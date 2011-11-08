@@ -1,0 +1,7 @@
+<BeliefbaseConfiguration 	class="angerona.fw.logic.asp.AspBeliefbase"
+				updateBehavior="EXPANSION">
+	<Expansion class="angerona.fw.logic.asp.AspExpansion"></Expansion>
+	<Consolidation class="empty"></Consolidation>
+	<Revision class="empty"></Revision>
+	<Reasoner class="angerona.fw.logic.asp.AspReasoner"></Reasoner>
+</BeliefbaseConfiguration>

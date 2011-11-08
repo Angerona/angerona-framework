@@ -1,0 +1,8 @@
+<AgentConfiguration name="DummyAgent">
+	<GenerateOptionsOperator class="angerona.fw.operators.dummy.DummyGenerateOptionsOperator"></GenerateOptionsOperator>
+	<FilterOperator class="angerona.fw.operators.dummy.DummyIntentionUpdateOperator"></FilterOperator>
+	<Planer class="angerona.fw.operators.dummy.DummySubgoalGenerationOperator"></Planer>
+	<UpdateOperator class="angerona.fw.operators.dummy.DummyChangeOperator"></UpdateOperator>
+	<PolicyControlOperator class="angerona.fw.operators.dummy.DummyPolicyControlOperator"></PolicyControlOperator>
+	<ViolatesOperator class="angerona.fw.operators.dummy.DummyViolatesOperator"></ViolatesOperator>	
+</AgentConfiguration>

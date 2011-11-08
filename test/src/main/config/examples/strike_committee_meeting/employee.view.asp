@@ -1,0 +1,1 @@
+attends :- -hasTime.

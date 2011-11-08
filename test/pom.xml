@@ -1,0 +1,197 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>angerona</groupId>
+  <artifactId>test</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Angerona (Functional Test)</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        
+        <configuration>
+          <finalName>Angerona-Strike_Committee_Meeting</finalName>
+          <descriptors>
+            <descriptor>src/main/assembly/user_assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+        
+        <executions>
+          <execution>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/plugins</outputDirectory>
+              <includeScope>runtime</includeScope>
+              <excludeTransitive>true</excludeTransitive>
+              <excludeArtifactIds>fw</excludeArtifactIds>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          
+          <execution>
+            <id>Copy Config-Files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${basedir}/target/config/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/config</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          
+          <execution>
+            <id>Copy Plugin-Files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${basedir}/target/plugins/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/plugins</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          
+          <execution>
+            <id>Copy Tool-Files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${basedir}/target/tools/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/tools</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          
+          <execution>
+            <id>Copy the resources in src/main/resources</id>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    
+    <pluginManagement>
+	    <plugins>
+	      <plugin>
+	        <groupId>org.eclipse.m2e</groupId>
+	        <artifactId>lifecycle-mapping</artifactId>
+	        <version>1.0.0</version>
+	        <configuration>
+	          <lifecycleMappingMetadata>
+	            <pluginExecutions>
+	              <pluginExecution>
+	                <pluginExecutionFilter>
+	                  <groupId>org.apache.maven.plugins</groupId>
+	                  <artifactId>maven-dependency-plugin</artifactId>
+	                  <versionRange>[2.0,)</versionRange>
+	                  <goals>
+	                    <goal>copy-dependencies</goal>
+	                  </goals>
+	                </pluginExecutionFilter>
+	                <action>
+	                  <ignore />
+	                </action>
+	              </pluginExecution>
+	            </pluginExecutions>
+	          </lifecycleMappingMetadata>
+	        </configuration>
+	      </plugin>
+	    </plugins>
+	</pluginManagement>
+  </build>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>angerona</groupId>
+    	<artifactId>fw</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>asp</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
+    </dependency>
+    <dependency>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>dummy</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
+    </dependency>
+  </dependencies>
+  <parent>
+  	<groupId>angerona.fw</groupId>
+  	<artifactId>maven-build-all</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  	<relativePath>..</relativePath>
+  </parent>
+</project>

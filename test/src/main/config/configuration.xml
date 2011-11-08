@@ -1,0 +1,4 @@
+<Config>
+	<Plugin file="plugins/dummy-0.0.1-SNAPSHOT.jar" />
+	<Plugin file="plugins/asp-0.0.1-SNAPSHOT.jar" />
+</Config>

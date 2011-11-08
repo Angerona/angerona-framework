@@ -1,0 +1,34 @@
+<AngeronaSimulation name="Strike committee meeting">
+	<Agent 	name="Employee"
+		configuration="config/agents/dummy_agent.xml" >
+		<Skill file="config/skills/QueryAnswer.xml" />
+		<Beliefs>
+			<World 	fileSuffix="employee.world"
+				configuration="config/beliefbases/asp_beliefbase.xml" />
+			<View 	agent="Boss" 
+				fileSuffix="employee.view" 
+				configuration="config/beliefbases/asp_beliefbase.xml" />
+			<Confidential 	fileSuffix="employee.conf" />
+		</Beliefs>
+		
+	</Agent>
+	
+	<Agent 	name="Boss" 
+		configuration="config/agents/dummy_agent.xml" >
+		
+		<Beliefs>
+			<World 	fileSuffix="boss.world" 
+				configuration="config/beliefbases/asp_beliefbase.xml" />
+			<View 	agent="Employee" 
+				fileSuffix="boss.view" 
+				configuration="config/beliefbases/asp_beliefbase.xml" />
+			<Confidential fileSuffix="boss.conf" />
+		</Beliefs>
+		
+	</Agent>
+
+	<Flow>
+		<Query sender="Boss" receiver="Employee" question="attends" />
+		<Query sender="Boss" receiver="Employee" question="has_time" /> 
+	</Flow>
+</AngeronaSimulation>

@@ -1,0 +1,24 @@
+<!--  -->
+<Skill name="QueryAnswer">
+	<Commandos>	
+		<!-- Reason the truth answer -->
+		<Reason beliefbase="$world" 
+				formula="$in.question" 
+				out="answer" />
+		
+		<!-- Run policy control on the answer and change it if it invalids confidentiality -->
+		<PolicyControl 	subjectId="$in.senderId" 
+						question="$in.question"
+						truthAnswer="$in.answer"
+						out="realAnswer" />
+		
+		<!-- Communicate the answer through the environment to the query sender -->
+		<SendAction out="answerAction" >
+				<Answer sender="$name"
+						receiver="$in.senderId"
+						question="$in.question"
+						answer="$in.realAnswer"
+				/>
+		</SendAction>
+	</Commandos>
+</Skill>
