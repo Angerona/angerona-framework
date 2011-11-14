@@ -1,6 +1,7 @@
 package angerona.fw.serialize;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,10 +70,13 @@ public class SimulationConfiguration {
 				viewAgent = el.getAttribute("agent");
 				String configFile = el.getAttribute("configuration");
 				
-				if(configFile != null) {
+				if(configFile != null && !configFile.isEmpty()) {
 					File f = new File(configFile);
-					if(f.exists())
+					if(f.exists()) {
 						config = BeliefbaseConfiguration.loadXml(configFile).get(0);
+					} else {
+						throw new ParserConfigurationException("Cant find file: " + configFile + ", " + el.toString());
+					}
 				}
 			}
 		}
@@ -142,7 +146,11 @@ public class SimulationConfiguration {
 				intentionFiles.add(ie.getAttribute("file"));
 			}
 			
-			config = AgentConfiguration.loadXml(configFile).get(0);
+			try {
+				config = AgentConfiguration.loadXml(configFile).get(0);
+			} catch (FileNotFoundException ex) {
+				throw new ParserConfigurationException(ex.getMessage());
+			}
 			Element bel = (Element)el.getElementsByTagName("Beliefs").item(0);			
 			
 			Element elWorld = (Element)bel.getElementsByTagName("World").item(0);
@@ -230,6 +238,7 @@ public class SimulationConfiguration {
 		for(int i=0; i<list.getLength(); ++i) {
 			Element elAgent = (Element) list.item(i);
 			AgentInstance ai = reval.new AgentInstance();
+			
 			ai.loadFromElement(elAgent);
 			reval.agents.add(ai);
 		}

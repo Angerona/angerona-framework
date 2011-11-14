@@ -1,4 +1,5 @@
 package angerona.fw;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -148,7 +149,13 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 	 * @throws AgentInstantiationException 
 	 */
 	public void loadSkillFromXML(String xmlFile) throws ParserConfigurationException, SAXException, IOException, AgentInstantiationException {
-		List<SkillConfiguration> lst = SkillConfiguration.loadXml(xmlFile);
+		List<SkillConfiguration> lst = null;
+		try {
+			lst = SkillConfiguration.loadXml(xmlFile);
+		} catch(FileNotFoundException fnf) {
+			fnf.printStackTrace();
+			throw new ParserConfigurationException(fnf.getMessage());
+		}
 		for(SkillConfiguration ic : lst) {
 			Skill act = new Skill(this, ic);
 			if(skills.containsKey(ic.getName())) {
