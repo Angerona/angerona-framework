@@ -1,13 +1,9 @@
 package angerona.fw;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.beenuts.ap.AgentArchitecture;
 import net.sf.tweety.Formula;
@@ -15,7 +11,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
@@ -141,28 +136,28 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 	}
 	
 	/**
-	 * Loads an intention from the given xml file and saves an instance in the intention map.
-	 * @param xmlFile	filename of the xml file
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
+	 * Adds all the skills saved in the skill configuration list
+	 * @param lst	List with all skill configurations which should be loaded
 	 * @throws AgentInstantiationException 
 	 */
-	public void loadSkillFromXML(String xmlFile) throws ParserConfigurationException, SAXException, IOException, AgentInstantiationException {
-		List<SkillConfiguration> lst = null;
-		try {
-			lst = SkillConfiguration.loadXml(xmlFile);
-		} catch(FileNotFoundException fnf) {
-			fnf.printStackTrace();
-			throw new ParserConfigurationException(fnf.getMessage());
-		}
+	public void addSkillsFromConfig(List<SkillConfiguration> lst) throws AgentInstantiationException {
 		for(SkillConfiguration ic : lst) {
-			Skill act = new Skill(this, ic);
-			if(skills.containsKey(ic.getName())) {
-				throw new AgentInstantiationException("Skill with name: '" + ic.getName() + "' already exists. Names of atomic Intentions / Skills must be unique.");
-			}
-			else
-				skills.put(ic.getName(), act);
+			addSkill(ic);
+		}
+	}
+
+	/**
+	 * Adds a skill to the Skill map of the Agent instance. A skill is an atomic action. The skill
+	 * is described by a data-structure given per parameter.
+	 * @param skillConfig	data-structure containing all informations about the skill.
+	 * @throws AgentInstantiationException
+	 */
+	public void addSkill(SkillConfiguration skillConfig) throws AgentInstantiationException {
+		Skill act = new Skill(this, skillConfig);
+		if(skills.containsKey(skillConfig.getName())) {
+			throw new AgentInstantiationException("Skill with name: '" + skillConfig.getName() + "' already exists. Names of atomic Intentions / Skills must be unique.");
+		} else {
+			skills.put(skillConfig.getName(), act);
 		}
 	}
 	

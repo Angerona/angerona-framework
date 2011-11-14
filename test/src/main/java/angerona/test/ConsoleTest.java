@@ -23,8 +23,8 @@ import angerona.fw.logic.AnswerValue;
  *
  * @author Tim Janus
  */
-public class App {
-	static private Logger LOG = LoggerFactory.getLogger(App.class);
+public class ConsoleTest {
+	static private Logger LOG = LoggerFactory.getLogger(ConsoleTest.class);
 	
 	/**
 	 * @param args

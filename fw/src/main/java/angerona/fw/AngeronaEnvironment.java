@@ -88,21 +88,59 @@ public class AngeronaEnvironment extends APR {
 	
 	/**
 	 * Loads a simulation from the given filename
-	 * @param filename	name of the xml file containing the information about the simulation.
-	 * @return true if no error occored during loading, false otherwise.
+	 * @param filename	name of the xml file containing the configuration of the simulation.
+	 * @return the loaded simulation configuration if no error occurred, null otherwise.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public SimulationConfiguration loadSimulation(String filename) throws FileNotFoundException, IOException {
+		return loadSimulation(filename, true);
+	}
+	
+	/**
+	 * Loads a simulation from the given filename
+	 * @param filename	name of the xml file containing the configuration of the simulation.
+	 * @param startImmediately	flag indicating if the simulation defined in the file should be started
+	 * 							immediatley after loading the file.
+	 * @return the loaded simulation configuration if no error occurred, null otherwise.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public boolean loadSimulation(String filename) throws FileNotFoundException, IOException {
-		boolean reval = true;
+	public SimulationConfiguration loadSimulation(String filename, boolean startImmediately) throws FileNotFoundException, IOException {
 		SimulationConfiguration config = null;
 		
 		try {
 			config = SimulationConfiguration.loadXml(filename).get(0);
+			
+		} catch (ParserConfigurationException e) {
+			config = null;
+			LOG.error("Cannot start simulation, something went wrong during xml parsing: " + e.getMessage());
+			e.printStackTrace();
+		} catch (SAXException e) {
+			config = null;
+			LOG.error("Cannot load simulation, something went wrong during xml parsing: " + e.getMessage());
+			e.printStackTrace();
+		} 
+		
+		if(config != null && startImmediately) {
 			File f = new File(filename);
 			String parentDir = f.getParent();
-			LOG.info("Starting simulation: " + config.getName());
+			return startSimulation(config, parentDir) ? config : null;
+		}
+		return config;
+	}
+	
+	/**
+	 * Starts an Angerona simulation, with the given config. The root directory of the simulation is also given.
+	 * @param config	reference to the data-structure containing the configuration of the simulation.
+	 * @param parentDir	the root folder for the simulation.
+	 * @return	true if everything was fine, false if an error occurred.
+	 */
+	public boolean startSimulation(SimulationConfiguration config, String parentDir) {
+		boolean reval = true;
 		
+		LOG.info("Starting simulation: " + config.getName());
+		try {
 			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
 			
@@ -123,41 +161,37 @@ public class AngeronaEnvironment extends APR {
 				}
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
 				addAgent(highLevelAg.getAgentProcess());
-				
-				for(String file : ai.getIntentionFiles()) {
-					highLevelAg.loadSkillFromXML(file);
-				}
+				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
 			}
-			
-			DefaultPerceptionFactory df = new DefaultPerceptionFactory();
-			List<Perception> initPercepts = df.generateFromParentElement(config.getFlowElement(), null);
-			for(Perception p : initPercepts) {
-				this.sendAction(p.getReceiverId(), p);
-			}
-		} catch (ParserConfigurationException e) {
-			reval = false;
-			LOG.error("Can't start simulation, something went wrong during xml parsing: " + e.getMessage());
-			e.printStackTrace();
-		} catch (SAXException e) {
-			reval = false;
-			LOG.error("Can't start simulation, something went wrong during xml parsing: " + e.getMessage());
-			e.printStackTrace();
 		} catch (AgentIdException e) {
 			reval = false;
-			LOG.error("Can't start simulation, something went wrong during agent registration: " + e.getMessage());
+			LOG.error("Cannot start simulation, something went wrong during agent registration: " + e.getMessage());
 			e.printStackTrace();
 		} catch (AgentInstantiationException e) {
 			reval = false;
-			LOG.error("Can't start simulation, something went wrong during agent instatiation: " + e.getMessage());
+			LOG.error("Cannot start simulation, something went wrong during agent instatiation: " + e.getMessage());
 			e.printStackTrace();
 		} catch (InstantiationException e) {
 			reval = false;
-			LOG.error("Can't start simulation, something went wrong during dynamic instantiation: " + e.getMessage());
+			LOG.error("Cannot start simulation, something went wrong during dynamic instantiation: " + e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			reval = false;
-			LOG.error("Can't start simulation, something went wrong during dynamic instantiation: " + e.getMessage());
+			LOG.error("Cannot start simulation, something went wrong during dynamic instantiation: " + e.getMessage());
 			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			reval = false;
+			LOG.error("Cannot start simulation, referenced file not found: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			reval = false;
+			e.printStackTrace();
+		}
+		
+		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
+		List<Perception> initPercepts = df.generateFromParentElement(config.getFlowElement(), null);
+		for(Perception p : initPercepts) {
+			this.sendAction(p.getReceiverId(), p);
 		}
 		
 		return reval;

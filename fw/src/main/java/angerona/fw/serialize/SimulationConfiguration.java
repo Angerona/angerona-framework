@@ -94,7 +94,7 @@ public class SimulationConfiguration {
 		private List<BeliefbaseInstance> views = new LinkedList<SimulationConfiguration.AgentInstance.BeliefbaseInstance>();
 		
 		/** list of file names for used intentions */
-		private List<String> intentionFiles = new LinkedList<String>();
+		private List<SkillConfiguration> skillConfigs = new LinkedList<SkillConfiguration>();
 		
 		/** data structure containing information about the confidential beliefbase */
 		private BeliefbaseInstance confidential;
@@ -125,8 +125,8 @@ public class SimulationConfiguration {
 		}
 		
 		/** @return list of file names for used intentions */
-		public List<String> getIntentionFiles() {
-			return intentionFiles;
+		public List<SkillConfiguration> getSkillConfig() {
+			return skillConfigs;
 		}
 		
 		/**
@@ -143,7 +143,14 @@ public class SimulationConfiguration {
 			NodeList lst = el.getElementsByTagName("Skill");
 			for(int i=0; i<lst.getLength(); ++i) {
 				Element ie = (Element)lst.item(i);
-				intentionFiles.add(ie.getAttribute("file"));
+				String filename = ie.getAttribute("file"); 
+				try {
+					List<SkillConfiguration> skills = SkillConfiguration.loadXml(filename);
+					skillConfigs.addAll(skills);
+				} catch(FileNotFoundException fnf) {
+					fnf.printStackTrace();
+					throw new ParserConfigurationException(fnf.getMessage());
+				}	
 			}
 			
 			try {

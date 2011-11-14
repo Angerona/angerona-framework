@@ -42,20 +42,6 @@ public class AspBeliefbase extends BaseBeliefbase {
 	@Override
 	protected void parseInt(BufferedReader br) throws ParserException, IOException {
 		program = Program.loadFrom(br);
-		
-		/*
-		signature = new FolSignature();
-		for(Rule r : program) {
-			List<Literal> literals = new LinkedList<Literal>();
-			literals.addAll(r.getBody());
-			literals.addAll(r.getHead());
-			
-			for(Literal l : literals) {
-				Predicate p = new Predicate(l.getAtom().getSymbol(), l.getAtom().getArity());
-				signature.add(p);
-			}
-		}
-		*/
 		signature = program.getSignature();
 	}
 
