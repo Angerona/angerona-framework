@@ -9,40 +9,20 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
  * @author Thomas Vengels
  *
  */
-public class StringTerm implements Term {
+public class StringTerm extends Constant {
 
-	protected String value = null;
+	public StringTerm(String value) {
+		super(fixMarks(value));
+	}
+	
+	protected static String fixMarks(String s) {
+		return s;
+	}
 	
 	@Override
 	public boolean isConstant() {
 		return false;
 	}
-
-	@Override
-	public boolean isVariable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAtom() {
-		return false;
-	}
-
-	@Override
-	public boolean isList() {
-		return false;
-	}
-
-	@Override
-	public boolean isSet() {
-		return false;
-	}
-
-	@Override
-	public boolean isNumber() {
-		return false;
-	}
-
 	@Override
 	public boolean isString() {
 		return true;
@@ -54,23 +34,8 @@ public class StringTerm implements Term {
 	}
 
 	@Override
-	public String get() {
-		return value;
-	}
-
-	@Override
-	public void set(int value) {
-		this.value = "" + value;
-	}
-
-	@Override
-	public int getInt() {
-		return 0;
-	}
-
-	@Override
 	public String toString() {
-		return "\"" + this.value + "\"";
+		return this.value;
 	}
 	
 	@Override
@@ -80,5 +45,10 @@ public class StringTerm implements Term {
 			return st.value.equals( this.value );
 		} else
 			return false;
+	}
+
+	@Override
+	public TermType type() {
+		return TermType.Stirng;
 	}
 }

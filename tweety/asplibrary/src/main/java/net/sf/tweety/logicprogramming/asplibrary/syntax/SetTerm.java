@@ -103,4 +103,9 @@ public class SetTerm implements Term {
 	public boolean isString() {
 		return false;
 	}
+
+	@Override
+	public TermType type() {
+		return TermType.Set;
+	}
 }

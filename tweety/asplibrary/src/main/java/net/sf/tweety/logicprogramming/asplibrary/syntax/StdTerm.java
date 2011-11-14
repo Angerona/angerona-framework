@@ -134,4 +134,9 @@ public class StdTerm implements Term {
 	public boolean isString() {
 		return false;
 	}
+
+	@Override
+	public TermType type() {
+		return TermType.Constant;
+	}
 }

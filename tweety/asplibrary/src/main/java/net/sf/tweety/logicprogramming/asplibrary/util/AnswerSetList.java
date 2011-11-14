@@ -32,7 +32,6 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 		return false;
 	}
 	
-	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

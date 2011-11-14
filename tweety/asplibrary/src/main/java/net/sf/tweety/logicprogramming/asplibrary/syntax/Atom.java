@@ -296,6 +296,10 @@ public class Atom implements Term, Literal, CommonStructure {
 	}
 
 	@Override
+	public TermType type() {
+		return TermType.Atom;
+	}
+	
 	public String getName() {
 		return name;
 	}

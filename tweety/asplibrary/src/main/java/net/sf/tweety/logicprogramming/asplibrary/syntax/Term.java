@@ -91,4 +91,12 @@ public interface Term {
 	 */
 	public int getInt();
 		
+	/**
+	 * this method returns the type of a term,
+	 * which can be used instead of getters and
+	 * for each individual type.
+	 * 
+	 * @return
+	 */
+	public TermType	type();
 }

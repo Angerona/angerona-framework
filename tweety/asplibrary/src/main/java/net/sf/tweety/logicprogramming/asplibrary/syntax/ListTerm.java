@@ -107,4 +107,9 @@ public class ListTerm implements Term {
 	public boolean isString() {
 		return false;
 	}
+
+	@Override
+	public TermType type() {
+		return TermType.List;
+	}
 }
