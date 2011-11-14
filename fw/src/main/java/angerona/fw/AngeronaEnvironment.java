@@ -36,6 +36,8 @@ public class AngeronaEnvironment extends APR {
 	/** implementation of the factory used for perceptions */
 	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
 	
+	private boolean running = false;
+	
 	/**
 	 * Adds the agents with the given name to the environment
 	 * @param ap		agent process handling low level communication through the environment.
@@ -74,6 +76,7 @@ public class AngeronaEnvironment extends APR {
 	 */
 	public void runTillNoMorePerceptionsLeft() {
 		boolean percept = false;
+		running = true;
 		do {
 			percept = false;
 			for(AgentProcess ap : agents) {
@@ -84,6 +87,11 @@ public class AngeronaEnvironment extends APR {
 				}
 			}
 		} while(percept);
+		running = false;
+	}
+	
+	public boolean isRunning() {
+		return running;
 	}
 	
 	/**
@@ -125,18 +133,18 @@ public class AngeronaEnvironment extends APR {
 		if(config != null && startImmediately) {
 			File f = new File(filename);
 			String parentDir = f.getParent();
-			return startSimulation(config, parentDir) ? config : null;
+			return initSimulation(config, parentDir) ? config : null;
 		}
 		return config;
 	}
 	
 	/**
-	 * Starts an Angerona simulation, with the given config. The root directory of the simulation is also given.
+	 * Initializes an Angerona simulation, with the given config. The root directory of the simulation is also given.
 	 * @param config	reference to the data-structure containing the configuration of the simulation.
-	 * @param parentDir	the root folder for the simulation.
+	 * @param simulationDirectory	the root folder for the simulation.
 	 * @return	true if everything was fine, false if an error occurred.
 	 */
-	public boolean startSimulation(SimulationConfiguration config, String parentDir) {
+	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
 		boolean reval = true;
 		
 		LOG.info("Starting simulation: " + config.getName());
@@ -145,18 +153,18 @@ public class AngeronaEnvironment extends APR {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
 			
 				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getWorld().getConfig());
-				world.parse(getBeliefbaseFilename(parentDir, ai.getWorld(), world));
+				world.parse(getBeliefbaseFilename(simulationDirectory, ai.getWorld(), world));
 				
 				ConfidentialKnowledge conf = new ConfidentialKnowledge();
 				FolSignature fsig = new FolSignature();
 				fsig.fromSignature(world.getSignature());
 				conf.setSignature(fsig);
-				conf.parse(getBeliefbaseFilename(parentDir, ai.getConfidential(), conf));
+				conf.parse(getBeliefbaseFilename(simulationDirectory, ai.getConfidential(), conf));
 				
 				Map<String, BaseBeliefbase> views = new HashMap<String, BaseBeliefbase>();
 				for(BeliefbaseInstance bi : ai.getViews()) {
 					BaseBeliefbase actView = PluginInstantiator.createBeliefbase(bi.getConfig());
-					actView.parse(getBeliefbaseFilename(parentDir, bi, actView));
+					actView.parse(getBeliefbaseFilename(simulationDirectory, bi, actView));
 					views.put(bi.getViewAgent(), actView);
 				}
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
@@ -165,23 +173,23 @@ public class AngeronaEnvironment extends APR {
 			}
 		} catch (AgentIdException e) {
 			reval = false;
-			LOG.error("Cannot start simulation, something went wrong during agent registration: " + e.getMessage());
+			LOG.error("Cannot init simulation, something went wrong during agent registration: " + e.getMessage());
 			e.printStackTrace();
 		} catch (AgentInstantiationException e) {
 			reval = false;
-			LOG.error("Cannot start simulation, something went wrong during agent instatiation: " + e.getMessage());
+			LOG.error("Cannot init simulation, something went wrong during agent instatiation: " + e.getMessage());
 			e.printStackTrace();
 		} catch (InstantiationException e) {
 			reval = false;
-			LOG.error("Cannot start simulation, something went wrong during dynamic instantiation: " + e.getMessage());
+			LOG.error("Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			reval = false;
-			LOG.error("Cannot start simulation, something went wrong during dynamic instantiation: " + e.getMessage());
+			LOG.error("Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage());
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			reval = false;
-			LOG.error("Cannot start simulation, referenced file not found: " + e.getMessage());
+			LOG.error("Cannot init simulation, referenced file not found: " + e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
 			reval = false;
@@ -195,6 +203,14 @@ public class AngeronaEnvironment extends APR {
 		}
 		
 		return reval;
+	}
+	
+	/**
+	 * deletes all agents from the environment and removes the information about the last simulation.
+	 */
+	public void cleanupSimulation() {
+		agents.clear();
+		agentMap.clear();
 	}
 	
 	/**
