@@ -115,6 +115,19 @@ public class BeliefSet {
 		
 		this.literals.put(functor, sl);
 	}
+
+	public boolean containsAll(Collection<Literal> lits) {
+		if(lits == null)
+			throw new NullPointerException();
+		
+		for(Literal l : lits) {
+			Set<Literal> getted = literals.get(l.getAtom().getName());
+			if(getted == null || !getted.contains(l))
+				return false;
+		}
+		
+		return true;
+	}
 	
 	public boolean holds(Collection<Literal> posLits, Collection<Literal> negLits) {
 		if (posLits != null) {
@@ -131,6 +144,7 @@ public class BeliefSet {
 		if (negLits != null) {
 			for(Literal l : negLits) {
 				Set<Literal> lits = literals.get(l.getAtom().getName());
+				// @Thomas: Close world assumption??? I dont get it.
 				if ((lits != null) && (lits.contains(l)))
 					return false;
 			}

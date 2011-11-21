@@ -105,5 +105,10 @@ public class Pair<E,F> {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + (obj1 == null ? "null" : obj1.toString()) + ", " + (obj2 == null ? "null" : obj2.toString()) + ")";
+	}
 
 }

@@ -17,7 +17,7 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
  * this class models a logical program, which is
  * a collection of rules.
  * 
- * @author Thomas Vengels
+ * @author Thomas Vengels, Tim Janus
  *
  */
 public class Program extends ArrayList<Rule> {
@@ -121,5 +121,36 @@ public class Program extends ArrayList<Rule> {
 		}
 		
 		return sb.toString();
+	}
+	
+	/**
+	 * Creates the defaultifictation p_d of a given program p.
+	 * A defaultificated program p' of p adds for every Rule r in p a modified rule r_d 
+	 * of the form: H(r) :- B(r), not -H(r). to the program p'. 
+	 * @param p	The program which is not defaultificated yet
+	 * @return a program p' which is the defaultificated version of p.
+	 */
+	public static Program defaultification(Program p) {
+		Program reval = new Program();
+		for(Rule origRule : p) {
+			Rule defRule = new Rule();
+			if(!origRule.isConstraint()) {
+				Literal head = origRule.getHead().get(0);
+				Neg neg = new Neg(head.getAtom());
+				defRule.addBody(origRule.getBody());
+				
+				if(head.isTrueNegated()) {
+					defRule.addHead(neg);
+					defRule.addBody(new Not(head.getAtom()));
+				} else {
+					defRule.addHead(head);
+					defRule.addBody(new Not(neg));
+				}
+			} else {
+				defRule.addBody(origRule.getBody());
+			}
+			reval.add(defRule);
+		}
+		return reval;
 	}
 }
