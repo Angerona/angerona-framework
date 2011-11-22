@@ -125,4 +125,12 @@ public class Rule {
 		
 		return ret;
 	}
+	
+	@Override 
+	public boolean equals(Object other) {
+		if(!(other instanceof Rule)) 	return false;
+		Rule or = (Rule)other;
+		
+		return this.head.equals(or.head) && this.body.equals(or.body);
+	}
 }

@@ -138,13 +138,17 @@ public class Program extends ArrayList<Rule> {
 				Literal head = origRule.getHead().get(0);
 				Neg neg = new Neg(head.getAtom());
 				defRule.addBody(origRule.getBody());
-				
+				Not defaultificationLit = null;
 				if(head.isTrueNegated()) {
 					defRule.addHead(neg);
-					defRule.addBody(new Not(head.getAtom()));
+					defaultificationLit = new Not(head.getAtom());
 				} else {
 					defRule.addHead(head);
-					defRule.addBody(new Not(neg));
+					defaultificationLit = new Not(neg);
+				}
+				
+				if(defaultificationLit != null && !defRule.getBody().contains(defaultificationLit)) {
+					defRule.addBody(defaultificationLit);
 				}
 			} else {
 				defRule.addBody(origRule.getBody());

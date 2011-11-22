@@ -28,7 +28,7 @@ public class DefaultificationTest extends TestCase {
         return new TestSuite( DefaultificationTest.class );
     }
     
-    public void testDefaultifcation() {
+    public void testSimpleDefaultifcation() {
     	Program p = new Program();
     	Rule onlyRule = new Rule();
     	onlyRule.addHead(new Atom("x"));
@@ -38,13 +38,40 @@ public class DefaultificationTest extends TestCase {
     	Program dp = Program.defaultification(p);
     	assertTrue(dp.size() == p.size());
     	Rule dr = dp.get(0);
-    	return; 
-    	// TODO: attach debugger to test using maven test goal
-    	/*
+    	
     	assertTrue(dr.getHead().equals(onlyRule.getHead()));
     	assertTrue(dr.getBody().contains(onlyRule.getBody().get(0)));
     	Not defNot = new Not(new Neg(dr.getHead().get(0).getAtom()));
     	assertTrue(dr.getBody().contains(defNot));
-    	*/
+    	
+    	p = new Program();
+    	onlyRule = new Rule();
+    	onlyRule.addHead(new Neg(new Atom("x")));
+    	
+    	p.add(onlyRule);
+    	dp = Program.defaultification(p);
+    	assertTrue(p.size() == dp.size());
+    	dr = dp.get(0);
+    	
+    	assertTrue(dr.getHead().equals(onlyRule.getHead()));
+    	defNot = new Not(dr.getHead().get(0).getAtom());
+    	assertTrue(dr.getBody().contains(defNot));
+    }
+    
+    public void testDefaultificationOfAlreadyDefaulticated() {
+    	Program p = new Program();
+    	Rule r = new Rule();
+    	Atom a = new Atom("x");
+    	r.addHead(a);
+    	Not defLit = new Not(new Neg(a));
+    	r.addBody(defLit);
+    	p.add(r);
+    	
+    	// We want the program dp look like p cause p was already
+    	// defaultisated
+    	Program dp = Program.defaultification(p);
+    	Rule rd = dp.get(0);
+    	assertTrue(rd.equals(r));
+    	assertTrue(dp.equals(p));
     }
 }
