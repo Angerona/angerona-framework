@@ -14,6 +14,11 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseExpansion;
 import angerona.fw.logic.base.BeliefUpdateParameter;
 
+/**
+ * Simply adds the new rule to the belief base, can make it inconsistent and
+ * so on.
+ * @author Tim Janus
+ */
 public class AspExpansion extends BaseExpansion {
 
 	@Override

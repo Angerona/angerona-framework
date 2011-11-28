@@ -29,6 +29,10 @@ public class AspBeliefbase extends BaseBeliefbase {
 		return program;
 	}
 	
+	public void setProgram(Program pr) {
+		program = pr;
+	}
+	
 	@Override
 	public String getFileEnding() {
 		return "asp";
