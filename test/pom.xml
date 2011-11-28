@@ -12,6 +12,47 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  
+  <profiles>
+    <profile>
+      <id>win</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <tools.home>${basedir}/src/main/tools/win</tools.home>
+        <permission.script>${basedir}/src/main/permission.bat</permission.script>
+      </properties>
+    </profile>
+    
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <properties>
+        <tools.home>${basedir}/src/main/tools/mac</tools.home>
+        <permission.script>${basedir}/src/main/permission.sh</permission.script>
+      </properties>
+    </profile>
+    
+    <profile>
+      <id>unix</id>
+      <activation>
+        <os>
+          <family>unix</family>
+        </os>
+      </activation>
+      <properties>
+        <tools.home>${basedir}/src/main/tools/unix</tools.home>
+        <permission.script>${basedir}/src/main/permission.sh</permission.script>
+      </properties>
+    </profile>
+  </profiles>
 
   <build>
     <plugins>
@@ -23,27 +64,6 @@
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
-        
-        <configuration>
-          <finalName>Angerona-Strike_Committee_Meeting</finalName>
-          <descriptors>
-            <descriptor>src/main/assembly/user_assembly.xml</descriptor>
-          </descriptors>
-        </configuration>
-        
-        <executions>
-          <execution>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
-        </executions>
       </plugin>
       
       <plugin>
@@ -106,6 +126,7 @@
             </configuration>
           </execution>
           
+          
           <execution>
             <id>Copy Tool-Files</id>
             <goals>
@@ -116,21 +137,34 @@
               <outputDirectory>${basedir}/target/tools/</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/tools</directory>
+                  <directory>${tools.home}</directory>
                   <filtering>false</filtering>
                 </resource>
               </resources>
             </configuration>
-          </execution>
-          
+          </execution>                             
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
           <execution>
-            <id>Copy the resources in src/main/resources</id>
+            <id>Set permissions</id>
+            <phase>package</phase>
             <goals>
-              <goal>resources</goal>
+              <goal>exec</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <executable>${permission.script}</executable>
+          <workingDirectory>${basedir}/target</workingDirectory>
+        </configuration>
       </plugin>
+      
     </plugins>
     
     <pluginManagement>
