@@ -1,4 +1,4 @@
-<AgentConfiguration name="DummyAgent">
+<AgentConfiguration name="Dummy Agent Implementation">
 	<GenerateOptionsOperator class="angerona.fw.operators.dummy.DummyGenerateOptionsOperator"></GenerateOptionsOperator>
 	<FilterOperator class="angerona.fw.operators.dummy.DummyIntentionUpdateOperator"></FilterOperator>
 	<Planer class="angerona.fw.operators.dummy.DummySubgoalGenerationOperator"></Planer>

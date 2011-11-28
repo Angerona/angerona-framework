@@ -23,6 +23,8 @@ import angerona.fw.logic.base.BaseBeliefbase.UpdateType;
  * @author Tim Janus
  */
 public class BeliefbaseConfiguration {
+	private String name;
+	
 	/** the class name used for the expansion operation */
 	private String expansionClassName;
 	
@@ -92,6 +94,7 @@ public class BeliefbaseConfiguration {
 	 */
 	public static BeliefbaseConfiguration loadFromElement(Element el) {
 		BeliefbaseConfiguration reval = new BeliefbaseConfiguration();
+		reval.name = el.getAttribute("name");
 		reval.beliefbaseClassName = getClassNameOfElement(el);
 		reval.reasonerClassName = getClassNameOfElement(el.getElementsByTagName(EL_REASONER));
 		reval.expansionClassName = getClassNameOfElement(el.getElementsByTagName(EL_EXPANSION));
@@ -156,5 +159,9 @@ public class BeliefbaseConfiguration {
 		}
 		
 		throw new IllegalArgumentException(updateBehaviorStr + " can't be convert to UpdateType");
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

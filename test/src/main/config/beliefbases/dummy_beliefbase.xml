@@ -1,4 +1,5 @@
-<BeliefbaseConfiguration 	class="angerona.fw.logic.dummy.DummyBeliefbase"
+<BeliefbaseConfiguration name="Dummy Beliefbase Implementation" 
+				class="angerona.fw.logic.dummy.DummyBeliefbase"
 				updateBehavior="EXPANSION_AND_CONSOLIDATION">
 	<Expansion class="angerona.fw.logic.dummy.DummyExpansion"></Expansion>
 	<Consolidation class="angerona.fw.logic.dummy.DummyConsolidation"></Consolidation>

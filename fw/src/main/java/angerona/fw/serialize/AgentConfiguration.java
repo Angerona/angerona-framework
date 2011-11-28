@@ -39,6 +39,9 @@ public class AgentConfiguration {
 	/** String identifying the Planer class name for dynamic instantiation */
 	private String planerClass;
 	
+	/** String with name of this agent configuration */
+	private String name;
+	
 
 	private static final String EL_ROOT = "AgentConfiguration";
 	
@@ -74,6 +77,7 @@ public class AgentConfiguration {
 	public static AgentConfiguration loadFromElement(Element el) {
 		AgentConfiguration reval = new AgentConfiguration();
 		
+		reval.name = el.getAttribute("name");
 		reval.generateOptionsOperatorClass = getClassNameOfElement(el.getElementsByTagName("GenerateOptionsOperator"));
 		reval.filterOperatorClass = getClassNameOfElement(el.getElementsByTagName("FilterOperator"));
 		reval.violatesOperatorClass = getClassNameOfElement(el.getElementsByTagName("ViolatesOperator"));
@@ -128,6 +132,11 @@ public class AgentConfiguration {
 	/** @return String identifying the Planer Operator class name */
 	public String getPlanerClass() {
 		return planerClass;
+	}
+	
+	/** @return String with name of the agent configuration */
+	public String getName() {
+		return name;
 	}
 	
 }
