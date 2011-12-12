@@ -1,6 +1,5 @@
 package angerona.fw.serialize;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -26,78 +25,22 @@ public class SimulationConfiguration {
 	 * An instance of this class represents one agent in the simulation
 	 * @author Tim Janus
 	 */
-	public class AgentInstance {
-
-		/**
-		 * An instance of this class represents one beliefbase of the agent.
-		 * @author Tim Janus
-		 */
-		public class BeliefbaseInstance {
-
-			/** data structure containing information about the beliefbase type and operators */
-			private BeliefbaseConfiguration config;
-
-			/** the file suffix identifying the belifbase */
-			private String fileSuffix;
-			
-			/** null if the instance isn't a view beliefbase otherwise the name of the agent which is viewed */
-			private String viewAgent;
-			
-			/** @return data structure containing information about the beliefbase type and operators */
-			public BeliefbaseConfiguration getConfig() {
-				return config;
-			}
-
-			/** @return the file suffix identifying the belifbase */
-			public String getFileSuffix() {
-				return fileSuffix;
-			}
-
-			/** @return null if the instance isn't a view beliefbase otherwise the name of the agent which is viewed */
-			public String getViewAgent() {
-				return viewAgent;
-			}
-			
-			/**
-			 * Helper method:  Loads the data of this structure from the given xml element
-			 * @param el	reference to an xml element containing information about the beliefbase.
-			 * @throws ParserConfigurationException
-			 * @throws SAXException
-			 * @throws IOException
-			 */
-			public void loadFromElement(Element el) throws ParserConfigurationException, SAXException, IOException {
-				fileSuffix = el.getAttribute("fileSuffix");
-				viewAgent = el.getAttribute("agent");
-				String configFile = el.getAttribute("configuration");
-				
-				if(configFile != null && !configFile.isEmpty()) {
-					File f = new File(configFile);
-					if(f.exists()) {
-						config = BeliefbaseConfiguration.loadXml(configFile).get(0);
-					} else {
-						throw new ParserConfigurationException("Cant find file: " + configFile + ", " + el.toString());
-					}
-				}
-			}
-		}
-		
+	public class AgentInstance {		
 		/** the unique name of the agent */
 		private String name;
 		
 		/** a data structure with type information of the agents operators */
 		private AgentConfiguration config;
 		
-		/** data structure representing information about the agents world beliefbase */
-		private BeliefbaseInstance world;
-		
-		/** list of beliefbase data structures representing the agents view beliefbases */
-		private List<BeliefbaseInstance> views = new LinkedList<SimulationConfiguration.AgentInstance.BeliefbaseInstance>();
+		/** data structure containing information about the beliefbase type and operators */
+		private BeliefbaseConfiguration beliefbaseConfig;
+
+		/** the file suffix identifying the belifbase */
+		private String fileSuffix;
 		
 		/** list of file names for used intentions */
 		private List<SkillConfiguration> skillConfigs = new LinkedList<SkillConfiguration>();
 		
-		/** data structure containing information about the confidential beliefbase */
-		private BeliefbaseInstance confidential;
 	
 		/** @return the unique name of the agent */
 		public String getName() {
@@ -107,21 +50,6 @@ public class SimulationConfiguration {
 		/** @return a data structure with type information of the agents operators */
 		public AgentConfiguration getConfig() {
 			return config;
-		}
-
-		/** @return data structure representing information about the agents world beliefbase */
-		public BeliefbaseInstance getWorld() {
-			return world;
-		}
-
-		/** @return list of beliefbase data structures representing the agents view beliefbases */
-		public List<BeliefbaseInstance> getViews() {
-			return views;
-		}
-
-		/** @return data structure containing information about the confidential beliefbase */
-		public BeliefbaseInstance getConfidential() {
-			return confidential;
 		}
 		
 		/** @return list of file names for used intentions */
@@ -158,23 +86,21 @@ public class SimulationConfiguration {
 			} catch (FileNotFoundException ex) {
 				throw new ParserConfigurationException(ex.getMessage());
 			}
-			Element bel = (Element)el.getElementsByTagName("Beliefs").item(0);			
-			
-			Element elWorld = (Element)bel.getElementsByTagName("World").item(0);
-			world = new BeliefbaseInstance();
-			world.loadFromElement(elWorld);
-			
-			Element elConf = (Element)bel.getElementsByTagName("Confidential").item(0);
-			confidential = new BeliefbaseInstance();
-			confidential.loadFromElement(elConf);
-			
-			NodeList list = bel.getElementsByTagName("View");
-			for(int i=0; i<list.getLength(); ++i) {
-				Element elView = (Element)list.item(i);
-				BeliefbaseInstance bi = new BeliefbaseInstance();
-				bi.loadFromElement(elView);
-				views.add(bi);
-			}
+			Element bel = (Element)el.getElementsByTagName("Beliefbase").item(0);			
+			fileSuffix = bel.getAttribute("fileSuffix");
+			beliefbaseConfig = BeliefbaseConfiguration.loadXml(bel.getAttribute("configuration")).get(0);
+		}
+
+		public BeliefbaseConfiguration getBeliefbaseConfig() {
+			return beliefbaseConfig;
+		}
+
+		public String getFileSuffix() {
+			return fileSuffix;
+		}
+
+		public List<SkillConfiguration> getSkillConfigs() {
+			return skillConfigs;
 		}
 	
 	}

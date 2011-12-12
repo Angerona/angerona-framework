@@ -1,4 +1,0 @@
-type(attends())
-type(has_time())
-
-has_time() || attends()

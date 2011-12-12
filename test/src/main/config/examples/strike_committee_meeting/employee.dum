@@ -1,0 +1,12 @@
+world {
+type(attends())
+type(has_time())
+
+attends()
+!has_time()
+} view.Boss {
+type(attends())
+type(has_time())
+
+has_time() || attends()
+}

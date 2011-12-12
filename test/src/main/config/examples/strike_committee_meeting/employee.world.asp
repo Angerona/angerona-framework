@@ -1,2 +1,0 @@
-attends.
--has_time.

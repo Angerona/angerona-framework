@@ -22,7 +22,6 @@ import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.serialize.SimulationConfiguration;
-import angerona.fw.serialize.SimulationConfiguration.AgentInstance.BeliefbaseInstance;
 
 /**
  * A simulation environment for Angerona. This is actually only used for some functional tests.
@@ -148,18 +147,19 @@ public class AngeronaEnvironment extends APR {
 		boolean reval = true;
 		
 		LOG.info("Starting simulation: " + config.getName());
+		/*
 		try {
 			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
 			
-				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getWorld().getConfig());
+				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
 				world.parse(getBeliefbaseFilename(simulationDirectory, ai.getWorld(), world));
 				
 				ConfidentialKnowledge conf = new ConfidentialKnowledge();
 				FolSignature fsig = new FolSignature();
 				fsig.fromSignature(world.getSignature());
 				conf.setSignature(fsig);
-				conf.parse(getBeliefbaseFilename(simulationDirectory, ai.getConfidential(), conf));
+				conf.parse(getBeliefbaseFilename(simulationDirectory, ai.getFileSuffix(), conf));
 				
 				Map<String, BaseBeliefbase> views = new HashMap<String, BaseBeliefbase>();
 				for(BeliefbaseInstance bi : ai.getViews()) {
@@ -170,6 +170,7 @@ public class AngeronaEnvironment extends APR {
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
 				addAgent(highLevelAg.getAgentProcess());
 				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
+				
 			}
 		} catch (AgentIdException e) {
 			reval = false;
@@ -195,7 +196,7 @@ public class AngeronaEnvironment extends APR {
 			reval = false;
 			e.printStackTrace();
 		}
-		
+		*/
 		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
 		List<Perception> initPercepts = df.generateFromParentElement(config.getFlowElement(), null);
 		for(Perception p : initPercepts) {
@@ -216,12 +217,12 @@ public class AngeronaEnvironment extends APR {
 	/**
 	 * Helper method: Generates the filepath to a belief base.
 	 * @param parentDir	The parent dir of the simulation
-	 * @param bi		data structure containing information about the belief base 
+	 * @param suffix	suffix of the filename.
 	 * @param bb		An instance of the belief base for determining the file ending.
 	 * @return			String representing the path to the correct belief base file.
 	 */
-	private String getBeliefbaseFilename(String parentDir, SimulationConfiguration.AgentInstance.BeliefbaseInstance bi, BaseBeliefbase bb) {
-		return parentDir + "/" + bi.getFileSuffix() + "." + bb.getFileEnding();
+	private String getBeliefbaseFilename(String parentDir, String suffix, BaseBeliefbase bb) {
+		return parentDir + "/" + suffix + "." + bb.getFileEnding();
 	}
 	
 	@Override
