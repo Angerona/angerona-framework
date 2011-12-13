@@ -1,6 +1,6 @@
 world {
 attends.
 -has_time.
-} view.Boss {
+} view->Boss {
 attends :- -hasTime.
 }

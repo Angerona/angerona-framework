@@ -1,8 +1,11 @@
 package angerona.fw;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,8 @@ import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.parser.BeliefbaseSetParser;
+import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
@@ -147,13 +152,25 @@ public class AngeronaEnvironment extends APR {
 		boolean reval = true;
 		
 		LOG.info("Starting simulation: " + config.getName());
-		/*
+		
 		try {
 			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
-			
+
 				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
-				world.parse(getBeliefbaseFilename(simulationDirectory, ai.getWorld(), world));
+				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
+				LOG.info("Parsing File: " + fn);
+				
+				FileInputStream fis = new FileInputStream(new File(fn));
+				BeliefbaseSetParser bbsp = new BeliefbaseSetParser(fis);
+				bbsp.Input();
+				fis.close();
+				
+				LOG.info("World:" + bbsp.worldContent);
+				LOG.info("Views:" + bbsp.viewContent);
+				
+				StringReader sr = new StringReader(bbsp.worldContent);
+				world.parse(new BufferedReader(sr));
 				
 				ConfidentialKnowledge conf = new ConfidentialKnowledge();
 				FolSignature fsig = new FolSignature();
@@ -162,10 +179,12 @@ public class AngeronaEnvironment extends APR {
 				conf.parse(getBeliefbaseFilename(simulationDirectory, ai.getFileSuffix(), conf));
 				
 				Map<String, BaseBeliefbase> views = new HashMap<String, BaseBeliefbase>();
-				for(BeliefbaseInstance bi : ai.getViews()) {
-					BaseBeliefbase actView = PluginInstantiator.createBeliefbase(bi.getConfig());
-					actView.parse(getBeliefbaseFilename(simulationDirectory, bi, actView));
-					views.put(bi.getViewAgent(), actView);
+				
+				for(String key : bbsp.viewContent.keySet()) {
+					BaseBeliefbase actView = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
+					sr = new StringReader(bbsp.viewContent.get(key));
+					actView.parse(new BufferedReader(sr));
+					views.put(key, actView);
 				}
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
 				addAgent(highLevelAg.getAgentProcess());
@@ -195,8 +214,12 @@ public class AngeronaEnvironment extends APR {
 		} catch (IOException e) {
 			reval = false;
 			e.printStackTrace();
+		} catch (ParseException e) {
+			reval = false;
+			LOG.error("Cannot init simulation, parsing error occured: " + e.getMessage());
+			e.printStackTrace();
 		}
-		*/
+		
 		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
 		List<Perception> initPercepts = df.generateFromParentElement(config.getFlowElement(), null);
 		for(Perception p : initPercepts) {

@@ -1,1 +1,0 @@
-attends :- not hasTime, not -attends.

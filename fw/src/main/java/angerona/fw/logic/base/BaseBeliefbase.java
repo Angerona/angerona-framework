@@ -106,12 +106,15 @@ public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void parse(String filepath) throws FileNotFoundException,
-			IOException {
+	public void parse(String filepath) throws FileNotFoundException, IOException {
 		File f = new File(filepath);
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);
 		
+		parseInt(br);
+	}
+	
+	public void parse(BufferedReader br) throws ParserException, IOException {
 		parseInt(br);
 	}
 	
