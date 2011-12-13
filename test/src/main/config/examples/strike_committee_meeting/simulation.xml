@@ -2,29 +2,14 @@
 	<Agent 	name="Employee"
 		configuration="config/agents/dummy_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
-		<Beliefs>
-			<World 	fileSuffix="employee.world"
-				configuration="config/beliefbases/dummy_beliefbase.xml" />
-			<View 	agent="Boss" 
-				fileSuffix="employee.view" 
-				configuration="config/beliefbases/dummy_beliefbase.xml" />
-			<Confidential 	fileSuffix="employee.conf" />
-		</Beliefs>
-		
+		<Beliefbase	fileSuffix="employee"
+					configuration="config/beliefbases/dummy_beliefbase.xml" />	
 	</Agent>
 	
 	<Agent 	name="Boss" 
 		configuration="config/agents/dummy_agent.xml" >
-		
-		<Beliefs>
-			<World 	fileSuffix="boss.world" 
-				configuration="config/beliefbases/dummy_beliefbase.xml" />
-			<View 	agent="Employee" 
-				fileSuffix="boss.view" 
-				configuration="config/beliefbases/dummy_beliefbase.xml" />
-			<Confidential fileSuffix="boss.conf" />
-		</Beliefs>
-		
+		<Beliefbase	fileSuffix="boss"
+					configuration="config/beliefbases/dummy_beliefbase.xml" />	
 	</Agent>
 
 	<Flow>

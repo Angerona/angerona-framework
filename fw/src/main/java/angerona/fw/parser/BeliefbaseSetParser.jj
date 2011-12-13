@@ -37,53 +37,45 @@ SKIP :
 
 TOKEN :
 {
-  <LBRACE: "{">
-| <RBRACE: "}">
-| <POINTER: "->" >
+  <POINTER: "->" >
 | <KW_WORLD: "world" >
 | <KW_VIEW: "view" >
-| <TEXT_CHAR: ~["{", "}"]>
+| <TEXT_CHAR: ["A"-"Z", "a"-"z", "0"-"9"] >
 }
 
-
+< IN_LOGIC > TOKEN :{
+  <LBRACE: "{">
+| <RBRACE: "}">}
+< IN_LOGIC > MORE:
+{
+  < ~["{", "}"] >}
 
 /** Root production. */
 void Input() :
 {
-  String bb = "";
   String agent = "";
   Token token;
 }
 {
-  < KW_WORLD >< LBRACE >
-  (
-    token = < TEXT_CHAR >
-    {
-      bb += token.image;    }
-  )*
-  < RBRACE >
-  {  
-    worldContent = bb;
-    bb = "";
+  < KW_WORLD >
+  {token_source.SwitchTo(this.IN_LOGIC);}
+  < LBRACE >
+  token = < RBRACE >
+  {
+    worldContent = token.image.substring(0, token.image.length()-1).trim();
+    token_source.SwitchTo(this.DEFAULT);
   }
   
   (
     < KW_VIEW >< POINTER >
-    (
-      token = < TEXT_CHAR >
-      {
-        agent += token.image;      }
-    )+
-    
-    < LBRACE >
-    (
-      token = < TEXT_CHAR >      {
-        bb += token.image;      }
-    )*
-    < RBRACE >
+	{token_source.SwitchTo(this.IN_LOGIC);}
+    token = < LBRACE >
     {
-      viewContent.put(agent, bb);
-      agent = bb = "";
+      agent = token.image.substring(0, token.image.length()-1).trim();    }
+    token = < RBRACE >
+    {
+      token_source.SwitchTo(this.DEFAULT);
+      viewContent.put(agent, token.image.substring(0, token.image.length()-1).trim());
     }
   )+
   

@@ -67,8 +67,9 @@ public class FolParser extends Parser {
 		try{
 			for(int c = reader.read(); c != -1; c = reader.read()){
 				if(c == 10){
+					s = s.trim();
 					if(!s.equals("")){
-						if(s.trim().startsWith("type")) section = 1;
+						if(s.startsWith("type")) section = 1;
 						else if(section == 1) section = 2;
 						
 						if(section == 2)
@@ -81,7 +82,8 @@ public class FolParser extends Parser {
 				}else{
 					s += (char) c;
 				}
-			}		
+			}	
+			s = s.trim();
 			if(!s.equals("")) beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
 		}catch(Exception e){
 			throw new ParserException(e);
