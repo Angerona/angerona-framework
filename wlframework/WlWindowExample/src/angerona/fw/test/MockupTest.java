@@ -66,8 +66,8 @@ public class MockupTest {
 	
 	private static void switchToSim() {
 		window.removeAllWlComponents();
-		window.addWlComponent(new TemplateComponent("Sim. Report"), BorderLayout.CENTER);
 		window.addWlComponent(new TemplateComponent("Alice BB - World"), BorderLayout.CENTER);
+		window.addWlComponent(new TemplateComponent("Sim. Report"), BorderLayout.SOUTH);
 		window.addWlComponent(new TemplateComponent("Explanation - 'has_time' but lied: '-has_time'"), BorderLayout.CENTER);
 		window.addWlComponent(new TemplateComponent("Boss BB - View->Alice"), BorderLayout.CENTER);
 		window.addWlComponent(new TemplateComponent("Resources"), BorderLayout.WEST);

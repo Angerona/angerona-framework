@@ -31,6 +31,14 @@ public class Angerona {
 	
 	private static Logger LOG = LoggerFactory.getLogger(Angerona.class);
 	
+	private static Angerona instance = null;
+	
+	public static Angerona getInstance() {
+		if(instance == null)
+			instance = new Angerona();
+		return instance;
+	}
+	
 	/**
 	 * Handle different resource file loadings by fileformat.
 	 * @author Tim Janus
@@ -95,13 +103,15 @@ public class Angerona {
 	private Set<String> simulationFolders = new HashSet<String>();
 	
 	/** map containing all loaded Agent Configurations ordered by name */
-	protected Map<String, AgentConfiguration> agentConfigurations = new HashMap<String, AgentConfiguration>();
+	private Map<String, AgentConfiguration> agentConfigurations = new HashMap<String, AgentConfiguration>();
 	
 	/** map containing all loaded Beliefbase Configurations ordered by name */
-	Map<String, BeliefbaseConfiguration> beliefbaseConfigurations = new HashMap<String, BeliefbaseConfiguration>();
+	private Map<String, BeliefbaseConfiguration> beliefbaseConfigurations = new HashMap<String, BeliefbaseConfiguration>();
 	
 	/** map containing all loaded Simulation Configurations ordered by name */
-	Map<String, SimulationConfiguration> simulationConfigurations = new HashMap<String, SimulationConfiguration>();
+	private Map<String, SimulationConfiguration> simulationConfigurations = new HashMap<String, SimulationConfiguration>();
+	
+	private Angerona() {}
 	
 	/**
 	 * Adds the given folder to the set of AgentConfiguration folders, if bootstrap is already done
@@ -174,6 +184,30 @@ public class Angerona {
 			}
 		}
 		bootstrapDone = true;
+	}
+	
+	public AgentConfiguration getAgentConfiguration(String name) {
+		return agentConfigurations.get(name);
+	}
+	
+	public Set<String> getBeliefbaseConfigurationNames() {
+		return beliefbaseConfigurations.keySet();
+	}
+	
+	public BeliefbaseConfiguration getBeliefbaseConfiguration(String name) {
+		return beliefbaseConfigurations.get(name);
+	}
+	
+	public Set<String> getSimulationConfigurationNames() {
+		return simulationConfigurations.keySet();
+	}
+	
+	public SimulationConfiguration getSimulationConfiguration(String name) {
+		return simulationConfigurations.get(name);
+	}
+	
+	public Set<String> getAgentConfigurationNames() {
+		return agentConfigurations.keySet();
 	}
 	
 	/** @return true if a bootstrap method was called otherwise false. */

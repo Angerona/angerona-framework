@@ -1,6 +1,8 @@
 package com.whiplash.gui;
 
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.*;
 
@@ -36,7 +38,33 @@ public class WlSplitPaneBorderPanel extends JPanel {
 		this.centerEastPane.setBorder(null);
 		this.centerEastPane.setDividerSize(1);
 		// do some layouting
-		this.setLayout(new BorderLayout(0,0));		
+		this.setLayout(new BorderLayout(0,0));
+		
+		this.addComponentListener(new ComponentListener() {
+			
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				resizeComponents();
+			}
+			
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 	
 	/** Specifies whether the component at the given location is allowed to
@@ -160,17 +188,41 @@ public class WlSplitPaneBorderPanel extends JPanel {
 		return new Dimension(width,height);
 	}
 	
+	private void resizeComponents() {
+		// TODO: Make configable. Save the manual sizes...
+		int centerWidth 	= getWidth();
+		int centerHeight	= getHeight();
+		
+		if(west != null && center != null) {
+			centerWidth -= west.getMinimumSize().width;
+			westCenterPane.setDividerLocation(west.getMinimumSize().width);
+		}
+		if(center != null && east != null) {
+			centerWidth -= east.getMinimumSize().width;
+			centerEastPane.setDividerLocation(centerWidth);
+		}
+		if(north != null && center != null) {
+			centerHeight -= north.getMinimumSize().height;
+			northCenterPane.setDividerLocation(north.getMinimumSize().height);
+		}
+		if(center != null && south != null) {
+			centerHeight -= south.getMinimumSize().height;
+			centerSouthPane.setDividerLocation(centerHeight);
+		}
+		repaint();
+	}
+	
 	/** Lays out the components. */
 	private void layoutComponents(){
 		super.removeAll();
 		Component comp = null;
+		
 		if(this.east != null)
 			comp = this.east;
 		if(this.center != null){
 			if(comp != null){
 				this.centerEastPane.setRightComponent(comp);
 				this.centerEastPane.setLeftComponent(this.center);
-				this.centerEastPane.setDividerLocation(comp.getMinimumSize().width);
 				comp = this.centerEastPane;
 			}else comp = this.center;
 		}
@@ -178,15 +230,13 @@ public class WlSplitPaneBorderPanel extends JPanel {
 			if(comp != null){
 				this.westCenterPane.setRightComponent(comp);
 				this.westCenterPane.setLeftComponent(this.west);				
-				this.westCenterPane.setDividerLocation(this.west.getMinimumSize().width);
 				comp = this.westCenterPane;
 			}else comp = this.west;
 		}
 		if(this.south != null){
 			if(comp != null){
 				this.centerSouthPane.setTopComponent(comp);
-				this.centerSouthPane.setBottomComponent(this.south);				
-				this.centerSouthPane.setDividerLocation(comp.getMinimumSize().height);
+				this.centerSouthPane.setBottomComponent(this.south);		
 				comp = this.centerSouthPane;
 			}else comp = this.south;
 		}
@@ -194,12 +244,14 @@ public class WlSplitPaneBorderPanel extends JPanel {
 			if(comp != null){
 				this.northCenterPane.setBottomComponent(comp);
 				this.northCenterPane.setTopComponent(this.north);				
-				this.northCenterPane.setDividerLocation(this.north.getMinimumSize().height);
 				comp = this.northCenterPane;
 			}else comp = this.north;
-		}		
+		}
+		
 		if(comp != null)
-			super.add(comp, BorderLayout.CENTER);		
+			super.add(comp, BorderLayout.CENTER);	
+		
+		resizeComponents();
 	}
 	
 	/** Returns the component at the given location.
