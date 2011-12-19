@@ -44,8 +44,8 @@ public class ConsoleTest {
 	
 	public static void dataDrivenTest() throws AgentIdException, ParserConfigurationException, SAXException, IOException, AgentInstantiationException, InstantiationException, IllegalAccessException {
 		AngeronaEnvironment env = new AngeronaEnvironment();
-		env.loadSimulation("config/examples/strike_committee_meeting/simulation.xml");
-		//env.loadSimulation("config/examples/strike_committee_meeting/simulation_asp.xml");
+		//env.loadSimulation("config/examples/strike_committee_meeting/simulation.xml");
+		env.loadSimulation("config/examples/strike_committee_meeting/simulation_asp.xml");
 		
 		Agent boss = env.getAgentByName("Boss");
 		Agent employee = env.getAgentByName("Employee");

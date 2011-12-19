@@ -13,5 +13,6 @@
   	<module>tweety/asplibrary</module>
   	<module>tweety/tweety</module>
   	<module>tweety/firstorderlogic</module>
+  	<module>gui</module>
   </modules>
 </project>

@@ -17,7 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import angerona.fw.Angerona;
-import angerona.fw.AngeronaEnvironment;
 
 import com.whiplash.gui.WlWindow;
 import com.whiplash.gui.WlWindowSet;
@@ -29,10 +28,6 @@ public class SimulationMonitor {
 	private WlWindow window;
 	
 	private WlWindowSet windowSet;
-	
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-		new SimulationMonitor();
-	}
 
 	public SimulationMonitor() throws ParserConfigurationException, SAXException, IOException {
 		DefaultResourceManager resourceManager = new DefaultResourceManager(new File(".").toURI().toURL());
