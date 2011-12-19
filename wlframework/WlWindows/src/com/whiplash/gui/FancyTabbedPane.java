@@ -164,6 +164,13 @@ public class FancyTabbedPane extends JPanel implements MouseListener, ComponentL
 		this.repaint();
 	}
 	
+	public void removeAllWlComponents() {
+		this.upperPane.removeAll();
+		this.lowerPane.removeAll();
+		this.tabs.clear();
+		this.repaint();
+	}
+	
 	/** Adds the given WlComponent to this tabbed pane at the
 	 * specified index. 
 	 * @param comp a WlComponent

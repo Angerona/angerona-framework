@@ -186,7 +186,7 @@ public abstract class WlComponent extends JPanel implements MouseListener {
 	 * @param e some mouse event.
 	 */
 	private void triggerPopupMenu(MouseEvent e){
-		if (e.isPopupTrigger())
+		if (e.isPopupTrigger() && this.popupMenu != null)
             this.popupMenu.show(e.getComponent(), e.getX(), e.getY());
 	}
 	

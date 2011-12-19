@@ -13,9 +13,24 @@ import com.whiplash.util.*;
 
 /**
  * A single window container, i.e. a separate application window.
- * @author Matthias Thimm
+ * @author Matthias Thimm, Tim Janus
  */
 public class WlWindow extends JFrame implements WindowListener, WindowFocusListener {
+	
+	/**
+	 * Implements a foreach callback for all panes in the WlWindow class
+	 * @author Tim Janus
+	 */
+	private abstract class PANE_FOREACH {
+		
+		public PANE_FOREACH(Object... params) {
+			for(int i=0; i<panes.length; ++i) {
+				callback(panes[i], borderLayout[i], params);
+			}
+		}
+		
+		protected abstract void callback(FancyTabbedPane pane, String layout, Object... params);
+	}
 	
 	/** The amount of pixels used to identify the border of this window. */
 	public static final int BORDER_PADDING = 40;
@@ -32,15 +47,19 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	/** The panel for tabbed panes. */
 	private WlSplitPaneBorderPanel tabbedPanesPanel;
 	
-	/** The center pane. */
-	private FancyTabbedPane centerPane = null;
-	/** The west pane. */
-	private FancyTabbedPane westPane = null;
-	/** The east pane. */
-	private FancyTabbedPane eastPane = null;
-	/** The south pane. */
-	private FancyTabbedPane southPane = null;
-		
+	private static final int CENTER_PANE = 0;
+	private static final int WEST_PANE = 1;
+	private static final int EAST_PANE = 2;
+	private static final int SOUTH_PANE = 3;
+	private static final int PANE_COUNT = 4;
+	
+	private FancyTabbedPane [] panes = new FancyTabbedPane[PANE_COUNT];
+	
+	private String [] borderLayout = {BorderLayout.CENTER, 
+			BorderLayout.WEST, 
+			BorderLayout.EAST, 
+			BorderLayout.SOUTH};
+	
 	/** The tool bar panel.*/
 	private JPanel toolbarPanel = null;
 	/** The list of tool bars. */
@@ -74,10 +93,12 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		// init default values for disposal of tabbed panes
 		this.disposePanes = new HashMap<String,Boolean>();
-		this.disposePanes.put(BorderLayout.EAST, true);
-		this.disposePanes.put(BorderLayout.WEST, true);
-		this.disposePanes.put(BorderLayout.SOUTH, true);
-		this.disposePanes.put(BorderLayout.CENTER, true);
+		new PANE_FOREACH() {
+			@Override
+			public void callback(FancyTabbedPane pane, String layout, Object... params) {
+				disposePanes.put(layout, true);
+			}
+		};
 		// the layout is always a border layout.		
 		this.tabbedPanesPanel = new WlSplitPaneBorderPanel();
 		this.tabbedPanesPanel.setBorder(null);	//BorderFactory.createEmptyBorder(3, 3, 3, 3));
@@ -106,14 +127,13 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 */
 	public void setDisposeWhenEmpty(String location, boolean value){
 		this.disposePanes.put(location, value);
-		if(location == BorderLayout.EAST && this.eastPane != null)
-			this.eastPane.setDisposeWhenEmpty(value);
-		if(location == BorderLayout.WEST && this.westPane != null)
-			this.westPane.setDisposeWhenEmpty(value);
-		if(location == BorderLayout.SOUTH && this.southPane != null)
-			this.southPane.setDisposeWhenEmpty(value);
-		if(location == BorderLayout.CENTER && this.centerPane != null)
-			this.centerPane.setDisposeWhenEmpty(value);
+		new PANE_FOREACH(location, new Boolean(value)) {
+			@Override
+			public void callback(FancyTabbedPane pane, String layout, Object... params) {
+				if((String)params[0] == layout && pane != null) 
+					pane.setDisposeWhenEmpty((Boolean)params[1]);
+			}
+		};
 	}
 
 	/** Toggles between the standard location and size of the window
@@ -153,7 +173,7 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 		this.toolBars.remove(toolBar);
 		this.toolbarPanel.remove(toolBar.getComponent());
 		// check whether to close the window
-		if(this.centerPane == null && this.toolBars.isEmpty()){
+		if(this.panes[CENTER_PANE] == null && this.toolBars.isEmpty()){
 			this.closeWindow();
 		}
 		if(this.toolBars.isEmpty())
@@ -167,23 +187,18 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 */
 	public List<WlComponent> getWlComponents(){		
 		List<WlComponent> components = new LinkedList<WlComponent>();
-		if(this.centerPane != null)
-			components.addAll(this.centerPane.getWlComponents());
-		if(this.southPane != null)
-			components.addAll(this.southPane.getWlComponents());
-		if(this.westPane != null)
-			components.addAll(this.westPane.getWlComponents());
-		if(this.eastPane != null)
-			components.addAll(this.eastPane.getWlComponents());
-		if(this.mainPanel.getComponentAt(BorderLayout.SOUTH) != null)
-			components.add((WlComponent)this.mainPanel.getComponentAt(BorderLayout.SOUTH));
-		if(this.mainPanel.getComponentAt(BorderLayout.EAST) != null)
-			components.add((WlComponent)this.mainPanel.getComponentAt(BorderLayout.EAST));
-		if(this.mainPanel.getComponentAt(BorderLayout.WEST) != null)
-			components.add((WlComponent)this.mainPanel.getComponentAt(BorderLayout.WEST));
-		if(this.mainPanel.getComponentAt(BorderLayout.CENTER) != null)
-			if(this.mainPanel.getComponentAt(BorderLayout.CENTER) instanceof WlStandaloneComponent)
-				components.add((WlComponent)this.mainPanel.getComponentAt(BorderLayout.CENTER));
+		new PANE_FOREACH(components) {
+			@Override
+			public void callback(FancyTabbedPane pane, String layout, Object... params) {
+				@SuppressWarnings("unchecked")
+				List<WlComponent> components = (List<WlComponent>)params[0];
+				if(pane != null)
+					components.addAll(pane.getWlComponents());
+				Component c = mainPanel.getComponentAt(layout);
+				if(c!= null && c instanceof WlComponent)
+					components.add((WlComponent)c);
+			}
+		};
 		return components;
 	}
 	
@@ -210,39 +225,44 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 			return;	
 		}		
 		// if the center pane is empty always add the component there
-		if(this.centerPane == null)	constraints = BorderLayout.CENTER;
-		if(constraints == BorderLayout.EAST){
-			if(this.eastPane == null){
-				this.eastPane = new FancyTabbedPane(this, this.disposePanes.get(BorderLayout.EAST));
-				this.eastPane.addWlComponent(comp);
-				this.tabbedPanesPanel.add(this.eastPane,constraints);				
-			}else this.eastPane.addWlComponent(comp);			
-			this.activePane = this.eastPane;
-		}else if(constraints == BorderLayout.WEST){
-			if(this.westPane == null){
-				this.westPane = new FancyTabbedPane(this, this.disposePanes.get(BorderLayout.WEST));
-				this.westPane.addWlComponent(comp);
-				this.tabbedPanesPanel.add(this.westPane,constraints);				
-			}else this.westPane.addWlComponent(comp);			
-			this.activePane = this.westPane;
-		}else if(constraints == BorderLayout.SOUTH){
-			if(this.southPane == null){
-				this.southPane = new FancyTabbedPane(this, this.disposePanes.get(BorderLayout.SOUTH));
-				this.southPane.addWlComponent(comp);
-				this.tabbedPanesPanel.add(this.southPane,constraints);				
-			}else this.southPane.addWlComponent(comp);			
-			this.activePane = this.southPane;
-		}else if(constraints == BorderLayout.CENTER){
-			if(this.centerPane == null){
-				this.centerPane = new FancyTabbedPane(this, this.disposePanes.get(BorderLayout.CENTER));
-				this.centerPane.addWlComponent(comp);
-				this.tabbedPanesPanel.add(this.centerPane,constraints);				
-			}else this.centerPane.addWlComponent(comp);			
-			this.activePane = this.centerPane;
-		}
+		if(this.panes[CENTER_PANE] == null)	constraints = BorderLayout.CENTER;
+		new PANE_FOREACH(this, constraints, comp) {
+			@Override
+			public void callback(FancyTabbedPane pane, String layout, Object... params) {
+				WlWindow parent = (WlWindow)params[0];
+				Object constraints = params[1];
+				WlComponent comp = (WlComponent)params[2];
+				if(!layout.equals(constraints))
+					return;
+				
+				if(pane == null) {
+					int index = -1;
+					for(int i=0; i<borderLayout.length; ++i) {
+						if(borderLayout[i].equals(layout)) {
+							index = i;
+							break;
+						}
+					}
+					pane = panes[index] = new FancyTabbedPane(parent, disposePanes.get(layout));
+					pane.addWlComponent(comp);
+					tabbedPanesPanel.add(pane, layout);
+				} else {
+					pane.addWlComponent(comp);
+				}
+				activePane = pane;
+			}
+		};
 		this.windowSet.fireWlComponentChangedTitleEvent(new WlComponentTitleChangedEvent(comp));
 		// refresh minimum size
 		this.refreshMinimumSize();
+	}
+	
+	public void removeAllWlComponents() {
+		for(int i=0; i<PANE_COUNT; ++i) {
+			if(panes[i] != null) {
+				panes[i].removeAllWlComponents();
+			}
+		}
 	}
 	
 	/** Removes the given standalone component
@@ -253,15 +273,14 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 		this.mainPanel.remove(comp);
 		comp.setWindow(null);
 		this.refreshMinimumSize();
-		boolean result = false;
-		if(this.mainPanel.getComponentAt(BorderLayout.SOUTH) != null)
-			result = true;
-		if(this.mainPanel.getComponentAt(BorderLayout.EAST) != null)
-			result = true;
-		if(this.mainPanel.getComponentAt(BorderLayout.WEST) != null)
-			result = true;
-		if(this.mainPanel.getComponentAt(BorderLayout.CENTER) != null)
-			result = true;
+		Boolean result = new Boolean(false);
+		new PANE_FOREACH() {
+			@Override
+			public void callback(FancyTabbedPane pane, String layout, Object... params) {
+				if(mainPanel.getComponentAt(layout) != null)
+					params[0] = (Boolean)true;
+			}
+		};
 		this.refreshMinimumSize();
 		if(result) return true;
 		this.closeWindow();
@@ -275,15 +294,12 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 */
 	protected boolean removePane(FancyTabbedPane pane){
 		boolean isCenterPane = false;
-		if(this.southPane == pane)
-			this.southPane = null;
-		if(this.westPane == pane)
-			this.westPane = null;
-		if(this.eastPane == pane)
-			this.eastPane = null;		
-		if(this.centerPane == pane){
-			this.centerPane = null;	
-			isCenterPane = true;
+		for(int i=0; i<panes.length; ++i) {
+			if(panes[i] == pane) {
+				panes[i] = null;
+				if(i == CENTER_PANE)
+					isCenterPane = true;
+			}
 		}
 		if(this.activePane == pane)
 			this.activePane = null;		
@@ -292,30 +308,27 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 		// move one of the other panes (or close the window)
 		boolean allEmpty = false;
 		if(isCenterPane){
-			if(this.westPane != null){
-				this.centerPane = this.westPane;
-				this.tabbedPanesPanel.remove(this.westPane);
-				this.westPane = null;
-				this.tabbedPanesPanel.add(this.centerPane,BorderLayout.CENTER);
-			}else if(this.eastPane != null){
-				this.centerPane = this.eastPane;
-				this.tabbedPanesPanel.remove(this.eastPane);
-				this.eastPane = null;
-				this.tabbedPanesPanel.add(this.centerPane,BorderLayout.CENTER);
-			}else if(this.southPane != null){
-				this.centerPane = this.southPane;
-				this.tabbedPanesPanel.remove(this.southPane);
-				this.southPane = null;
-				this.tabbedPanesPanel.add(this.centerPane,BorderLayout.CENTER);
-			}else allEmpty = true;
+			int [] prio = {WEST_PANE, EAST_PANE, SOUTH_PANE};
+			allEmpty = true;
+			for(int i=0; i<prio.length; ++i) {
+				FancyTabbedPane act = panes[prio[i]];
+				if(act != null) {
+					tabbedPanesPanel.remove(act);
+					panes[CENTER_PANE] = act;
+					panes[prio[i]] = null;
+					tabbedPanesPanel.add(act, borderLayout[CENTER_PANE]);
+					allEmpty = false;
+					break;
+				}
+			}
 		}
 		// if removed pane should not be removed when empty re-assign the new center pane this property
 		if(!pane.getDisposeWhenEmpty()){
-			if(this.centerPane != null)
-				this.centerPane.setDisposeWhenEmpty(false);
+			if(this.panes[CENTER_PANE] != null)
+				this.panes[CENTER_PANE].setDisposeWhenEmpty(false);
 			else{
 				// re-add the pane if everything has been closed)
-				this.centerPane = pane;
+				this.panes[CENTER_PANE] = pane;
 				this.tabbedPanesPanel.add(pane,BorderLayout.CENTER);
 				this.activePane = pane;
 			}			
@@ -337,11 +350,11 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 		int minHeight = 28;
 		for(WlToolBar toolBar: this.toolBars)
 			minHeight += toolBar.getComponent().getMinimumSize().height;		
-		if(this.southPane != null)
-			minHeight += this.southPane.getMinimumSize().height;
-		int minEast = (this.eastPane != null)?(this.eastPane.getMinimumSize().width):(0);
-		int minCenter = (this.centerPane != null)?(this.centerPane.getMinimumSize().width):(0);
-		int minWest = (this.westPane != null)?(this.westPane.getMinimumSize().width):(0);
+		if(this.panes[SOUTH_PANE] != null)
+			minHeight += this.panes[SOUTH_PANE].getMinimumSize().height;
+		int minEast = (this.panes[EAST_PANE] != null)?(this.panes[EAST_PANE].getMinimumSize().width):(0);
+		int minCenter = (this.panes[CENTER_PANE] != null)?(this.panes[CENTER_PANE].getMinimumSize().width):(0);
+		int minWest = (this.panes[WEST_PANE] != null)?(this.panes[WEST_PANE].getMinimumSize().width):(0);
 		minWidth += minCenter + minEast + minWest;
 		if(this.mainPanel.getComponentAt(BorderLayout.WEST) != null)
 			minWidth += this.mainPanel.getComponentAt(BorderLayout.WEST).getMinimumSize().width;
@@ -366,9 +379,9 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 * east, center, and west.
 	 */
 	private int minHeightEastCenterWest(){
-		int minEast = (this.eastPane != null)?(this.eastPane.getMinimumSize().height):(0);
-		int minCenter = (this.centerPane != null)?(this.centerPane.getMinimumSize().height):(0);
-		int minWest = (this.westPane != null)?(this.westPane.getMinimumSize().height):(0);
+		int minEast = (this.panes[EAST_PANE] != null)?(this.panes[EAST_PANE].getMinimumSize().height):(0);
+		int minCenter = (this.panes[CENTER_PANE] != null)?(this.panes[CENTER_PANE].getMinimumSize().height):(0);
+		int minWest = (this.panes[WEST_PANE] != null)?(this.panes[WEST_PANE].getMinimumSize().height):(0);
 		return Math.max(minEast, Math.max(minCenter, minWest));
 	}
 	
@@ -379,12 +392,11 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 * east, center, and west.
 	 */
 	protected int currentHeightEastCenterWest(){
-		if(this.eastPane != null)
-			return this.eastPane.getHeight();
-		if(this.centerPane != null)
-			return this.centerPane.getHeight();
-		if(this.westPane != null)
-			return this.westPane.getHeight();
+		int [] prio = {EAST_PANE, CENTER_PANE, WEST_PANE};
+		for(int i=0; i<prio.length; ++i) {
+			if(panes[prio[i]] != null)
+				return panes[prio[i]].getHeight();
+		}
 		return 0;
 	}
 	
@@ -404,24 +416,14 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 * @param pane a tabbed pane.
 	 */
 	protected void requestFocus(FancyTabbedPane pane){
-		// remove focus
-		if(this.southPane != null)
-			if(this.southPane != pane) this.southPane.focusLost();
-		if(this.centerPane != null)
-			if(this.centerPane != pane) this.centerPane.focusLost();
-		if(this.eastPane != null)
-			if(this.eastPane != pane) this.eastPane.focusLost();
-		if(this.westPane != null)
-			if(this.westPane != pane) this.westPane.focusLost();
-		// give focus
-		if(this.southPane != null)
-			if(this.southPane == pane) this.southPane.focusGained();			
-		if(this.centerPane != null)
-			if(this.centerPane == pane) this.centerPane.focusGained();			
-		if(this.eastPane != null)
-			if(this.eastPane == pane) this.eastPane.focusGained();			
-		if(this.westPane != null)
-			if(this.westPane == pane) this.westPane.focusGained();			
+		for(int i=0; i<panes.length; ++i) {
+			if(panes[i] != null && panes[i] != pane)
+				panes[i].focusLost();
+		}
+		for(int i=0; i<panes.length; ++i) {
+			if(panes[i] != null && panes[i] == pane)
+				panes[i].focusGained();
+		}			
 		this.activePane = pane;
 	}
 	
@@ -439,19 +441,20 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 */
 	@Override
 	public void windowGainedFocus(WindowEvent e) {
-		if(this.southPane != null && this.southPane == this.activePane) this.southPane.focusGained();
-		if(this.centerPane != null && this.centerPane == this.activePane) this.centerPane.focusGained();
-		if(this.eastPane != null && this.eastPane == this.activePane) this.eastPane.focusGained();
-		if(this.westPane != null && this.westPane == this.activePane) this.westPane.focusGained();
-		if(this.mainPanel.getComponentAt(BorderLayout.SOUTH) != null)
-			((WlComponent)this.mainPanel.getComponentAt(BorderLayout.SOUTH)).focusGained();
-		if(this.mainPanel.getComponentAt(BorderLayout.WEST) != null)
-			((WlComponent)this.mainPanel.getComponentAt(BorderLayout.WEST)).focusGained();
-		if(this.mainPanel.getComponentAt(BorderLayout.EAST) != null)
-			((WlComponent)this.mainPanel.getComponentAt(BorderLayout.EAST)).focusGained();
+		if(activePane != null)
+			activePane.focusGained();
+		
+		int [] order = {SOUTH_PANE, WEST_PANE, EAST_PANE};
+		for(int i=0; i<order.length; ++i) {
+			Component c = mainPanel.getComponentAt(borderLayout[order[i]]);
+			if(c != null)
+				((WlComponent)c).focusGained();
+		}
+		
 		if(this.mainPanel.getComponentAt(BorderLayout.CENTER) != null)
 			if(this.mainPanel.getComponentAt(BorderLayout.CENTER) instanceof WlStandaloneComponent)
 			((WlComponent)this.mainPanel.getComponentAt(BorderLayout.CENTER)).focusGained();		
+		
 		if(OsTools.isMacOS())
 			this.windowSet.requestMenuBar(this);
 	}
@@ -461,10 +464,10 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 */
 	@Override
 	public void windowLostFocus(WindowEvent e) {
-		if(this.southPane != null) this.southPane.focusLost();
-		if(this.centerPane != null) this.centerPane.focusLost();
-		if(this.eastPane != null) this.eastPane.focusLost();
-		if(this.westPane != null) this.westPane.focusLost();
+		for(int i=0; i<panes.length; ++i) {
+			if(panes[i] != null) panes[i].focusLost();
+		}
+		
 		if(OsTools.isMacOS())
 			this.setJMenuBar(null);
 	}
@@ -480,14 +483,14 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 * @return the center pane of this window.
 	 */
 	protected FancyTabbedPane getCenterPane(){
-		return this.centerPane;
+		return this.panes[CENTER_PANE];
 	}
 	
 	/** Checks whether this window has no WlComponents.
 	 * @return "true" if there are no WlComponents in this window.
 	 */
 	public boolean isEmpty(){
-		return this.centerPane == null;
+		return this.panes[CENTER_PANE] == null;
 	}
 	
 	/** Checks whether the given pane is the active pane.
@@ -529,10 +532,10 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 	 * @return a tabbed pane or "null".
 	 */
 	protected FancyTabbedPane getPaneOfLocation(Point p){
-		if(this.southPane != null && WlWindowSet.isInComponent(p, this.southPane)) return this.southPane;
-		if(this.centerPane != null && WlWindowSet.isInComponent(p, this.centerPane)) return this.centerPane;
-		if(this.westPane != null && WlWindowSet.isInComponent(p, this.westPane)) return this.westPane;
-		if(this.eastPane != null && WlWindowSet.isInComponent(p, this.eastPane)) return this.eastPane;
+		for(int i=0; i<panes.length; ++i) {
+			if(panes[i] != null && WlWindowSet.isInComponent(p, panes[i]))
+				return panes[i];
+		}
 		return null;
 	}
 
