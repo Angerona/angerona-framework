@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WlConfiguration"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WlMultiTextEditor"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WlResourceManager"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WlEditorPane"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WlUtilities"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
