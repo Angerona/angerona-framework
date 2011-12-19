@@ -24,35 +24,29 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-    </plugins>
-  </build>
-
-  <!-- Use install.sh instead
-  <build>
-    <plugins>
+      
       <plugin>
-        <artifactId>maven-install-plugin</artifactId>
-        <version>2.3.1</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>javacc-maven-plugin</artifactId>
+        <version>2.6</version>
         <executions>
           <execution>
-            <phase>validate</phase>
+          	<phase>generate-sources</phase>
+            <id>javacc</id>
             <goals>
-              <goal>install-file</goal>
+              <goal>javacc</goal>
             </goals>
             <configuration>
-              <file>lib/jspf.core-1.0.2.jar</file>
-              <groupId>net.xeoh</groupId>
-              <artifactId>jspf-core</artifactId>
-              <version>1.0.2</version>
-              <updateReleaseInfo>true</updateReleaseInfo>
-              <packaging>jar</packaging>
+              <isStatic>false</isStatic>
+              <sourceDirectory>${basedir}/src/main/java/angerona/fw/parser</sourceDirectory>
+              <outputDirectory>${basedir}/src/main/java/</outputDirectory>
             </configuration>
           </execution>
         </executions>
+      	
       </plugin>
     </plugins>
   </build>
-  -->
   
   <dependencies>
     <dependency>
