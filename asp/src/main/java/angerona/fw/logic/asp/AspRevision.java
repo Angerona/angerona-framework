@@ -11,7 +11,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseRevision;
-import angerona.fw.logic.base.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 public class AspRevision extends BaseRevision {
 
@@ -21,7 +21,7 @@ public class AspRevision extends BaseRevision {
 	}
 
 	@Override
-	public BaseBeliefbase process(BeliefUpdateParameter param) {
+	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
 		PreferenceHandling pf = new PreferenceHandling();
 		if(! (param.getBeliefBase() instanceof AspBeliefbase))
 			throw new RuntimeException("Error: Beliefbase must be of type asp");

@@ -1,5 +1,6 @@
 package angerona.fw.operators;
 
+import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.Beliefs;
 import angerona.fw.operators.parameter.UpdateParameter;
 
@@ -9,4 +10,5 @@ import angerona.fw.operators.parameter.UpdateParameter;
  */
 public abstract class BaseChangeOperator extends 
 	Operator<UpdateParameter, Beliefs> {
+
 }

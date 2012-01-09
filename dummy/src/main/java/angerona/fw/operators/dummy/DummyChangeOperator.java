@@ -30,7 +30,7 @@ public class DummyChangeOperator extends BaseChangeOperator {
 	private static Logger LOG = LoggerFactory.getLogger(DummyChangeOperator.class);
 	
 	@Override
-	public Beliefs process(UpdateParameter param) {
+	protected Beliefs processInt(UpdateParameter param) {
 		Beliefs reval = param.getAgent().getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		
@@ -52,7 +52,8 @@ public class DummyChangeOperator extends BaseChangeOperator {
 				BaseBeliefbase bb = param.getAgent().getBeliefs().getViewKnowledge().get(naa.getReceiverId());
 				bb.addNewKnowledge(knowledge);
 			}
-			LOG.info(out);
+			//LOG.info(out);
+			report(out);
 		} else if(param.getPerception() instanceof NAQuery) {
 			NAQuery naq = (NAQuery)param.getPerception();
 			String out = id + " Update-NA: Query ";
@@ -60,12 +61,17 @@ public class DummyChangeOperator extends BaseChangeOperator {
 			
 			param.getAgent().addDesire(new Atom(new Predicate("wantsToAnswer")));
 			
-			LOG.info(out);
+			//LOG.info(out);
+			report(out);
 		} else {
 			LOG.warn("Update-Operator: Cant handle perception of type: " + param.getPerception().getClass().getName());
 		}
 		
 		return reval;
 	}
-
+	
+	@Override
+	public String getPosterName() {
+		return "DummyChange";
+	}
 }

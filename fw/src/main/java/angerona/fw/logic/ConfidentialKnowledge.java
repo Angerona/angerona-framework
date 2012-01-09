@@ -12,6 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.BaseBeliefbase;
 /**
  * Beliefbase containing a set of personal confidential targets.

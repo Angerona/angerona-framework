@@ -16,7 +16,7 @@ public class DummyViolatesOperator extends BaseViolatesOperator {
 	private static Logger LOG = LoggerFactory.getLogger(DummyViolatesOperator.class);
 	
 	@Override
-	public Boolean process(ViolatesParameter param) {
+	protected Boolean processInt(ViolatesParameter param) {
 		LOG.info("Dummy: ViolatesOperator");
 		return new Boolean(false);
 	}

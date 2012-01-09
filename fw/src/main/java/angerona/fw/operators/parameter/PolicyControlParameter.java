@@ -9,10 +9,10 @@ import angerona.fw.logic.AngeronaAnswer;
  * @see angerona.fw.operators.BasePolicyControlOperator
  * @author Tim Janus
  */
-public class PolicyControlParameter {
+public class PolicyControlParameter extends GenericOperatorParameter {
 
 	/** reference to the agent who will send information to another agent */
-	private Agent sender;
+	private Agent policyProofer;
 
 	/** unique name of the agent who receives the informations */
 	private String informationReceiverId;
@@ -25,21 +25,22 @@ public class PolicyControlParameter {
 	
 	/**
 	 * Ctor: Generating the policy-control parameter data-structure with the following parameters:
-	 * @param sender			reference to the agent who is controls the policies.
+	 * @param policyProofer			reference to the agent who is controls the policies.
 	 * @param answerReceiverId	unique name of the agent who will receive the answer.
 	 * @param answer			the not yet controlled answer to the question.
 	 * @param question			formula representing the question.
 	 */
-	public PolicyControlParameter(Agent sender, String answerReceiverId, AngeronaAnswer answer, Formula question) {
-		this.sender = sender;
+	public PolicyControlParameter(Agent policyProofer, String answerReceiverId, AngeronaAnswer answer, Formula question) {
+		super(policyProofer.getEnvironment());
+		this.policyProofer = policyProofer;
 		this.informationReceiverId = answerReceiverId;
 		this.answer = answer;
 		this.question = question;
 	}
 
 	/** @return reference to the agent who will send information to another agent */
-	public Agent getSender() {
-		return sender;
+	public Agent getPolicyProofer() {
+		return policyProofer;
 	}
 	
 	/** @return unique name of the agent who receives the information */

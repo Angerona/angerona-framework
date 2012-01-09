@@ -9,7 +9,7 @@ import angerona.fw.Plan;
  * These are the parameters used by a Planer.
  * @author Tim Janus
  */
-public class SubgoalGenerationParameter {
+public class SubgoalGenerationParameter extends GenericOperatorParameter {
 	/** a list of possible actions which were calculated before running the planer */
 	private List<Intention> options;
 	
@@ -22,6 +22,7 @@ public class SubgoalGenerationParameter {
 	 * @param options		list of possible actions (applicable skills)
 	 */
 	public SubgoalGenerationParameter(Plan actualPlan, List<Intention> options) {
+		super(actualPlan.getAgent().getEnvironment());
 		this.options = options;
 		this.actualPlan = actualPlan;
 	}

@@ -20,7 +20,7 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 	private static Logger LOG = LoggerFactory.getLogger(DummySubgoalGenerationOperator.class);
 	
 	@Override
-	public Boolean process(SubgoalGenerationParameter pp) {
+	protected Boolean processInt(SubgoalGenerationParameter pp) {
 		LOG.info("Subgoal-Generation: ");
 		
 		Agent ag = pp.getActualPlan().getAgent();

@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
+import angerona.fw.Agent;
 import angerona.fw.Perception;
 import angerona.fw.Skill;
 import angerona.fw.logic.base.Beliefs;
@@ -12,7 +13,7 @@ import angerona.fw.logic.base.Beliefs;
  * Class encoding the input parameter for the GenerateOptionsOperator.
  * @author Tim Janus
  */
-public class GenerateOptionsParameter {
+public class GenerateOptionsParameter extends GenericOperatorParameter {
 	/** beliefs of the agent */
 	protected Beliefs beliefs;
 	
@@ -26,13 +27,13 @@ public class GenerateOptionsParameter {
 	
 	/**
 	 * Ctor: Generates a GenerateOptionsParameter data-structure with the following parameters:
-	 * @param beliefbase	beliefs of the agent
-	 * @param desires		desieres of the agent
+	 * @param agent			The agent containing the desires and beliefs.
 	 * @param perception	the last received perception
 	 */
-	public GenerateOptionsParameter(Beliefs beliefbase, Set<Formula> desires, Perception perception, Map<String, Skill> skills) {
-		this.beliefs = beliefbase;
-		this.desires = desires;
+	public GenerateOptionsParameter(Agent agent, Perception perception, Map<String, Skill> skills) {
+		super(agent.getEnvironment());
+		this.beliefs = agent.getBeliefs();
+		this.desires = agent.getDesires();
 		this.perception = perception;
 		this.skills = skills;
 	}

@@ -4,7 +4,7 @@ import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseExpansion;
-import angerona.fw.logic.base.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 public class DummyExpansion extends BaseExpansion {
 
@@ -14,7 +14,7 @@ public class DummyExpansion extends BaseExpansion {
 	}
 
 	@Override
-	public BaseBeliefbase process(BeliefUpdateParameter param) {
+	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
 		if(! (param.getBeliefBase() instanceof DummyBeliefbase))
 			throw new ClassCastException("");
 		

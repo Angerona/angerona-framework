@@ -1,9 +1,10 @@
 package angerona.fw.operators.parameter;
 
 import angerona.fw.Action;
+import angerona.fw.Agent;
 import angerona.fw.logic.base.Beliefs;
 
-public class ViolatesParameter {
+public class ViolatesParameter extends GenericOperatorParameter {
 	/** the beliefs of the agent */
 	private Beliefs  beliefs;
 	
@@ -14,8 +15,9 @@ public class ViolatesParameter {
 	 * @param beliefs 	The belief base.
 	 * @param na		The NegotiationAct which will be apply on the beliefbase
 	 */
-	public ViolatesParameter(Beliefs beliefs, Action na) {
-		this.beliefs = beliefs;
+	public ViolatesParameter(Agent agent, Action na) {
+		super(agent.getEnvironment());
+		this.beliefs = agent.getBeliefs();
 		this.action = na;
 	}
 	

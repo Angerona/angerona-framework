@@ -7,7 +7,7 @@ import angerona.fw.Agent;
  * 
  * @author Tim Janus
  */
-public class UpdateParameter {
+public class UpdateParameter extends GenericOperatorParameter {
 	
 	/**	reference to the agent which should perform the update */
 	private Agent agent;
@@ -21,6 +21,7 @@ public class UpdateParameter {
 	 * @param perception	object representing the perception which causes the update.
 	 */
 	public UpdateParameter(Agent agent, Object perception) {
+		super(agent.getEnvironment());
 		this.agent = agent;
 		this.perception = perception;
 	}

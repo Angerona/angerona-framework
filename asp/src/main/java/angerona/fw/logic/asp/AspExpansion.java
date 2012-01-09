@@ -12,7 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseExpansion;
-import angerona.fw.logic.base.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 /**
  * Simply adds the new rule to the belief base, can make it inconsistent and
@@ -27,7 +27,7 @@ public class AspExpansion extends BaseExpansion {
 	}
 
 	@Override
-	public BaseBeliefbase process(BeliefUpdateParameter param) {
+	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
 		AspBeliefbase abb = (AspBeliefbase)param.getBeliefBase();
 		Program p = abb.getProgram();
 		

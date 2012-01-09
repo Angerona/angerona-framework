@@ -14,8 +14,11 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import angerona.fw.AngeronaEnvironment;
 import angerona.fw.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.operators.parameter.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.BeliefbaseParameter;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
 /**
@@ -32,6 +35,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
 	
 	/** default error string if a formula uses variables but the beliefbase does not support them */
 	protected static String RES_HAS_VARIABLES = "formula has variables, they are not supported.";
+	
+	private AngeronaEnvironment env;
 	
 	/**
 	 * Enumeration with different operation types for updating the belief base.
@@ -79,6 +84,10 @@ public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
+	}
+
+	public void setEnvironment(AngeronaEnvironment env) {
+		this.env = env;
 	}
 	
 	/**
@@ -176,7 +185,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
 			}
 		}
 		
-		BeliefUpdateParameter bup = new BeliefUpdateParameter(this, newKnowledge);
+		BeliefUpdateParameter bup = new BeliefUpdateParameter(this, newKnowledge, env);
 		switch(updateType) {
 		case U_EXPANSION:
 			if(expansionOperator == null)
@@ -190,7 +199,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
 			if(consolidationOperator == null)
 				throw new RuntimeException("Can't use consolidation on a beliefbase which doesn't has a valid consolidation operator.");
 			expansionOperator.process(bup);
-			consolidationOperator.process(this);
+			consolidationOperator.process(new BeliefbaseParameter(this, env));
 			break;
 			
 		case U_REVISION:

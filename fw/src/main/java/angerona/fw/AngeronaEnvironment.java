@@ -37,10 +37,22 @@ public class AngeronaEnvironment extends APR {
 
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
+	private int tick = 0;
+	
+	private String name = "";
+	
 	/** implementation of the factory used for perceptions */
 	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
 	
 	private boolean running = false;
+	
+	public int getTick() {
+		return tick;
+	}
+	
+	public String getName() {
+		return name;
+	}
 	
 	/**
 	 * Adds the agents with the given name to the environment
@@ -80,8 +92,10 @@ public class AngeronaEnvironment extends APR {
 	 */
 	public void runTillNoMorePerceptionsLeft() {
 		boolean percept = false;
+		tick = 0;
 		running = true;
 		do {
+			++tick;
 			percept = false;
 			for(AgentProcess ap : agents) {
 				AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
@@ -134,6 +148,8 @@ public class AngeronaEnvironment extends APR {
 			e.printStackTrace();
 		} 
 		
+		config.getName();
+		
 		if(config != null && startImmediately) {
 			File f = new File(filename);
 			String parentDir = f.getParent();
@@ -158,6 +174,7 @@ public class AngeronaEnvironment extends APR {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
 
 				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
+				world.setEnvironment(this);
 				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
 				LOG.info("Parsing File: " + fn);
 				
@@ -173,6 +190,7 @@ public class AngeronaEnvironment extends APR {
 				world.parse(new BufferedReader(sr));
 				
 				ConfidentialKnowledge conf = new ConfidentialKnowledge();
+				conf.setEnvironment(this);
 				FolSignature fsig = new FolSignature();
 				fsig.fromSignature(world.getSignature());
 				conf.setSignature(fsig);
@@ -182,6 +200,7 @@ public class AngeronaEnvironment extends APR {
 				
 				for(String key : bbsp.viewContent.keySet()) {
 					BaseBeliefbase actView = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
+					actView.setEnvironment(this);
 					sr = new StringReader(bbsp.viewContent.get(key));
 					actView.parse(new BufferedReader(sr));
 					views.put(key, actView);

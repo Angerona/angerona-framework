@@ -18,7 +18,7 @@ public class DummyIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	private static Logger LOG = LoggerFactory.getLogger(DummyIntentionUpdateOperator.class);
 	
 	@Override
-	public Intention process(IntentionUpdateParameter param) {
+	protected Intention processInt(IntentionUpdateParameter param) {
 		LOG.info("Intention-Update-Operator");
 		for(int i=0; i<param.getPlan().getNumberOfStacks(); ++i) {
 			if(param.getPlan().peekStack(i).isAtomic()) {

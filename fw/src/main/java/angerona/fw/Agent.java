@@ -184,7 +184,7 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 		}
 			
 		updateBeliefs(actualPerception);	
-		List<Intention> options = generateOptionsOperator.process(new GenerateOptionsParameter(beliefs, desires, actualPerception, skills));
+		List<Intention> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
 		for(Intention option : options) {
 			if(!option.isAtomic()) {
 				// TODO: Operator reval exception.
@@ -244,7 +244,7 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 	 * @return			true if applying the action violates confidential, false otherwise.
 	 */
 	public boolean performViolates(Beliefs beliefs, Action action) {
-		return violatesOperator.process(new ViolatesParameter(beliefs, action));
+		return violatesOperator.process(new ViolatesParameter(this, action));
 	}
 	
 	public AngeronaAnswer reason(FolFormula query) {

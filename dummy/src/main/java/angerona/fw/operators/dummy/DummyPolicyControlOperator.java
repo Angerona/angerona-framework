@@ -21,14 +21,14 @@ public class DummyPolicyControlOperator extends BasePolicyControlOperator {
 	private static Logger LOG = LoggerFactory.getLogger(DummyPolicyControlOperator.class);
 	
 	@Override
-	public AngeronaAnswer process(PolicyControlParameter param) {
+	protected AngeronaAnswer processInt(PolicyControlParameter param) {
 		LOG.info("Dummy: Policy-Control Operator");
 		
-		ConfidentialKnowledge ck = (ConfidentialKnowledge)param.getSender().getBeliefs().getConfidentialKnowledge();
+		ConfidentialKnowledge ck = (ConfidentialKnowledge)param.getPolicyProofer().getBeliefs().getConfidentialKnowledge();
 		ConfidentialTarget ct = ck.getTarget(param.getInformationReceiver(), param.getQuestion());
 		AngeronaAnswer aa = param.getAnswer();
 		AnswerValue newAnswer = aa.getAnswerExtended();
-		String id = param.getSender().getName();
+		String id = param.getPolicyProofer().getName();
 		
 		if(ct != null) {
 			if(ct.contains(aa)) {

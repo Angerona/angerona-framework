@@ -21,7 +21,7 @@ public class DummyGenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	private static Logger LOG = LoggerFactory.getLogger(DummyGenerateOptionsOperator.class);
 	
 	@Override
-	public List<Intention> process(GenerateOptionsParameter param) {
+	protected List<Intention> processInt(GenerateOptionsParameter param) {
 		LOG.info("Generate Options operator");
 		
 		List<Intention> reval =  new LinkedList<Intention>();

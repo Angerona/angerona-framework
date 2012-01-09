@@ -1,6 +1,7 @@
 package angerona.fw.logic.base;
 
 import angerona.fw.operators.Operator;
+import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 /**
  * Base class for all revision operations on belief bases.

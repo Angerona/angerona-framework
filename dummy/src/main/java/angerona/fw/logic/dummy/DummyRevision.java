@@ -2,7 +2,7 @@ package angerona.fw.logic.dummy;
 
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseRevision;
-import angerona.fw.logic.base.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 public class DummyRevision extends BaseRevision {
 
@@ -12,7 +12,7 @@ public class DummyRevision extends BaseRevision {
 	}
 
 	@Override
-	public BaseBeliefbase process(BeliefUpdateParameter param) {
+	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
 		return param.getBeliefBase();
 	}
 

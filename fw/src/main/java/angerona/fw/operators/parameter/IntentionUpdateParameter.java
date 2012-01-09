@@ -6,7 +6,7 @@ import angerona.fw.Intention;
 import angerona.fw.Perception;
 import angerona.fw.Plan;
 
-public class IntentionUpdateParameter {
+public class IntentionUpdateParameter extends GenericOperatorParameter {
 	protected List<Intention> skills;
 	
 	protected Plan plan;
@@ -14,6 +14,7 @@ public class IntentionUpdateParameter {
 	protected Perception perception;
 	
 	public IntentionUpdateParameter(Plan plan, List<Intention> skills, Perception perception) {
+		super(plan.getAgent().getEnvironment());
 		if(!plan.isPlan())
 			throw new IllegalArgumentException("The given intention must be an high level plan");
 		this.plan= plan;

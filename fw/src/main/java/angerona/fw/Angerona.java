@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +18,8 @@ import org.xml.sax.SAXException;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.ReportListener;
+import angerona.fw.util.ReportPoster;
 
 /**
  * Main class of Angerona manages all resources.
@@ -33,10 +36,44 @@ public class Angerona {
 	
 	private static Angerona instance = null;
 	
+	private List<ReportListener> reportListeners = new LinkedList<ReportListener>();
+	
 	public static Angerona getInstance() {
 		if(instance == null)
 			instance = new Angerona();
 		return instance;
+	}
+	
+	public void report(String msg, ReportPoster sender) {
+		report(msg, sender, null);
+	}
+	
+	public void report(String msg, ReportPoster sender, Object attachment) {
+		String logOut = msg;
+		
+		if (sender == null){
+			throw new IllegalArgumentException("sender must not be null");
+		}
+
+		logOut += " by " + sender.getPosterName() + " in " + sender.getSimTick()+":"+sender.getSimulationName();
+		
+		// Every report will also be logged by our logging facility.
+		LOG.info("REPORT: " + logOut);
+		for(ReportListener listener : reportListeners) {
+			listener.reportReceived(msg, sender, attachment);
+		}
+	}
+	
+	public void addReportListener(ReportListener listener) {
+		reportListeners.add(listener);
+	}
+	
+	public void removeReportListener(ReportListener listener) {
+		reportListeners.remove(listener);
+	}
+	
+	public void removeAllReportListeners() {
+		reportListeners.clear();
 	}
 	
 	/**
