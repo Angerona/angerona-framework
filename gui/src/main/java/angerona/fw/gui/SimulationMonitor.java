@@ -24,7 +24,6 @@ import com.whiplash.res.DefaultResourceManager;
 import com.whiplash.res.WlResourceManager;
 
 public class SimulationMonitor {
-
 	private WlWindow window;
 	
 	private WlWindowSet windowSet;

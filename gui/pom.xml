@@ -40,5 +40,15 @@
     	<artifactId>fw</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>com.whiplash</groupId>
+    	<artifactId>WlWindows</artifactId>
+    	<version>0.1.22</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.whiplash</groupId>
+    	<artifactId>WlResourceManager</artifactId>
+    	<version>0.1.22</version>
+    </dependency>
   </dependencies>
 </project>
