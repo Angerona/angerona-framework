@@ -46,14 +46,16 @@ public class DummyChangeOperator extends BaseChangeOperator {
 			} 
 			knowledge.add(toAdd);
 			
+			BaseBeliefbase bb = null;
 			if(id.compareTo(naa.getReceiverId()) == 0) {
-				reval.getWorldKnowledge().addNewKnowledge(knowledge);
+				bb = reval.getWorldKnowledge();
+				bb.addNewKnowledge(knowledge);
 			} else if (id.compareTo(naa.getSenderId()) == 0){
-				BaseBeliefbase bb = param.getAgent().getBeliefs().getViewKnowledge().get(naa.getReceiverId());
+				bb = param.getAgent().getBeliefs().getViewKnowledge().get(naa.getReceiverId());
 				bb.addNewKnowledge(knowledge);
 			}
 			//LOG.info(out);
-			report(out);
+			report(out, bb);
 		} else if(param.getPerception() instanceof NAQuery) {
 			NAQuery naq = (NAQuery)param.getPerception();
 			String out = id + " Update-NA: Query ";

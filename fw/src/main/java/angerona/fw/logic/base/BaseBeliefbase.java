@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.BeliefBase;
@@ -249,6 +250,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
 		
 		return true;
 	}
+	
+	/** gets the atoms of the belief base in string representation usefull for viewing them in UIs and so on */
+	public abstract List<String> getAtoms();
 	
 	/** 
 	 * @return 	An empty String until isQueryValid returns false the first time. Then it contains the reason why the last

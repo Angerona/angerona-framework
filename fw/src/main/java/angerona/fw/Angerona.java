@@ -20,6 +20,7 @@ import angerona.fw.serialize.BeliefbaseConfiguration;
 import angerona.fw.serialize.SimulationConfiguration;
 import angerona.fw.util.ReportListener;
 import angerona.fw.util.ReportPoster;
+import angerona.fw.util.SimulationListener;
 
 /**
  * Main class of Angerona manages all resources.
@@ -37,6 +38,11 @@ public class Angerona {
 	private static Angerona instance = null;
 	
 	private List<ReportListener> reportListeners = new LinkedList<ReportListener>();
+	
+	private List<SimulationListener> simulationListeners = new LinkedList<SimulationListener>();
+	
+	/** flag indicating if the history of every tick should be saved */
+	private boolean histroy = true;
 	
 	public static Angerona getInstance() {
 		if(instance == null)
@@ -74,6 +80,30 @@ public class Angerona {
 	
 	public void removeAllReportListeners() {
 		reportListeners.clear();
+	}
+	
+	public void addSimulationListener(SimulationListener listener) {
+		simulationListeners.add(listener);
+	}
+	
+	public void removeReportListener(SimulationListener listener) {
+		simulationListeners.remove(listener);
+	}
+	
+	public void removeAllSimulationListeners() {
+		simulationListeners.clear();
+	}
+	
+	public void onNewSimulation(AngeronaEnvironment ev) {
+		for(SimulationListener l : simulationListeners) {
+			l.simulationStarted(ev);
+		}
+	}
+	
+	public void onTickDone(AngeronaEnvironment ev) {
+		for(SimulationListener l : simulationListeners) {
+			l.tickDone(ev);
+		}
 	}
 	
 	/**

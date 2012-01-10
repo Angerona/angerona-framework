@@ -28,6 +28,7 @@ public class SimulationLoadBar extends BaseComponent {
 	
 	private AngeronaEnvironment environment = new AngeronaEnvironment();
 	
+	private boolean simFinished = true;
 	
 	public SimulationLoadBar() {
 		super("Simulation Loader");
@@ -51,10 +52,11 @@ public class SimulationLoadBar extends BaseComponent {
 		btnRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				environment.cleanupSimulation();
-				environment.initSimulation(actConfig, simulationDirectory);
-				environment.runTillNoMorePerceptionsLeft();
+				if(simFinished) {
+					environment.cleanupSimulation();
+					environment.initSimulation(actConfig, simulationDirectory);
+				}
+				simFinished = !environment.runOneTick();
 			}
 		});
 		add(btnRun);

@@ -2,11 +2,14 @@ package angerona.fw.logic.asp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.error.NotImplementedException;
@@ -80,6 +83,15 @@ public class AspBeliefbase extends BaseBeliefbase {
 		}
 		
 		return true;
+	}
+
+	@Override
+	public List<String> getAtoms() {
+		List<String> reval = new LinkedList<String>();
+		for(Rule r : program) {
+			reval.add(r.toString());
+		}
+		return reval;
 	}
 
 }

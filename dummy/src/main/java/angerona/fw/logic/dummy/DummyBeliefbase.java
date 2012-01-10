@@ -2,12 +2,15 @@ package angerona.fw.logic.dummy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import angerona.fw.logic.base.BaseBeliefbase;
 
@@ -65,5 +68,13 @@ public class DummyBeliefbase extends BaseBeliefbase {
 	@Override
 	public String getFileEnding() {
 		return "dum";
+	}
+
+	@Override
+	public List<String> getAtoms() {
+		List<String> reval = new LinkedList<String>();
+		for(FolFormula ff : fbs)
+			reval.add(ff.toString());
+		return reval;
 	}
 }

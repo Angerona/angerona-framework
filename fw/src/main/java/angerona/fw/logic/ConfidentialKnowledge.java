@@ -2,6 +2,8 @@ package angerona.fw.logic;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
@@ -12,7 +14,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.BaseBeliefbase;
 /**
  * Beliefbase containing a set of personal confidential targets.
@@ -155,5 +156,16 @@ public class ConfidentialKnowledge extends BaseBeliefbase {
 	@Override
 	public String getFileEnding() {
 		return "conf";
+	}
+
+	@Override
+	public List<String> getAtoms() {
+		List<String> reval = new LinkedList<String>() ;
+		
+		for(ConfidentialTarget ct : confidentialTargets) {
+			reval.add(ct.toString());
+		}
+		
+		return reval;
 	}
 }

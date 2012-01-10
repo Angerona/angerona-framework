@@ -22,7 +22,7 @@ public class DummyPolicyControlOperator extends BasePolicyControlOperator {
 	
 	@Override
 	protected AngeronaAnswer processInt(PolicyControlParameter param) {
-		LOG.info("Dummy: Policy-Control Operator");
+		report("Dummy: Policy-Control Operator");
 		
 		ConfidentialKnowledge ck = (ConfidentialKnowledge)param.getPolicyProofer().getBeliefs().getConfidentialKnowledge();
 		ConfidentialTarget ct = ck.getTarget(param.getInformationReceiver(), param.getQuestion());

@@ -1,8 +1,11 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Enumeration;
 
 import javax.swing.JFrame;
@@ -18,18 +21,34 @@ import org.xml.sax.SAXException;
 
 import angerona.fw.Angerona;
 
+import com.whiplash.gui.WlComponent;
 import com.whiplash.gui.WlWindow;
 import com.whiplash.gui.WlWindowSet;
 import com.whiplash.res.DefaultResourceManager;
 import com.whiplash.res.WlResourceManager;
 
-public class SimulationMonitor {
+public class SimulationMonitor  {
 	private WlWindow window;
 	
 	private WlWindowSet windowSet;
 
-	public SimulationMonitor() throws ParserConfigurationException, SAXException, IOException {
-		DefaultResourceManager resourceManager = new DefaultResourceManager(new File(".").toURI().toURL());
+	private static SimulationMonitor instance;
+	
+	public static SimulationMonitor getInstance() {
+		if(instance == null) {
+			instance = new SimulationMonitor();
+		}
+		return instance;
+	}
+	
+	private SimulationMonitor() {
+		DefaultResourceManager resourceManager = null;
+		try {
+			resourceManager = new DefaultResourceManager(new File(".").toURI().toURL());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		WlResourceManager.setDefaultResourceManager(resourceManager);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -38,8 +57,18 @@ public class SimulationMonitor {
 		window.setBounds(100, 100, 640, 480);
 		window.setVisible(true);
 		
+		JMenu menuFile = new JMenu("File");
+		menuFile.add(new JMenuItem("Exit"));
+		menuBar.add(menuFile);
+		
+		window.pack();
+	}
+
+	public void init() throws ParserConfigurationException, SAXException,
+			IOException {
 		window.setTitle("Angerona - Simulation Monitor");
-		window.setBounds(0, 0, 800, 600);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		window.setBounds(0, 0, dim.width, dim.height);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Angerona angerona = Angerona.getInstance();
@@ -59,14 +88,11 @@ public class SimulationMonitor {
 		System.out.println("Report: " + rv.getMinimumSize());
 		System.out.println("Resourcen: " + resv.getMinimumSize());
 		System.out.println("Simulation: " + siml.getMinimumSize());
-		
-		JMenu menuFile = new JMenu("File");
-		menuFile.add(new JMenuItem("Exit"));
-		menuBar.add(menuFile);
-		
-		window.pack();
 	}
 	
+	public void addComponentToCenter(WlComponent component) {
+		window.addWlComponent(component, BorderLayout.CENTER);
+	}
 	
 	
 	// If expand is true, expands all nodes in the tree.
@@ -95,5 +121,4 @@ public class SimulationMonitor {
 	        tree.collapsePath(parent);
 	    }
 	}
-
 }

@@ -9,6 +9,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -54,6 +55,10 @@ public class AngeronaEnvironment extends APR {
 		return name;
 	}
 	
+	public Set<String> getAgentNames() {
+		return agentMap.keySet();
+	}
+	
 	/**
 	 * Adds the agents with the given name to the environment
 	 * @param ap		agent process handling low level communication through the environment.
@@ -92,20 +97,28 @@ public class AngeronaEnvironment extends APR {
 	 */
 	public void runTillNoMorePerceptionsLeft() {
 		boolean percept = false;
-		tick = 0;
-		running = true;
 		do {
-			++tick;
-			percept = false;
-			for(AgentProcess ap : agents) {
-				AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
-				if(aap.hasPerceptions()) {
-					percept = true;
-					aap.execCycle();
-				}
-			}
+			percept = runOneTick();
 		} while(percept);
+	}
+	
+	/**
+	 * runs one simulation tick. Gives every agent the ability to call its cycle method.
+	 * @return true if at least one agents cylce function was called, false otherwise.
+	 */
+	public boolean runOneTick() {
+		running = true;
+		++tick;
+		boolean percept = false;
+		for(AgentProcess ap : agents) {
+			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
+			if(aap.hasPerceptions()) {
+				aap.execCycle();
+				percept = true;
+			}
+		}
 		running = false;
+		return percept;
 	}
 	
 	public boolean isRunning() {
@@ -244,6 +257,9 @@ public class AngeronaEnvironment extends APR {
 		for(Perception p : initPercepts) {
 			this.sendAction(p.getReceiverId(), p);
 		}
+		
+		tick = 0;
+		Angerona.getInstance().onNewSimulation(this);
 		
 		return reval;
 	}

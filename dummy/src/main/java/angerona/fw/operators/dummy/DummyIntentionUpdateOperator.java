@@ -19,7 +19,7 @@ public class DummyIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {
-		LOG.info("Intention-Update-Operator");
+		report("Intention-Update-Operator");
 		for(int i=0; i<param.getPlan().getNumberOfStacks(); ++i) {
 			if(param.getPlan().peekStack(i).isAtomic()) {
 				Intention intention = param.getPlan().peekStack(i);
