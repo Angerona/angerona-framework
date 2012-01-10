@@ -59,6 +59,13 @@ public class Rule {
 		return (this.body==null)? Collections.<Literal>emptyList() : this.body; 
 	}
 	
+	public List<Literal> getLiterals() {
+		List<Literal> reval = new LinkedList<Literal>();
+		if(head != null)	reval.addAll(head);
+		if(body != null)	reval.addAll(body);
+		return reval;
+	}
+	
 	public void		addHead(Literal l) {
 		if (this.head == null)
 			this.head = new LinkedList<Literal>();

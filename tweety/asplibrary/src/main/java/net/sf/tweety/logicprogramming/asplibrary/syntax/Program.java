@@ -6,9 +6,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
@@ -29,7 +32,15 @@ public class Program extends ArrayList<Rule> {
 
 	private ElpSignature signature;
 	
+	private Set<Atom> atoms = new HashSet<Atom>();
+	
 	public Preamble	preamble = new Preamble();
+	
+	public Set<Atom> getAtoms() {
+		return atoms;
+	}
+	
+	
 	
 	public void add(Program other) {
 		this.addAll( other );
@@ -156,5 +167,76 @@ public class Program extends ArrayList<Rule> {
 			reval.add(defRule);
 		}
 		return reval;
+	}
+	
+	// overload array list methods to keep track of the atoms
+	@Override
+	public boolean add(Rule r) {
+		for(Literal l : r.getLiterals()) {
+			atoms.add(l.getAtom()); 
+		}
+		return super.add(r);
+	}
+	
+	@Override
+	public void add(int index, Rule r) {
+		for(Literal l : r.getLiterals()) {
+			atoms.add(l.getAtom());
+		}
+		super.add(index, r);
+	}
+	
+	@Override
+	public boolean addAll(Collection<? extends Rule> c) {
+		for(Rule r : c) {
+			for(Literal l : r.getLiterals()) {
+				atoms.add(l.getAtom());
+			}
+		}
+		return super.addAll(c);
+	}
+	
+	@Override
+	public boolean addAll(int index, Collection<? extends Rule> c) {
+		for(Rule r : c) {
+			for(Literal l : r.getLiterals()) {
+				atoms.add(l.getAtom());
+			}
+		}
+		return super.addAll(index, c);
+	}
+	
+	@Override
+	public void clear() {
+		atoms.clear();
+		super.clear();
+	}
+	
+	@Override
+	public Rule remove(int index){		
+		Rule reval =  super.remove(index);
+		if(reval != null) {
+			updateAtoms();
+		}
+		return reval;
+	}
+	
+	@Override
+	public boolean remove(Object o) {
+		Rule r = (Rule)o;
+		boolean reval = super.remove(r);
+		if(reval) {
+			updateAtoms();
+		}
+		return reval;
+	}
+	
+	private void updateAtoms() {
+		atoms.clear();
+		for(Rule r : this) {
+			for(Literal l : r.getLiterals()) {
+				atoms.add(l.getAtom());
+			}
+		}
 	}
 }
