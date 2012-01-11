@@ -1,6 +1,5 @@
 mkdir tlib
-for lib in "WlWindows" "WlConfiguration" "WlMacWidgets" "WlPreview" "WlResourceManager" "WlUtilities"
-do
+for lib in "WlWindows" "WlConfiguration" "WlMacWidgets" "WlPreview" "WlResourceManager" "WlUtilities"; do
 echo $lib
 cd $lib/bin/
 jar cf ../../tlib/$lib.jar ./*

@@ -3,6 +3,7 @@ package com.explodingpixels.macwidgets;
 import com.explodingpixels.macwidgets.plaf.PreferencesTabBarButtonUI;
 import com.explodingpixels.macwidgets.plaf.UnifiedToolbarButtonUI;
 import com.explodingpixels.painter.*;
+import com.explodingpixels.painter.Painter;
 import com.explodingpixels.swingx.EPButton;
 import com.explodingpixels.widgets.PopdownButton;
 import com.explodingpixels.widgets.PopupMenuCustomizer;
