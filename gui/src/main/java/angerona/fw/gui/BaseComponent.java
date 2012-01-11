@@ -19,7 +19,7 @@ public class BaseComponent extends WlComponent {
 	}
 	
 	/**
-	 * This method returns the type of object which is shown by this compoennt
+	 * This method returns the type of object which is shown by this component
 	 * @return 	null if the component is not bounded to a special type (like a beliefbase type (asp graphs)) otherwise the class
 	 * *		object describing the shown object.
 	 * TODO: Decide to move this into a subclass?
