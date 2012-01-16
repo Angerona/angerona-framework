@@ -73,7 +73,7 @@ public class DummyChangeOperator extends BaseChangeOperator {
 	}
 	
 	@Override
-	public String getPosterName() {
+	public String getName() {
 		return "DummyChange";
 	}
 }

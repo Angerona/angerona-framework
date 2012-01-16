@@ -25,8 +25,10 @@ import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.logic.base.Beliefs;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
+import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
@@ -34,7 +36,7 @@ import angerona.fw.serialize.SimulationConfiguration;
  * TODO: Extend the functionality.
  * @author Tim Janus
  */
-public class AngeronaEnvironment extends APR {
+public class AngeronaEnvironment extends APR implements ReportPoster {
 
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
@@ -46,10 +48,6 @@ public class AngeronaEnvironment extends APR {
 	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
 	
 	private boolean running = false;
-	
-	public int getTick() {
-		return tick;
-	}
 	
 	public String getName() {
 		return name;
@@ -182,22 +180,19 @@ public class AngeronaEnvironment extends APR {
 		
 		LOG.info("Starting simulation: " + config.getName());
 		
+		tick = 0;
 		try {
 			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
-
+				
 				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
 				world.setEnvironment(this);
 				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
-				LOG.info("Parsing File: " + fn);
 				
 				FileInputStream fis = new FileInputStream(new File(fn));
 				BeliefbaseSetParser bbsp = new BeliefbaseSetParser(fis);
 				bbsp.Input();
 				fis.close();
-				
-				LOG.info("World:" + bbsp.worldContent);
-				LOG.info("Views:" + bbsp.viewContent);
 				
 				StringReader sr = new StringReader(bbsp.worldContent);
 				world.parse(new BufferedReader(sr));
@@ -217,11 +212,11 @@ public class AngeronaEnvironment extends APR {
 					sr = new StringReader(bbsp.viewContent.get(key));
 					actView.parse(new BufferedReader(sr));
 					views.put(key, actView);
+					
 				}
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
-				addAgent(highLevelAg.getAgentProcess());
 				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
-				
+				addAgent(highLevelAg.getAgentProcess());
 			}
 		} catch (AgentIdException e) {
 			reval = false;
@@ -252,14 +247,29 @@ public class AngeronaEnvironment extends APR {
 			e.printStackTrace();
 		}
 		
+		Angerona.getInstance().onNewSimulation(this);
+		// report the initialized data of the agent to the report system.
+		for(String agName : agentMap.keySet()) {
+			Agent agent = getAgentByName(agName);
+			Angerona.getInstance().report("Agent: '" + agent.getName()+"' created.", this);
+			
+			Beliefs b = agent.getBeliefs();
+			Angerona.getInstance().report("World Beliefbase of '" + agent.getName()+"' created.", this, b.getWorldKnowledge() );
+			
+			Map<String, BaseBeliefbase> views = b.getViewKnowledge();
+			for(String name : views.keySet()) {
+				BaseBeliefbase actView = views.get(name);
+				Angerona.getInstance().report("View->'" + name +"' Beliefbase of '" + agent.getName() + "' created.", this, actView);
+			}
+			
+			Angerona.getInstance().report("Confidental Knowledge of '" + agent.getName() + "' created.", this, b.getConfidentialKnowledge());
+		}
+		
 		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
 		List<Perception> initPercepts = df.generateFromParentElement(config.getFlowElement(), null);
 		for(Perception p : initPercepts) {
 			this.sendAction(p.getReceiverId(), p);
 		}
-		
-		tick = 0;
-		Angerona.getInstance().onNewSimulation(this);
 		
 		return reval;
 	}
@@ -297,5 +307,15 @@ public class AngeronaEnvironment extends APR {
 
 	PerceptionFactory getPerceptionFactory() {
 		return perceptionFactory;
+	}
+
+	@Override
+	public int getSimulationTick() {
+		return tick;
+	}
+
+	@Override
+	public AngeronaEnvironment getSimulation() {
+		return this;
 	}
 }

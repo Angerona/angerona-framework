@@ -20,13 +20,14 @@ import angerona.fw.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.operators.parameter.BeliefbaseParameter;
+import angerona.fw.report.ReportAttachment;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
 /**
  * Base class for every belief base used in Angerona.
  * @author Tim Janus
  */
-public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
+public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachment {
 	
 	/** default error string if a formula is no FOL formula */
 	protected static String RES_NO_FOL = "formula is no FOL formula.";
@@ -282,4 +283,20 @@ public abstract class BaseBeliefbase extends BeliefBase implements Cloneable {
 	
 	/** @return  a signature containing the atomic language constructs used by this beliefbase. */
 	public abstract Signature getSignature();
+	
+	@Override
+	public Long getGUID() {
+		return null;
+	}
+	
+	@Override
+	public Long getParent() {
+		return null;
+	}
+	
+	@Override
+	public List<Long> getChilds() {
+		// TODO: implement.
+		return null;
+	}
 }

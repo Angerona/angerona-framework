@@ -48,15 +48,22 @@ public class SimulationLoadBar extends BaseComponent {
 		add(btnLoad);
 		
 		btnRun = new JButton("Run");
-		btnRun.setText("Run");
+		btnRun.setText("Init");
+		btnRun.setEnabled(false);
 		btnRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(simFinished) {
 					environment.cleanupSimulation();
 					environment.initSimulation(actConfig, simulationDirectory);
+					btnRun.setText("Run");
+					simFinished = false;
+				} else {
+					simFinished = !environment.runOneTick();
 				}
-				simFinished = !environment.runOneTick();
+				if(simFinished) {
+					btnRun.setText("Restart");
+				}
 			}
 		});
 		add(btnRun);
@@ -69,17 +76,21 @@ public class SimulationLoadBar extends BaseComponent {
 		int reval = fileDialog.showOpenDialog(this);
 		if(reval == JFileChooser.APPROVE_OPTION) {
 			File file = fileDialog.getSelectedFile();
-			try {
-				actConfig = environment.loadSimulation(file.getAbsolutePath(), false);
-				simulationDirectory = file.getParent();
-				updateConfigView();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			loadSimulation(file);
+		}
+	}
+
+	public void loadSimulation(File file) {
+		try {
+			actConfig = environment.loadSimulation(file.getAbsolutePath(), false);
+			simulationDirectory = file.getParent();
+			updateConfigView();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

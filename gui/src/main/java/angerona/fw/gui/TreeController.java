@@ -1,8 +1,12 @@
 package angerona.fw.gui;
 
+import java.util.Enumeration;
+
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
@@ -11,54 +15,6 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.util.SimulationListener;
 
 public class TreeController implements SimulationListener {
-	private DefaultMutableTreeNode rootNode;
-	
-	private JTree ui;
-	
-	public TreeController(DefaultMutableTreeNode node, JTree ui) {
-		rootNode = node;
-		Angerona configContainer = Angerona.getInstance();
-		this.ui = ui;
-		
-		DefaultMutableTreeNode agent = new DefaultMutableTreeNode("Agent Configs");
-		for(String str : configContainer.getAgentConfigurationNames()) {
-			agent.add(new DefaultMutableTreeNode(str));
-		}
-				
-		DefaultMutableTreeNode beliefbase = new DefaultMutableTreeNode("Beliefbase Configs");
-		for(String str: configContainer.getBeliefbaseConfigurationNames()) {
-			beliefbase.add(new DefaultMutableTreeNode(str));
-		}
-				
-		DefaultMutableTreeNode simulation = new DefaultMutableTreeNode("Simulation Templates");
-		for(String str: configContainer.getSimulationConfigurationNames()) {
-			simulation.add(new DefaultMutableTreeNode(str));
-		}
-		
-		node.add(agent);
-		node.add(beliefbase);
-		node.add(simulation);
-		
-		configContainer.addSimulationListener(this);
-	}
-	
-	@Override
-	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
-		simulationEnvironment.getName();
-		DefaultMutableTreeNode simNode = new DefaultMutableTreeNode(simulationEnvironment);
-		rootNode.add(simNode);
-		ui.setModel(new DefaultTreeModel(rootNode));
-		
-		for(String agName : simulationEnvironment.getAgentNames()) {
-			agentAddedInt(simNode, simulationEnvironment.getAgentByName(agName));
-		}
-	}
-
-	@Override
-	public void agentAdded(AngeronaEnvironment simulationEnvironment,
-			Agent added) {
-		// TODO:
-	}
 	
 	public class BBUserObject {
 		private BaseBeliefbase beliefbase;
@@ -88,6 +44,80 @@ public class TreeController implements SimulationListener {
 	public class ViewUserObject extends BBUserObject 
 	{public ViewUserObject(String onAgent, BaseBeliefbase bb) {super("View --> " + onAgent, bb);} }
 	
+	public class SimulationUserObject {
+		private AngeronaEnvironment simulation;
+		public SimulationUserObject(AngeronaEnvironment env) {
+			simulation = env;
+		}
+		
+		public AngeronaEnvironment getSimulation() {
+			return simulation;
+		}
+		
+		@Override
+		public String toString() {
+			return simulation.getName();
+		}
+	}
+	
+	private DefaultMutableTreeNode root;
+	
+	private DefaultTreeModel treeModel;
+	
+	private JTree tree;
+	
+	public TreeController(JTree tree, DefaultMutableTreeNode root) {
+		Angerona configContainer = Angerona.getInstance();
+		
+		this.tree = tree;
+		this.root = root;
+		
+		DefaultMutableTreeNode agent = new DefaultMutableTreeNode("Agent Configs");
+		for(String str : configContainer.getAgentConfigurationNames()) {
+			agent.add(new DefaultMutableTreeNode(str));
+		}
+				
+		DefaultMutableTreeNode beliefbase = new DefaultMutableTreeNode("Beliefbase Configs");
+		for(String str: configContainer.getBeliefbaseConfigurationNames()) {
+			beliefbase.add(new DefaultMutableTreeNode(str));
+		}
+				
+		DefaultMutableTreeNode simulation = new DefaultMutableTreeNode("Simulation Templates");
+		for(String str: configContainer.getSimulationConfigurationNames()) {
+			simulation.add(new DefaultMutableTreeNode(str));
+		}
+		
+		root.add(agent);
+		root.add(beliefbase);
+		root.add(simulation);
+		
+		treeModel = (DefaultTreeModel) tree.getModel();
+		treeModel.setRoot(root);
+		expandAll(tree, true);
+		configContainer.addSimulationListener(this);
+	}
+	
+	public JTree getTree() {
+		return tree;
+	}
+	
+	@Override
+	public void simulationStarted(AngeronaEnvironment simulation) {
+		simulation.getName();
+		DefaultMutableTreeNode simNode = new DefaultMutableTreeNode(new SimulationUserObject(simulation));
+		
+		for(String agName : simulation.getAgentNames()) {
+			agentAddedInt(simNode, simulation.getAgentByName(agName));
+		}
+		
+		treeModel.insertNodeInto(simNode, root, root.getChildCount());
+		expandAll(tree, true);
+	}
+
+	@Override
+	public void agentAdded(AngeronaEnvironment simulationEnvironment,
+			Agent added) {
+	}
 	
 	private void agentAddedInt(DefaultMutableTreeNode parent, Agent added) {
 		DefaultMutableTreeNode dmt = new DefaultMutableTreeNode(added.getName());
@@ -104,6 +134,7 @@ public class TreeController implements SimulationListener {
 		}
 		
 		parent.add(dmt);
+		expandAll(tree, true);
 	}
 
 	@Override
@@ -112,7 +143,34 @@ public class TreeController implements SimulationListener {
 	}
 
 	@Override
-	public void tickDone(AngeronaEnvironment simulationEnvironment) {
+	public void tickDone(AngeronaEnvironment simulationEnvironment, boolean finished) {
 		// do nothing.
 	}
+	
+	// If expand is true, expands all nodes in the tree.
+		// Otherwise, collapses all nodes in the tree.
+		public static void expandAll(JTree tree, boolean expand) {
+		    TreeNode root = (TreeNode)tree.getModel().getRoot();
+
+		    // Traverse tree from root
+		    expandAll(tree, new TreePath(root), expand);
+		}
+		private static void expandAll(JTree tree, TreePath parent, boolean expand) {
+		    // Traverse children
+		    TreeNode node = (TreeNode)parent.getLastPathComponent();
+		    if (node.getChildCount() >= 0) {
+		        for (Enumeration<TreeNode> e=node.children(); e.hasMoreElements(); ) {
+		            TreeNode n = (TreeNode)e.nextElement();
+		            TreePath path = parent.pathByAddingChild(n);
+		            expandAll(tree, path, expand);
+		        }
+		    }
+
+		    // Expansion or collapse must be done bottom-up
+		    if (expand) {
+		        tree.expandPath(parent);
+		    } else {
+		        tree.collapsePath(parent);
+		    }
+		}
 }

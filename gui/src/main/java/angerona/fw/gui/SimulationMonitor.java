@@ -1,8 +1,6 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -32,6 +30,8 @@ public class SimulationMonitor  {
 	
 	private WlWindowSet windowSet;
 
+	private SimulationLoadBar simLoadBar;
+	
 	private static SimulationMonitor instance;
 	
 	public static SimulationMonitor getInstance() {
@@ -54,8 +54,6 @@ public class SimulationMonitor  {
 		JMenuBar menuBar = new JMenuBar();
 		windowSet = new WlWindowSet(menuBar);
 		window = windowSet.createWindow("Angerona - Simulation Monitor");
-		window.setBounds(100, 100, 640, 480);
-		window.setVisible(true);
 		
 		JMenu menuFile = new JMenu("File");
 		menuFile.add(new JMenuItem("Exit"));
@@ -67,9 +65,10 @@ public class SimulationMonitor  {
 	public void init() throws ParserConfigurationException, SAXException,
 			IOException {
 		window.setTitle("Angerona - Simulation Monitor");
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		window.setBounds(0, 0, dim.width, dim.height);
+		window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setVisible(true);
+		
 		
 		Angerona angerona = Angerona.getInstance();
 		angerona.addAgentConfigFolder("config/agents");
@@ -79,46 +78,25 @@ public class SimulationMonitor  {
 		
 		ReportView rv = new ReportView();
 		ResourcenView resv = new ResourcenView();
-		SimulationLoadBar siml = new SimulationLoadBar();
+		simLoadBar = new SimulationLoadBar();
 		
 		window.addWlComponent(rv, BorderLayout.CENTER);
 		window.addWlComponent(resv , BorderLayout.WEST);
-		window.addWlComponent(siml, BorderLayout.SOUTH);
+		window.addWlComponent(simLoadBar, BorderLayout.SOUTH);
 		
 		System.out.println("Report: " + rv.getMinimumSize());
 		System.out.println("Resourcen: " + resv.getMinimumSize());
-		System.out.println("Simulation: " + siml.getMinimumSize());
+		System.out.println("Simulation: " + simLoadBar.getMinimumSize());
 	}
 	
 	public void addComponentToCenter(WlComponent component) {
 		window.addWlComponent(component, BorderLayout.CENTER);
 	}
 	
-	
-	// If expand is true, expands all nodes in the tree.
-	// Otherwise, collapses all nodes in the tree.
-	public static void expandAll(JTree tree, boolean expand) {
-	    TreeNode root = (TreeNode)tree.getModel().getRoot();
-
-	    // Traverse tree from root
-	    expandAll(tree, new TreePath(root), expand);
-	}
-	private static void expandAll(JTree tree, TreePath parent, boolean expand) {
-	    // Traverse children
-	    TreeNode node = (TreeNode)parent.getLastPathComponent();
-	    if (node.getChildCount() >= 0) {
-	        for (Enumeration<TreeNode> e=node.children(); e.hasMoreElements(); ) {
-	            TreeNode n = (TreeNode)e.nextElement();
-	            TreePath path = parent.pathByAddingChild(n);
-	            expandAll(tree, path, expand);
-	        }
-	    }
-
-	    // Expansion or collapse must be done bottom-up
-	    if (expand) {
-	        tree.expandPath(parent);
-	    } else {
-	        tree.collapsePath(parent);
-	    }
+	public void loadSimulation(String path) {
+		File f = new File(path);
+		if(f.exists()) {
+			simLoadBar.loadSimulation(f);
+		}
 	}
 }

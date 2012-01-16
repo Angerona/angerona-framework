@@ -7,7 +7,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 public class ResourcenView extends BaseComponent {
@@ -21,9 +20,7 @@ public class ResourcenView extends BaseComponent {
 		super("Resourcen");
 		tree = new JTree();
 		DefaultMutableTreeNode ar = new DefaultMutableTreeNode("Angerona Resourcen");
-		new TreeController(ar, tree);
-		tree.setModel(new DefaultTreeModel(ar));
-		SimulationMonitor.expandAll(tree, true);
+		new TreeController(tree, ar);
 		this.add(tree);
 		
 		MouseListener ml = new MouseAdapter() {

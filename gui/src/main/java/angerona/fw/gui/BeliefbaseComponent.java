@@ -1,6 +1,5 @@
 package angerona.fw.gui;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -8,8 +7,9 @@ import javax.swing.JList;
 
 import angerona.fw.Angerona;
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.util.ReportListener;
-import angerona.fw.util.ReportPoster;
+import angerona.fw.report.Report;
+import angerona.fw.report.ReportEntry;
+import angerona.fw.report.ReportListener;
 
 public class BeliefbaseComponent extends BaseComponent implements ReportListener {
 
@@ -39,15 +39,18 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	
 	private BaseBeliefbase beliefbase;
 	
+	private BaseBeliefbase actualBeliefbase;
+	
+	private BaseBeliefbase previousBeliefbase;
+	
 	private JList actualLiterals;
 	
 	private DefaultListModel model;
 	
-	private List<List<String>> atomHistory = new LinkedList<List<String>>();
-	
 	public BeliefbaseComponent(String name, BaseBeliefbase bb) {
 		super(name);
 		this.beliefbase = bb;
+		this.actualBeliefbase = bb;
 		
 		actualLiterals = new JList();
 		this.add(actualLiterals);
@@ -55,21 +58,13 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 		model = new DefaultListModel();
 		actualLiterals.setModel(model);
 		
-		Angerona.getInstance().addReportListener(this);
-		
 		update();
+		Angerona.getInstance().addReportListener(this);
 	}
-
+	
 	private void update() {		
-		List<String> actual = beliefbase.getAtoms();
-		List<String> last = null;
-		if(!atomHistory.isEmpty()) {
-			//if(atomHistory.get(atomHistory.size()-1).equals(actual)) {
-			//	return; // no changes...
-			//} else {
-				last = atomHistory.get(atomHistory.size()-1);
-			//}
-		}
+		List<String> actual = actualBeliefbase.getAtoms();
+		List<String> last = previousBeliefbase == null ? null : previousBeliefbase.getAtoms();
 		
 		model.clear();		
 		for(String atom : actual) {
@@ -87,14 +82,18 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 				}
 			}
 		}
-		
-		atomHistory.add(actual);
 	}
 
 	@Override
-	public void reportReceived(String msg, ReportPoster sender,
-			Object attachment) {
-		if(attachment == beliefbase) {
+	public void reportReceived(ReportEntry entry) {
+		if(isVisible() && entry.getAttachment() == beliefbase) {
+			Report r = Angerona.getInstance().getReport(entry.getPoster().getSimulation());
+			List<ReportEntry> entries = r.getEntriesOf(beliefbase);
+			// TODO: Think about ordering of report listeners (Report saving in memory should be done first, hard code it?)
+			if(entries.size() >= 2) {
+				ReportEntry prevEntry = entries.get(entries.size()-2);
+				previousBeliefbase = (BaseBeliefbase) prevEntry.getAttachment();
+			}
 			update();
 		}
 	}

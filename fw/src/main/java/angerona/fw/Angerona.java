@@ -15,11 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import angerona.fw.report.Report;
+import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.ReportEntry;
+import angerona.fw.report.ReportListener;
+import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 import angerona.fw.serialize.SimulationConfiguration;
-import angerona.fw.util.ReportListener;
-import angerona.fw.util.ReportPoster;
 import angerona.fw.util.SimulationListener;
 
 /**
@@ -41,8 +44,8 @@ public class Angerona {
 	
 	private List<SimulationListener> simulationListeners = new LinkedList<SimulationListener>();
 	
-	/** flag indicating if the history of every tick should be saved */
-	private boolean histroy = true;
+	// TODO: Differentiate between environment and simulation.
+	private Map<AngeronaEnvironment, Report> reports = new HashMap<AngeronaEnvironment, Report>(); 
 	
 	public static Angerona getInstance() {
 		if(instance == null)
@@ -54,20 +57,27 @@ public class Angerona {
 		report(msg, sender, null);
 	}
 	
-	public void report(String msg, ReportPoster sender, Object attachment) {
+	public void report(String msg, ReportPoster sender, ReportAttachment attachment) {
 		String logOut = msg;
 		
 		if (sender == null){
 			throw new IllegalArgumentException("sender must not be null");
 		}
 
-		logOut += " by " + sender.getPosterName() + " in " + sender.getSimTick()+":"+sender.getSimulationName();
+		logOut += " by " + sender.getName() + " in " + sender.getSimulationTick()+":"+sender.getSimulation();
 		
 		// Every report will also be logged by our logging facility.
 		LOG.info("REPORT: " + logOut);
+		
+		ReportEntry entry = new ReportEntry(msg, sender, attachment);
+		Angerona.getInstance().getReport(entry.getPoster().getSimulation()).saveEntry(entry);
 		for(ReportListener listener : reportListeners) {
-			listener.reportReceived(msg, sender, attachment);
+			listener.reportReceived(entry);
 		}
+	}
+	
+	public Report getReport(AngeronaEnvironment simulation) {
+		return reports.get(simulation);
 	}
 	
 	public void addReportListener(ReportListener listener) {
@@ -95,14 +105,15 @@ public class Angerona {
 	}
 	
 	public void onNewSimulation(AngeronaEnvironment ev) {
+		reports.put(ev, new Report(ev));
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
 		}
 	}
 	
-	public void onTickDone(AngeronaEnvironment ev) {
+	public void onTickDone(AngeronaEnvironment ev, boolean finished) {
 		for(SimulationListener l : simulationListeners) {
-			l.tickDone(ev);
+			l.tickDone(ev, finished);
 		}
 	}
 	

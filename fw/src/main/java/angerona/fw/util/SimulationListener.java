@@ -14,5 +14,5 @@ public interface SimulationListener {
 	void agentRemoved(AngeronaEnvironment simulationEnvironment, Agent removed);
 	
 	/** is called after a complete cylce of the simulation (an update of ever agent) is done. */
-	void tickDone(AngeronaEnvironment simulationEnvironment);
+	void tickDone(AngeronaEnvironment simulationEnvironment, boolean finished);
 }
