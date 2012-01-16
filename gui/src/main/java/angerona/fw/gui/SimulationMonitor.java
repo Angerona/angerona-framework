@@ -30,7 +30,7 @@ public class SimulationMonitor  {
 	
 	private WlWindowSet windowSet;
 
-	private SimulationLoadBar simLoadBar;
+	private SimulationControlBar simLoadBar;
 	
 	private static SimulationMonitor instance;
 	
@@ -78,7 +78,7 @@ public class SimulationMonitor  {
 		
 		ReportView rv = new ReportView();
 		ResourcenView resv = new ResourcenView();
-		simLoadBar = new SimulationLoadBar();
+		simLoadBar = new SimulationControlBar();
 		
 		window.addWlComponent(rv, BorderLayout.CENTER);
 		window.addWlComponent(resv , BorderLayout.WEST);

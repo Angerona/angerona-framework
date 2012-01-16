@@ -47,7 +47,9 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	/** implementation of the factory used for perceptions */
 	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
 	
-	private boolean running = false;
+	private boolean doingTick = false;
+	
+	private boolean ready = false;
 	
 	public String getName() {
 		return name;
@@ -105,7 +107,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	 * @return true if at least one agents cylce function was called, false otherwise.
 	 */
 	public boolean runOneTick() {
-		running = true;
+		doingTick = true;
 		++tick;
 		boolean percept = false;
 		for(AgentProcess ap : agents) {
@@ -115,12 +117,16 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				percept = true;
 			}
 		}
-		running = false;
+		doingTick = false;
 		return percept;
 	}
 	
-	public boolean isRunning() {
-		return running;
+	public boolean isDoeingTick() {
+		return doingTick;
+	}
+	
+	public boolean isReady() {
+		return ready;
 	}
 	
 	/**
@@ -271,7 +277,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 			this.sendAction(p.getReceiverId(), p);
 		}
 		
-		return reval;
+		return ready = reval;
 	}
 	
 	/**
