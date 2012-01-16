@@ -47,6 +47,8 @@ public class Angerona {
 	// TODO: Differentiate between environment and simulation.
 	private Map<AngeronaEnvironment, Report> reports = new HashMap<AngeronaEnvironment, Report>(); 
 	
+	private Report actualReport;
+	
 	public static Angerona getInstance() {
 		if(instance == null)
 			instance = new Angerona();
@@ -76,18 +78,37 @@ public class Angerona {
 		}
 	}
 	
+	/** @return the report of the last started simulation. */
+	public Report getActualReport() {
+		return actualReport;
+	}
+	
+	/**
+	 * @param simulation a reference to a simulation.
+	 * @return the report belonging to the given simulation.
+	 */
 	public Report getReport(AngeronaEnvironment simulation) {
 		return reports.get(simulation);
 	}
 	
+	/**
+	 * registers a listener which will be informed if a report is posted.
+	 * @param listener	reference to the listener which should be registered.
+	 */
 	public void addReportListener(ReportListener listener) {
 		reportListeners.add(listener);
 	}
 	
-	public void removeReportListener(ReportListener listener) {
-		reportListeners.remove(listener);
+	/**
+	 * removes a registered report-listener from the list of report-listeners.
+	 * @param listener
+	 * @return flag indicating if the remove operation was successful.
+	 */
+	public boolean removeReportListener(ReportListener listener) {
+		return reportListeners.remove(listener);
 	}
 	
+	/** removes all registered report-listeners. */
 	public void removeAllReportListeners() {
 		reportListeners.clear();
 	}
@@ -105,7 +126,8 @@ public class Angerona {
 	}
 	
 	public void onNewSimulation(AngeronaEnvironment ev) {
-		reports.put(ev, new Report(ev));
+		actualReport = new Report(ev);
+		reports.put(ev, actualReport);
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
 		}

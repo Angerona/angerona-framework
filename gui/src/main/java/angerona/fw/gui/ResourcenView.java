@@ -1,10 +1,12 @@
 package angerona.fw.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -18,10 +20,11 @@ public class ResourcenView extends BaseComponent {
 	
 	public ResourcenView() {
 		super("Resourcen");
+		this.setLayout(new BorderLayout());
 		tree = new JTree();
 		DefaultMutableTreeNode ar = new DefaultMutableTreeNode("Angerona Resourcen");
 		new TreeController(tree, ar);
-		this.add(tree);
+		this.add(new JScrollPane(tree), BorderLayout.CENTER);
 		
 		MouseListener ml = new MouseAdapter() {
 		     public void mousePressed(MouseEvent e) {

@@ -6,6 +6,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 import angerona.fw.Angerona;
+import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.report.Report;
 import angerona.fw.report.ReportEntry;
@@ -58,6 +59,8 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 		model = new DefaultListModel();
 		actualLiterals.setModel(model);
 		
+		// TODO: Determine the environment using ReportAttachment hierarchy.
+		defaultUpdatePrevious(null);
 		update();
 		Angerona.getInstance().addReportListener(this);
 	}
@@ -87,14 +90,18 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	@Override
 	public void reportReceived(ReportEntry entry) {
 		if(isVisible() && entry.getAttachment() == beliefbase) {
-			Report r = Angerona.getInstance().getReport(entry.getPoster().getSimulation());
-			List<ReportEntry> entries = r.getEntriesOf(beliefbase);
-			// TODO: Think about ordering of report listeners (Report saving in memory should be done first, hard code it?)
-			if(entries.size() >= 2) {
-				ReportEntry prevEntry = entries.get(entries.size()-2);
-				previousBeliefbase = (BaseBeliefbase) prevEntry.getAttachment();
-			}
+			defaultUpdatePrevious(entry.getPoster().getSimulation());
 			update();
+		}
+	}
+
+	private void defaultUpdatePrevious(AngeronaEnvironment simulation) {
+		Report r = simulation == null ? Angerona.getInstance().getActualReport() : Angerona.getInstance().getReport(simulation);
+		List<ReportEntry> entries = r.getEntriesOf(beliefbase);
+
+		if(entries.size() >= 2) {
+			ReportEntry prevEntry = entries.get(entries.size()-2);
+			previousBeliefbase = (BaseBeliefbase) prevEntry.getAttachment();
 		}
 	}
 }

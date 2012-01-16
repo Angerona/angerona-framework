@@ -4,15 +4,11 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Enumeration;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JTree;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
