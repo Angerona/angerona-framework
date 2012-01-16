@@ -40,6 +40,10 @@ public class ResourcenView extends BaseComponent {
 		                		 TreeController.BBUserObject temp = (TreeController.BBUserObject)o;
 		                		 BeliefbaseComponent bc = new BeliefbaseComponent(temp.toString(), temp.getBeliefbase());
 		                		 SimulationMonitor.getInstance().addComponentToCenter(bc);
+		                	 } else if(o instanceof TreeController.AgentUserObject) {
+		                		 TreeController.AgentUserObject temp = (TreeController.AgentUserObject)o;
+		                		 AgentComponent ac = new AgentComponent(temp.getAgent());
+		                		 SimulationMonitor.getInstance().addComponentToCenter(ac);
 		                	 }
 		                 }
 		             }

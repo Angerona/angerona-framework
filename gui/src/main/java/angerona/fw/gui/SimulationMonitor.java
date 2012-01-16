@@ -95,4 +95,8 @@ public class SimulationMonitor  {
 			simLoadBar.loadSimulation(f);
 		}
 	}
+	
+	public WlWindow getWindow() {
+		return window;
+	}
 }

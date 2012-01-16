@@ -161,6 +161,7 @@ public class FancyTabbedPane extends JPanel implements MouseListener, ComponentL
 		this.activateTab(comp.getTab());
 		// maybe some resizing/repainting is necessary
 		this.componentResized(null);
+		comp.refreshTitle();
 		this.repaint();
 	}
 	
@@ -203,6 +204,7 @@ public class FancyTabbedPane extends JPanel implements MouseListener, ComponentL
 			this.activateTab(comp.getTab());
 			// maybe some resizing/repainting is necessary
 			this.componentResized(null);
+			comp.refreshTitle();
 			this.repaint();
 		}else this.addWlComponent(comp);
 	}

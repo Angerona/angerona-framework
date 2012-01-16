@@ -33,7 +33,7 @@ public class SimulationControlBar extends BaseComponent {
 	private boolean simFinished = true;
 	
 	public SimulationControlBar() {
-		super("Simulation Loader");
+		super("Simulation Control-Bar");
 		this.setLayout(new BorderLayout());
 		txtSimStatus = new JTextField();
 		txtSimStatus.setMinimumSize(new Dimension(200, 30));

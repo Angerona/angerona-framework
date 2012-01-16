@@ -3,8 +3,11 @@ package angerona.fw.gui;
 import java.util.Enumeration;
 
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -60,6 +63,32 @@ public class TreeController implements SimulationListener {
 		}
 	}
 	
+	public class AgentUserObject {
+		private Agent agent;
+		private boolean init = false;
+		
+		public AgentUserObject(Agent agent) {
+			this.agent = agent;
+		}
+		
+		public Agent getAgent() {
+			return agent;
+		}
+		
+		@Override
+		public String toString() {
+			return agent.getName();
+		}
+		
+		boolean getInit() {
+			return init;
+		}
+		
+		void setInit(boolean init) {
+			this.init = init;
+		}
+	}
+	
 	private DefaultMutableTreeNode root;
 	
 	private DefaultTreeModel treeModel;
@@ -95,6 +124,34 @@ public class TreeController implements SimulationListener {
 		treeModel.setRoot(root);
 		expandAll(tree, true);
 		configContainer.addSimulationListener(this);
+		
+		tree.addTreeWillExpandListener(new TreeWillExpandListener() {
+			
+			@Override
+			public void treeWillExpand(TreeExpansionEvent ev)
+					throws ExpandVetoException {
+				internal(ev);
+			}
+			
+			@Override
+			public void treeWillCollapse(TreeExpansionEvent ev)
+					throws ExpandVetoException {
+				internal(ev);
+			}
+			
+			private void internal(TreeExpansionEvent ev) throws ExpandVetoException {
+				// TODO Find a way to determine if a double click or a single click was the basic for this event...
+				DefaultMutableTreeNode n = (DefaultMutableTreeNode)ev.getPath().getLastPathComponent();
+				if(n.getUserObject() instanceof AgentUserObject) {
+					AgentUserObject auo = (AgentUserObject)n.getUserObject();
+					if(auo.init) {
+						throw new ExpandVetoException(ev);
+					} else {
+						auo.init = true;
+					}
+				}
+			}
+		});
 	}
 	
 	public JTree getTree() {
@@ -120,7 +177,7 @@ public class TreeController implements SimulationListener {
 	}
 	
 	private void agentAddedInt(DefaultMutableTreeNode parent, Agent added) {
-		DefaultMutableTreeNode dmt = new DefaultMutableTreeNode(added.getName());
+		DefaultMutableTreeNode dmt = new DefaultMutableTreeNode(new AgentUserObject(added));
 		DefaultMutableTreeNode world = new DefaultMutableTreeNode(new WorldUserObject(added.getBeliefs().getWorldKnowledge()) );
 		DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
 		DefaultMutableTreeNode conf = new DefaultMutableTreeNode(new ConfUserObject(added.getBeliefs().getConfidentialKnowledge()));

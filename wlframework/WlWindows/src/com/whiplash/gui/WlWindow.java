@@ -252,7 +252,8 @@ public class WlWindow extends JFrame implements WindowListener, WindowFocusListe
 				activePane = pane;
 			}
 		};
-		this.windowSet.fireWlComponentChangedTitleEvent(new WlComponentTitleChangedEvent(comp));
+		// TODO: Check if the next line is needed somewhere.
+		//this.windowSet.fireWlComponentChangedTitleEvent(new WlComponentTitleChangedEvent(comp));
 		// refresh minimum size
 		this.refreshMinimumSize();
 	}
