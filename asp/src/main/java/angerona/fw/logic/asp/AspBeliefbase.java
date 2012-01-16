@@ -43,7 +43,10 @@ public class AspBeliefbase extends BaseBeliefbase {
 
 	@Override
 	public Object clone() {
-		throw new NotImplementedException();
+		AspBeliefbase reval = new AspBeliefbase();
+		reval.program = (Program) program.clone();
+		reval.signature = signature;
+		return reval;
 	}
 
 	@Override

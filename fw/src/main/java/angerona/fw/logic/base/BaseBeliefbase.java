@@ -187,6 +187,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 			}
 		}
 		
+		// TODO: Think about local copies...
 		BeliefUpdateParameter bup = new BeliefUpdateParameter(this, newKnowledge, env);
 		switch(updateType) {
 		case U_EXPANSION:

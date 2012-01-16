@@ -45,15 +45,14 @@ public class AspRevision extends BaseRevision {
 			newInfo.add(r);
 		}
 		
-		AspBeliefbase reval = new AspBeliefbase();
 		try {
-			reval.setProgram(pf.revision(bb.getProgram(), newInfo, new Clingo("tools/solver/asp/clingo/clingo")));
+			bb.setProgram(pf.revision(bb.getProgram(), newInfo, new Clingo("tools/solver/asp/clingo/clingo")));
 		} catch (SolverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return reval;
+		return bb;
 	}
 
 }
