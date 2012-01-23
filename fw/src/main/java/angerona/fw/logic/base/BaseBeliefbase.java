@@ -38,6 +38,10 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	/** default error string if a formula uses variables but the beliefbase does not support them */
 	protected static String RES_HAS_VARIABLES = "formula has variables, they are not supported.";
 	
+	private static Long nextId = new Long(1);
+	
+	protected Long Id;
+	
 	private AngeronaEnvironment env;
 	
 	/**
@@ -86,6 +90,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
+		Id = nextId++;
 	}
 
 	public void setEnvironment(AngeronaEnvironment env) {
@@ -100,6 +105,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	public BaseBeliefbase(boolean supportsQuantifiers, boolean supportVariables) {
 		this.supportsQuantifiers = supportsQuantifiers;;
 		this.supportsVariables = supportVariables;
+		Id = nextId++;
 	}
 	
 	/**
@@ -109,6 +115,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	 */
 	public BaseBeliefbase(String filepath) throws IOException {
 		parse(filepath);
+		Id = nextId++;
 	}
 
 	/**
@@ -287,7 +294,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	
 	@Override
 	public Long getGUID() {
-		return null;
+		return Id;
 	}
 	
 	@Override

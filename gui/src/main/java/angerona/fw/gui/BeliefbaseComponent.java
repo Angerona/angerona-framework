@@ -1,18 +1,18 @@
 package angerona.fw.gui;
 
+import java.awt.BorderLayout;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 import angerona.fw.Angerona;
-import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.report.Report;
+import angerona.fw.report.ReportAttachment;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
-public class BeliefbaseComponent extends BaseComponent implements ReportListener {
+public class BeliefbaseComponent extends BaseComponent implements ReportListener, NavigationUser {
 
 	private class ListElement {
 		public String name;
@@ -48,19 +48,26 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	
 	private DefaultListModel model;
 	
+	private ReportEntry actEntry;
+	
 	public BeliefbaseComponent(String name, BaseBeliefbase bb) {
 		super(name);
 		this.beliefbase = bb;
 		this.actualBeliefbase = bb;
+		List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(beliefbase);
+		if(entries.size() > 0) {
+			actEntry = entries.get(entries.size()-1);
+		}
+		this.setLayout(new BorderLayout());
+		add(new NavigationPanel(this), BorderLayout.NORTH);
 		
 		actualLiterals = new JList();
-		this.add(actualLiterals);
+		this.add(actualLiterals, BorderLayout.CENTER);
 		
 		model = new DefaultListModel();
 		actualLiterals.setModel(model);
 		
-		// TODO: Determine the environment using ReportAttachment hierarchy.
-		defaultUpdatePrevious(null);
+		defaultUpdatePrevious();
 		update();
 		Angerona.getInstance().addReportListener(this);
 	}
@@ -89,19 +96,40 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 
 	@Override
 	public void reportReceived(ReportEntry entry) {
-		if(isVisible() && entry.getAttachment() == beliefbase) {
-			defaultUpdatePrevious(entry.getPoster().getSimulation());
-			update();
+		if(entry.getAttachment() != null) {
+			if(isVisible() && entry.getAttachment().getGUID() == beliefbase.getGUID()) {
+				actEntry = entry;
+				actualBeliefbase = (BaseBeliefbase) entry.getAttachment();
+				defaultUpdatePrevious();
+				update();
+			}
 		}
 	}
 
-	private void defaultUpdatePrevious(AngeronaEnvironment simulation) {
-		Report r = simulation == null ? Angerona.getInstance().getActualReport() : Angerona.getInstance().getReport(simulation);
-		List<ReportEntry> entries = r.getEntriesOf(beliefbase);
+	private void defaultUpdatePrevious() {
+		List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(beliefbase);
+		int index = entries.indexOf(actEntry) - 1;
 
-		if(entries.size() >= 2) {
-			ReportEntry prevEntry = entries.get(entries.size()-2);
+		if(index >= 0) {
+			ReportEntry prevEntry = entries.get(index);
 			previousBeliefbase = (BaseBeliefbase) prevEntry.getAttachment();
+		} else {
+			previousBeliefbase = null;
 		}
+	}
+
+	@Override
+	public ReportAttachment getAttachment() {
+		return beliefbase;
+	}
+
+	@Override
+	public ReportEntry getActualEntry() {
+		return actEntry;
+	}
+
+	@Override
+	public void setActualEntry(ReportEntry entry) {
+		reportReceived(entry);
 	}
 }
