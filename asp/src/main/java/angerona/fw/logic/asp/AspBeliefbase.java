@@ -12,7 +12,6 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.base.BaseBeliefbase;
 
 /**

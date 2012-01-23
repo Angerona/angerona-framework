@@ -32,6 +32,8 @@ public class PluginInstantiator {
 	/** reference to the plugin manager used by jspf. */
 	private static PluginManager pm;
 	
+	private static PluginManagerUtil util;
+	
 	/** list of all classes implementing the generate options operator */
 	private static List<Class<? extends BaseGenerateOptionsOperator>> generateOptionsOperators = new LinkedList<Class<? extends BaseGenerateOptionsOperator>>();
 
@@ -65,6 +67,12 @@ public class PluginInstantiator {
 	/** list of all classes implementing a revision for a belief base */
 	private static List<Class<? extends BaseRevision>> revisions = new LinkedList<Class<? extends BaseRevision>>();
 	
+	public static PluginManagerUtil getPluginManagerUtil() {
+		if(pm == null)
+			initPlugins();
+		return util;
+	}
+	
 	/**
 	 * Helper method: Initializes the plugins
 	 */
@@ -76,8 +84,8 @@ public class PluginInstantiator {
 			pm.addPluginsFrom(new File(pluginPath).toURI());
 		}
 		
-		PluginManagerUtil pluginManagerUtil = new PluginManagerUtil(pm);
-		Collection<OperatorPlugin> opPlugins = new LinkedList<OperatorPlugin>(pluginManagerUtil.getPlugins(OperatorPlugin.class));
+		util = new PluginManagerUtil(pm);
+		Collection<OperatorPlugin> opPlugins = new LinkedList<OperatorPlugin>(util.getPlugins(OperatorPlugin.class));
 		
 		for(OperatorPlugin ap : opPlugins) {
 			generateOptionsOperators.addAll(ap.getSupportedGenerateOptionsOperators());
@@ -88,7 +96,7 @@ public class PluginInstantiator {
 			planers.addAll(ap.getSupportedPlaners());
 		}
 		
-		Collection<BeliefbasePlugin> bbPlugins = new LinkedList<BeliefbasePlugin>(pluginManagerUtil.getPlugins(BeliefbasePlugin.class));
+		Collection<BeliefbasePlugin> bbPlugins = new LinkedList<BeliefbasePlugin>(util.getPlugins(BeliefbasePlugin.class));
 		for(BeliefbasePlugin bp : bbPlugins) {
 			beliefbases.addAll(bp.getSupportedBeliefbases());
 			reasoners.addAll(bp.getSupportedReasoners());

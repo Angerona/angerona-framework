@@ -1,19 +1,29 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
+
+import net.xeoh.plugins.base.util.PluginManagerUtil;
 
 import org.xml.sax.SAXException;
 
 import angerona.fw.Angerona;
+import angerona.fw.PluginInstantiator;
 
 import com.whiplash.gui.WlComponent;
 import com.whiplash.gui.WlWindow;
@@ -27,6 +37,8 @@ public class SimulationMonitor  {
 	private WlWindowSet windowSet;
 
 	private SimulationControlBar simLoadBar;
+	
+	private Map<String, Class<? extends BaseComponent>> map = new HashMap<String, Class<? extends BaseComponent>>();
 	
 	private static SimulationMonitor instance;
 	
@@ -55,6 +67,35 @@ public class SimulationMonitor  {
 		menuFile.add(new JMenuItem("Exit"));
 		menuBar.add(menuFile);
 		
+		JMenu menuWindow = new JMenu("Windows");
+		JMenuItem miCreate = new JMenuItem("Create...");
+		miCreate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {	
+				String str = (String) JOptionPane.showInputDialog(window, 
+						"Select a Window to create...",
+						"Create Window",
+						JOptionPane.PLAIN_MESSAGE,
+						null,
+						map.keySet().toArray(),
+						null);
+				if(map.containsKey(str)) {
+					try {
+						BaseComponent bc = map.get(str).newInstance();
+						window.addWlComponent(bc, BorderLayout.CENTER);
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		menuWindow.add(miCreate);
+		menuBar.add(menuWindow);
+		
 		window.pack();
 	}
 
@@ -65,12 +106,21 @@ public class SimulationMonitor  {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 		
-		
 		Angerona angerona = Angerona.getInstance();
 		angerona.addAgentConfigFolder("config/agents");
 		angerona.addBeliefbaseConfigFolder("config/beliefbases");
 		angerona.addSimulationFolders("config/examples");
 		angerona.bootstrap();
+		
+		map.put("Report-View", ReportView.class);
+		map.put("Resourcen-View", ResourcenView.class);
+		
+		// TODO: Move this somewhere else.
+		PluginManagerUtil pluginManagerUtil = PluginInstantiator.getPluginManagerUtil();
+		Collection<UIPlugin> uiPlugins = new LinkedList<UIPlugin>(pluginManagerUtil.getPlugins(UIPlugin.class));
+		for(UIPlugin pl : uiPlugins) {
+			map.putAll(pl.getUIComponents());
+		}
 		
 		ReportView rv = new ReportView();
 		ResourcenView resv = new ResourcenView();

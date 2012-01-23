@@ -117,4 +117,9 @@ public class SimulationControlBar extends BaseComponent {
 			}
 		}
 	}
+
+	@Override
+	public String getComponentTypeName() {
+		return "Simulation Control-Bar";
+	}
 }

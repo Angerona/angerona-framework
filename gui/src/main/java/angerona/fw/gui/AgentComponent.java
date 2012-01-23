@@ -37,4 +37,9 @@ public class AgentComponent extends BaseComponent {
 		
 		add(ftp, BorderLayout.CENTER);
 	}
+
+	@Override
+	public String getComponentTypeName() {
+		return "Default Agent-Component";
+	}
 }

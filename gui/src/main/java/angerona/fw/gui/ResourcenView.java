@@ -57,5 +57,10 @@ public class ResourcenView extends BaseComponent {
 	public Dimension getMinimumSize() {
 		return tree.getPreferredSize();
 	}
+
+	@Override
+	public String getComponentTypeName() {
+		return "Resourcen View";
+	}
 	
 }

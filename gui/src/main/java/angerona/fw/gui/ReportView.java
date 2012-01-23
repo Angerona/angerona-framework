@@ -41,4 +41,9 @@ public class ReportView extends BaseComponent implements ReportListener {
 	public void reportReceived(ReportEntry entry) {
 		reportModel.add(0, entry.getMessage() + " from " + entry.getPoster().getName());
 	}
+
+	@Override
+	public String getComponentTypeName() {
+		return "Report-List Component";
+	}
 }
