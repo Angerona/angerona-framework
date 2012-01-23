@@ -124,12 +124,12 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	}
 
 	@Override
-	public ReportEntry getActualEntry() {
+	public ReportEntry getCurrentEntry() {
 		return actEntry;
 	}
 
 	@Override
-	public void setActualEntry(ReportEntry entry) {
+	public void setCurrentEntry(ReportEntry entry) {
 		reportReceived(entry);
 	}
 }
