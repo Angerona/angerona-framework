@@ -55,8 +55,14 @@ public class ReportEntry implements Cloneable {
 		reval.simulationTick = this.simulationTick;
 		reval.realTime = this.realTime;
 		reval.poster = this.poster;
-		if(this.attachment != null)
-			reval.attachment = (ReportAttachment) this.attachment.clone();
+		if(this.attachment != null) {
+			if(this.attachment instanceof ReportAttachmentAtomic) {
+				ReportAttachmentAtomic atomic = (ReportAttachmentAtomic) this.attachment;
+				reval.attachment = (ReportAttachmentAtomic) atomic.clone();
+			} else {
+				reval.attachment = this.attachment;
+			}
+		}
 		else 
 			reval.attachment = null;
 		return reval;
@@ -73,7 +79,7 @@ public class ReportEntry implements Cloneable {
 			cast.poster == this.poster ) {
 			if(this.attachment == null && cast.attachment == null)	return true;
 			else if(this.attachment != null && cast.attachment != null) {
-				return this.attachment.getGUID() == cast.attachment.getGUID();
+				return this.attachment.getGUID().equals(cast.attachment.getGUID());
 			}
 		}
 		return false;

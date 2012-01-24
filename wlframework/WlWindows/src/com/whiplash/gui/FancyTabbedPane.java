@@ -13,7 +13,7 @@ import com.whiplash.res.*;
 
 /**
  * This class implements a fancy alternative to the JTabbedPane.
- * @author Matthias Thimm
+ * @author Matthias Thimm, Tim Janus
  */
 public class FancyTabbedPane extends JPanel implements MouseListener, ComponentListener, ActionListener {
 	
@@ -282,6 +282,19 @@ public class FancyTabbedPane extends JPanel implements MouseListener, ComponentL
 		this.repaint();		
 	}
 	
+	/**
+	 * activates the tab containing the given component
+	 * @param component	the component whichs tab should be activated.
+	 */
+	public void activateComponent(WlComponent component) {
+		for(FancyTabbedPaneTab ftpt : this.tabs) {
+			if(ftpt.getComponent() == component) {
+				activateTab(ftpt);
+				break;
+			}
+		}
+	}
+	
 	/** Activates the given tab, i.e. puts it and its component
 	 * to the foreground.
 	 * @param tab a tab
@@ -292,7 +305,10 @@ public class FancyTabbedPane extends JPanel implements MouseListener, ComponentL
 				aTab.setFocus(FancyTabbedPaneTab.FOCUS_BACKGROUND);
 		tab.setFocus(FancyTabbedPaneTab.FOCUS_ACTIVE);
 		if(this.activeTab != tab){
+			if(activeTab != null)
+				activeTab.getComponent().focusLost();
 			this.activeTab = tab;
+			activeTab.getComponent().focusGained();
 			CardLayout cl = (CardLayout) this.lowerPane.getLayout();
 			cl.show(this.lowerPane, tab.getComponent().getId());
 		}

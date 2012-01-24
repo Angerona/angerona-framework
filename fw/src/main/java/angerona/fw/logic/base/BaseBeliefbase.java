@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,18 +17,20 @@ import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.IdGenerator;
 import angerona.fw.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.operators.parameter.BeliefbaseParameter;
 import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.ReportAttachmentAtomic;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
 /**
  * Base class for every belief base used in Angerona.
  * @author Tim Janus
  */
-public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachment {
+public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachmentAtomic {
 	
 	/** default error string if a formula is no FOL formula */
 	protected static String RES_NO_FOL = "formula is no FOL formula.";
@@ -38,9 +41,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	/** default error string if a formula uses variables but the beliefbase does not support them */
 	protected static String RES_HAS_VARIABLES = "formula has variables, they are not supported.";
 	
-	private static Long nextId = new Long(1);
+	protected Long id;
 	
-	protected Long Id;
+	protected Long parentId;
 	
 	private AngeronaEnvironment env;
 	
@@ -90,13 +93,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
-		Id = nextId++;
+		id = IdGenerator.generate();
 	}
 
-	public void setEnvironment(AngeronaEnvironment env) {
-		this.env = env;
-	}
-	
 	/**
 	 * Ctor: Generates an empty belief base if its supports quantifiers or variables is given by the parameter flags.
 	 * @param supportsQuantifiers	if this is true the belief base supports formulas using quantifiers.
@@ -105,9 +104,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	public BaseBeliefbase(boolean supportsQuantifiers, boolean supportVariables) {
 		this.supportsQuantifiers = supportsQuantifiers;;
 		this.supportsVariables = supportVariables;
-		Id = nextId++;
+		id = IdGenerator.generate();
 	}
-	
+
 	/**
 	 * Ctor: Generates a belief base by parsing a file
 	 * @param filepath	path to the file containing the string representation of the belief base.
@@ -115,9 +114,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	 */
 	public BaseBeliefbase(String filepath) throws IOException {
 		parse(filepath);
-		Id = nextId++;
+		id = IdGenerator.generate();
 	}
-
+	
+	public void setEnvironment(AngeronaEnvironment env) {
+		this.env = env;
+	}
+	
 	/**
 	 * Generates the content of this beliefbase by parsing a file
 	 * @param filepath	path to the file containing the representation of the belief base.
@@ -294,17 +297,21 @@ public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachm
 	
 	@Override
 	public Long getGUID() {
-		return Id;
+		return id;
+	}
+	
+	public void setParent(Long id) {
+		parentId = id;
 	}
 	
 	@Override
 	public Long getParent() {
-		return null;
+		return parentId;
 	}
 	
 	@Override
 	public List<Long> getChilds() {
-		// TODO: implement.
-		return null;
+		// base beliefs bases are at the bottom of the hierarchy.
+		return new LinkedList<Long>();
 	}
 }

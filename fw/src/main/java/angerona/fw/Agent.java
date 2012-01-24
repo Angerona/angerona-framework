@@ -1,6 +1,7 @@
 package angerona.fw;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,7 @@ import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
+import angerona.fw.report.ReportAttachment;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.SkillConfiguration;
 
@@ -44,7 +46,7 @@ import angerona.fw.serialize.SkillConfiguration;
  * The agent defines helper methods to use the operators of the agent.
  * @author Tim Janus
  */
-public class Agent extends AgentArchitecture implements ContextProvider {
+public class Agent extends AgentArchitecture implements ContextProvider, ReportAttachment {
 
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Agent.class);
@@ -57,6 +59,11 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 	
 	/** The belief base of the agent */
 	private Beliefs beliefs;
+	
+	/** id in the report-attachment hierarchy. */
+	private Long id;
+	
+	private List<Long> childrenIds = new LinkedList<Long>();
 	
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
@@ -105,7 +112,24 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 	 * @param confidential	A knowledge base representing the confidential rules of this agent.
 	 */
 	public void setBeliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> views, ConfidentialKnowledge confidential) {
+		if(beliefs != null) {
+			childrenIds.remove(beliefs.getWorldKnowledge().getGUID());
+			childrenIds.remove(beliefs.getConfidentialKnowledge().getGUID());
+			for(String name : beliefs.getViewKnowledge().keySet()) {
+				BaseBeliefbase act = beliefs.getViewKnowledge().get(name);
+				childrenIds.remove(act.getGUID());
+			}
+		}
 		beliefs = new Beliefs(world, views, confidential);
+		childrenIds.add(world.getGUID());
+		childrenIds.add(confidential.getGUID());
+		world.setParent(id);
+		confidential.setParent(id);
+		for(String name : views.keySet()) {
+			BaseBeliefbase bb = views.get(name);
+			childrenIds.add(bb.getGUID());
+			bb.setParent(id);
+		}
 		regenContext();
 	}
 	
@@ -115,6 +139,7 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 	 * @throws AgentInstantiationException
 	 */
 	private void ctor(AgentConfiguration ac, String name) throws AgentInstantiationException {
+		this.id = new Long(IdGenerator.generate());
 		context = new Context();
 		
 		agentProcess = new AngeronaAgentProcess(name);
@@ -313,5 +338,21 @@ public class Agent extends AgentArchitecture implements ContextProvider {
 	
 	public boolean removeDesire(Formula desire) {
 		return this.desires.remove(desire);
+	}
+
+	@Override
+	public Long getGUID() {
+		return id;
+	}
+
+	@Override
+	public Long getParent() {
+		// at this moment agents are the highest instance in the hierarchy.
+		return null;
+	}
+
+	@Override
+	public List<Long> getChilds() {
+		return childrenIds;
 	}
 }

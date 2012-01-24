@@ -43,7 +43,8 @@ public class AspBeliefbase extends BaseBeliefbase {
 	@Override
 	public Object clone() {
 		AspBeliefbase reval = new AspBeliefbase();
-		reval.Id = Id;
+		reval.id = new Long(getGUID());
+		reval.parentId = new Long(getParent());
 		reval.program = (Program) program.clone();
 		reval.signature = signature;
 		return reval;

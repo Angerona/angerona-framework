@@ -145,6 +145,15 @@ public abstract class WlComponent extends JPanel implements MouseListener {
 	protected void focusGained() {		
 		this.setBackground(WlLookAndFeel.COLOR_FOCUS_ACTIVE);
 		this.requestFocus();
+		for(Component c : this.getComponents()) {
+			if(c instanceof FancyTabbedPane) {
+				FancyTabbedPane ftp = (FancyTabbedPane)c;
+				ftp.focusGained();
+			} else if(c instanceof WlComponent) {
+				WlComponent wc = (WlComponent)c;
+				wc.focusGained();
+			}
+		}
 		if(this.getWindowSet() != null)
 			this.getWindowSet().fireWlComponentGainedFocusEvent(new WlComponentFocusGainedEvent(this));
 	}
@@ -152,6 +161,15 @@ public abstract class WlComponent extends JPanel implements MouseListener {
 	/** This method is called when this component loses focus. */
 	protected void focusLost() {	
 		this.setBackground(WlLookAndFeel.COLOR_FOCUS_FOREGROUND);
+		for(Component c : this.getComponents()) {
+			if(c instanceof FancyTabbedPane) {
+				FancyTabbedPane ftp = (FancyTabbedPane)c;
+				ftp.focusLost();
+			} else if(c instanceof WlComponent) {
+				WlComponent wc = (WlComponent)c;
+				wc.focusLost();
+			}
+		}
 		if(this.parent != null && this.parent.getWindow() != null)
 			this.parent.getWindow().getWindowSet().fireWlComponentFocusLostEvent(new WlComponentFocusLostEvent(this));
 	}

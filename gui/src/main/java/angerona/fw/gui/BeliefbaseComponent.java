@@ -1,6 +1,8 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -126,13 +128,19 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	@Override
 	public void reportReceived(ReportEntry entry) {
 		if(entry.getAttachment() != null) {
-			if(isVisible() && entry.getAttachment().getGUID() == beliefbase.getGUID()) {
+			if(entry.getAttachment().getGUID().equals(beliefbase.getGUID())) {
 				actEntry = entry;
-				actualBeliefbase = (BaseBeliefbase) entry.getAttachment();
-				defaultUpdatePrevious();
-				update();
+				if(isVisible()) {
+					updateView();
+				}
 			}
 		}
+	}
+
+	private void updateView() {
+		actualBeliefbase = (BaseBeliefbase) actEntry.getAttachment();
+		defaultUpdatePrevious();
+		update();
 	}
 
 	/** Helper method: updates the reference of the previous beliefbase */
