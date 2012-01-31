@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import angerona.fw.report.Report;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 import angerona.fw.report.ReportPoster;
@@ -59,14 +59,14 @@ public class Angerona {
 		report(msg, sender, null);
 	}
 	
-	public void report(String msg, ReportPoster sender, ReportAttachment attachment) {
+	public void report(String msg, ReportPoster sender, Entity attachment) {
 		String logOut = msg;
 		
 		if (sender == null){
 			throw new IllegalArgumentException("sender must not be null");
 		}
 
-		logOut += " by " + sender.getName() + " in " + sender.getSimulationTick()+":"+sender.getSimulation();
+		logOut += " by " + sender.getPosterName() + " in " + sender.getSimulationTick()+":"+sender.getSimulation();
 		
 		// Every report will also be logged by our logging facility.
 		LOG.info("REPORT: " + logOut);

@@ -4,7 +4,7 @@ import angerona.fw.AngeronaEnvironment;
 
 /**
  * Every class which implement this interface can be used as information 
- * provider for the report mechanism of Angerona
+ * provider for the report mechanism of Angerona.
  * 
  * @author Tim Janus
  */
@@ -16,5 +16,5 @@ public interface ReportPoster {
 	AngeronaEnvironment getSimulation();
 	
 	/** @return a more detailed name of the poster like the operator name */
-	String getName();
+	String getPosterName();
 }

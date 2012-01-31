@@ -7,15 +7,18 @@ import com.whiplash.gui.WlComponent;
 /**
  * Base class for Angerona UI Components.
  * 
- * Custom components extend this class.
+ * There are several UI Components already defined in the Angerona GUI Extension library. Nevertheless
+ * Plugins have the ability to extends this Component and register them to the Angerona GUI Extension.
  * 
+ * @see UIPlugin
  * @author Tim Janus
  */
-public abstract class BaseComponent extends WlComponent {
+public abstract class UIComponent extends WlComponent {
 
 	/** kill warning */
 	private static final long serialVersionUID = -1482323833112551669L;
 
+	/** the title of the UIComponent tab. */
 	private String title;
 	
 	@Override
@@ -23,6 +26,10 @@ public abstract class BaseComponent extends WlComponent {
 		return title;
 	}
 	
+	/**
+	 * changes the title of the tab lable of the UI Component.
+	 * @param title
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 		try {

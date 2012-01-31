@@ -12,25 +12,35 @@ import angerona.fw.AngeronaEnvironment;
  * A report encapsulates the data collect during a simulation. The Angerona main class is responsible
  * to feed in the data. The class does not use a listener concept because we want to guarantee that the
  * report data is saved before the other ReportListeners are informed.
+ * 
  * @author Tim Janus
  */
 public class Report  {
+	/** list containing all the report entries */
 	private List<ReportEntry> entries = new LinkedList<ReportEntry>();
 	
-	private Map<ReportAttachment, List<ReportEntry>> attachmentEntriesMap = new HashMap<ReportAttachment, List<ReportEntry>>();
+	/** mapping from an entity to a list of report entries containing the key entity as attachment */
+	private Map<Entity, List<ReportEntry>> attachmentEntriesMap = new HashMap<Entity, List<ReportEntry>>();
 	
+	/** reference to the simulation of the report */
 	private AngeronaEnvironment simulation;
 	
 	public Report(AngeronaEnvironment simulation) {
 		this.simulation = simulation;
 	}
 
+	/** 
+	 * saves the given entry in the data structures of the report. That means its  put in the complete list and
+	 * in the entity -> Report entries map if an attachment is added to the report.
+	 * The entry and its attachment is copied before saving.
+	 * @param entry	reference to the entry which will be saved.
+	 */
 	public void saveEntry(ReportEntry entry) {
 		if(entry.getPoster().getSimulation() == simulation) {
 			ReportEntry copy = (ReportEntry) entry.clone();
 			entries.add(copy);
 			
-			ReportAttachment att = entry.getAttachment();
+			Entity att = entry.getAttachment();
 			if(att != null) {
 				List<ReportEntry> entries = null;
 				if(!attachmentEntriesMap.containsKey(att)) {
@@ -44,6 +54,9 @@ public class Report  {
 		}
 	}
 	
+	/**
+	 * @return complete list of report entries so far. The list is not modifiable.
+	 */
 	public List<ReportEntry> getAllEntries() {
 		return Collections.unmodifiableList(entries);
 	}
@@ -56,7 +69,7 @@ public class Report  {
 	 * @return				null if a list for the given attachment does not exists otherwise the list with all the report entries
 	 * 						of the given attachment.
 	 */
-	public List<ReportEntry> getEntriesOf(ReportAttachment attachment) {
+	public List<ReportEntry> getEntriesOf(Entity attachment) {
 		if(attachment == null)	throw new IllegalArgumentException("attachment must not be null.");
 		return Collections.unmodifiableList(attachmentEntriesMap.get(attachment));
 	}

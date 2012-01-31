@@ -1,5 +1,5 @@
 package angerona.fw.gui;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 
 /**
@@ -10,7 +10,7 @@ import angerona.fw.report.ReportEntry;
  */
 public interface NavigationUser {
 	/** @return a reference to the report-attachment which is observed by the parent component */
-	ReportAttachment getAttachment();
+	Entity getAttachment();
 	
 	/** @return the entry which is watch currently */
 	ReportEntry getCurrentEntry();

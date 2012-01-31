@@ -4,8 +4,8 @@ package angerona.fw.error;
  * Own not implemented exception class. The one defined in
  * sun.reflect.generic.reflectiveObjects generates warnings
  * when building java-doc.
+ * 
  * @author Tim Janus
- *
  */
 public class NotImplementedException extends Error {
 

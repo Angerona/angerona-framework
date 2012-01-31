@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.PluginInstantiator;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 
 import com.whiplash.gui.WlComponent;
 import com.whiplash.gui.WlWindow;
@@ -35,25 +35,31 @@ import com.whiplash.gui.WlWindowSet;
 import com.whiplash.res.DefaultResourceManager;
 import com.whiplash.res.WlResourceManager;
 
-public class SimulationMonitor  {
+/**
+ * The main window of the Angerona UI - Extension. It is a Singleton. 
+ * @author Tim Janus
+ */
+public class AngeronaWindow  {
 	private WlWindow window;
 	
 	private WlWindowSet windowSet;
 
 	private SimulationControlBar simLoadBar;
 	
-	private Map<String, Class<? extends BaseComponent>> map = new HashMap<String, Class<? extends BaseComponent>>();
+	private Map<String, Class<? extends UIComponent>> map = new HashMap<String, Class<? extends UIComponent>>();
 	
-	private static SimulationMonitor instance;
+	/** unique instance of the AngeronaWindow (Singleton) */
+	private static AngeronaWindow instance;
 	
-	public static SimulationMonitor getInstance() {
+	/** @return reference to the unique instance of the AngeronaWindow */
+	public static AngeronaWindow getInstance() {
 		if(instance == null) {
-			instance = new SimulationMonitor();
+			instance = new AngeronaWindow();
 		}
 		return instance;
 	}
 	
-	private SimulationMonitor() {
+	private AngeronaWindow() {
 		DefaultResourceManager resourceManager = null;
 		try {
 			resourceManager = new DefaultResourceManager(new File(".").toURI().toURL());
@@ -76,72 +82,10 @@ public class SimulationMonitor  {
 		miCreate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {	
-				String str = (String) JOptionPane.showInputDialog(window, 
-						"Select a Window to create...",
-						"Create Window",
-						JOptionPane.PLAIN_MESSAGE,
-						null,
-						map.keySet().toArray(),
-						null);
-				if(map.containsKey(str)) {
-					try {
-						BaseComponent bc = map.get(str).newInstance();
-						Class<?> type = bc.getObservationObjectType();
-						if(type == null) {
-							bc.init();
-							window.addWlComponent(bc, BorderLayout.CENTER);
-						} else {
-							AngeronaEnvironment env = simLoadBar.getEnvironment();
-							List<ReportAttachment> tempList = new LinkedList<ReportAttachment>();
-							for(Long id : env.getEntityMap().keySet()) {
-								ReportAttachment possible = env.getEntityMap().get(id);
-								if(possible.getClass().equals(bc.getObservationObjectType())) {
-									tempList.add(possible);
-								}
-							}
-							
-							List<String> names = new LinkedList<String>();
-							for(ReportAttachment att : tempList) {
-								names.add("<" + att.getGUID() + ">");
-							}
-							
-							ReportAttachment selection = null;
-							if(tempList.size() == 0) {
-								JOptionPane.showMessageDialog(window, "No object for observation found.");
-							} else if(tempList.size() == 1) {
-								selection = tempList.get(0);
-							} else {
-								String str2 = (String) JOptionPane.showInputDialog(window, 
-										"Select a Object for observation...",
-										"Create Window 2",
-										JOptionPane.PLAIN_MESSAGE,
-										null,
-										names.toArray(),
-										null);
-								
-								int index = names.indexOf(str2);
-								if(index != -1) {
-									selection = tempList.get(index);
-								}
-							}
-							
-							if(selection != null) {
-								BaseComponent comp = SimulationMonitor.createBaseComponent(map.get(str), selection);
-								SimulationMonitor.getInstance().addComponentToCenter(comp);
-							}
-						}
-						
-						
-					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				onCreateWindowClicked();
 			}
 		});
+		
 		menuWindow.add(miCreate);
 		menuBar.add(menuWindow);
 		
@@ -171,20 +115,9 @@ public class SimulationMonitor  {
 			map.putAll(pl.getUIComponents());
 		}
 		
-		ReportView rv = new ReportView();
-		rv.init();
-		ResourcenView resv = new ResourcenView();
-		resv.init();
-		simLoadBar = new SimulationControlBar();
-		simLoadBar.init();
-		
-		window.addWlComponent(rv, BorderLayout.CENTER);
-		window.addWlComponent(resv , BorderLayout.WEST);
-		window.addWlComponent(simLoadBar, BorderLayout.SOUTH);
-		
-		System.out.println("Report: " + rv.getMinimumSize());
-		System.out.println("Resourcen: " + resv.getMinimumSize());
-		System.out.println("Simulation: " + simLoadBar.getMinimumSize());
+		window.addWlComponent(createBaseComponent(ReportView.class, null), BorderLayout.CENTER);
+		window.addWlComponent(createBaseComponent(ResourcenView.class, null), BorderLayout.WEST);
+		window.addWlComponent(createBaseComponent(SimulationControlBar.class, null), BorderLayout.SOUTH);
 	}
 	
 	public void addComponentToCenter(WlComponent component) {
@@ -202,7 +135,13 @@ public class SimulationMonitor  {
 		return window;
 	}
 	
-	public static <T extends BaseComponent> T createBaseComponent(Class<? extends T> cls, Object toObserve) {
+	/**
+	 * creates and initalized an UI Component.
+	 * @param cls class information about the UI component which should be created.
+	 * @param toObserve	reference to the object the UI component should observe (might be null if no direct mapping between observed object and UI component can be given)
+	 * @return a new instance of UIComponent which is ready to use.
+	 */
+	public static <T extends UIComponent> T createBaseComponent(Class<? extends T> cls, Object toObserve) {
 		T reval;
 		try {
 			reval = cls.newInstance();
@@ -222,5 +161,73 @@ public class SimulationMonitor  {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/** helper method: called if the 'Create Window...' menu item is clicked */
+	private void onCreateWindowClicked() {
+		String str = (String) JOptionPane.showInputDialog(window, 
+				"Select a Window to create...",
+				"Create Window",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				map.keySet().toArray(),
+				null);
+		if(map.containsKey(str)) {
+			try {
+				UIComponent bc = map.get(str).newInstance();
+				Class<?> type = bc.getObservationObjectType();
+				if(type == null) {
+					bc.init();
+					window.addWlComponent(bc, BorderLayout.CENTER);
+				} else {
+					AngeronaEnvironment env = simLoadBar.getEnvironment();
+					List<Entity> tempList = new LinkedList<Entity>();
+					for(Long id : env.getEntityMap().keySet()) {
+						Entity possible = env.getEntityMap().get(id);
+						if(possible.getClass().equals(bc.getObservationObjectType())) {
+							tempList.add(possible);
+						}
+					}
+					
+					List<String> names = new LinkedList<String>();
+					for(Entity att : tempList) {
+						names.add("<" + att.getGUID() + ">");
+					}
+					
+					Entity selection = null;
+					if(tempList.size() == 0) {
+						JOptionPane.showMessageDialog(window, "No object for observation found.");
+					} else if(tempList.size() == 1) {
+						selection = tempList.get(0);
+					} else {
+						String str2 = (String) JOptionPane.showInputDialog(window, 
+								"Select a Object for observation...",
+								"Create Window 2",
+								JOptionPane.PLAIN_MESSAGE,
+								null,
+								names.toArray(),
+								null);
+						
+						int index = names.indexOf(str2);
+						if(index != -1) {
+							selection = tempList.get(index);
+						}
+					}
+					
+					if(selection != null) {
+						UIComponent comp = AngeronaWindow.createBaseComponent(map.get(str), selection);
+						AngeronaWindow.getInstance().addComponentToCenter(comp);
+					}
+				}
+				
+				
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

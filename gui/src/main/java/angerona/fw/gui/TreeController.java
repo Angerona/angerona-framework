@@ -17,6 +17,12 @@ import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.util.SimulationListener;
 
+/**
+ * This class is responsible for keeping track of new Resources added to Angerona and to keep them
+ * in sync with the JTrees in ResourcenView.
+ * @see ResourcenView
+ * @author Tim Janus
+ */
 public class TreeController implements SimulationListener {
 	
 	public class BBUserObject {
@@ -59,7 +65,7 @@ public class TreeController implements SimulationListener {
 		
 		@Override
 		public String toString() {
-			return simulation.getName();
+			return simulation.getPosterName();
 		}
 	}
 	
@@ -160,7 +166,7 @@ public class TreeController implements SimulationListener {
 	
 	@Override
 	public void simulationStarted(AngeronaEnvironment simulation) {
-		simulation.getName();
+		simulation.getPosterName();
 		DefaultMutableTreeNode simNode = new DefaultMutableTreeNode(new SimulationUserObject(simulation));
 		
 		for(String agName : simulation.getAgentNames()) {

@@ -22,15 +22,15 @@ import angerona.fw.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.operators.parameter.BeliefbaseParameter;
-import angerona.fw.report.ReportAttachment;
-import angerona.fw.report.ReportAttachmentAtomic;
+import angerona.fw.report.Entity;
+import angerona.fw.report.EntityAtomic;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
 /**
  * Base class for every belief base used in Angerona.
  * @author Tim Janus
  */
-public abstract class BaseBeliefbase extends BeliefBase implements ReportAttachmentAtomic {
+public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic {
 	
 	/** default error string if a formula is no FOL formula */
 	protected static String RES_NO_FOL = "formula is no FOL formula.";

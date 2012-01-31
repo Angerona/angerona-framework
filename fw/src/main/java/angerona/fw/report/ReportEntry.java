@@ -5,22 +5,30 @@ import java.util.Date;
 /**
  * A ReportEntry contains informations about a report, like the message, the poster or the attachment.
  * It also saves the simulation tick and the real time when the report was create.
+ * 
+ * It implements the cloneable interface and also overrides equal for comparing itself with other report entries.
+ * 
  * @author Tim Janus
  */
 public class ReportEntry implements Cloneable {
+	/** simulation tick */
 	private int 	simulationTick;
 	
+	/** real time at the cration of the entry */
 	private Date 	realTime;
 	
+	/** a short message describing what the report entry is all about */
 	private String 	message;
 	
+	/** reference to the poster of the report entry */
 	private ReportPoster poster;
 	
-	private ReportAttachment attachment;
+	/** the attachment of the report entry, might be null if no attachment is attached. */
+	private Entity attachment;
 	
 	private ReportEntry() {}
 	
-	public ReportEntry(String message, ReportPoster poster, ReportAttachment attachment) {
+	public ReportEntry(String message, ReportPoster poster, Entity attachment) {
 		this.message = message;
 		this.poster = poster;
 		this.attachment = attachment;
@@ -44,7 +52,7 @@ public class ReportEntry implements Cloneable {
 		return poster;
 	}
 
-	public ReportAttachment getAttachment() {
+	public Entity getAttachment() {
 		return attachment;
 	}
 	
@@ -56,9 +64,9 @@ public class ReportEntry implements Cloneable {
 		reval.realTime = this.realTime;
 		reval.poster = this.poster;
 		if(this.attachment != null) {
-			if(this.attachment instanceof ReportAttachmentAtomic) {
-				ReportAttachmentAtomic atomic = (ReportAttachmentAtomic) this.attachment;
-				reval.attachment = (ReportAttachmentAtomic) atomic.clone();
+			if(this.attachment instanceof EntityAtomic) {
+				EntityAtomic atomic = (EntityAtomic) this.attachment;
+				reval.attachment = (EntityAtomic) atomic.clone();
 			} else {
 				reval.attachment = this.attachment;
 			}

@@ -29,7 +29,7 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.SimulationConfiguration;
 
@@ -42,24 +42,30 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
+	/** the actual simulation tick */
 	private int tick = 0;
 	
+	/** the name of the simulation, for example: 'strike_comittee_meeting' */
 	private String name = "";
 	
 	/** implementation of the factory used for perceptions */
 	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
 	
+	/** flag indicating if the environment is currently in its update process */
 	private boolean doingTick = false;
 	
+	/** flag indicating if the environment is correctly initialized */
 	private boolean ready = false;
 	
-	private Map<Long, ReportAttachment> entities = new HashMap<Long, ReportAttachment>();
+	/** a map of entity ids to the entity references */
+	private Map<Long, Entity> entities = new HashMap<Long, Entity>();
 	
-	public Map<Long, ReportAttachment> getEntityMap() {
+	public Map<Long, Entity> getEntityMap() {
 		return Collections.unmodifiableMap(entities);
 	}
 	
-	public String getName() {
+	@Override
+	public String getPosterName() {
 		return name;
 	}
 	

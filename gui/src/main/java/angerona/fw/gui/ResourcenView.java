@@ -11,7 +11,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-public class ResourcenView extends BaseComponent {
+public class ResourcenView extends UIComponent {
 
 	/** kill warning */
 	private static final long serialVersionUID = 5711286288337915366L;
@@ -38,15 +38,15 @@ public class ResourcenView extends BaseComponent {
 		                	 o = n.getUserObject();
 		                	 if(o instanceof TreeController.BBUserObject) {
 		                		 TreeController.BBUserObject temp = (TreeController.BBUserObject)o;
-		                		 BeliefbaseComponent bc = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, 
+		                		 BeliefbaseComponent bc = AngeronaWindow.createBaseComponent(BeliefbaseComponent.class, 
 		                				 temp.getBeliefbase());
-		                		 SimulationMonitor.getInstance().addComponentToCenter(bc);
+		                		 AngeronaWindow.getInstance().addComponentToCenter(bc);
 		                	 } else if(o instanceof TreeController.AgentUserObject) {
 		                		 TreeController.AgentUserObject temp = (TreeController.AgentUserObject)o;
 		                		 AgentComponent ac = new AgentComponent();
 		                		 ac.setObservationObject(temp.getAgent());
 		                		 ac.init();
-		                		 SimulationMonitor.getInstance().addComponentToCenter(ac);
+		                		 AngeronaWindow.getInstance().addComponentToCenter(ac);
 		                	 }
 		                 }
 		             }

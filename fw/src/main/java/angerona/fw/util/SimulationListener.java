@@ -3,6 +3,12 @@ package angerona.fw.util;
 import angerona.fw.Agent;
 import angerona.fw.AngeronaEnvironment;
 
+/**
+ * Listener interface which gets informed about changes of the simulation. For example if a new agent
+ * is added to simulation. Or a agent is removed, when the simulation starts or a tick is done.
+ * 
+ * @author Tim Janus
+ */
 public interface SimulationListener {
 	/** is called when a new simulation starts */
 	void simulationStarted(AngeronaEnvironment simulationEnvironment);

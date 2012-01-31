@@ -11,7 +11,7 @@ import angerona.fw.Angerona;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
-public class ReportView extends BaseComponent implements ReportListener {
+public class ReportView extends UIComponent implements ReportListener {
 
 	/** kill warning */
 	private static final long serialVersionUID = 697392233654570429L;
@@ -40,7 +40,7 @@ public class ReportView extends BaseComponent implements ReportListener {
 
 	@Override
 	public void reportReceived(ReportEntry entry) {
-		reportModel.add(0, entry.getMessage() + " from " + entry.getPoster().getName());
+		reportModel.add(0, entry.getMessage() + " from " + entry.getPoster().getPosterName());
 	}
 
 	@Override

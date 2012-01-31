@@ -131,7 +131,7 @@ public class Context {
 	 */
 	public void Invoke(ContextVisitor visitor, SkillConfiguration.Statement st) throws InvokeException {
 		if(visitor == null)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("The visitor must not be 'null'");
 		visitor.run(st, this);
 	}
 }

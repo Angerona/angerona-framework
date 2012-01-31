@@ -2,6 +2,12 @@ package angerona.fw.error;
 
 import angerona.fw.reflection.Context;
 
+/**
+ * This exception is thrown if something went wrong during the invoking of function defined in xml 
+ * format. 
+ * 
+ * @author Tim Janus
+ */
 public class InvokeException extends AngeronaException {
 	/** kill warning */
 	private static final long serialVersionUID = 3424965969366130708L;

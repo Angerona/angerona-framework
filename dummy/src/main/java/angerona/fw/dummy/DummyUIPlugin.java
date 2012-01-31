@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import angerona.fw.gui.BaseComponent;
+import angerona.fw.gui.UIComponent;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.dummy.DummyBeliefbaseComponent;
 
@@ -12,8 +12,8 @@ import angerona.fw.gui.dummy.DummyBeliefbaseComponent;
 public class DummyUIPlugin implements UIPlugin {
 
 	@Override
-	public Map<String, Class<? extends BaseComponent>> getUIComponents() {
-		Map<String, Class<? extends BaseComponent>> reval = new HashMap<String, Class<? extends BaseComponent>>();
+	public Map<String, Class<? extends UIComponent>> getUIComponents() {
+		Map<String, Class<? extends UIComponent>> reval = new HashMap<String, Class<? extends UIComponent>>();
 		reval.put("Dummy Beliefbase Extension", DummyBeliefbaseComponent.class);
 		return reval;
 	}

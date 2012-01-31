@@ -34,7 +34,7 @@ import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.SkillConfiguration;
 
@@ -46,7 +46,7 @@ import angerona.fw.serialize.SkillConfiguration;
  * The agent defines helper methods to use the operators of the agent.
  * @author Tim Janus
  */
-public class Agent extends AgentArchitecture implements ContextProvider, ReportAttachment {
+public class Agent extends AgentArchitecture implements ContextProvider, Entity {
 
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Agent.class);

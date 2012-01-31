@@ -8,7 +8,7 @@ import javax.swing.JList;
 
 import angerona.fw.Angerona;
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
@@ -18,7 +18,7 @@ import angerona.fw.report.ReportListener;
  * It has a navigation element
  * @author Tim Janus
  */
-public class BeliefbaseComponent extends BaseComponent implements ReportListener, NavigationUser {
+public class BeliefbaseComponent extends UIComponent implements ReportListener, NavigationUser {
 
 	/**
 	 * Inner class used to represent the elements in a list.
@@ -150,7 +150,7 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	}
 
 	@Override
-	public ReportAttachment getAttachment() {
+	public Entity getAttachment() {
 		return beliefbase;
 	}
 

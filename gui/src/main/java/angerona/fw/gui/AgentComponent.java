@@ -10,13 +10,13 @@ import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
 import com.whiplash.gui.FancyTabbedPane;
 
-public class AgentComponent extends BaseComponent implements NavigationUser, ReportListener {
+public class AgentComponent extends UIComponent implements NavigationUser, ReportListener {
 
 	/** kill warning */
 	private static final long serialVersionUID = -4199687668546277953L;
@@ -25,7 +25,7 @@ public class AgentComponent extends BaseComponent implements NavigationUser, Rep
 	
 	private ReportEntry currentEntry;
 	
-	private List<BaseComponent> components = new LinkedList<BaseComponent>();
+	private List<UIComponent> components = new LinkedList<UIComponent>();
 	
 	private FancyTabbedPane ftp;
 	
@@ -40,19 +40,19 @@ public class AgentComponent extends BaseComponent implements NavigationUser, Rep
 		JLabel agName = new JLabel("Name: " + agent.getName());
 		add(agName, BorderLayout.NORTH);
 		
-		ftp = new FancyTabbedPane(SimulationMonitor.getInstance().getWindow(), false);
+		ftp = new FancyTabbedPane(AngeronaWindow.getInstance().getWindow(), false);
 		Beliefs b = agent.getBeliefs();
 		
-		BeliefbaseComponent comp = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, b.getWorldKnowledge());
+		BeliefbaseComponent comp = AngeronaWindow.createBaseComponent(BeliefbaseComponent.class, b.getWorldKnowledge());
 		comp.setTitle("World");
 		addWlComponent(comp);
 		for(String viewName : b.getViewKnowledge().keySet()) {
 			BaseBeliefbase actView = b.getViewKnowledge().get(viewName);
-			BeliefbaseComponent actComp = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, actView);
+			BeliefbaseComponent actComp = AngeronaWindow.createBaseComponent(BeliefbaseComponent.class, actView);
 			actComp.setTitle("View->" + viewName);
 			addWlComponent(actComp);
 		}
-		BeliefbaseComponent bc = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, b.getConfidentialKnowledge());
+		BeliefbaseComponent bc = AngeronaWindow.createBaseComponent(BeliefbaseComponent.class, b.getConfidentialKnowledge());
 		bc.setTitle("Conf");
 		addWlComponent(bc);
 		
@@ -60,7 +60,7 @@ public class AgentComponent extends BaseComponent implements NavigationUser, Rep
 		Angerona.getInstance().addReportListener(this);
 	}
 	
-	private void addWlComponent(BaseComponent bc) {
+	private void addWlComponent(UIComponent bc) {
 		ftp.addWlComponent(bc);
 		components.add(bc);
 	}
@@ -71,7 +71,7 @@ public class AgentComponent extends BaseComponent implements NavigationUser, Rep
 	}
 
 	@Override
-	public ReportAttachment getAttachment() {
+	public Entity getAttachment() {
 		return agent;
 	}
 
@@ -94,7 +94,7 @@ public class AgentComponent extends BaseComponent implements NavigationUser, Rep
 			agent.getChilds().contains(id)) {
 			currentEntry = entry;
 			
-			for(BaseComponent bc : components) {
+			for(UIComponent bc : components) {
 				if(bc instanceof BeliefbaseComponent) {
 					BeliefbaseComponent bbc = (BeliefbaseComponent)bc;
 					if(bbc.getAttachment().getGUID().equals(id)) {

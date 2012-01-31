@@ -3,7 +3,7 @@ package angerona.fw.operators;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.operators.parameter.GenericOperatorParameter;
-import angerona.fw.report.ReportAttachment;
+import angerona.fw.report.Entity;
 import angerona.fw.report.ReportPoster;
 
 /**
@@ -38,7 +38,7 @@ public abstract class Operator<IN extends GenericOperatorParameter, OUT> impleme
 	
 
 	@Override
-	public String getName() {
+	public String getPosterName() {
 		return this.getClass().getSimpleName();
 	}
 
@@ -56,7 +56,7 @@ public abstract class Operator<IN extends GenericOperatorParameter, OUT> impleme
 		Angerona.getInstance().report(msg, this);
 	}
 	
-	protected void report(String msg, ReportAttachment attachment) {
+	protected void report(String msg, Entity attachment) {
 		Angerona.getInstance().report(msg, this, attachment);
 	}
 }
