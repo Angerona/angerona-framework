@@ -22,11 +22,14 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.xeoh.plugins.base.util.PluginManagerUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.PluginInstantiator;
+import angerona.fw.PluginListener;
 import angerona.fw.report.Entity;
 
 import com.whiplash.gui.WlComponent;
@@ -39,7 +42,7 @@ import com.whiplash.res.WlResourceManager;
  * The main window of the Angerona UI - Extension. It is a Singleton. 
  * @author Tim Janus
  */
-public class AngeronaWindow  {
+public class AngeronaWindow implements PluginListener {
 	private WlWindow window;
 	
 	private WlWindowSet windowSet;
@@ -47,6 +50,8 @@ public class AngeronaWindow  {
 	private SimulationControlBar simLoadBar;
 	
 	private Map<String, Class<? extends UIComponent>> map = new HashMap<String, Class<? extends UIComponent>>();
+	
+	private static Logger LOG = LoggerFactory.getLogger(AngeronaWindow.class);
 	
 	/** unique instance of the AngeronaWindow (Singleton) */
 	private static AngeronaWindow instance;
@@ -94,10 +99,13 @@ public class AngeronaWindow  {
 
 	public void init() throws ParserConfigurationException, SAXException,
 			IOException {
+		LOG.trace("init() AngeronaWindow");
 		window.setTitle("Angerona - Simulation Monitor");
 		window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+		
+		PluginInstantiator.getInstance().addListener(this);
 		
 		Angerona angerona = Angerona.getInstance();
 		angerona.addAgentConfigFolder("config/agents");
@@ -108,16 +116,9 @@ public class AngeronaWindow  {
 		map.put("Report-View", ReportView.class);
 		map.put("Resourcen-View", ResourcenView.class);
 		
-		// TODO: Move this somewhere else.
-		PluginManagerUtil pluginManagerUtil = PluginInstantiator.getPluginManagerUtil();
-		Collection<UIPlugin> uiPlugins = new LinkedList<UIPlugin>(pluginManagerUtil.getPlugins(UIPlugin.class));
-		for(UIPlugin pl : uiPlugins) {
-			map.putAll(pl.getUIComponents());
-		}
-		
 		window.addWlComponent(createBaseComponent(ReportView.class, null), BorderLayout.CENTER);
 		window.addWlComponent(createBaseComponent(ResourcenView.class, null), BorderLayout.WEST);
-		window.addWlComponent(createBaseComponent(SimulationControlBar.class, null), BorderLayout.SOUTH);
+		window.addWlComponent(simLoadBar = createBaseComponent(SimulationControlBar.class, null), BorderLayout.SOUTH);
 	}
 	
 	public void addComponentToCenter(WlComponent component) {
@@ -125,6 +126,7 @@ public class AngeronaWindow  {
 	}
 	
 	public void loadSimulation(String path) {
+		LOG.trace("Load simulation {}", path);
 		File f = new File(path);
 		if(f.exists()) {
 			simLoadBar.loadSimulation(f);
@@ -228,6 +230,17 @@ public class AngeronaWindow  {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+
+	@Override
+	public void loadingImplementations(PluginInstantiator pi) {
+		LOG.info("Load UI-Plugins");
+		PluginManagerUtil pmu = PluginInstantiator.getInstance().getPluginUtil();
+		Collection<UIPlugin> uiPlugins = new LinkedList<UIPlugin>(pmu.getPlugins(UIPlugin.class));
+		for(UIPlugin pl : uiPlugins) {
+			LOG.info("UI-Plugin: '{}' loaded", pl.getClass().getName());
+			map.putAll(pl.getUIComponents());
 		}
 	}
 }

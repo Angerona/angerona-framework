@@ -148,17 +148,18 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws IllegalAccessException
 	 */
 	public void generateOperators(BeliefbaseConfiguration bbc) throws InstantiationException, IllegalAccessException {		
-		reasoningOperator = PluginInstantiator.createReasoner(bbc.getReasonerClassName());
+		PluginInstantiator pi = PluginInstantiator.getInstance();
+		reasoningOperator = pi.createReasoner(bbc.getReasonerClassName());
 		reasoningOperator.setBeliefbase(this);
 		
 		if(bbc.getExpansionClassName() != null && !bbc.getExpansionClassName().equals("empty"))
-			expansionOperator = PluginInstantiator.createExpansion(bbc.getExpansionClassName());
+			expansionOperator = pi.createExpansion(bbc.getExpansionClassName());
 		
 		if(bbc.getConsolidationClassName() != null && !bbc.getConsolidationClassName().equals("empty"))
-			consolidationOperator = PluginInstantiator.createConsolidation(bbc.getConsolidationClassName());
+			consolidationOperator = pi.createConsolidation(bbc.getConsolidationClassName());
 		
 		if(bbc.getRevisionClassName() != null && !bbc.getRevisionClassName().equals("empty"))
-			revisionOperator = PluginInstantiator.createRevision(bbc.getRevisionClassName());
+			revisionOperator = pi.createRevision(bbc.getRevisionClassName());
 		
 		try {
 			defaultUpdateBehavior = bbc.getUpdateBehavior();

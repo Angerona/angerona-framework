@@ -200,13 +200,14 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		
 		LOG.info("Starting simulation: " + config.getName());
 		
+		PluginInstantiator pi = PluginInstantiator.getInstance();
 		tick = 0;
 		try {
 			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
 				entities.put(highLevelAg.getGUID(), highLevelAg);
 				
-				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
+				BaseBeliefbase world = pi.createBeliefbase(ai.getBeliefbaseConfig());
 				entities.put(world.getGUID(), world);
 				world.setEnvironment(this);
 				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
@@ -230,7 +231,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				Map<String, BaseBeliefbase> views = new HashMap<String, BaseBeliefbase>();
 				
 				for(String key : bbsp.viewContent.keySet()) {
-					BaseBeliefbase actView = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
+					BaseBeliefbase actView = pi.createBeliefbase(ai.getBeliefbaseConfig());
 					entities.put(actView.getGUID(), actView);
 					actView.setEnvironment(this);
 					sr = new StringReader(bbsp.viewContent.get(key));
@@ -241,6 +242,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
 				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
 				addAgent(highLevelAg.getAgentProcess());
+				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {
 			reval = false;

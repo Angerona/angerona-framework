@@ -283,6 +283,8 @@ public class Angerona {
 				forAllFilesIn(folder, scl);
 			}
 		}
+		// TODO: Kick Angerona Main
+		PluginInstantiator.getInstance().addPlugins(AngeronaMain.getConfig().getPluginPaths());
 		bootstrapDone = true;
 	}
 	

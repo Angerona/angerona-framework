@@ -146,13 +146,14 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		agentProcess.setAgentArchitecture(this);
 		init(agentProcess);
 		
+		PluginInstantiator pi = PluginInstantiator.getInstance();
 		try {
-			generateOptionsOperator = PluginInstantiator.createGenerateOptionsOperator(ac.getGenerateOptionsOperatorClass());
-			intentionUpdateOperator = PluginInstantiator.createFilterOperator(ac.getFilterOperatorClass());
-			subgoalGenerationOperator = PluginInstantiator.createPlaner(ac.getPlanerClass());
-			changeOperator = PluginInstantiator.createUpdateOperator(ac.getUpdateOperatorClass());
-			policyControlOperator = PluginInstantiator.createPolicyControlOperator(ac.getPolicyControlOperatorClass());
-			violatesOperator = PluginInstantiator.createViolatesOperator(ac.getViolatesOperatorClass());
+			generateOptionsOperator = pi.createGenerateOptionsOperator(ac.getGenerateOptionsOperatorClass());
+			intentionUpdateOperator = pi.createFilterOperator(ac.getFilterOperatorClass());
+			subgoalGenerationOperator = pi.createPlaner(ac.getPlanerClass());
+			changeOperator = pi.createUpdateOperator(ac.getUpdateOperatorClass());
+			policyControlOperator = pi.createPolicyControlOperator(ac.getPolicyControlOperatorClass());
+			violatesOperator = pi.createViolatesOperator(ac.getViolatesOperatorClass());
 		} catch (InstantiationException e) {
 			throw new AgentInstantiationException(e.getMessage());
 		} catch (IllegalAccessException e) {
