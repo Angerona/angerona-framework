@@ -1,7 +1,6 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,23 +29,32 @@ public class AgentComponent extends BaseComponent implements NavigationUser, Rep
 	
 	private FancyTabbedPane ftp;
 	
-	public AgentComponent(Agent agent) {
-		super("Agent '" + agent.getName() +"'");
-		this.agent = agent;
+	@Override
+	public void init() {
+		if(agent == null) {
+			// TODO: Error
+		}
 		
 		this.setLayout(new BorderLayout());
-		
+		setTitle("Agent '" + agent.getName() +"'");
 		JLabel agName = new JLabel("Name: " + agent.getName());
 		add(agName, BorderLayout.NORTH);
 		
 		ftp = new FancyTabbedPane(SimulationMonitor.getInstance().getWindow(), false);
 		Beliefs b = agent.getBeliefs();
-		addWlComponent(new BeliefbaseComponent("World", b.getWorldKnowledge()));
+		
+		BeliefbaseComponent comp = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, b.getWorldKnowledge());
+		comp.setTitle("World");
+		addWlComponent(comp);
 		for(String viewName : b.getViewKnowledge().keySet()) {
 			BaseBeliefbase actView = b.getViewKnowledge().get(viewName);
-			addWlComponent(new BeliefbaseComponent("View->"+viewName, actView));
+			BeliefbaseComponent actComp = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, actView);
+			actComp.setTitle("View->" + viewName);
+			addWlComponent(actComp);
 		}
-		addWlComponent(new BeliefbaseComponent("Confidential", b.getConfidentialKnowledge()));
+		BeliefbaseComponent bc = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, b.getConfidentialKnowledge());
+		bc.setTitle("Conf");
+		addWlComponent(bc);
 		
 		add(ftp, BorderLayout.CENTER);
 		Angerona.getInstance().addReportListener(this);
@@ -95,5 +103,13 @@ public class AgentComponent extends BaseComponent implements NavigationUser, Rep
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void setObservationObject(Object obj) {
+		if(!(obj instanceof Agent)) {
+			throw new IllegalArgumentException("The observatin Object must be of type 'Agent'");
+		}
+		this.agent = (Agent)obj;
 	}
 }

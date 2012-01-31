@@ -21,8 +21,9 @@ public class ReportView extends BaseComponent implements ReportListener {
     
     private DefaultListModel reportModel = new DefaultListModel();
     
-	public ReportView() {
-		super("Report");
+    @Override
+	public void init() {
+		setTitle("Report");
 		
 		setLayout(new BorderLayout());
 		

@@ -1,21 +1,42 @@
 package angerona.fw.gui;
 
+import javax.naming.OperationNotSupportedException;
+
 import com.whiplash.gui.WlComponent;
 
+/**
+ * Base class for Angerona UI Components.
+ * 
+ * Custom components extend this class.
+ * 
+ * @author Tim Janus
+ */
 public abstract class BaseComponent extends WlComponent {
 
 	/** kill warning */
 	private static final long serialVersionUID = -1482323833112551669L;
 
-	private String name;
-	
-	public BaseComponent(String name) {
-		this.name = name;
-	}
+	private String title;
 	
 	@Override
 	public String getTitle() {
-		return name;
+		return title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+		try {
+			this.getTab().refreshTitle();
+		} catch(NullPointerException ex) {
+			System.err.println("Title change failed");
+		}
+	}
+	
+	/**
+	 * initialization method must be called after the constructor
+	 */
+	public void init() {
+		this.title = "TBD";
 	}
 	
 	public abstract String getComponentTypeName();
@@ -26,8 +47,16 @@ public abstract class BaseComponent extends WlComponent {
 	 * *		object describing the shown object.
 	 * TODO: Decide to move this into a subclass?
 	 */
-	public Class<?> getViewedObject() {
+	public Class<?> getObservationObjectType() {
 		return null;
 	}
 
+	/**
+	 * Sets the object which is observed by the UI component.
+	 * @param observationObject
+	 * @throws OperationNotSupportedException if the UI component is not bound to a specfic object.
+	 */
+	public void setObservationObject(Object observationObject) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException();
+	}
 }

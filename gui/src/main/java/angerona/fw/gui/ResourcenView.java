@@ -16,12 +16,12 @@ public class ResourcenView extends BaseComponent {
 	/** kill warning */
 	private static final long serialVersionUID = 5711286288337915366L;
 	
-	private JTree tree;
+	private JTree tree = new JTree();
 	
-	public ResourcenView() {
-		super("Resourcen");
+	@Override
+	public void init() {
+		setTitle("Resourcen");
 		this.setLayout(new BorderLayout());
-		tree = new JTree();
 		DefaultMutableTreeNode ar = new DefaultMutableTreeNode("Angerona Resourcen");
 		new TreeController(tree, ar);
 		this.add(new JScrollPane(tree), BorderLayout.CENTER);
@@ -38,11 +38,14 @@ public class ResourcenView extends BaseComponent {
 		                	 o = n.getUserObject();
 		                	 if(o instanceof TreeController.BBUserObject) {
 		                		 TreeController.BBUserObject temp = (TreeController.BBUserObject)o;
-		                		 BeliefbaseComponent bc = new BeliefbaseComponent(temp.toString(), temp.getBeliefbase());
+		                		 BeliefbaseComponent bc = SimulationMonitor.createBaseComponent(BeliefbaseComponent.class, 
+		                				 temp.getBeliefbase());
 		                		 SimulationMonitor.getInstance().addComponentToCenter(bc);
 		                	 } else if(o instanceof TreeController.AgentUserObject) {
 		                		 TreeController.AgentUserObject temp = (TreeController.AgentUserObject)o;
-		                		 AgentComponent ac = new AgentComponent(temp.getAgent());
+		                		 AgentComponent ac = new AgentComponent();
+		                		 ac.setObservationObject(temp.getAgent());
+		                		 ac.init();
 		                		 SimulationMonitor.getInstance().addComponentToCenter(ac);
 		                	 }
 		                 }

@@ -1,4 +1,4 @@
 world {
-	attends :- not hasTime, -attends.
+	attends :- not hasTime, not -attends.
 } view->Employee {
 }

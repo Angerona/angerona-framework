@@ -25,8 +25,7 @@ public class DummyBeliefbase extends BaseBeliefbase {
 	
 	private FolSignature signature;
 	
-	public DummyBeliefbase() {
-		
+	public DummyBeliefbase() {	
 	}
 	
 	public DummyBeliefbase(DummyBeliefbase other) {

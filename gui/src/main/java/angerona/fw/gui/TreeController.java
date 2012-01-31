@@ -34,7 +34,7 @@ public class TreeController implements SimulationListener {
 		
 		@Override
 		public String toString() {
-			return prefix + " - Knowledge";
+			return "<" + beliefbase.getGUID() + "> " +prefix + " - Knowledge";
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class TreeController implements SimulationListener {
 		
 		@Override
 		public String toString() {
-			return agent.getName();
+			return "<" + agent.getGUID() + "> " + agent.getName();
 		}
 		
 		boolean getInit() {

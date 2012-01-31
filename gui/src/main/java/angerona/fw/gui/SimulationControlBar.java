@@ -32,8 +32,8 @@ public class SimulationControlBar extends BaseComponent {
 	
 	private boolean simFinished = true;
 	
-	public SimulationControlBar() {
-		super("Simulation Control-Bar");
+	@Override
+	public void init() {
 		this.setLayout(new BorderLayout());
 		txtSimStatus = new JTextField();
 		txtSimStatus.setMinimumSize(new Dimension(200, 30));
@@ -118,6 +118,10 @@ public class SimulationControlBar extends BaseComponent {
 		}
 	}
 
+	public AngeronaEnvironment getEnvironment() {
+		return environment;
+	}
+	
 	@Override
 	public String getComponentTypeName() {
 		return "Simulation Control-Bar";

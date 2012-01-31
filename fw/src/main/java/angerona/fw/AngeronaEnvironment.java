@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
+import angerona.fw.report.ReportAttachment;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.SimulationConfiguration;
 
@@ -50,6 +52,12 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	private boolean doingTick = false;
 	
 	private boolean ready = false;
+	
+	private Map<Long, ReportAttachment> entities = new HashMap<Long, ReportAttachment>();
+	
+	public Map<Long, ReportAttachment> getEntityMap() {
+		return Collections.unmodifiableMap(entities);
+	}
 	
 	public String getName() {
 		return name;
@@ -190,8 +198,10 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		try {
 			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
+				entities.put(highLevelAg.getGUID(), highLevelAg);
 				
 				BaseBeliefbase world = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
+				entities.put(world.getGUID(), world);
 				world.setEnvironment(this);
 				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
 				
@@ -204,6 +214,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				world.parse(new BufferedReader(sr));
 				
 				ConfidentialKnowledge conf = new ConfidentialKnowledge();
+				entities.put(conf.getGUID(), conf);
 				conf.setEnvironment(this);
 				FolSignature fsig = new FolSignature();
 				fsig.fromSignature(world.getSignature());
@@ -214,6 +225,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				
 				for(String key : bbsp.viewContent.keySet()) {
 					BaseBeliefbase actView = PluginInstantiator.createBeliefbase(ai.getBeliefbaseConfig());
+					entities.put(actView.getGUID(), actView);
 					actView.setEnvironment(this);
 					sr = new StringReader(bbsp.viewContent.get(key));
 					actView.parse(new BufferedReader(sr));

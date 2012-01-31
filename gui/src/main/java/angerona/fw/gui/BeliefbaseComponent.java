@@ -1,8 +1,6 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -51,13 +49,13 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	private static final long serialVersionUID = -3706152280500718930L;
 	
 	/** reference to the orignal beliefbase (which is in the agent) */
-	private BaseBeliefbase beliefbase;
+	protected BaseBeliefbase beliefbase;
 	
 	/** reference to the beliefbase instance which is actually shown. */
-	private BaseBeliefbase actualBeliefbase;
+	protected BaseBeliefbase actualBeliefbase;
 	
 	/** reference to the predecessor beliefbase of the actual beliefbase, this will be null if actual is the first */
-	private BaseBeliefbase previousBeliefbase;
+	protected BaseBeliefbase previousBeliefbase;
 	
 	/** JList containing the literals of the actual belief base and the literals which were removed in the last step (removed and new literals are highlighted) */
 	private JList actualLiterals;
@@ -68,16 +66,10 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	/** reference to the actually showed report entry. */
 	private ReportEntry actEntry;
 	
-	/**
-	 * CTor: Initialize the ui with the current view on the given beliefbase.
-	 * @param name	a name (title) for the component
-	 * @param bb	reference to the beliefbase object which is shown in this component
-	 */
-	public BeliefbaseComponent(String name, BaseBeliefbase bb) {
-		super(name);
-		this.beliefbase = bb;
-		this.actualBeliefbase = bb;
-		
+
+	@Override
+	public void init() {
+		super.init();
 		if(beliefbase != null) {
 			List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(beliefbase);
 			if(entries.size() > 0) {
@@ -173,12 +165,21 @@ public class BeliefbaseComponent extends BaseComponent implements ReportListener
 	}
 	
 	@Override
-	public Class<?> getViewedObject() {
+	public Class<?> getObservationObjectType() {
 		return BaseBeliefbase.class;
 	}
 
 	@Override
 	public String getComponentTypeName() {
 		return "Default Beliefbase-Component";
+	}
+	
+	@Override
+	public void setObservationObject(Object obj) {
+		if(!(obj instanceof BaseBeliefbase)) {
+			throw new IllegalArgumentException("Observation object must be of type 'BaseBeliefbase'");
+		}
+		this.beliefbase = (BaseBeliefbase)obj;
+		this.actualBeliefbase = this.beliefbase;
 	}
 }
