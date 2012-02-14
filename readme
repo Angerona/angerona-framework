@@ -1,7 +1,0 @@
-I got errors like: Could not resolve dependencies for project what can I do?:
-.............................................................................
-You have to install third-party librarys which were not tracked in a maven repository
-yet. You only have to do two things, first: Cd into fw and run fw/install.sh to install those 
-librarys to your local maven repository. Second: Inform eclipse about the change in your local 
-repository by clicking right onto the project --> Maven --> Update Dependencies. In the dialog 
-you select all projects of your workspace and click on Ok. Now everything should work fine.
