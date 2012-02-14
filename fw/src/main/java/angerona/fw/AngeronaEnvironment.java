@@ -306,6 +306,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	public void cleanupSimulation() {
 		agents.clear();
 		agentMap.clear();
+		Angerona.getInstance().onSimulationDestroyed(this);
 	}
 	
 	/**

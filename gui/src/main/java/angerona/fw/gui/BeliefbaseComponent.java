@@ -1,16 +1,23 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
+import angerona.fw.Agent;
 import angerona.fw.Angerona;
+import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
+import angerona.fw.util.SimulationListener;
 
 /**
  * Generic ui component to show a Beliefbase. It shows its content in a list
@@ -18,7 +25,7 @@ import angerona.fw.report.ReportListener;
  * It has a navigation element
  * @author Tim Janus
  */
-public class BeliefbaseComponent extends UIComponent implements ReportListener, NavigationUser {
+public class BeliefbaseComponent extends UIComponent implements ReportListener, NavigationUser, SimulationListener {
 
 	/**
 	 * Inner class used to represent the elements in a list.
@@ -41,7 +48,7 @@ public class BeliefbaseComponent extends UIComponent implements ReportListener, 
 		}
 		
 		public String toString() {
-			return "[" + (status == ST_NOTCHANGED ? " " : (status == ST_NEW ? "N" : "D")) + "] " + name; 
+			return name; 
 		}
 	}
 	
@@ -80,6 +87,7 @@ public class BeliefbaseComponent extends UIComponent implements ReportListener, 
 		add(new NavigationPanel(this), BorderLayout.NORTH);
 		
 		actualLiterals = new JList();
+		actualLiterals.setCellRenderer(new ListRenderer());
 		this.add(actualLiterals, BorderLayout.CENTER);
 		
 		model = new DefaultListModel();
@@ -88,6 +96,7 @@ public class BeliefbaseComponent extends UIComponent implements ReportListener, 
 		defaultUpdatePrevious();
 		update();
 		Angerona.getInstance().addReportListener(this);
+		Angerona.getInstance().addSimulationListener(this);
 	}
 	
 	/**
@@ -181,5 +190,68 @@ public class BeliefbaseComponent extends UIComponent implements ReportListener, 
 		}
 		this.beliefbase = (BaseBeliefbase)obj;
 		this.actualBeliefbase = this.beliefbase;
+	}
+	
+	/** special list renderer for the literals of the beliefbases, using the ListElement class which
+	 *  saves the status of the literal (new, deleted, old)
+	 * 	
+	 * 	@author Tim Janus
+	 */
+	private class ListRenderer extends JLabel implements ListCellRenderer {
+
+		/** kill warning */
+		private static final long serialVersionUID = -6867522427499396635L;
+
+		public ListRenderer() {
+			setOpaque(true);
+		}
+		
+		@Override
+		public Component getListCellRendererComponent(JList list, Object value,
+				int index2, boolean isSelected, boolean cellHasFocus) {
+			if(!(value instanceof ListElement)) throw new IllegalArgumentException("This list only allows list elements of type ListElement");
+			
+			ListElement le = (ListElement)value;
+			setText(le.toString());
+			setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
+			setForeground(le.status == ListElement.ST_NEW ? new Color(0,128,0) : (le.status == ListElement.ST_DELETED ? Color.red : Color.BLACK));
+			
+			return this;
+		}
+		
+	}
+
+	@Override
+	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
+		// TODO: Remove correctly
+		//this.getWindow().remove(this);
+		//this.getWindowSet().remove(this);
+	}
+
+	@Override
+	public void agentAdded(AngeronaEnvironment simulationEnvironment,
+			Agent added) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
+			Agent removed) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tickDone(AngeronaEnvironment simulationEnvironment,
+			boolean finished) {
+		// TODO Auto-generated method stub
+		
 	}
 }

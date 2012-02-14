@@ -13,6 +13,9 @@ public interface SimulationListener {
 	/** is called when a new simulation starts */
 	void simulationStarted(AngeronaEnvironment simulationEnvironment);
 	
+	/** is called when a simulations cleanup method is called */
+	void simulationDestroyed(AngeronaEnvironment simulationEnvironment);
+	
 	/** is called when the given agent is added to the simulation-environment */
 	void agentAdded(AngeronaEnvironment simulationEnvironment, Agent added);
 	

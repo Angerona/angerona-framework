@@ -71,6 +71,10 @@ public class Report  {
 	 */
 	public List<ReportEntry> getEntriesOf(Entity attachment) {
 		if(attachment == null)	throw new IllegalArgumentException("attachment must not be null.");
-		return Collections.unmodifiableList(attachmentEntriesMap.get(attachment));
+		if(attachmentEntriesMap.containsKey(attachment)) {
+			return Collections.unmodifiableList(attachmentEntriesMap.get(attachment));
+		} else {
+			return null;
+		}
 	}
 }

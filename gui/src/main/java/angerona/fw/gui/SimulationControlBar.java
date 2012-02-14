@@ -10,9 +10,11 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.serialize.SimulationConfiguration;
 
@@ -57,20 +59,32 @@ public class SimulationControlBar extends UIComponent {
 		btnRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(simFinished) {
-					environment.cleanupSimulation();
-					environment.initSimulation(actConfig, simulationDirectory);
-					simFinished = false;
-					updateConfigView(simFinished);
-				} else {
-					simFinished = !environment.runOneTick();
-					updateConfigView(simFinished);
-				}
+				onRunButtonClicked();
 			}
 		});
 		buttonPanel.add(btnRun);
 		updateConfigView(false);
 		add(buttonPanel, BorderLayout.EAST);
+	}
+	
+	private void onRunButtonClicked() {
+		if(simFinished) {
+			boolean doIt = Angerona.getInstance().getActualReport() == null;
+			if(!doIt) {
+				int res = JOptionPane.showConfirmDialog(this, "Do you really want to delete the content of the old simulation? " +
+					"There is no serialisation implemented in Angerona yet.", "Really delete old results?", JOptionPane.YES_NO_OPTION);
+				doIt = res == JOptionPane.YES_OPTION;
+			}
+			if(doIt) {
+				environment.cleanupSimulation();
+				environment.initSimulation(actConfig, simulationDirectory);
+				simFinished = false;
+				updateConfigView(simFinished);
+			}
+		} else {
+			simFinished = !environment.runOneTick();
+			updateConfigView(simFinished);
+		}
 	}
 	
 	private void onLoadClicked() {

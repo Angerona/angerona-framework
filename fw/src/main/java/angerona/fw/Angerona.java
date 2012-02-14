@@ -22,6 +22,7 @@ import angerona.fw.report.ReportListener;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.BeliefbaseConfiguration;
+import angerona.fw.serialize.GlobalConfiguration;
 import angerona.fw.serialize.SimulationConfiguration;
 import angerona.fw.util.SimulationListener;
 
@@ -53,6 +54,29 @@ public class Angerona {
 		if(instance == null)
 			instance = new Angerona();
 		return instance;
+	}
+	
+	private static GlobalConfiguration config = null;
+	
+	public static GlobalConfiguration getConfig() {
+		if(config == null) {
+			try {
+				config = GlobalConfiguration.loadXml("config/configuration.xml");
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if(config == null)
+				config = new GlobalConfiguration();
+		}
+		return config;
 	}
 	
 	public void report(String msg, ReportPoster sender) {
@@ -130,6 +154,14 @@ public class Angerona {
 		reports.put(ev, actualReport);
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
+		}
+	}
+	
+	public void onSimulationDestroyed(AngeronaEnvironment ev) {
+		actualReport = null;
+		reports.clear();
+		for(SimulationListener l : simulationListeners) {
+			l.simulationDestroyed(ev);
 		}
 	}
 	
@@ -283,8 +315,7 @@ public class Angerona {
 				forAllFilesIn(folder, scl);
 			}
 		}
-		// TODO: Kick Angerona Main
-		PluginInstantiator.getInstance().addPlugins(AngeronaMain.getConfig().getPluginPaths());
+		PluginInstantiator.getInstance().addPlugins(getConfig().getPluginPaths());
 		bootstrapDone = true;
 	}
 	

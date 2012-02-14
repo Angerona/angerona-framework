@@ -7,6 +7,9 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.Angerona;
 import angerona.fw.report.ReportEntry;
 
@@ -20,6 +23,8 @@ import angerona.fw.report.ReportEntry;
  */
 public class NavigationPanel extends JPanel {
 
+	private static Logger LOG = LoggerFactory.getLogger(Angerona.class);
+	
 	/** kill warning */
 	private static final long serialVersionUID = -5215434068009560588L;
 
@@ -45,8 +50,13 @@ public class NavigationPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				if(entries.size() > 0)
-					user.setCurrentEntry(entries.get(0));
+				if(entries != null) {
+					if(entries.size() > 0)
+						user.setCurrentEntry(entries.get(0));
+				} else {
+					LOG.warn("Cannot find report-entries for: {} with id #{}", 
+							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());
+				}
 			}
 		});
 		add(btnRewind);
@@ -56,9 +66,14 @@ public class NavigationPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				int index = entries.indexOf(user.getCurrentEntry()) - 1;
-				if(index >= 0)
-					user.setCurrentEntry(entries.get(index));
+				if(entries != null) {
+					int index = entries.indexOf(user.getCurrentEntry()) - 1;
+					if(index >= 0)
+						user.setCurrentEntry(entries.get(index));
+				} else {
+					LOG.warn("Cannot find report-entries for: {} with id #{}", 
+							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());
+				}
 			}
 		});
 		add(btnStepBack);
@@ -68,9 +83,14 @@ public class NavigationPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				int index = entries.indexOf(user.getCurrentEntry()) + 1;
-				if(index < entries.size())
-					user.setCurrentEntry(entries.get(index));
+				if(entries != null) {
+					int index = entries.indexOf(user.getCurrentEntry()) + 1;
+					if(index < entries.size())
+						user.setCurrentEntry(entries.get(index));
+				} else {
+					LOG.warn("Cannot find report-entries for: {} with id #{}", 
+							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());	
+				}
 			}
 		});
 		add(btnStepForward);
@@ -80,8 +100,13 @@ public class NavigationPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				if(entries.size() > 0)
-					user.setCurrentEntry(entries.get(entries.size()-1));
+				if(entries != null) {
+					if(entries.size() > 0)
+						user.setCurrentEntry(entries.get(entries.size()-1));
+				} else {
+					LOG.warn("Cannot find report-entries for: {} with id #{}", 
+							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());
+				}
 			}
 		});
 		add(btnForward);

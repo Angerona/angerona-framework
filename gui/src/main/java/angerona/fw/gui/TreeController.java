@@ -8,6 +8,7 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -20,6 +21,7 @@ import angerona.fw.util.SimulationListener;
 /**
  * This class is responsible for keeping track of new Resources added to Angerona and to keep them
  * in sync with the JTrees in ResourcenView.
+ * 
  * @see ResourcenView
  * @author Tim Janus
  */
@@ -212,28 +214,46 @@ public class TreeController implements SimulationListener {
 	
 	// If expand is true, expands all nodes in the tree.
 		// Otherwise, collapses all nodes in the tree.
-		public static void expandAll(JTree tree, boolean expand) {
-		    TreeNode root = (TreeNode)tree.getModel().getRoot();
+	public static void expandAll(JTree tree, boolean expand) {
+	    TreeNode root = (TreeNode)tree.getModel().getRoot();
 
-		    // Traverse tree from root
-		    expandAll(tree, new TreePath(root), expand);
-		}
-		private static void expandAll(JTree tree, TreePath parent, boolean expand) {
-		    // Traverse children
-		    TreeNode node = (TreeNode)parent.getLastPathComponent();
-		    if (node.getChildCount() >= 0) {
-		        for (Enumeration<TreeNode> e=node.children(); e.hasMoreElements(); ) {
-		            TreeNode n = (TreeNode)e.nextElement();
-		            TreePath path = parent.pathByAddingChild(n);
-		            expandAll(tree, path, expand);
-		        }
-		    }
+	    // Traverse tree from root
+	    expandAll(tree, new TreePath(root), expand);
+	}
+		
+	private static void expandAll(JTree tree, TreePath parent, boolean expand) {
+	    // Traverse children
+	    TreeNode node = (TreeNode)parent.getLastPathComponent();
+	    if (node.getChildCount() >= 0) {
+	        for (Enumeration<TreeNode> e=node.children(); e.hasMoreElements(); ) {
+	            TreeNode n = (TreeNode)e.nextElement();
+	            TreePath path = parent.pathByAddingChild(n);
+	            expandAll(tree, path, expand);
+	        }
+	    }
 
-		    // Expansion or collapse must be done bottom-up
-		    if (expand) {
-		        tree.expandPath(parent);
-		    } else {
+	    // Expansion or collapse must be done bottom-up
+	    if (expand) {
+	    	tree.expandPath(parent);
+	    } else {
 		        tree.collapsePath(parent);
-		    }
 		}
+	}
+
+	@Override
+	public void simulationDestroyed(
+			AngeronaEnvironment simulationEnvironment) {
+		DefaultTreeModel tm = (DefaultTreeModel)tree.getModel();
+		for(int i=0; i<tm.getChildCount(root); ++i) {
+			DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)tm.getChild(root, i);
+			if(dmtn.getUserObject() instanceof SimulationUserObject) {
+				SimulationUserObject suo = (SimulationUserObject)dmtn.getUserObject();
+				if(suo.getSimulation() == simulationEnvironment) {
+					tm.removeNodeFromParent(dmtn);
+					break;
+				}
+			}
+		}
+		
+	}
 }
