@@ -5,6 +5,21 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Angerona (Maven Build All)</name>
+  <distributionManagement>
+    <repository>
+      <id>nexus-angerona-releases</id>
+      <name>Angerona Releases</name>
+      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <id>nexus-angerona-snapshots</id>
+      <name>Angerona Snapshots</name>
+      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
+  
   <modules>
   	<module>asp</module>
   	<module>dummy</module>
