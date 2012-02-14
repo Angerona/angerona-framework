@@ -22,7 +22,6 @@ import angerona.fw.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.operators.parameter.BeliefbaseParameter;
-import angerona.fw.report.Entity;
 import angerona.fw.report.EntityAtomic;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
@@ -106,15 +105,17 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		this.supportsVariables = supportVariables;
 		id = IdGenerator.generate();
 	}
-
+	
 	/**
-	 * Ctor: Generates a belief base by parsing a file
-	 * @param filepath	path to the file containing the string representation of the belief base.
-	 * @throws IOException 
+	 * Copy-Ctor: Does not create a new ID for the Object but shares
+	 * the ID of the parameter object.
+	 * @param other another Beliefbase which should be copied.
 	 */
-	public BaseBeliefbase(String filepath) throws IOException {
-		parse(filepath);
-		id = IdGenerator.generate();
+	public BaseBeliefbase(BaseBeliefbase other) {
+		this.id = new Long(other.getGUID());
+		if(other.getParent() != null) {
+			this.parentId = new Long(other.getParent());
+		}
 	}
 	
 	public void setEnvironment(AngeronaEnvironment env) {

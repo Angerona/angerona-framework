@@ -21,7 +21,7 @@ import angerona.fw.logic.base.BaseBeliefbase;
 public class AspBeliefbase extends BaseBeliefbase {
 
 	/** reference to the logical program */
-	private Program program;
+	private Program program = new Program();
 	
 	/** a fol signature describing which predicates are used in the logical program */
 	private Signature signature;
@@ -39,15 +39,22 @@ public class AspBeliefbase extends BaseBeliefbase {
 	public String getFileEnding() {
 		return "asp";
 	}
+	
+	public AspBeliefbase() {
+		super();
+	}
+	
+	public AspBeliefbase(AspBeliefbase other) {
+		super(other);
+		
+		this.program = (Program) other.program.clone();
+		this.signature = other.signature;
+		
+	}
 
 	@Override
 	public Object clone() {
-		AspBeliefbase reval = new AspBeliefbase();
-		reval.id = new Long(getGUID());
-		reval.parentId = new Long(getParent());
-		reval.program = (Program) program.clone();
-		reval.signature = signature;
-		return reval;
+		return new AspBeliefbase(this);
 	}
 
 	@Override

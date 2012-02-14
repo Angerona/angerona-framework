@@ -16,24 +16,28 @@ import angerona.fw.logic.base.BaseBeliefbase;
 
 /**
  * Just a dummy belief base for testing purposes.
- * TODO: Use operators for changing the beliefbase.
+ *
  * @author Tim Janus
  */
 public class DummyBeliefbase extends BaseBeliefbase {
 
+	/** the beliefset of the beliefbase */
 	FolBeliefSet fbs = new FolBeliefSet();
 	
+	/** the signature of the beliefbase */
 	private FolSignature signature;
 	
+	/** Default Ctor: Needed for dynamic instantiation */
 	public DummyBeliefbase() {	
 	}
 	
+	/** Copy-Ctor: Copies a Dummy-Beliefbase, the copied object has the
+	 * 	same object id like the given parameter.
+	 * 	@param other
+	 */
 	public DummyBeliefbase(DummyBeliefbase other) {
+		super(other);
 		fbs.addAll(other.fbs);
-	}
-	
-	public DummyBeliefbase(String filename) throws IOException {
-		super(filename);
 	}
 	
 	@Override
