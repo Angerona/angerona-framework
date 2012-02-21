@@ -25,7 +25,7 @@ public class DummyGenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	
 	@Override
 	protected Set<Formula> processInt(GenerateOptionsParameter param) {
-		LOG.info("Generate Options operator");
+		LOG.info("Run Example-Generate-Options-operator");
 		
 		Set<Formula> reval = new HashSet<Formula>();
 		if(param.getPerception() instanceof NAQuery) {

@@ -105,4 +105,9 @@ public class Skill extends Intention implements Runnable {
 	public void onSubgoalFinished(Intention subgoal) {
 		// does nothing here has no subgoals.
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 }

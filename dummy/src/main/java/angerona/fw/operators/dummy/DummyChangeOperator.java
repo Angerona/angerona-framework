@@ -3,10 +3,8 @@ package angerona.fw.operators.dummy;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +29,7 @@ public class DummyChangeOperator extends BaseChangeOperator {
 	
 	@Override
 	protected Beliefs processInt(UpdateParameter param) {
+		LOG.info("Run Example-Change-Operator");
 		Beliefs reval = param.getAgent().getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		

@@ -22,8 +22,7 @@ public class DummyPolicyControlOperator extends BasePolicyControlOperator {
 	
 	@Override
 	protected AngeronaAnswer processInt(PolicyControlParameter param) {
-		report("Dummy: Policy-Control Operator");
-		
+		LOG.info("Running policy control");
 		ConfidentialKnowledge ck = (ConfidentialKnowledge)param.getPolicyProofer().getBeliefs().getConfidentialKnowledge();
 		ConfidentialTarget ct = ck.getTarget(param.getInformationReceiver(), param.getQuestion());
 		AngeronaAnswer aa = param.getAnswer();
@@ -43,9 +42,13 @@ public class DummyPolicyControlOperator extends BasePolicyControlOperator {
 				else {
 					newAnswer = AnswerValue.AV_UNKNOWN;
 				}
+				
+				report("Policy of '" + id + "'injured by: '" + ct + "' and answer: '" + aa.getAnswerExtended() + 
+						"' using '"+newAnswer+"' as answer.");
 			}
 		}
-			
+		
+		report("No policy injured.");
 		return new AngeronaAnswer(aa.getKnowledgeBase(), aa.getQuery(), newAnswer);
 		
 	}

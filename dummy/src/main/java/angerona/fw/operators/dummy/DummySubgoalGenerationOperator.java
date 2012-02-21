@@ -22,7 +22,7 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 	
 	@Override
 	protected Boolean processInt(SubgoalGenerationParameter pp) {
-		LOG.info("Subgoal-Generation: ");
+		LOG.info("Run Example-Subgoal-Generation");
 		
 		Agent ag = pp.getActualPlan().getAgent();
 		Atom wannaAnswer = new Atom(new Predicate("wantsToAnswer"));
@@ -33,9 +33,14 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 				return false;
 			}
 			pp.getActualPlan().newStack(qaSkill, pp.getActualPlan().getAgent().getActualPerception());
+			
+			// TODO: Find a better place to remove desire again.
 			ag.removeDesire(wannaAnswer);
+			
+			report("Add the new atomic action '"+qaSkill.getName()+"' to the plan");
 			return true;
 		}
+		report("No new subgoal generated.");
 		return false;
 	}
 

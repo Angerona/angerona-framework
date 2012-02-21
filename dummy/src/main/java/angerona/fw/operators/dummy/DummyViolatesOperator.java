@@ -17,7 +17,7 @@ public class DummyViolatesOperator extends BaseViolatesOperator {
 	
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
-		LOG.info("Dummy: ViolatesOperator");
+		LOG.info("Run Example-ViolatesOperator");
 		return new Boolean(false);
 	}
 }

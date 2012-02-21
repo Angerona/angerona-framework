@@ -19,17 +19,22 @@ public class DummyIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {
-		report("Intention-Update-Operator");
+		LOG.info("Run Example-Intention-Update");
+		
 		for(int i=0; i<param.getPlan().getNumberOfStacks(); ++i) {
 			if(param.getPlan().peekStack(i).isAtomic()) {
 				Intention intention = param.getPlan().peekStack(i);
 				intention.setRealRun(false);
+				report("Performing dry-run of atomic-action: '"+intention+"'");
 				intention.run();
 				Skill sk = (Skill)intention;
-				if(!sk.violates())
+				if(!sk.violates()) {
+					report("Next atomic step selected: '" + sk.getName() + "'" );
 					return intention;
+				}
 			}
 		}
+		report("Cannot find next atomic step.");
 		return null;
 	}
 
