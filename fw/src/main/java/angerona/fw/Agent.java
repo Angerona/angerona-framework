@@ -72,7 +72,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
 	
 	/** reference to the actual goal of the agent */
-	private Plan actualPlan = new Plan(this);
+	private MasterPlan masterPlan;
 	
 	/** Reference to the used generate options operator. */
 	BaseGenerateOptionsOperator generateOptionsOperator;
@@ -143,6 +143,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		context = new Context();
 		
 		desires = new Desires(this.id);
+		masterPlan = new MasterPlan(this);
 		
 		agentProcess = new AngeronaAgentProcess(name);
 		agentProcess.setAgentArchitecture(this);
@@ -223,10 +224,10 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		
 		// Means-end-reasoning:
 		while(atomic == null) {
-			atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(actualPlan, allSkills, actualPerception));
+			atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
 			
 			if(atomic == null) {
-				if(!subgoalGenerationOperator.process(new SubgoalGenerationParameter(actualPlan, allSkills)))
+				if(!subgoalGenerationOperator.process(new SubgoalGenerationParameter(masterPlan, allSkills)))
 					break;
 			}
 		}

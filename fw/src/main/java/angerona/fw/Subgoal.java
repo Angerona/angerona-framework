@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * A plan is a complex intention. It realized sub plans by using stacks. 
+ * A subgoal is a complex intention. It can realize sub plans by using stacks. 
  * It gives the user the possibility of using more than one sub-plan, this allows the implementation of
  * Hierarchical task network planners and similar stuff.
  * @author Tim Janus
  */
-public class Plan extends Intention {
+public class Subgoal extends Intention {
 
+	private String name = "MASTER-PLAN";
+	
 	/**
 	 * Represents a stack element. Skills need to save their context object to perform
 	 * the correct actions
@@ -22,6 +24,11 @@ public class Plan extends Intention {
 		
 		private Object context;
 		
+		public StackElement(StackElement other) {
+			this.intention = (Intention)other.intention.clone();
+			this.context = other.context;
+		}
+		
 		public StackElement(Intention intention, Object context) {
 			this.intention = intention;
 			this.context = context;
@@ -31,12 +38,24 @@ public class Plan extends Intention {
 	/** a collection of stacks with sub-intentions defining the subgoals of this intention */
 	private List<Stack<StackElement>> stacks = new LinkedList<Stack<StackElement>>();
 	
-	public Plan(Agent agent) {
+	public Subgoal(String name, Subgoal parent) {
+		super(parent.getAgent());
+		this.parent = parent;
+		this.name = name;
+	}
+	
+	protected Subgoal(Agent agent) {
 		super(agent);
 	}
-
-	public Plan(Plan parent) {
-		super(parent);
+	
+	protected Subgoal(Subgoal other) {
+		super(other);
+		for(Stack<StackElement> stack : other.stacks) {
+			Stack<StackElement> newOne = new Stack<Subgoal.StackElement>();
+			for(int i=0; i<stack.size(); ++i) {
+				newOne.add(new StackElement(stack.get(i)));
+			}
+		}
 	}
 	
 	/** @return the number of used stacks */
@@ -61,7 +80,7 @@ public class Plan extends Intention {
 	 * @return
 	 */
 	public boolean newStack(Intention intention, Object context) {
-		Stack<StackElement> newStack = new Stack<Plan.StackElement>();
+		Stack<StackElement> newStack = new Stack<Subgoal.StackElement>();
 		newStack.add(new StackElement(intention, context));
 		return stacks.add(newStack);
 	}
@@ -138,5 +157,10 @@ public class Plan extends Intention {
 		
 		if(parent != null && stacks.isEmpty())
 			parent.onSubgoalFinished(this);
+	}
+	
+	@Override
+	public Object clone() {
+		return new Subgoal(this);
 	}
 }

@@ -3,17 +3,17 @@ package angerona.fw.operators.parameter;
 import java.util.List;
 
 import angerona.fw.Perception;
-import angerona.fw.Plan;
+import angerona.fw.Subgoal;
 import angerona.fw.Skill;
 
 public class IntentionUpdateParameter extends GenericOperatorParameter {
 	protected List<Skill> skills;
 	
-	protected Plan plan;
+	protected Subgoal plan;
 	
 	protected Perception perception;
 	
-	public IntentionUpdateParameter(Plan plan, List<Skill> skills, Perception perception) {
+	public IntentionUpdateParameter(Subgoal plan, List<Skill> skills, Perception perception) {
 		super(plan.getAgent().getEnvironment());
 		if(!plan.isPlan())
 			throw new IllegalArgumentException("The given intention must be an high level plan");
@@ -26,7 +26,7 @@ public class IntentionUpdateParameter extends GenericOperatorParameter {
 		return skills;
 	}
 	
-	public Plan getPlan() {
+	public Subgoal getPlan() {
 		return plan;
 	}
 	

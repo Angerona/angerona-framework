@@ -110,4 +110,9 @@ public class Skill extends Intention implements Runnable {
 	public String toString() {
 		return name;
 	}
+
+	@Override
+	public Object clone() {
+		return this;
+	}
 }

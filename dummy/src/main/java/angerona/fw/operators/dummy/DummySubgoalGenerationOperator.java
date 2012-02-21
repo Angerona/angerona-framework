@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
+import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
+import angerona.fw.Subgoal;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 
@@ -37,7 +39,12 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 			// TODO: Find a better place to remove desire again.
 			ag.removeDesire(wannaAnswer);
 			
-			report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag);
+			Subgoal sg = pp.getActualPlan();
+			while(!(sg instanceof MasterPlan)) {
+				sg = (Subgoal) sg.getParentGoal();
+			}
+			MasterPlan mp = (MasterPlan) sg;
+			report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", mp);
 			return true;
 		}
 		report("No new subgoal generated.", ag);

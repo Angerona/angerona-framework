@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.sf.tweety.Formula;
 import angerona.fw.IdGenerator;
-import angerona.fw.report.Entity;
 import angerona.fw.report.EntityAtomic;
 
 /**

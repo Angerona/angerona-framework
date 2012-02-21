@@ -25,7 +25,6 @@ import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.serialize.BeliefbaseConfiguration;
-import angerona.fw.serialize.GlobalConfiguration;
 
 /**
  * This class collects all the implementation of the plugins and gives the user the ability to dynamically

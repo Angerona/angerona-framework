@@ -9,10 +9,10 @@ import net.sf.tweety.Formula;
  * An intention is either atomic, then it is called Skill or it is complex
  * then it is called Plan. 
  * @see Skill
- * @see Plan
+ * @see Subgoal
  * @author Tim Janus
  */
-public abstract class Intention implements Runnable {
+public abstract class Intention implements Runnable, Cloneable {
 	
 	/** the name for the top-level plan of an agent. */
 	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";
@@ -40,13 +40,15 @@ public abstract class Intention implements Runnable {
 		this.agent = agent;
 	}
 	
-	/**
-	 * Ctor: Creates a child intention for the given parent intention of the agent
-	 * @param parent
-	 */
-	public Intention(Intention parent) {
-		this(parent.getAgent());
-		this.parent = parent;
+	
+	protected Intention(Intention other) {
+		this.parent = other.parent;
+		this.agent = other.agent;
+		this.fulfillsDesires.addAll(other.fulfillsDesires);
+		this.realRun = other.realRun;
+		
+		// TODO: This should have no side-effects, but not sure yet.
+		this.objectContainingContext = null;
 	}
 	
 	/** @return reference to the agent owning this Intention */
@@ -88,6 +90,10 @@ public abstract class Intention implements Runnable {
 		this.parent = parent;
 	}
 	
+	public Intention getParentGoal() {
+		return parent;
+	}
+	
 	/**
 	 * Is called when an sub goal is finished by an agent. For example a Skill was performed or 
 	 * a complex plan was finished. The given subgoal must be removed from the subgoals by the
@@ -104,4 +110,6 @@ public abstract class Intention implements Runnable {
 	
 	/** @return	true if this instance is a sub-intention but no atomic intention in a plan of the agent */
 	public abstract boolean isSubPlan();	
+	
+	public abstract Object clone();
 }
