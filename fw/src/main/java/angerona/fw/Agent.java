@@ -352,6 +352,10 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		return reval;
 	}
 
+	public MasterPlan getPlan() {
+		return masterPlan;
+	}
+	
 	@Override
 	public Long getGUID() {
 		return id;

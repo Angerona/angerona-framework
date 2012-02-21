@@ -55,6 +55,7 @@ public class Subgoal extends Intention {
 			for(int i=0; i<stack.size(); ++i) {
 				newOne.add(new StackElement(stack.get(i)));
 			}
+			this.stacks.add(newOne);
 		}
 	}
 	
@@ -103,6 +104,15 @@ public class Subgoal extends Intention {
 		se.intention.setObjectContainingContext(se.context);
 		se.intention.setParent(this);
 		return se.intention;
+	}
+	
+	public List<Intention> getStackAsIntentionList(int index) {
+		List<Intention> reval = new LinkedList<Intention>();
+		Stack<StackElement> st = stacks.get(index);
+		for(int i=0; i<st.size(); ++i) {
+			reval.add(st.get(i).intention);
+		}
+		return reval;
 	}
 	
 	/**
@@ -157,10 +167,18 @@ public class Subgoal extends Intention {
 		
 		if(parent != null && stacks.isEmpty())
 			parent.onSubgoalFinished(this);
+		else if(this instanceof MasterPlan) {
+			Angerona.getInstance().report("Step on plan executed, plan updated.", getAgent().getEnvironment(), (MasterPlan)this);
+		}
 	}
 	
 	@Override
 	public Object clone() {
 		return new Subgoal(this);
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }

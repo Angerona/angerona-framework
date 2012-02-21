@@ -63,6 +63,9 @@ public class AgentComponent extends UIComponent implements NavigationUser, Repor
 		bc.setTitle("Conf");
 		addWlComponent(bc);
 		
+		PlanComponent pc = AngeronaWindow.createBaseComponent(PlanComponent.class, agent.getPlan());
+		addWlComponent(pc);
+		
 		add(ftp, BorderLayout.CENTER);
 		Angerona.getInstance().addReportListener(this);
 	}

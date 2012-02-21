@@ -291,6 +291,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 			}
 			
 			Angerona.getInstance().report("Confidental Knowledge of '" + agent.getName() + "' created.", this, b.getConfidentialKnowledge());
+			Angerona.getInstance().report("Master-Plan of '" + agent.getName() + "' created.", this, agent.getPlan());
 		}
 		
 		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
