@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
@@ -36,12 +37,18 @@ public class AgentComponent extends UIComponent implements NavigationUser, Repor
 		}
 		
 		this.setLayout(new BorderLayout());
+		JPanel top = new JPanel();
+		top.setLayout(new BorderLayout());
 		setTitle("Agent '" + agent.getName() +"'");
 		JLabel agName = new JLabel("Name: " + agent.getName());
-		add(agName, BorderLayout.NORTH);
+		top.add(agName, BorderLayout.NORTH);
 		
 		ftp = new FancyTabbedPane(AngeronaWindow.getInstance().getWindow(), false);
 		Beliefs b = agent.getBeliefs();
+		
+		DesiresComponent dc = AngeronaWindow.createBaseComponent(DesiresComponent.class, agent.getDesires());
+		dc.setTitle("Desires");
+		addWlComponent(dc);
 		
 		BeliefbaseComponent comp = AngeronaWindow.createBaseComponent(BeliefbaseComponent.class, b.getWorldKnowledge());
 		comp.setTitle("World");

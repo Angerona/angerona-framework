@@ -279,6 +279,8 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 			Agent agent = getAgentByName(agName);
 			Angerona.getInstance().report("Agent: '" + agent.getName()+"' created.", this);
 			
+			Angerona.getInstance().report("Desires Set of '" + agent.getName() + "' created.", this, agent.getDesires());
+			
 			Beliefs b = agent.getBeliefs();
 			Angerona.getInstance().report("World Beliefbase of '" + agent.getName()+"' created.", this, b.getWorldKnowledge() );
 			

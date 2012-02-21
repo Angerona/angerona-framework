@@ -1,6 +1,5 @@
 package angerona.fw;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.Desires;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
 import angerona.fw.operators.BaseChangeOperator;
@@ -55,7 +55,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	private AngeronaAgentProcess agentProcess;
 	
 	/** The desires of the agent */
-	private Set<Formula> desires = new HashSet<Formula>();
+	private Desires desires;
 	
 	/** The belief base of the agent */
 	private Beliefs beliefs;
@@ -142,6 +142,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		this.id = new Long(IdGenerator.generate());
 		context = new Context();
 		
+		desires = new Desires(this.id);
+		
 		agentProcess = new AngeronaAgentProcess(name);
 		agentProcess.setAgentArchitecture(this);
 		init(agentProcess);
@@ -210,9 +212,16 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		}
 			
 		updateBeliefs(actualPerception);	
+		// Deliberation:
 		Set<Formula> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
+		if(!desires.equals(options)) {
+			desires.clear();
+			desires.addAll(options);
+			Angerona.getInstance().report("Desires of Agent '" + getName() + "' updated.", generateOptionsOperator, desires);
+		}
 		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		
+		// Means-end-reasoning:
 		while(atomic == null) {
 			atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(actualPlan, allSkills, actualPerception));
 			
@@ -276,7 +285,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	}
 	
 	/** @return a set of formulas representing the desires of the agent. */
-	public Set<Formula> getDesires() {
+	public Desires getDesires() {
 		return desires;
 	}
 	
@@ -327,11 +336,19 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	}
 	
 	public boolean addDesire(Formula desire) {
-		return this.desires.add(desire);
+		boolean reval = this.desires.add(desire);
+		if(reval) {
+			Angerona.getInstance().report("Desires changed.", this.getEnvironment(), this.desires);
+		}
+		return reval;
 	}
 	
 	public boolean removeDesire(Formula desire) {
-		return this.desires.remove(desire);
+		boolean reval = this.desires.remove(desire);
+		if(reval) {
+			Angerona.getInstance().report("Desires changed.", this.getEnvironment(), this.desires);
+		}
+		return reval;
 	}
 
 	@Override

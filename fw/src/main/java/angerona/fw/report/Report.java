@@ -20,7 +20,7 @@ public class Report  {
 	private List<ReportEntry> entries = new LinkedList<ReportEntry>();
 	
 	/** mapping from an entity to a list of report entries containing the key entity as attachment */
-	private Map<Entity, List<ReportEntry>> attachmentEntriesMap = new HashMap<Entity, List<ReportEntry>>();
+	private Map<Long, List<ReportEntry>> attachmentEntriesMap = new HashMap<Long, List<ReportEntry>>();
 	
 	/** reference to the simulation of the report */
 	private AngeronaEnvironment simulation;
@@ -42,12 +42,18 @@ public class Report  {
 			
 			Entity att = entry.getAttachment();
 			if(att != null) {
+				Long id = att.getGUID();
 				List<ReportEntry> entries = null;
-				if(!attachmentEntriesMap.containsKey(att)) {
+				
+				if(id == null) {
+					// TODO: Error
+				}
+				
+				if(!attachmentEntriesMap.containsKey(id)) {
 					entries = new LinkedList<ReportEntry>();
-					attachmentEntriesMap.put(att, entries);
+					attachmentEntriesMap.put(id, entries);
 				} else {
-					entries = attachmentEntriesMap.get(att);
+					entries = attachmentEntriesMap.get(id);
 				}
 				entries.add(copy);
 			}
@@ -71,8 +77,20 @@ public class Report  {
 	 */
 	public List<ReportEntry> getEntriesOf(Entity attachment) {
 		if(attachment == null)	throw new IllegalArgumentException("attachment must not be null.");
-		if(attachmentEntriesMap.containsKey(attachment)) {
-			return Collections.unmodifiableList(attachmentEntriesMap.get(attachment));
+		return getEntriesOf(attachment.getGUID());
+	}
+	
+	/**
+	 * Returns all the entries which belong to a specific id. The entries must really belong to this id
+	 * no child or parent relationships are observed. The returned list is not modifiable and will throw an exception if
+	 * someone tries to modify it.
+	 * @param id			long representing the id of the object mentioned in the attachments.
+	 * @return				null if a list for the given attachment does not exists otherwise the list with all the report entries
+	 * 						of the given attachment.
+	 */
+	public List<ReportEntry> getEntriesOf(Long id) {
+		if(attachmentEntriesMap.containsKey(id)) {
+			return Collections.unmodifiableList(attachmentEntriesMap.get(id));
 		} else {
 			return null;
 		}

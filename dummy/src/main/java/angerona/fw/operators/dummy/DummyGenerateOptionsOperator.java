@@ -10,6 +10,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.nacts.NAQuery;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
@@ -27,7 +28,9 @@ public class DummyGenerateOptionsOperator extends BaseGenerateOptionsOperator {
 		LOG.info("Generate Options operator");
 		
 		Set<Formula> reval = new HashSet<Formula>();
-		reval.add(new Atom(new Predicate("answer")));
+		if(param.getPerception() instanceof NAQuery) {
+			reval.add(new Atom(new Predicate("wantsToAnswer")));
+		}
 		return reval;
 	}
 }

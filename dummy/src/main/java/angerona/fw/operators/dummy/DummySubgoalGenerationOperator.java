@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
+import angerona.fw.Skill;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 
@@ -26,8 +27,13 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 		Agent ag = pp.getActualPlan().getAgent();
 		Atom wannaAnswer = new Atom(new Predicate("wantsToAnswer"));
 		if(ag.getDesires().contains(wannaAnswer)) {
-			pp.getActualPlan().newStack(ag.getSkill("QueryAnswer"), pp.getActualPlan().getAgent().getActualPerception());
-			ag.getDesires().remove(wannaAnswer);
+			Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
+			if(qaSkill == null) {
+				LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
+				return false;
+			}
+			pp.getActualPlan().newStack(qaSkill, pp.getActualPlan().getAgent().getActualPerception());
+			ag.removeDesire(wannaAnswer);
 			return true;
 		}
 		return false;

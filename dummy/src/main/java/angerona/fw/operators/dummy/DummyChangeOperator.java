@@ -61,8 +61,6 @@ public class DummyChangeOperator extends BaseChangeOperator {
 			String out = id + " Update-NA: Query ";
 			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (nonsense)" : "as receiver (view)");
 			
-			param.getAgent().addDesire(new Atom(new Predicate("wantsToAnswer")));
-			
 			//LOG.info(out);
 			report(out);
 		} else {

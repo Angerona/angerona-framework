@@ -26,10 +26,10 @@ public class DummyBeliefbaseComponent extends BeliefbaseComponent {
 	@Override
 	public void setObservationObject(Object obj) {
 		if(! (obj instanceof DummyBeliefbase)) {
-			throw new IllegalArgumentException("Observation Object must be of type 'DummyBeliefbase'");
+			throw new IllegalArgumentException("Observation Object must be of type '" +  DummyBeliefbase.class.getSimpleName() + "'");
 		}
-		this.beliefbase = (DummyBeliefbase)obj;
-		this.actualBeliefbase = this.beliefbase;
+		this.ref = (DummyBeliefbase)obj;
+		this.actual = this.ref;
 		setTitle("DUMMY");
 	}
 }
