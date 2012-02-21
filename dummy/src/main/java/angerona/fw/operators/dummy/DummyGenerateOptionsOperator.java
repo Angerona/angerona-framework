@@ -1,13 +1,15 @@
 package angerona.fw.operators.dummy;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Intention;
-import angerona.fw.nacts.NAQuery;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
@@ -21,13 +23,11 @@ public class DummyGenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	private static Logger LOG = LoggerFactory.getLogger(DummyGenerateOptionsOperator.class);
 	
 	@Override
-	protected List<Intention> processInt(GenerateOptionsParameter param) {
+	protected Set<Formula> processInt(GenerateOptionsParameter param) {
 		LOG.info("Generate Options operator");
 		
-		List<Intention> reval =  new LinkedList<Intention>();
-		if(param.getPerception() instanceof NAQuery) {
-			reval.add(param.getSkills().get("QueryAnswer"));
-		}
+		Set<Formula> reval = new HashSet<Formula>();
+		reval.add(new Atom(new Predicate("answer")));
 		return reval;
 	}
 }

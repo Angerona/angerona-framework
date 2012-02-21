@@ -9,7 +9,7 @@ import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
 
 /**
- * dummy filter operator: only text output to the console.
+ * 
  * @author Tim Janus
  */
 public class DummyIntentionUpdateOperator extends BaseIntentionUpdateOperator {

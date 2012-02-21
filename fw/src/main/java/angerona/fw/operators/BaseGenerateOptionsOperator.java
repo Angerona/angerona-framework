@@ -1,14 +1,15 @@
 package angerona.fw.operators;
 
-import java.util.List;
+import java.util.Set;
 
-import angerona.fw.Intention;
+import net.sf.tweety.Formula;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
 /**
  * Base class for option generation operators.
+ * It creates a set of formulas which represent the new agent desires.
  * @author Tim Janus
  */
 public abstract class BaseGenerateOptionsOperator extends 
-	Operator<GenerateOptionsParameter, List<Intention>> {
+	Operator<GenerateOptionsParameter, Set<Formula>> {
 }

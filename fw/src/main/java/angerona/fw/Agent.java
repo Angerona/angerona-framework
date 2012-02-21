@@ -188,7 +188,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	}
 	
 	/**
-	 * Gets the intention indentified by the given name
+	 * Gets the intention identified by the given name
 	 * @param name	the name of the intention
 	 * @return		reference to the intention.
 	 */
@@ -210,21 +210,14 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		}
 			
 		updateBeliefs(actualPerception);	
-		List<Intention> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
-		for(Intention option : options) {
-			if(!option.isAtomic()) {
-				// TODO: Operator reval exception.
-			}
-		}
+		Set<Formula> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
+		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		
 		while(atomic == null) {
-			atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(actualPlan, options, actualPerception));
-			if(!options.contains(atomic)) {
-				// TODO: Operator reval exception.
-			}
+			atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(actualPlan, allSkills, actualPerception));
 			
 			if(atomic == null) {
-				if(!subgoalGenerationOperator.process(new SubgoalGenerationParameter(actualPlan, options)))
+				if(!subgoalGenerationOperator.process(new SubgoalGenerationParameter(actualPlan, allSkills)))
 					break;
 			}
 		}
