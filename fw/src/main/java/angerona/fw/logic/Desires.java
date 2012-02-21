@@ -27,7 +27,7 @@ public class Desires extends HashSet<Formula> implements EntityAtomic {
 	private Long parent;
 	
 	public Desires(Long parent) {
-		id = IdGenerator.generate();
+		id = IdGenerator.generate(this);
 		this.parent = parent;
 	}
 	

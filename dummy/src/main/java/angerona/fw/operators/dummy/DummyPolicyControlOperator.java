@@ -44,11 +44,11 @@ public class DummyPolicyControlOperator extends BasePolicyControlOperator {
 				}
 				
 				report("Policy of '" + id + "'injured by: '" + ct + "' and answer: '" + aa.getAnswerExtended() + 
-						"' using '"+newAnswer+"' as answer.");
+						"' using '"+newAnswer+"' as answer.", param.getPolicyProofer());
 			}
 		}
 		
-		report("No policy injured.");
+		report("No policy injured.", param.getPolicyProofer());
 		return new AngeronaAnswer(aa.getKnowledgeBase(), aa.getQuery(), newAnswer);
 		
 	}

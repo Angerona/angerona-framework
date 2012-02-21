@@ -53,15 +53,14 @@ public class DummyChangeOperator extends BaseChangeOperator {
 				bb = param.getAgent().getBeliefs().getViewKnowledge().get(naa.getReceiverId());
 				bb.addNewKnowledge(knowledge);
 			}
-			//LOG.info(out);
+			
 			report(out, bb);
 		} else if(param.getPerception() instanceof NAQuery) {
 			NAQuery naq = (NAQuery)param.getPerception();
 			String out = id + " Update-NA: Query ";
 			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (nonsense)" : "as receiver (view)");
 			
-			//LOG.info(out);
-			report(out);
+			report(out, param.getAgent());
 		} else {
 			LOG.warn("Update-Operator: Cant handle perception of type: " + param.getPerception().getClass().getName());
 		}

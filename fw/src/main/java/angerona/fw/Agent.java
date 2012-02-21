@@ -139,7 +139,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	 * @throws AgentInstantiationException
 	 */
 	private void ctor(AgentConfiguration ac, String name) throws AgentInstantiationException {
-		this.id = new Long(IdGenerator.generate());
+		this.id = new Long(IdGenerator.generate(this));
 		context = new Context();
 		
 		desires = new Desires(this.id);

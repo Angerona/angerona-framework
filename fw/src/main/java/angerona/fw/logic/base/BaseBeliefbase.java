@@ -92,7 +92,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
-		id = IdGenerator.generate();
+		id = IdGenerator.generate(this);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public BaseBeliefbase(boolean supportsQuantifiers, boolean supportVariables) {
 		this.supportsQuantifiers = supportsQuantifiers;;
 		this.supportsVariables = supportVariables;
-		id = IdGenerator.generate();
+		id = IdGenerator.generate(this);
 	}
 	
 	/**

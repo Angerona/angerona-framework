@@ -7,7 +7,10 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+import angerona.fw.Agent;
 import angerona.fw.Angerona;
+import angerona.fw.IdGenerator;
+import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
@@ -40,7 +43,18 @@ public class ReportView extends UIComponent implements ReportListener {
 
 	@Override
 	public void reportReceived(ReportEntry entry) {
-		reportModel.add(0, entry.getMessage() + " from " + entry.getPoster().getPosterName());
+		String prefix = "<Sim> ";
+		Entity attach = entry.getAttachment();
+		if(attach != null) {
+			while(attach.getParent() != null) {
+				attach = IdGenerator.getEntityWithId(attach.getParent());
+			}
+			if(attach instanceof Agent) {
+				Agent ag = (Agent)attach;
+				prefix = "<"+ag.getName()+"> ";
+			}
+		}
+		reportModel.add(0, prefix + entry.getMessage() + " from " + entry.getPoster().getPosterName());
 	}
 
 	@Override

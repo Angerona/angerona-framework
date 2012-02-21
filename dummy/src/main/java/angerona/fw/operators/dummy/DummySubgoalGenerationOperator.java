@@ -37,10 +37,10 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 			// TODO: Find a better place to remove desire again.
 			ag.removeDesire(wannaAnswer);
 			
-			report("Add the new atomic action '"+qaSkill.getName()+"' to the plan");
+			report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag);
 			return true;
 		}
-		report("No new subgoal generated.");
+		report("No new subgoal generated.", ag);
 		return false;
 	}
 
