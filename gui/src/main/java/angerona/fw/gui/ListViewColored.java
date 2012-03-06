@@ -45,6 +45,8 @@ public abstract class ListViewColored<T extends Entity> extends UIComponent impl
 	/** reference to the actually showed report entry. */
 	private ReportEntry actEntry;
 	
+	protected NavigationPanel navPanel;
+	
 	/**
 	 * Inner class used to represent the elements in a list.
 	 * @author Tim Janus
@@ -115,7 +117,9 @@ public abstract class ListViewColored<T extends Entity> extends UIComponent impl
 		}
 		
 		this.setLayout(new BorderLayout());
-		add(new NavigationPanel(this), BorderLayout.NORTH);
+		navPanel = new NavigationPanel(this);
+		add(navPanel, BorderLayout.NORTH);
+		navPanel.setEntry(actEntry);
 		
 		actualLiterals = new JList();
 		actualLiterals.setCellRenderer(new ListRenderer());
@@ -163,6 +167,7 @@ public abstract class ListViewColored<T extends Entity> extends UIComponent impl
 		if(entry.getAttachment() != null) {
 			if(entry.getAttachment().getGUID().equals(ref.getGUID())) {
 				actEntry = entry;
+				navPanel.setEntry(actEntry);
 				if(isVisible()) {
 					updateView();
 				}
