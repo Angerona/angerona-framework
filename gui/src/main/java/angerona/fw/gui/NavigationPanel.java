@@ -187,7 +187,7 @@ public class NavigationPanel extends JPanel {
 		}
 		
 		int curTick = re.getPoster().getSimulation().getSimulationTick() + 1;
-		String txt = "Tick: " + (re.getSimulationTick() + 1) + "/" + curTick + " - Entry: ";
+		String txt = index+1 + "/" + entries.size() + " in Tick: " + (re.getSimulationTick() + 1) + "/" + curTick + " - InTick-Entry: ";
 		txt += (entriesBefore+1) + "/" + (entriesBefore + entriesAfter + 1);
 		lblTimeline.setText(txt);
 		currentEntry = re;
