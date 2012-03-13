@@ -18,8 +18,9 @@ import angerona.fw.operators.BaseChangeOperator;
 import angerona.fw.operators.parameter.UpdateParameter;
 
 /**
- * Dummy Update Operator can only handle: Answer and Query negotiation actions.
- * TODO: Use the correct beliefbase operators (update/revision)
+ * Default Update Operator reacts on Answer and Query speech acts.
+ * Sub-classes can use the default behavior and add their custom knowledge
+ * updates on custom perceptions/actions
  * @author Tim Janus
  */
 public class DummyChangeOperator extends BaseChangeOperator {
@@ -29,7 +30,7 @@ public class DummyChangeOperator extends BaseChangeOperator {
 	
 	@Override
 	protected Beliefs processInt(UpdateParameter param) {
-		LOG.info("Run Example-Change-Operator");
+		LOG.info("Run Default-Change-Operator");
 		Beliefs reval = param.getAgent().getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		
