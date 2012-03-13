@@ -1,4 +1,4 @@
-package angerona.fw.operators.dummy;
+package angerona.fw.operators.def;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 
@@ -18,10 +18,10 @@ import angerona.fw.operators.parameter.SubgoalGenerationParameter;
  * acts.
  * @author Tim Janus
  */
-public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
+public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(DummySubgoalGenerationOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
 	
 	@Override
 	protected Boolean processInt(SubgoalGenerationParameter pp) {
@@ -29,13 +29,13 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 		
 		Agent ag = pp.getActualPlan().getAgent();
 		if(ag.getDesires().contains(
-				new Atom(DummyGenerateOptionsOperator.prepareQueryProcessing))) {
+				new Atom(GenerateOptionsOperator.prepareQueryProcessing))) {
 			return answerQuery(pp, ag);
 		} else if(ag.getDesires().contains(
-				new Atom(DummyGenerateOptionsOperator.prepareRevisionRequestProcessing))) {
+				new Atom(GenerateOptionsOperator.prepareRevisionRequestProcessing))) {
 			// TODO Implement.
 		} else if(ag.getDesires().contains(
-				new Atom(DummyGenerateOptionsOperator.prepareReasonCalculation))) {
+				new Atom(GenerateOptionsOperator.prepareReasonCalculation))) {
 			// TODO Implement.
 		}
 		report("No new subgoal generated.", ag);
@@ -51,7 +51,7 @@ public class DummySubgoalGenerationOperator extends BaseSubgoalGenerationOperato
 		pp.getActualPlan().newStack(qaSkill, pp.getActualPlan().getAgent().getActualPerception());
 		
 		// TODO: Find a better place to remove desire again.
-		ag.removeDesire(new Atom(DummyGenerateOptionsOperator.prepareQueryProcessing));
+		ag.removeDesire(new Atom(GenerateOptionsOperator.prepareQueryProcessing));
 		
 		Subgoal sg = pp.getActualPlan();
 		while(!(sg instanceof MasterPlan)) {

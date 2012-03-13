@@ -1,4 +1,4 @@
-package angerona.fw.operators.dummy;
+package angerona.fw.operators.def;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +15,10 @@ import angerona.fw.operators.parameter.PolicyControlParameter;
  * confidential it prefers to lie.
  * @author Tim Janus
  */
-public class DummyPolicyControlOperator extends BasePolicyControlOperator {
+public class PolicyControlOperator extends BasePolicyControlOperator {
 
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(DummyPolicyControlOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(PolicyControlOperator.class);
 	
 	@Override
 	protected AngeronaAnswer processInt(PolicyControlParameter param) {

@@ -1,4 +1,4 @@
-package angerona.fw.operators.dummy;
+package angerona.fw.operators.def;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,10 @@ import angerona.fw.operators.parameter.IntentionUpdateParameter;
  * 
  * @author Tim Janus
  */
-public class DummyIntentionUpdateOperator extends BaseIntentionUpdateOperator {
+public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(DummyIntentionUpdateOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
 	
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {

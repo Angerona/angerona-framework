@@ -1,6 +1,6 @@
 <AngeronaSimulation name="Strike committee meeting">
 	<Agent 	name="Employee"
-		configuration="config/agents/dummy_agent.xml" >
+		configuration="config/agents/default_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
 		<Beliefbase	fileSuffix="employee"
 					configuration="config/beliefbases/asp_beliefbase.xml" />
@@ -10,7 +10,7 @@
 	</Agent>
 	
 	<Agent 	name="Boss" 
-		configuration="config/agents/dummy_agent.xml" >
+		configuration="config/agents/default_agent.xml" >
 		<Beliefbase	fileSuffix="boss"
 					configuration="config/beliefbases/asp_beliefbase.xml" />	
 	</Agent>

@@ -1,4 +1,4 @@
-package angerona.fw.operators.dummy;
+package angerona.fw.operators.def;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,10 +23,10 @@ import angerona.fw.operators.parameter.UpdateParameter;
  * updates on custom perceptions/actions
  * @author Tim Janus
  */
-public class DummyChangeOperator extends BaseChangeOperator {
+public class ChangeOperator extends BaseChangeOperator {
 
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(DummyChangeOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(ChangeOperator.class);
 	
 	@Override
 	protected Beliefs processInt(UpdateParameter param) {

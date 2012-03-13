@@ -1,4 +1,4 @@
-package angerona.fw.operators.dummy;
+package angerona.fw.operators.def;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,10 +22,10 @@ import angerona.fw.operators.parameter.GenerateOptionsParameter;
  * for more specific option generator which want to use the speech acts of Angerona.
  * @author Tim Janus
  */
-public class DummyGenerateOptionsOperator extends BaseGenerateOptionsOperator {
+public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(DummyGenerateOptionsOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(GenerateOptionsOperator.class);
 	
 	public static final Predicate prepareQueryProcessing = new Predicate("wantsPrepareQueryProcessing");
 	
