@@ -1,4 +1,13 @@
 world {
-	attends :- not hasTime, not -attends.
+	fired :- -excused, -attendsWork.
+	fired :- attendsScm.
+	excused :- attendsScm.
+	excused :- attendsBurial.
+	-attendsWork :- excused.
 } view->Employee {
+	fired :- -excused, -attendsWork.
+	fired :- attendsScm.
+	excused :- attendsScm.
+	excused :- attendsBurial.
+	-attendsWork :- excused.
 }

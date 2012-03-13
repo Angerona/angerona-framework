@@ -3,7 +3,10 @@
 		configuration="config/agents/dummy_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
 		<Beliefbase	fileSuffix="employee"
-					configuration="config/beliefbases/asp_beliefbase.xml" />	
+					configuration="config/beliefbases/asp_beliefbase.xml" />
+		<Desires>
+			<Desire>attendsScm</Desire>
+		</Desires>	
 	</Agent>
 	
 	<Agent 	name="Boss" 
@@ -13,7 +16,10 @@
 	</Agent>
 
 	<Flow>
+		<!-- 
+		<RevisionRequest sender="Employee" receiver="Boss" sentence="excused" />
 		<Query sender="Boss" receiver="Employee" question="attends" />
 		<Query sender="Boss" receiver="Employee" question="has_time" /> 
+		-->
 	</Flow>
 </AngeronaSimulation>

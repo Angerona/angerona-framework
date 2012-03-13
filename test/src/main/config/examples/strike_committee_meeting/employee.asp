@@ -1,6 +1,13 @@
 world {
-attends.
--has_time.
+	fired :- -excused, -attendsWork.
+	fired :- attendsScm.
+	excused :- attendsScm.
+	excused :- attendsBurial.
+	-attendsWork :- excused.
 } view->Boss {
-attends :- -hasTime.
+	fired :- -excused, -attendsWork.
+	fired :- attendsScm.
+	excused :- attendsScm.
+	excused :- attendsBurial.
+	-attendsWork :- excused.
 }
