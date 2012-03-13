@@ -1,0 +1,18 @@
+<AngeronaSimulation name="Core-Feature Test">
+	<Agent 	name="Alice"
+		configuration="config/agents/default_agent.xml" >
+		<Skill file="config/skills/QueryAnswer.xml" />
+		<Beliefbase	fileSuffix="alice"
+					configuration="config/beliefbases/dummy_beliefbase.xml" />	
+	</Agent>
+	
+	<Agent 	name="Bob" 
+		configuration="config/agents/default_agent.xml" >
+		<Beliefbase	fileSuffix="bob"
+					configuration="config/beliefbases/dummy_beliefbase.xml" />	
+	</Agent>
+
+	<Flow>
+		<Query sender="Bob" receiver="Alice" question="wannaDance" />
+	</Flow>
+</AngeronaSimulation>
