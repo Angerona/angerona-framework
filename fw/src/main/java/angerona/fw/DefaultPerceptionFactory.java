@@ -4,10 +4,10 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.w3c.dom.Element;
 
+import angerona.fw.comm.Answer;
+import angerona.fw.comm.Query;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.nacts.NAAnswer;
-import angerona.fw.nacts.NAQuery;
 import angerona.fw.reflection.Context;
 
 public class DefaultPerceptionFactory extends PerceptionFactory {
@@ -25,7 +25,7 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 		if(elName.compareToIgnoreCase("Query") == 0) {
 			FolFormula f = PerceptionFactory.createFormula(
 					elAP.getAttribute("question"), context);
-			return new NAQuery(s, r, f);
+			return new Query(s, r, f);
 		}
 		else if(elName.compareToIgnoreCase("Answer") == 0) {
 			FolFormula f = PerceptionFactory.createFormula(
@@ -33,7 +33,7 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 			AnswerValue av = PerceptionFactory.createAnswerValue(
 					elAP.getAttribute("answer"), context);
 				
-			return new NAAnswer(s, r, f, av);
+			return new Answer(s, r, f, av);
 		}
 		
 		throw new NotImplementedException("Factory doesn't support: " + elName + " as Parameter");

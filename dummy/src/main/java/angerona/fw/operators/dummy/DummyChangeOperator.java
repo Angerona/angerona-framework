@@ -9,11 +9,11 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.comm.Answer;
+import angerona.fw.comm.Query;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
-import angerona.fw.nacts.NAAnswer;
-import angerona.fw.nacts.NAQuery;
 import angerona.fw.operators.BaseChangeOperator;
 import angerona.fw.operators.parameter.UpdateParameter;
 
@@ -33,8 +33,8 @@ public class DummyChangeOperator extends BaseChangeOperator {
 		Beliefs reval = param.getAgent().getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		
-		if(param.getPerception() instanceof NAAnswer) {
-			NAAnswer naa = (NAAnswer)param.getPerception();
+		if(param.getPerception() instanceof Answer) {
+			Answer naa = (Answer)param.getPerception();
 			String out = id + " Update-NA: Answer ";
 			out += (naa.getSenderId().compareTo(id) == 0 ? "as sender (view)" : "as receiver (world)");
 			
@@ -55,8 +55,8 @@ public class DummyChangeOperator extends BaseChangeOperator {
 			}
 			
 			report(out, bb);
-		} else if(param.getPerception() instanceof NAQuery) {
-			NAQuery naq = (NAQuery)param.getPerception();
+		} else if(param.getPerception() instanceof Query) {
+			Query naq = (Query)param.getPerception();
 			String out = id + " Update-NA: Query ";
 			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (nonsense)" : "as receiver (view)");
 			

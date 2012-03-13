@@ -1,13 +1,13 @@
-package angerona.fw.nacts;
+package angerona.fw.comm;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.logic.AnswerValue;
 
 /**
- * Implementation of the negotiation act "Answer".
+ * Implementation of the speech act "Answer".
  * @author Tim Janus
  */
-public class NAAnswer extends NegotiationAct {
+public class Answer extends SpeechAct {
 
 	/** the formula representing the question */
 	private FolFormula regarding;
@@ -16,13 +16,13 @@ public class NAAnswer extends NegotiationAct {
 	private AnswerValue answer;
 	
 	/**
-	 * Ctor: Generates the Answer negotiation act by the following parameters.
+	 * Ctor: Generates the Answer speech act by the following parameters.
 	 * @param senderId		unique name of the sender of the answer
 	 * @param receiverId	unique name of the receiver of the answer
 	 * @param regarding		formula representing the question
 	 * @param answer		the value of the answer.
 	 */
-	public NAAnswer(String senderId, String receiverId, FolFormula regarding, AnswerValue answer) {
+	public Answer(String senderId, String receiverId, FolFormula regarding, AnswerValue answer) {
 		super(senderId, receiverId);
 		this.regarding = regarding;
 		this.answer = answer;
