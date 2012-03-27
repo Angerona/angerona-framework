@@ -24,6 +24,7 @@ import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 import angerona.fw.serialize.GlobalConfiguration;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.ErrorListener;
 import angerona.fw.util.SimulationListener;
 
 /**
@@ -44,6 +45,8 @@ public class Angerona {
 	private List<ReportListener> reportListeners = new LinkedList<ReportListener>();
 	
 	private List<SimulationListener> simulationListeners = new LinkedList<SimulationListener>();
+	
+	private List<ErrorListener> errorListeners = new LinkedList<ErrorListener>();
 	
 	// TODO: Differentiate between environment and simulation.
 	private Map<AngeronaEnvironment, Report> reports = new HashMap<AngeronaEnvironment, Report>(); 
@@ -149,6 +152,18 @@ public class Angerona {
 		simulationListeners.clear();
 	}
 	
+	public void addErrorListener(ErrorListener listener) {
+		errorListeners.add(listener);
+	}
+	
+	public boolean removeErrorListener(ErrorListener listener) {
+		return errorListeners.remove(listener);
+	}
+	
+	public void removeAllErrorListeners() {
+		errorListeners.clear();
+	}
+	
 	public void onNewSimulation(AngeronaEnvironment ev) {
 		actualReport = new Report(ev);
 		reports.put(ev, actualReport);
@@ -168,6 +183,12 @@ public class Angerona {
 	public void onTickDone(AngeronaEnvironment ev, boolean finished) {
 		for(SimulationListener l : simulationListeners) {
 			l.tickDone(ev, finished);
+		}
+	}
+	
+	public void onError(String title, String message) {
+		for(ErrorListener l : errorListeners) {
+			l.onError(title, message);
 		}
 	}
 	

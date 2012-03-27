@@ -13,6 +13,7 @@ import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.parser.ParseException;
 
 /**
  * Just a dummy belief base for testing purposes.
@@ -62,10 +63,14 @@ public class DummyBeliefbase extends BaseBeliefbase {
 
 	// Belief base is a simple FOL Beliefbase.
 	@Override
-	protected void parseInt(BufferedReader br) throws ParserException, IOException {
+	protected void parseInt(BufferedReader br) throws ParseException, IOException {
 		FolParser fp = new FolParser();
-		fbs = (FolBeliefSet)fp.parseBeliefBase(br);
-		signature = fp.getSignature();
+		try{
+			fbs = (FolBeliefSet)fp.parseBeliefBase(br);
+			signature = fp.getSignature();
+		} catch (ParserException ex) {
+			throw new ParseException(ex.getMessage());
+		}
 	}
 
 	@Override

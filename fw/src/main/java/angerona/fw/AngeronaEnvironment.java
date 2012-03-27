@@ -196,12 +196,11 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	 * @return	true if everything was fine, false if an error occurred.
 	 */
 	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
-		boolean reval = true;
-		
 		LOG.info("Starting simulation: " + config.getName());
 		
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		tick = 0;
+		String errorOutput = "";
 		try {
 			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
@@ -245,32 +244,32 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {
-			reval = false;
-			LOG.error("Cannot init simulation, something went wrong during agent registration: " + e.getMessage());
+			errorOutput = "Cannot init simulation, something went wrong during agent registration: " + e.getMessage();
 			e.printStackTrace();
 		} catch (AgentInstantiationException e) {
-			reval = false;
-			LOG.error("Cannot init simulation, something went wrong during agent instatiation: " + e.getMessage());
+			errorOutput = "Cannot init simulation, something went wrong during agent instatiation: " + e.getMessage();
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			reval = false;
-			LOG.error("Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage());
+			errorOutput = "Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage();
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			reval = false;
-			LOG.error("Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage());
+			errorOutput = "Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage();
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			reval = false;
-			LOG.error("Cannot init simulation, referenced file not found: " + e.getMessage());
+			errorOutput = "Cannot init simulation, referenced file not found: " + e.getMessage();
 			e.printStackTrace();
 		} catch (IOException e) {
-			reval = false;
 			e.printStackTrace();
 		} catch (ParseException e) {
-			reval = false;
-			LOG.error("Cannot init simulation, parsing error occured: " + e.getMessage());
+			errorOutput = "Cannot init simulation, parsing error occured: " + e.getMessage();
 			e.printStackTrace();
+		}
+		
+		if(!errorOutput.isEmpty()) {
+			LOG.error(errorOutput);
+			this.cleanupSimulation();
+			Angerona.getInstance().onError("Simulation Initialization", errorOutput);
+			return false;
 		}
 		
 		Angerona.getInstance().onNewSimulation(this);
@@ -299,8 +298,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		for(Perception p : initPercepts) {
 			this.sendAction(p.getReceiverId(), p);
 		}
-		
-		return ready = reval;
+		return ready = true;
 	}
 	
 	/**

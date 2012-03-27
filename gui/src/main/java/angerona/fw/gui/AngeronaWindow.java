@@ -31,6 +31,7 @@ import angerona.fw.AngeronaEnvironment;
 import angerona.fw.PluginInstantiator;
 import angerona.fw.PluginListener;
 import angerona.fw.report.Entity;
+import angerona.fw.util.ErrorListener;
 
 import com.whiplash.gui.WlComponent;
 import com.whiplash.gui.WlWindow;
@@ -42,7 +43,7 @@ import com.whiplash.res.WlResourceManager;
  * The main window of the Angerona UI - Extension. It is a Singleton. 
  * @author Tim Janus
  */
-public class AngeronaWindow implements PluginListener {
+public class AngeronaWindow implements PluginListener, ErrorListener {
 	private WlWindow window;
 	
 	private WlWindowSet windowSet;
@@ -112,6 +113,8 @@ public class AngeronaWindow implements PluginListener {
 		angerona.addBeliefbaseConfigFolder("config/beliefbases");
 		angerona.addSimulationFolders("config/examples");
 		angerona.bootstrap();
+		
+		angerona.addErrorListener(this);
 		
 		map.put("Report-View", ReportView.class);
 		map.put("Resourcen-View", ResourcenView.class);
@@ -242,5 +245,11 @@ public class AngeronaWindow implements PluginListener {
 			LOG.info("UI-Plugin: '{}' loaded", pl.getClass().getName());
 			map.putAll(pl.getUIComponents());
 		}
+	}
+
+	@Override
+	public void onError(String errorTitle, String errorMessage) {
+		JOptionPane.showMessageDialog(this.getWindow(), errorMessage, 
+				errorTitle, JOptionPane.ERROR_MESSAGE);
 	}
 }

@@ -22,6 +22,7 @@ import angerona.fw.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.operators.parameter.BeliefbaseParameter;
+import angerona.fw.parser.ParseException;
 import angerona.fw.report.EntityAtomic;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
@@ -128,7 +129,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void parse(String filepath) throws FileNotFoundException, IOException {
+	public void parse(String filepath) throws FileNotFoundException, IOException, ParseException {
 		File f = new File(filepath);
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);
@@ -136,7 +137,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		parseInt(br);
 	}
 	
-	public void parse(BufferedReader br) throws ParserException, IOException {
+	public void parse(BufferedReader br) throws ParseException, IOException {
 		parseInt(br);
 	}
 	
@@ -176,7 +177,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws IOException 
 	 * @throws ParserException 
 	 */
-	protected abstract void parseInt(BufferedReader br) throws ParserException, IOException;
+	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
 	/**
 	 * adds the given formulas to the knowledgebase as new knowledge. Using the default update mechanism
