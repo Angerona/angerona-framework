@@ -9,6 +9,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -40,7 +44,8 @@ public class SimulationConfiguration {
 		
 		/** list of file names for used intentions */
 		private List<SkillConfiguration> skillConfigs = new LinkedList<SkillConfiguration>();
-		
+	
+		private List<FolFormula> desires = new LinkedList<FolFormula>();
 	
 		/** @return the unique name of the agent */
 		public String getName() {
@@ -55,6 +60,10 @@ public class SimulationConfiguration {
 		/** @return list of file names for used intentions */
 		public List<SkillConfiguration> getSkillConfig() {
 			return skillConfigs;
+		}
+		
+		public List<FolFormula> getDesires() {
+			return desires;
 		}
 		
 		/**
@@ -79,6 +88,16 @@ public class SimulationConfiguration {
 					fnf.printStackTrace();
 					throw new ParserConfigurationException(fnf.getMessage());
 				}	
+			}
+			
+			Element elDes = (Element)el.getElementsByTagName("Desires").item(0);
+			if(elDes != null) {
+				lst = elDes.getElementsByTagName("Desire");
+				for(int i=0; i<lst.getLength(); ++i) {
+					Element des = (Element)lst.item(i);
+					FolFormula formula = new Atom(new Predicate(des.getTextContent()));
+					desires.add(formula);
+				}
 			}
 			
 			try {

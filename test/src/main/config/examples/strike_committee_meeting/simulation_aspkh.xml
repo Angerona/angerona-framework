@@ -2,10 +2,11 @@
 	<Agent 	name="Employee"
 		configuration="config/agents/knowhow_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
-		<Beliefbase	fileSuffix="employee"
+        <Skill file="config/skills/RevisionRequestlxml" />
+        <Beliefbase	fileSuffix="employee"
 					configuration="config/beliefbases/aspkh_beliefbase.xml" />
 		<Desires>
-			<Desire>attendsScm</Desire>
+			<Desire>attend_scm</Desire>
 		</Desires>	
 	</Agent>
 	

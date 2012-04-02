@@ -344,6 +344,14 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		return reval;
 	}
 	
+	public boolean addDesires(List<FolFormula> list) {
+		boolean reval = list.addAll(list);
+		if(reval) {
+			Angerona.getInstance().report("Desires changed.", this.getEnvironment(), this.desires);
+		}
+		return reval;
+	}
+	
 	public boolean removeDesire(Formula desire) {
 		boolean reval = this.desires.remove(desire);
 		if(reval) {
