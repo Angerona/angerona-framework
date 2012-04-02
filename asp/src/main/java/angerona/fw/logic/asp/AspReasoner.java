@@ -7,6 +7,7 @@ import net.sf.tweety.Answer;
 import net.sf.tweety.Formula;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
+import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
@@ -44,11 +45,12 @@ public class AspReasoner extends BaseReasoner {
 	/** enum encoding the possible solver backends which can be use to retrieve the answer sets*/
 	private enum SolverType {
 		CLINGO,
-		DLV
+		DLV,
+		DLV_COMPLEX
 	}
 	
 	/** the solver type used by this class instance */
-	private SolverType solver = SolverType.CLINGO;
+	private SolverType solver = SolverType.DLV_COMPLEX;
 	
 	/** the actual used semantic for interpreting the received answer sets */
 	private InferenceSemantic semantic = InferenceSemantic.S_SKEPTICAL;
@@ -129,7 +131,9 @@ public class AspReasoner extends BaseReasoner {
 		if(this.solver == SolverType.CLINGO)
 			solver = new Clingo("tools/solver/asp/clingo/clingo");
 		else if(this.solver == SolverType.DLV)
-			solver = new DLV("tools/solver/asp/dlv/dlv.bin");
+			solver = new DLV("tools/solver/asp/dlv/dlv");
+		else if(this.solver == SolverType.DLV_COMPLEX)
+			solver = new DLVComplex("tools/solver/aps/dlv/dl-complex");
 		
 		return solver.computeModels(bb.getProgram(), 10);
 	}

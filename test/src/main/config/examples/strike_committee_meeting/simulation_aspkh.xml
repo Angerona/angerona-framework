@@ -1,0 +1,25 @@
+<AngeronaSimulation name="Strike committee meeting">
+	<Agent 	name="Employee"
+		configuration="config/agents/knowhow_agent.xml" >
+		<Skill file="config/skills/QueryAnswer.xml" />
+		<Beliefbase	fileSuffix="employee"
+					configuration="config/beliefbases/aspkh_beliefbase.xml" />
+		<Desires>
+			<Desire>attendsScm</Desire>
+		</Desires>	
+	</Agent>
+	
+	<Agent 	name="Boss" 
+		configuration="config/agents/knowhow_agent.xml" >
+		<Beliefbase	fileSuffix="boss"
+					configuration="config/beliefbases/aspkh_beliefbase.xml" />	
+	</Agent>
+
+	<Flow>
+		<!-- 
+		<RevisionRequest sender="Employee" receiver="Boss" sentence="excused" />
+		<Query sender="Boss" receiver="Employee" question="attends" />
+		<Query sender="Boss" receiver="Employee" question="has_time" /> 
+		-->
+	</Flow>
+</AngeronaSimulation>

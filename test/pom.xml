@@ -226,6 +226,12 @@
     	<artifactId>gui</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>knowhow</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>angerona.fw</groupId>

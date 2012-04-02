@@ -1,5 +1,9 @@
 package angerona.fw.knowhow;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import angerona.fw.logic.asp.AspBeliefbase;
 
 /**
@@ -8,4 +12,19 @@ import angerona.fw.logic.asp.AspBeliefbase;
  */
 public class KBBeliefbase extends AspBeliefbase {
 	
+	private Program nextAction;
+	
+	private Program initTree;
+	
+	public KBBeliefbase() {
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/InitTree");
+		initTree = Program.loadFrom(new InputStreamReader(is));
+		
+		is = this.getClass().getClassLoader().getResourceAsStream("programs/NextAction");
+		nextAction = Program.loadFrom(new InputStreamReader(is));
+	}
+	
+	public String getFileEnding() {
+		return "aspkh";
+	}
 }

@@ -1,0 +1,3 @@
+khState([]).
+state(intentionAdded).
+istack([]).

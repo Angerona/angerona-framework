@@ -29,5 +29,6 @@
   	<module>tweety/tweety</module>
   	<module>tweety/firstorderlogic</module>
   	<module>gui</module>
+  	<module>knowhow</module>
   </modules>
 </project>

@@ -2,12 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>angerona.fw</groupId>
   <artifactId>knowhow</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>knowhow</name>
+  <name>Angerona (Know-How Plugin)</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -26,5 +24,16 @@
     	<artifactId>asp</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>gui</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
+  <parent>
+  	<groupId>angerona.fw</groupId>
+  	<artifactId>maven-build-all</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  	<relativePath>..</relativePath>
+  </parent>
 </project>
