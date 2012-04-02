@@ -10,13 +10,13 @@ import angerona.fw.logic.asp.AspBeliefbase;
  * Extends a generic ASP Beliefbase with know-how.
  * @author Tim Janus
  */
-public class KBBeliefbase extends AspBeliefbase {
+public class KnowHowBeliefbase extends AspBeliefbase {
 	
 	private Program nextAction;
 	
 	private Program initTree;
 	
-	public KBBeliefbase() {
+	public KnowHowBeliefbase() {
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/InitTree");
 		initTree = Program.loadFrom(new InputStreamReader(is));
 		

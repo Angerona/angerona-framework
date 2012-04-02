@@ -22,7 +22,7 @@ public class KnowhowPlugin extends AspPlugin implements UIPlugin {
 	public List<Class<? extends BaseBeliefbase>> getSupportedBeliefbases() {
 		List<Class<? extends BaseBeliefbase>> reval = new LinkedList<Class<? extends BaseBeliefbase>>();
 		reval.addAll(super.getSupportedBeliefbases());
-		reval.add(KBBeliefbase.class);
+		reval.add(KnowHowBeliefbase.class);
 		return reval;
 	}
 

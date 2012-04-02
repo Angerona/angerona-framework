@@ -1,5 +1,5 @@
 <BeliefbaseConfiguration name="Answer-Set Beliefbase"
-				class="angerona.fw.knowhow.KBBeliefbase"
+				class="angerona.fw.knowhow.KnowHowBeliefbase"
 				updateBehavior="REVISION">
 	<Expansion class="angerona.fw.logic.asp.AspExpansion"></Expansion>
 	<Consolidation class="empty"></Consolidation>
