@@ -5,4 +5,8 @@
 	<UpdateOperator class="angerona.fw.operators.def.ChangeOperator"></UpdateOperator>
 	<PolicyControlOperator class="angerona.fw.operators.def.PolicyControlOperator"></PolicyControlOperator>
 	<ViolatesOperator class="angerona.fw.operators.def.ViolatesOperator"></ViolatesOperator>	
+	
+	<Components>
+		<Component class="angerona.fw.knowhow.KnowhowBase" />
+	</Components>
 </AgentConfiguration>

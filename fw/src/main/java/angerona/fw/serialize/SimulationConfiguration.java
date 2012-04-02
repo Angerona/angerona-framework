@@ -2,8 +2,11 @@ package angerona.fw.serialize;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,6 +49,8 @@ public class SimulationConfiguration {
 		private List<SkillConfiguration> skillConfigs = new LinkedList<SkillConfiguration>();
 	
 		private List<FolFormula> desires = new LinkedList<FolFormula>();
+		
+		private Map<String, String> additionalData = new HashMap<String, String>();
 	
 		/** @return the unique name of the agent */
 		public String getName() {
@@ -64,6 +69,11 @@ public class SimulationConfiguration {
 		
 		public List<FolFormula> getDesires() {
 			return desires;
+		}
+		
+		
+		public Map<String, String> getAdditionalData() {
+			return Collections.unmodifiableMap(additionalData);
 		}
 		
 		/**
@@ -97,6 +107,18 @@ public class SimulationConfiguration {
 					Element des = (Element)lst.item(i);
 					FolFormula formula = new Atom(new Predicate(des.getTextContent()));
 					desires.add(formula);
+				}
+			}
+			
+			Element elAdditionalData = (Element)el.getElementsByTagName("AdditionalData").item(0);
+			if(elAdditionalData != null) {
+				lst = elAdditionalData.getChildNodes();
+				for(int i=0; i<lst.getLength(); ++i) {
+					if(!(lst.item(i) instanceof Element)) 
+						continue;
+					
+					Element act = (Element)lst.item(i);
+					additionalData.put(act.getNodeName(), act.getTextContent());
 				}
 			}
 			
@@ -150,6 +172,7 @@ public class SimulationConfiguration {
 	public Element getFlowElement() {
 		return flowElement;
 	}
+
 	
 	/**
 	 * Helper method: Loads the simulation configuration data structure from the given filename

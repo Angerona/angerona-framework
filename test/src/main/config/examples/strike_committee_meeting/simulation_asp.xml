@@ -1,12 +1,21 @@
 <AngeronaSimulation name="Strike committee meeting">
 	<Agent 	name="Employee"
-		configuration="config/agents/default_agent.xml" >
+		configuration="config/agents/knowhow_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
+        <Skill file="config/skills/RevisionRequest.xml" />
 		<Beliefbase	fileSuffix="employee"
 					configuration="config/beliefbases/asp_beliefbase.xml" />
 		<Desires>
-			<Desire>attendsScm</Desire>
+			<Desire>attend_scm</Desire>
 		</Desires>	
+		
+		<AdditionalData>
+			<KnowHow>
+			Bel(Y, X); RevisionRequest(Y, X); Reason(X)
+			excused; Bel(Boss, excused);  
+			attend_scm; excused; 
+			</KnowHow>
+		</AdditionalData>	
 	</Agent>
 	
 	<Agent 	name="Boss" 

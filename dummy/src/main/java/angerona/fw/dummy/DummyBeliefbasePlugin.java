@@ -3,6 +3,7 @@ package angerona.fw.dummy;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.BeliefbasePlugin;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseConsolidation;
@@ -14,7 +15,6 @@ import angerona.fw.logic.dummy.DummyConsolidation;
 import angerona.fw.logic.dummy.DummyExpansion;
 import angerona.fw.logic.dummy.DummyReasoner;
 import angerona.fw.logic.dummy.DummyRevision;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * A dummy belief base plugin. It is used as an example and for testing purposes.

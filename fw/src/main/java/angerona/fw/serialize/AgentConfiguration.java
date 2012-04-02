@@ -1,6 +1,7 @@
 package angerona.fw.serialize;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,6 +39,8 @@ public class AgentConfiguration {
 
 	/** String identifying the Planer class name for dynamic instantiation */
 	private String planerClass;
+	
+	private List<String> componentClasses = new LinkedList<String>();
 	
 	/** String with name of this agent configuration */
 	private String name;
@@ -84,6 +87,15 @@ public class AgentConfiguration {
 		reval.policyControlOperatorClass = getClassNameOfElement(el.getElementsByTagName("PolicyControlOperator"));
 		reval.planerClass = getClassNameOfElement(el.getElementsByTagName("Planer"));
 		reval.updateOperatorClass = getClassNameOfElement(el.getElementsByTagName("UpdateOperator"));
+		
+		el = (Element)el.getElementsByTagName("Components").item(0);
+		if(el != null) {
+			NodeList lst = el.getElementsByTagName("Component");
+			for(int k=0; k< lst.getLength(); ++k) {
+				Element elC = (Element)lst.item(k);
+				reval.componentClasses.add(elC.getAttribute("class"));
+			}
+		} 
 		
 		return reval;
 	}
@@ -139,4 +151,7 @@ public class AgentConfiguration {
 		return name;
 	}
 	
+	public List<String> getComponents() {
+		return Collections.unmodifiableList(componentClasses);
+	}
 }

@@ -2,6 +2,7 @@ package angerona.fw;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -87,6 +88,9 @@ public class PluginInstantiator {
 	/** list of all classes implementing a revision for a belief base */
 	private List<Class<? extends BaseRevision>> revisions = new LinkedList<Class<? extends BaseRevision>>();
 	
+	/** list of all classes implementing a custom agent component */
+	private List<Class<? extends AgentComponent>> components = new LinkedList<Class<? extends AgentComponent>>();
+	
 	public PluginManagerUtil getPluginUtil() {
 		return util;
 	}
@@ -153,6 +157,16 @@ public class PluginInstantiator {
 			LOG.info("Beliefbase-Plugin '{}' loaded", bp.getClass().getName());
 		}
 		
+		LOG.info("Load Agent-Plugins:");
+		Collection<AgentPlugin> aPlugins = new LinkedList<AgentPlugin>(util.getPlugins(AgentPlugin.class));
+		for(AgentPlugin ap : aPlugins) {
+			if(loadedPlugins.contains(ap))
+				continue;
+			loadedPlugins.add(ap);
+			components.addAll(ap.getAgentComponents());
+			LOG.info("Agent-Pluign '{}' loaded", ap.getClass().getName());
+		}
+		
 		for(PluginListener pl : listeners) {
 			pl.loadingImplementations(this);
 		}
@@ -160,57 +174,61 @@ public class PluginInstantiator {
 	
 	/** @return list with all Generate-Options operators */
 	public List<Class<? extends BaseGenerateOptionsOperator>> getGenerateOptionsOperators() {
-		return generateOptionsOperators;
+		return Collections.unmodifiableList(generateOptionsOperators);
 	}
 
 	/** @return list with all filter operators */
 	public List<Class<? extends BaseIntentionUpdateOperator>> getFilterOperators() {
-		return filterOperators;
+		return Collections.unmodifiableList(filterOperators);
 	}
 
 	/** @return list with all update operators */
 	public List<Class<? extends BaseChangeOperator>> getUpdateOperators() {
-		return updateOperators;
+		return Collections.unmodifiableList(updateOperators);
 	}
 
 	/** @return list with all policy-control operators */
 	public List<Class<? extends BasePolicyControlOperator>> getPolicyControlOperators() {
-		return policyControlOperators;
+		return Collections.unmodifiableList(policyControlOperators);
 	}
 
 	/** @return list with all violates operators */
 	public List<Class<? extends BaseViolatesOperator>> getViolatesOperators() {
-		return violatesOperators;
+		return Collections.unmodifiableList(violatesOperators);
 	}
 
 	/** @return list with all planer operators */
 	public List<Class<? extends BaseSubgoalGenerationOperator>> getPlaners() {
-		return planers;
+		return Collections.unmodifiableList(planers);
 	}
 	
 	/** @return list with all belief base operators */
 	public List<Class<? extends BaseBeliefbase>> getBeliefbases() {
-		return beliefbases;
+		return Collections.unmodifiableList(beliefbases);
 	}
 	
 	/** @return list with all Reasoner operators */
 	public List<Class<? extends BaseReasoner>> getReasoners() {
-		return reasoners;
+		return Collections.unmodifiableList(reasoners);
 	}
 	
 	/** @return list with all Expansion operators */
 	public List<Class<? extends BaseExpansion>> getExpansions() {
-		return expansions;
+		return Collections.unmodifiableList(expansions);
 	}
 	
 	/** @return list with all Consolidation operators */
 	public List<Class<? extends BaseConsolidation>> getConsolidations() {
-		return consolidations;
+		return Collections.unmodifiableList(consolidations);
 	}
 	
 	/** @return list with all Revision operators */
 	public List<Class<? extends BaseRevision>> getRevisions() {
-		return revisions;
+		return Collections.unmodifiableList(revisions);
+	}
+	
+	public List<Class<? extends AgentComponent>> getComponents() {
+		return Collections.unmodifiableList(components);
 	}
 	
 	/**
@@ -418,6 +436,16 @@ public class PluginInstantiator {
 			}
 		}
 
-		throw new InstantiationException("Can't find Revision with name: " + classname );
+		throw new InstantiationException("Cannot find Revision with name: " + classname );
+	}
+	
+	public AgentComponent createComponent(String classname) throws InstantiationException, IllegalAccessException {
+		for(Class<? extends AgentComponent> c : getComponents()) {
+			if(c.getName().compareTo(classname) == 0) {
+				return c.newInstance();
+			}
+		}
+		
+		throw new InstantiationException("Cannot find Agent-Component with name: " + classname);
 	}
 }

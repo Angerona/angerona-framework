@@ -1,4 +1,5 @@
 package angerona.fw;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +36,7 @@ import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
 import angerona.fw.report.Entity;
+import angerona.fw.report.EntityAtomic;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.SkillConfiguration;
 
@@ -64,6 +66,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	private Long id;
 	
 	private List<Long> childrenIds = new LinkedList<Long>();
+	
+	private List<AgentComponent> customComponents = new LinkedList<AgentComponent>();
 	
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
@@ -157,11 +161,53 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 			changeOperator = pi.createUpdateOperator(ac.getUpdateOperatorClass());
 			policyControlOperator = pi.createPolicyControlOperator(ac.getPolicyControlOperatorClass());
 			violatesOperator = pi.createViolatesOperator(ac.getViolatesOperatorClass());
+
+			for(String compName : ac.getComponents()) {
+				addComponent(pi.createComponent(compName));
+				LOG.info("Add custom Component '{}' to agent '{}'", compName, name);
+			}
 		} catch (InstantiationException e) {
 			throw new AgentInstantiationException(e.getMessage());
 		} catch (IllegalAccessException e) {
 			throw new AgentInstantiationException(e.getMessage());
 		}
+	}
+	
+	public void initComponents(Map<String, String> additionalData) {
+		for(AgentComponent ac : customComponents) {
+			ac.init(additionalData);
+		}
+	}
+	
+	public boolean addComponent(AgentComponent ea) {
+		if(ea == null)
+			throw new IllegalArgumentException();
+		
+		boolean reval = true;
+		for(EntityAtomic loopEa : customComponents) {
+			if(ea.getClass().equals(loopEa)) {
+				reval = false;
+				break;
+			}
+		}
+		
+		if(reval) {
+			customComponents.add(ea);
+			ea.setParent(id);
+		}
+		return reval;
+	}
+	
+	public EntityAtomic getComponent(Class<? extends AgentComponent> cls) {
+		for(EntityAtomic ea : customComponents) {
+			if(ea.getClass().equals(cls))
+				return ea;
+		}
+		return null;
+	}
+	
+	public List<AgentComponent> getComponents() {
+		return Collections.unmodifiableList(customComponents);
 	}
 	
 	/**

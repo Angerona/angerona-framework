@@ -238,10 +238,13 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 					views.put(key, actView);
 					
 				}
+				
+								
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
 				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
 				addAgent(highLevelAg.getAgentProcess());
 				highLevelAg.getDesires().addAll(ai.getDesires());
+				highLevelAg.initComponents(ai.getAdditionalData());
 				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {
@@ -292,6 +295,10 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 			
 			Angerona.getInstance().report("Confidental Knowledge of '" + agent.getName() + "' created.", this, b.getConfidentialKnowledge());
 			Angerona.getInstance().report("Master-Plan of '" + agent.getName() + "' created.", this, agent.getPlan());
+			
+			for(AgentComponent ac : agent.getComponents()) {
+				Angerona.getInstance().report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + agent.getName() + "' created.", this, ac);
+			}
 		}
 		
 		DefaultPerceptionFactory df = new DefaultPerceptionFactory();

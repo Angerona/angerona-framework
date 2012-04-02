@@ -3,7 +3,8 @@
 		configuration="config/agents/default_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
 		<Beliefbase	fileSuffix="employee"
-					configuration="config/beliefbases/dummy_beliefbase.xml" />	
+					configuration="config/beliefbases/dummy_beliefbase.xml" />
+		
 	</Agent>
 	
 	<Agent 	name="Boss" 

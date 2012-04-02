@@ -6,23 +6,24 @@ import java.util.List;
 import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import angerona.fw.asp.AspPlugin;
+import angerona.fw.AgentComponent;
+import angerona.fw.AgentPlugin;
 import angerona.fw.gui.UIComponent;
 import angerona.fw.gui.UIPlugin;
-import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.knowhow.gui.KnowhowUIComponent;
 
 @PluginImplementation
-public class KnowhowPlugin extends AspPlugin implements UIPlugin {
+public class KnowhowPlugin implements AgentPlugin, UIPlugin {
 
 	public Map<String, Class<? extends UIComponent>> getUIComponents() {
 		Map<String, Class<? extends UIComponent>> reval = new HashMap<String, Class<? extends UIComponent>>();
+		reval.put("Knowhow", KnowhowUIComponent.class);
 		return reval;
 	}
 
-	public List<Class<? extends BaseBeliefbase>> getSupportedBeliefbases() {
-		List<Class<? extends BaseBeliefbase>> reval = new LinkedList<Class<? extends BaseBeliefbase>>();
-		reval.addAll(super.getSupportedBeliefbases());
-		reval.add(KnowHowBeliefbase.class);
+	public List<Class<? extends AgentComponent>> getAgentComponents() {
+		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
+		reval.add(KnowhowBase.class);
 		return reval;
 	}
 
