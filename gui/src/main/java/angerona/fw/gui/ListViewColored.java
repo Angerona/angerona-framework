@@ -89,13 +89,13 @@ public abstract class ListViewColored<T extends Entity> extends UIComponent impl
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index2, boolean isSelected, boolean cellHasFocus) {
-			if(!(value instanceof ListViewColored.ListElement)) 
-				throw new IllegalArgumentException("This list only allows list elements of type ListElement");
-			else {
-				ListElement le = (ListElement)value;
+			if(value instanceof ListViewColored.ListElement) {
+				ListElement le = (ListViewColored<T>.ListElement)value;
 				setText(le.toString());
 				setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
 				setForeground(le.status == ListElement.ST_NEW ? new Color(0,128,0) : (le.status == ListElement.ST_DELETED ? Color.red : Color.BLACK));
+			} else {
+				throw new IllegalArgumentException("This list only allows list elements of type ListElement");
 			}
 			return this;
 		}
