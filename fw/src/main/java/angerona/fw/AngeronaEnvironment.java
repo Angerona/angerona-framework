@@ -239,12 +239,17 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 					
 				}
 				
+				for(AgentComponent comp : highLevelAg.getComponents()) {
+					entities.put(comp.getGUID(), comp);
+				}
+				
 								
 				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
 				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
 				addAgent(highLevelAg.getAgentProcess());
 				highLevelAg.getDesires().addAll(ai.getDesires());
 				highLevelAg.initComponents(ai.getAdditionalData());
+				
 				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {

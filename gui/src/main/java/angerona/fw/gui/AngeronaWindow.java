@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.IdGenerator;
 import angerona.fw.PluginInstantiator;
 import angerona.fw.PluginListener;
 import angerona.fw.report.Entity;

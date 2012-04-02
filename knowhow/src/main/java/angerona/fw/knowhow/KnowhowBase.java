@@ -2,6 +2,7 @@ package angerona.fw.knowhow;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class KnowhowBase extends AgentComponent {
 	
 	private Program initTree;
 	
-	private List<KnowHowStatement> statements = new LinkedList<KnowHowStatement>();
+	private List<KnowhowStatement> statements = new LinkedList<KnowhowStatement>();
 	
 	public KnowhowBase() {
 		super();
@@ -43,7 +44,7 @@ public class KnowhowBase extends AgentComponent {
 		super(other);
 		nextAction = (Program)other.nextAction.clone();
 		initTree = (Program)other.initTree.clone();
-		this.statements = new LinkedList<KnowHowStatement>(other.statements);
+		this.statements = new LinkedList<KnowhowStatement>(other.statements);
 	}
 
 	@Override
@@ -72,8 +73,12 @@ public class KnowhowBase extends AgentComponent {
 			if(!comps[2].trim().isEmpty())
 				conditions.add(new Atom(comps[2]+"."));
 			
-			statements.add(new KnowHowStatement(target, subtargets, conditions));
+			statements.add(new KnowhowStatement(target, subtargets, conditions));
 		}
+	}
+	
+	public List<KnowhowStatement> getStatements() {
+		return Collections.unmodifiableList(statements);
 	}
 	
 	/*
