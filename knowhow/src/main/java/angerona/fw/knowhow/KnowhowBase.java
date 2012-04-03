@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.AgentComponent;
+import angerona.fw.knowhow.parser.KnowhowParser;
+import angerona.fw.knowhow.parser.ParseException;
 
 /**
  * Extends a generic ASP Beliefbase with know-how.
@@ -58,22 +60,14 @@ public class KnowhowBase extends AgentComponent {
 		String [] lines = value.split("\n");
 		
 		for(String line : lines) {
-			String [] comps = line.split(";");
-			if(comps.length != 3) {
-				LOG.warn("Cannot parse know-statement: '{}'", line);
-				continue;
-			}
-			
 			LOG.info("Parse know-statement: '{}'", line);
-			
-			Atom target = new Atom(comps[0]+".");
-			Vector<Atom> subtargets = new Vector<Atom>();
-			Vector<Atom> conditions = new Vector<Atom>();
-			subtargets.add(new Atom(comps[1]+"."));
-			if(!comps[2].trim().isEmpty())
-				conditions.add(new Atom(comps[2]+"."));
-			
-			statements.add(new KnowhowStatement(target, subtargets, conditions));
+			KnowhowParser parser = new KnowhowParser(line);
+			try {
+				statements.add(parser.statement());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	

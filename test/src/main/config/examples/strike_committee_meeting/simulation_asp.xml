@@ -11,9 +11,9 @@
 		
 		<AdditionalData>
 			<KnowHow>
-			Bel(Y, X); RevisionRequest(Y, X); Reason(X)
-			excused; Bel(Boss, excused);  
-			attend_scm; excused; 
+			bel(Y, X), revisionRequest(Y, X), reason(X)
+			excused, bel(Boss, excused), 
+			attend_scm, excused, 
 			</KnowHow>
 		</AdditionalData>	
 	</Agent>
