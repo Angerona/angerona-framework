@@ -2,7 +2,7 @@
 	<Agent 	name="Employee"
 		configuration="config/agents/knowhow_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
-        <Skill file="config/skills/RevisionRequest.xml" />
+        <!-- <Skill file="config/skills/RevisionRequest.xml" /> -->
 		<Beliefbase	fileSuffix="employee"
 					configuration="config/beliefbases/asp_beliefbase.xml" />
 		<Desires>
