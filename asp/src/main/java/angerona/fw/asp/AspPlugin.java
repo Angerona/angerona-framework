@@ -3,8 +3,12 @@ package angerona.fw.asp;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-
 import angerona.fw.BeliefbasePlugin;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspExpansion;
@@ -51,6 +55,54 @@ public class AspPlugin implements BeliefbasePlugin {
 	public List<Class<? extends BaseConsolidation>> getSupportedConsolidationOperations() {
 		List<Class<? extends BaseConsolidation>> reval = new LinkedList<Class<? extends BaseConsolidation>>();
 		return reval;
+	}
+	
+	public static void main(String [] args) {
+		Program p = new Program();
+		
+		Rule r = new Rule();
+		r.addHead(new Atom("excused"));
+		r.addBody(new Atom("attend_burial"));
+		p.add(r);
+		
+		r = new Rule();
+		r.addHead(new Atom("excused"));
+		r.addBody(new Atom("is_ill"));
+		p.add(r);
+		
+		r = new Rule();
+		r.addHead(new Atom("fired"));
+		r.addBody(new Neg( new Atom("attend_work")));
+		r.addBody(new Not( new Atom("excused")));
+		p.add(r);
+		
+		r = new Rule();
+		r.addHead(new Neg(new Atom("fired")));
+		r.addBody(new Atom("excused"));
+		p.add(r);
+		
+		r = new Rule();
+		r.addHead(new Neg(new Atom("attend_work")));
+		p.add(r);
+		
+		AspBeliefbase bb = new AspBeliefbase();
+		bb.setProgram(p);
+		AspReasoner reasoner = new AspReasoner();
+		reasoner.setBeliefbase(bb);
+		
+		System.out.println(p.toStringFlat());
+		System.out.println();
+		
+		net.sf.tweety.logics.firstorderlogic.syntax.Atom a =
+			new net.sf.tweety.logics.firstorderlogic.syntax.Atom(
+				new net.sf.tweety.logics.firstorderlogic.syntax.Predicate("fired"));
+		reasoner.query(a);
+		
+		r = new Rule();
+		r.addHead(new Atom("attend_burial"));
+		p.add(r);
+		
+		reasoner.query(a);
 	}
 
 }
