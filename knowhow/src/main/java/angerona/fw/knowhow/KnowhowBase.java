@@ -6,9 +6,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 
 import org.slf4j.Logger;
@@ -19,7 +17,8 @@ import angerona.fw.knowhow.parser.KnowhowParser;
 import angerona.fw.knowhow.parser.ParseException;
 
 /**
- * Extends a generic ASP Beliefbase with know-how.
+ * A KnowhowBase is an AgentComponent adding the concept of knowhow to an Angerona agent.
+ * The concept of Knowhow was defined by Thimm, Krümpelmann 2009.
  * @author Tim Janus
  */
 public class KnowhowBase extends AgentComponent {
@@ -27,10 +26,13 @@ public class KnowhowBase extends AgentComponent {
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(KnowhowBase.class);
 	
+	/** the program responsible to calculate the next action, nextAction4 of Regina Fritsch was used as basic */
 	private Program nextAction;
 	
+	/** the program responsible for initialization of the intention tree */
 	private Program initTree;
 	
+	/** the KnowhowStatements which define this KnowhowBase */
 	private List<KnowhowStatement> statements = new LinkedList<KnowhowStatement>();
 	
 	public KnowhowBase() {
@@ -71,75 +73,10 @@ public class KnowhowBase extends AgentComponent {
 		}
 	}
 	
+	/** @return unmodifiable list of all KnowhowStatements saved in this KnowhowBase */
 	public List<KnowhowStatement> getStatements() {
 		return Collections.unmodifiableList(statements);
 	}
-	
-	/*
-	private KnowHowStatement parse(String line) {
-		Atom target = null;
-		Vector<Atom> subtargets = new Vector<Atom>();
-		Vector<Atom> conditions = new Vector<Atom>();
-		
-		int pos = 0;
-		int state = 0;
-		line = line.trim();
-		while(pos < line.length()) {
-			if(state == 0) {
-				int i = line.indexOf(";");
-				if(i == -1) {
-					state = -1;
-				} else {
-					target = new Atom(line.substring(pos, i-1));
-					pos = i;
-					++state;
-				}
-			} else if(state == 1) {
-				int ic = line.indexOf(";", pos);
-				int ip = line.indexOf("(", pos);
-				
-				if(ic == -1 && ip == -1) {
-					state = -1;
-					continue;
-				} else if(ic < ip) {
-					subtargets.add(new Atom(line.substring(pos, ic-1)));
-				} else {
-					int ei = line.indexOf(")", pos);
-					String [] sts = line.substring(ip, ei).split(",");
-					for(String sub : sts) {
-						subtargets.add(new Atom(sub));
-					}
-				}
-				pos = ic;
-				++state;
-			} else if (state == 2) {
-				int ic = line.indexOf(",", pos);
-				int ip = line.indexOf("(", pos);
-				
-				if(ic == -1 && ip == -1) {
-					state = -1;
-					continue;
-				} else if(ic < ip) {
-					conditions.add(new Atom(line.substring(pos, ic-1)));
-				} else {
-					int ei = line.indexOf(")", pos);
-					String [] sts = line.substring(ip, ei).split(",");
-					for(String sub : sts) {
-						conditions.add(new Atom(sub));
-					}
-				}
-				pos = ic;
-				++state;
-			} else {
-				LOG.warn("Cannot parse know-statement: '{}'", line);
-				return null;
-			}
-			
-		}
-		
-		return new KnowHowStatement(target, subtargets, conditions);
-	}
-	*/
 	
 	@Override
 	public String toString() {

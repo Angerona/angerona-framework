@@ -103,6 +103,14 @@ public class AspPlugin implements BeliefbasePlugin {
 		p.add(r);
 		
 		reasoner.query(a);
+		
+		// Tutorial:
+		/*
+		number(1..4).
+		orderedLists([X]) :- number(X).
+		orderedLists([X|[Y|L]]) :- orderedLists([Y|L]), number(X), X < Y.
+		*/
+		
 	}
 
 }
