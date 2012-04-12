@@ -23,7 +23,9 @@ public class PolicyControlOperator extends BasePolicyControlOperator {
 	@Override
 	protected AngeronaAnswer processInt(PolicyControlParameter param) {
 		LOG.info("Running policy control");
-		ConfidentialKnowledge ck = (ConfidentialKnowledge)param.getPolicyProofer().getBeliefs().getConfidentialKnowledge();
+		
+		ConfidentialKnowledge ck = (ConfidentialKnowledge)
+				param.getPolicyProofer().getComponent(ConfidentialKnowledge.class);
 		ConfidentialTarget ct = ck.getTarget(param.getInformationReceiver(), param.getQuestion());
 		AngeronaAnswer aa = param.getAnswer();
 		AnswerValue newAnswer = aa.getAnswerExtended();

@@ -12,6 +12,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import angerona.fw.Agent;
+import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.logic.base.BaseBeliefbase;
@@ -67,6 +68,22 @@ public class TreeController implements SimulationListener {
 		@Override
 		public String toString() {
 			return simulation.getPosterName();
+		}
+	}
+	
+	public class AgentComponentUserObject{
+		private AgentComponent comp;
+		
+		public AgentComponentUserObject(AgentComponent comp) {
+			this.comp = comp;
+		}
+		
+		public AgentComponent getComponent() {
+			return comp;
+		}
+		
+		public String toString() {
+			return comp.getClass().getSimpleName();
 		}
 	}
 	
@@ -187,15 +204,27 @@ public class TreeController implements SimulationListener {
 		DefaultMutableTreeNode dmt = new DefaultMutableTreeNode(new AgentUserObject(added));
 		DefaultMutableTreeNode world = new DefaultMutableTreeNode(new WorldUserObject(added.getBeliefs().getWorldKnowledge()) );
 		DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
-		DefaultMutableTreeNode conf = new DefaultMutableTreeNode(new ConfUserObject(added.getBeliefs().getConfidentialKnowledge()));
+		
 		dmt.add(world);
-		dmt.add(views);
-		dmt.add(conf);
-		for(String name : added.getBeliefs().getViewKnowledge().keySet()) {
-			BaseBeliefbase bb = added.getBeliefs().getViewKnowledge().get(name);
-			DefaultMutableTreeNode actView = new DefaultMutableTreeNode(new ViewUserObject(name, bb));
-			views.add(actView);
+		if(added.getBeliefs().getViewKnowledge().size() > 0) {
+			dmt.add(views);
+			for(String name : added.getBeliefs().getViewKnowledge().keySet()) {
+				BaseBeliefbase bb = added.getBeliefs().getViewKnowledge().get(name);
+				DefaultMutableTreeNode actView = new DefaultMutableTreeNode(new ViewUserObject(name, bb));
+				views.add(actView);
+			}
 		}
+		
+		DefaultMutableTreeNode comps = new DefaultMutableTreeNode("Components");
+		for(AgentComponent ac  : added.getComponents()) {
+			DefaultMutableTreeNode actComp = new DefaultMutableTreeNode(
+				new AgentComponentUserObject(ac));
+			comps.add(actComp);
+		}
+		// Todo components
+		//	DefaultMutableTreeNode conf = new DefaultMutableTreeNode(new ConfUserObject(added.getBeliefs().getConfidentialKnowledge()));
+		//	dmt.add(conf);
+		dmt.add(comps);
 		
 		parent.add(dmt);
 		expandAll(tree, true);

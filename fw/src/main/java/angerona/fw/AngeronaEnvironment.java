@@ -219,13 +219,11 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				StringReader sr = new StringReader(bbsp.worldContent);
 				world.parse(new BufferedReader(sr));
 				
+				// TODO: Move
 				ConfidentialKnowledge conf = new ConfidentialKnowledge();
 				entities.put(conf.getGUID(), conf);
-				conf.setEnvironment(this);
 				FolSignature fsig = new FolSignature();
 				fsig.fromSignature(world.getSignature());
-				conf.setSignature(fsig);
-				conf.parse(getBeliefbaseFilename(simulationDirectory, ai.getFileSuffix(), conf));
 				
 				Map<String, BaseBeliefbase> views = new HashMap<String, BaseBeliefbase>();
 				
@@ -244,7 +242,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				}
 				
 								
-				highLevelAg.setBeliefs(world, views, (ConfidentialKnowledge)conf);		
+				highLevelAg.setBeliefs(world, views);		
 				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
 				addAgent(highLevelAg.getAgentProcess());
 				highLevelAg.getDesires().addAll(ai.getDesires());
@@ -298,7 +296,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				Angerona.getInstance().report("View->'" + name +"' Beliefbase of '" + agent.getName() + "' created.", this, actView);
 			}
 			
-			Angerona.getInstance().report("Confidental Knowledge of '" + agent.getName() + "' created.", this, b.getConfidentialKnowledge());
 			Angerona.getInstance().report("Master-Plan of '" + agent.getName() + "' created.", this, agent.getPlan());
 			
 			for(AgentComponent ac : agent.getComponents()) {

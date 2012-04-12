@@ -1,9 +1,9 @@
-<AngeronaSimulation name="Strike committee meeting">
-	<Agent 	name="Employee"
-		configuration="config/agents/full_agent.xml" >
+<AngeronaSimulation name="Cleaner Robot">
+	<Agent 	name="Cleaner"
+		configuration="config/agents/knowhow_agent.xml" >
 		<Skill file="config/skills/QueryAnswer.xml" />
         <!-- <Skill file="config/skills/RevisionRequest.xml" /> -->
-		<Beliefbase	fileSuffix="employee"
+		<Beliefbase	fileSuffix="cleaner"
 					configuration="config/beliefbases/asp_beliefbase.xml" />
 		<Desires>
 			<Desire>attend_scm</Desire>
@@ -11,19 +11,15 @@
 		
 		<AdditionalData>
 			<KnowHow>
-			bel(Y, X), revisionRequest(Y, X), reason(X)
-			excused, bel(Boss, excused), 
-			attend_scm, excused, 
+			cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full
+			cleaned_hallway, (at_hallway, vacuumed_hallway), bag_empty
+			cleaned_lounge, ordered_robotxy_to_clean_lounge, robotxy_available
+			cleaned_lounge, (at_lounge, free_lounge, vacuumed_lounge), bag_empty
+			free_lounge, people_sent_away, at_lounge
 			</KnowHow>
 		</AdditionalData>	
 	</Agent>
 	
-	<Agent 	name="Boss" 
-		configuration="config/agents/default_agent.xml" >
-		<Beliefbase	fileSuffix="boss"
-					configuration="config/beliefbases/asp_beliefbase.xml" />	
-	</Agent>
-
 	<Flow>
 		<!-- 
 		<RevisionRequest sender="Employee" receiver="Boss" sentence="excused" />

@@ -1,0 +1,3 @@
+world {
+    battery_full.
+}

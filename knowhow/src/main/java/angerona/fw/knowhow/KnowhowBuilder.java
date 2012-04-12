@@ -1,8 +1,11 @@
 package angerona.fw.knowhow;
 
+import java.util.Collection;
+
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import angerona.fw.Skill;
 
 /**
  * Helper class responsible for translating the know-how base into other data-structures like
@@ -41,6 +44,22 @@ public class KnowhowBuilder {
 				r.addHead(new Atom("khCondition", stAtom, a));
 				p.add(r);
 			}
+		}
+		
+		return p;
+	}
+	
+	/**
+	 * Creates an extended logic program from the given collection of skills
+	 * @param skills	all skills which are atomic actions of the agent
+	 * @return			An extended logic program containing all is_atomic facts for the agent
+	 */
+	public static Program buildExtendedLogicProgram(Collection<Skill> skills) {
+		Program p = new Program();
+		
+		for(Skill s : skills) {
+			Rule r = new Rule();
+			r.addHead(new Atom("is_atomic", new Atom(s.getName())));
 		}
 		
 		return p;

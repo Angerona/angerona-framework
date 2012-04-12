@@ -30,14 +30,6 @@ public class BeliefbaseSetParser implements BeliefbaseSetParserConstants {
     token_source.SwitchTo(this.DEFAULT);
     label_1:
     while (true) {
-      jj_consume_token(KW_VIEW);
-      jj_consume_token(POINTER);
-         token_source.SwitchTo(this.IN_LOGIC);
-      token = jj_consume_token(LBRACE);
-      agent = token.image.substring(0, token.image.length()-1).trim();
-      token = jj_consume_token(RBRACE);
-      token_source.SwitchTo(this.DEFAULT);
-      viewContent.put(agent, token.image.substring(0, token.image.length()-1).trim());
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case KW_VIEW:
         ;
@@ -46,6 +38,14 @@ public class BeliefbaseSetParser implements BeliefbaseSetParserConstants {
         jj_la1[0] = jj_gen;
         break label_1;
       }
+      jj_consume_token(KW_VIEW);
+      jj_consume_token(POINTER);
+         token_source.SwitchTo(this.IN_LOGIC);
+      token = jj_consume_token(LBRACE);
+      agent = token.image.substring(0, token.image.length()-1).trim();
+      token = jj_consume_token(RBRACE);
+      token_source.SwitchTo(this.DEFAULT);
+      viewContent.put(agent, token.image.substring(0, token.image.length()-1).trim());
     }
   }
 

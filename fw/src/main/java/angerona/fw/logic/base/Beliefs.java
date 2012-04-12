@@ -22,12 +22,10 @@ public class Beliefs implements Cloneable
 	 * Ctor: generates agent beliefs with the given world, view and confidential knowledge.
 	 * @param world			reference to a belief base representing the world knowledge.
 	 * @param otherAgents	reference to a map from agent names to belief bases representing the view on the other agents
-	 * @param confidential	reference to a belief base containing the confidential knowledge.
 	 */
-	public Beliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> otherAgents, BaseBeliefbase confidential) {
+	public Beliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> otherAgents) {
 		worldKnowledge = world;
 		viewKnowledge.putAll(otherAgents);
-		confidentialKnowledge = confidential;
 	}
 	
 	/**
@@ -39,7 +37,6 @@ public class Beliefs implements Cloneable
 		for(String name : toCopy.viewKnowledge.keySet()) {
 			viewKnowledge.put(name, (BaseBeliefbase)toCopy.getViewKnowledge().get(name).clone());
 		}
-		confidentialKnowledge = (BaseBeliefbase)toCopy.confidentialKnowledge.clone();
 	}
 	
 	/** @return the world knowledge of the agent (what the agent knows) */
@@ -47,10 +44,6 @@ public class Beliefs implements Cloneable
 		return worldKnowledge;
 	}
 	
-	/** @return a list of views on other agents knowledge (what the agent beliefs about the knowledge of the other agents) */
-	public BaseBeliefbase getConfidentialKnowledge() {
-		return confidentialKnowledge;
-	}
 	
 	/** @return knowledge about confidential informations */
 	public Map<String, BaseBeliefbase> getViewKnowledge(){

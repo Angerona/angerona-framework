@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,6 +57,10 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	
 	/** unique instance of the AngeronaWindow (Singleton) */
 	private static AngeronaWindow instance;
+	
+	public Map<String, Class<? extends UIComponent>> getUIComponentMap() {
+		return Collections.unmodifiableMap(map);
+	}
 	
 	/** @return reference to the unique instance of the AngeronaWindow */
 	public static AngeronaWindow getInstance() {
@@ -116,8 +121,10 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		
 		angerona.addErrorListener(this);
 		
+		// TODO: Implement internal plugin
 		map.put("Report-View", ReportView.class);
 		map.put("Resourcen-View", ResourcenView.class);
+		map.put("Confidential-Knowledge", ConfidentialUIComponent.class);
 		
 		window.addWlComponent(createBaseComponent(ReportView.class, null), BorderLayout.CENTER);
 		window.addWlComponent(createBaseComponent(ResourcenView.class, null), BorderLayout.WEST);

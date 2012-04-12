@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Desires;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
@@ -115,20 +114,17 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	 * @param views			A map of agent names to belief bases representing the views onto the knowledge of other agents 
 	 * @param confidential	A knowledge base representing the confidential rules of this agent.
 	 */
-	public void setBeliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> views, ConfidentialKnowledge confidential) {
+	public void setBeliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> views) {
 		if(beliefs != null) {
 			childrenIds.remove(beliefs.getWorldKnowledge().getGUID());
-			childrenIds.remove(beliefs.getConfidentialKnowledge().getGUID());
 			for(String name : beliefs.getViewKnowledge().keySet()) {
 				BaseBeliefbase act = beliefs.getViewKnowledge().get(name);
 				childrenIds.remove(act.getGUID());
 			}
 		}
-		beliefs = new Beliefs(world, views, confidential);
+		beliefs = new Beliefs(world, views);
 		childrenIds.add(world.getGUID());
-		childrenIds.add(confidential.getGUID());
 		world.setParent(id);
-		confidential.setParent(id);
 		for(String name : views.keySet()) {
 			BaseBeliefbase bb = views.get(name);
 			childrenIds.add(bb.getGUID());
@@ -360,7 +356,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		context = ContextFactory.createContext(this);
 		if(beliefs != null) {
 			context.set("world", beliefs.getWorldKnowledge());
-			context.set("confidential", beliefs.getConfidentialKnowledge());
+			
+			// TODO: Replace
+			//context.set("confidential", beliefs.getConfidentialKnowledge());
 		
 			Map<String, BaseBeliefbase> views = beliefs.getViewKnowledge();
 			Context vc = new Context();

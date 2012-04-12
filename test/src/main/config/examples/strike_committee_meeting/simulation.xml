@@ -4,6 +4,12 @@
 		<Skill file="config/skills/QueryAnswer.xml" />
 		<Beliefbase	fileSuffix="employee"
 					configuration="config/beliefbases/dummy_beliefbase.xml" />
+					
+		<AdditionalData>
+			<Confidential>
+			(Boss, attend_scm, {true})
+			</Confidential>
+		</AdditionalData>
 		
 	</Agent>
 	

@@ -10,6 +10,7 @@ import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
 import net.xeoh.plugins.base.util.PluginManagerUtil;
+import net.xeoh.plugins.base.util.uri.ClassURI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,6 +159,7 @@ public class PluginInstantiator {
 		}
 		
 		LOG.info("Load Agent-Plugins:");
+		util.addPluginsFrom(ClassURI.PLUGIN(DefaultAgentPlugin.class));
 		Collection<AgentPlugin> aPlugins = new LinkedList<AgentPlugin>(util.getPlugins(AgentPlugin.class));
 		for(AgentPlugin ap : aPlugins) {
 			if(loadedPlugins.contains(ap))

@@ -1,9 +1,10 @@
 package angerona.fw.logic;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
@@ -14,12 +15,12 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.AgentComponent;
 /**
- * Beliefbase containing a set of personal confidential targets.
+ * Data-Component of an agent containing a set of personal confidential targets.
  * @author Tim Janus
  */
-public class ConfidentialKnowledge extends BaseBeliefbase {
+public class ConfidentialKnowledge extends AgentComponent {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ConfidentialKnowledge.class);
@@ -40,11 +41,6 @@ public class ConfidentialKnowledge extends BaseBeliefbase {
 	@Override
 	public Object clone() {
 		return new ConfidentialKnowledge(this);
-	}
-
-	@Override
-	public FolSignature getSignature() {
-		return signature;
 	}
 
 	public void setSignature(FolSignature signature) {
@@ -80,9 +76,32 @@ public class ConfidentialKnowledge extends BaseBeliefbase {
 				return ct;
 		return null;
 	}
+	
+	public Set<ConfidentialTarget> getTargets() {
+		return Collections.unmodifiableSet(confidentialTargets);
+	}
 
 	@Override
-	protected void parseInt(BufferedReader br) throws IOException, ParserException {
+	public void init(Map<String, String> additionalData) {
+		if(!additionalData.containsValue("Confidential")) {
+			LOG.warn("Confidential Knowledge of agent '{}' has no initial data.", getAgent().getName());
+			return;
+		} else {
+			try {
+				parseInt(new BufferedReader(new StringReader(additionalData.get("Confidential"))));
+			} catch (ParserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	/** internal helper for parsing confidential data */
+	private void parseInt(BufferedReader br) throws IOException, ParserException {
 		// 0 = nothing
 		// 1 = agent name
 		// 2 = predicate (use tweety)
@@ -151,21 +170,5 @@ public class ConfidentialKnowledge extends BaseBeliefbase {
 				state = 0;
 			}
 		}
-	}
-
-	@Override
-	public String getFileEnding() {
-		return "conf";
-	}
-
-	@Override
-	public List<String> getAtoms() {
-		List<String> reval = new LinkedList<String>() ;
-		
-		for(ConfidentialTarget ct : confidentialTargets) {
-			reval.add(ct.toString());
-		}
-		
-		return reval;
 	}
 }

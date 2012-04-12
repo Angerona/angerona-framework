@@ -7,6 +7,7 @@
 	<ViolatesOperator class="angerona.fw.operators.def.ViolatesOperator"></ViolatesOperator>
 	
 	<Components>
+		<Component class="angerona.fw.knowhow.KnowhowBase" />
 		<Component class="angerona.fw.logic.ConfidentialKnowledge" />
 	</Components>	
 </AgentConfiguration>

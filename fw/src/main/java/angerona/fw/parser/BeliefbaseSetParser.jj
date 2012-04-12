@@ -77,6 +77,6 @@ void Input() :
       token_source.SwitchTo(this.DEFAULT);
       viewContent.put(agent, token.image.substring(0, token.image.length()-1).trim());
     }
-  )+
+  )*
   
 }
