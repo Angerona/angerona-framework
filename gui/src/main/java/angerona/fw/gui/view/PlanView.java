@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +9,7 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.report.Entity;
 
-public class PlanComponent extends ListViewColored<MasterPlan> {
+public class PlanView extends ListViewColored<MasterPlan> {
 
 	/** kill warning */
 	private static final long serialVersionUID = -8417236877682507065L;

@@ -1,6 +1,8 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import javax.naming.OperationNotSupportedException;
+
+import angerona.fw.gui.UIPlugin;
 
 import com.whiplash.gui.WlComponent;
 
@@ -13,7 +15,7 @@ import com.whiplash.gui.WlComponent;
  * @see UIPlugin
  * @author Tim Janus
  */
-public abstract class UIComponent extends WlComponent {
+public abstract class BaseView extends WlComponent {
 
 	/** kill warning */
 	private static final long serialVersionUID = -1482323833112551669L;

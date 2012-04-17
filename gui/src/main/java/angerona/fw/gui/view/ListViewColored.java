@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,6 +11,8 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import angerona.fw.Angerona;
+import angerona.fw.gui.NavigationPanel;
+import angerona.fw.gui.NavigationUser;
 import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
@@ -22,7 +24,7 @@ import angerona.fw.report.ReportListener;
  *
  * @param <T> the type of the observed object
  */
-public abstract class ListViewColored<T extends Entity> extends UIComponent implements ReportListener, NavigationUser {
+public abstract class ListViewColored<T extends Entity> extends BaseView implements ReportListener, NavigationUser {
 
 	/** kill warning*/
 	private static final long serialVersionUID = 347925312291828783L;

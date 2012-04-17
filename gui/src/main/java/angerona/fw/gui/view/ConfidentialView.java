@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +7,7 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.ConfidentialTarget;
 import angerona.fw.report.Entity;
 
-public class ConfidentialUIComponent extends ListViewColored<ConfidentialKnowledge> {
+public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
 
 	/** kill warning */
 	private static final long serialVersionUID = 5545434636562463488L;

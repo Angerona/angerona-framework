@@ -7,7 +7,7 @@ import javax.swing.JList;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import angerona.fw.gui.UIComponent;
+import angerona.fw.gui.view.BaseView;
 import angerona.fw.knowhow.KnowhowBase;
 import angerona.fw.knowhow.KnowhowBuilder;
 import angerona.fw.knowhow.KnowhowStatement;
@@ -19,7 +19,7 @@ import angerona.fw.report.ReportListener;
  * @author Tim Janus
  *
  */
-public class KnowhowUIComponent extends UIComponent implements ReportListener{
+public class KnowhowUIComponent extends BaseView implements ReportListener{
 
 	/** */
 	private static final long serialVersionUID = -4168568552100892570L;

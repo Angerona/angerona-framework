@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import angerona.fw.report.Entity;
  * It has a navigation element
  * @author Tim Janus
  */
-public class BeliefbaseComponent extends ListViewColored<BaseBeliefbase> {
+public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	
 	/** kill warning */
 	private static final long serialVersionUID = -3706152280500718930L;

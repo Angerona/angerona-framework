@@ -8,15 +8,15 @@ import java.util.Map;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.AgentComponent;
 import angerona.fw.AgentPlugin;
-import angerona.fw.gui.UIComponent;
 import angerona.fw.gui.UIPlugin;
+import angerona.fw.gui.view.BaseView;
 import angerona.fw.knowhow.gui.KnowhowUIComponent;
 
 @PluginImplementation
 public class KnowhowPlugin implements AgentPlugin, UIPlugin {
 
-	public Map<String, Class<? extends UIComponent>> getUIComponents() {
-		Map<String, Class<? extends UIComponent>> reval = new HashMap<String, Class<? extends UIComponent>>();
+	public Map<String, Class<? extends BaseView>> getUIComponents() {
+		Map<String, Class<? extends BaseView>> reval = new HashMap<String, Class<? extends BaseView>>();
 		reval.put("Knowhow", KnowhowUIComponent.class);
 		return reval;
 	}

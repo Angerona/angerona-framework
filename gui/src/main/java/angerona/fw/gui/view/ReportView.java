@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import java.awt.BorderLayout;
 
@@ -14,15 +14,15 @@ import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
-public class ReportView extends UIComponent implements ReportListener {
+public class ReportView extends BaseView implements ReportListener {
 
 	/** kill warning */
 	private static final long serialVersionUID = 697392233654570429L;
 
 	/** the list containing all the report entries */
-    JList reportList = new JList();
+    JList<String> reportList = new JList<String>();
     
-    private DefaultListModel reportModel = new DefaultListModel();
+    private DefaultListModel<String> reportModel = new DefaultListModel<String>();
     
     @Override
 	public void init() {

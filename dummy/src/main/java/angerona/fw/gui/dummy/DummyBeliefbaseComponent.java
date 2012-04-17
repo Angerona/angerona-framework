@@ -1,5 +1,5 @@
 package angerona.fw.gui.dummy;
-import angerona.fw.gui.BeliefbaseComponent;
+import angerona.fw.gui.view.BeliefbaseView;
 import angerona.fw.logic.dummy.DummyBeliefbase;
 
 /**
@@ -8,7 +8,7 @@ import angerona.fw.logic.dummy.DummyBeliefbase;
  * 
  * @author Tim Janus
  */
-public class DummyBeliefbaseComponent extends BeliefbaseComponent {
+public class DummyBeliefbaseComponent extends BeliefbaseView {
 	/** kill warning */
 	private static final long serialVersionUID = 8044649633781759407L;
 

@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -15,9 +15,10 @@ import javax.swing.tree.TreePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.gui.TreeController.AgentComponentUserObject;
+import angerona.fw.gui.AngeronaWindow;
+import angerona.fw.gui.TreeController;
 
-public class ResourcenView extends UIComponent {
+public class ResourcenView extends BaseView {
 
 	/** kill warning */
 	private static final long serialVersionUID = 5711286288337915366L;
@@ -46,23 +47,23 @@ public class ResourcenView extends UIComponent {
 		                	 o = n.getUserObject();
 		                	 if(o instanceof TreeController.BBUserObject) {
 		                		 TreeController.BBUserObject temp = (TreeController.BBUserObject)o;
-		                		 BeliefbaseComponent bc = AngeronaWindow.createBaseComponent(BeliefbaseComponent.class, 
+		                		 BeliefbaseView bc = AngeronaWindow.createBaseComponent(BeliefbaseView.class, 
 		                				 temp.getBeliefbase());
 		                		 AngeronaWindow.getInstance().addComponentToCenter(bc);
 		                	 } else if(o instanceof TreeController.AgentUserObject) {
 		                		 TreeController.AgentUserObject temp = (TreeController.AgentUserObject)o;
-		                		 AgentUIComponent ac = new AgentUIComponent();
+		                		 AgentView ac = new AgentView();
 		                		 ac.setObservationObject(temp.getAgent());
 		                		 ac.init();
 		                		 AngeronaWindow.getInstance().addComponentToCenter(ac);
 		                	 } else if(o instanceof TreeController.AgentComponentUserObject) {
 		                		 boolean uiViewFound = false;
 		                		 TreeController.AgentComponentUserObject uo = (TreeController.AgentComponentUserObject)o;
-		                		 Collection<Class<? extends UIComponent>> uiViews = AngeronaWindow.getInstance().getUIComponentMap().values();
-		                		 for(Class<? extends UIComponent> cls : uiViews) {
+		                		 Collection<Class<? extends BaseView>> uiViews = AngeronaWindow.getInstance().getUIComponentMap().values();
+		                		 for(Class<? extends BaseView> cls : uiViews) {
 		                			 try {
 										if(uo.getComponent().getClass().equals(cls.newInstance().getObservationObjectType())) {
-											 UIComponent newly = AngeronaWindow.createBaseComponent(cls, uo.getComponent());
+											 BaseView newly = AngeronaWindow.createBaseComponent(cls, uo.getComponent());
 											 AngeronaWindow.getInstance().addComponentToCenter(newly);
 											 uiViewFound = true;
 										 }

@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.view;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +7,7 @@ import net.sf.tweety.Formula;
 import angerona.fw.logic.Desires;
 import angerona.fw.report.Entity;
 
-public class DesiresComponent extends ListViewColored<Desires> {
+public class DesiresView extends ListViewColored<Desires> {
 
 	/** kill warning */
 	private static final long serialVersionUID = 8925750149764894623L;

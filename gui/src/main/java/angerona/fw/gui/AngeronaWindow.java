@@ -31,6 +31,10 @@ import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.PluginInstantiator;
 import angerona.fw.PluginListener;
+import angerona.fw.gui.view.BaseView;
+import angerona.fw.gui.view.ConfidentialView;
+import angerona.fw.gui.view.ReportView;
+import angerona.fw.gui.view.ResourcenView;
 import angerona.fw.report.Entity;
 import angerona.fw.util.ErrorListener;
 
@@ -51,14 +55,14 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 
 	private SimulationControlBar simLoadBar;
 	
-	private Map<String, Class<? extends UIComponent>> map = new HashMap<String, Class<? extends UIComponent>>();
+	private Map<String, Class<? extends BaseView>> map = new HashMap<String, Class<? extends BaseView>>();
 	
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaWindow.class);
 	
 	/** unique instance of the AngeronaWindow (Singleton) */
 	private static AngeronaWindow instance;
 	
-	public Map<String, Class<? extends UIComponent>> getUIComponentMap() {
+	public Map<String, Class<? extends BaseView>> getUIComponentMap() {
 		return Collections.unmodifiableMap(map);
 	}
 	
@@ -124,7 +128,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		// TODO: Implement internal plugin
 		map.put("Report-View", ReportView.class);
 		map.put("Resourcen-View", ResourcenView.class);
-		map.put("Confidential-Knowledge", ConfidentialUIComponent.class);
+		map.put("Confidential-Knowledge", ConfidentialView.class);
 		
 		window.addWlComponent(createBaseComponent(ReportView.class, null), BorderLayout.CENTER);
 		window.addWlComponent(createBaseComponent(ResourcenView.class, null), BorderLayout.WEST);
@@ -153,7 +157,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	 * @param toObserve	reference to the object the UI component should observe (might be null if no direct mapping between observed object and UI component can be given)
 	 * @return a new instance of UIComponent which is ready to use.
 	 */
-	public static <T extends UIComponent> T createBaseComponent(Class<? extends T> cls, Object toObserve) {
+	public static <T extends BaseView> T createBaseComponent(Class<? extends T> cls, Object toObserve) {
 		T reval;
 		try {
 			reval = cls.newInstance();
@@ -186,7 +190,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 				null);
 		if(map.containsKey(str)) {
 			try {
-				UIComponent bc = map.get(str).newInstance();
+				BaseView bc = map.get(str).newInstance();
 				Class<?> type = bc.getObservationObjectType();
 				if(type == null) {
 					bc.init();
@@ -227,7 +231,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 					}
 					
 					if(selection != null) {
-						UIComponent comp = AngeronaWindow.createBaseComponent(map.get(str), selection);
+						BaseView comp = AngeronaWindow.createBaseComponent(map.get(str), selection);
 						AngeronaWindow.getInstance().addComponentToCenter(comp);
 					}
 				}

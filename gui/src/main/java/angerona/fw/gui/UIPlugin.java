@@ -2,6 +2,8 @@ package angerona.fw.gui;
 
 import java.util.Map;
 
+import angerona.fw.gui.view.BaseView;
+
 import net.xeoh.plugins.base.Plugin;
 
 /**
@@ -13,5 +15,5 @@ public interface UIPlugin extends Plugin {
 	 * TODO: Use map???
 	 * @return
 	 */
-	Map<String, Class<? extends UIComponent>> getUIComponents();
+	Map<String, Class<? extends BaseView>> getUIComponents();
 }

@@ -16,9 +16,10 @@ import javax.swing.JTextField;
 
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.gui.view.BaseView;
 import angerona.fw.serialize.SimulationConfiguration;
 
-public class SimulationControlBar extends UIComponent {
+public class SimulationControlBar extends BaseView {
 	/** kill warning */
 	private static final long serialVersionUID = -5662460862082002346L;
 

@@ -15,6 +15,7 @@ import angerona.fw.Agent;
 import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.gui.view.ResourcenView;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.util.SimulationListener;
 
@@ -36,7 +37,7 @@ public class TreeController implements SimulationListener {
 			this.prefix = prefix;
 		}
 		
-		BaseBeliefbase getBeliefbase() {
+		public BaseBeliefbase getBeliefbase() {
 			return beliefbase;
 		}
 		
