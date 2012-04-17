@@ -7,10 +7,11 @@ import angerona.fw.gui.UIPlugin;
 import com.whiplash.gui.WlComponent;
 
 /**
- * Base class for Angerona UI Components.
+ * Base class for Angerona UI Views.
  * 
- * There are several UI Components already defined in the Angerona GUI Extension library. Nevertheless
- * Plugins have the ability to extends this Component and register them to the Angerona GUI Extension.
+ * There are several UI Views already defined in the Angerona GUI Extension library. Nevertheless
+ * Plugins have the ability to extends this class and register them to the Angerona GUI Extension as
+ * new views.
  * 
  * @see UIPlugin
  * @author Tim Janus

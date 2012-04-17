@@ -1,7 +1,5 @@
 package angerona.fw.logic;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,11 +26,14 @@ public class ConfidentialKnowledge extends AgentComponent {
 	/** set of confidential targets defining this beliefbase */
 	private Set<ConfidentialTarget> confidentialTargets = new HashSet<ConfidentialTarget>();
 	
-	public ConfidentialKnowledge() {}
 	
-	private FolSignature signature;
+	private FolSignature signature = new FolSignature();
 	
-	private ConfidentialKnowledge(ConfidentialKnowledge other) {
+	public ConfidentialKnowledge() {
+		super();
+	}
+	
+	public ConfidentialKnowledge(ConfidentialKnowledge other) {
 		for(ConfidentialTarget ct : other.confidentialTargets) {
 			this.confidentialTargets.add((ConfidentialTarget)ct.clone());
 		}
@@ -83,12 +84,13 @@ public class ConfidentialKnowledge extends AgentComponent {
 
 	@Override
 	public void init(Map<String, String> additionalData) {
-		if(!additionalData.containsValue("Confidential")) {
+		if(!additionalData.containsKey("Confidential")) {
 			LOG.warn("Confidential Knowledge of agent '{}' has no initial data.", getAgent().getName());
 			return;
 		} else {
+			this.signature.fromSignature(getAgent().getBeliefs().getWorldKnowledge().getSignature());
 			try {
-				parseInt(new BufferedReader(new StringReader(additionalData.get("Confidential"))));
+				parseInt(additionalData.get("Confidential"));
 			} catch (ParserException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -101,15 +103,12 @@ public class ConfidentialKnowledge extends AgentComponent {
 	
 	
 	/** internal helper for parsing confidential data */
-	private void parseInt(BufferedReader br) throws IOException, ParserException {
+	private void parseInt(String content) throws IOException, ParserException {
 		// 0 = nothing
 		// 1 = agent name
 		// 2 = predicate (use tweety)
 		// 3 = set
 		
-		String content = "";
-		while(br.ready())
-			content += br.readLine();
 		int state = 0;
 		
 		String name = "";

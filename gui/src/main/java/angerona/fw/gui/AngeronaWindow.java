@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.PluginInstantiator;
@@ -49,22 +49,23 @@ import com.whiplash.res.WlResourceManager;
  * @author Tim Janus
  */
 public class AngeronaWindow implements PluginListener, ErrorListener {
+	/** the main window of the angerona gui-extension */
 	private WlWindow window;
 	
+	/** the window set containing the window */
 	private WlWindowSet windowSet;
 
+	/** a bar allowing the loading, running and initalization of simulations */
 	private SimulationControlBar simLoadBar;
 	
-	private Map<String, Class<? extends BaseView>> map = new HashMap<String, Class<? extends BaseView>>();
+	/** map containing registered views some of them are default other might be provided by plugins */
+	private Map<String, Class<? extends BaseView>> viewMap = new HashMap<String, Class<? extends BaseView>>();
 	
+	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaWindow.class);
 	
 	/** unique instance of the AngeronaWindow (Singleton) */
 	private static AngeronaWindow instance;
-	
-	public Map<String, Class<? extends BaseView>> getUIComponentMap() {
-		return Collections.unmodifiableMap(map);
-	}
 	
 	/** @return reference to the unique instance of the AngeronaWindow */
 	public static AngeronaWindow getInstance() {
@@ -126,19 +127,27 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		angerona.addErrorListener(this);
 		
 		// TODO: Implement internal plugin
-		map.put("Report-View", ReportView.class);
-		map.put("Resourcen-View", ResourcenView.class);
-		map.put("Confidential-Knowledge", ConfidentialView.class);
+		viewMap.put("Report-View", ReportView.class);
+		viewMap.put("Resourcen-View", ResourcenView.class);
+		viewMap.put("Confidential-Knowledge", ConfidentialView.class);
 		
-		window.addWlComponent(createBaseComponent(ReportView.class, null), BorderLayout.CENTER);
-		window.addWlComponent(createBaseComponent(ResourcenView.class, null), BorderLayout.WEST);
-		window.addWlComponent(simLoadBar = createBaseComponent(SimulationControlBar.class, null), BorderLayout.SOUTH);
+		window.addWlComponent(createBaseView(ReportView.class, null), BorderLayout.CENTER);
+		window.addWlComponent(createBaseView(ResourcenView.class, null), BorderLayout.WEST);
+		window.addWlComponent(simLoadBar = createBaseView(SimulationControlBar.class, null), BorderLayout.SOUTH);
 	}
 	
+	/**
+	 * Adds the given component as tab to the center area of the window
+	 * @param component an wlwindow component (BaseView)
+	 */
 	public void addComponentToCenter(WlComponent component) {
 		window.addWlComponent(component, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * loads the simulation at the specified path
+	 * @param path	path to the simulation which is loaded.
+	 */
 	public void loadSimulation(String path) {
 		LOG.trace("Load simulation {}", path);
 		File f = new File(path);
@@ -147,17 +156,51 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		}
 	}
 	
+	/** @return the main WlFramework Window */
 	public WlWindow getWindow() {
 		return window;
 	}
 	
 	/**
-	 * creates and initalized an UI Component.
+	 * Creates (but not add) a view for the given AgentComponent. 
+	 * @param comp	Reference to the component which should be showed in the new view.
+	 * @return	reference to the created view. null if no view for the AgentComponent is
+	 * 			registered or an error occured.
+	 */
+	public BaseView createViewForAgentComponent(AgentComponent comp) {
+		for (Class<? extends BaseView> cls : viewMap.values()) {
+			BaseView view = null;
+			try {
+				view = cls.newInstance();
+			} catch (InstantiationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			if(view == null)
+				return null;
+			
+			if (comp.getClass().equals(view.getObservationObjectType())) {
+				BaseView newly = AngeronaWindow.createBaseView(cls, comp);
+				return newly;
+			}
+		}
+		
+		LOG.warn("Cannot find UI-View for Agent-Component '{}' of agent '{}'", 
+				comp, comp.getAgent().getName());
+		return null;
+	}
+	
+	/**
+	 * creates and initialized an UI View.
 	 * @param cls class information about the UI component which should be created.
 	 * @param toObserve	reference to the object the UI component should observe (might be null if no direct mapping between observed object and UI component can be given)
 	 * @return a new instance of UIComponent which is ready to use.
 	 */
-	public static <T extends BaseView> T createBaseComponent(Class<? extends T> cls, Object toObserve) {
+	public static <T extends BaseView> T createBaseView(Class<? extends T> cls, Object toObserve) {
 		T reval;
 		try {
 			reval = cls.newInstance();
@@ -186,11 +229,11 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 				"Create Window",
 				JOptionPane.PLAIN_MESSAGE,
 				null,
-				map.keySet().toArray(),
+				viewMap.keySet().toArray(),
 				null);
-		if(map.containsKey(str)) {
+		if(viewMap.containsKey(str)) {
 			try {
-				BaseView bc = map.get(str).newInstance();
+				BaseView bc = viewMap.get(str).newInstance();
 				Class<?> type = bc.getObservationObjectType();
 				if(type == null) {
 					bc.init();
@@ -231,7 +274,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 					}
 					
 					if(selection != null) {
-						BaseView comp = AngeronaWindow.createBaseComponent(map.get(str), selection);
+						BaseView comp = AngeronaWindow.createBaseView(viewMap.get(str), selection);
 						AngeronaWindow.getInstance().addComponentToCenter(comp);
 					}
 				}
@@ -254,7 +297,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		Collection<UIPlugin> uiPlugins = new LinkedList<UIPlugin>(pmu.getPlugins(UIPlugin.class));
 		for(UIPlugin pl : uiPlugins) {
 			LOG.info("UI-Plugin: '{}' loaded", pl.getClass().getName());
-			map.putAll(pl.getUIComponents());
+			viewMap.putAll(pl.getUIComponents());
 		}
 	}
 

@@ -15,6 +15,9 @@
 			excused, bel(Boss, excused), 
 			attend_scm, excused, 
 			</KnowHow>
+			<Confidential>
+			(Boss, attend_scm, {true})
+			</Confidential>
 		</AdditionalData>	
 	</Agent>
 	

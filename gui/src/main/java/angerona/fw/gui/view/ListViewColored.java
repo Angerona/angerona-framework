@@ -18,8 +18,8 @@ import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
 /**
- * Base class for UI-Components which show a colored list of their content.
- * For example the atoms in a beliefbase.
+ * Base class for UI-Views which show a colored list of their content.
+ * For example the atoms in a belief base.
  * @author Tim Janus
  *
  * @param <T> the type of the observed object
@@ -39,10 +39,10 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 	protected Entity previous;
 	
 	/** JList containing the literals of the actual belief base and the literals which were removed in the last step (removed and new literals are highlighted) */
-	private JList actualLiterals;
+	private JList<ListElement> actualLiterals;
 	
 	/** The data model to accessing the JList */
-	private DefaultListModel model;
+	private DefaultListModel<ListElement> model;
 	
 	/** reference to the actually showed report entry. */
 	private ReportEntry actEntry;
@@ -79,7 +79,7 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 	 * 	
 	 * 	@author Tim Janus
 	 */
-	private class ListRenderer extends JLabel implements ListCellRenderer {
+	private class ListRenderer extends JLabel implements ListCellRenderer<ListElement> {
 
 		/** kill warning */
 		private static final long serialVersionUID = -6867522427499396635L;
@@ -89,16 +89,11 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 		}
 		
 		@Override
-		public Component getListCellRendererComponent(JList list, Object value,
-				int index2, boolean isSelected, boolean cellHasFocus) {
-			if(value instanceof ListViewColored.ListElement) {
-				ListElement le = (ListViewColored<T>.ListElement)value;
-				setText(le.toString());
-				setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
-				setForeground(le.status == ListElement.ST_NEW ? new Color(0,128,0) : (le.status == ListElement.ST_DELETED ? Color.red : Color.BLACK));
-			} else {
-				throw new IllegalArgumentException("This list only allows list elements of type ListElement");
-			}
+		public Component getListCellRendererComponent(JList<? extends ListViewColored<T>.ListElement> list, 
+				ListViewColored<T>.ListElement le, int index2, boolean isSelected, boolean cellHasFocus) {
+			setText(le.toString());
+			setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
+			setForeground(le.status == ListElement.ST_NEW ? new Color(0,128,0) : (le.status == ListElement.ST_DELETED ? Color.red : Color.BLACK));
 			return this;
 		}
 		
@@ -123,11 +118,11 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 		add(navPanel, BorderLayout.NORTH);
 		navPanel.setEntry(actEntry);
 		
-		actualLiterals = new JList();
+		actualLiterals = new JList<ListElement>();
 		actualLiterals.setCellRenderer(new ListRenderer());
 		this.add(actualLiterals, BorderLayout.CENTER);
 		
-		model = new DefaultListModel();
+		model = new DefaultListModel<ListElement>();
 		actualLiterals.setModel(model);
 		
 		defaultUpdatePrevious();

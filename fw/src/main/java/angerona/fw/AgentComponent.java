@@ -16,8 +16,10 @@ import angerona.fw.report.EntityAtomic;
  */
 public abstract class AgentComponent implements EntityAtomic {
 	
+	/** unique id of the parent (the agent) */
 	private Long parentId;
 	
+	/** own unique id */
 	private Long id;
 	
 	public AgentComponent() {
@@ -25,14 +27,18 @@ public abstract class AgentComponent implements EntityAtomic {
 	}
 	
 	public AgentComponent(AgentComponent other) {
-		other.id = id;
-		other.parentId = parentId;
+		this.id = new Long(other.id);
+		this.parentId = new Long(other.parentId);
 	}
 	
 	public void setParent(Long id) {
 		parentId = id;
 	}
 
+	/**
+	 * @return 	the agent which is the owner of this agent-component or null if
+	 * 			the component is not added to an agent yet.
+	 */
 	public Agent getAgent() {
 		Entity reval = IdGenerator.getEntityWithId(parentId);
 		if(reval != null) {

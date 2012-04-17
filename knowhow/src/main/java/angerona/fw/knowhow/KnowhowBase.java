@@ -63,6 +63,9 @@ public class KnowhowBase extends AgentComponent {
 		
 		for(String line : lines) {
 			LOG.info("Parse know-statement: '{}'", line);
+			if(line.trim().isEmpty())
+				continue;
+			
 			KnowhowParser parser = new KnowhowParser(line);
 			try {
 				statements.add(parser.statement());

@@ -6,9 +6,9 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.report.Entity;
 
 /**
- * Generic ui component to show a Beliefbase. It shows its content in a list
+ * Generic ui view to show a Beliefbase. It shows its content in a list
+ * and uses the generic base class ListViewColored
  * 
- * It has a navigation element
  * @author Tim Janus
  */
 public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {

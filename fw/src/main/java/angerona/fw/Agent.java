@@ -159,7 +159,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 			violatesOperator = pi.createViolatesOperator(ac.getViolatesOperatorClass());
 
 			for(String compName : ac.getComponents()) {
-				addComponent(pi.createComponent(compName));
+				AgentComponent comp = pi.createComponent(compName);
+				addComponent(comp);
 				LOG.info("Add custom Component '{}' to agent '{}'", compName, name);
 			}
 		} catch (InstantiationException e) {
@@ -175,21 +176,21 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		}
 	}
 	
-	public boolean addComponent(AgentComponent ea) {
-		if(ea == null)
+	public boolean addComponent(AgentComponent component) {
+		if(component == null)
 			throw new IllegalArgumentException();
 		
 		boolean reval = true;
 		for(EntityAtomic loopEa : customComponents) {
-			if(ea.getClass().equals(loopEa)) {
+			if(component.getClass().equals(loopEa)) {
 				reval = false;
 				break;
 			}
 		}
 		
 		if(reval) {
-			customComponents.add(ea);
-			ea.setParent(id);
+			customComponents.add(component);
+			component.setParent(id);
 		}
 		return reval;
 	}

@@ -7,6 +7,12 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.ConfidentialTarget;
 import angerona.fw.report.Entity;
 
+/**
+ * View for the confidential knowledge of the agents. It shows the confidential targets
+ * in a list.
+ * 
+ * @author Tim Janus
+ */
 public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
 
 	/** kill warning */
