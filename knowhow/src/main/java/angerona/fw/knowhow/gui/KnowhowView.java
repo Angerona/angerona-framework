@@ -19,7 +19,7 @@ import angerona.fw.report.ReportListener;
  * @author Tim Janus
  *
  */
-public class KnowhowUIComponent extends BaseView implements ReportListener{
+public class KnowhowView extends BaseView implements ReportListener{
 
 	/** */
 	private static final long serialVersionUID = -4168568552100892570L;

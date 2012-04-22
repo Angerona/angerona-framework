@@ -10,14 +10,14 @@ import angerona.fw.AgentComponent;
 import angerona.fw.AgentPlugin;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.view.BaseView;
-import angerona.fw.knowhow.gui.KnowhowUIComponent;
+import angerona.fw.knowhow.gui.KnowhowView;
 
 @PluginImplementation
 public class KnowhowPlugin implements AgentPlugin, UIPlugin {
 
 	public Map<String, Class<? extends BaseView>> getUIComponents() {
 		Map<String, Class<? extends BaseView>> reval = new HashMap<String, Class<? extends BaseView>>();
-		reval.put("Knowhow", KnowhowUIComponent.class);
+		reval.put("Knowhow", KnowhowView.class);
 		return reval;
 	}
 
