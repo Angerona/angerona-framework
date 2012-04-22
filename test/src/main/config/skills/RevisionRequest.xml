@@ -1,0 +1,12 @@
+<Skill name="RevisionRequest">
+	<Commandos>	
+		<!-- Communicate the revision request through the environment to the query sender -->
+		<SendAction out="RevisionRequestAction" >
+				<RevisiionRequest 
+                    sender="$name"
+					receiver="$in.receiverId"
+					fact="$in.fact"
+				/>
+		</SendAction>
+	</Commandos>
+</Skill>
