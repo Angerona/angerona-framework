@@ -1,53 +1,68 @@
 package angerona.fw.serialize;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+@Root(name="Config")
 public class GlobalConfiguration {
-	private List<String>	pluginPaths = new LinkedList<String>();
+	/** reference to the logback logger instance */
+	private Logger LOG = LoggerFactory.getLogger(GlobalConfiguration.class);
 	
-	static private final String EL_ROOT = "Config";
+	
+	@ElementList
+	private List<String>	pluginPaths = new LinkedList<String>();
 	
 	public List<String> getPluginPaths() {
 		return pluginPaths;
 	}
 	
-	public static GlobalConfiguration loadXml(String filepath) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(filepath);
-		
-		NodeList nl = doc.getElementsByTagName(EL_ROOT);
-		if(nl.getLength() > 0)
-			return loadFromElement((Element)nl.item(0));
-		
-		return null;
+	/**
+	 * loads the global-configuration from the given file-path.
+	 * @param filepath
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	public static GlobalConfiguration loadXml(String filepath) throws IOException {
+		Serializer serializer = new Persister();
+		File source = new File(filepath);
+		GlobalConfiguration reval = new GlobalConfiguration();
+		try {
+			reval = serializer.read(GlobalConfiguration.class, source);
+		} catch (Exception e) {
+			reval.LOG.error("Something went wrong during loading of '{}': {}", filepath, e.getMessage());
+			e.printStackTrace();
+		}
+		return reval;
 	}
 	
 	/**
-	 * Loads the global configuration from a xml element
-	 * @param el	The xml element containing the global configuration.
-	 * @return		The global configuration data-structure which was saved in the xml element.
+	 * Test method for proofing the syntax of xml test files.
+	 * @param args
 	 */
-	public static GlobalConfiguration loadFromElement(Element el) {
-		GlobalConfiguration reval = new GlobalConfiguration();
-		
-		NodeList nl = el.getElementsByTagName("Plugin");
-		for(int i=0; i<nl.getLength(); ++i) {
-			Element actEl = (Element)nl.item(i);
-			reval.pluginPaths.add(actEl.getAttribute("file"));
+	public static void main(String args []) {
+		Serializer serializer = new Persister();
+		GlobalConfiguration test = new GlobalConfiguration();
+		test.pluginPaths.add("AspPlugin.jar");
+		test.pluginPaths.add("DummyPlugin.jar");
+		try {
+			serializer.write(test, System.out);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		return reval;
 	}
 }

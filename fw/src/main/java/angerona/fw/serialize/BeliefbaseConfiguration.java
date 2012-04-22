@@ -1,20 +1,19 @@
 package angerona.fw.serialize;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import angerona.fw.logic.BaseBeliefbase;
-import angerona.fw.logic.BaseBeliefbase.UpdateType;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contains the dynamic configurations of a belief base.
@@ -22,38 +21,27 @@ import angerona.fw.logic.BaseBeliefbase.UpdateType;
  * 
  * @author Tim Janus
  */
+@Root(name="Beliefbase")
 public class BeliefbaseConfiguration {
+	/** reference to the logback logger instance */
+	private Logger LOG = LoggerFactory.getLogger(BeliefbaseConfiguration.class);
+	
+	
+	@Element
 	private String name;
 	
 	/** the class name used for the revision operation */
-	private String changeClassName;
+	@ElementList
+	private List<String> changeClassName = new LinkedList<String>();
 
 	/** the class name used for the reasoning operations */
+	@Element
 	private String reasonerClassName;
 	
 	/** the class name of the beliefbase */
+	@Element
 	private String beliefbaseClassName;
 	
-	/** the updateBehavior Attribute String */
-	private String updateBehaviorStr;
-	
-	/** string representing the expansion update behavior */
-	public static final String EXPANSION 					= "EXPANSION";
-	
-	/** string representing the expansion and consolidation update behavior */
-	public static final String EXPANSION_AND_CONSOLIDATION 	= "EXPANSION_AND_CONSOLIDATION";
-	
-	/** string representing the revision update behavior */
-	public static final String REVISION						= "REVISION";
-	
-	// The unique element identifier
-	private static final String EL_ROOT = "BeliefbaseConfiguration";
-	private static final String EL_REASONER = "Reasoner";
-	private static final String EL_REVISION = "Revision";
-	
-	// The unique attribute identifier
-	private static final String A_CLASS = "class";
-	private static final String A_UPDATEBEHAVIOR = "updateBehavior";
 	
 	/**
 	 * Reads a list of belief base configurations from a given xml file
@@ -63,60 +51,23 @@ public class BeliefbaseConfiguration {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static List<BeliefbaseConfiguration> loadXml(String filename) throws ParserConfigurationException, SAXException, IOException {
-		List<BeliefbaseConfiguration> reval = new LinkedList<BeliefbaseConfiguration>();
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(filename);
-		
-		NodeList nl = doc.getElementsByTagName(EL_ROOT);
-		for (int i = 0; i < nl.getLength(); i++) {
-			Element el = (Element) nl.item(i);
-			BeliefbaseConfiguration cfg = loadFromElement(el);
-			cfg.updateBehaviorStr = el.getAttribute(A_UPDATEBEHAVIOR);
-			reval.add(cfg);
-		}
-		return reval;
-	}
-
-	/**
-	 * Loads one belief base configuration from a given xml element.
-	 * @param el	reference to the xml element containing the belief base configuration data.
-	 * @return		An in-memory data structure of the belief base configuration.
-	 */
-	public static BeliefbaseConfiguration loadFromElement(Element el) {
+	public static BeliefbaseConfiguration loadXml(String filename) throws IOException {
+		Serializer serializer = new Persister();
+		File source = new File(filename);
 		BeliefbaseConfiguration reval = new BeliefbaseConfiguration();
-		reval.name = el.getAttribute("name");
-		reval.beliefbaseClassName = getClassNameOfElement(el);
-		reval.reasonerClassName = getClassNameOfElement(el.getElementsByTagName(EL_REASONER));
-		reval.changeClassName = getClassNameOfElement(el.getElementsByTagName(EL_REVISION));
-		
+		try {
+			reval = serializer.read(BeliefbaseConfiguration.class, source);
+		} catch (Exception e) {
+			reval.LOG.error("Something went wrong during loading of '{}': {}", filename, e.getMessage());
+			e.printStackTrace();
+		}
 		return reval;
 	}
-	
-	/**
-	 * Helper method: Returns the class attribute of the given element in the node list.
-	 * The method returns null if the NodeList contains more than one Element.
-	 * @param lst	list of nodes in the xml file
-	 * @return		null if the list nodes doesn't has exactly one item, otherwise the string of the class attribute of the first element in the node list.
-	 */
-	private static String getClassNameOfElement(NodeList lst) {
-		if(lst.getLength() != 1) {
-			return null;
-		} else {
-			return getClassNameOfElement((Element)lst.item(0));
-		}
-	}
-	
-	private static String getClassNameOfElement(Element el) {
-		if(el == null)
-			throw new IllegalArgumentException("The given element must not be null");
-		return el.getAttribute(A_CLASS);
-	}
-	
+		
 	/** @return the class name used for the revision operation */
 	public String getRevisionClassName() {
-		return changeClassName;
+		// TODO support list in framework
+		return changeClassName.get(0);
 	}
 
 	/** @return the class name used for the reasoning operations */
@@ -129,19 +80,22 @@ public class BeliefbaseConfiguration {
 		return beliefbaseClassName;
 	}
 	
-	public BaseBeliefbase.UpdateType getUpdateBehavior() {
-		if(updateBehaviorStr.compareToIgnoreCase(EXPANSION) == 0) {
-			return UpdateType.U_EXPANSION;
-		} else if(updateBehaviorStr.compareToIgnoreCase(EXPANSION_AND_CONSOLIDATION) == 0) {
-			return UpdateType.U_EXPANSION_AND_CONSOLIDATION;
-		} else if(updateBehaviorStr.compareToIgnoreCase(REVISION) == 0) {
-			return UpdateType.U_REVISION;
-		}
-		
-		throw new IllegalArgumentException(updateBehaviorStr + " can't be convert to UpdateType");
-	}
-	
 	public String getName() {
 		return name;
+	}
+	
+	public static void main(String [] args) {
+		Serializer serializer = new Persister();
+		BeliefbaseConfiguration test = new BeliefbaseConfiguration();
+		test.beliefbaseClassName = "AspBeliefbase";
+		test.changeClassName.add("ChangeOperator");
+		test.reasonerClassName = "AspReasoner";
+		test.name = "AspBeliefbase";
+		try {
+			serializer.write(test, System.out);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

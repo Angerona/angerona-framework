@@ -148,12 +148,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		
 		if(bbc.getRevisionClassName() != null && !bbc.getRevisionClassName().equals("empty"))
 			revisionOperator = pi.createRevision(bbc.getRevisionClassName());
-		
-		try {
-			defaultUpdateBehavior = bbc.getUpdateBehavior();
-		} catch(IllegalArgumentException ex) {
-			// Do nothing yet.
-		}
 	}
 	
 	/**

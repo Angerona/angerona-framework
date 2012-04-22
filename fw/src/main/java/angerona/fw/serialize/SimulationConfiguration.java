@@ -129,7 +129,7 @@ public class SimulationConfiguration {
 			}
 			Element bel = (Element)el.getElementsByTagName("Beliefbase").item(0);			
 			fileSuffix = bel.getAttribute("fileSuffix");
-			beliefbaseConfig = BeliefbaseConfiguration.loadXml(bel.getAttribute("configuration")).get(0);
+			beliefbaseConfig = BeliefbaseConfiguration.loadXml(bel.getAttribute("configuration"));
 		}
 
 		public BeliefbaseConfiguration getBeliefbaseConfig() {

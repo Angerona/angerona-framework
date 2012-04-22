@@ -66,12 +66,6 @@ public class Angerona {
 		if(config == null) {
 			try {
 				config = GlobalConfiguration.loadXml("config/configuration.xml");
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -222,10 +216,8 @@ public class Angerona {
 	private class BeliefbaseConfigLoader implements FileLoader {
 		@Override
 		public void load(File file, Angerona container) throws ParserConfigurationException, SAXException, IOException {
-			List<BeliefbaseConfiguration> bbs = BeliefbaseConfiguration.loadXml(file.getAbsolutePath());
-			for(BeliefbaseConfiguration bbc : bbs) {
-				container.beliefbaseConfigurations.put(bbc.getName(), bbc);
-			}
+			BeliefbaseConfiguration bbc = BeliefbaseConfiguration.loadXml(file.getAbsolutePath());
+			container.beliefbaseConfigurations.put(bbc.getName(), bbc);
 		}
 	}
 	

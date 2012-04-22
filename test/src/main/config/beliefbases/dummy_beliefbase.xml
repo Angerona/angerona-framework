@@ -1,6 +1,8 @@
-<BeliefbaseConfiguration name="Dummy Beliefbase Implementation" 
-				class="angerona.fw.logic.dummy.DummyBeliefbase"
-				updateBehavior="REVISION">
-	<Revision class="angerona.fw.logic.dummy.DummyExpansion"></Revision>
-	<Reasoner class="angerona.fw.logic.dummy.DummyReasoner"></Reasoner>
-</BeliefbaseConfiguration>
+<Beliefbase>
+   <name>Dummy Belief base Implementation</name>
+   <changeClassName class="java.util.LinkedList">
+      <string>angerona.fw.logic.dummy.DummyExpansion</string>
+   </changeClassName>
+   <reasonerClassName>angerona.fw.logic.dummy.DummyReasoner</reasonerClassName>
+   <beliefbaseClassName>angerona.fw.logic.dummy.DummyBeliefbase</beliefbaseClassName>
+</Beliefbase>
