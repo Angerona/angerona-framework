@@ -3,10 +3,10 @@ package angerona.fw.logic.dummy;
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseExpansion;
+import angerona.fw.logic.base.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
-public class DummyExpansion extends BaseExpansion {
+public class DummyExpansion extends BaseChangeBeliefs {
 
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {

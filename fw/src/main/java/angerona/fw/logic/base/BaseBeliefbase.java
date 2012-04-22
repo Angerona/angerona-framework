@@ -154,12 +154,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		reasoningOperator = pi.createReasoner(bbc.getReasonerClassName());
 		reasoningOperator.setBeliefbase(this);
 		
-		if(bbc.getExpansionClassName() != null && !bbc.getExpansionClassName().equals("empty"))
-			expansionOperator = pi.createExpansion(bbc.getExpansionClassName());
-		
-		if(bbc.getConsolidationClassName() != null && !bbc.getConsolidationClassName().equals("empty"))
-			consolidationOperator = pi.createConsolidation(bbc.getConsolidationClassName());
-		
 		if(bbc.getRevisionClassName() != null && !bbc.getRevisionClassName().equals("empty"))
 			revisionOperator = pi.createRevision(bbc.getRevisionClassName());
 		

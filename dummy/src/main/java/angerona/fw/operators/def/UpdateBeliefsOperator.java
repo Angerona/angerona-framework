@@ -18,19 +18,19 @@ import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 
 /**
- * Default Update Operator reacts on Answer and Query speech acts.
+ * Default Update Beliefs reacts on Answer and Query speech acts.
  * Sub-classes can use the default behavior and add their custom knowledge
  * updates on custom perceptions/actions
  * @author Tim Janus
  */
-public class ChangeOperator extends BaseUpdateBeliefsOperator {
+public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(ChangeOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(UpdateBeliefsOperator.class);
 	
 	@Override
 	protected Beliefs processInt(UpdateBeliefsParameter param) {
-		LOG.info("Run Default-Change-Operator");
+		LOG.info("Run Default-Update-Beliefs-Operator");
 		Beliefs reval = param.getAgent().getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		

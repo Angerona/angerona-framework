@@ -25,14 +25,8 @@ import angerona.fw.logic.base.BaseBeliefbase.UpdateType;
 public class BeliefbaseConfiguration {
 	private String name;
 	
-	/** the class name used for the expansion operation */
-	private String expansionClassName;
-	
-	/** the class name used for the consolidation operation */
-	private String consolidationClassName;
-
 	/** the class name used for the revision operation */
-	private String revisionClassName;
+	private String changeClassName;
 
 	/** the class name used for the reasoning operations */
 	private String reasonerClassName;
@@ -55,8 +49,6 @@ public class BeliefbaseConfiguration {
 	// The unique element identifier
 	private static final String EL_ROOT = "BeliefbaseConfiguration";
 	private static final String EL_REASONER = "Reasoner";
-	private static final String EL_EXPANSION = "Expansion";
-	private static final String EL_CONSOLIDATION = "Consolidation";
 	private static final String EL_REVISION = "Revision";
 	
 	// The unique attribute identifier
@@ -97,9 +89,7 @@ public class BeliefbaseConfiguration {
 		reval.name = el.getAttribute("name");
 		reval.beliefbaseClassName = getClassNameOfElement(el);
 		reval.reasonerClassName = getClassNameOfElement(el.getElementsByTagName(EL_REASONER));
-		reval.expansionClassName = getClassNameOfElement(el.getElementsByTagName(EL_EXPANSION));
-		reval.consolidationClassName = getClassNameOfElement(el.getElementsByTagName(EL_CONSOLIDATION));
-		reval.revisionClassName = getClassNameOfElement(el.getElementsByTagName(EL_REVISION));
+		reval.changeClassName = getClassNameOfElement(el.getElementsByTagName(EL_REVISION));
 		
 		return reval;
 	}
@@ -124,19 +114,9 @@ public class BeliefbaseConfiguration {
 		return el.getAttribute(A_CLASS);
 	}
 	
-	/** @return the class name used for the expansion operation */
-	public String getExpansionClassName() {
-		return expansionClassName;
-	}
-
-	/** @return the class name used for the consolidation operation */
-	public String getConsolidationClassName() {
-		return consolidationClassName;
-	}
-
 	/** @return the class name used for the revision operation */
 	public String getRevisionClassName() {
-		return revisionClassName;
+		return changeClassName;
 	}
 
 	/** @return the class name used for the reasoning operations */

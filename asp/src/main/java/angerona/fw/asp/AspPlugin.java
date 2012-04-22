@@ -15,10 +15,8 @@ import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspRevision;
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseConsolidation;
-import angerona.fw.logic.base.BaseExpansion;
-import angerona.fw.logic.base.BaseReasoner;
 import angerona.fw.logic.base.BaseChangeBeliefs;
+import angerona.fw.logic.base.BaseReasoner;
 
 @PluginImplementation
 public class AspPlugin implements BeliefbasePlugin {
@@ -38,25 +36,13 @@ public class AspPlugin implements BeliefbasePlugin {
 	}
 
 	@Override
-	public List<Class<? extends BaseExpansion>> getSupportedExpansionOperations() {
-		List<Class<? extends BaseExpansion>> reval = new LinkedList<Class<? extends BaseExpansion>>();
+	public List<Class<? extends BaseChangeBeliefs>> getSupportedChangeOperations() {
+		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
+		reval.add(AspRevision.class);
 		reval.add(AspExpansion.class);
 		return reval;
 	}
 
-	@Override
-	public List<Class<? extends BaseChangeBeliefs>> getSupportedRevisionOperations() {
-		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
-		reval.add(AspRevision.class);
-		return reval;
-	}
-
-	@Override
-	public List<Class<? extends BaseConsolidation>> getSupportedConsolidationOperations() {
-		List<Class<? extends BaseConsolidation>> reval = new LinkedList<Class<? extends BaseConsolidation>>();
-		return reval;
-	}
-	
 	public static void main(String [] args) {
 		Program p = new Program();
 		

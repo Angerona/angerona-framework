@@ -2,7 +2,7 @@
 	<GenerateOptionsOperator class="angerona.fw.operators.def.GenerateOptionsOperator"></GenerateOptionsOperator>
 	<FilterOperator class="angerona.fw.operators.def.IntentionUpdateOperator"></FilterOperator>
 	<Planer class="angerona.fw.operators.def.SubgoalGenerationOperator"></Planer>
-	<UpdateOperator class="angerona.fw.operators.def.ChangeOperator"></UpdateOperator>
+	<UpdateOperator class="angerona.fw.operators.def.UpdateBeliefsOperator"></UpdateOperator>
 	<PolicyControlOperator class="angerona.fw.operators.def.PolicyControlOperator"></PolicyControlOperator>
 	<ViolatesOperator class="angerona.fw.operators.def.ViolatesOperator"></ViolatesOperator>
 	

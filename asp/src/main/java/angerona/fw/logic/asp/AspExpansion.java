@@ -11,7 +11,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseExpansion;
+import angerona.fw.logic.base.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 /**
@@ -19,7 +19,7 @@ import angerona.fw.operators.parameter.BeliefUpdateParameter;
  * so on.
  * @author Tim Janus
  */
-public class AspExpansion extends BaseExpansion {
+public class AspExpansion extends BaseChangeBeliefs {
 
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {

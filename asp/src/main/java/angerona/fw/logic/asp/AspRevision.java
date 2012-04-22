@@ -1,18 +1,22 @@
 package angerona.fw.logic.asp;
 
 import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
-import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
+import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
+/**
+ * Aps Revision using 
+ * @author Tim Janus
+ */
 public class AspRevision extends BaseChangeBeliefs {
 
 	@Override
@@ -46,7 +50,7 @@ public class AspRevision extends BaseChangeBeliefs {
 		}
 		
 		try {
-			bb.setProgram(pf.revision(bb.getProgram(), newInfo, new Clingo("tools/solver/asp/clingo/clingo")));
+			bb.setProgram(pf.revision(bb.getProgram(), newInfo, new DLVComplex("tools/solver/asp/dlv/dl-complex")));
 		} catch (SolverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

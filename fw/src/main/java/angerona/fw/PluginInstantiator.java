@@ -16,15 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseConsolidation;
-import angerona.fw.logic.base.BaseExpansion;
-import angerona.fw.logic.base.BaseReasoner;
 import angerona.fw.logic.base.BaseChangeBeliefs;
-import angerona.fw.operators.BaseUpdateBeliefsOperator;
+import angerona.fw.logic.base.BaseReasoner;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
+import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
@@ -79,13 +77,7 @@ public class PluginInstantiator {
 	
 	/** list of all classes implementing a reasoner for a belief base */
 	private List<Class<? extends BaseReasoner>> reasoners = new LinkedList<Class<? extends BaseReasoner>>();
-	
-	/** list of all classes implementing a expansion for a belief base */
-	private List<Class<? extends BaseExpansion>> expansions = new LinkedList<Class<? extends BaseExpansion>>();
-	
-	/** list of all classes implementing a consolidation for a belief base */
-	private List<Class<? extends BaseConsolidation>> consolidations = new LinkedList<Class<? extends BaseConsolidation>>();
-	
+		
 	/** list of all classes implementing a revision for a belief base */
 	private List<Class<? extends BaseChangeBeliefs>> revisions = new LinkedList<Class<? extends BaseChangeBeliefs>>();
 	
@@ -152,9 +144,7 @@ public class PluginInstantiator {
 			loadedPlugins.add(bp);
 			beliefbases.addAll(bp.getSupportedBeliefbases());
 			reasoners.addAll(bp.getSupportedReasoners());
-			expansions.addAll(bp.getSupportedExpansionOperations());
-			consolidations.addAll(bp.getSupportedConsolidationOperations());
-			revisions.addAll(bp.getSupportedRevisionOperations());
+			revisions.addAll(bp.getSupportedChangeOperations());
 			LOG.info("Beliefbase-Plugin '{}' loaded", bp.getClass().getName());
 		}
 		
@@ -212,16 +202,6 @@ public class PluginInstantiator {
 	/** @return list with all Reasoner operators */
 	public List<Class<? extends BaseReasoner>> getReasoners() {
 		return Collections.unmodifiableList(reasoners);
-	}
-	
-	/** @return list with all Expansion operators */
-	public List<Class<? extends BaseExpansion>> getExpansions() {
-		return Collections.unmodifiableList(expansions);
-	}
-	
-	/** @return list with all Consolidation operators */
-	public List<Class<? extends BaseConsolidation>> getConsolidations() {
-		return Collections.unmodifiableList(consolidations);
 	}
 	
 	/** @return list with all Revision operators */
@@ -388,40 +368,6 @@ public class PluginInstantiator {
 		}
 
 		throw new InstantiationException("Can't find Reasoner with name: " + classname );
-	}
-	
-	/**
-	 * creates a new expansion operator instance.
-	 * @param classname class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseExpansion createExpansion(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseExpansion> c : getExpansions()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-
-		throw new InstantiationException("Can't find Expansion with name: " + classname );
-	}
-	
-	/**
-	 * creates a new consolidation operator instance.
-	 * @param classname class name of the new created instance (inclusive package)
-	 * @return reference to the newly created consolidation operator instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseConsolidation createConsolidation(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseConsolidation> c : getConsolidations()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-
-		throw new InstantiationException("Can't find Consolidation with name: " + classname );
 	}
 	
 	/**

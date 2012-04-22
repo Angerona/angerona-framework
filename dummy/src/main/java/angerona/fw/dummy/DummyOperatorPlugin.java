@@ -12,7 +12,7 @@ import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
-import angerona.fw.operators.def.ChangeOperator;
+import angerona.fw.operators.def.UpdateBeliefsOperator;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.def.IntentionUpdateOperator;
 import angerona.fw.operators.def.PolicyControlOperator;
@@ -31,7 +31,7 @@ public class DummyOperatorPlugin implements OperatorPlugin {
 	@Override
 	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators() {
 		List<Class<? extends BaseUpdateBeliefsOperator>> reval = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
-		reval.add(ChangeOperator.class);
+		reval.add(UpdateBeliefsOperator.class);
 		return reval;
 	}
 
