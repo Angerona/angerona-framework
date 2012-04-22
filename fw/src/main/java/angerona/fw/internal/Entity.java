@@ -1,4 +1,4 @@
-package angerona.fw.report;
+package angerona.fw.internal;
 
 import java.util.List;
 

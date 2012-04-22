@@ -1,4 +1,4 @@
-package angerona.fw.util;
+package angerona.fw.listener;
 
 /**
  * Informs plugins of the Angerona framework about errors.

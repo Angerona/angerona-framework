@@ -1,9 +1,8 @@
-package angerona.fw;
+package angerona.fw.internal;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import angerona.fw.report.Entity;
 
 /**
  * Used for generating unique ids for the Angerona Report-Attachment

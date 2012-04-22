@@ -1,4 +1,4 @@
-package angerona.fw;
+package angerona.fw.internal;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +10,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import angerona.fw.Perception;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;

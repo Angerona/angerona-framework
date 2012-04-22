@@ -29,14 +29,14 @@ import org.xml.sax.SAXException;
 import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.PluginInstantiator;
-import angerona.fw.PluginListener;
 import angerona.fw.gui.view.BaseView;
 import angerona.fw.gui.view.ConfidentialView;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
-import angerona.fw.report.Entity;
-import angerona.fw.util.ErrorListener;
+import angerona.fw.internal.Entity;
+import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.listener.ErrorListener;
+import angerona.fw.listener.PluginListener;
 
 import com.whiplash.gui.WlComponent;
 import com.whiplash.gui.WlWindow;

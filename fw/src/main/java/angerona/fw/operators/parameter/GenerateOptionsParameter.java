@@ -7,7 +7,7 @@ import net.sf.tweety.Formula;
 import angerona.fw.Agent;
 import angerona.fw.Perception;
 import angerona.fw.Skill;
-import angerona.fw.logic.base.Beliefs;
+import angerona.fw.logic.Beliefs;
 
 /**
  * Class encoding the input parameter for the GenerateOptionsOperator.

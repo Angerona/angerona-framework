@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.Formula;
+import angerona.fw.internal.Entity;
 import angerona.fw.logic.Desires;
-import angerona.fw.report.Entity;
 
 public class DesiresView extends ListViewColored<Desires> {
 

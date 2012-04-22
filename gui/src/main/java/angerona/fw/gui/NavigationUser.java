@@ -1,5 +1,5 @@
 package angerona.fw.gui;
-import angerona.fw.report.Entity;
+import angerona.fw.internal.Entity;
 import angerona.fw.report.ReportEntry;
 
 /**

@@ -4,8 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import angerona.fw.report.Entity;
-import angerona.fw.report.EntityAtomic;
+import angerona.fw.internal.Entity;
+import angerona.fw.internal.EntityAtomic;
+import angerona.fw.internal.IdGenerator;
 
 /**
  * Base class for extensions of the Agent-Model, like know-how.

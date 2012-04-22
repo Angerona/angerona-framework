@@ -16,8 +16,8 @@ import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.view.ResourcenView;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.util.SimulationListener;
+import angerona.fw.listener.SimulationListener;
+import angerona.fw.logic.BaseBeliefbase;
 
 /**
  * This class is responsible for keeping track of new Resources added to Angerona and to keep them

@@ -2,8 +2,8 @@ package angerona.fw.operators;
 
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.internal.Entity;
 import angerona.fw.operators.parameter.GenericOperatorParameter;
-import angerona.fw.report.Entity;
 import angerona.fw.report.ReportPoster;
 
 /**

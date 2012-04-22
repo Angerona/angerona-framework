@@ -7,9 +7,9 @@ import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.AgentComponent;
-import angerona.fw.AgentPlugin;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.view.BaseView;
+import angerona.fw.internal.AgentPlugin;
 import angerona.fw.knowhow.gui.KnowhowView;
 
 @PluginImplementation

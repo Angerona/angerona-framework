@@ -12,7 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
-import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.parser.ParseException;
 
 /**

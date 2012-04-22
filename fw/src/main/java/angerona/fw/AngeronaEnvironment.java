@@ -24,12 +24,15 @@ import org.xml.sax.SAXException;
 
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
+import angerona.fw.internal.DefaultPerceptionFactory;
+import angerona.fw.internal.Entity;
+import angerona.fw.internal.PerceptionFactory;
+import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.Beliefs;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
-import angerona.fw.report.Entity;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.SimulationConfiguration;
 
@@ -318,17 +321,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		agents.clear();
 		agentMap.clear();
 		Angerona.getInstance().onSimulationDestroyed(this);
-	}
-	
-	/**
-	 * Helper method: Generates the filepath to a belief base.
-	 * @param parentDir	The parent dir of the simulation
-	 * @param suffix	suffix of the filename.
-	 * @param bb		An instance of the belief base for determining the file ending.
-	 * @return			String representing the path to the correct belief base file.
-	 */
-	private String getBeliefbaseFilename(String parentDir, String suffix, BaseBeliefbase bb) {
-		return parentDir + "/" + suffix + "." + bb.getFileEnding();
 	}
 	
 	@Override

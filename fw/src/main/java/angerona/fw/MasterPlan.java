@@ -3,7 +3,8 @@ package angerona.fw;
 import java.util.LinkedList;
 import java.util.List;
 
-import angerona.fw.report.EntityAtomic;
+import angerona.fw.internal.EntityAtomic;
+import angerona.fw.internal.IdGenerator;
 
 public class MasterPlan extends Subgoal implements EntityAtomic {
 

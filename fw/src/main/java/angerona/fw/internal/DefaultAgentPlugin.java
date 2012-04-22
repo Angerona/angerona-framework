@@ -1,8 +1,9 @@
-package angerona.fw;
+package angerona.fw.internal;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import angerona.fw.AgentComponent;
 import angerona.fw.logic.ConfidentialKnowledge;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;

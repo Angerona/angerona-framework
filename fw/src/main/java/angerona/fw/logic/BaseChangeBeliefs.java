@@ -1,4 +1,4 @@
-package angerona.fw.logic.base;
+package angerona.fw.logic;
 
 import angerona.fw.operators.Operator;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;

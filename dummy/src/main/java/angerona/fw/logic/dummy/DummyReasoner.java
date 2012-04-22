@@ -4,8 +4,8 @@ import net.sf.tweety.Answer;
 import net.sf.tweety.Formula;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseReasoner;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.BaseReasoner;
 
 /**
  * Just a dummy Reasoner for testing purposes.

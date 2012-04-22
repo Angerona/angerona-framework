@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import angerona.fw.OperatorPlugin;
+import angerona.fw.internal.OperatorPlugin;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BasePolicyControlOperator;

@@ -3,7 +3,7 @@ package angerona.fw.operators.parameter;
 import java.util.Set;
 
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.logic.BaseBeliefbase;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 

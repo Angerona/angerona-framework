@@ -1,9 +1,9 @@
 package angerona.fw.reflection;
 
 import angerona.fw.Action;
-import angerona.fw.PerceptionFactory;
 import angerona.fw.error.InvokeException;
-import angerona.fw.logic.base.Beliefs;
+import angerona.fw.internal.PerceptionFactory;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.serialize.SkillConfiguration.Statement;
 
 /**

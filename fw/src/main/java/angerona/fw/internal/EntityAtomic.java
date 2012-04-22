@@ -1,4 +1,4 @@
-package angerona.fw.report;
+package angerona.fw.internal;
 
 /**
  * Marks an entity as atomic. This means that this entity

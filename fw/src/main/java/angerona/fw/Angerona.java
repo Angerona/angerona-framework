@@ -15,8 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import angerona.fw.internal.Entity;
+import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.listener.ErrorListener;
+import angerona.fw.listener.SimulationListener;
 import angerona.fw.report.Report;
-import angerona.fw.report.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 import angerona.fw.report.ReportPoster;
@@ -24,8 +27,6 @@ import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 import angerona.fw.serialize.GlobalConfiguration;
 import angerona.fw.serialize.SimulationConfiguration;
-import angerona.fw.util.ErrorListener;
-import angerona.fw.util.SimulationListener;
 
 /**
  * Main class of Angerona manages all resources.

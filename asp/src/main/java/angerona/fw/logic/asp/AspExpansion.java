@@ -10,8 +10,8 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseChangeBeliefs;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 /**

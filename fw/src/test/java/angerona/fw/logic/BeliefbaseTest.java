@@ -1,7 +1,6 @@
 package angerona.fw.logic;
 
 import junit.framework.TestCase;
-import angerona.fw.logic.base.BaseBeliefbase;
 
 /**
  * A generic test class testing the generic interface of different

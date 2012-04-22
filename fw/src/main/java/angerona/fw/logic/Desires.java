@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.Formula;
-import angerona.fw.IdGenerator;
-import angerona.fw.report.EntityAtomic;
+import angerona.fw.internal.EntityAtomic;
+import angerona.fw.internal.IdGenerator;
 
 /**
  * The desire component of an Angerona Agent. The desires are a set of

@@ -9,8 +9,8 @@ import javax.swing.JScrollPane;
 
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
-import angerona.fw.IdGenerator;
-import angerona.fw.report.Entity;
+import angerona.fw.internal.Entity;
+import angerona.fw.internal.IdGenerator;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 

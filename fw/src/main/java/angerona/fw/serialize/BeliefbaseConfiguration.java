@@ -13,8 +13,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseBeliefbase.UpdateType;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.BaseBeliefbase.UpdateType;
 
 /**
  * Contains the dynamic configurations of a belief base.

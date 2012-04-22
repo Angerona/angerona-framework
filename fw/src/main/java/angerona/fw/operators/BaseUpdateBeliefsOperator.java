@@ -1,6 +1,6 @@
 package angerona.fw.operators;
 
-import angerona.fw.logic.base.Beliefs;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 
 /**

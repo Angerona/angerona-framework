@@ -1,4 +1,4 @@
-package angerona.fw.logic.base;
+package angerona.fw.logic;
 
 import java.util.HashMap;
 import java.util.Map;

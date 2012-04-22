@@ -2,6 +2,9 @@ package angerona.fw.report;
 
 import java.util.Date;
 
+import angerona.fw.internal.Entity;
+import angerona.fw.internal.EntityAtomic;
+
 /**
  * A ReportEntry contains informations about a report, like the message, the poster or the attachment.
  * It also saves the simulation tick and the real time when the report was create.

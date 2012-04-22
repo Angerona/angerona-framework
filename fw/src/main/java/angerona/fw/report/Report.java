@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.internal.Entity;
 
 /**
  * A report encapsulates the data collect during a simulation. The Angerona main class is responsible

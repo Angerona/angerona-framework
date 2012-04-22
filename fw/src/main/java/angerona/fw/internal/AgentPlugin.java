@@ -1,6 +1,8 @@
-package angerona.fw;
+package angerona.fw.internal;
 
 import java.util.List;
+
+import angerona.fw.AgentComponent;
 
 import net.xeoh.plugins.base.Plugin;
 

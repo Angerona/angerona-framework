@@ -12,9 +12,9 @@ import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.NavigationUser;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.Beliefs;
-import angerona.fw.report.Entity;
+import angerona.fw.internal.Entity;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 

@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseReasoner;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.BaseReasoner;
 
 /**
  * Implementation of an ASP Reasoner using dlv or clingo as solver backends.

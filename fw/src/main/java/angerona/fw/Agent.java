@@ -15,10 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
+import angerona.fw.internal.Entity;
+import angerona.fw.internal.EntityAtomic;
+import angerona.fw.internal.IdGenerator;
+import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.Beliefs;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
@@ -34,8 +38,6 @@ import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
-import angerona.fw.report.Entity;
-import angerona.fw.report.EntityAtomic;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.SkillConfiguration;
 

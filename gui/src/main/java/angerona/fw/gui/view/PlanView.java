@@ -7,7 +7,7 @@ import angerona.fw.Intention;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
-import angerona.fw.report.Entity;
+import angerona.fw.internal.Entity;
 
 public class PlanView extends ListViewColored<MasterPlan> {
 

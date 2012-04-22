@@ -3,7 +3,7 @@ package angerona.fw.reflection;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.error.InvokeException;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.serialize.SkillConfiguration.Statement;
 
 /**

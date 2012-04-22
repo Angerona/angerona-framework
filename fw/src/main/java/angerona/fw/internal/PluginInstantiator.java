@@ -1,4 +1,4 @@
-package angerona.fw;
+package angerona.fw.internal;
 
 import java.io.File;
 import java.util.Collection;
@@ -15,9 +15,11 @@ import net.xeoh.plugins.base.util.uri.ClassURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseChangeBeliefs;
-import angerona.fw.logic.base.BaseReasoner;
+import angerona.fw.AgentComponent;
+import angerona.fw.listener.PluginListener;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.BaseChangeBeliefs;
+import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BasePolicyControlOperator;

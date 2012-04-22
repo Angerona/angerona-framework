@@ -9,14 +9,14 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import angerona.fw.BeliefbasePlugin;
+import angerona.fw.internal.BeliefbasePlugin;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.BaseChangeBeliefs;
+import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspRevision;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseChangeBeliefs;
-import angerona.fw.logic.base.BaseReasoner;
 
 @PluginImplementation
 public class AspPlugin implements BeliefbasePlugin {

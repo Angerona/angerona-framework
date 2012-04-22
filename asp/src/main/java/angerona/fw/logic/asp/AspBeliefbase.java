@@ -12,7 +12,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import angerona.fw.logic.base.BaseBeliefbase;
+import angerona.fw.logic.BaseBeliefbase;
 
 /**
  * A beliefbase implementation containing a logical program. 

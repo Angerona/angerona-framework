@@ -1,9 +1,10 @@
-package angerona.fw;
+package angerona.fw.internal;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.w3c.dom.Element;
 
+import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.error.NotImplementedException;

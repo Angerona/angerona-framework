@@ -5,7 +5,6 @@ import java.util.Set;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
-import angerona.fw.GenericAnswer;
 
 /**
  * An answer in the Angerona framework. Extends the GenericAnswer by an extended 

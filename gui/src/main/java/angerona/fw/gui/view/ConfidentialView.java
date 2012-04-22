@@ -3,9 +3,9 @@ package angerona.fw.gui.view;
 import java.util.LinkedList;
 import java.util.List;
 
+import angerona.fw.internal.Entity;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.ConfidentialTarget;
-import angerona.fw.report.Entity;
 
 /**
  * View for the confidential knowledge of the agents. It shows the confidential targets

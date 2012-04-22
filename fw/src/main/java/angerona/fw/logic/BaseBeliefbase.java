@@ -1,4 +1,4 @@
-package angerona.fw.logic.base;
+package angerona.fw.logic;
 
 
 import java.io.BufferedReader;
@@ -17,13 +17,11 @@ import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.IdGenerator;
-import angerona.fw.PluginInstantiator;
-import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.internal.EntityAtomic;
+import angerona.fw.internal.IdGenerator;
+import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
-import angerona.fw.operators.parameter.BeliefbaseParameter;
 import angerona.fw.parser.ParseException;
-import angerona.fw.report.EntityAtomic;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 
 /**
@@ -76,12 +74,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * 	query was rejected.
 	 */
 	protected String reason = "";
-	
-	/** Reference to the used expansion operator */
-	private BaseExpansion expansionOperator;
-	
-	/** Reference to the used consolidation operator */
-	private BaseConsolidation consolidationOperator;
 	
 	/** Reference to the used revision operator */
 	private BaseChangeBeliefs revisionOperator;
@@ -197,21 +189,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		// TODO: Think about local copies...
 		BeliefUpdateParameter bup = new BeliefUpdateParameter(this, newKnowledge, env);
 		switch(updateType) {
-		case U_EXPANSION:
-			if(expansionOperator == null)
-				throw new RuntimeException("Can't use expansion on a beliefbase which doesn't has a valid expansion operator.");
-			expansionOperator.process(bup);
-			break;
-			
-		case U_EXPANSION_AND_CONSOLIDATION:
-			if(expansionOperator == null)
-				throw new RuntimeException("Can't use expansion on a beliefbase which doesn't has a valid expansion operator.");
-			if(consolidationOperator == null)
-				throw new RuntimeException("Can't use consolidation on a beliefbase which doesn't has a valid consolidation operator.");
-			expansionOperator.process(bup);
-			consolidationOperator.process(new BeliefbaseParameter(this, env));
-			break;
-			
 		case U_REVISION:
 			if(revisionOperator == null)
 				throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");;

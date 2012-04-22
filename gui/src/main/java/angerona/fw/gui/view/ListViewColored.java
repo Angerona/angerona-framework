@@ -13,7 +13,7 @@ import javax.swing.ListCellRenderer;
 import angerona.fw.Angerona;
 import angerona.fw.gui.NavigationPanel;
 import angerona.fw.gui.NavigationUser;
-import angerona.fw.report.Entity;
+import angerona.fw.internal.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 

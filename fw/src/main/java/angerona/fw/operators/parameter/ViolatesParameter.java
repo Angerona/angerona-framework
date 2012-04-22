@@ -3,7 +3,7 @@ package angerona.fw.operators.parameter;
 import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.AngeronaAtom;
-import angerona.fw.logic.base.Beliefs;
+import angerona.fw.logic.Beliefs;
 
 public class ViolatesParameter extends GenericOperatorParameter {
 	/** the beliefs of the agent */

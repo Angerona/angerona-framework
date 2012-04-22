@@ -1,11 +1,11 @@
-package angerona.fw;
+package angerona.fw.internal;
 
 import java.util.List;
 
 import net.xeoh.plugins.base.Plugin;
-import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseChangeBeliefs;
-import angerona.fw.logic.base.BaseReasoner;
+import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.logic.BaseChangeBeliefs;
+import angerona.fw.logic.BaseReasoner;
 
 /**
  * Interface for plugins defining new belief base types.

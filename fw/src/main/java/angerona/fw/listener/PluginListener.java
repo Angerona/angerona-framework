@@ -1,4 +1,6 @@
-package angerona.fw;
+package angerona.fw.listener;
+
+import angerona.fw.internal.PluginInstantiator;
 
 /**
  * Plugin listener gets informed if the PluginInstantiator reloads its implementations.

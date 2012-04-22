@@ -1,4 +1,4 @@
-package angerona.fw;
+package angerona.fw.logic;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
