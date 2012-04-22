@@ -41,7 +41,7 @@ public class SendActionVisitor extends ContextVisitor {
 		if(realRun)
 			getSelf().performAction(reval);
 		else
-			violates = getSelf().performViolates(beliefs, reval);
+			violates = getSelf().performThought(beliefs, reval);
 		this.setOutName(statement.getOutName(), reval);
 	}
 

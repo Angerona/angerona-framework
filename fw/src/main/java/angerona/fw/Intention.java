@@ -12,7 +12,7 @@ import net.sf.tweety.Formula;
  * @see Subgoal
  * @author Tim Janus
  */
-public abstract class Intention implements Runnable, Cloneable {
+public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	
 	/** the name for the top-level plan of an agent. */
 	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";

@@ -310,12 +310,13 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	}
 	
 	/**
-	 * Performs the violates operator.
+	 * Performs a thought experiment what happens if the agent applies the following action. It uses the violates operator
+	 * registered to the agent.
 	 * @param beliefs	The beliefs which should be used for testing violation.
 	 * @param action	The action which should be applied before testing for violation.
 	 * @return			true if applying the action violates confidential, false otherwise.
 	 */
-	public boolean performViolates(Beliefs beliefs, Action action) {
+	public boolean performThought(Beliefs beliefs, Action action) {
 		return violatesOperator.process(new ViolatesParameter(this, action));
 	}
 	
