@@ -1,10 +1,10 @@
 package angerona.fw.logic.dummy;
 
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseRevision;
+import angerona.fw.logic.base.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
-public class DummyRevision extends BaseRevision {
+public class DummyRevision extends BaseChangeBeliefs {
 
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {

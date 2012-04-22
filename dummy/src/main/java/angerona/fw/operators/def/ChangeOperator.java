@@ -14,8 +14,8 @@ import angerona.fw.comm.Query;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
-import angerona.fw.operators.BaseChangeOperator;
-import angerona.fw.operators.parameter.UpdateParameter;
+import angerona.fw.operators.BaseUpdateBeliefsOperator;
+import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 
 /**
  * Default Update Operator reacts on Answer and Query speech acts.
@@ -23,13 +23,13 @@ import angerona.fw.operators.parameter.UpdateParameter;
  * updates on custom perceptions/actions
  * @author Tim Janus
  */
-public class ChangeOperator extends BaseChangeOperator {
+public class ChangeOperator extends BaseUpdateBeliefsOperator {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ChangeOperator.class);
 	
 	@Override
-	protected Beliefs processInt(UpdateParameter param) {
+	protected Beliefs processInt(UpdateBeliefsParameter param) {
 		LOG.info("Run Default-Change-Operator");
 		Beliefs reval = param.getAgent().getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();

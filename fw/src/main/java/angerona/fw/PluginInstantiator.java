@@ -19,8 +19,8 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseConsolidation;
 import angerona.fw.logic.base.BaseExpansion;
 import angerona.fw.logic.base.BaseReasoner;
-import angerona.fw.logic.base.BaseRevision;
-import angerona.fw.operators.BaseChangeOperator;
+import angerona.fw.logic.base.BaseChangeBeliefs;
+import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BasePolicyControlOperator;
@@ -63,7 +63,7 @@ public class PluginInstantiator {
 	private List<Class<? extends BaseIntentionUpdateOperator>> filterOperators = new LinkedList<Class<? extends BaseIntentionUpdateOperator>>();
 
 	/** list of all classes implementing the update operator */
-	private List<Class<? extends BaseChangeOperator>> updateOperators = new LinkedList<Class<? extends BaseChangeOperator>>();
+	private List<Class<? extends BaseUpdateBeliefsOperator>> updateOperators = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
 
 	/** list of all classes implementing the policy-control operator */
 	private List<Class<? extends BasePolicyControlOperator>> policyControlOperators = new LinkedList<Class<? extends BasePolicyControlOperator>>();
@@ -87,7 +87,7 @@ public class PluginInstantiator {
 	private List<Class<? extends BaseConsolidation>> consolidations = new LinkedList<Class<? extends BaseConsolidation>>();
 	
 	/** list of all classes implementing a revision for a belief base */
-	private List<Class<? extends BaseRevision>> revisions = new LinkedList<Class<? extends BaseRevision>>();
+	private List<Class<? extends BaseChangeBeliefs>> revisions = new LinkedList<Class<? extends BaseChangeBeliefs>>();
 	
 	/** list of all classes implementing a custom agent component */
 	private List<Class<? extends AgentComponent>> components = new LinkedList<Class<? extends AgentComponent>>();
@@ -185,7 +185,7 @@ public class PluginInstantiator {
 	}
 
 	/** @return list with all update operators */
-	public List<Class<? extends BaseChangeOperator>> getUpdateOperators() {
+	public List<Class<? extends BaseUpdateBeliefsOperator>> getUpdateOperators() {
 		return Collections.unmodifiableList(updateOperators);
 	}
 
@@ -225,7 +225,7 @@ public class PluginInstantiator {
 	}
 	
 	/** @return list with all Revision operators */
-	public List<Class<? extends BaseRevision>> getRevisions() {
+	public List<Class<? extends BaseChangeBeliefs>> getRevisions() {
 		return Collections.unmodifiableList(revisions);
 	}
 	
@@ -291,8 +291,8 @@ public class PluginInstantiator {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseChangeOperator createUpdateOperator(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseChangeOperator> c : getUpdateOperators()) {
+	public BaseUpdateBeliefsOperator createUpdateOperator(String classname) throws InstantiationException, IllegalAccessException {
+		for(Class<? extends BaseUpdateBeliefsOperator> c : getUpdateOperators()) {
 			if(c.getName().compareTo(classname) == 0) {
 				return c.newInstance();
 			}
@@ -431,8 +431,8 @@ public class PluginInstantiator {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseRevision createRevision(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseRevision> c : getRevisions()) {
+	public BaseChangeBeliefs createRevision(String classname) throws InstantiationException, IllegalAccessException {
+		for(Class<? extends BaseChangeBeliefs> c : getRevisions()) {
 			if(c.getName().compareTo(classname) == 0) {
 				return c.newInstance();
 			}

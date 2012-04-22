@@ -10,10 +10,10 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.logic.base.BaseBeliefbase;
-import angerona.fw.logic.base.BaseRevision;
+import angerona.fw.logic.base.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
-public class AspRevision extends BaseRevision {
+public class AspRevision extends BaseChangeBeliefs {
 
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {

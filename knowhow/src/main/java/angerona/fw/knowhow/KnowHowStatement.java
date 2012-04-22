@@ -5,7 +5,7 @@ import java.util.Vector;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 
 /**
- * Class represents a KnowhowStatement like the one defined in Thimm, Krümpelmann 2009.
+ * Class represents a KnowhowStatement like the one defined in Thimm, KrÃ¼mpelmann 2009.
  * @author Tim Janus
  *
  */

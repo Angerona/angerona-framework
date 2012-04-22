@@ -19,7 +19,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Desires;
 import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.Beliefs;
-import angerona.fw.operators.BaseChangeOperator;
+import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BasePolicyControlOperator;
@@ -29,7 +29,7 @@ import angerona.fw.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
 import angerona.fw.operators.parameter.PolicyControlParameter;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
-import angerona.fw.operators.parameter.UpdateParameter;
+import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
@@ -84,7 +84,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	BaseIntentionUpdateOperator intentionUpdateOperator;
 	
 	/** The operator used to change the knowledge base when receiving perceptions */
-	BaseChangeOperator changeOperator;
+	BaseUpdateBeliefsOperator changeOperator;
 	
 	/** The operator used for policy control */
 	BasePolicyControlOperator policyControlOperator;
@@ -295,7 +295,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	 */
 	public void updateBeliefs(Perception perception) {
 		if(perception != null)
-			beliefs = changeOperator.process(new UpdateParameter(this, perception));
+			beliefs = changeOperator.process(new UpdateBeliefsParameter(this, perception));
 	}
 	
 	/**

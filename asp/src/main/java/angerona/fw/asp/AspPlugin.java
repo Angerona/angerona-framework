@@ -18,7 +18,7 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseConsolidation;
 import angerona.fw.logic.base.BaseExpansion;
 import angerona.fw.logic.base.BaseReasoner;
-import angerona.fw.logic.base.BaseRevision;
+import angerona.fw.logic.base.BaseChangeBeliefs;
 
 @PluginImplementation
 public class AspPlugin implements BeliefbasePlugin {
@@ -45,8 +45,8 @@ public class AspPlugin implements BeliefbasePlugin {
 	}
 
 	@Override
-	public List<Class<? extends BaseRevision>> getSupportedRevisionOperations() {
-		List<Class<? extends BaseRevision>> reval = new LinkedList<Class<? extends BaseRevision>>();
+	public List<Class<? extends BaseChangeBeliefs>> getSupportedRevisionOperations() {
+		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
 		reval.add(AspRevision.class);
 		return reval;
 	}

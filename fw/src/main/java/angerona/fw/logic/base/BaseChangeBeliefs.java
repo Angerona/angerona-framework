@@ -9,7 +9,7 @@ import angerona.fw.operators.parameter.BeliefUpdateParameter;
  * guaranteed that it is consistent.
  * @author Tim Janus
  */
-public abstract class BaseRevision extends Operator<BeliefUpdateParameter, BaseBeliefbase> {
+public abstract class BaseChangeBeliefs extends Operator<BeliefUpdateParameter, BaseBeliefbase> {
 	
 	/**
 	 * @return the class definition of the belief base this revision operation supports.

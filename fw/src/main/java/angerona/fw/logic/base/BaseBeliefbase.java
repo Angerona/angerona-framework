@@ -84,7 +84,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	private BaseConsolidation consolidationOperator;
 	
 	/** Reference to the used revision operator */
-	private BaseRevision revisionOperator;
+	private BaseChangeBeliefs revisionOperator;
 	
 	/** Reference to the used reasoning operator */
 	private BaseReasoner reasoningOperator;

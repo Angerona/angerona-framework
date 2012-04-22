@@ -7,7 +7,7 @@ import angerona.fw.logic.base.BaseBeliefbase;
 import angerona.fw.logic.base.BaseConsolidation;
 import angerona.fw.logic.base.BaseExpansion;
 import angerona.fw.logic.base.BaseReasoner;
-import angerona.fw.logic.base.BaseRevision;
+import angerona.fw.logic.base.BaseChangeBeliefs;
 
 /**
  * Interface for plugins defining new belief base types.
@@ -27,7 +27,7 @@ public interface BeliefbasePlugin extends Plugin {
 	public List<Class<? extends BaseExpansion>> getSupportedExpansionOperations();
 	
 	/** @return all the supported revisions defined in this plugin */
-	public List<Class<? extends BaseRevision>> getSupportedRevisionOperations();
+	public List<Class<? extends BaseChangeBeliefs>> getSupportedRevisionOperations();
 	
 	/** @return all the supported consolidations defined in this plugin */
 	public List<Class<? extends BaseConsolidation>> getSupportedConsolidationOperations();

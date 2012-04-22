@@ -5,7 +5,7 @@ import java.util.List;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BasePolicyControlOperator;
-import angerona.fw.operators.BaseChangeOperator;
+import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 
@@ -22,7 +22,7 @@ import net.xeoh.plugins.base.Plugin;
 public interface OperatorPlugin extends Plugin {
 	
 	/** @return all the supported Update Operators defined in this plugin */
-	public List<Class<? extends BaseChangeOperator>> getSupportedChangeOperators();
+	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators();
 	
 	/** @return all the supported filter Operators defined in this plugin */
 	public List<Class<? extends BaseIntentionUpdateOperator>> getSupportedFilterOperators();
