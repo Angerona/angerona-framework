@@ -30,8 +30,8 @@
 	<Flow>
 		<!-- 
 		<RevisionRequest sender="Employee" receiver="Boss" sentence="excused" />
-		<Query sender="Boss" receiver="Employee" question="attends" />
-		<Query sender="Boss" receiver="Employee" question="has_time" /> 
 		-->
+		<Query sender="Boss" receiver="Employee" question="attend_scm" />
+		<!-- <Query sender="Boss" receiver="Employee" question="has_time" />   -->
 	</Flow>
 </AngeronaSimulation>
