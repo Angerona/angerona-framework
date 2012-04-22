@@ -121,7 +121,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		Angerona angerona = Angerona.getInstance();
 		angerona.addAgentConfigFolder("config/agents");
 		angerona.addBeliefbaseConfigFolder("config/beliefbases");
-		angerona.addSimulationFolders("config/examples");
+		angerona.addSimulationFolders("examples");
 		angerona.bootstrap();
 		
 		angerona.addErrorListener(this);

@@ -110,6 +110,23 @@
           </execution>
           
           <execution>
+            <id>Copy Example-Files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${basedir}/target/examples/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/examples</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          
+          <execution>
             <id>Copy Plugin-Files</id>
             <goals>
               <goal>copy-resources</goal>
