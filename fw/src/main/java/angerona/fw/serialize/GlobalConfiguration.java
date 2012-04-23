@@ -11,17 +11,12 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-@Root(name="Config")
+@Root(name="config")
 public class GlobalConfiguration {
-	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(GlobalConfiguration.class);
 	
-	
-	@ElementList
+	@ElementList(name="plugins")
 	private List<String>	pluginPaths = new LinkedList<String>();
 	
 	public List<String> getPluginPaths() {
@@ -30,23 +25,14 @@ public class GlobalConfiguration {
 	
 	/**
 	 * loads the global-configuration from the given file-path.
-	 * @param filepath
+	 * @param source	reference to the source File.
 	 * @return
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static GlobalConfiguration loadXml(String filepath) throws IOException {
-		Serializer serializer = new Persister();
-		File source = new File(filepath);
-		GlobalConfiguration reval = new GlobalConfiguration();
-		try {
-			reval = serializer.read(GlobalConfiguration.class, source);
-		} catch (Exception e) {
-			reval.LOG.error("Something went wrong during loading of '{}': {}", filepath, e.getMessage());
-			e.printStackTrace();
-		}
-		return reval;
+	public static GlobalConfiguration loadXml(File source) {
+		return SerializeHelper.loadXml(GlobalConfiguration.class, source);
 	}
 	
 	/**

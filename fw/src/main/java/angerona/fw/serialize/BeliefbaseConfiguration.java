@@ -10,10 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 /**
  * Contains the dynamic configurations of a belief base.
@@ -21,25 +18,21 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Tim Janus
  */
-@Root(name="Beliefbase")
+@Root(name="beliefbase-configuration")
 public class BeliefbaseConfiguration {
-	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(BeliefbaseConfiguration.class);
-	
-	
 	@Element
 	private String name;
 	
 	/** the class name used for the revision operation */
-	@ElementList
+	@ElementList(name="change-operators")
 	private List<String> changeClassName = new LinkedList<String>();
 
 	/** the class name used for the reasoning operations */
-	@Element
+	@Element(name="reasoner-class")
 	private String reasonerClassName;
 	
 	/** the class name of the beliefbase */
-	@Element
+	@Element(name="beliefbase-class")
 	private String beliefbaseClassName;
 	
 	
@@ -51,17 +44,8 @@ public class BeliefbaseConfiguration {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static BeliefbaseConfiguration loadXml(String filename) throws IOException {
-		Serializer serializer = new Persister();
-		File source = new File(filename);
-		BeliefbaseConfiguration reval = new BeliefbaseConfiguration();
-		try {
-			reval = serializer.read(BeliefbaseConfiguration.class, source);
-		} catch (Exception e) {
-			reval.LOG.error("Something went wrong during loading of '{}': {}", filename, e.getMessage());
-			e.printStackTrace();
-		}
-		return reval;
+	public static BeliefbaseConfiguration loadXml(File source) {
+		return SerializeHelper.loadXml(BeliefbaseConfiguration.class, source);
 	}
 		
 	/** @return the class name used for the revision operation */
@@ -85,17 +69,11 @@ public class BeliefbaseConfiguration {
 	}
 	
 	public static void main(String [] args) {
-		Serializer serializer = new Persister();
 		BeliefbaseConfiguration test = new BeliefbaseConfiguration();
 		test.beliefbaseClassName = "AspBeliefbase";
 		test.changeClassName.add("ChangeOperator");
 		test.reasonerClassName = "AspReasoner";
 		test.name = "AspBeliefbase";
-		try {
-			serializer.write(test, System.out);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		SerializeHelper.outputXml(test, System.out);
 	}
 }

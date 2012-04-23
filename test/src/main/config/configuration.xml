@@ -1,7 +1,7 @@
-<Config>
-   <pluginPaths class="java.util.LinkedList">
+<config>
+   <plugins class="java.util.LinkedList">
       <string>plugins/dummy-0.0.1-SNAPSHOT.jar</string>
       <string>plugins/asp-0.0.1-SNAPSHOT.jar</string>
       <string>plugins/knowhow-0.0.1-SNAPSHOT.jar</string>
-   </pluginPaths>
-</Config>
+   </plugins>
+</config>

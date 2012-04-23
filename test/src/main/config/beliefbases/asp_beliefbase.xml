@@ -1,9 +1,9 @@
-<Beliefbase>
+<beliefbase-configuration>
    <name>Answer-Set Belief base</name>
-   <changeClassName class="java.util.LinkedList">
+   <change-operators class="java.util.LinkedList">
       <string>angerona.fw.logic.asp.AspRevision</string>
       <string>angerona.fw.logic.asp.AspExpansion</string>
-   </changeClassName>
-   <reasonerClassName>angerona.fw.logic.asp.AspReasoner</reasonerClassName>
-   <beliefbaseClassName>angerona.fw.logic.asp.AspBeliefbase</beliefbaseClassName>
-</Beliefbase>
+   </change-operators>
+   <reasoner-class>angerona.fw.logic.asp.AspReasoner</reasoner-class>
+   <beliefbase-class>angerona.fw.logic.asp.AspBeliefbase</beliefbase-class>
+</beliefbase-configuration>

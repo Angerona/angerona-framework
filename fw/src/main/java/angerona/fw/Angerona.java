@@ -26,6 +26,7 @@ import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfiguration;
 import angerona.fw.serialize.BeliefbaseConfiguration;
 import angerona.fw.serialize.GlobalConfiguration;
+import angerona.fw.serialize.SerializeHelper;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
@@ -64,13 +65,9 @@ public class Angerona {
 	
 	public static GlobalConfiguration getConfig() {
 		if(config == null) {
-			try {
-				config = GlobalConfiguration.loadXml("config/configuration.xml");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			File defConfigFile = new File("config/configuration.xml");
+			config = GlobalConfiguration.loadXml(defConfigFile);
+			
 			if(config == null)
 				config = new GlobalConfiguration();
 		}
@@ -201,11 +198,9 @@ public class Angerona {
 	 */
 	private class AgentConfigLoader implements FileLoader {
 		@Override
-		public void load(File file, Angerona container) throws ParserConfigurationException, SAXException, IOException {
-			List<AgentConfiguration> acs = AgentConfiguration.loadXml(file.getAbsolutePath());
-			for(AgentConfiguration ac : acs) {
-				container.agentConfigurations.put(ac.getName(), ac);
-			}
+		public void load(File file, Angerona container) {
+			AgentConfiguration ac = SerializeHelper.loadXml(AgentConfiguration.class, file);
+			container.agentConfigurations.put(ac.getName(), ac);
 		}
 	}
 	
@@ -215,8 +210,8 @@ public class Angerona {
 	 */
 	private class BeliefbaseConfigLoader implements FileLoader {
 		@Override
-		public void load(File file, Angerona container) throws ParserConfigurationException, SAXException, IOException {
-			BeliefbaseConfiguration bbc = BeliefbaseConfiguration.loadXml(file.getAbsolutePath());
+		public void load(File file, Angerona container) {
+			BeliefbaseConfiguration bbc = BeliefbaseConfiguration.loadXml(file);
 			container.beliefbaseConfigurations.put(bbc.getName(), bbc);
 		}
 	}

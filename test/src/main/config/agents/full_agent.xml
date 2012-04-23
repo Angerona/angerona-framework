@@ -1,13 +1,14 @@
-<AgentConfiguration name="Default Agent Implementation">
-	<GenerateOptionsOperator class="angerona.fw.operators.def.GenerateOptionsOperator"></GenerateOptionsOperator>
-	<FilterOperator class="angerona.fw.operators.def.IntentionUpdateOperator"></FilterOperator>
-	<Planer class="angerona.fw.operators.def.SubgoalGenerationOperator"></Planer>
-	<UpdateOperator class="angerona.fw.operators.def.UpdateBeliefsOperator"></UpdateOperator>
-	<PolicyControlOperator class="angerona.fw.operators.def.PolicyControlOperator"></PolicyControlOperator>
-	<ViolatesOperator class="angerona.fw.operators.def.ViolatesOperator"></ViolatesOperator>
+<agent-configuration>
+	<name>Full Agent Implementation</name>
+	<generate-options-class>angerona.fw.operators.def.GenerateOptionsOperator</generate-options-class>
+	<intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class>
+	<subgoal-generation-class>angerona.fw.operators.def.SubgoalGenerationOperator</subgoal-generation-class>
+	<update-beliefs-class>angerona.fw.operators.def.UpdateBeliefsOperator</update-beliefs-class>
+	<policy-control-class>angerona.fw.operators.def.PolicyControlOperator</policy-control-class>
+	<violates-class>angerona.fw.operators.def.ViolatesOperator</violates-class>
 	
-	<Components>
-		<Component class="angerona.fw.knowhow.KnowhowBase" />
-		<Component class="angerona.fw.logic.ConfidentialKnowledge" />
-	</Components>	
-</AgentConfiguration>
+	<component-classes class="java.util.LinkedList">
+		<string>angerona.fw.logic.ConfidentialKnowledge</string>
+		<string>angerona.fw.knowhow.KnowhowBase</string>
+	</component-classes>	
+</agent-configuration>

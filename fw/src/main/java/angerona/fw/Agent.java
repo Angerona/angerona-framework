@@ -154,8 +154,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		try {
 			generateOptionsOperator = pi.createGenerateOptionsOperator(ac.getGenerateOptionsOperatorClass());
-			intentionUpdateOperator = pi.createFilterOperator(ac.getFilterOperatorClass());
-			subgoalGenerationOperator = pi.createPlaner(ac.getPlanerClass());
+			intentionUpdateOperator = pi.createFilterOperator(ac.getIntentionUpdateOperatorClass());
+			subgoalGenerationOperator = pi.createPlaner(ac.getSubgoalGenerationClass());
 			changeOperator = pi.createUpdateOperator(ac.getUpdateOperatorClass());
 			policyControlOperator = pi.createPolicyControlOperator(ac.getPolicyControlOperatorClass());
 			violatesOperator = pi.createViolatesOperator(ac.getViolatesOperatorClass());

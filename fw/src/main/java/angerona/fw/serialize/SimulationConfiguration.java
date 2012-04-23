@@ -1,5 +1,6 @@
 package angerona.fw.serialize;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
@@ -122,14 +123,11 @@ public class SimulationConfiguration {
 				}
 			}
 			
-			try {
-				config = AgentConfiguration.loadXml(configFile).get(0);
-			} catch (FileNotFoundException ex) {
-				throw new ParserConfigurationException(ex.getMessage());
-			}
+			config = SerializeHelper.loadXml(AgentConfiguration.class, new File(configFile));
 			Element bel = (Element)el.getElementsByTagName("Beliefbase").item(0);			
 			fileSuffix = bel.getAttribute("fileSuffix");
-			beliefbaseConfig = BeliefbaseConfiguration.loadXml(bel.getAttribute("configuration"));
+			configFile = bel.getAttribute("configuration");
+			beliefbaseConfig = BeliefbaseConfiguration.loadXml(new File(configFile));
 		}
 
 		public BeliefbaseConfiguration getBeliefbaseConfig() {
