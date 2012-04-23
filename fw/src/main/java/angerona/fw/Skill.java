@@ -11,7 +11,8 @@ import angerona.fw.reflection.PolicyControlVisitor;
 import angerona.fw.reflection.ReasonVisitor;
 import angerona.fw.reflection.SendActionVisitor;
 import angerona.fw.reflection.UpdateBeliefbaseVisitor;
-import angerona.fw.serialize.SkillConfiguration;
+import angerona.fw.serialize.SkillConfig;
+import angerona.fw.serialize.Statement;
 
 /** A skill represents an atomic intention an agent can perform */
 public class Skill extends Intention implements Runnable {
@@ -23,11 +24,11 @@ public class Skill extends Intention implements Runnable {
 	private static Logger LOG = LoggerFactory.getLogger(Skill.class);
 	
 	/** data-structure containing the configuration of the skill (set of operations) */
-	private SkillConfiguration config;
+	private SkillConfig config;
 	
 	private boolean violates = false;
 	
-	public Skill(Agent agent, SkillConfiguration config) {
+	public Skill(Agent agent, SkillConfig config) {
 		super(agent);
 		this.name = config.getName();
 		this.config = config;
@@ -50,7 +51,7 @@ public class Skill extends Intention implements Runnable {
 		Context in = ContextFactory.createContext(objectContainingContext);
 		c.attachContext("in", in);
 		
-		for(SkillConfiguration.Statement st : config.getStatements()) {
+		for(Statement st : config.getStatements()) {
 			ContextVisitor cv = null;
 			String cmd = st.getCommandoName();
 			boolean sendAction = false;

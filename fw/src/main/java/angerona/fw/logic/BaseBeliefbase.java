@@ -22,7 +22,7 @@ import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.parser.ParseException;
-import angerona.fw.serialize.BeliefbaseConfiguration;
+import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
  * Base class for every belief base used in Angerona.
@@ -141,7 +141,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public void generateOperators(BeliefbaseConfiguration bbc) throws InstantiationException, IllegalAccessException {		
+	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		reasoningOperator = pi.createReasoner(bbc.getReasonerClassName());
 		reasoningOperator.setBeliefbase(this);
@@ -180,15 +180,11 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			}
 		}
 		
-		// TODO: Think about local copies...
+		// TODO: Think about local copies and mapping of different knowledge ect.
 		BeliefUpdateParameter bup = new BeliefUpdateParameter(this, newKnowledge, env);
-		switch(updateType) {
-		case U_REVISION:
-			if(revisionOperator == null)
-				throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");;
-			revisionOperator.process(bup);
-			break;
-		}
+		if(revisionOperator == null)
+			throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");;
+		revisionOperator.process(bup);		
 	}
 	
 	/**

@@ -1,33 +1,16 @@
 package angerona.fw.internal;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import angerona.fw.Perception;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
+import angerona.fw.serialize.perception.PerceptionDO;
 
 public abstract class PerceptionFactory {
-	public List<Perception> generateFromParentElement(Element elParent, Context context) {
-		List<Perception> reval = new LinkedList<Perception>();
-		NodeList lst = elParent.getChildNodes();
-		for(int i=0; i<lst.getLength(); ++i) {
-			if(lst.item(i) instanceof Element) {
-				reval.add(generateFromElement((Element)lst.item(i), context));
-			}
-		}
-		return reval;
-	}
-	
-	public abstract Perception generateFromElement(Element elPerception, Context context);
+	public abstract Perception generateFromDataObject(PerceptionDO dataObject, Context context);
 	
 	public static String createString(String attributeValue, Context context) {
 		if(attributeValue.startsWith("$"))

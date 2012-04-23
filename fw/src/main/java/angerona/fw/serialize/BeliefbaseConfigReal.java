@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
  * @author Tim Janus
  */
 @Root(name="beliefbase-configuration")
-public class BeliefbaseConfiguration {
+public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Element
 	private String name;
 	
@@ -44,32 +44,33 @@ public class BeliefbaseConfiguration {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static BeliefbaseConfiguration loadXml(File source) {
-		return SerializeHelper.loadXml(BeliefbaseConfiguration.class, source);
+	public static BeliefbaseConfigReal loadXml(File source) {
+		return SerializeHelper.loadXml(BeliefbaseConfigReal.class, source);
 	}
 		
-	/** @return the class name used for the revision operation */
+	@Override
 	public String getRevisionClassName() {
 		// TODO support list in framework
 		return changeClassName.get(0);
 	}
 
-	/** @return the class name used for the reasoning operations */
+	@Override
 	public String getReasonerClassName() {
 		return reasonerClassName;
 	}
 	
-	/** @return the class name of the beliefbase */
+	@Override
 	public String getBeliefbaseClassName() {
 		return beliefbaseClassName;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
 	
 	public static void main(String [] args) {
-		BeliefbaseConfiguration test = new BeliefbaseConfiguration();
+		BeliefbaseConfigReal test = new BeliefbaseConfigReal();
 		test.beliefbaseClassName = "AspBeliefbase";
 		test.changeClassName.add("ChangeOperator");
 		test.reasonerClassName = "AspReasoner";

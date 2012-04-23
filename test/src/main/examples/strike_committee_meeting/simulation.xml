@@ -1,26 +1,41 @@
-<AngeronaSimulation name="Strike committee meeting">
-	<Agent 	name="Employee"
-		configuration="config/agents/default_agent.xml" >
-		<Skill file="config/skills/QueryAnswer.xml" />
-		<Beliefbase	fileSuffix="employee"
-					configuration="config/beliefbases/dummy_beliefbase.xml" />
-					
-		<AdditionalData>
-			<Confidential>
-			(Boss, attend_scm, {true})
-			</Confidential>
-		</AdditionalData>
-		
-	</Agent>
+<!--  
+<Flow>
+	<Query sender="Boss" receiver="Employee" question="attends" />
+	<Query sender="Boss" receiver="Employee" question="has_time" /> 
+</Flow>
+-->
+<simulation-configuration>
+	<name>Strike Committee Meeting (Dummy Logic)</name>
 	
-	<Agent 	name="Boss" 
-		configuration="config/agents/default_agent.xml" >
-		<Beliefbase	fileSuffix="boss"
-					configuration="config/beliefbases/dummy_beliefbase.xml" />	
-	</Agent>
-
-	<Flow>
-		<Query sender="Boss" receiver="Employee" question="attends" />
-		<Query sender="Boss" receiver="Employee" question="has_time" /> 
-	</Flow>
-</AngeronaSimulation>
+	<agent-instance>
+		<name>Employee</name>
+		<default-suffix>employee</default-suffix>
+	
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/default_agent.xml</source>
+        </config>
+    
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/dummy_beliefbase.xml</source>
+        </beliefbase-config>
+        
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+               <source>config/skills/QueryAnswer.xml</source>
+		</skill>
+		
+		<data key="Confidential">(Boss, attend_scm, {true})</data>
+	</agent-instance>
+	
+	<agent-instance>
+		<name>Boss</name>
+		<default-suffix>boss</default-suffix>
+	
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/default_agent.xml</source>
+        </config>
+    
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/dummy_beliefbase.xml</source>
+        </beliefbase-config>
+	</agent-instance>
+</simulation-configuration>

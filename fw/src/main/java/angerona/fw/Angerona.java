@@ -23,8 +23,8 @@ import angerona.fw.report.Report;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 import angerona.fw.report.ReportPoster;
-import angerona.fw.serialize.AgentConfiguration;
-import angerona.fw.serialize.BeliefbaseConfiguration;
+import angerona.fw.serialize.AgentConfigReal;
+import angerona.fw.serialize.BeliefbaseConfigReal;
 import angerona.fw.serialize.GlobalConfiguration;
 import angerona.fw.serialize.SerializeHelper;
 import angerona.fw.serialize.SimulationConfiguration;
@@ -199,7 +199,7 @@ public class Angerona {
 	private class AgentConfigLoader implements FileLoader {
 		@Override
 		public void load(File file, Angerona container) {
-			AgentConfiguration ac = SerializeHelper.loadXml(AgentConfiguration.class, file);
+			AgentConfigReal ac = SerializeHelper.loadXml(AgentConfigReal.class, file);
 			container.agentConfigurations.put(ac.getName(), ac);
 		}
 	}
@@ -211,7 +211,7 @@ public class Angerona {
 	private class BeliefbaseConfigLoader implements FileLoader {
 		@Override
 		public void load(File file, Angerona container) {
-			BeliefbaseConfiguration bbc = BeliefbaseConfiguration.loadXml(file);
+			BeliefbaseConfigReal bbc = BeliefbaseConfigReal.loadXml(file);
 			container.beliefbaseConfigurations.put(bbc.getName(), bbc);
 		}
 	}
@@ -224,10 +224,8 @@ public class Angerona {
 	private class SimulationConfigLoader implements FileLoader {
 		@Override
 		public void load(File file, Angerona container) throws ParserConfigurationException, SAXException, IOException {
-			List<SimulationConfiguration> scs = SimulationConfiguration.loadXml(file.getAbsolutePath());
-			for(SimulationConfiguration sc : scs) {
-				container.simulationConfigurations.put(sc.getName(), sc);
-			}
+			SimulationConfiguration sc = SimulationConfiguration.loadXml(file);
+			container.simulationConfigurations.put(sc.getName(), sc);
 		}
 	}
 	
@@ -244,10 +242,10 @@ public class Angerona {
 	private Set<String> simulationFolders = new HashSet<String>();
 	
 	/** map containing all loaded Agent Configurations ordered by name */
-	private Map<String, AgentConfiguration> agentConfigurations = new HashMap<String, AgentConfiguration>();
+	private Map<String, AgentConfigReal> agentConfigurations = new HashMap<String, AgentConfigReal>();
 	
 	/** map containing all loaded Beliefbase Configurations ordered by name */
-	private Map<String, BeliefbaseConfiguration> beliefbaseConfigurations = new HashMap<String, BeliefbaseConfiguration>();
+	private Map<String, BeliefbaseConfigReal> beliefbaseConfigurations = new HashMap<String, BeliefbaseConfigReal>();
 	
 	/** map containing all loaded Simulation Configurations ordered by name */
 	private Map<String, SimulationConfiguration> simulationConfigurations = new HashMap<String, SimulationConfiguration>();
@@ -328,7 +326,7 @@ public class Angerona {
 		bootstrapDone = true;
 	}
 	
-	public AgentConfiguration getAgentConfiguration(String name) {
+	public AgentConfigReal getAgentConfiguration(String name) {
 		return agentConfigurations.get(name);
 	}
 	
@@ -336,7 +334,7 @@ public class Angerona {
 		return beliefbaseConfigurations.keySet();
 	}
 	
-	public BeliefbaseConfiguration getBeliefbaseConfiguration(String name) {
+	public BeliefbaseConfigReal getBeliefbaseConfiguration(String name) {
 		return beliefbaseConfigurations.get(name);
 	}
 	
@@ -376,7 +374,7 @@ public class Angerona {
 			return;
 		for(File actFile : files) {
 			try {
-				if(actFile.isFile())
+				if(actFile.isFile() && actFile.getPath().endsWith("xml"))
 					loader.load(actFile, this);
 				else if(actFile.isDirectory())
 					forAllFilesIn(actFile.getAbsolutePath(), loader);

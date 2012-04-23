@@ -1,30 +1,29 @@
-<AngeronaSimulation name="Cleaner Robot">
-	<Agent 	name="Cleaner"
-		configuration="config/agents/knowhow_agent.xml" >
-		<Skill file="config/skills/QueryAnswer.xml" />
-        <!-- <Skill file="config/skills/RevisionRequest.xml" /> -->
-		<Beliefbase	fileSuffix="cleaner"
-					configuration="config/beliefbases/asp_beliefbase.xml" />
-		<Desires>
-			<Desire>attend_scm</Desire>
-		</Desires>	
+<simulation-configuration>
+	<name>Cleaner Robot</name>
+	
+	<agent-instance>
+		<name>Employee</name>
+		<default-suffix>cleaner</default-suffix>
+	
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/knowhow_agent.xml</source>
+        </config>
+    
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/asp_beliefbase.xml</source>
+        </beliefbase-config>
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+               <source>config/skills/QueryAnswer.xml</source>
+		</skill>
 		
-		<AdditionalData>
-			<KnowHow>
-			cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full
+		<desire>attend_scm</desire>
+		<data key="KnowHow">
+            cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full
 			cleaned_hallway, (at_hallway, vacuumed_hallway), bag_empty
 			cleaned_lounge, ordered_robotxy_to_clean_lounge, robotxy_available
 			cleaned_lounge, (at_lounge, free_lounge, vacuumed_lounge), bag_empty
 			free_lounge, people_sent_away, at_lounge
-			</KnowHow>
-		</AdditionalData>	
-	</Agent>
-	
-	<Flow>
-		<!-- 
-		<RevisionRequest sender="Employee" receiver="Boss" sentence="excused" />
-		<Query sender="Boss" receiver="Employee" question="attends" />
-		<Query sender="Boss" receiver="Employee" question="has_time" /> 
-		-->
-	</Flow>
-</AngeronaSimulation>
+		</data>
+	</agent-instance>
+</simulation-configuration>
+

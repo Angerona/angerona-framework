@@ -26,7 +26,7 @@ import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
-import angerona.fw.serialize.BeliefbaseConfiguration;
+import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
  * This class collects all the implementation of the plugins and gives the user the ability to dynamically
@@ -324,7 +324,7 @@ public class PluginInstantiator {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseBeliefbase createBeliefbase(BeliefbaseConfiguration config) throws InstantiationException, IllegalAccessException {
+	public BaseBeliefbase createBeliefbase(BeliefbaseConfig config) throws InstantiationException, IllegalAccessException {
 		if(config == null)
 			throw new IllegalArgumentException("Beliefbase configuration must not null");
 		

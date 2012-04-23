@@ -8,11 +8,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.beenuts.ap.AgentProcess;
 import net.sf.beenuts.apr.APR;
@@ -20,7 +17,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
@@ -34,11 +30,12 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
 import angerona.fw.report.ReportPoster;
+import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.serialize.perception.PerceptionDO;
 
 /**
  * A simulation environment for Angerona. This is actually only used for some functional tests.
- * TODO: Extend the functionality.
  * @author Tim Janus
  */
 public class AngeronaEnvironment extends APR implements ReportPoster {
@@ -161,7 +158,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	 * Loads a simulation from the given filename
 	 * @param filename	name of the xml file containing the configuration of the simulation.
 	 * @param startImmediately	flag indicating if the simulation defined in the file should be started
-	 * 							immediatley after loading the file.
+	 * 							Immediately after loading the file.
 	 * @return the loaded simulation configuration if no error occurred, null otherwise.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
@@ -169,20 +166,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	public SimulationConfiguration loadSimulation(String filename, boolean startImmediately) throws FileNotFoundException, IOException {
 		SimulationConfiguration config = null;
 		
-		try {
-			config = SimulationConfiguration.loadXml(filename).get(0);
-			
-		} catch (ParserConfigurationException e) {
-			config = null;
-			LOG.error("Cannot start simulation, something went wrong during xml parsing: " + e.getMessage());
-			e.printStackTrace();
-		} catch (SAXException e) {
-			config = null;
-			LOG.error("Cannot load simulation, something went wrong during xml parsing: " + e.getMessage());
-			e.printStackTrace();
-		} 
-		
-		config.getName();
+		config = SimulationConfiguration.loadXml(new File(filename));	
 		
 		if(config != null && startImmediately) {
 			File f = new File(filename);
@@ -205,7 +189,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		tick = 0;
 		String errorOutput = "";
 		try {
-			for(SimulationConfiguration.AgentInstance ai : config.getAgents()) {
+			for(AgentInstance ai : config.getAgents()) {
 				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
 				entities.put(highLevelAg.getGUID(), highLevelAg);
 				
@@ -246,7 +230,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				
 								
 				highLevelAg.setBeliefs(world, views);		
-				highLevelAg.addSkillsFromConfig(ai.getSkillConfig());
+				highLevelAg.addSkillsFromConfig(ai.getSkills());
 				addAgent(highLevelAg.getAgentProcess());
 				highLevelAg.getDesires().addAll(ai.getDesires());
 				highLevelAg.initComponents(ai.getAdditionalData());
@@ -306,10 +290,16 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 			}
 		}
 		
-		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
+		/** TODO Readd
 		List<Perception> initPercepts = df.generateFromParentElement(config.getFlowElement(), null);
 		for(Perception p : initPercepts) {
 			this.sendAction(p.getReceiverId(), p);
+		}
+		*/
+		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
+		for(PerceptionDO p : config.getPerceptions()) {
+			Perception percept = df.generateFromDataObject(p, null);
+			this.sendAction(percept.getReceiverId(), percept);
 		}
 		return ready = true;
 	}
@@ -331,7 +321,10 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				agentMap.get(name).perceive(action);
 			}
 		} else {
-			agentMap.get(agentName).perceive(action);
+			if(!agentMap.containsKey(agentName))
+				LOG.warn("Action was not send, agent '{}' was not found in environment.", agentName);
+			else
+				agentMap.get(agentName).perceive(action);
 		}
 	}
 

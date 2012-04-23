@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import angerona.fw.error.InvokeException;
-import angerona.fw.serialize.SkillConfiguration;
+import angerona.fw.serialize.Statement;
 
 /**
  * @author Tim Janus
@@ -129,7 +129,7 @@ public class Context {
 	 * @param st		data strucuture containing datas about parameters and return types of the invoked visitor (method)
 	 * @throws InvokeException
 	 */
-	public void Invoke(ContextVisitor visitor, SkillConfiguration.Statement st) throws InvokeException {
+	public void Invoke(ContextVisitor visitor, Statement st) throws InvokeException {
 		if(visitor == null)
 			throw new IllegalArgumentException("The visitor must not be 'null'");
 		visitor.run(st, this);

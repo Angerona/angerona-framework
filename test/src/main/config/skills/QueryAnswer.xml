@@ -1,18 +1,4 @@
-<!--  -->
-<Skill name="QueryAnswer">
-	<Commandos>	
-		<!-- Reason the truth answer -->
-		<Reason beliefbase="$world" 
-				formula="$in.question" 
-				out="answer" />
-		
-		<!-- Run policy control on the answer and change it if it invalids confidentiality -->
-		<PolicyControl 	subjectId="$in.senderId" 
-						question="$in.question"
-						truthAnswer="$in.answer"
-						out="realAnswer" />
-		
-		<!-- Communicate the answer through the environment to the query sender -->
+<!--  
 		<SendAction out="answerAction" >
 				<Answer sender="$name"
 						receiver="$in.senderId"
@@ -20,5 +6,29 @@
 						answer="$in.realAnswer"
 				/>
 		</SendAction>
-	</Commandos>
-</Skill>
+-->	
+<skill>
+   <name>QueryAnswer</name>
+   <statement>
+      <name>Reason</name>
+      <param key="beliefbase">$world</param>
+      <param key="sentence">$in.question</param>
+      <return-value-identifier>answer</return-value-identifier>
+   </statement>
+   <statement>
+      <name>PolicyControl</name>
+      <param key="subjectId">$in.senderId</param>
+      <param key="question">$in.question</param>
+      <param key="truthAnswer">$in.answer</param>
+      <return-value-identifier>realAnswer</return-value-identifier>
+   </statement>
+   <statement>
+      <name>SendAction</name>
+      <complex-info class="angerona.fw.serialize.perception.AnswerDO"
+      		sender="$name" receiver="$in.senderId">
+      		<question>$in.question</question>
+      		<answer>$in.realAnswer</answer>
+      </complex-info>
+      <return-value-identifier>answerAction</return-value-identifier>
+   </statement>
+</skill>

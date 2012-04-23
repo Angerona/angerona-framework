@@ -17,7 +17,7 @@ import org.simpleframework.xml.Root;
  * @author Tim Janus
  */
 @Root(name="agent-configuration")
-public class AgentConfiguration {
+public class AgentConfigReal implements AgentConfig{
 	
 	/** String with name of this agent configuration */
 	@Element
@@ -50,51 +50,52 @@ public class AgentConfiguration {
 	@ElementList(name="component-classes")
 	private List<String> componentClasses = new LinkedList<String>();
 
-	public static AgentConfiguration loadXml(File file) throws IOException {
-		return SerializeHelper.loadXml(AgentConfiguration.class, file);
+	public static AgentConfigReal loadXml(File file) throws IOException {
+		return SerializeHelper.loadXml(AgentConfigReal.class, file);
 	}
 
-	/** @return String identifying the GenerateOptions Operator class name */
+	@Override
 	public String getGenerateOptionsOperatorClass() {
 		return generateOptionsOperatorClass;
 	}
 
-	/** @return String identifying the Filter Operator class name */
+	@Override
 	public String getIntentionUpdateOperatorClass() {
 		return intentionUpdateOperatorClass;
 	}
 
-	/** @return String identifying the Violates Operator class name */
+	@Override
 	public String getViolatesOperatorClass() {
 		return violatesOperatorClass;
 	}
 
-	/** @return String identifying the Policy-Control Operator class name */
+	@Override
 	public String getPolicyControlOperatorClass() {
 		return policyControlOperatorClass;
 	}
 
-	/** @return String identifying the Update Operator class name */
+	@Override
 	public String getUpdateOperatorClass() {
 		return updateBeliefsOperatorClass;
 	}
 
-	/** @return String identifying the Planer Operator class name */
+	@Override
 	public String getSubgoalGenerationClass() {
 		return subgoalGenerationClass;
 	}
 	
-	/** @return String with name of the agent configuration */
+	@Override
 	public String getName() {
 		return name;
 	}
 	
+	@Override
 	public List<String> getComponents() {
 		return Collections.unmodifiableList(componentClasses);
 	}
 	
 	public static void main(String [] args) {
-		AgentConfiguration test = new AgentConfiguration();
+		AgentConfigReal test = new AgentConfigReal();
 		test.componentClasses.add("Knowhow");
 		test.name = "AgentName";
 		test.generateOptionsOperatorClass = "ggo";

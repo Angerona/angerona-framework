@@ -23,11 +23,11 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
-import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
+import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
@@ -38,8 +38,8 @@ import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
-import angerona.fw.serialize.AgentConfiguration;
-import angerona.fw.serialize.SkillConfiguration;
+import angerona.fw.serialize.AgentConfig;
+import angerona.fw.serialize.SkillConfig;
 
 /**
  * Implementation of an agent in the Angerona Framework.
@@ -106,7 +106,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	 * @throws AgentIdException				Is thrown if automatic and manual id assignment are mixed.
 	 * @throws AgentInstantiationException	Is thrown if the dynamic instantiation of a class fails.
 	 */
-	public Agent(AgentConfiguration ac, String name) throws AgentIdException, AgentInstantiationException {
+	public Agent(AgentConfig ac, String name) throws AgentIdException, AgentInstantiationException {
 		ctor(ac, name);
 	}
 	
@@ -140,7 +140,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	 * @param ac	The configuration of the agent
 	 * @throws AgentInstantiationException
 	 */
-	private void ctor(AgentConfiguration ac, String name) throws AgentInstantiationException {
+	private void ctor(AgentConfig ac, String name) throws AgentInstantiationException {
 		this.id = new Long(IdGenerator.generate(this));
 		context = new Context();
 		
@@ -214,8 +214,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	 * @param lst	List with all skill configurations which should be loaded
 	 * @throws AgentInstantiationException 
 	 */
-	public void addSkillsFromConfig(List<SkillConfiguration> lst) throws AgentInstantiationException {
-		for(SkillConfiguration ic : lst) {
+	public void addSkillsFromConfig(List<SkillConfig> lst) throws AgentInstantiationException {
+		for(SkillConfig ic : lst) {
 			addSkill(ic);
 		}
 	}
@@ -226,7 +226,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	 * @param skillConfig	data-structure containing all informations about the skill.
 	 * @throws AgentInstantiationException
 	 */
-	public void addSkill(SkillConfiguration skillConfig) throws AgentInstantiationException {
+	public void addSkill(SkillConfig skillConfig) throws AgentInstantiationException {
 		Skill act = new Skill(this, skillConfig);
 		if(skills.containsKey(skillConfig.getName())) {
 			throw new AgentInstantiationException("Skill with name: '" + skillConfig.getName() + "' already exists. Names of atomic Intentions / Skills must be unique.");

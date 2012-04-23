@@ -1,18 +1,40 @@
-<AngeronaSimulation name="Core-Feature Test">
-	<Agent 	name="Alice"
-		configuration="config/agents/default_agent.xml" >
-		<Skill file="config/skills/QueryAnswer.xml" />
-		<Beliefbase	fileSuffix="alice"
-					configuration="config/beliefbases/dummy_beliefbase.xml" />	
-	</Agent>
-	
-	<Agent 	name="Bob" 
-		configuration="config/agents/default_agent.xml" >
-		<Beliefbase	fileSuffix="bob"
-					configuration="config/beliefbases/dummy_beliefbase.xml" />	
-	</Agent>
+<!--  
+<Flow>
+	<Query sender="Bob" receiver="Alice" question="wannaDance" />
+</Flow>
+-->
 
-	<Flow>
-		<Query sender="Bob" receiver="Alice" question="wannaDance" />
-	</Flow>
-</AngeronaSimulation>
+<simulation-configuration>
+	<name>Core-Feature Test</name>
+	
+	<agent-instance>
+		<name>Alice</name>
+		<default-suffix>alice</default-suffix>
+	
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/default_agent.xml</source>
+        </config>
+    
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/dummy_beliefbase.xml</source>
+        </beliefbase-config>
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+               <source>config/skills/QueryAnswer.xml</source>
+		</skill>
+	</agent-instance>
+	
+	<agent-instance>
+		<name>Bob</name>
+		<default-suffix>bob</default-suffix>
+	
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/default_agent.xml</source>
+        </config>
+    
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/dummy_beliefbase.xml</source>
+        </beliefbase-config>
+	</agent-instance>
+	
+</simulation-configuration>
+

@@ -2,7 +2,7 @@ package angerona.fw.reflection;
 
 import angerona.fw.Agent;
 import angerona.fw.error.InvokeException;
-import angerona.fw.serialize.SkillConfiguration;
+import angerona.fw.serialize.Statement;
 
 /**
  * A ContextVisitor represents a method/operation which can be defined as
@@ -24,7 +24,7 @@ public abstract class ContextVisitor {
 	 * @param c reference to the context used for performing this method/operation.
 	 * @throws InvokeException
 	 */
-	public void run(SkillConfiguration.Statement statement, Context c) throws InvokeException {
+	public void run(Statement statement, Context c) throws InvokeException {
 		context = c;
 		runImpl(statement);
 	}
@@ -35,7 +35,7 @@ public abstract class ContextVisitor {
 	 * @param statement	data strucutre with parameter names etc.
 	 * @throws InvokeException
 	 */
-	protected abstract void runImpl(SkillConfiguration.Statement statement) throws InvokeException;
+	protected abstract void runImpl(Statement statement) throws InvokeException;
 	
 	/**
 	 * Helper method: Returns the parameter value given by name
@@ -67,7 +67,7 @@ public abstract class ContextVisitor {
 	 * @param out the value of the parameter.
 	 * @throws InvokeException
 	 */
-	protected void setOutName(String outName, Object out) throws InvokeException{
+	protected void setReturnValueIdentifier(String outName, Object out) throws InvokeException{
 		if(outName == null)
 			return;
 		

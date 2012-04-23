@@ -3,10 +3,15 @@ package angerona.fw.serialize;
 import java.io.File;
 import java.io.OutputStream;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.transform.RegistryMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import angerona.fw.serialize.transform.FolAtomTransform;
 
 /**
  * Helper class encapsulates the exception handling during xml serialization.
@@ -16,6 +21,20 @@ public class SerializeHelper {
 	/** reference to the logback logger instance */
 	private static Logger LOG = LoggerFactory.getLogger(SerializeHelper.class);
 	
+	/** the used serializer */
+	private static Serializer serializer = null;
+	
+	/**
+	 * Initialize the SerializeHelper
+	 */
+	private static void init() {
+		if(serializer == null) {
+			RegistryMatcher matcher = new RegistryMatcher();
+			matcher.bind(Atom.class, FolAtomTransform.class);
+			serializer = new Persister(matcher);
+		}
+	}
+	
 	/**
 	 * loads the xml in the given file assuming that the given class is anotated by simplexml library
 	 * @param cls		class information about the object to deserialize.
@@ -23,7 +42,7 @@ public class SerializeHelper {
 	 * @return			An instance of with the type T containing the xml data.
 	 */
 	public static <T> T loadXml(Class<T> cls, File source) {
-		Serializer serializer = new Persister();
+		init();
 		T obj = null;
 		try {
 			obj = cls.newInstance();
@@ -49,7 +68,7 @@ public class SerializeHelper {
 	 * @param destination	file referencing the destination of the xml writing.
 	 */
 	public static <T> void writeXml(T data, File destination) {
-		Serializer serializer = new Persister();
+		init();
 		try {
 			serializer.write(data, destination);
 		} catch (Exception e) {
@@ -64,7 +83,7 @@ public class SerializeHelper {
 	 * @param output	output-stream referencing the object which receives the xml output.
 	 */
 	public static<T> void outputXml(T data, OutputStream output) {
-		Serializer serializer = new Persister();
+		init();
 		try {
 			serializer.write(data, output);
 		} catch (Exception e) {
