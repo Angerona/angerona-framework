@@ -1,4 +1,4 @@
-package angerona.fw.serialize;
+package angerona.fw.serialize.internal;
 
 import java.io.File;
 import java.util.List;
@@ -8,10 +8,12 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.core.Resolve;
 
+import angerona.fw.serialize.AgentConfig;
+
 @Root(name="agent-config-file")
 public class AgentConfigImport implements AgentConfig {
 	@Element
-	protected File source;
+	private File source;
 
 	@Resolve
 	public AgentConfig substitute() throws Exception {
@@ -58,5 +60,9 @@ public class AgentConfigImport implements AgentConfig {
 		throw new IllegalStateException("Method not supported.");
 	}
 	
-	
+	public static AgentConfigImport getTestObject()  {
+		AgentConfigImport reval = new AgentConfigImport();
+		reval.source = new File("config/skills/QueryAnswer.xml");
+		return reval;
+	}
 }

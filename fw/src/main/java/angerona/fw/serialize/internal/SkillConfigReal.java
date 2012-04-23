@@ -1,4 +1,4 @@
-package angerona.fw.serialize;
+package angerona.fw.serialize.internal;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -7,6 +7,9 @@ import java.util.List;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+
+import angerona.fw.serialize.SkillConfig;
+import angerona.fw.serialize.Statement;
 
 /**
  * Contains the configuration for a Skill. It holds the

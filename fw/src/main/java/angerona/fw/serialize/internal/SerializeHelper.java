@@ -1,4 +1,4 @@
-package angerona.fw.serialize;
+package angerona.fw.serialize.internal;
 
 import java.io.File;
 import java.io.OutputStream;

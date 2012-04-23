@@ -1,6 +1,5 @@
 package angerona.fw.serialize;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,6 +13,10 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
+
+import angerona.fw.serialize.internal.AgentConfigImport;
+import angerona.fw.serialize.internal.BeliefbaseConfigImport;
+import angerona.fw.serialize.internal.SkillConfigImport;
 
 /**
  * An instance of this class represents one agent in the simulation
@@ -89,20 +92,10 @@ public class AgentInstance {
 		test.name = "Employee";
 		test.additionalData.put("confidential", "(blub, bla, TRUE)");
 		test.fileSuffix = "asp";
-		
-		AgentConfigImport ac = new AgentConfigImport();
-		ac.source = new File("full-agent.xml");
-		test.config = ac;
-		
-		BeliefbaseConfigImport bc = new BeliefbaseConfigImport();
-		bc.source = new File("asp-beliefbase.xml");
-		test.beliefbaseConfig = bc;
-		
+		test.config = AgentConfigImport.getTestObject();
+		test.beliefbaseConfig = BeliefbaseConfigImport.getTestObject();
 		test.desires.add(new Atom(new Predicate("attend_scm")));
-		
-		SkillConfigImport sk = new SkillConfigImport();
-		sk.source = new File("QueryAnswer.xml");
-		test.skillConfigs.add(sk);
+		test.skillConfigs.add(SkillConfigImport.getTestObject());
 		
 		return test;
 	}

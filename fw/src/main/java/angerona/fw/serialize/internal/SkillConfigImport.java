@@ -1,4 +1,4 @@
-package angerona.fw.serialize;
+package angerona.fw.serialize.internal;
 
 import java.io.File;
 import java.util.List;
@@ -8,11 +8,14 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.core.Resolve;
 
+import angerona.fw.serialize.SkillConfig;
+import angerona.fw.serialize.Statement;
+
 @Root(name="skill-import")
 public class SkillConfigImport implements SkillConfig {
 
 	@Element
-	protected File source;
+	private File source;
 
 	@Resolve
 	public SkillConfig substitute() throws Exception {
@@ -29,4 +32,9 @@ public class SkillConfigImport implements SkillConfig {
 		throw new IllegalStateException("Method not supported.");
 	}
 
+	public static SkillConfigImport getTestObject()  {
+		SkillConfigImport reval = new SkillConfigImport();
+		reval.source = new File("config/skills/QueryAnswer.xml");
+		return reval;
+	}
 }

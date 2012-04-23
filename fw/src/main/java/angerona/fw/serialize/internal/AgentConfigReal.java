@@ -1,4 +1,4 @@
-package angerona.fw.serialize;
+package angerona.fw.serialize.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.util.List;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+
+import angerona.fw.serialize.AgentConfig;
 
 /**
  * Contains the dynamic configurations of an agent.

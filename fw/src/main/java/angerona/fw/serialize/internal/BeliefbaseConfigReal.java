@@ -1,4 +1,4 @@
-package angerona.fw.serialize;
+package angerona.fw.serialize.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,8 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 import org.xml.sax.SAXException;
+
+import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
  * Contains the dynamic configurations of a belief base.

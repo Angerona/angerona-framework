@@ -23,11 +23,11 @@ import angerona.fw.report.Report;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 import angerona.fw.report.ReportPoster;
-import angerona.fw.serialize.AgentConfigReal;
-import angerona.fw.serialize.BeliefbaseConfigReal;
 import angerona.fw.serialize.GlobalConfiguration;
-import angerona.fw.serialize.SerializeHelper;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.serialize.internal.AgentConfigReal;
+import angerona.fw.serialize.internal.BeliefbaseConfigReal;
+import angerona.fw.serialize.internal.SerializeHelper;
 
 /**
  * Main class of Angerona manages all resources.
