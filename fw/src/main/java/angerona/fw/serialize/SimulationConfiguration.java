@@ -11,7 +11,6 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
-import angerona.fw.serialize.internal.SerializeHelper;
 import angerona.fw.serialize.perception.PerceptionDO;
 import angerona.fw.serialize.perception.QueryDO;
 

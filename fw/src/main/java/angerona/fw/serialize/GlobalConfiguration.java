@@ -13,7 +13,6 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.xml.sax.SAXException;
 
-import angerona.fw.serialize.internal.SerializeHelper;
 
 @Root(name="config")
 public class GlobalConfiguration {

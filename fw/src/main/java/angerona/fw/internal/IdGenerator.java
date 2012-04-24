@@ -5,13 +5,16 @@ import java.util.Map;
 
 
 /**
- * Used for generating unique ids for the Angerona Report-Attachment
+ * Used for generating unique ids for the Angerona Entity
  * hierarchy.
+ * @see Entity
  * @author Tim Janus
  */
 public class IdGenerator {
+	/** the start id of the counter */
 	private static long nextId = 1;
 	
+	/** a map of ids to entity references */
 	private static Map<Long, Entity> entityMap = new HashMap<Long, Entity>();
 	
 	/**

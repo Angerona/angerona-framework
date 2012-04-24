@@ -3,8 +3,9 @@ package angerona.fw.internal;
 import java.util.List;
 
 /**
- * Every object in the Angerona environment is an entity. An Agent is an entity. A Beliefbase is an entity and so on.
- * The Entity interface gives TODO
+ * Every object in the Angerona environment is an entity. 
+ * An Agent is an entity. A Beliefbase is an entity and so on.
+ * 
  * @author Tim Janus
  */
 public interface Entity {

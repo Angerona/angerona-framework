@@ -12,6 +12,16 @@ import angerona.fw.serialize.perception.CommunicationActDO;
 import angerona.fw.serialize.perception.PerceptionDO;
 import angerona.fw.serialize.perception.QueryDO;
 
+/**
+ * A factory for creating perceptions from data objects. The default
+ * implementation supports Queries and Answers.
+ * 
+ * By inherting from this class one can define more perception types
+ * in plugins.
+ * BEWARE in the actual implementation is no PerceptionFactory plugin.
+ * 
+ * @author Tim Janus
+ */
 public class DefaultPerceptionFactory extends PerceptionFactory {
 
 	@Override

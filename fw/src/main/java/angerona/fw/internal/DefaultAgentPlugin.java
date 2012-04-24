@@ -9,6 +9,12 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 @PluginImplementation
+/**
+ * The default agent plugin for the Angerona framework defines
+ * the confidential Knowledge and is part of the main-framework.
+ *  
+ * @author Tim Janus
+ */
 public class DefaultAgentPlugin implements AgentPlugin {
 
 	@Override

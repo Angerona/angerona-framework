@@ -14,9 +14,6 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
-import angerona.fw.serialize.internal.AgentConfigImport;
-import angerona.fw.serialize.internal.BeliefbaseConfigImport;
-import angerona.fw.serialize.internal.SkillConfigImport;
 
 /**
  * An instance of this class represents one agent in the simulation

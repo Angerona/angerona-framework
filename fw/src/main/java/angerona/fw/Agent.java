@@ -361,9 +361,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		if(beliefs != null) {
 			context.set("world", beliefs.getWorldKnowledge());
 			
-			// TODO: Replace
-			//context.set("confidential", beliefs.getConfidentialKnowledge());
-		
 			Map<String, BaseBeliefbase> views = beliefs.getViewKnowledge();
 			Context vc = new Context();
 			context.attachContext("views", vc);

@@ -1,12 +1,3 @@
-<!--  
-		<SendAction out="answerAction" >
-				<Answer sender="$name"
-						receiver="$in.senderId"
-						question="$in.question"
-						answer="$in.realAnswer"
-				/>
-		</SendAction>
--->	
 <skill>
    <name>QueryAnswer</name>
    <statement>
