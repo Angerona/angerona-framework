@@ -9,7 +9,7 @@ import java.util.*;
 
 
 public class Clingo extends SolverBase {
-	protected AspInterface ai = new AspInterface();
+
 	protected String path2clingo = null;
 	
 	public Clingo(String path2clingo) {
@@ -38,7 +38,7 @@ public class Clingo extends SolverBase {
 			e.printStackTrace();
 		}
 		
-		this.checkErrors(ai.getError());
+		this.checkErrors();
 		return this.buildASL(ai.getOutput());
 	}
 
@@ -52,7 +52,7 @@ public class Clingo extends SolverBase {
 			e.printStackTrace();
 		}
 		
-		this.checkErrors(ai.getError());
+		this.checkErrors();
 		return this.buildASL(ai.getOutput());
 	}
 
@@ -68,12 +68,13 @@ public class Clingo extends SolverBase {
 			e.printStackTrace();
 		}
 		
-		this.checkErrors(ai.getError());
+		this.checkErrors();
 		return this.buildASL(ai.getOutput());				
 	}
 	
 	
-	protected void checkErrors(List<String> errorOut) throws SolverException {
+	@Override
+	protected void checkErrors() throws SolverException {
 		// process possible errors and throw exception
 		if (ai.getError().size() > 0) {
 			// skip any warning, anything else is critical!
@@ -82,7 +83,7 @@ public class Clingo extends SolverBase {
 				String l = iter.next();
 				
 				if (l.startsWith("% warning"))
-					;
+					; // TODO: Find a warning policy like logging it at least.
 				
 				if (l.startsWith("ERROR:")) {
 					if (iter.hasNext())

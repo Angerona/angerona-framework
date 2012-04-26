@@ -59,10 +59,14 @@ public class AspInterface
     StreamFlusher stdoutFlusher = new StreamFlusher( process.getInputStream() );
     StreamFlusher erroutFlusher = new StreamFlusher( process.getErrorStream() );
     
-    if (input != null)
-    	stdin.write( input.getBytes() );
-    stdin.flush();
-    stdin.close();
+    try {
+    	if (input != null)
+    		stdin.write( input.getBytes() );
+    	stdin.flush();
+    	stdin.close();
+    } catch(IOException ioexec) {
+    	// ignore broken pipe and save output.
+    }
     
     stdoutFlusher.start();
     erroutFlusher.start();
@@ -75,6 +79,7 @@ public class AspInterface
     
     this.outputData = stdoutFlusher.getOutput();
     this.errorData = erroutFlusher.getOutput();
+    
   }
   
   public void executeProgram(String... args) throws IOException {

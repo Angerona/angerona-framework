@@ -17,7 +17,6 @@ import net.sf.tweety.logicprogramming.asplibrary.util.*;
 public class DLV extends SolverBase {
 
 	String path2dlv = null;
-	AspInterface ai = new AspInterface();
 	
 	public DLV(String path2dlv) {
 		this.path2dlv = path2dlv;
@@ -74,24 +73,6 @@ public class DLV extends SolverBase {
 			ret.add( new AnswerSet(lastAS,0,0));
 		
 		return ret;
-	}
-	
-	protected void checkErrors() throws SolverException {
-		// early exit
-		if (ai.getError().size() > 0) {
-			Iterator<String> iter = ai.getError().iterator();
-			while (iter.hasNext()) {
-				String l = iter.next();
-				
-				if (l.endsWith("syntax error.")) {
-					throw new SolverException(l, SolverException.SE_SYNTAX_ERROR);
-				} else if (l.endsWith("open input.")) {
-					throw new SolverException(l, SolverException.SE_CANNOT_OPEN_INPUT);
-				} else {
-					throw new SolverException(l, SolverException.SE_ERROR);
-				}
-			}
-		}
 	}
 	
 	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {

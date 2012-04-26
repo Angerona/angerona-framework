@@ -13,7 +13,6 @@ import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 public class DLVComplex extends SolverBase {
 
 	String path2dlx = null;
-	AspInterface ai = new AspInterface();
 	
 	public DLVComplex(String path2dlx) {
 		this.path2dlx = path2dlx;
@@ -66,9 +65,7 @@ public class DLVComplex extends SolverBase {
 	protected AnswerSetList processResults(List<String> result) throws SolverException {
 		AnswerSetList ret = new AnswerSetList();
 
-		if (ai.getError().size() > 0) {
-			System.out.println(ai.getError());
-		}
+		checkErrors();
 		
 		// early return
 		if (result == null)
