@@ -133,7 +133,7 @@ public class AspReasoner extends BaseReasoner {
 		else if(this.solver == SolverType.DLV)
 			solver = new DLV("tools/solver/asp/dlv/dlv");
 		else if(this.solver == SolverType.DLV_COMPLEX)
-			solver = new DLVComplex("tools/solver/asp/dlv/dl-complex");
+			solver = new DLVComplex("tools/solver/asp/dlv/dlv-complex");
 		
 		return solver.computeModels(bb.getProgram(), 10);
 	}

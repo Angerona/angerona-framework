@@ -50,7 +50,7 @@ public class AspRevision extends BaseChangeBeliefs {
 		}
 		
 		try {
-			bb.setProgram(pf.revision(bb.getProgram(), newInfo, new DLVComplex("tools/solver/asp/dlv/dl-complex")));
+			bb.setProgram(pf.revision(bb.getProgram(), newInfo, new DLVComplex("tools/solver/asp/dlv/dlv-complex")));
 		} catch (SolverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
