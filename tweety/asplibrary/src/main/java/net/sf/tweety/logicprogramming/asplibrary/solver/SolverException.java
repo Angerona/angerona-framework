@@ -12,9 +12,11 @@ public class SolverException extends Exception {
 	public static int	SE_NO_BINARY = 3;
 	public static int	SE_SYNTAX_ERROR = 4;
 	public static int	SE_CANNOT_OPEN_INPUT = 5;
+	public static int 	SE_CANNOT_FIND_SOLVER = 6;
+	public static int 	SE_PERMISSIONS = 7;
 
 	public SolverException(String text, int exceptionCode) {		
-		super();		
+		super(text);		
 		solverErrorText = text;
 		solverErrorCode = exceptionCode;
 	}

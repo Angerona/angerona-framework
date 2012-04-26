@@ -1,13 +1,16 @@
 package net.sf.tweety.logicprogramming.asplibrary.solver;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
-import net.sf.tweety.logicprogramming.asplibrary.util.*;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
-public class DLVComplex implements Solver {
+public class DLVComplex extends SolverBase {
 
 	String path2dlx = null;
 	AspInterface ai = new AspInterface();
@@ -22,8 +25,8 @@ public class DLVComplex implements Solver {
 	
 	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {
 	
+		checkSolver(path2dlx);
 		String cmdLine = path2dlx + " -- " + "-nofdcheck " + "N=" + nModels; 
-		
 		List<String> result = null;
 		
 		// try running dlv
@@ -44,7 +47,8 @@ public class DLVComplex implements Solver {
 			cmdLine += " N=" + models; 
 		
 		List<String> result = null;
-		
+
+		checkSolver(path2dlx);
 		// try running dlv
 		try {
 			ai.executeProgram(cmdLine, program );

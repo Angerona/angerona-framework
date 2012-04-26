@@ -11,10 +11,10 @@ import net.sf.tweety.logicprogramming.asplibrary.util.*;
  * wrapper class for the dlv answer set solver command line
  * utility.
  * 
- * @author Thomas Vengels
+ * @author Thomas Vengels, Tim Janus
  *
  */
-public class DLV implements Solver {
+public class DLV extends SolverBase {
 
 	String path2dlv = null;
 	AspInterface ai = new AspInterface();
@@ -96,6 +96,7 @@ public class DLV implements Solver {
 	
 	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {
 	
+		checkSolver(path2dlv);
 		String cmdLine = path2dlv + " -- " + "-N=" + nModels; 
 		
 		// try running dlv
@@ -127,7 +128,8 @@ public class DLV implements Solver {
 	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
 
 		String cmdLine = path2dlv + " -- " + "-N=" + maxModels; 
-		
+
+		checkSolver(path2dlv);
 		// try running dlv
 		try {
 			ai.executeProgram(cmdLine,s);

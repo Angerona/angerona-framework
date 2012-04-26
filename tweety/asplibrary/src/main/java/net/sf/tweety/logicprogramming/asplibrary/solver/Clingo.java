@@ -8,7 +8,7 @@ import java.io.StringReader;
 import java.util.*;
 
 
-public class Clingo implements Solver {
+public class Clingo extends SolverBase {
 	protected AspInterface ai = new AspInterface();
 	protected String path2clingo = null;
 	
@@ -31,6 +31,7 @@ public class Clingo implements Solver {
 
 	@Override
 	public AnswerSetList computeModels(Program p, int maxModels) throws SolverException {
+		checkSolver(path2clingo);
 		try {
 			ai.executeProgram( path2clingo, p.toStringFlat() );
 		} catch (Exception e) {
@@ -44,7 +45,7 @@ public class Clingo implements Solver {
 	
 	@Override
 	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
-		
+		checkSolver(path2clingo);
 		try {
 			ai.executeProgram( path2clingo, s );
 		} catch (Exception e) {
@@ -58,6 +59,7 @@ public class Clingo implements Solver {
 	
 	@Override
 	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
+		checkSolver(path2clingo);
 		try {			
 			LinkedList<String> f2 = new LinkedList<String>(files);
 			f2.addFirst(path2clingo);
