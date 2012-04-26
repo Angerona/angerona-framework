@@ -146,6 +146,23 @@
                 </resource>
               </resources>
             </configuration>
+          </execution>
+          
+          <execution>
+            <id>Copy Icon-Files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${basedir}/target/resources/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
           </execution>                             
         </executions>
       </plugin>

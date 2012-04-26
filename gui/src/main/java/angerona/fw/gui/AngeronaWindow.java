@@ -78,7 +78,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	private AngeronaWindow() {
 		DefaultResourceManager resourceManager = null;
 		try {
-			resourceManager = new DefaultResourceManager(new File(".").toURI().toURL());
+			resourceManager = new DefaultResourceManager(new File("./resources").toURI().toURL());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
