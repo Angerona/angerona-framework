@@ -50,7 +50,15 @@ public class AspRevision extends BaseChangeBeliefs {
 		}
 		
 		try {
-			bb.setProgram(pf.revision(bb.getProgram(), newInfo, new DLVComplex("tools/solver/asp/dlv/dlv-complex")));
+
+			// TODO: Find better solution replace duplo (REASONER)
+			String postfix = "";
+			postfix += System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ".exe" : "";
+			postfix += System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0 ? ".bin" : "";
+			// no postfix for unix.
+			
+			bb.setProgram(pf.revision(bb.getProgram(), newInfo, 
+					new DLVComplex("tools/solver/asp/dlv/dlv-complex"+postfix)));
 		} catch (SolverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

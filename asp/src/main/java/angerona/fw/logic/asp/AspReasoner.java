@@ -128,13 +128,17 @@ public class AspReasoner extends BaseReasoner {
 	 */
 	private List<AnswerSet> runSolver(AspBeliefbase bb) throws SolverException {
 		Solver solver = null;
+		// TODO: Find better solution replace duplo (REVISION)
+		String postfix = "";
+		postfix += System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ".exe" : "";
+		postfix += System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0 ? ".bin" : "";
+		
 		if(this.solver == SolverType.CLINGO)
 			solver = new Clingo("tools/solver/asp/clingo/clingo");
 		else if(this.solver == SolverType.DLV)
-			solver = new DLV("tools/solver/asp/dlv/dlv");
+			solver = new DLV("tools/solver/asp/dlv/dlv"+postfix);
 		else if(this.solver == SolverType.DLV_COMPLEX)
-			solver = new DLVComplex("tools/solver/asp/dlv/dlv-complex");
-		
+			solver = new DLVComplex("./tools/solver/asp/dlv/dlv-complex"+postfix);
 		return solver.computeModels(bb.getProgram(), 10);
 	}
 
