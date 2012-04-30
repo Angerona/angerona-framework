@@ -31,6 +31,7 @@ public class PolicyControlOperator extends BasePolicyControlOperator {
 		AnswerValue newAnswer = aa.getAnswerExtended();
 		String id = param.getPolicyProofer().getName();
 		
+		boolean injured = false;
 		if(ct != null) {
 			if(ct.contains(aa)) {
 				LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
@@ -45,14 +46,15 @@ public class PolicyControlOperator extends BasePolicyControlOperator {
 					newAnswer = AnswerValue.AV_UNKNOWN;
 				}
 				
+				injured = true;
 				report("Policy of '" + id + "'injured by: '" + ct + "' and answer: '" + aa.getAnswerExtended() + 
-						"' using '"+newAnswer+"' as answer.", param.getPolicyProofer());
+						"' lying using '"+newAnswer+"' as answer.", param.getPolicyProofer());
 			}
 		}
 		
-		report("No policy injured.", param.getPolicyProofer());
+		if(!injured)
+			report("No policy injured.", param.getPolicyProofer());
 		return new AngeronaAnswer(aa.getKnowledgeBase(), aa.getQuery(), newAnswer);
-		
 	}
 	
 }

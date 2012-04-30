@@ -27,16 +27,16 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 			if(param.getPlan().peekStack(i).isAtomic()) {
 				Intention intention = param.getPlan().peekStack(i);
 				intention.setRealRun(false);
-				report("Performing dry-run of atomic-action: '"+intention+"'", ag);
+				report("Performing mental-action applying: '"+intention+"'", ag);
 				intention.run();
 				Skill sk = (Skill)intention;
 				if(!sk.violates()) {
-					report("Next atomic step selected: '" + sk.getName() + "'", ag);
+					report("Mental action successfull, using '" + sk.getName() + "' as next atomic action.", ag);
 					return intention;
 				}
 			}
 		}
-		report("Cannot find next atomic step.", ag);
+		report("No valid next atomic step candidate found.", ag);
 		return null;
 	}
 

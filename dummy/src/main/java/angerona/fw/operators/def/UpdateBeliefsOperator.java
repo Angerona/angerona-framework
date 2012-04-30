@@ -33,10 +33,11 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		LOG.info("Run Default-Update-Beliefs-Operator");
 		Beliefs reval = param.getAgent().getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
+		String out = "Update-Beliefs: ";
 		
 		if(param.getPerception() instanceof Answer) {
 			Answer naa = (Answer)param.getPerception();
-			String out = id + " Update-NA: Answer ";
+			out += "Answer ";
 			out += (naa.getSenderId().compareTo(id) == 0 ? "as sender (view)" : "as receiver (world)");
 			
 			Set<FolFormula> knowledge = new HashSet<FolFormula>();
@@ -58,8 +59,8 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			report(out, bb);
 		} else if(param.getPerception() instanceof Query) {
 			Query naq = (Query)param.getPerception();
-			String out = id + " Update-NA: Query ";
-			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (nonsense)" : "as receiver (view)");
+			out += "Query ";
+			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (might be an error)" : "as receiver (view)");
 			
 			report(out, param.getAgent());
 		} else {

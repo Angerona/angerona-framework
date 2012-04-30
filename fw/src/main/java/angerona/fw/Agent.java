@@ -261,9 +261,10 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		// Deliberation:
 		Set<Formula> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
 		if(!desires.equals(options)) {
-			desires.clear();
-			desires.addAll(options);
-			Angerona.getInstance().report("Desires of Agent '" + getName() + "' updated.", generateOptionsOperator, desires);
+			options.remove(desires);
+			if(options.size() == 1)
+				addDesire(options.iterator().next());
+			addDesires(options);
 		}
 		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		
@@ -384,15 +385,15 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	public boolean addDesire(Formula desire) {
 		boolean reval = this.desires.add(desire);
 		if(reval) {
-			Angerona.getInstance().report("Desires changed.", this.getEnvironment(), this.desires);
+			Angerona.getInstance().report("New desire: " + desire.toString(), this.getEnvironment(), this.desires);
 		}
 		return reval;
 	}
 	
-	public boolean addDesires(List<FolFormula> list) {
-		boolean reval = list.addAll(list);
+	public boolean addDesires(Set<Formula> set) {
+		boolean reval = this.desires.addAll(set);
 		if(reval) {
-			Angerona.getInstance().report("Desires changed.", this.getEnvironment(), this.desires);
+			Angerona.getInstance().report("New desires: " + set.toString(), this.getEnvironment(), this.desires);
 		}
 		return reval;
 	}
@@ -400,7 +401,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	public boolean removeDesire(Formula desire) {
 		boolean reval = this.desires.remove(desire);
 		if(reval) {
-			Angerona.getInstance().report("Desires changed.", this.getEnvironment(), this.desires);
+			Angerona.getInstance().report("Removed desire: " + desire.toString(), this.getEnvironment(), this.desires);
 		}
 		return reval;
 	}
@@ -423,5 +424,10 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	@Override
 	public List<Long> getChilds() {
 		return childrenIds;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getName();
 	}
 }

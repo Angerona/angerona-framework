@@ -270,7 +270,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		// report the initialized data of the agent to the report system.
 		for(String agName : agentMap.keySet()) {
 			Agent agent = getAgentByName(agName);
-			Angerona.getInstance().report("Agent: '" + agent.getName()+"' created.", this);
+			Angerona.getInstance().report("Agent: '" + agent.getName()+"' created.", this, agent);
 			
 			Angerona.getInstance().report("Desires Set of '" + agent.getName() + "' created.", this, agent.getDesires());
 			

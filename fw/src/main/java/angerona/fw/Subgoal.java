@@ -19,7 +19,7 @@ public class Subgoal extends Intention {
 	 * the correct actions
 	 * @author Tim Janus
 	 */
-	private class StackElement {
+	protected class StackElement {
 		private Intention intention;
 		
 		private Object context;
@@ -167,9 +167,6 @@ public class Subgoal extends Intention {
 		
 		if(parent != null && stacks.isEmpty())
 			parent.onSubgoalFinished(this);
-		else if(this instanceof MasterPlan) {
-			Angerona.getInstance().report("Step on plan executed, plan updated.", getAgent().getEnvironment(), (MasterPlan)this);
-		}
 	}
 	
 	@Override
