@@ -74,9 +74,6 @@ public class AgentView extends BaseView implements NavigationUser, ReportListene
 			addWlComponent(actComp);
 		}
 		
-		PlanView pc = AngeronaWindow.createBaseView(PlanView.class, agent.getPlan());
-		addWlComponent(pc);
-		
 		for(AgentComponent ac : agent.getComponents()) {
 			BaseView view = AngeronaWindow.getInstance().createViewForAgentComponent(ac);
 			if(view != null) {
@@ -91,11 +88,6 @@ public class AgentView extends BaseView implements NavigationUser, ReportListene
 	private void addWlComponent(BaseView bc) {
 		ftp.addWlComponent(bc);
 		views.add(bc);
-	}
-
-	@Override
-	public String getComponentTypeName() {
-		return "Default Agent-Component";
 	}
 
 	@Override

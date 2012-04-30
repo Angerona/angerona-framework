@@ -44,12 +44,6 @@ public class KnowhowView extends BaseView implements ReportListener{
 	}
 	
 	@Override
-	public String getComponentTypeName() {
-		// TODO Auto-generated method stub
-		return "KnowHow";
-	}
-
-	@Override
 	public void setObservationObject(Object obj) {
 		if(!(obj instanceof KnowhowBase)) {
 			throw new IllegalArgumentException();

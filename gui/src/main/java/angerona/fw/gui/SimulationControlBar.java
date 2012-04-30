@@ -136,9 +136,4 @@ public class SimulationControlBar extends BaseView {
 	public AngeronaEnvironment getEnvironment() {
 		return environment;
 	}
-	
-	@Override
-	public String getComponentTypeName() {
-		return "Simulation Control-Bar";
-	}
 }

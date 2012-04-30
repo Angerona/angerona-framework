@@ -12,7 +12,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.AgentComponent;
+import angerona.fw.BaseAgentComponent;
 import angerona.fw.knowhow.parser.KnowhowParser;
 import angerona.fw.knowhow.parser.ParseException;
 
@@ -21,7 +21,7 @@ import angerona.fw.knowhow.parser.ParseException;
  * The concept of Knowhow was defined by Thimm, Krümpelmann 2009.
  * @author Tim Janus
  */
-public class KnowhowBase extends AgentComponent {
+public class KnowhowBase extends BaseAgentComponent {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(KnowhowBase.class);

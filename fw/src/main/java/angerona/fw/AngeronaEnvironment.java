@@ -283,8 +283,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				Angerona.getInstance().report("View->'" + name +"' Beliefbase of '" + agent.getName() + "' created.", this, actView);
 			}
 			
-			Angerona.getInstance().report("Master-Plan of '" + agent.getName() + "' created.", this, agent.getPlan());
-			
 			for(AgentComponent ac : agent.getComponents()) {
 				Angerona.getInstance().report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + agent.getName() + "' created.", this, ac);
 			}

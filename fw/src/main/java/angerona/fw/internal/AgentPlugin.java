@@ -2,16 +2,16 @@ package angerona.fw.internal;
 
 import java.util.List;
 
-import angerona.fw.AgentComponent;
-
 import net.xeoh.plugins.base.Plugin;
+import angerona.fw.AgentComponent;
+import angerona.fw.BaseAgentComponent;
 
 /**
  * An Agent plugin provides custom AgentComponents. An 
  * AgentComponent is an extension of the agent data-component
  * like the ConfidentialKnowledge or KnowHow.
  * 
- * @see AgentComponent
+ * @see BaseAgentComponent
  * @author Tim Janus
  */
 public interface AgentPlugin extends Plugin{

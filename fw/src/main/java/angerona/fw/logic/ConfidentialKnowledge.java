@@ -13,12 +13,12 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.AgentComponent;
+import angerona.fw.BaseAgentComponent;
 /**
  * Data-Component of an agent containing a set of personal confidential targets.
  * @author Tim Janus
  */
-public class ConfidentialKnowledge extends AgentComponent {
+public class ConfidentialKnowledge extends BaseAgentComponent {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ConfidentialKnowledge.class);

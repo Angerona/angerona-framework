@@ -9,5 +9,6 @@
 	
 	<component-classes class="java.util.LinkedList">
 		<string>angerona.fw.logic.ConfidentialKnowledge</string>
+        <string>angerona.fw.MasterPlan</string>
 	</component-classes>	
 </agent-configuration>

@@ -49,8 +49,6 @@ public abstract class BaseView extends WlComponent {
 		this.title = "TBD";
 	}
 	
-	public abstract String getComponentTypeName();
-	
 	/**
 	 * This method returns the type of object which is shown by this component
 	 * @return 	null if the component is not bounded to a special type (like a beliefbase type (asp graphs)) otherwise the class

@@ -3,24 +3,18 @@ package angerona.fw;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
-import ch.qos.logback.core.db.dialect.MsSQLDialect;
-
-import net.sf.tweety.Formula;
-import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 
-public class MasterPlan extends Subgoal implements EntityAtomic {
+public class MasterPlan extends Subgoal implements AgentComponent {
 
 	private Long id;
 	
 	private Long parent;
 	
-	public MasterPlan(Agent agent) {
-		super(agent);
+	public MasterPlan() {
+		super((Agent)null);
 		id = IdGenerator.generate(this);
-		parent = agent.getGUID();
 	}
 	
 	public MasterPlan(MasterPlan plan) {
@@ -54,5 +48,16 @@ public class MasterPlan extends Subgoal implements EntityAtomic {
 	@Override
 	public Object clone() {
 		return new MasterPlan(this);
+	}
+
+	@Override
+	public void init(Map<String, String> additionalData) {
+		// nothing...
+	}
+
+	@Override
+	public void setParent(Long id) {
+		parent = id;
+		agent = (Agent)IdGenerator.getEntityWithId(id);
 	}
 }

@@ -3,10 +3,10 @@ package angerona.fw.internal;
 import java.util.LinkedList;
 import java.util.List;
 
-import angerona.fw.AgentComponent;
-import angerona.fw.logic.ConfidentialKnowledge;
-
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import angerona.fw.AgentComponent;
+import angerona.fw.MasterPlan;
+import angerona.fw.logic.ConfidentialKnowledge;
 
 @PluginImplementation
 /**
@@ -21,6 +21,7 @@ public class DefaultAgentPlugin implements AgentPlugin {
 	public List<Class<? extends AgentComponent>> getAgentComponents() {
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
 		reval.add(ConfidentialKnowledge.class);
+		reval.add(MasterPlan.class);
 		return reval;
 	}
 

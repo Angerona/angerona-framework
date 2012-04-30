@@ -128,9 +128,4 @@ public class ReportView extends BaseView implements ReportListener {
 		
 		return false;
 	}
-	
-	@Override
-	public String getComponentTypeName() {
-		return "Report-List Component";
-	}
 }

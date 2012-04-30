@@ -8,6 +8,7 @@ import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.internal.Entity;
+import angerona.fw.logic.ConfidentialKnowledge;
 
 public class PlanView extends ListViewColored<MasterPlan> {
 
@@ -54,8 +55,7 @@ public class PlanView extends ListViewColored<MasterPlan> {
 	}
 
 	@Override
-	public String getComponentTypeName() {
-		return "Agent-Plan";
+	public Class<?> getObservationObjectType() {
+		return MasterPlan.class;
 	}
-
 }

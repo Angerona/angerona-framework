@@ -76,9 +76,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	/** mapping atomic intentions names to the intention references defining the skills of the agent. */
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
 	
-	/** reference to the actual goal of the agent */
-	private MasterPlan masterPlan;
-	
 	/** Reference to the used generate options operator. */
 	BaseGenerateOptionsOperator generateOptionsOperator;
 	
@@ -145,7 +142,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		context = new Context();
 		
 		desires = new Desires(this.id);
-		masterPlan = new MasterPlan(this);
 		
 		agentProcess = new AngeronaAgentProcess(name);
 		agentProcess.setAgentArchitecture(this);
@@ -197,10 +193,11 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		return reval;
 	}
 	
-	public EntityAtomic getComponent(Class<? extends AgentComponent> cls) {
+	@SuppressWarnings("unchecked")
+	public <T extends AgentComponent> T getComponent(Class<? extends T> cls) {
 		for(EntityAtomic ea : customComponents) {
 			if(ea.getClass().equals(cls))
-				return ea;
+				return (T)ea;
 		}
 		return null;
 	}
@@ -269,13 +266,18 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		
 		// Means-end-reasoning:
-		while(atomic == null) {
-			atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
-			
-			if(atomic == null) {
-				if(!subgoalGenerationOperator.process(new SubgoalGenerationParameter(masterPlan, allSkills)))
-					break;
+		MasterPlan masterPlan = getComponent(MasterPlan.class);
+		if(masterPlan != null) {
+			while(atomic == null) {
+				atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
+				
+				if(atomic == null) {
+					if(!subgoalGenerationOperator.process(new SubgoalGenerationParameter(masterPlan, allSkills)))
+						break;
+				}
 			}
+		} else {
+			LOG.error("Cannot perform Agent-cylce: agent missing Plan-Component");
 		}
 	
 		if(atomic != null) {
@@ -404,10 +406,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 			Angerona.getInstance().report("Removed desire: " + desire.toString(), this.getEnvironment(), this.desires);
 		}
 		return reval;
-	}
-
-	public MasterPlan getPlan() {
-		return masterPlan;
 	}
 	
 	@Override

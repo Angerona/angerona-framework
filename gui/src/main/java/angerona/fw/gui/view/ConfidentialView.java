@@ -40,11 +40,6 @@ public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
 	}
 
 	@Override
-	public String getComponentTypeName() {
-		return "Confidential Knowledge";
-	}
-
-	@Override
 	public Class<?> getObservationObjectType() {
 		return ConfidentialKnowledge.class;
 	}

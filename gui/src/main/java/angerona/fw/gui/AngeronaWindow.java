@@ -30,7 +30,6 @@ import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.view.BaseView;
-import angerona.fw.gui.view.ConfidentialView;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
 import angerona.fw.internal.Entity;
@@ -125,11 +124,6 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		angerona.bootstrap();
 		
 		angerona.addErrorListener(this);
-		
-		// TODO: Implement internal plugin
-		viewMap.put("Report-View", ReportView.class);
-		viewMap.put("Resourcen-View", ResourcenView.class);
-		viewMap.put("Confidential-Knowledge", ConfidentialView.class);
 		
 		window.addWlComponent(createBaseView(ReportView.class, null), BorderLayout.CENTER);
 		window.addWlComponent(createBaseView(ResourcenView.class, null), BorderLayout.WEST);
@@ -295,6 +289,15 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		LOG.info("Load UI-Plugins");
 		PluginManagerUtil pmu = PluginInstantiator.getInstance().getPluginUtil();
 		Collection<UIPlugin> uiPlugins = new LinkedList<UIPlugin>(pmu.getPlugins(UIPlugin.class));
+		try {
+			uiPlugins.add(DefaultUIPlugin.class.newInstance());
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for(UIPlugin pl : uiPlugins) {
 			LOG.info("UI-Plugin: '{}' loaded", pl.getClass().getName());
 			viewMap.putAll(pl.getUIComponents());

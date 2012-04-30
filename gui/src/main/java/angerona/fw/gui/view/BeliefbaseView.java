@@ -23,11 +23,6 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	}
 
 	@Override
-	public String getComponentTypeName() {
-		return "Default Beliefbase-Component";
-	}
-
-	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
 		if(obj instanceof BaseBeliefbase) {
 			BaseBeliefbase bb = (BaseBeliefbase)obj;

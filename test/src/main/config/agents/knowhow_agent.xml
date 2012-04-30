@@ -9,6 +9,7 @@
 	
 	<component-classes class="java.util.LinkedList">
 		<string>angerona.fw.knowhow.KnowhowBase</string>
+        <string>angerona.fw.MasterPlan</string>
 	</component-classes>	
 </agent-configuration>
 

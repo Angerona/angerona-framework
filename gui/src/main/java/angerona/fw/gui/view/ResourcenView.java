@@ -119,10 +119,4 @@ public class ResourcenView extends BaseView {
 	public Dimension getMinimumSize() {
 		return tree.getPreferredSize();
 	}
-
-	@Override
-	public String getComponentTypeName() {
-		return "Resourcen View";
-	}
-	
 }

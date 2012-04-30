@@ -11,12 +11,6 @@ public class DesiresView extends ListViewColored<Desires> {
 
 	/** kill warning */
 	private static final long serialVersionUID = 8925750149764894623L;
-
-	
-	@Override
-	public String getComponentTypeName() {
-		return "Desires";
-	}
 	
 	@Override
 	public Class<?> getObservationObjectType() {

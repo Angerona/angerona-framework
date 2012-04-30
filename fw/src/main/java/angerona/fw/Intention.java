@@ -18,7 +18,7 @@ public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";
 	
 	/** reference to the agent who is owner of this Intention */
-	private Agent agent;
+	protected Agent agent;
 	
 	/** a collection of desires which will be fulfilled if this Intention was processed */
 	private Collection<Formula>	fulfillsDesires = new LinkedList<Formula>();
