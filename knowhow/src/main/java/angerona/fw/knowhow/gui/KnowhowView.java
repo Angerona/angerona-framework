@@ -34,6 +34,7 @@ public class KnowhowView extends BaseView implements ReportListener{
 	public void init() {
 		super.init();
 		
+		setTitle("Knowhow");
 		this.setLayout(new BorderLayout());
 		JList<String> statementList = new JList<String>();
 		statementList.setModel(stmtListModel);

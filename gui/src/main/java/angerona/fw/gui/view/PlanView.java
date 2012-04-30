@@ -8,13 +8,18 @@ import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.internal.Entity;
-import angerona.fw.logic.ConfidentialKnowledge;
 
 public class PlanView extends ListViewColored<MasterPlan> {
 
 	/** kill warning */
 	private static final long serialVersionUID = -8417236877682507065L;
 
+	@Override
+	public void init() {
+		super.init();
+		setTitle("Plan");
+	}
+	
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
 		if(obj instanceof MasterPlan) {

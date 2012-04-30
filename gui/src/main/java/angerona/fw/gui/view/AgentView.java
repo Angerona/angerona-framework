@@ -60,10 +60,6 @@ public class AgentView extends BaseView implements NavigationUser, ReportListene
 		ftp = new FancyTabbedPane(AngeronaWindow.getInstance().getWindow(), false);
 		Beliefs b = agent.getBeliefs();
 		
-		DesiresView dc = AngeronaWindow.createBaseView(DesiresView.class, agent.getDesires());
-		dc.setTitle("Desires");
-		addWlComponent(dc);
-		
 		BeliefbaseView comp = AngeronaWindow.createBaseView(BeliefbaseView.class, b.getWorldKnowledge());
 		comp.setTitle("World");
 		addWlComponent(comp);
@@ -73,6 +69,11 @@ public class AgentView extends BaseView implements NavigationUser, ReportListene
 			actComp.setTitle("View->" + viewName);
 			addWlComponent(actComp);
 		}
+		
+
+		DesiresView dc = AngeronaWindow.createBaseView(DesiresView.class, agent.getDesires());
+		dc.setTitle("Desires");
+		addWlComponent(dc);
 		
 		for(AgentComponent ac : agent.getComponents()) {
 			BaseView view = AngeronaWindow.getInstance().createViewForAgentComponent(ac);

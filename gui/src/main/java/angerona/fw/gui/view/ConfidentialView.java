@@ -19,6 +19,12 @@ public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
 	private static final long serialVersionUID = 5545434636562463488L;
 
 	@Override
+	public void init() {
+		super.init();
+		setTitle("Confidential");
+	}
+	
+	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
 		ConfidentialKnowledge ck = (ConfidentialKnowledge)obj;
 		
