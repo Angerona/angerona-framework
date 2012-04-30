@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Angerona;
+import angerona.fw.gui.nav.NavigationControl;
 import angerona.fw.report.ReportEntry;
 
 /**
@@ -22,27 +23,12 @@ import angerona.fw.report.ReportEntry;
  * @author Tim Janus
  *
  */
-public class NavigationPanel extends JPanel {
+public class NavigationPanel extends JPanel implements ActionListener {
 
 	private static Logger LOG = LoggerFactory.getLogger(Angerona.class);
 	
 	/** kill warning */
 	private static final long serialVersionUID = -5215434068009560588L;
-
-	/** button to perform one time step back */
-	private JButton btnStepBack;
-	
-	/** button to perform one time step forward */
-	private JButton btnStepForward;
-	
-	/** button to perform a complete rewind (begin by the first report entry of the observed report-attachment */
-	private JButton btnRewind;
-	
-	/** button to perform a complete fast-forward (select the last report-entry of the observer report-attachment */
-	private JButton btnForward;
-	
-	/** A Label containing text in the form "Tick: 2/5 - Entry: 2/3" helping the user to navigate through the simulation */
-	private JLabel lblTimeline;
 	
 	/** reference to the current selected report-entry of the NavigationPanel */
 	private ReportEntry currentEntry;
@@ -50,78 +36,25 @@ public class NavigationPanel extends JPanel {
 	/** reference to the navigation user object which is responsible for the communication between the NavigationPanel and its holding component */
 	private NavigationUser user;
 	
+	private NavigationControl navAllEntries;
+	
+	private NavigationControl navTicks;
+	
+	private NavigationControl navTickEntries;
+	
 	public NavigationPanel(NavigationUser nu) {
 		this.user = nu;
 		
-		lblTimeline = new JLabel("Tick xxxx/xxxx - Entry yyy/yyy");
-		add(lblTimeline);
+		add(new JLabel("Navigation:"));
+		navAllEntries = (NavigationControl) add(new NavigationControl("Gesamte Einträge: "));
+		navAllEntries.addActionListener(this);
 		
-		btnRewind = new JButton("<--|");
-		btnRewind.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				if(entries != null) {
-					if(entries.size() > 0)
-						onReportEntryUpdate(entries, 0);
-				} else {
-					LOG.warn("Cannot find report-entries for: {} with id #{}", 
-							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());
-				}
-			}
-		});
-		add(btnRewind);
+		navTicks = (NavigationControl)add(new NavigationControl("Aktueller Tick: "));
+		navTicks.setMin(0);
+		navTicks.addActionListener(this);
 		
-		btnStepBack = new JButton("<-");
-		btnStepBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				if(entries != null) {
-					int index = entries.indexOf(user.getCurrentEntry()) - 1;
-					if(index >= 0)
-						onReportEntryUpdate(entries, index);
-				} else {
-					LOG.warn("Cannot find report-entries for: {} with id #{}", 
-							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());
-				}
-			}
-		});
-		add(btnStepBack);
-		
-		btnStepForward = new JButton("->");
-		btnStepForward.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				if(entries != null) {
-					int index = entries.indexOf(user.getCurrentEntry()) + 1;
-					if(index < entries.size())
-						onReportEntryUpdate(entries, index);
-				} else {
-					LOG.warn("Cannot find report-entries for: {} with id #{}", 
-							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());	
-				}
-			}
-		});
-		add(btnStepForward);
-		
-		btnForward = new JButton("|-->");
-		btnForward.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
-				if(entries != null) {
-					if(entries.size() > 0)
-						onReportEntryUpdate(entries, entries.size()-1);
-				} else {
-					LOG.warn("Cannot find report-entries for: {} with id #{}", 
-							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());
-				}
-			}
-		});
-		add(btnForward);
-		
+		navTickEntries = (NavigationControl)add(new NavigationControl("Einträge im aktuellen Tick: "));
+		navTickEntries.addActionListener(this);
 	}
 	
 	/**
@@ -166,33 +99,70 @@ public class NavigationPanel extends JPanel {
 	 * @param inform	flag indicating if the user-object is informed of the change of the report-entry.
 	 */
 	private void onReportEntryUpdate(List<ReportEntry> entries, int index, boolean inform) {
+		
 		ReportEntry re = entries.get(index);
-		int entriesBefore = 0;
-		int entriesAfter = 0;
 		
-		for(int i=index-1; i>0; i--) {
+		int first = -1;
+		int last = -1;
+		for(int i=0; i<entries.size(); ++i) {
 			if(entries.get(i).getSimulationTick() == re.getSimulationTick()) {
-				entriesBefore += 1;
-			} else {
+				if(first == -1) {
+					first = i;
+				}
+				last = i;
+			} else if(last != -1 && first != -1){
 				break;
 			}
 		}
 		
-		for(int i=index+1; i<entries.size(); ++i) {
-			if(entries.get(i).getSimulationTick() == re.getSimulationTick()) {
-				entriesAfter += 1;
-			} else {
-				break;
-			}
+		if(first == -1) {
+			navTickEntries.set(0, 0, 0);
+		} else {
+			navTickEntries.set(1, index - first + 1, last - first + 1);
 		}
 		
-		int curTick = re.getPoster().getSimulation().getSimulationTick() + 1;
-		String txt = index+1 + "/" + entries.size() + " in Tick: " + (re.getSimulationTick() + 1) + "/" + curTick + " - InTick-Entry: ";
-		txt += (entriesBefore+1) + "/" + (entriesBefore + entriesAfter + 1);
-		lblTimeline.setText(txt);
+		int curTick = re.getPoster().getSimulation().getSimulationTick();
 		currentEntry = re;
+		navAllEntries.setNumbers(index+1, entries.size());
+		navTicks.setNumbers(re.getSimulationTick(), curTick);
+		
 		if(inform) {
 			user.setCurrentEntry(re);
+		}
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() instanceof JButton) {
+			JButton btn = (JButton) e.getSource();
+			int move = 0;
+			if(e.getActionCommand().equals("forward")) {
+				move = 1;
+			} else if(e.getActionCommand().equals("backward")) {
+				move = -1;
+			}
+			
+			List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
+			if(navAllEntries.isAncestorOf(btn) || navTickEntries.isAncestorOf(btn)) {
+				if(entries != null) {
+					int index = entries.indexOf(user.getCurrentEntry()) + move;
+					if(index >= 0 && index < entries.size())
+						onReportEntryUpdate(entries, index);
+				} else {
+					LOG.warn("Cannot find report-entries for: {} with id #{}", 
+							user.getAttachment().getClass().getSimpleName(), user.getAttachment().getGUID());
+				}
+			} else if(navTicks.isAncestorOf(btn)) {
+				int cur = user.getCurrentEntry().getSimulationTick() + move;
+				for(int i=0; i<entries.size(); ++i) {
+					ReportEntry entry = entries.get(i);
+					if(entry.getSimulationTick() == cur) {
+						onReportEntryUpdate(entries, i);
+						break;
+					}
+				}
+			}
 		}
 	}
 }

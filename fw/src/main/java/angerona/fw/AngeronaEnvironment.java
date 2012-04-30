@@ -122,17 +122,27 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	 */
 	public boolean runOneTick() {
 		doingTick = true;
+		
+		boolean somethingHappens = false;
+		for(AgentProcess ap : agents) {
+			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
+			if(aap.hasPerceptions()) {
+				somethingHappens = true;
+			}
+		}
+		
+		if(!somethingHappens)
+			return false;
+		
 		++tick;
-		boolean percept = false;
 		for(AgentProcess ap : agents) {
 			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
 			if(aap.hasPerceptions()) {
 				aap.execCycle();
-				percept = true;
 			}
 		}
 		doingTick = false;
-		return percept;
+		return true;
 	}
 	
 	public boolean isDoeingTick() {

@@ -2,7 +2,9 @@ package angerona.fw.gui.view;
 
 import java.util.List;
 
+import angerona.fw.Agent;
 import angerona.fw.internal.Entity;
+import angerona.fw.internal.IdGenerator;
 import angerona.fw.logic.BaseBeliefbase;
 
 /**
@@ -16,6 +18,26 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	/** kill warning */
 	private static final long serialVersionUID = -3706152280500718930L;
 	
+	
+	@Override
+	public void init() {
+		super.init();
+		
+		Agent ag = (Agent)IdGenerator.getEntityWithId(this.ref.getParent());
+		String postfix = "";
+		if(ag.getBeliefs().getWorldKnowledge() == ref) {
+			postfix = "World";
+		} else {
+			for(String key : ag.getBeliefs().getViewKnowledge().keySet()) {
+				BaseBeliefbase bb = ag.getBeliefs().getViewKnowledge().get(key);
+				if(bb == ref) {
+					postfix = "View->"+key;
+					break;
+				}
+			}
+		}
+		setTitle(ag.getName() + " - " + postfix);
+	}
 	
 	@Override
 	public Class<?> getObservationObjectType() {
