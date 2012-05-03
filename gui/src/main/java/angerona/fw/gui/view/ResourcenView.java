@@ -110,7 +110,7 @@ public class ResourcenView extends BaseView {
 	 */
 	private void handlerBeliefbase(TreeController.BBUserObject uo) {
 		LOG.trace("Handle beliefbase: '{}'", uo.getBeliefbase().getFileEnding());
-		BeliefbaseView bc = AngeronaWindow.createBaseView(
+		BeliefbaseView bc = AngeronaWindow.getInstance().createBaseView(
 				BeliefbaseView.class, uo.getBeliefbase());
 		AngeronaWindow.getInstance().addComponentToCenter(bc);
 	}

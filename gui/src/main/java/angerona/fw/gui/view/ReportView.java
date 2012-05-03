@@ -1,16 +1,23 @@
 package angerona.fw.gui.view;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
+import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.TreeController;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
@@ -62,10 +69,53 @@ public class ReportView extends BaseView implements ReportListener {
         add(pane, BorderLayout.CENTER);
         setVisible(true);
         
-        
+        MouseListener ml = new MouseAdapter() {
+        	public void mousePressed(MouseEvent e) {
+        		onMouseClick(e);
+		    }
+		};
+		tree.addMouseListener(ml);
         Angerona.getInstance().addReportListener(this);
 	}
 
+    /**
+	 * Helper method: called when user clicks on the tree 
+	 * @param e structure containing data about the (click)mouse-event.
+	 */
+	private void onMouseClick(MouseEvent e) {
+		int selRow = tree.getRowForLocation(e.getX(), e.getY());
+         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+         if(selRow == -1)
+        	 return;
+         
+         if(e.getClickCount() == 2) {
+             selectHandler(selPath);
+         }
+	}
+	
+	private void selectHandler(TreePath selPath) {
+		if(selPath.getLastPathComponent() instanceof DefaultMutableTreeNode) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)selPath.getLastPathComponent();
+			Object uo = node.getUserObject();
+			if(uo instanceof Leaf) {
+				ReportEntry entry = ((Leaf)uo).entry;
+				if(entry.getAttachment() == null)
+					return;
+				
+				AngeronaWindow wnd = AngeronaWindow.getInstance();
+				BaseView view = wnd.getBaseViewObservingEntity(entry.getAttachment());
+				if(view != null) {
+					if(view instanceof ReportListener) {
+						((ReportListener)view).reportReceived(entry);
+					}
+					wnd.addComponentToCenter(view);
+				} else {
+					
+				}
+			}
+		}
+	}
+    
 	@Override
 	public void reportReceived(ReportEntry entry) {
 		Integer tick = new Integer(entry.getSimulationTick());

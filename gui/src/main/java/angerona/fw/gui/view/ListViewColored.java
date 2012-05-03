@@ -165,9 +165,9 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 			if(entry.getAttachment().getGUID().equals(ref.getGUID())) {
 				actEntry = entry;
 				navPanel.setEntry(actEntry);
-				if(isVisible()) {
+				//if(isVisible()) {
 					updateView();
-				}
+				//}
 			}
 		}
 	}
