@@ -131,15 +131,13 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 			}
 		}
 		
-		if(!somethingHappens)
+		if(!somethingHappens && tick != 0)
 			return false;
 		
 		++tick;
 		for(AgentProcess ap : agents) {
 			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
-			if(aap.hasPerceptions()) {
-				aap.execCycle();
-			}
+			aap.execCycle();
 		}
 		doingTick = false;
 		return true;
@@ -298,12 +296,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 			}
 		}
 		
-		/** TODO Readd
-		List<Perception> initPercepts = df.generateFromParentElement(config.getFlowElement(), null);
-		for(Perception p : initPercepts) {
-			this.sendAction(p.getReceiverId(), p);
-		}
-		*/
 		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
 		for(PerceptionDO p : config.getPerceptions()) {
 			Perception percept = df.generateFromDataObject(p, null);

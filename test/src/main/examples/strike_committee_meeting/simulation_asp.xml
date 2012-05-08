@@ -16,7 +16,14 @@
 		<skill class="angerona.fw.serialize.SkillConfigImport">
 			<source>config/skills/QueryAnswer.xml</source>
         </skill>
-         
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/Query.xml</source>
+        </skill>
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/RevisionRequest.xml</source>
+        </skill>
+        
+        <desire>v_Boss(excused)</desire>
         <desire>attend_scm</desire>
          
         <data key="Confidential">(Boss, attend_scm, {true})</data>
@@ -38,9 +45,17 @@
       	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
             <source>config/beliefbases/asp_beliefbase.xml</source>
          </beliefbase-config>
+         
+         <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/QueryAnswer.xml</source>
+        </skill>
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/Query.xml</source>
+        </skill>
 	</agent-instance>
-    
+    <!--
     <perception class="angerona.fw.serialize.perception.QueryDO" sender="Boss" receiver="Employee">
       <question>attend_scm</question>
     </perception>
+    -->
 </simulation-configuration>

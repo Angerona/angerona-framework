@@ -27,11 +27,11 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(GenerateOptionsOperator.class);
 	
-	public static final Predicate prepareQueryProcessing = new Predicate("wantsPrepareQueryProcessing");
+	public static final Predicate prepareQueryProcessing = new Predicate("queryProcessing");
 	
-	public static final Predicate prepareRevisionRequestProcessing = new Predicate("wantsPrepareRevisionRequestProcessing");
+	public static final Predicate prepareRevisionRequestProcessing = new Predicate("revisionRequestProcessing");
 	
-	public static final Predicate prepareReasonCalculation = new Predicate("wantsPrepareReason");
+	public static final Predicate prepareReasonCalculation = new Predicate("reasonProcessing");
 	
 	@Override
 	protected Set<Formula> processInt(GenerateOptionsParameter param) {

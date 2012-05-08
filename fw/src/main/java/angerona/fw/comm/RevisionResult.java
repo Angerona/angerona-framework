@@ -18,7 +18,7 @@ public class RevisionResult extends SpeechAct {
 
 	private Set<Formula> regarding = new HashSet<Formula>();
 	
-	private Set<Formula> result = new HashSet<Formula>();
+	private Boolean acceptance = new Boolean(false);
 	
 	public RevisionResult(String sender, String receiver,
 			Set<Formula> regarding) {
@@ -28,22 +28,22 @@ public class RevisionResult extends SpeechAct {
 	
 	
 	public RevisionResult(String sender, String receiver, 
-			Set<Formula> regarding, Set<Formula> result) {
+			Set<Formula> regarding, Boolean acceptance) {
 		super(sender, receiver);
 		this.regarding.addAll(regarding);
-		this.result.addAll(result);
+		this.acceptance = acceptance;
 	}
 
 	public Set<Formula> getRegarding() {
 		return Collections.unmodifiableSet(regarding);
 	}
 	
-	public Set<Formula> getResult() {
-		return Collections.unmodifiableSet(result);
+	public Boolean getAcceptance() {
+		return acceptance;
 	}
 	
 	@Override
 	public String toString() {
-		return "< " + getSenderId() + " revision-result " + getReceiverId() + " " + regarding + " " + result + " >";
+		return "< " + getSenderId() + " revision-result " + getReceiverId() + " " + regarding + " " + acceptance + " >";
 	}
 }

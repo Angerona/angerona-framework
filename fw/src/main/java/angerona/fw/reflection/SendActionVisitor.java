@@ -39,7 +39,7 @@ public class SendActionVisitor extends ContextVisitor {
 		// TODO: implement inner element of actions in skill.
 		//Action reval = (Action) factory.generateFromElement(statement.getInnerElement(), context);
 		Action reval = (Action) factory.generateFromDataObject((PerceptionDO)statement.getComplexInfo(), context);
-		
+
 		if(realRun)
 			getSelf().performAction(reval);
 		else
