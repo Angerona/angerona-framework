@@ -1,9 +1,14 @@
 package angerona.fw.logic;
 
-import net.sf.tweety.Reasoner;
+import net.sf.tweety.Answer;
+import net.sf.tweety.Formula;
+import angerona.fw.operators.Operator;
+import angerona.fw.operators.parameter.ReasonerParameter;
 
 /**
  * Base class for all reasoner used by the Angerona project.
+ * 
+ *
  * To query the reasoner a subset of the FOL Language defined in tweety is used.
  * It is the responsibility of the Reasoner implementation to translate the given
  * query into its native language. 
@@ -11,15 +16,32 @@ import net.sf.tweety.Reasoner;
  * @author Tim Janus
  */
 public abstract class BaseReasoner 
-	extends Reasoner{
+	extends Operator<ReasonerParameter, AngeronaAnswer>{
+	
+	protected BaseBeliefbase actualBeliefbase;
 	
 	public BaseReasoner() {
-		super(null);	
 	}
 	
-	public void setBeliefbase(BaseBeliefbase bb) {
-		this.beliefBase = bb;
+	/**
+	 * queries for question in the given beliefbase bb
+	 * @param bb
+	 * @param question
+	 * @return
+	 */
+	public Answer query(BaseBeliefbase bb, Formula question) {
+		actualBeliefbase = bb;
+		return query(question);
 	}
+	
+	/**
+	 * This method determines the answer of the given query
+	 * wrt. using the last used beliefbase (if beliefbase is not set null is returned)
+	 * @param query a query.
+	 * @return the answer to the query.
+	 */
+	protected abstract Answer query(Formula query);
+	
 	
 	/**
 	 * @return the class definition of the belief base this reasoner supports.

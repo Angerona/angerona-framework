@@ -3,7 +3,6 @@ package angerona.fw.operators;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.internal.Entity;
-import angerona.fw.operators.parameter.GenericOperatorParameter;
 import angerona.fw.report.ReportPoster;
 
 /**
@@ -13,11 +12,8 @@ import angerona.fw.report.ReportPoster;
  * @param <IN>		Type of the input parameter
  * @param <OUT>		Type of the output (return value)
  */
-public abstract class Operator<IN extends GenericOperatorParameter, OUT> implements ReportPoster{
-	private AngeronaEnvironment environment;
-	
+public abstract class Operator<IN, OUT> implements ReportPoster{
 	public OUT process(IN param) {
-		updateEnvInfo(param);
 		return processInt(param);
 	}
 	
@@ -26,16 +22,6 @@ public abstract class Operator<IN extends GenericOperatorParameter, OUT> impleme
 	 *	a good ReportPoster out of an operator.
 	 */
 	protected abstract OUT processInt(IN param);
-	
-	/*
-	 * 	Performs the processing of this operator instance.
-	 * 	@param param 	input parameter to process
-	 * 	@return			the result of the processing
-	 */
-	private void updateEnvInfo(GenericOperatorParameter gop) {
-		environment = gop.getSimulation();
-	}
-	
 
 	@Override
 	public String getPosterName() {
@@ -44,12 +30,12 @@ public abstract class Operator<IN extends GenericOperatorParameter, OUT> impleme
 
 	@Override
 	public int getSimulationTick() {
-		return environment.getSimulationTick();
+		return Angerona.getInstance().getActualSimulation().getSimulationTick();
 	}
 
 	@Override
 	public AngeronaEnvironment getSimulation() {
-		return environment;
+		return Angerona.getInstance().getActualSimulation();
 	}
 	
 	protected void report(String msg) {

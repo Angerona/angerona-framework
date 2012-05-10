@@ -6,6 +6,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.operators.parameter.ReasonerParameter;
 
 /**
  * Just a dummy Reasoner for testing purposes.
@@ -20,10 +21,18 @@ public class DummyReasoner extends BaseReasoner {
 
 	@Override
 	public Answer query(Formula query) {
-		DummyBeliefbase bb = (DummyBeliefbase)this.getKnowledgBase();
+		if(this.actualBeliefbase == null)
+			return null;
+		
+		DummyBeliefbase bb = (DummyBeliefbase)this.actualBeliefbase;
 		boolean b = bb.fbs.contains(query);
 		AnswerValue ae = b ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
 		
-		return new AngeronaAnswer(this.getKnowledgBase(), query, ae);
+		return new AngeronaAnswer(bb, query, ae);
+	}
+
+	@Override
+	protected AngeronaAnswer processInt(ReasonerParameter param) {
+		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
 	}
 }

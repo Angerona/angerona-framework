@@ -21,6 +21,8 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
+import angerona.fw.reflection.Context;
+import angerona.fw.reflection.ContextFactory;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the
@@ -107,7 +109,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
 			return false;
 		}
-		pp.getActualPlan().newStack(qaSkill, pp.getActualPlan().getAgent().getActualPerception());
+		Context context = ContextFactory.createContext(
+				pp.getActualPlan().getAgent().getActualPerception());
+		context.set("answer", AnswerValue.AV_TRUE);
+		pp.getActualPlan().newStack(qaSkill, context);
+		
+		context = new Context(context);
+		context.set("answer", AnswerValue.AV_FALSE);
+		pp.getActualPlan().newStack(qaSkill, context);
 		
 		// TODO: Find a better place to remove desire again.
 		ag.removeDesire(new Atom(GenerateOptionsOperator.prepareQueryProcessing));

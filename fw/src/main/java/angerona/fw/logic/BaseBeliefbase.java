@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -109,6 +110,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		if(other.getParent() != null) {
 			this.parentId = new Long(other.getParent());
 		}
+		
+		revisionOperator = other.revisionOperator;
+		reasoningOperator = other.reasoningOperator;
 	}
 	
 	public void setEnvironment(AngeronaEnvironment env) {
@@ -144,7 +148,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		reasoningOperator = pi.createReasoner(bbc.getReasonerClassName());
-		reasoningOperator.setBeliefbase(this);
 		
 		if(bbc.getRevisionClassName() != null && !bbc.getRevisionClassName().equals("empty"))
 			revisionOperator = pi.createRevision(bbc.getRevisionClassName());
@@ -158,6 +161,12 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws ParserException 
 	 */
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
+	
+	public void addNewKnowledge(FolFormula newKnowlege) {
+		Set<FolFormula> k = new HashSet<FolFormula>();
+		k.add(newKnowlege);
+		addNewKnowledge(k);
+	}
 	
 	/**
 	 * adds the given formulas to the knowledgebase as new knowledge. Using the default update mechanism
@@ -197,7 +206,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
 		else if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperator.query(query);
+		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperator.query(this, query);
 		return answer;
 	}
 	

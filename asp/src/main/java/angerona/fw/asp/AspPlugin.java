@@ -74,7 +74,6 @@ public class AspPlugin implements BeliefbasePlugin {
 		AspBeliefbase bb = new AspBeliefbase();
 		bb.setProgram(p);
 		AspReasoner reasoner = new AspReasoner();
-		reasoner.setBeliefbase(bb);
 		
 		System.out.println(p.toStringFlat());
 		System.out.println();
@@ -82,7 +81,7 @@ public class AspPlugin implements BeliefbasePlugin {
 		net.sf.tweety.logics.firstorderlogic.syntax.Atom a =
 			new net.sf.tweety.logics.firstorderlogic.syntax.Atom(
 				new net.sf.tweety.logics.firstorderlogic.syntax.Predicate("fired"));
-		reasoner.query(a);
+		reasoner.query(bb, a);
 		
 		r = new Rule();
 		r.addHead(new Atom("attend_burial"));
