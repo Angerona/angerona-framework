@@ -34,6 +34,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	protected Boolean processInt(ViolatesParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
 		if(param.getAction() instanceof Answer) {
+			// only apply violates if confidential knowledge is saved in agent.
 			ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
 			if(conf == null)
 				return new Boolean(false);
@@ -47,7 +48,6 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {
 					view.addNewKnowledge(new Negation(a.getRegarding()));
 				}
-				LOG.info("Revide KB: \n{}", view.toString());
 				
 				for(ConfidentialTarget ct : conf.getTargets()) {
 					if(ct.getSubjectName().equals(a.getReceiverId())) {
@@ -64,6 +64,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				}
 			}
 		}
+		report("No violation applying the action: '" + param.getAction() + "'", param.getAgent());
 		return new Boolean(false);
 	}
 }

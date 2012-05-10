@@ -20,7 +20,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {
-		LOG.info("Run Example-Intention-Update");
+		LOG.info("Run Default-Intention-Update");
 		
 		Agent ag = param.getPlan().getAgent();
 		for(int i=0; i<param.getPlan().getNumberOfStacks(); ++i) {
@@ -36,7 +36,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 				}
 			}
 		}
-		report("No valid next atomic step candidate found.", ag);
+		report("No atomic step candidate found.", ag);
 		return null;
 	}
 
