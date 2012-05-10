@@ -18,6 +18,12 @@ public class DesiresView extends ListViewColored<Desires> {
 	private static final long serialVersionUID = 8925750149764894623L;
 	
 	@Override
+	public void init() {
+		super.init();
+		setTitle("Desires");
+	}
+	
+	@Override
 	public Class<?> getObservationObjectType() {
 		return Desires.class;
 	}

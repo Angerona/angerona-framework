@@ -6,6 +6,7 @@ import java.util.Map;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.gui.view.BaseView;
 import angerona.fw.gui.view.ConfidentialView;
+import angerona.fw.gui.view.DesiresView;
 import angerona.fw.gui.view.PlanView;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
@@ -20,6 +21,7 @@ public class DefaultUIPlugin implements UIPlugin {
 		reval.put("Resourcen", ResourcenView.class);
 		reval.put("Confidential-Knowledge", ConfidentialView.class);
 		reval.put("Plan", PlanView.class);
+		reval.put("Desires", DesiresView.class);
 		return reval;
 	}
 
