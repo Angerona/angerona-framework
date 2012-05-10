@@ -27,6 +27,7 @@ import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.Desires;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
 import angerona.fw.report.ReportPoster;
@@ -240,8 +241,15 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				highLevelAg.setBeliefs(world, views);		
 				highLevelAg.addSkillsFromConfig(ai.getSkills());
 				addAgent(highLevelAg.getAgentProcess());
-				highLevelAg.getDesires().addAll(ai.getDesires());
+				Desires desires = highLevelAg.getDesires();
+				if(desires == null && ai.getDesires().size() > 0) {
+					LOG.warn("No desire-component added to agent '{}' but desires, auto-add the desire component.", highLevelAg.getName());
+					desires = new Desires();
+					highLevelAg.addComponent(desires);
+				}
 				highLevelAg.initComponents(ai.getAdditionalData());
+				if(desires != null)
+					highLevelAg.getDesires().addAll(ai.getDesires());
 				
 				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}

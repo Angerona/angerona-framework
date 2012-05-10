@@ -3,8 +3,8 @@ package angerona.fw.operators.def;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
@@ -34,10 +34,10 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	public static final Predicate prepareReasonCalculation = new Predicate("reasonProcessing");
 	
 	@Override
-	protected Set<Formula> processInt(GenerateOptionsParameter param) {
+	protected Set<FolFormula> processInt(GenerateOptionsParameter param) {
 		LOG.info("Run Default-Generate-Options-operator");
 		
-		Set<Formula> reval = new HashSet<Formula>();
+		Set<FolFormula> reval = new HashSet<FolFormula>();
 		if(param.getPerception() instanceof Query) {
 			reval.add(new Atom(prepareQueryProcessing));
 		} else if(param.getPerception() instanceof RevisionRequest) {

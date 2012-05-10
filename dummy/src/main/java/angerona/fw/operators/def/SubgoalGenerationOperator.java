@@ -3,7 +3,6 @@ package angerona.fw.operators.def;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
@@ -42,16 +41,19 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		Agent ag = pp.getActualPlan().getAgent();
 
 		boolean reval = processPersuadeOtherAgentsDesires(pp, ag);
-		
-		if(ag.getDesires().contains(
-				new Atom(GenerateOptionsOperator.prepareQueryProcessing))) {
-			reval = reval || answerQuery(pp, ag);
-		} else if(ag.getDesires().contains(
-				new Atom(GenerateOptionsOperator.prepareRevisionRequestProcessing))) {
-			reval = reval || revisionRequest(pp, ag);
-		} else if(ag.getDesires().contains(
-				new Atom(GenerateOptionsOperator.prepareReasonCalculation))) {
-			// TODO Implement.
+
+		if(ag.getDesires() != null) {
+			Set<FolFormula> desires = ag.getDesires().getTweety();
+			if(desires.contains(
+					new Atom(GenerateOptionsOperator.prepareQueryProcessing))) {
+				reval = reval || answerQuery(pp, ag);
+			} else if(desires.contains(
+					new Atom(GenerateOptionsOperator.prepareRevisionRequestProcessing))) {
+				reval = reval || revisionRequest(pp, ag);
+			} else if(desires.contains(
+					new Atom(GenerateOptionsOperator.prepareReasonCalculation))) {
+				// TODO Implement.
+			}
 		}
 		
 		if(!reval)
@@ -62,8 +64,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	protected boolean processPersuadeOtherAgentsDesires(
 			SubgoalGenerationParameter pp, Agent ag) {
 		boolean reval = false;
-		Set<Formula> toRemove = new HashSet<Formula>();
-		for(Formula desire : ag.getDesires()) {
+		Set<FolFormula> toRemove = new HashSet<FolFormula>();
+		if(ag.getDesires() == null)
+			return false;
+		
+		for(FolFormula desire : ag.getDesires().getTweety()) {
 			if(desire.toString().trim().startsWith("v_")) {
 				int si = desire.toString().indexOf("_")+1;
 				int li = desire.toString().indexOf("(", si);
@@ -96,7 +101,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), mp);
 			}
 		}
-		for(Formula desire : toRemove) {
+		for(FolFormula desire : toRemove) {
 			ag.removeDesire(desire);
 		//	ag.addDesire(new Atom(new Predicate(desire.toString()+"_wait")));
 		}

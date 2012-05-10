@@ -1,12 +1,12 @@
 package angerona.fw.logic;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
-import net.sf.tweety.Formula;
-import angerona.fw.internal.EntityAtomic;
-import angerona.fw.internal.IdGenerator;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.BaseAgentComponent;
 
 /**
  * The desire component of an Angerona Agent. The desires are a set of
@@ -16,52 +16,35 @@ import angerona.fw.internal.IdGenerator;
  * 
  * @author Tim Janus
  */
-public class Desires extends HashSet<Formula> implements EntityAtomic {
+public class Desires extends BaseAgentComponent {
 
-	/** kill warning */
-	private static final long serialVersionUID = 3632568908513258322L;
-
-	private Long id;
+	private Set<FolFormula> desires = new HashSet<FolFormula>();
 	
-	private Long parent;
-	
-	public Desires(Long parent) {
-		id = IdGenerator.generate(this);
-		this.parent = parent;
-	}
+	public Desires() {}
 	
 	public Desires(Desires other) {
-		id = other.id;
-		parent = other.parent;
-		this.addAll(other);
+		super(other);
+		desires.addAll(other.desires);
 	}
 	
-	@Override
-	public Long getGUID() {
-		return id;
-	}
-
-	@Override
-	public Long getParent() {
-		return parent;
-	}
-
-	@Override
-	public List<Long> getChilds() {
-		return new LinkedList<Long>();
+	public boolean add(FolFormula desire) {
+		return desires.add(desire);
 	}
 	
+	public boolean addAll(Collection<? extends FolFormula> elements) {
+		return desires.addAll(elements);
+	}
+	
+	public boolean remove(FolFormula desire) {
+		return desires.remove(desire);
+	}
+	
+	public Set<FolFormula> getTweety() {
+		return Collections.unmodifiableSet(desires);
+	}
+
 	@Override
 	public Object clone() {
 		return new Desires(this);
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if(other instanceof Desires) {
-			Desires dot = (Desires)other;
-			return this.id.equals(dot.id);
-		}
-		return super.equals(other);
 	}
 }

@@ -57,9 +57,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	/** the beenuts agent process used for low level communication in the framework */
 	private AngeronaAgentProcess agentProcess;
 	
-	/** The desires of the agent */
-	private Desires desires;
-	
 	/** The belief base of the agent */
 	private Beliefs beliefs;
 	
@@ -140,8 +137,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	private void ctor(AgentConfig ac, String name) throws AgentInstantiationException {
 		this.id = new Long(IdGenerator.generate(this));
 		context = new Context();
-		
-		desires = new Desires(this.id);
 		
 		agentProcess = new AngeronaAgentProcess(name);
 		agentProcess.setAgentArchitecture(this);
@@ -256,15 +251,18 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 			
 		updateBeliefs(actualPerception);	
 		// Deliberation:
-		Set<Formula> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
-		if(!desires.equals(options)) {
-			options.remove(desires);
-			if(options.size() == 1)
-				addDesire(options.iterator().next());
-			addDesires(options);
+		Desires desires = getDesires();
+		if(desires != null) {
+			Set<FolFormula> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
+			if(!desires.equals(options)) {
+				options.remove(desires);
+				if(options.size() == 1)
+					addDesire(options.iterator().next());
+				addDesires(options);
+			}
 		}
-		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		
+		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		// Means-end-reasoning:
 		MasterPlan masterPlan = getComponent(MasterPlan.class);
 		if(masterPlan != null) {
@@ -336,6 +334,11 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	
 	/** @return a set of formulas representing the desires of the agent. */
 	public Desires getDesires() {
+		Desires desires = getComponent(Desires.class);
+		if(desires == null) {
+			LOG.warn("Tried to access the desires of agent '{}' which has no desire-component.", getName());
+			return null;
+		}
 		return desires;
 	}
 	
@@ -384,28 +387,40 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		LOG.info("Action performed: " + act.toString());
 	}
 	
-	public boolean addDesire(Formula desire) {
-		boolean reval = this.desires.add(desire);
-		if(reval) {
-			Angerona.getInstance().report("New desire: " + desire.toString(), this.getEnvironment(), this.desires);
+	public boolean addDesire(FolFormula desire) {
+		Desires desires = getDesires();
+		if(desires != null) {
+			boolean reval = getDesires().add(desire);
+			if(reval) {
+				Angerona.getInstance().report("New desire: " + desire.toString(), getEnvironment(), desires);
+			}
+			return reval;
 		}
-		return reval;
+		return false;
 	}
 	
-	public boolean addDesires(Set<Formula> set) {
-		boolean reval = this.desires.addAll(set);
-		if(reval) {
-			Angerona.getInstance().report("New desires: " + set.toString(), this.getEnvironment(), this.desires);
+	public boolean addDesires(Set<FolFormula> set) {
+		Desires desires = getDesires();
+		if(desires != null) {
+			boolean reval = desires.addAll(set);
+			if(reval) {
+				Angerona.getInstance().report("New desires: " + set.toString(), getEnvironment(), desires);
+			}
+			return reval;
 		}
-		return reval;
+		return false;
 	}
 	
-	public boolean removeDesire(Formula desire) {
-		boolean reval = this.desires.remove(desire);
-		if(reval) {
-			Angerona.getInstance().report("Removed desire: " + desire.toString(), this.getEnvironment(), this.desires);
+	public boolean removeDesire(FolFormula desire) {
+		Desires desires = getDesires();
+		if(desires != null) {
+			boolean reval = desires.remove(desire);
+			if(reval) {
+				Angerona.getInstance().report("Removed desire: " + desire.toString(), getEnvironment(), desires);
+			}
+			return reval;
 		}
-		return reval;
+		return false;
 	}
 	
 	@Override

@@ -158,7 +158,10 @@ public class PluginInstantiator {
 				continue;
 			loadedPlugins.add(ap);
 			components.addAll(ap.getAgentComponents());
-			LOG.info("Agent-Pluign '{}' loaded", ap.getClass().getName());
+			for(Class<? extends AgentComponent> ac : ap.getAgentComponents()) {
+				LOG.info("Agent-Component: '{}' loaded.", ac.getName());
+			}
+			LOG.info("Agent-Pluign '{}' loading complete", ap.getClass().getName());
 		}
 		
 		for(PluginListener pl : listeners) {

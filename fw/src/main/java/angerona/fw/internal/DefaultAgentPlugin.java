@@ -7,6 +7,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.AgentComponent;
 import angerona.fw.MasterPlan;
 import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.Desires;
 
 @PluginImplementation
 /**
@@ -22,6 +23,7 @@ public class DefaultAgentPlugin implements AgentPlugin {
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
 		reval.add(ConfidentialKnowledge.class);
 		reval.add(MasterPlan.class);
+		reval.add(Desires.class);
 		return reval;
 	}
 

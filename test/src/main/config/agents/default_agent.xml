@@ -8,6 +8,7 @@
 	<violates-class>angerona.fw.operators.def.ViolatesOperator</violates-class>
 	
 	<component-classes class="java.util.LinkedList">
+		<string>angerona.fw.logic.Desires</string>
 		<string>angerona.fw.logic.ConfidentialKnowledge</string>
         <string>angerona.fw.MasterPlan</string>
 	</component-classes>	
