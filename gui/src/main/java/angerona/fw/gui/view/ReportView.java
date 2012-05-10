@@ -15,12 +15,14 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.TreeController;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
+import angerona.fw.listener.SimulationAdapter;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
@@ -39,6 +41,30 @@ public class ReportView extends BaseView implements ReportListener {
     
     private DefaultMutableTreeNode actAgentNode;
     
+    /**
+     * An user object for the Agent nodes of the treeview for reports.
+     * This user object can contain the agent and the last used action.
+     * @author Tim Janus
+     */
+    public class AgentNodeUserObject {
+    	private Agent agent;
+    	
+    	private Action action;
+    	
+    	public AgentNodeUserObject(Agent agent) {
+    		this.agent = agent;
+    	}
+    	
+    	public void setAction(Action action) {
+    		this.action = action;
+    	}
+    	
+    	@Override
+    	public String toString() {
+    		return (action == null ? agent.getName() : action.toString());
+    	}
+    }
+    
     public class Leaf {
 
     	private ReportEntry entry;
@@ -52,6 +78,23 @@ public class ReportView extends BaseView implements ReportListener {
     		return entry.getMessage();
     	}
     }
+    
+    private class NodeActionUpdater extends SimulationAdapter {
+    	private ReportView parent;
+    	
+    	public NodeActionUpdater(ReportView parent) {
+    		this.parent = parent;
+    	}
+    	
+    	@Override
+    	public void actionPerformed(Agent agent, Action act) {
+    		AgentNodeUserObject uo = (AgentNodeUserObject)parent.actAgentNode.getUserObject();
+    		uo.setAction(act);
+    		tree.repaint();
+    	}
+    } 
+    
+    NodeActionUpdater nodeActionUpdater;
     
     @Override
 	public void init() {
@@ -69,13 +112,15 @@ public class ReportView extends BaseView implements ReportListener {
         add(pane, BorderLayout.CENTER);
         setVisible(true);
         
+        Angerona.getInstance().addReportListener(this);
         MouseListener ml = new MouseAdapter() {
         	public void mousePressed(MouseEvent e) {
         		onMouseClick(e);
 		    }
 		};
 		tree.addMouseListener(ml);
-        Angerona.getInstance().addReportListener(this);
+        nodeActionUpdater = new NodeActionUpdater(this);
+        Angerona.getInstance().addSimulationListener(nodeActionUpdater);
 	}
 
     /**
@@ -165,12 +210,13 @@ public class ReportView extends BaseView implements ReportListener {
 				Agent ag = (Agent)attach;
 				for(int i=0; i<actTickNode.getChildCount(); ++i) {
 					DefaultMutableTreeNode child = (DefaultMutableTreeNode)actTickNode.getChildAt(i);
-					if(child.getUserObject().equals(ag)) {
+					AgentNodeUserObject uo = (AgentNodeUserObject)child.getUserObject();
+					if(uo.agent.equals(ag)) {
 						actAgentNode = child;
 						return true;
 					}
 				}
-				actAgentNode = new DefaultMutableTreeNode(ag);
+				actAgentNode = new DefaultMutableTreeNode(new AgentNodeUserObject(ag));
 				actTickNode.add(actAgentNode);
 				return true;
 			}

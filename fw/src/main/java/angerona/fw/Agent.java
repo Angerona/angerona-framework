@@ -385,6 +385,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		getAgentProcess().act(act);
 		updateBeliefs(act);
 		LOG.info("Action performed: " + act.toString());
+		Angerona.getInstance().onActionPerformed(this, act);
 	}
 	
 	public boolean addDesire(FolFormula desire) {

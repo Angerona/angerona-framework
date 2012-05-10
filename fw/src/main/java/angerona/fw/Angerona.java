@@ -390,4 +390,10 @@ public class Angerona {
 			} 
 		}
 	}
+
+	public void onActionPerformed(Agent agent, Action act) {
+		for(SimulationListener listener : simulationListeners) {
+			listener.actionPerformed(agent, act);
+		}
+	}
 }

@@ -34,6 +34,6 @@ public class RevisionRequest extends SpeechAct
 	
 	@Override 
 	public String toString() {
-		return "< " + this.getSenderId() + "revision-request " + this.getReceiverId() + " " + sentences + " >";
+		return "< " + this.getSenderId() + " revision-request " + this.getReceiverId() + " " + sentences + " >";
 	}
 }

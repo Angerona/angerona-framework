@@ -40,6 +40,6 @@ public class Answer extends SpeechAct {
 	
 	@Override
 	public String toString() {
-		return "NAAnswer: " + regarding.toString() + " --> " + answer.toString();
+		return "< " + getSenderId() + " answers " + getReceiverId() + " " + regarding.toString() + "=" + answer.toString() + " >";
 	}
 }
