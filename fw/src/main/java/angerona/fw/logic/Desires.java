@@ -1,12 +1,11 @@
 package angerona.fw.logic;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.Desire;
 
@@ -32,17 +31,9 @@ public class Desires extends BaseAgentComponent {
 		desires.addAll(other.desires);
 	}
 	
-	/** adds the given atom as desire the the DesireComponent of the Agent */
-	public boolean add(Atom desire) {
-		return desires.add(new Desire(desire));
-	}
-	
-	public boolean addAll(Collection<? extends Atom> elements) {
-		Collection<Desire> toAdd = new LinkedList<Desire>();
-		for(Atom atom : elements) {
-			toAdd.add(new Desire(atom));
-		}
-		return desires.addAll(toAdd);
+	/** adds the given desire to the DesireComponent of the Agent */
+	public boolean add(Desire desire) {
+		return desires.add(desire);
 	}
 	
 	public boolean remove(Desire desire) {
@@ -81,6 +72,16 @@ public class Desires extends BaseAgentComponent {
 			atoms.add(des.getDesire());
 		}
 		return atoms;
+	}
+	
+	public Set<Desire> getDesiresByPredicate(Predicate pred) {
+		Set<Desire> reval = new HashSet<Desire>();
+		for(Desire d : desires) {
+			if(d.getDesire().getPredicate().equals(pred)) {
+				reval.add(d);
+			}
+		}
+		return reval;
 	}
 
 	@Override

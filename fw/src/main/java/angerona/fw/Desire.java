@@ -16,6 +16,9 @@ public class Desire {
 	/** plan as subgoal */
 	private Subgoal plan;
 	
+	/** the perception which initialized the desire, this might be null */
+	private Perception perception;
+	
 	/** Default Ctor: Initialize plan and atom with null */
 	public Desire() {}
 	
@@ -24,7 +27,12 @@ public class Desire {
 	 * @param desire	a tweety atom representing the desire.
 	 */
 	public Desire(Atom desire) {
+		this(desire, null);
+	}
+	
+	public Desire(Atom desire, Perception reason) {
 		this.atom = desire;
+		this.perception = reason;
 	}
 	
 	/**
@@ -48,6 +56,15 @@ public class Desire {
 	/** @return tweety representation of the desire */
 	public Atom getDesire() {
 		return atom;
+	}
+
+	public Perception getPerception() {
+		return perception;
+	}
+	
+	@Override
+	public String toString() {
+		return atom.toString();
 	}
 	
 	@Override 

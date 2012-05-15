@@ -5,8 +5,18 @@ import java.util.Map;
 
 
 /**
- * Used for generating unique ids for the Angerona Entity
+ * Static methods are used for generating unique ids for the Angerona Entity
  * hierarchy.
+ * 
+ * Instances of this object can be used for generating unique ids for other objects
+ * like desire arguments (queryProcessing(1), ..., queryProcessing(n))
+ * 
+ * BEWARE: using the correct instance of this class at the right place to ensure that
+ * the id generation is unique for the needed id space.
+ * 
+ * BEWARE: the id generation will be reseted after Angerona exits. This means when restarting
+ * the framework the id counts from the beginning.
+ * 
  * @see Entity
  * @author Tim Janus
  */
@@ -16,6 +26,8 @@ public class IdGenerator {
 	
 	/** a map of ids to entity references */
 	private static Map<Long, Entity> entityMap = new HashMap<Long, Entity>();
+	
+	private long next = 1;
 	
 	/**
 	 * @param	ent	reference to the entity which wants the new id;
@@ -34,5 +46,13 @@ public class IdGenerator {
 		} else {
 			return null;
 		}
+	}
+	
+	/** generator */
+	public IdGenerator() {}
+	
+	/** @return the next unique id */
+	public Long getNextId() {
+		return next++;
 	}
 }

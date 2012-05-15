@@ -162,9 +162,12 @@ public class Subgoal extends Intention {
 			}
 		}
 		
-		if(toDel != null)
+		if(toDel != null) {
 			stacks.remove(toDel);
-		
+			if(getNumberOfStacks() == 0 && getFulfillsDesire() != null) {
+				agent.removeDesire(getFulfillsDesire());
+			}
+		}
 		if(parent != null && stacks.isEmpty())
 			parent.onSubgoalFinished(this);
 	}

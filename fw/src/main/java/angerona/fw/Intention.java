@@ -1,9 +1,5 @@
 package angerona.fw;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
-import net.sf.tweety.Formula;
 
 /**
  * An intention is either atomic, then it is called Skill or it is complex
@@ -21,7 +17,7 @@ public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	protected Agent agent;
 	
 	/** a collection of desires which will be fulfilled if this Intention was processed */
-	private Collection<Formula>	fulfillsDesires = new LinkedList<Formula>();
+	private Desire	fulfillsDesire;
 	
 	/** the parent intention of this instance */
 	protected Intention parent;
@@ -44,7 +40,7 @@ public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	protected Intention(Intention other) {
 		this.parent = other.parent;
 		this.agent = other.agent;
-		this.fulfillsDesires.addAll(other.fulfillsDesires);
+		this.fulfillsDesire = other.fulfillsDesire;
 		this.realRun = other.realRun;
 		
 		// TODO: This should have no side-effects, but not sure yet.
@@ -57,8 +53,8 @@ public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	}
 	
 	/** @return collection of desires which will be fullfiled after the Intention was followed */
-	public Collection<Formula> getFulfillsDesires() {
-		return fulfillsDesires;
+	public Desire getFulfillsDesire() {
+		return fulfillsDesire;
 	}
 	
 	/**

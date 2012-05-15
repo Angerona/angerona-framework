@@ -10,7 +10,7 @@ public class DesireTest extends TestCase {
 	public void testCRD() {
 		Desires desComp = new Desires();
 		Atom a = new Atom(new Predicate("test"));
-		desComp.add(a);
+		desComp.add(new Desire(a));
 		
 		assertNotNull(desComp.getDesire(a));
 		assertNotNull(desComp.getDesire(new Desire(a)));

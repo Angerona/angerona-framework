@@ -13,6 +13,7 @@ import java.util.Set;
 
 import net.sf.beenuts.ap.AgentProcess;
 import net.sf.beenuts.apr.APR;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
@@ -248,9 +249,11 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 					highLevelAg.addComponent(desires);
 				}
 				highLevelAg.initComponents(ai.getAdditionalData());
-				if(desires != null)
-					highLevelAg.getDesires().addAll(ai.getDesires());
-				
+				if(desires != null) {
+					for(Atom a : ai.getDesires()) {
+						highLevelAg.getDesires().add(new Desire(a));
+					}
+				}
 				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {

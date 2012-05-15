@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
+import angerona.fw.Desire;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
@@ -18,6 +19,7 @@ import angerona.fw.comm.Query;
 import angerona.fw.comm.RevisionRequest;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
@@ -42,18 +44,20 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 		boolean reval = processPersuadeOtherAgentsDesires(pp, ag);
 
-		if(ag.getDesires() != null) {
-			Set<Atom> desires = ag.getDesires().getTweety();
-			if(desires.contains(
-					new Atom(GenerateOptionsOperator.prepareQueryProcessing))) {
-				reval = reval || answerQuery(pp, ag);
-			} else if(desires.contains(
-					new Atom(GenerateOptionsOperator.prepareRevisionRequestProcessing))) {
-				reval = reval || revisionRequest(pp, ag);
-			} else if(desires.contains(
-					new Atom(GenerateOptionsOperator.prepareReasonCalculation))) {
-				// TODO Implement.
+		Desires des = ag.getDesires();
+		if(des != null) {
+			Set<Desire> actual;
+			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
+			for(Desire d : actual) {
+				reval = reval || answerQuery(d, pp, ag);
 			}
+			
+			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareRevisionRequestProcessing);
+			for(Desire d : actual) {
+				reval = reval || revisionRequest(d, pp, ag);
+			}
+			
+			// Todo prepare reason
 		}
 		
 		if(!reval)
@@ -109,14 +113,15 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		return reval;
 	}
 
-	protected Boolean answerQuery(SubgoalGenerationParameter pp, Agent ag) {
+	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
 		if(qaSkill == null) {
 			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
 			return false;
 		}
-		Context context = ContextFactory.createContext(
-				pp.getActualPlan().getAgent().getActualPerception());
+		
+		// TODO: create alternative later
+		Context context = ContextFactory.createContext(des.getPerception());
 		context.set("answer", AnswerValue.AV_TRUE);
 		pp.getActualPlan().newStack(qaSkill, context);
 		
@@ -125,7 +130,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		pp.getActualPlan().newStack(qaSkill, context);
 		
 		// TODO: Find a better place to remove desire again.
-		ag.removeDesire(new Atom(GenerateOptionsOperator.prepareQueryProcessing));
+		ag.removeDesire(des.getDesire());
 		
 		Subgoal sg = pp.getActualPlan();
 		while(!(sg instanceof MasterPlan)) {
@@ -136,17 +141,15 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		return true;
 	}
 	
-	protected Boolean revisionRequest(SubgoalGenerationParameter pp, Agent ag) {
+	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		// three cases: accept, query (to ensure about something) or deny.
 		// in general we will accept all Revision queries but for the scm example
 		// it is proofed if the given atom is 'excused' and if this is the case
 		// first of all attend_scm is queried.
-		
-		// TODO: NEXT STEPS make a more complex desire object to save working plans and used perceptions and so on.
-		if(!(ag.getActualPerception() instanceof RevisionRequest))
+		if(!(des.getPerception() instanceof RevisionRequest))
 			return false;
 		
-		RevisionRequest rr = (RevisionRequest) ag.getActualPerception();
+		RevisionRequest rr = (RevisionRequest) des.getPerception();
 		if(rr.getSentences().size() == 1) {
 			FolFormula ff = rr.getSentences().iterator().next();
 			if(ff.toString().equals("excused")) {
@@ -155,8 +158,9 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				if(aa.getAnswerExtended() == AnswerValue.AV_UNKNOWN) {
 					Skill query = (Skill) ag.getSkill("Query");
 					pp.getActualPlan().newStack(query, new Query(ag.getName(), rr.getSenderId(), reasonToFire).getContext());
+					ag.removeDesire(des);
 				} else if(aa.getAnswerExtended() == AnswerValue.AV_FALSE) {
-					
+					return false;
 				}
 				return true;
 			}

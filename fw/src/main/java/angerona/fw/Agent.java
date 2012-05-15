@@ -389,7 +389,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	public boolean addDesire(Desire desire) {
 		Desires desires = getDesires();
 		if(desires != null) {
-			boolean reval = getDesires().add(desire.getDesire());
+			boolean reval = getDesires().add(desire);
 			if(reval) {
 				Angerona.getInstance().report("New desire: " + desire.toString(), getEnvironment(), desires);
 			}
