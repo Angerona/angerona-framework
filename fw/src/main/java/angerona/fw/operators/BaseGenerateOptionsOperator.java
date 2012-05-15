@@ -2,7 +2,7 @@ package angerona.fw.operators;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Desire;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
 /**
@@ -11,5 +11,5 @@ import angerona.fw.operators.parameter.GenerateOptionsParameter;
  * @author Tim Janus
  */
 public abstract class BaseGenerateOptionsOperator extends 
-	Operator<GenerateOptionsParameter, Set<FolFormula>> {
+	Operator<GenerateOptionsParameter, Set<Desire>> {
 }

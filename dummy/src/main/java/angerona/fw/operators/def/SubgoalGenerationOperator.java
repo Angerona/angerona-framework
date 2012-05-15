@@ -43,7 +43,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		boolean reval = processPersuadeOtherAgentsDesires(pp, ag);
 
 		if(ag.getDesires() != null) {
-			Set<FolFormula> desires = ag.getDesires().getTweety();
+			Set<Atom> desires = ag.getDesires().getTweety();
 			if(desires.contains(
 					new Atom(GenerateOptionsOperator.prepareQueryProcessing))) {
 				reval = reval || answerQuery(pp, ag);
@@ -64,11 +64,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	protected boolean processPersuadeOtherAgentsDesires(
 			SubgoalGenerationParameter pp, Agent ag) {
 		boolean reval = false;
-		Set<FolFormula> toRemove = new HashSet<FolFormula>();
+		Set<Atom> toRemove = new HashSet<Atom>();
 		if(ag.getDesires() == null)
 			return false;
 		
-		for(FolFormula desire : ag.getDesires().getTweety()) {
+		for(Atom desire : ag.getDesires().getTweety()) {
 			if(desire.toString().trim().startsWith("v_")) {
 				int si = desire.toString().indexOf("_")+1;
 				int li = desire.toString().indexOf("(", si);
@@ -101,7 +101,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), mp);
 			}
 		}
-		for(FolFormula desire : toRemove) {
+		// TODO: Implement in plan destroying
+		for(Atom desire : toRemove) {
 			ag.removeDesire(desire);
 		//	ag.addDesire(new Atom(new Predicate(desire.toString()+"_wait")));
 		}

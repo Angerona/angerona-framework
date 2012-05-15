@@ -8,6 +8,7 @@ import java.util.Set;
 
 import net.sf.beenuts.ap.AgentArchitecture;
 import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
@@ -253,12 +254,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		// Deliberation:
 		Desires desires = getDesires();
 		if(desires != null) {
-			Set<FolFormula> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
-			if(!desires.equals(options)) {
-				options.remove(desires);
-				if(options.size() == 1)
-					addDesire(options.iterator().next());
-				addDesires(options);
+			Set<Desire> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
+			for(Desire des : options) {
+				addDesire(des);
 			}
 		}
 		
@@ -388,40 +386,66 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		Angerona.getInstance().onActionPerformed(this, act);
 	}
 	
-	public boolean addDesire(FolFormula desire) {
+	public boolean addDesire(Desire desire) {
 		Desires desires = getDesires();
 		if(desires != null) {
-			boolean reval = getDesires().add(desire);
+			boolean reval = getDesires().add(desire.getDesire());
 			if(reval) {
 				Angerona.getInstance().report("New desire: " + desire.toString(), getEnvironment(), desires);
 			}
 			return reval;
 		}
+		LOG.warn("Tried to add a desire to agent '{}' lacking the desire component.", getName());
 		return false;
 	}
 	
-	public boolean addDesires(Set<FolFormula> set) {
-		Desires desires = getDesires();
-		if(desires != null) {
-			boolean reval = desires.addAll(set);
-			if(reval) {
-				Angerona.getInstance().report("New desires: " + set.toString(), getEnvironment(), desires);
-			}
-			return reval;
+	/**
+	 * adds the given tweety atom as desire
+	 * @param desire
+	 * @return
+	 */
+	public boolean addDesire(Atom desire) {
+		return addDesire(new Desire(desire));
+	}
+	
+	/**
+	 * adds the given set of tweety atoms as desire to the desire component.
+	 * @param set
+	 * @return
+	 */
+	public boolean addDesires(Set<Atom> set) {
+		for(Atom a : set) {
+			if(!addDesire(a))
+				return false;
 		}
-		return false;
+		return true;
 	}
 	
-	public boolean removeDesire(FolFormula desire) {
+	/**
+	 * removes the given desire
+	 * @param desire
+	 * @return
+	 */
+	public boolean removeDesire(Desire desire) {
 		Desires desires = getDesires();
 		if(desires != null) {
 			boolean reval = desires.remove(desire);
 			if(reval) {
 				Angerona.getInstance().report("Removed desire: " + desire.toString(), getEnvironment(), desires);
+				
 			}
 			return reval;
 		}
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @param desire
+	 * @return
+	 */
+	public boolean removeDesire(Atom desire) {
+		return removeDesire(new Desire(desire));
 	}
 	
 	@Override

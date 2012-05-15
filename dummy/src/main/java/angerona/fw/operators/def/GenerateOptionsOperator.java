@@ -4,12 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Desire;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.RevisionRequest;
 import angerona.fw.comm.Why;
@@ -34,16 +34,16 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	public static final Predicate prepareReasonCalculation = new Predicate("reasonProcessing");
 	
 	@Override
-	protected Set<FolFormula> processInt(GenerateOptionsParameter param) {
+	protected Set<Desire> processInt(GenerateOptionsParameter param) {
 		LOG.info("Run Default-Generate-Options-operator");
 		
-		Set<FolFormula> reval = new HashSet<FolFormula>();
+		Set<Desire> reval = new HashSet<Desire>();
 		if(param.getPerception() instanceof Query) {
-			reval.add(new Atom(prepareQueryProcessing));
+			reval.add(new Desire(new Atom(prepareQueryProcessing)));
 		} else if(param.getPerception() instanceof RevisionRequest) {
-			reval.add(new Atom(prepareRevisionRequestProcessing));
+			reval.add(new Desire(new Atom(prepareRevisionRequestProcessing)));
 		} else if(param.getPerception() instanceof Why) {
-			reval.add(new Atom(prepareReasonCalculation));
+			reval.add(new Desire(new Atom(prepareReasonCalculation)));
 		}
 		return reval;
 	}

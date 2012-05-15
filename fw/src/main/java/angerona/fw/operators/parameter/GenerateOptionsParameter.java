@@ -3,8 +3,8 @@ package angerona.fw.operators.parameter;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
+import angerona.fw.Desire;
 import angerona.fw.Perception;
 import angerona.fw.Skill;
 import angerona.fw.logic.Beliefs;
@@ -18,7 +18,7 @@ public class GenerateOptionsParameter extends GenericOperatorParameter {
 	protected Beliefs beliefs;
 	
 	/** desires of the agent */
-	protected Set<FolFormula> desires;
+	protected Set<Desire> desires;
 	
 	/** the last received perception */
 	protected Perception perception;
@@ -34,7 +34,7 @@ public class GenerateOptionsParameter extends GenericOperatorParameter {
 		super(agent.getEnvironment());
 		this.beliefs = agent.getBeliefs();
 		if(agent.getDesires() != null) {
-			this.desires = agent.getDesires().getTweety();
+			this.desires = agent.getDesires().getDesires();
 		}
 		this.perception = perception;
 		this.skills = skills;
@@ -46,7 +46,7 @@ public class GenerateOptionsParameter extends GenericOperatorParameter {
 	}
 	
 	/** @return desires of the agent */
-	public Set<FolFormula> getDesires() {
+	public Set<Desire> getDesires() {
 		return desires;
 	}
 	
