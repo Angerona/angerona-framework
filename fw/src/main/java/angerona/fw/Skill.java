@@ -48,7 +48,12 @@ public class Skill extends Intention implements Runnable {
 		Agent a = getAgent();
 		violates = false;
 		Context c = a.getContext();
-		Context in = ContextFactory.createContext(objectContainingContext);
+		Context in = null;
+		if(objectContainingContext instanceof Context) {
+			in = (Context) objectContainingContext;
+		} else {
+			in = ContextFactory.createContext(objectContainingContext);
+		}
 		c.attachContext("in", in);
 		
 		for(Statement st : config.getStatements()) {

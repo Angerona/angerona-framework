@@ -29,7 +29,7 @@ public class Query extends SpeechAct {
 	
 	@Override 
 	public String toString() {
-		return "< " + getSenderId() + " query " + getReceiverId() + question + " >";
+		return "< " + getSenderId() + " query " + getReceiverId() + " " + question + " >";
 	}
 
 }

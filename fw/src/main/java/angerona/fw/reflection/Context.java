@@ -14,7 +14,15 @@ import angerona.fw.serialize.Statement;
 public class Context {
 	
 	/** map containing all the objects saved by the key-string name */
-	private Map<String, Object> objects = new HashMap<String, Object>();
+	private Map<String, Object> objects;
+	
+	public Context() {
+		objects = new HashMap<String, Object>();
+	}
+	
+	public Context(Context other) {
+		this.objects = new HashMap<String, Object>(other.objects);
+	}
 	
 	/**
 	 * Gets the object saved with the given name.

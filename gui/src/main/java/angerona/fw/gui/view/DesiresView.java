@@ -3,14 +3,25 @@ package angerona.fw.gui.view;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.internal.Entity;
 import angerona.fw.logic.Desires;
 
+/**
+ * A List-View of the desires of an agent.
+ * @author Tim Janus
+ *
+ */
 public class DesiresView extends ListViewColored<Desires> {
 
 	/** kill warning */
 	private static final long serialVersionUID = 8925750149764894623L;
+	
+	@Override
+	public void init() {
+		super.init();
+		setTitle("Desires");
+	}
 	
 	@Override
 	public Class<?> getObservationObjectType() {
@@ -31,7 +42,7 @@ public class DesiresView extends ListViewColored<Desires> {
 		if(obj instanceof Desires) {
 			Desires des = (Desires)obj;
 			List<String> reval = new LinkedList<String>();
-			for(Formula f : des) {
+			for(FolFormula f : des.getTweety()) {
 				reval.add(f.toString());
 			}
 			

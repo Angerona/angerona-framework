@@ -11,6 +11,7 @@ import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
@@ -284,5 +285,10 @@ public class TreeController implements SimulationListener {
 			}
 		}
 		
+	}
+
+	@Override
+	public void actionPerformed(Agent agent, Action act) {
+		// does nothing
 	}
 }

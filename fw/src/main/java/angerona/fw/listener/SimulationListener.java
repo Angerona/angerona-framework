@@ -1,11 +1,12 @@
 package angerona.fw.listener;
 
+import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.AngeronaEnvironment;
 
 /**
  * Listener interface which gets informed about changes of the simulation. For example if a new agent
- * is added to simulation. Or a agent is removed, when the simulation starts or a tick is done.
+ * is added to simulation. Or an agent is removed, when the simulation starts or a tick is done.
  * 
  * @author Tim Janus
  */
@@ -24,4 +25,7 @@ public interface SimulationListener {
 	
 	/** is called after a complete cylce of the simulation (an update of ever agent) is done. */
 	void tickDone(AngeronaEnvironment simulationEnvironment, boolean finished);
+
+	/** is called after an agent has performed an action. */
+	void actionPerformed(Agent agent, Action act);
 }

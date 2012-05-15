@@ -1,5 +1,9 @@
 package angerona.fw.internal;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
@@ -44,10 +48,38 @@ public abstract class PerceptionFactory {
 	 * 			as tweety atom.
 	 */
 	public static FolFormula createFormula(String paramValue, Context context) {
-		if(paramValue.startsWith("$"))
-			return (FolFormula)context.get(paramValue.substring(1));
+		if(paramValue.startsWith("$")) {
+			Object obj = context.get(paramValue.substring(1));
+			if(obj instanceof FolFormula) {
+				return (FolFormula)obj;
+			} else if(obj instanceof String) {
+				return new Atom(new Predicate(obj.toString()));
+			} else {
+				throw new ClassCastException("Cannot cast: " + obj.toString() + " to FolFormula");
+			}
+		}
 		else // TODO: use more generic formula generation.
 			return new Atom(new Predicate(paramValue));
+	}
+	
+	public static Set<FolFormula> createFormulaSet(String paramValue, Context context) {
+		Set<FolFormula> reval = new HashSet<FolFormula>();
+		
+		if(paramValue.startsWith("$")) {
+			Object obj = context.get(paramValue.substring(1));
+			if(obj instanceof Collection<?>) {
+				for(Object element : (Collection<?>)obj) {
+					if(element instanceof FolFormula)
+						reval.add((FolFormula)element);
+				}
+			}
+		} else {
+			String [] parts = paramValue.split(",");
+			for(String part : parts) {
+				reval.add(new Atom(new Predicate(part)));
+			}
+		}
+		return reval;
 	}
 	
 	/**

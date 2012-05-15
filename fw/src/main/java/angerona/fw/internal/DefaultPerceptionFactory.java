@@ -1,9 +1,12 @@
 package angerona.fw.internal;
 
+import java.util.Set;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
+import angerona.fw.comm.RevisionRequest;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
@@ -11,6 +14,7 @@ import angerona.fw.serialize.perception.AnswerDO;
 import angerona.fw.serialize.perception.CommunicationActDO;
 import angerona.fw.serialize.perception.PerceptionDO;
 import angerona.fw.serialize.perception.QueryDO;
+import angerona.fw.serialize.perception.RevisionRequestDO;
 
 /**
  * A factory for creating perceptions from data objects. The default
@@ -39,6 +43,11 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 				FolFormula q = createFormula(ado.getQuestion(), context);
 				AnswerValue av = createAnswerValue(ado.getAnswer(), context);
 				return new Answer(s, r, q, av);
+			} else if (commAct instanceof RevisionRequestDO) {
+				RevisionRequestDO rrdo = (RevisionRequestDO) commAct;
+				Set<FolFormula> fs = createFormulaSet(rrdo.getSentences(), context);
+				
+				return new RevisionRequest(s, r, fs);
 			}
 		} 
 		

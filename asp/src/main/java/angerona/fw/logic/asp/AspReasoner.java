@@ -23,6 +23,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.operators.parameter.ReasonerParameter;
 
 /**
  * Implementation of an ASP Reasoner using dlv or clingo as solver backends.
@@ -62,6 +63,10 @@ public class AspReasoner extends BaseReasoner {
 
 	@Override
 	public Answer query(Formula query) {		
+		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
+		if(bb == null)
+			return null;
+		
 		boolean negate = false;
 		Atom aq = null;
 		if(query instanceof Negation) {
@@ -72,7 +77,6 @@ public class AspReasoner extends BaseReasoner {
 			negate = false;
 			aq = (Atom)query;
 		}
-		AspBeliefbase bb = (AspBeliefbase)this.beliefBase;
 		
 		List<AnswerSet> reval = null;
 		try {
@@ -140,6 +144,11 @@ public class AspReasoner extends BaseReasoner {
 		else if(this.solver == SolverType.DLV_COMPLEX)
 			solver = new DLVComplex("./tools/solver/asp/dlv/dlv-complex"+postfix);
 		return solver.computeModels(bb.getProgram(), 10);
+	}
+
+	@Override
+	protected AngeronaAnswer processInt(ReasonerParameter param) {
+		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
 	}
 
 }

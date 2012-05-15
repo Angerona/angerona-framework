@@ -60,6 +60,8 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	/** map containing registered views some of them are default other might be provided by plugins */
 	private Map<String, Class<? extends BaseView>> viewMap = new HashMap<String, Class<? extends BaseView>>();
 	
+	private Map<Entity, List<BaseView>> registeredViewsByEntity = new HashMap<Entity, List<BaseView>>();
+	
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaWindow.class);
 	
@@ -178,7 +180,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 				return null;
 			
 			if (comp.getClass().equals(view.getObservationObjectType())) {
-				BaseView newly = AngeronaWindow.createBaseView(cls, comp);
+				BaseView newly = createBaseView(cls, comp);
 				return newly;
 			}
 		}
@@ -194,12 +196,16 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	 * @param toObserve	reference to the object the UI component should observe (might be null if no direct mapping between observed object and UI component can be given)
 	 * @return a new instance of UIComponent which is ready to use.
 	 */
-	public static <T extends BaseView> T createBaseView(Class<? extends T> cls, Object toObserve) {
+	public <T extends BaseView> T createBaseView(Class<? extends T> cls, Entity toObserve) {
 		T reval;
 		try {
 			reval = cls.newInstance();
 			if(toObserve != null) {
 				reval.setObservationObject(toObserve);
+				if(!registeredViewsByEntity.containsKey(toObserve)) {
+					registeredViewsByEntity.put(toObserve, new LinkedList<BaseView>());
+				}
+				registeredViewsByEntity.get(toObserve).add(reval);
 			}
 			reval.init();
 			return reval;
@@ -212,6 +218,14 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		} catch (OperationNotSupportedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends BaseView> T getBaseViewObservingEntity(Entity ent) {
+		if(registeredViewsByEntity.containsKey(ent)) {
+			return (T) registeredViewsByEntity.get(ent).get(0);
 		}
 		return null;
 	}
@@ -268,7 +282,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 					}
 					
 					if(selection != null) {
-						BaseView comp = AngeronaWindow.createBaseView(viewMap.get(str), selection);
+						BaseView comp = createBaseView(viewMap.get(str), selection);
 						AngeronaWindow.getInstance().addComponentToCenter(comp);
 					}
 				}

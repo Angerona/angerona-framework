@@ -1,12 +1,11 @@
-<Skill name="RevisionRequest">
-	<Commandos>	
-		<!-- Communicate the revision request through the environment to the query sender -->
-		<SendAction out="RevisionRequestAction" >
-				<RevisiionRequest 
-                    sender="$name"
-					receiver="$in.receiverId"
-					fact="$in.fact"
-				/>
-		</SendAction>
-	</Commandos>
-</Skill>
+<skill>
+   <name>RevisionRequest</name>
+   <statement>
+      <name>SendAction</name>
+      <complex-info class="angerona.fw.serialize.perception.RevisionRequestDO"
+      		sender="$name" receiver="$in.receiverId">
+      		<sentences>$in.sentences</sentences>
+      </complex-info>
+      <return-value-identifier>rrResult</return-value-identifier>
+   </statement>
+</skill>

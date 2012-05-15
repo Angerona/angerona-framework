@@ -55,6 +55,8 @@ public class Angerona {
 	
 	private Report actualReport;
 	
+	private AngeronaEnvironment actualSimulation;
+	
 	public static Angerona getInstance() {
 		if(instance == null)
 			instance = new Angerona();
@@ -100,6 +102,10 @@ public class Angerona {
 	/** @return the report of the last started simulation. */
 	public Report getActualReport() {
 		return actualReport;
+	}
+	
+	public AngeronaEnvironment getActualSimulation() {
+		return actualSimulation;
 	}
 	
 	/**
@@ -158,6 +164,7 @@ public class Angerona {
 	
 	public void onNewSimulation(AngeronaEnvironment ev) {
 		actualReport = new Report(ev);
+		actualSimulation = ev;
 		reports.put(ev, actualReport);
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
@@ -381,6 +388,12 @@ public class Angerona {
 			} catch(Exception ex) {
 				LOG.warn("Cannot load file: '"+actFile.getName()+"' " + ex.getMessage());
 			} 
+		}
+	}
+
+	public void onActionPerformed(Agent agent, Action act) {
+		for(SimulationListener listener : simulationListeners) {
+			listener.actionPerformed(agent, act);
 		}
 	}
 }

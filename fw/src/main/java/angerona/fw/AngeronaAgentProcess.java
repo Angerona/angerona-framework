@@ -91,6 +91,8 @@ public class AngeronaAgentProcess implements AgentProcess {
 		if(hasPerceptions()) {
 			architecture.cycle(perceptions.get(0));
 			perceptions.remove(0);
+		} else {
+			architecture.cycle(null);
 		}
 	}
 
