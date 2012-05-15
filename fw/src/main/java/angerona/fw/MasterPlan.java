@@ -1,48 +1,44 @@
 package angerona.fw;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import angerona.fw.internal.IdGenerator;
+import angerona.fw.listener.SubgoalListener;
 
-public class MasterPlan extends Subgoal implements AgentComponent {
+/**
+ * 
+ * @author Tim Janus
+ */
+public class MasterPlan extends BaseAgentComponent implements SubgoalListener{
 
-	private Long id;
+	private List<Subgoal> plans = new LinkedList<Subgoal>();
 	
-	private Long parent;
-	
-	public MasterPlan() {
-		super((Agent)null);
-		id = IdGenerator.generate(this);
-	}
+	public MasterPlan() {}
 	
 	public MasterPlan(MasterPlan plan) {
 		super(plan);
-		id = plan.getGUID();
-		parent = plan.getParent();
-	}
-
-	@Override
-	public void onSubgoalFinished(Intention subgoal) {
-		super.onSubgoalFinished(subgoal);
-
-		Angerona.getInstance().report("Step on plan executed, plan updated.", getAgent().getEnvironment(), (MasterPlan)this);
 	}
 	
-	@Override
-	public Long getGUID() {
-		return id;
+	public boolean addPlan(Subgoal plan) {
+		boolean reval = plans.add(plan);
+		if(reval) {
+			report("New plan for desire '"+plan.getFulfillsDesire()+"' generated.");
+		}
+		return reval;
 	}
-
-	@Override
-	public Long getParent() {
-		return parent;
+	
+	public boolean removePlan(Subgoal plan) {
+		boolean reval = plans.remove(plan);
+		if(reval) {
+			report("Removed plan for desire '"+plan.getFulfillsDesire()+"'.");
+		}
+		return reval;
 	}
-
-	@Override
-	public List<Long> getChilds() {
-		return new LinkedList<Long>();
+	
+	public List<Subgoal> getPlans() {
+		return Collections.unmodifiableList(plans);
 	}
 
 	@Override
@@ -52,12 +48,17 @@ public class MasterPlan extends Subgoal implements AgentComponent {
 
 	@Override
 	public void init(Map<String, String> additionalData) {
-		// nothing...
+		this.getAgent().addSubgoalListener(this);
 	}
 
 	@Override
-	public void setParent(Long id) {
-		parent = id;
-		agent = (Agent)IdGenerator.getEntityWithId(id);
+	public void onSubgoalFinished(Intention subgoal) {
+		if(subgoal.getParentGoal() == null) {
+			Subgoal sg = (Subgoal) subgoal;
+			removePlan(sg);
+			if(sg.getFulfillsDesire() != null) {
+				getAgent().removeDesire(sg.getFulfillsDesire());
+			}
+		}
 	}
 }

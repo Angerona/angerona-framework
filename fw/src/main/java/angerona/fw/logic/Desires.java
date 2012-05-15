@@ -56,7 +56,7 @@ public class Desires extends BaseAgentComponent {
 	
 	public Desire getDesire(Atom twettyAtom) {
 		for(Desire des : desires) {
-			if(des.getDesire().equals(twettyAtom))
+			if(des.getAtom().equals(twettyAtom))
 				return des;
 		}
 		return null;
@@ -69,7 +69,7 @@ public class Desires extends BaseAgentComponent {
 	public Set<Atom> getTweety() {
 		Set<Atom> atoms = new HashSet<Atom>();
 		for(Desire des : desires) {
-			atoms.add(des.getDesire());
+			atoms.add(des.getAtom());
 		}
 		return atoms;
 	}
@@ -77,7 +77,7 @@ public class Desires extends BaseAgentComponent {
 	public Set<Desire> getDesiresByPredicate(Predicate pred) {
 		Set<Desire> reval = new HashSet<Desire>();
 		for(Desire d : desires) {
-			if(d.getDesire().getPredicate().equals(pred)) {
+			if(d.getAtom().getPredicate().equals(pred)) {
 				reval.add(d);
 			}
 		}

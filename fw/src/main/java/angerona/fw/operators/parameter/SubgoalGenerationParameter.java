@@ -2,7 +2,7 @@ package angerona.fw.operators.parameter;
 
 import java.util.List;
 
-import angerona.fw.Subgoal;
+import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 
 /**
@@ -14,14 +14,14 @@ public class SubgoalGenerationParameter extends GenericOperatorParameter {
 	private List<Skill> skills;
 	
 	/** the actual working goals */
-	private Subgoal actualPlan;
+	private MasterPlan actualPlan;
 
 	/**
 	 * Ctor: Generation the PlanerParameter data-structure with the following parameters:
 	 * @param actualPlan	the high level plan of the agent
 	 * @param options		list of possible actions (applicable skills)
 	 */
-	public SubgoalGenerationParameter(Subgoal actualPlan, List<Skill> skills) {
+	public SubgoalGenerationParameter(MasterPlan actualPlan, List<Skill> skills) {
 		super(actualPlan.getAgent().getEnvironment());
 		this.skills = skills;
 		this.actualPlan = actualPlan;
@@ -33,7 +33,7 @@ public class SubgoalGenerationParameter extends GenericOperatorParameter {
 		return skills;
 	}
 	
-	public Subgoal getActualPlan() {
+	public MasterPlan getActualPlan() {
 		return actualPlan;
 	}
 	

@@ -20,6 +20,7 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.Beliefs;
@@ -67,6 +68,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	private List<Long> childrenIds = new LinkedList<Long>();
 	
 	private List<AgentComponent> customComponents = new LinkedList<AgentComponent>();
+	
+	private List<SubgoalListener> subgoalListeners = new LinkedList<SubgoalListener>();
 	
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
@@ -200,6 +203,24 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	
 	public List<AgentComponent> getComponents() {
 		return Collections.unmodifiableList(customComponents);
+	}
+	
+	public boolean addSubgoalListener(SubgoalListener listener) {
+		return subgoalListeners.add(listener);
+	}
+	
+	public boolean removeSubgoalListener(SubgoalListener listener) {
+		return subgoalListeners.remove(listener);
+	}
+	
+	public List<SubgoalListener> getSubgoalListeners() {
+		return Collections.unmodifiableList(subgoalListeners);
+	}
+	
+	public void onSubgoalFinished(Subgoal sg) {
+		for(SubgoalListener sl : subgoalListeners) {
+			sl.onSubgoalFinished(sg);
+		}
 	}
 	
 	/**
@@ -340,6 +361,15 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		return desires;
 	}
 	
+	public MasterPlan getPlanComponent() {
+		MasterPlan plan = getComponent(MasterPlan.class);
+		if(plan == null) {
+			LOG.warn("Tried to access the plan-component of agent '{}' which has no plan-component.", getName());
+			return null;
+		}
+		return plan;
+	}
+	
 	/** @return the perception the agent is working on. */
 	public Perception getActualPerception() {
 		return actualPerception;
@@ -383,6 +413,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		getAgentProcess().act(act);
 		updateBeliefs(act);
 		LOG.info("Action performed: " + act.toString());
+		Angerona.getInstance().report("Action: '"+act.toString()+"' performed.", getEnvironment(), this);
 		Angerona.getInstance().onActionPerformed(this, act);
 	}
 	

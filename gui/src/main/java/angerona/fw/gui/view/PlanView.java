@@ -24,7 +24,8 @@ public class PlanView extends ListViewColored<MasterPlan> {
 	protected List<String> getStringRepresentation(Entity obj) {
 		if(obj instanceof MasterPlan) {
 			MasterPlan p = (MasterPlan)obj;
-			return rek(p, 0);
+			// TODO, as tree view
+			return null;
 		}
 		return null;
 	}

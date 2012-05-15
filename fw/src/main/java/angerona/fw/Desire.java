@@ -54,7 +54,7 @@ public class Desire {
 	}
 	
 	/** @return tweety representation of the desire */
-	public Atom getDesire() {
+	public Atom getAtom() {
 		return atom;
 	}
 

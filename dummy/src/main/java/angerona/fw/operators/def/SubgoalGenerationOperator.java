@@ -1,6 +1,5 @@
 package angerona.fw.operators.def;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
 import angerona.fw.Desire;
-import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Query;
@@ -68,23 +66,23 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	protected boolean processPersuadeOtherAgentsDesires(
 			SubgoalGenerationParameter pp, Agent ag) {
 		boolean reval = false;
-		Set<Atom> toRemove = new HashSet<Atom>();
 		if(ag.getDesires() == null)
 			return false;
 		
-		for(Atom desire : ag.getDesires().getTweety()) {
-			if(desire.toString().trim().startsWith("v_")) {
-				int si = desire.toString().indexOf("_")+1;
-				int li = desire.toString().indexOf("(", si);
+		for(Desire desire : ag.getDesires().getDesires()) {
+			Atom atom = desire.getAtom();
+			if(atom.toString().trim().startsWith("v_")) {
+				int si = atom.toString().indexOf("_")+1;
+				int li = atom.toString().indexOf("(", si);
 				if(si == -1 || li == -1)
 					continue;
-				String recvName = desire.toString().substring(si, li);
+				String recvName = atom.toString().substring(si, li);
 				
-				si = desire.toString().indexOf("(")+1;
-				li = desire.toString().indexOf(")");
+				si = atom.toString().indexOf("(")+1;
+				li = atom.toString().indexOf(")");
 				if(si == -1 || li == -1)
 					continue;
-				String content = desire.toString().substring(si,li);
+				String content = atom.toString().substring(si,li);
 				
 				LOG.info("'{}' wants '"+recvName+"' to believe: '{}'",  ag.getName(), content);
 		
@@ -93,22 +91,12 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "RevisionRequest");
 					continue;
 				}
-				Subgoal sg = pp.getActualPlan();
-				while(!(sg instanceof MasterPlan)) {
-					sg = (Subgoal) sg.getParentGoal();
-				}
-				MasterPlan mp = (MasterPlan)sg;
-				mp.newStack(rr, new RevisionRequest(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
-				toRemove.add(desire);
+				Subgoal sg = new Subgoal(ag, desire);
+				sg.newStack(rr, new RevisionRequest(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
+				ag.getPlanComponent().addPlan(sg);
+				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), ag.getPlanComponent());
 				reval = true;
-				
-				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), mp);
 			}
-		}
-		// TODO: Implement in plan destroying
-		for(Atom desire : toRemove) {
-			ag.removeDesire(desire);
-		//	ag.addDesire(new Atom(new Predicate(desire.toString()+"_wait")));
 		}
 		return reval;
 	}
@@ -120,24 +108,17 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			return false;
 		}
 		
+		Subgoal answer = new Subgoal(ag, des);
 		// TODO: create alternative later
 		Context context = ContextFactory.createContext(des.getPerception());
 		context.set("answer", AnswerValue.AV_TRUE);
-		pp.getActualPlan().newStack(qaSkill, context);
+		answer.newStack(qaSkill, context);
 		
 		context = new Context(context);
 		context.set("answer", AnswerValue.AV_FALSE);
-		pp.getActualPlan().newStack(qaSkill, context);
-		
-		// TODO: Find a better place to remove desire again.
-		ag.removeDesire(des.getDesire());
-		
-		Subgoal sg = pp.getActualPlan();
-		while(!(sg instanceof MasterPlan)) {
-			sg = (Subgoal) sg.getParentGoal();
-		}
-		MasterPlan mp = (MasterPlan) sg;
-		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", mp);
+		answer.newStack(qaSkill, context);
+		ag.getPlanComponent().addPlan(answer);
+		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
 		return true;
 	}
 	
@@ -157,8 +138,10 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				AngeronaAnswer aa = ag.getBeliefs().getWorldKnowledge().reason(reasonToFire);
 				if(aa.getAnswerExtended() == AnswerValue.AV_UNKNOWN) {
 					Skill query = (Skill) ag.getSkill("Query");
-					pp.getActualPlan().newStack(query, new Query(ag.getName(), rr.getSenderId(), reasonToFire).getContext());
-					ag.removeDesire(des);
+					Subgoal sg = new Subgoal(ag, des);
+					sg.newStack(query, new Query(ag.getName(), rr.getSenderId(), reasonToFire).getContext());
+					ag.getPlanComponent().addPlan(sg);
+					report("Add the new atomic action '" + query.getName() + "' to the plan.", ag.getPlanComponent());
 				} else if(aa.getAnswerExtended() == AnswerValue.AV_FALSE) {
 					return false;
 				}
