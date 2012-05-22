@@ -13,6 +13,7 @@ import angerona.fw.listener.SubgoalListener;
  */
 public class MasterPlan extends BaseAgentComponent implements SubgoalListener{
 
+	/** parallel plans of the Plan Component */
 	private List<Subgoal> plans = new LinkedList<Subgoal>();
 	
 	public MasterPlan() {}

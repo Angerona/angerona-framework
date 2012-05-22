@@ -33,7 +33,11 @@ public class Desires extends BaseAgentComponent {
 	
 	/** adds the given desire to the DesireComponent of the Agent */
 	public boolean add(Desire desire) {
-		return desires.add(desire);
+		boolean reval = desires.add(desire);
+		if(reval) {
+			report("New desire: " + desire.toString());
+		}
+		return reval;
 	}
 	
 	public boolean remove(Desire desire) {
@@ -43,7 +47,12 @@ public class Desires extends BaseAgentComponent {
 		// only call return desires.remove(desire) will fail a unit test
 		// (but I do not know why)
 		Desire toRemove = getDesire(desire);
-		return desires.remove(toRemove);
+		if(toRemove != null) {
+			desires.remove(toRemove);
+			report("Removed desire: " + desire.toString());
+			return true;
+		}
+		return false;
 	}
 	
 	public Desire getDesire(Desire desire) {

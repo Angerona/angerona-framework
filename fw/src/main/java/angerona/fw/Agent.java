@@ -40,6 +40,7 @@ import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
+import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.SkillConfig;
 
@@ -420,11 +421,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	public boolean addDesire(Desire desire) {
 		Desires desires = getDesires();
 		if(desires != null) {
-			boolean reval = getDesires().add(desire);
-			if(reval) {
-				Angerona.getInstance().report("New desire: " + desire.toString(), getEnvironment(), desires);
-			}
-			return reval;
+			return getDesires().add(desire);			
 		}
 		LOG.warn("Tried to add a desire to agent '{}' lacking the desire component.", getName());
 		return false;
@@ -460,12 +457,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	public boolean removeDesire(Desire desire) {
 		Desires desires = getDesires();
 		if(desires != null) {
-			boolean reval = desires.remove(desire);
-			if(reval) {
-				Angerona.getInstance().report("Removed desire: " + desire.toString(), getEnvironment(), desires);
-				
-			}
-			return reval;
+			return desires.remove(desire);
 		}
 		return false;
 	}

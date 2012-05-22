@@ -195,6 +195,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
 		LOG.info("Starting simulation: " + config.getName());
 		
+		Angerona.getInstance().onCreateSimulation(this);
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		tick = 0;
 		String errorOutput = "";

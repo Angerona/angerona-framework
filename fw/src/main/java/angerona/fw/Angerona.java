@@ -162,10 +162,13 @@ public class Angerona {
 		errorListeners.clear();
 	}
 	
-	public void onNewSimulation(AngeronaEnvironment ev) {
+	public void onCreateSimulation(AngeronaEnvironment ev) {
 		actualReport = new Report(ev);
 		actualSimulation = ev;
 		reports.put(ev, actualReport);
+	}
+	
+	public void onNewSimulation(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
 		}
