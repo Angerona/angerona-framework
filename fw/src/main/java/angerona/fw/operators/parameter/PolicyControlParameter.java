@@ -31,7 +31,7 @@ public class PolicyControlParameter extends GenericOperatorParameter {
 	 * @param question			formula representing the question.
 	 */
 	public PolicyControlParameter(Agent policyProofer, String answerReceiverId, AngeronaAnswer answer, Formula question) {
-		super(policyProofer.getEnvironment());
+		super(policyProofer);
 		this.policyProofer = policyProofer;
 		this.informationReceiverId = answerReceiverId;
 		this.answer = answer;

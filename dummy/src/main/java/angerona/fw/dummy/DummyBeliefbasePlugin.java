@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.internal.BeliefbasePlugin;
-import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.dummy.DummyBeliefbase;

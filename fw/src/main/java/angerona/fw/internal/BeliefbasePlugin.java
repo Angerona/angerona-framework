@@ -3,7 +3,7 @@ package angerona.fw.internal;
 import java.util.List;
 
 import net.xeoh.plugins.base.Plugin;
-import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 

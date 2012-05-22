@@ -1,7 +1,7 @@
 package angerona.fw.operators.parameter;
 
 import net.sf.tweety.Formula;
-import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.BaseBeliefbase;
 
 public class ReasonerParameter  {
 	private BaseBeliefbase beliefbase;

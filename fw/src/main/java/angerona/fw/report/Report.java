@@ -37,7 +37,7 @@ public class Report  {
 	 * @param entry	reference to the entry which will be saved.
 	 */
 	public void saveEntry(ReportEntry entry) {
-		if(entry.getPoster().getSimulation() == simulation) {
+		if(entry.getSimulation() == simulation) {
 			ReportEntry copy = (ReportEntry) entry.clone();
 			entries.add(copy);
 			

@@ -1,5 +1,6 @@
 package angerona.fw.logic;
 
+import angerona.fw.BaseBeliefbase;
 import junit.framework.TestCase;
 
 /**

@@ -22,7 +22,7 @@ public class SubgoalGenerationParameter extends GenericOperatorParameter {
 	 * @param options		list of possible actions (applicable skills)
 	 */
 	public SubgoalGenerationParameter(MasterPlan actualPlan, List<Skill> skills) {
-		super(actualPlan.getAgent().getEnvironment());
+		super(actualPlan.getAgent());
 		this.skills = skills;
 		this.actualPlan = actualPlan;
 	}

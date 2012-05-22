@@ -2,6 +2,7 @@ package angerona.fw.logic;
 
 import net.sf.tweety.Answer;
 import net.sf.tweety.Formula;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.operators.Operator;
 import angerona.fw.operators.parameter.ReasonerParameter;
 

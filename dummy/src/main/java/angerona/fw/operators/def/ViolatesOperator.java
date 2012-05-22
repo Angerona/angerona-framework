@@ -8,10 +8,10 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.ConfidentialTarget;
 import angerona.fw.operators.BaseViolatesOperator;

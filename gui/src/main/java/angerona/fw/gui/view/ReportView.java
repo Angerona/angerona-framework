@@ -73,7 +73,7 @@ public class ReportView extends BaseView implements ReportListener {
     	
     	@Override
     	public String toString() {
-    		return entry.getPoster().getPosterName() + ": " + entry.getMessage();
+    		return entry.getPosterName() + ": " + entry.getMessage();
     	}
     }
     

@@ -25,7 +25,6 @@ import angerona.fw.internal.DefaultPerceptionFactory;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.internal.PluginInstantiator;
-import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Desires;
@@ -206,7 +205,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				
 				BaseBeliefbase world = pi.createBeliefbase(ai.getBeliefbaseConfig());
 				entities.put(world.getGUID(), world);
-				world.setEnvironment(this);
 				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
 				
 				FileInputStream fis = new FileInputStream(new File(fn));
@@ -228,7 +226,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				for(String key : bbsp.viewContent.keySet()) {
 					BaseBeliefbase actView = pi.createBeliefbase(ai.getBeliefbaseConfig());
 					entities.put(actView.getGUID(), actView);
-					actView.setEnvironment(this);
 					sr = new StringReader(bbsp.viewContent.get(key));
 					actView.parse(new BufferedReader(sr));
 					views.put(key, actView);
@@ -344,7 +341,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		return perceptionFactory;
 	}
 
-	@Override
 	public int getSimulationTick() {
 		return tick;
 	}

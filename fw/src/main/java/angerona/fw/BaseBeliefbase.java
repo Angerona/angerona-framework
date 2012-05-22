@@ -1,4 +1,4 @@
-package angerona.fw.logic;
+package angerona.fw;
 
 
 import java.io.BufferedReader;
@@ -17,10 +17,13 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
-import angerona.fw.AngeronaEnvironment;
+import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.BaseChangeBeliefs;
+import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
@@ -43,8 +46,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	protected Long id;
 	
 	protected Long parentId;
-	
-	private AngeronaEnvironment env;
 	
 	/**
 	 * Enumeration with different operation types for updating the belief base.
@@ -115,10 +116,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		reasoningOperator = other.reasoningOperator;
 	}
 	
-	public void setEnvironment(AngeronaEnvironment env) {
-		this.env = env;
-	}
-	
 	/**
 	 * Generates the content of this beliefbase by parsing a file
 	 * @param filepath	path to the file containing the representation of the belief base.
@@ -151,6 +148,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		
 		if(bbc.getRevisionClassName() != null && !bbc.getRevisionClassName().equals("empty"))
 			revisionOperator = pi.createRevision(bbc.getRevisionClassName());
+		
+		updateOwner();
 	}
 	
 	/**
@@ -190,7 +189,11 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		}
 		
 		// TODO: Think about local copies and mapping of different knowledge ect.
-		BeliefUpdateParameter bup = new BeliefUpdateParameter(this, newKnowledge, env);
+		BeliefUpdateParameter bup = new BeliefUpdateParameter(this,  newKnowledge, null);
+		if(getParent() != 0) {
+			Entity ent = IdGenerator.getEntityWithId(getParent());
+			bup = new BeliefUpdateParameter(this, newKnowledge, (Agent)ent);
+		}
 		if(revisionOperator == null)
 			throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");;
 		revisionOperator.process(bup);		
@@ -275,6 +278,19 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	public void setParent(Long id) {
 		parentId = id;
+		updateOwner();
+	}
+
+	private void updateOwner() {
+		Entity ent = IdGenerator.getEntityWithId(parentId);
+		if(ent != null) {
+			if(reasoningOperator != null) {
+				reasoningOperator.setOwner((Agent)ent);
+			}
+			if(revisionOperator != null) {
+				revisionOperator.setOwner((Agent)ent);
+			}
+		}
 	}
 	
 	@Override

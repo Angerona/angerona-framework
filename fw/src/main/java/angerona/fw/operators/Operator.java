@@ -1,9 +1,8 @@
 package angerona.fw.operators;
 
-import angerona.fw.Angerona;
-import angerona.fw.AngeronaEnvironment;
-import angerona.fw.internal.Entity;
-import angerona.fw.report.ReportPoster;
+import angerona.fw.BaseOperator;
+
+
 
 /**
  * This is the base class for every user defined operator.
@@ -12,9 +11,12 @@ import angerona.fw.report.ReportPoster;
  * @param <IN>		Type of the input parameter
  * @param <OUT>		Type of the output (return value)
  */
-public abstract class Operator<IN, OUT> implements ReportPoster{
+public abstract class Operator<IN, OUT> extends BaseOperator {
 	public OUT process(IN param) {
-		return processInt(param);
+		getOwner().pushOperator(this);
+		OUT reval = processInt(param);
+		getOwner().popOperator();
+		return reval;
 	}
 	
 	/**
@@ -22,27 +24,4 @@ public abstract class Operator<IN, OUT> implements ReportPoster{
 	 *	a good ReportPoster out of an operator.
 	 */
 	protected abstract OUT processInt(IN param);
-
-	@Override
-	public String getPosterName() {
-		return this.getClass().getSimpleName();
-	}
-
-	@Override
-	public int getSimulationTick() {
-		return Angerona.getInstance().getActualSimulation().getSimulationTick();
-	}
-
-	@Override
-	public AngeronaEnvironment getSimulation() {
-		return Angerona.getInstance().getActualSimulation();
-	}
-	
-	protected void report(String msg) {
-		Angerona.getInstance().report(msg, this);
-	}
-	
-	protected void report(String msg, Entity attachment) {
-		Angerona.getInstance().report(msg, this, attachment);
-	}
 }

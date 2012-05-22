@@ -9,9 +9,6 @@ import angerona.fw.AngeronaEnvironment;
  * @author Tim Janus
  */
 public interface ReportPoster {
-	/** @return the simulation cylce the report was posted */
-	int getSimulationTick();
-	
 	/** @return a reference to the simulation which was posting the report */
 	AngeronaEnvironment getSimulation();
 	

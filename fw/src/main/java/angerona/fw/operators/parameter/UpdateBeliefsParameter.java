@@ -22,7 +22,7 @@ public class UpdateBeliefsParameter extends GenericOperatorParameter {
 	 * @param perception	object representing the perception which causes the update.
 	 */
 	public UpdateBeliefsParameter(Agent agent, AngeronaAtom perception) {
-		super(agent.getEnvironment());
+		super(agent);
 		this.agent = agent;
 		this.perception = perception;
 	}

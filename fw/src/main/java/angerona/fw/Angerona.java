@@ -87,13 +87,13 @@ public class Angerona {
 			throw new IllegalArgumentException("sender must not be null");
 		}
 
-		logOut += " by " + sender.getPosterName() + " in " + sender.getSimulationTick()+":"+sender.getSimulation();
+		logOut += " by " + sender.getPosterName() + " in " + sender.getSimulation()+":"+sender.getSimulation();
 		
 		// Every report will also be logged by our logging facility.
 		LOG.info("REPORT: " + logOut);
 		
 		ReportEntry entry = new ReportEntry(msg, sender, attachment);
-		Angerona.getInstance().getReport(entry.getPoster().getSimulation()).saveEntry(entry);
+		Angerona.getInstance().getReport(entry.getSimulation()).saveEntry(entry);
 		for(ReportListener listener : reportListeners) {
 			listener.reportReceived(entry);
 		}

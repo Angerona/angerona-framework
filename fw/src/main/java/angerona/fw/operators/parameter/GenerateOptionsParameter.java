@@ -31,7 +31,7 @@ public class GenerateOptionsParameter extends GenericOperatorParameter {
 	 * @param perception	the last received perception
 	 */
 	public GenerateOptionsParameter(Agent agent, Perception perception, Map<String, Skill> skills) {
-		super(agent.getEnvironment());
+		super(agent);
 		this.beliefs = agent.getBeliefs();
 		if(agent.getDesires() != null) {
 			this.desires = agent.getDesires().getDesires();

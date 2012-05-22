@@ -14,7 +14,7 @@ public class IntentionUpdateParameter extends GenericOperatorParameter {
 	protected Perception perception;
 	
 	public IntentionUpdateParameter(MasterPlan plan, List<Skill> skills, Perception perception) {
-		super(plan.getAgent().getEnvironment());
+		super(plan.getAgent());
 		this.plan= plan;
 		this.perception = perception;
 	}

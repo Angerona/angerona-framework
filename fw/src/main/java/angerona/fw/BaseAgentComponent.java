@@ -6,7 +6,6 @@ import java.util.Map;
 
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
-import angerona.fw.report.ReportPoster;
 
 /**
  * Base class for extensions of the Agent-Model, like know-how.
@@ -15,7 +14,7 @@ import angerona.fw.report.ReportPoster;
  * @author Tim Janus
  *
  */
-public abstract class BaseAgentComponent implements AgentComponent, ReportPoster {
+public abstract class BaseAgentComponent implements AgentComponent {
 	
 	/** unique id of the parent (the agent) */
 	private Long parentId;
@@ -47,7 +46,7 @@ public abstract class BaseAgentComponent implements AgentComponent, ReportPoster
 	}
 	
 	public void report(String msg) {
-		Angerona.getInstance().report(msg, this, this);
+		Angerona.getInstance().report(msg, getAgent(), this);
 	}
 		
 	@Override
@@ -66,21 +65,6 @@ public abstract class BaseAgentComponent implements AgentComponent, ReportPoster
 	@Override
 	public List<Long> getChilds() {
 		return new LinkedList<Long>();
-	}
-
-	@Override
-	public int getSimulationTick() {
-		return Angerona.getInstance().getActualSimulation().getSimulationTick();
-	}
-	
-	@Override
-	public AngeronaEnvironment getSimulation() {
-		return Angerona.getInstance().getActualSimulation();
-	}
-	
-	@Override
-	public String getPosterName() {
-		return this.getClass().getSimpleName();
 	}
 	
 	@Override

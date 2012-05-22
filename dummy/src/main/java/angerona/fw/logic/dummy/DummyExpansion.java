@@ -2,7 +2,7 @@ package angerona.fw.logic.dummy;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import angerona.fw.logic.BaseBeliefbase;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
