@@ -3,5 +3,6 @@
       <string>plugins/dummy-0.0.1-SNAPSHOT.jar</string>
       <string>plugins/asp-0.0.1-SNAPSHOT.jar</string>
       <string>plugins/knowhow-0.0.1-SNAPSHOT.jar</string>
+      <string>plugins/mary-0.0.1-SNAPSHOT.jar</string>
    </plugins>
 </config>
