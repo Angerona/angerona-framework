@@ -33,7 +33,7 @@ public class Clingo extends SolverBase {
 	public AnswerSetList computeModels(Program p, int maxModels) throws SolverException {
 		checkSolver(path2clingo);
 		try {
-			ai.executeProgram( path2clingo, p.toStringFlat() );
+			ai.executeProgram( path2clingo+" "+maxModels, p.toStringFlat());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
