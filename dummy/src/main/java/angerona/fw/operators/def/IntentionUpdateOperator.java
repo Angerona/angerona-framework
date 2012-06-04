@@ -21,7 +21,6 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {
 		LOG.info("Run Default-Intention-Update");
-		
 		Agent ag = param.getPlan().getAgent();
 		for(int i=0; i<param.getPlan().getNumberOfStacks(); ++i) {
 			if(param.getPlan().peekStack(i).isAtomic()) {

@@ -21,42 +21,42 @@ import angerona.fw.operators.BaseViolatesOperator;
 @PluginImplementation
 public class Plugin implements OperatorPlugin {
 
-	@Override
+	//@Override
 	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators() {
 		List<Class<? extends BaseUpdateBeliefsOperator>> reval = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
 		
 		return reval;
 	}
 
-	@Override
+	//@Override
 	public List<Class<? extends BaseIntentionUpdateOperator>> getSupportedFilterOperators() {
 		List<Class<? extends BaseIntentionUpdateOperator>> reval = new LinkedList<Class<? extends BaseIntentionUpdateOperator>>();
 
 		return reval;
 	}
 
-	@Override
+	//@Override
 	public List<Class<? extends BaseGenerateOptionsOperator>> getSupportedGenerateOptionsOperators() {
 		List<Class<? extends BaseGenerateOptionsOperator>> reval = new LinkedList<Class<? extends BaseGenerateOptionsOperator>>();
 	
 		return reval;
 	}
 
-	@Override
+	//@Override
 	public List<Class<? extends BasePolicyControlOperator>> getSupportedPolicyControlOperators() {
 		List<Class<? extends BasePolicyControlOperator>> reval = new LinkedList<Class<? extends BasePolicyControlOperator>>();
 	
 		return reval;
 	}
 
-	@Override
+	//@Override
 	public List<Class<? extends BaseViolatesOperator>> getSupportedViolatesOperators() {
 		List<Class<? extends BaseViolatesOperator>> reval = new LinkedList<Class<? extends BaseViolatesOperator>>();
 		
 		return reval;
 	}
 
-	@Override
+	//@Override
 	public List<Class<? extends BaseSubgoalGenerationOperator>> getSupportedPlaners() {
 		List<Class<? extends BaseSubgoalGenerationOperator>> reval = new LinkedList<Class<? extends BaseSubgoalGenerationOperator>>();
 		reval.add(angerona.fw.mary.SubgoalGenerationOperator.class);

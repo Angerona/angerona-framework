@@ -67,7 +67,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		Set<FolFormula> toRemove = new HashSet<FolFormula>();
 		if(ag.getDesires() == null)
 			return false;
-		
+
 		for(FolFormula desire : ag.getDesires().getTweety()) {
 			if(desire.toString().trim().startsWith("v_")) {
 				int si = desire.toString().indexOf("_")+1;
