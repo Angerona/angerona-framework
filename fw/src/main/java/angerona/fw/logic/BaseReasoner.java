@@ -1,7 +1,7 @@
 package angerona.fw.logic;
 
 import net.sf.tweety.Answer;
-import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.operators.Operator;
 import angerona.fw.operators.parameter.ReasonerParameter;
@@ -30,7 +30,7 @@ public abstract class BaseReasoner
 	 * @param question
 	 * @return
 	 */
-	public Answer query(BaseBeliefbase bb, Formula question) {
+	public Answer query(BaseBeliefbase bb, FolFormula question) {
 		actualBeliefbase = bb;
 		return query(question);
 	}
@@ -41,7 +41,7 @@ public abstract class BaseReasoner
 	 * @param query a query.
 	 * @return the answer to the query.
 	 */
-	protected abstract Answer query(Formula query);
+	protected abstract Answer query(FolFormula query);
 	
 	
 	/**

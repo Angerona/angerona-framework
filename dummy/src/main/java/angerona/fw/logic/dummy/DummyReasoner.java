@@ -1,7 +1,7 @@
 package angerona.fw.logic.dummy;
 
 import net.sf.tweety.Answer;
-import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -20,7 +20,7 @@ public class DummyReasoner extends BaseReasoner {
 	}
 
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(FolFormula query) {
 		if(this.actualBeliefbase == null)
 			return null;
 		
