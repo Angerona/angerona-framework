@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.Answer;
-import net.sf.tweety.Formula;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
@@ -13,6 +12,7 @@ import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 
 import org.slf4j.Logger;
@@ -61,11 +61,52 @@ public class AspReasoner extends BaseReasoner {
 		return AspBeliefbase.class;
 	}
 
-	@Override
-	public Answer query(Formula query) {		
+	/**
+	 * Process the answer sets for the beliefbase owning the operator.
+	 * @return a list of answer sets representing the solver output.
+	 */
+	public List<AnswerSet> processAnswerSets() {
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
 		if(bb == null)
 			return null;
+		
+		List<AnswerSet> reval = null;
+		try {
+			reval = runSolver(bb);
+		} catch(SolverException ex) {
+			LOG.error("Error occured: " + ex.getMessage());
+		}
+		
+		LOG.info(reval.toString());
+		return reval;
+	}
+	
+	@Override
+	public Answer query(FolFormula query) {		
+		List<AnswerSet> answerSets = processAnswerSets();
+		AnswerValue av = AnswerValue.AV_UNKNOWN;
+		
+		if(semantic == InferenceSemantic.S_CREDULOUS) {
+			throw new NotImplementedException();
+		} else if(semantic == InferenceSemantic.S_SKEPTICAL) {
+			av = skepticalInference(answerSets, query);
+		}
+		
+		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
+		return new AngeronaAnswer(bb, query, av);
+	}
+
+	/**
+	 * Implements the skeptical asp inference. 
+	 * @param answerSets	List of answer sets representing the solver result.
+	 * @param query			The question must be an atom or an Negation but no complexer formulas
+	 * @return				AV_True, AV_FALSE or AV_UNKNOWN if the inference was successful,
+	 * 						AV_REJECT if an error occured.
+	 */
+	public AnswerValue skepticalInference(List<AnswerSet> answerSets, FolFormula query) {
+		AnswerValue av;
+		int falseInAS = 0;
+		int trueInAS = 0;
 		
 		boolean negate = false;
 		Atom aq = null;
@@ -73,54 +114,40 @@ public class AspReasoner extends BaseReasoner {
 			negate = true;
 			Negation n = (Negation)query;
 			aq = (Atom)n.getFormula();
-		} else {
+		} else if(query instanceof Atom ){
 			negate = false;
 			aq = (Atom)query;
+		} else {
+			//throw new AngeronaException("The query formula for the ASP Reasoner must be an atom or a negation:");
+			LOG.error("The given query: '{}' is neither a atom nor a negation, so it cannot be process by the ASPReasoner.", query);
+			return AnswerValue.AV_REJECT;
 		}
 		
-		List<AnswerSet> reval = null;
-		try {
-			reval = runSolver(bb);
-		} catch(SolverException ex) {
-			LOG.error("Error occured: " + ex.getMessage());
-			return null;
-		}
-		
-		AnswerValue av = AnswerValue.AV_UNKNOWN;
-		int falseInAS = 0;
-		int trueInAS = 0;
-		if(semantic == InferenceSemantic.S_CREDULOUS) {
-			throw new NotImplementedException();
-		} else if(semantic == InferenceSemantic.S_SKEPTICAL) {
+		for(AnswerSet as : answerSets) {
+			av = AnswerValue.AV_UNKNOWN;
+			Set<Literal> literals = as.getLiteralsBySymbol(aq.getPredicate().getName());
+			for(Literal l : literals) {
+				if(l.isTrueNegated()) {
+					av = negate ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
+				} else {
+					av = negate ? AnswerValue.AV_FALSE : AnswerValue.AV_TRUE;
+				}
+			}
 			
-			for(AnswerSet as : reval) {
-				av = AnswerValue.AV_UNKNOWN;
-				Set<Literal> literals = as.getLiteralsBySymbol(aq.getPredicate().getName());
-				for(Literal l : literals) {
-					if(l.isTrueNegated()) {
-						av = negate ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
-					} else {
-						av = negate ? AnswerValue.AV_FALSE : AnswerValue.AV_TRUE;
-					}
-				}
-				
-				if(av == AnswerValue.AV_TRUE) {
-					trueInAS += 1;
-				} else if(av == AnswerValue.AV_FALSE) {
-					falseInAS += 1;
-				}
+			if(av == AnswerValue.AV_TRUE) {
+				trueInAS += 1;
+			} else if(av == AnswerValue.AV_FALSE) {
+				falseInAS += 1;
 			}
 		}
 		
-		LOG.info(reval.toString());
-
 		if(trueInAS > 0 && falseInAS == 0)
 			av = AnswerValue.AV_TRUE;
 		else if(falseInAS > 0 && trueInAS == 0)
 			av = AnswerValue.AV_FALSE;
 		else 
 			av = AnswerValue.AV_UNKNOWN;
-		return new AngeronaAnswer(bb, query, av);
+		return av;
 	}
 	
 	

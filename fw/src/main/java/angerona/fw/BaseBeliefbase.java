@@ -83,6 +83,14 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	/** Reference to the used reasoning operator */
 	private BaseReasoner reasoningOperator;
 	
+	public BaseChangeBeliefs getRevisionOperator() {
+		return revisionOperator;
+	}
+
+	public BaseReasoner getReasoningOperator() {
+		return reasoningOperator;
+	}
+
 	/** Default Ctor: Generates an empty belief base which does not supports quantifiers or variables in its formulas */
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
