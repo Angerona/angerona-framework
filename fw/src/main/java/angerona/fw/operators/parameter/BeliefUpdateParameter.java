@@ -2,10 +2,9 @@ package angerona.fw.operators.parameter;
 
 import java.util.Set;
 
-import angerona.fw.AngeronaEnvironment;
-import angerona.fw.logic.BaseBeliefbase;
-
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.BaseBeliefbase;
+import angerona.fw.operators.OperatorVisitor;
 
 /**
  * Parameter class for Expansion and Revision Operations
@@ -25,8 +24,8 @@ public class BeliefUpdateParameter extends GenericOperatorParameter {
 	 * @param bb			belief base
 	 * @param newKnowledge	set of formula with new knowledge.
 	 */
-	public BeliefUpdateParameter(BaseBeliefbase bb, Set<FolFormula> newKnowledge, AngeronaEnvironment ev) {
-		super(ev);
+	public BeliefUpdateParameter(BaseBeliefbase bb, Set<FolFormula> newKnowledge, OperatorVisitor ov) {
+		super(ov);
 		this.beliefBase = bb;
 		this.newKnowledge = newKnowledge;
 	}

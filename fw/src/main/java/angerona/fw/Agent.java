@@ -5,9 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import net.sf.beenuts.ap.AgentArchitecture;
 import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
@@ -19,8 +21,8 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
@@ -29,6 +31,7 @@ import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
+import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
 import angerona.fw.operators.parameter.PolicyControlParameter;
@@ -38,6 +41,7 @@ import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
+import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.SkillConfig;
 
@@ -49,7 +53,7 @@ import angerona.fw.serialize.SkillConfig;
  * The agent defines helper methods to use the operators of the agent.
  * @author Tim Janus
  */
-public class Agent extends AgentArchitecture implements ContextProvider, Entity {
+public class Agent extends AgentArchitecture implements ContextProvider, Entity, OperatorVisitor, ReportPoster {
 
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Agent.class);
@@ -66,6 +70,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	private List<Long> childrenIds = new LinkedList<Long>();
 	
 	private List<AgentComponent> customComponents = new LinkedList<AgentComponent>();
+	
+	private List<SubgoalListener> subgoalListeners = new LinkedList<SubgoalListener>();
 	
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
@@ -90,6 +96,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	
 	/** Reference to the used planer */
 	BaseSubgoalGenerationOperator subgoalGenerationOperator;
+	
+	/** reference to the current used operator in the cycle process. */
+	Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
 	
 	/** the perception received by the last or running cylce call */
 	private Perception actualPerception;
@@ -151,6 +160,13 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 			policyControlOperator = pi.createPolicyControlOperator(ac.getPolicyControlOperatorClass());
 			violatesOperator = pi.createViolatesOperator(ac.getViolatesOperatorClass());
 
+			generateOptionsOperator.setOwner(this);
+			intentionUpdateOperator.setOwner(this);
+			subgoalGenerationOperator.setOwner(this);
+			changeOperator.setOwner(this);
+			policyControlOperator.setOwner(this);
+			violatesOperator.setOwner(this);
+			
 			for(String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
 				addComponent(comp);
@@ -199,6 +215,24 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	
 	public List<AgentComponent> getComponents() {
 		return Collections.unmodifiableList(customComponents);
+	}
+	
+	public boolean addSubgoalListener(SubgoalListener listener) {
+		return subgoalListeners.add(listener);
+	}
+	
+	public boolean removeSubgoalListener(SubgoalListener listener) {
+		return subgoalListeners.remove(listener);
+	}
+	
+	public List<SubgoalListener> getSubgoalListeners() {
+		return Collections.unmodifiableList(subgoalListeners);
+	}
+	
+	public void onSubgoalFinished(Subgoal sg) {
+		for(SubgoalListener sl : subgoalListeners) {
+			sl.onSubgoalFinished(sg);
+		}
 	}
 	
 	/**
@@ -253,12 +287,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		// Deliberation:
 		Desires desires = getDesires();
 		if(desires != null) {
-			Set<FolFormula> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
-			if(!desires.equals(options)) {
-				options.remove(desires);
-				if(options.size() == 1)
-					addDesire(options.iterator().next());
-				addDesires(options);
+			Set<Desire> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
+			for(Desire des : options) {
+				addDesire(des);
 			}
 		}
 		
@@ -342,6 +373,15 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		return desires;
 	}
 	
+	public MasterPlan getPlanComponent() {
+		MasterPlan plan = getComponent(MasterPlan.class);
+		if(plan == null) {
+			LOG.warn("Tried to access the plan-component of agent '{}' which has no plan-component.", getName());
+			return null;
+		}
+		return plan;
+	}
+	
 	/** @return the perception the agent is working on. */
 	public Perception getActualPerception() {
 		return actualPerception;
@@ -385,43 +425,61 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 		getAgentProcess().act(act);
 		updateBeliefs(act);
 		LOG.info("Action performed: " + act.toString());
+		Angerona.getInstance().report("Action: '"+act.toString()+"' performed.", getEnvironment(), this);
 		Angerona.getInstance().onActionPerformed(this, act);
 	}
 	
-	public boolean addDesire(FolFormula desire) {
+	public boolean addDesire(Desire desire) {
 		Desires desires = getDesires();
 		if(desires != null) {
-			boolean reval = getDesires().add(desire);
-			if(reval) {
-				Angerona.getInstance().report("New desire: " + desire.toString(), getEnvironment(), desires);
-			}
-			return reval;
+			return getDesires().add(desire);			
+		}
+		LOG.warn("Tried to add a desire to agent '{}' lacking the desire component.", getName());
+		return false;
+	}
+	
+	/**
+	 * adds the given tweety atom as desire
+	 * @param desire
+	 * @return
+	 */
+	public boolean addDesire(Atom desire) {
+		return addDesire(new Desire(desire));
+	}
+	
+	/**
+	 * adds the given set of tweety atoms as desire to the desire component.
+	 * @param set
+	 * @return
+	 */
+	public boolean addDesires(Set<Atom> set) {
+		for(Atom a : set) {
+			if(!addDesire(a))
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * removes the given desire
+	 * @param desire
+	 * @return
+	 */
+	public boolean removeDesire(Desire desire) {
+		Desires desires = getDesires();
+		if(desires != null) {
+			return desires.remove(desire);
 		}
 		return false;
 	}
 	
-	public boolean addDesires(Set<FolFormula> set) {
-		Desires desires = getDesires();
-		if(desires != null) {
-			boolean reval = desires.addAll(set);
-			if(reval) {
-				Angerona.getInstance().report("New desires: " + set.toString(), getEnvironment(), desires);
-			}
-			return reval;
-		}
-		return false;
-	}
-	
-	public boolean removeDesire(FolFormula desire) {
-		Desires desires = getDesires();
-		if(desires != null) {
-			boolean reval = desires.remove(desire);
-			if(reval) {
-				Angerona.getInstance().report("Removed desire: " + desire.toString(), getEnvironment(), desires);
-			}
-			return reval;
-		}
-		return false;
+	/**
+	 * 
+	 * @param desire
+	 * @return
+	 */
+	public boolean removeDesire(Atom desire) {
+		return removeDesire(new Desire(desire));
 	}
 	
 	@Override
@@ -443,5 +501,28 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity 
 	@Override
 	public String toString() {
 		return this.getName();
+	}
+
+	@Override
+	public AngeronaEnvironment getSimulation() {
+		return getEnvironment();
+	}
+
+	@Override
+	public String getPosterName() {
+		if(operatorStack.empty())
+			return getName();
+		else
+			return operatorStack.peek().toString();
+	}
+
+	@Override
+	public void pushOperator(BaseOperator op) {
+		operatorStack.push(op);
+	}
+
+	@Override
+	public void popOperator() {
+		operatorStack.pop();
 	}
 }

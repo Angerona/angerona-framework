@@ -73,7 +73,7 @@ public class ReportView extends BaseView implements ReportListener {
     	
     	@Override
     	public String toString() {
-    		return entry.getMessage();
+    		return entry.getPosterName() + ": " + entry.getMessage();
     	}
     }
     
@@ -96,8 +96,7 @@ public class ReportView extends BaseView implements ReportListener {
     
     @Override
 	public void init() {
-		setTitle("Report");
-		
+		setTitle("Report");		
 		setLayout(new BorderLayout());
 		
 		JLabel lbl = new JLabel("Reports");
@@ -172,21 +171,7 @@ public class ReportView extends BaseView implements ReportListener {
 			actAgentNode.add(newNode);
 		else
 			actTickNode.add(newNode);
-		/*
-		for(int i=0; i<rootNode.getChildCount(); ++i) {
-			TreeNode n = rootNode.getChildAt(i);
-			if(n.equals(actTickNode)) {
-				tree.collapsePath(new TreePath(n));
-			} else {
-				for(int k=0; k<n.getChildCount(); k++) {
-					TreeNode m = n.getChildAt(k);
-					tree.expandPath(new TreePath(m));
-				}
-				tree.expandPath(new TreePath(n));
-			}
-		}
-		tree.expandPath(new TreePath(rootNode));
-		*/
+
 		TreeController.expandAll(tree, true);
 		tree.updateUI();
 	}

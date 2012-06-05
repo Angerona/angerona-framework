@@ -2,6 +2,7 @@ package angerona.fw.report;
 
 import java.util.Date;
 
+import angerona.fw.AngeronaEnvironment;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 
@@ -23,19 +24,22 @@ public class ReportEntry implements Cloneable {
 	/** a short message describing what the report entry is all about */
 	private String 	message;
 	
-	/** reference to the poster of the report entry */
-	private ReportPoster poster;
-	
 	/** the attachment of the report entry, might be null if no attachment is attached. */
 	private Entity attachment;
+	
+	/** the name of the poster of this entry */
+	private String posterName;
+	
+	private AngeronaEnvironment simulation;
 	
 	private ReportEntry() {}
 	
 	public ReportEntry(String message, ReportPoster poster, Entity attachment) {
 		this.message = message;
-		this.poster = poster;
 		this.attachment = attachment;
-		this.simulationTick = poster.getSimulationTick();
+		this.posterName = poster.getPosterName();
+		this.simulation = poster.getSimulation();
+		this.simulationTick = poster.getSimulation().getSimulationTick();
 		this.realTime = new Date();
 	}
 
@@ -51,12 +55,16 @@ public class ReportEntry implements Cloneable {
 		return message;
 	}
 
-	public ReportPoster getPoster() {
-		return poster;
-	}
-
 	public Entity getAttachment() {
 		return attachment;
+	}
+	
+	public AngeronaEnvironment getSimulation() {
+		return simulation;
+	}
+	
+	public String getPosterName() {
+		return posterName;
 	}
 	
 	@Override
@@ -65,7 +73,6 @@ public class ReportEntry implements Cloneable {
 		reval.message = this.message;
 		reval.simulationTick = this.simulationTick;
 		reval.realTime = this.realTime;
-		reval.poster = this.poster;
 		if(this.attachment != null) {
 			if(this.attachment instanceof EntityAtomic) {
 				EntityAtomic atomic = (EntityAtomic) this.attachment;
@@ -86,8 +93,7 @@ public class ReportEntry implements Cloneable {
 		
 		ReportEntry cast = (ReportEntry)other;
 		if(	cast.simulationTick == this.simulationTick && 
-			cast.realTime == this.realTime &&
-			cast.poster == this.poster ) {
+			cast.realTime == this.realTime) {
 			if(this.attachment == null && cast.attachment == null)	return true;
 			else if(this.attachment != null && cast.attachment != null) {
 				return this.attachment.getGUID().equals(cast.attachment.getGUID());

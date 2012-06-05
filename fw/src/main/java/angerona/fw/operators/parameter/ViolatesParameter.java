@@ -16,7 +16,7 @@ public class ViolatesParameter extends GenericOperatorParameter {
 	 * @param na		The NegotiationAct which will be apply on the beliefbase
 	 */
 	public ViolatesParameter(Agent agent, Action na) {
-		super(agent.getEnvironment());
+		super(agent);
 		this.agent = agent;
 		this.action = na;
 	}

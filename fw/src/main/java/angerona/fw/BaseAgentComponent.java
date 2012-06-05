@@ -45,6 +45,10 @@ public abstract class BaseAgentComponent implements AgentComponent {
 		return null;
 	}
 	
+	public void report(String msg) {
+		Angerona.getInstance().report(msg, getAgent(), this);
+	}
+		
 	@Override
 	public void init(Map<String, String> additionalData) { }
 	

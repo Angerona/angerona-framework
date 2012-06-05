@@ -3,6 +3,8 @@ package angerona.fw.logic;
 import java.util.HashMap;
 import java.util.Map;
 
+import angerona.fw.BaseBeliefbase;
+
 /**
  * One instance of this class represents all beliefs of an agent.
  * @author Tim Janus

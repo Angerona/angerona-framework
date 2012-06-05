@@ -4,15 +4,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Desire;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.RevisionRequest;
 import angerona.fw.comm.Why;
+import angerona.fw.internal.IdGenerator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
@@ -27,23 +29,30 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(GenerateOptionsOperator.class);
 	
-	public static final Predicate prepareQueryProcessing = new Predicate("queryProcessing");
+	public static final Predicate prepareQueryProcessing = new Predicate("queryProcessing", 1);
 	
-	public static final Predicate prepareRevisionRequestProcessing = new Predicate("revisionRequestProcessing");
+	public static final Predicate prepareRevisionRequestProcessing = new Predicate("revisionRequestProcessing", 1);
 	
-	public static final Predicate prepareReasonCalculation = new Predicate("reasonProcessing");
+	public static final Predicate prepareReasonCalculation = new Predicate("reasonProcessing", 1);
+	
+	public static final IdGenerator desireIds = new IdGenerator();
 	
 	@Override
-	protected Set<FolFormula> processInt(GenerateOptionsParameter param) {
+	protected Set<Desire> processInt(GenerateOptionsParameter param) {
 		LOG.info("Run Default-Generate-Options-operator");
 		
-		Set<FolFormula> reval = new HashSet<FolFormula>();
+		Atom ad = null;
+		Set<Desire> reval = new HashSet<Desire>();
 		if(param.getPerception() instanceof Query) {
-			reval.add(new Atom(prepareQueryProcessing));
+			ad = new Atom(prepareQueryProcessing);
 		} else if(param.getPerception() instanceof RevisionRequest) {
-			reval.add(new Atom(prepareRevisionRequestProcessing));
+			ad = new Atom(prepareRevisionRequestProcessing);
 		} else if(param.getPerception() instanceof Why) {
-			reval.add(new Atom(prepareReasonCalculation));
+			ad = new Atom(prepareReasonCalculation);
+		}
+		if(ad != null) {
+			ad.addArgument(new Constant(desireIds.getNextId().toString()));
+			reval.add(new Desire(ad, param.getPerception()));
 		}
 		return reval;
 	}

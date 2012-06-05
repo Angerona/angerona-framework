@@ -13,6 +13,7 @@ import java.util.Set;
 
 import net.sf.beenuts.ap.AgentProcess;
 import net.sf.beenuts.apr.APR;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
@@ -24,7 +25,6 @@ import angerona.fw.internal.DefaultPerceptionFactory;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.internal.PluginInstantiator;
-import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Desires;
@@ -194,6 +194,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
 		LOG.info("Starting simulation: " + config.getName());
 		
+		Angerona.getInstance().onCreateSimulation(this);
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		tick = 0;
 		String errorOutput = "";
@@ -204,7 +205,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				
 				BaseBeliefbase world = pi.createBeliefbase(ai.getBeliefbaseConfig());
 				entities.put(world.getGUID(), world);
-				world.setEnvironment(this);
 				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
 				
 				FileInputStream fis = new FileInputStream(new File(fn));
@@ -226,7 +226,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 				for(String key : bbsp.viewContent.keySet()) {
 					BaseBeliefbase actView = pi.createBeliefbase(ai.getBeliefbaseConfig());
 					entities.put(actView.getGUID(), actView);
-					actView.setEnvironment(this);
 					sr = new StringReader(bbsp.viewContent.get(key));
 					actView.parse(new BufferedReader(sr));
 					views.put(key, actView);
@@ -248,9 +247,11 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 					highLevelAg.addComponent(desires);
 				}
 				highLevelAg.initComponents(ai.getAdditionalData());
-				if(desires != null)
-					highLevelAg.getDesires().addAll(ai.getDesires());
-				
+				if(desires != null) {
+					for(Atom a : ai.getDesires()) {
+						highLevelAg.getDesires().add(new Desire(a));
+					}
+				}
 				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {
@@ -340,7 +341,6 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		return perceptionFactory;
 	}
 
-	@Override
 	public int getSimulationTick() {
 		return tick;
 	}

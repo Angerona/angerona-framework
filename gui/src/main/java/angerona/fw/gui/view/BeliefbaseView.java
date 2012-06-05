@@ -3,9 +3,9 @@ package angerona.fw.gui.view;
 import java.util.List;
 
 import angerona.fw.Agent;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
-import angerona.fw.logic.BaseBeliefbase;
 
 /**
  * Generic ui view to show a Beliefbase. It shows its content in a list

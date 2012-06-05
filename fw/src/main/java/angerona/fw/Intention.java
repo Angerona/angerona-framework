@@ -1,9 +1,7 @@
 package angerona.fw;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import angerona.fw.listener.SubgoalListener;
 
-import net.sf.tweety.Formula;
 
 /**
  * An intention is either atomic, then it is called Skill or it is complex
@@ -12,16 +10,13 @@ import net.sf.tweety.Formula;
  * @see Subgoal
  * @author Tim Janus
  */
-public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
+public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnable, Cloneable {
 	
 	/** the name for the top-level plan of an agent. */
 	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";
 	
 	/** reference to the agent who is owner of this Intention */
 	protected Agent agent;
-	
-	/** a collection of desires which will be fulfilled if this Intention was processed */
-	private Collection<Formula>	fulfillsDesires = new LinkedList<Formula>();
 	
 	/** the parent intention of this instance */
 	protected Intention parent;
@@ -44,7 +39,6 @@ public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	protected Intention(Intention other) {
 		this.parent = other.parent;
 		this.agent = other.agent;
-		this.fulfillsDesires.addAll(other.fulfillsDesires);
 		this.realRun = other.realRun;
 		
 		// TODO: This should have no side-effects, but not sure yet.
@@ -54,11 +48,6 @@ public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	/** @return reference to the agent owning this Intention */
 	public Agent getAgent() {
 		return agent;
-	}
-	
-	/** @return collection of desires which will be fullfiled after the Intention was followed */
-	public Collection<Formula> getFulfillsDesires() {
-		return fulfillsDesires;
 	}
 	
 	/**
@@ -97,7 +86,7 @@ public abstract class Intention implements AngeronaAtom, Runnable, Cloneable {
 	/**
 	 * Is called when an sub goal is finished by an agent. For example a Skill was performed or 
 	 * a complex plan was finished. The given subgoal must be removed from the subgoals by the
-	 * implementation
+	 * implementation and is a child of the called object.
 	 * @param subgoal reference to the finished subgoal
 	 */
 	public abstract void onSubgoalFinished(Intention subgoal);

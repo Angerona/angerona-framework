@@ -12,7 +12,10 @@ import java.util.Stack;
  */
 public class Subgoal extends Intention {
 
-	private String name = "MASTER-PLAN";
+	private String name = "NO-NAME";
+	
+	/** a collection of desires which will be fulfilled if this Intention was processed */
+	private Desire	fulfillsDesire;
 	
 	/**
 	 * Represents a stack element. Skills need to save their context object to perform
@@ -38,14 +41,13 @@ public class Subgoal extends Intention {
 	/** a collection of stacks with sub-intentions defining the subgoals of this intention */
 	private List<Stack<StackElement>> stacks = new LinkedList<Stack<StackElement>>();
 	
-	public Subgoal(String name, Subgoal parent) {
-		super(parent.getAgent());
-		this.parent = parent;
-		this.name = name;
+	public Subgoal(Agent agent) {
+		this(agent, null);
 	}
 	
-	protected Subgoal(Agent agent) {
+	public Subgoal(Agent agent, Desire desire) {
 		super(agent);
+		this.fulfillsDesire = desire;
 	}
 	
 	protected Subgoal(Subgoal other) {
@@ -163,11 +165,19 @@ public class Subgoal extends Intention {
 			}
 		}
 		
-		if(toDel != null)
+		if(toDel != null) {
 			stacks.remove(toDel);
+		}
 		
 		if(parent != null && stacks.isEmpty())
 			parent.onSubgoalFinished(this);
+		else
+			getAgent().onSubgoalFinished(this);
+	}
+	
+	/** @return collection of desires which will be fullfiled after the Intention was followed */
+	public Desire getFulfillsDesire() {
+		return fulfillsDesire;
 	}
 	
 	@Override

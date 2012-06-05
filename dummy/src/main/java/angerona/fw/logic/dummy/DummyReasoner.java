@@ -2,9 +2,9 @@ package angerona.fw.logic.dummy;
 
 import net.sf.tweety.Answer;
 import net.sf.tweety.Formula;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.BaseBeliefbase;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
 

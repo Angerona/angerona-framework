@@ -121,7 +121,7 @@ public class NavigationPanel extends JPanel implements ActionListener {
 			navTickEntries.set(1, index - first + 1, last - first + 1);
 		}
 		
-		int curTick = re.getPoster().getSimulation().getSimulationTick();
+		int curTick = re.getSimulation().getSimulationTick();
 		currentEntry = re;
 		navAllEntries.setNumbers(index+1, entries.size());
 		navTicks.setNumbers(re.getSimulationTick(), curTick);
