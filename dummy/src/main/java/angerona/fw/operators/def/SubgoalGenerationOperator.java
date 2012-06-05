@@ -39,7 +39,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	protected Boolean processInt(SubgoalGenerationParameter pp) {
 		LOG.info("Run Default-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
-
+		
 		boolean reval = processPersuadeOtherAgentsDesires(pp, ag);
 
 		if(ag.getDesires() != null) {

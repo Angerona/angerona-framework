@@ -25,6 +25,10 @@ import angerona.fw.operators.parameter.ViolatesParameter;
  * false.
  * @author Tim Janus
  */
+/*
+ * The applying of AN answer shouldn't return true, but rather the applying of THE 
+ * answer -- to the question currently being posed. 
+ */
 public class ViolatesOperator extends BaseViolatesOperator {
 	
 	/** reference to the logback instance used for logging */
@@ -49,6 +53,8 @@ public class ViolatesOperator extends BaseViolatesOperator {
 					view.addNewKnowledge(new Negation(a.getRegarding()));
 				}
 				
+				//Does it even make sense to go through all confidential targets,
+				//given how it's making false positives right now?
 				for(ConfidentialTarget ct : conf.getTargets()) {
 					if(ct.getSubjectName().equals(a.getReceiverId())) {
 						AngeronaAnswer aa = view.reason((FolFormula)ct.getInformation());
@@ -58,6 +64,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 							(aa.getAnswerExtended() == AnswerValue.AV_FALSE &&
 							 !ct.contains(AnswerValue.AV_TRUE)))  {
 							report("Confidential-Target: '" + ct + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
+							//conf.removeConfidentialTarget(ct);
 							return new Boolean(true);
 						}
 					}

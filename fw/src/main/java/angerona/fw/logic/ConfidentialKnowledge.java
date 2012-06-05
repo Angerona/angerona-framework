@@ -64,7 +64,10 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 	public boolean addConfidentialTarget(ConfidentialTarget cf) {
 		return confidentialTargets.add(cf);
 	}
-
+	public boolean removeConfidentialTarget(ConfidentialTarget cf)
+	{
+		return confidentialTargets.remove(cf);
+	}
 	/**
 	 * Gets the confidential target defined by the subject and the information which is confidential.
 	 * @param subjectName	name of the agent who should not get the confidential information

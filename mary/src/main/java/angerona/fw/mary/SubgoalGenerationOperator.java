@@ -1,29 +1,27 @@
 package angerona.fw.mary;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
-
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Query;
+import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.operators.def.GenerateOptionsOperator;
-//import angerona.fw.operators.def.SubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
@@ -32,13 +30,11 @@ import angerona.fw.reflection.ContextFactory;
 public class SubgoalGenerationOperator extends
 		angerona.fw.operators.def.SubgoalGenerationOperator {
 	Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
-
+	
 	@Override
 	protected Boolean processInt(SubgoalGenerationParameter pp) {
 		LOG.info("Run Default-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
-
-		//JOptionPane.showMessageDialog(null, ag.getDesires());
 		
 		boolean reval = interrogateOtherAgent(pp, ag);
 
@@ -82,16 +78,14 @@ public class SubgoalGenerationOperator extends
 		//within the Agent class which returns a sorted array
 		class DesireComp implements Comparator<FolFormula>
 		{
-			/*
-			public int compare(Object _f1, Object _f2)
-			{
-				FolFormula f1 = (FolFormula) _f1;
-				FolFormula f2 = (FolFormula) _f2;
-				*/
 			public int compare(FolFormula f1, FolFormula f2)
 			{
-				int f1_num = Integer.parseInt(f1.toString().split("_")[2]); 
-				int f2_num = Integer.parseInt(f2.toString().split("_")[2]);
+				String[] f1_s = f1.toString().split("_");
+				String[] f2_s = f2.toString().split("_");
+				//Should be some way to ensure that what's being parsed
+				//is in fact an integer
+				int f1_num = Integer.parseInt(f1_s[f1_s.length-1]); 
+				int f2_num = Integer.parseInt(f2_s[f2_s.length-1]);
 				
 				if (f1_num < f2_num)
 				{
@@ -107,10 +101,10 @@ public class SubgoalGenerationOperator extends
 		//FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
 		FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
 		Arrays.sort(desires, new DesireComp());
-		for (FolFormula d : desires)
+		/*for (FolFormula d : desires)
 		{
 			JOptionPane.showMessageDialog(null, d.toString());
-		}
+		}*/
 		
 		for(FolFormula desire : desires)
 		{
@@ -144,7 +138,6 @@ public class SubgoalGenerationOperator extends
 				mp.newStack(query, new Query(ag.getName(), recvName, question).getContext());
 				toRemove.add(desire);
 				reval = true;
-			
 				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), mp);
 			}
 		}
@@ -165,15 +158,28 @@ public class SubgoalGenerationOperator extends
 			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
 			return false;
 		}
+		
+		/* Here, rather than hardwire the answer, the answer should be read from the
+		 * belief base of the answering agent, based on the question that was asked. 
+		 * */
+		//That presupposes that you know what question was asked
+		//Unfortunately, the agent does not even have access to the question
+		
+		//JOptionPane.showMessageDialog(null, ag.getActualPerception().toString());
+		Query query = (Query) (ag.getActualPerception()); //How it knows what question was asked
+		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion()); //How it refers to the belief base
+		//JOptionPane.showMessageDialog(null, ans.getAnswerExtended());
+		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
-		context.set("answer", AnswerValue.AV_TRUE);
+		context.set("answer", ans.getAnswerExtended());
 		pp.getActualPlan().newStack(qaSkill, context);
 		
+		/*
 		context = new Context(context);
-		context.set("answer", AnswerValue.AV_FALSE);
+		context.set("answer", AnswerValue.AV_REJECT);
 		pp.getActualPlan().newStack(qaSkill, context);
-		
+		*/
 		// TODO: Find a better place to remove desire again.
 		ag.removeDesire(new Atom(GenerateOptionsOperator.prepareQueryProcessing));
 		

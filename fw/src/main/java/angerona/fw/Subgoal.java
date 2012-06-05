@@ -101,10 +101,11 @@ public class Subgoal extends Intention {
 	 */
 	public Intention peekStack(int index) {
 		StackElement se = stacks.get(index).peek();
-		se.intention.setObjectContainingContext(se.context);
+		se.intention.setObjectContainingContext(se.context); //What do these side effects do?
 		se.intention.setParent(this);
 		return se.intention;
 	}
+	
 	
 	public List<Intention> getStackAsIntentionList(int index) {
 		List<Intention> reval = new LinkedList<Intention>();
