@@ -1,9 +1,9 @@
 package angerona.fw.mary;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -18,9 +18,9 @@ import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Query;
-import angerona.fw.comm.RevisionRequest;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Desires;
+import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
@@ -178,6 +178,11 @@ public class SubgoalGenerationOperator extends
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
 		context.set("answer", ans.getAnswerExtended());
+		
+		
+		AspReasoner r = (AspReasoner)ag.getBeliefs().getWorldKnowledge().getReasoningOperator();
+		JOptionPane.showMessageDialog(null, r.processAnswerSets().toString());
+		
 		
 		/*
 		context = new Context(context);
