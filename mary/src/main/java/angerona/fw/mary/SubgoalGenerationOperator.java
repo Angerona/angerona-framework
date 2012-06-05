@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
@@ -15,12 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
+import angerona.fw.Desire;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Query;
+import angerona.fw.comm.RevisionRequest;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.AnswerValue;
+import angerona.fw.logic.Desires;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
@@ -39,26 +39,34 @@ public class SubgoalGenerationOperator extends
 		boolean reval = interrogateOtherAgent(pp, ag);
 
 
-		//Changing this if statement to a while loop has absolutely no effect
-		//while(ag.getDesires() != null && ag.getDesires().getTweety().size() > 0) 
-		if(ag.getDesires() != null)
-		{
-			Set<FolFormula> desires = ag.getDesires().getTweety();
-			if(desires.contains(
-					new Atom(GenerateOptionsOperator.prepareQueryProcessing))) 
-			{
-				//JOptionPane.showMessageDialog(null, "Answer Query called");
-				reval = reval || answerQuery(pp, ag);
-			} 
-			else if(desires.contains(
-					new Atom(GenerateOptionsOperator.prepareRevisionRequestProcessing))) 
-			{
-				reval = reval || revisionRequest(pp, ag);
-			} 
-			else if(desires.contains(
-					new Atom(GenerateOptionsOperator.prepareReasonCalculation))) {
-				// TODO Implement.
+		Desires des = ag.getDesires();
+		if(des != null) {
+			Set<Desire> actual;
+			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
+			for(Desire d : actual) {
+				MasterPlan p = ag.getComponent(MasterPlan.class);
+				boolean exists = false;
+				for(Subgoal sg : p.getPlans())
+					if(sg.getFulfillsDesire().equals(d))
+						exists = true;
+				if(exists)
+					continue;
+				reval = reval || answerQuery(d, pp, ag);
 			}
+			
+			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareRevisionRequestProcessing);
+			for(Desire d : actual) {
+				MasterPlan p = ag.getComponent(MasterPlan.class);
+				boolean exists = false;
+				for(Subgoal sg : p.getPlans())
+					if(sg.getFulfillsDesire().equals(d))
+						exists = true;
+				if(exists)
+					continue;
+				reval = reval || revisionRequest(d, pp, ag);
+			}
+			
+			// Todo prepare reason
 		}
 		
 		if(!reval)
@@ -76,8 +84,10 @@ public class SubgoalGenerationOperator extends
 		
 		//Sort the desires before using. It would be more modular to have a function
 		//within the Agent class which returns a sorted array
+		/*
 		class DesireComp implements Comparator<FolFormula>
 		{
+			
 			public int compare(FolFormula f1, FolFormula f2)
 			{
 				String[] f1_s = f1.toString().split("_");
@@ -98,15 +108,16 @@ public class SubgoalGenerationOperator extends
 				return 0;
 			}
 		}
+		*/
 		//FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
-		FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
-		Arrays.sort(desires, new DesireComp());
+		//FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
+		//Arrays.sort(desires, new DesireComp());
 		/*for (FolFormula d : desires)
 		{
 			JOptionPane.showMessageDialog(null, d.toString());
 		}*/
 		
-		for(FolFormula desire : desires)
+		for(Desire desire : ag.getDesires().getDesires())
 		{
 			if(desire.toString().trim().startsWith("q_"))
 			{
@@ -129,29 +140,22 @@ public class SubgoalGenerationOperator extends
 					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
 					continue;
 				}
-				Subgoal sg = pp.getActualPlan();
-				while(!(sg instanceof MasterPlan)) {
-					sg = (Subgoal) sg.getParentGoal();
-				}
-				Atom question = new Atom(new Predicate(content));
-				MasterPlan mp = (MasterPlan)sg;
-				mp.newStack(query, new Query(ag.getName(), recvName, question).getContext());
-				toRemove.add(desire);
+				Subgoal sg = new Subgoal(ag, desire);
+				sg.newStack(query, new Query(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
+				ag.getPlanComponent().addPlan(sg);
 				reval = true;
-				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), mp);
+				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 
+						ag.getPlanComponent());
 			}
 		}
 		
-		for(FolFormula desire : toRemove) {
-			ag.removeDesire(desire);
-		}
 		return reval;
 	}
 	
 	//What currently needs work. The program is easily able to ask multiple questions,
 	//but it can't return multiple answers (it just answers its first answer over and over)
 	@Override
-	protected Boolean answerQuery(SubgoalGenerationParameter pp, Agent ag) 
+	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
 		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
 		if(qaSkill == null) {
@@ -168,12 +172,12 @@ public class SubgoalGenerationOperator extends
 		//JOptionPane.showMessageDialog(null, ag.getActualPerception().toString());
 		Query query = (Query) (ag.getActualPerception()); //How it knows what question was asked
 		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion()); //How it refers to the belief base
+		//ag.getBeliefs().getWorldKnowledge().get
 		//JOptionPane.showMessageDialog(null, ans.getAnswerExtended());
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
 		context.set("answer", ans.getAnswerExtended());
-		pp.getActualPlan().newStack(qaSkill, context);
 		
 		/*
 		context = new Context(context);
@@ -181,14 +185,11 @@ public class SubgoalGenerationOperator extends
 		pp.getActualPlan().newStack(qaSkill, context);
 		*/
 		// TODO: Find a better place to remove desire again.
-		ag.removeDesire(new Atom(GenerateOptionsOperator.prepareQueryProcessing));
 		
-		Subgoal sg = pp.getActualPlan();
-		while(!(sg instanceof MasterPlan)) {
-			sg = (Subgoal) sg.getParentGoal();
-		}
-		MasterPlan mp = (MasterPlan) sg;
-		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", mp);
+		Subgoal sg = new Subgoal(ag, des);
+		sg.newStack(qaSkill, context);
+		ag.getPlanComponent().addPlan(sg);
+		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
 		return true;
 	}
 	

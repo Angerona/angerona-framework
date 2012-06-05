@@ -2,6 +2,9 @@ package angerona.fw;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class represents a desire as complex object.
  * In Angerona a desire might be linked to a plan, this object is responsible of
@@ -10,6 +13,8 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
  * @author Tim Janus
  */
 public class Desire {
+	Logger LOG = LoggerFactory.getLogger(Desire.class);
+	
 	/** tweety atom representing the desire */
 	private Atom atom;
 	
@@ -77,7 +82,14 @@ public class Desire {
 		
 		if(other instanceof Desire) {
 			Desire od = (Desire)other;
-			return od.atom.equals(this.atom);
+			
+			try {
+				boolean reval = od.atom.equals(this.atom);
+				return reval;
+			} catch(IllegalArgumentException e) {
+				LOG.warn("'{}' or '{}' not well formed.", od.atom, this.atom);
+				throw e;
+			}
 		}
 		
 		return false;
