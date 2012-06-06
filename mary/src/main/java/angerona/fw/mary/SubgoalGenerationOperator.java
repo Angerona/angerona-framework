@@ -1,5 +1,7 @@
 package angerona.fw.mary;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -85,10 +87,10 @@ public class SubgoalGenerationOperator extends
 		//Sort the desires before using. It would be more modular to have a function
 		//within the Agent class which returns a sorted array
 		/*
-		class DesireComp implements Comparator<FolFormula>
+		class DesireComp implements Comparator<Desire>
 		{
 			
-			public int compare(FolFormula f1, FolFormula f2)
+			public int compare(Desire f1, Desire f2)
 			{
 				String[] f1_s = f1.toString().split("_");
 				String[] f2_s = f2.toString().split("_");
@@ -108,16 +110,16 @@ public class SubgoalGenerationOperator extends
 				return 0;
 			}
 		}
-		*/
-		//FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
-		//FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
-		//Arrays.sort(desires, new DesireComp());
-		/*for (FolFormula d : desires)
+		
+		Desire[] desires = (Desire[]) ag.getDesires().getDesires().getTweety().toArray(new FolFormula[0]);
+		Arrays.sort(desires, new DesireComp());
+		for (Desire d : desires)
 		{
 			JOptionPane.showMessageDialog(null, d.toString());
-		}*/
-		
+		}
+		*/
 		for(Desire desire : ag.getDesires().getDesires())
+	//	for(Desire desire: desires)
 		{
 			if(desire.toString().trim().startsWith("q_"))
 			{
@@ -162,18 +164,9 @@ public class SubgoalGenerationOperator extends
 			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
 			return false;
 		}
-		
-		/* Here, rather than hardwire the answer, the answer should be read from the
-		 * belief base of the answering agent, based on the question that was asked. 
-		 * */
-		//That presupposes that you know what question was asked
-		//Unfortunately, the agent does not even have access to the question
-		
-		//JOptionPane.showMessageDialog(null, ag.getActualPerception().toString());
+		/*
 		Query query = (Query) (ag.getActualPerception()); //How it knows what question was asked
 		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion()); //How it refers to the belief base
-		//ag.getBeliefs().getWorldKnowledge().get
-		//JOptionPane.showMessageDialog(null, ans.getAnswerExtended());
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
@@ -182,7 +175,20 @@ public class SubgoalGenerationOperator extends
 		
 		AspReasoner r = (AspReasoner)ag.getBeliefs().getWorldKnowledge().getReasoningOperator();
 		JOptionPane.showMessageDialog(null, r.processAnswerSets().toString());
+		*/
+		/* Some parsing necessary to distinguish between true/false questions and open, list-based questions.
+		 * All answer processing will be done in the reasoning operator */
 		
+		
+		Query query = (Query) (ag.getActualPerception());
+		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
+		//JOptionPane.showMessageDialog(null, ans.getAnswerExtended());
+		
+		Context context = ContextFactory.createContext(
+				pp.getActualPlan().getAgent().getActualPerception());
+		context.set("answer", ans.getAnswerExtended());
+		
+		//Recognize that the question is open-ended
 		
 		/*
 		context = new Context(context);

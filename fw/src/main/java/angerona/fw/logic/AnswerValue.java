@@ -15,5 +15,8 @@ public enum AnswerValue {
 	AV_UNKNOWN,
 	
 	/** answer is not given */
-	AV_REJECT
+	AV_REJECT,
+	
+	/** answer is a list of arbitrary elements (a list of one arbitrary element in case of an arbitrary answer) */
+	AV_LIST
 }
