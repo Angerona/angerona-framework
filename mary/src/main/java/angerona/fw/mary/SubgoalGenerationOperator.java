@@ -86,7 +86,7 @@ public class SubgoalGenerationOperator extends
 		
 		//Sort the desires before using. It would be more modular to have a function
 		//within the Agent class which returns a sorted array
-		/*
+		
 		class DesireComp implements Comparator<Desire>
 		{
 			
@@ -111,15 +111,16 @@ public class SubgoalGenerationOperator extends
 			}
 		}
 		
-		Desire[] desires = (Desire[]) ag.getDesires().getDesires().getTweety().toArray(new FolFormula[0]);
+		Desire[] desires = (Desire[]) ag.getDesires().getDesires().toArray(new Desire[0]);
 		Arrays.sort(desires, new DesireComp());
+		/*
 		for (Desire d : desires)
 		{
 			JOptionPane.showMessageDialog(null, d.toString());
 		}
 		*/
-		for(Desire desire : ag.getDesires().getDesires())
-	//	for(Desire desire: desires)
+	//	for(Desire desire : ag.getDesires().getDesires())
+		for(Desire desire: desires)
 		{
 			if(desire.toString().trim().startsWith("q_"))
 			{

@@ -74,6 +74,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 					return false;
 				}
 				/******/
+				
 				if(a.getAnswer() == AnswerValue.AV_TRUE) {
 					view.addNewKnowledge(a.getRegarding());
 				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {
@@ -86,6 +87,12 @@ public class ViolatesOperator extends BaseViolatesOperator {
 					if(ct.getSubjectName().equals(a.getReceiverId())) {
 						AngeronaAnswer aa = view.reason((FolFormula)ct.getInformation());
 						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
+						/*****
+						 * Remove false positives: if the confidential target does not match the question being asked, 
+						 * then don't consider it
+						 * /
+						
+						/******/
 						if (confidentialityViolated(aa.getAnswerExtended(), ct)){
 							report("Confidential-Target: '" + ct + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
 							//conf.removeConfidentialTarget(ct);
