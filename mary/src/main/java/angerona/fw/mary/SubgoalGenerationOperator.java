@@ -119,8 +119,8 @@ public class SubgoalGenerationOperator extends
 			JOptionPane.showMessageDialog(null, d.toString());
 		}
 		*/
-	//	for(Desire desire : ag.getDesires().getDesires())
-		for(Desire desire: desires)
+		for(Desire desire : ag.getDesires().getDesires())
+		//for(Desire desire: desires)
 		{
 			if(desire.toString().trim().startsWith("q_"))
 			{
@@ -183,7 +183,7 @@ public class SubgoalGenerationOperator extends
 		
 		Query query = (Query) (ag.getActualPerception());
 		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
-		//JOptionPane.showMessageDialog(null, ans.getAnswerExtended());
+		JOptionPane.showMessageDialog(null, (FolFormula)query.getQuestion());
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());

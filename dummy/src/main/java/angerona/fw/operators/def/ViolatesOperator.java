@@ -35,7 +35,6 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	private boolean confidentialityViolated(AnswerValue ansExtended, ConfidentialTarget ct)
 	{
-		
 		if (ansExtended == AnswerValue.AV_TRUE && !ct.contains(AnswerValue.AV_FALSE))
 				 {
 					return true;
@@ -44,13 +43,14 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			{
 				return true;
 			}
-				 
+		JOptionPane.showMessageDialog(null, "No confidentiality breached");		 
 		return false;
 	}
 	
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
+		//JOptionPane.showMessageDialog(null, param.getAction());
 		if(param.getAction() instanceof Answer) {
 			// only apply violates if confidential knowledge is saved in agent.
 			ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
@@ -83,6 +83,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				
 				//Does it even make sense to go through all confidential targets,
 				//given how it's making false positives right now?
+				//JOptionPane.showMessageDialog(null, conf.getTargets().size());
 				for(ConfidentialTarget ct : conf.getTargets()) {
 					if(ct.getSubjectName().equals(a.getReceiverId())) {
 						AngeronaAnswer aa = view.reason((FolFormula)ct.getInformation());
@@ -95,6 +96,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						
 						if(!secret.toString().equalsIgnoreCase(question.toString()))
 						{
+							//JOptionPane.showMessageDialog(null, "Continue called");
 							continue;
 						}
 						
@@ -105,6 +107,10 @@ public class ViolatesOperator extends BaseViolatesOperator {
 							return new Boolean(true);
 						}
 					}
+					/*else
+					{
+						JOptionPane.showMessageDialog(null, "ct.getSubjectName(): "+ct.getSubjectName()+" a.getReceiverId(): "+a.getReceiverId());
+					}*/
 				}
 			}
 		}
