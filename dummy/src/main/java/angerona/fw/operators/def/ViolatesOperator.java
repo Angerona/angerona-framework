@@ -1,4 +1,5 @@
 package angerona.fw.operators.def;
+import javax.swing.JOptionPane;
 
 import java.util.Map;
 
@@ -34,6 +35,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	private boolean confidentialityViolated(AnswerValue ansExtended, ConfidentialTarget ct)
 	{
+		
 		if (ansExtended == AnswerValue.AV_TRUE && !ct.contains(AnswerValue.AV_FALSE))
 				 {
 					return true;
@@ -63,8 +65,6 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				/*****
 				 * Redefinition of confidentiality:
 				 * if the attacking agent already holds that information (in the defending agent's view) then no reason to lie.
-				 * I think this addition also solves the problem of false positives in finding a breach of confidentiality,
-				 * assuming the agent lies and assumes the lie worked. If it doesn't say anything, then we have the same problem as before.
 				 * */
 				Query query = (Query) (param.getAgent().getActualPerception());
 				FolFormula question = (FolFormula)query.getQuestion();
@@ -90,7 +90,13 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						/*****
 						 * Remove false positives: if the confidential target does not match the question being asked, 
 						 * then don't consider it
-						 * /
+						 */
+						FolFormula secret = (FolFormula) ct.getInformation();
+						
+						if(!secret.toString().equalsIgnoreCase(question.toString()))
+						{
+							continue;
+						}
 						
 						/******/
 						if (confidentialityViolated(aa.getAnswerExtended(), ct)){
