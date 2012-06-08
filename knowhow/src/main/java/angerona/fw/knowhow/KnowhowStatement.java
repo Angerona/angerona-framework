@@ -30,6 +30,10 @@ public class KnowhowStatement {
 		this.conditions.addAll(conditions);
 	}
 	
+	public Atom getTarget() {
+		return target;
+	}
+	
 	public Vector<Atom> getSubTargets() {
 		return subTargets;
 	}
