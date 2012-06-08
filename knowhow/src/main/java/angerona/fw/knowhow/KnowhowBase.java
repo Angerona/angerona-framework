@@ -1,13 +1,19 @@
 package angerona.fw.knowhow;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
+import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +30,7 @@ import angerona.fw.knowhow.parser.ParseException;
 public class KnowhowBase extends BaseAgentComponent {
 	
 	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(KnowhowBase.class);
+	static private Logger LOG = LoggerFactory.getLogger(KnowhowBase.class);
 	
 	/** the program responsible to calculate the next action, nextAction4 of Regina Fritsch was used as basic */
 	private Program nextAction;
@@ -89,5 +95,37 @@ public class KnowhowBase extends BaseAgentComponent {
 	@Override
 	public Object clone() {
 		return new KnowhowBase(this);
+	}
+	
+	public static void main(String [] args) throws SolverException {
+		LOG.info("Programm arguments: '{}'", args);
+		
+		if(args.length == 0)
+			throw new IllegalArgumentException("Argument dlv-complex path must be given at last.");
+		
+		File f = new File(args[0]);
+		if(!f.exists() || !f.isFile()) {
+			throw new IllegalArgumentException("DLV-Complex binary with path: " + f.getAbsolutePath() + " not found.");
+		}
+		
+		KnowhowBase kb = new KnowhowBase();
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("KnowHow", 
+				"cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full\n" +
+				"cleaned_hallway, (at_hallway, vacuumed_hallway), bag_empty\n" +
+				"cleaned_lounge, ordered_robotxy_to_clean_lounge, robotxy_available\n" +
+				"cleaned_lounge, (at_lounge, free_lounge, vacuumed_lounge), bag_empty\n" +
+				"free_lounge, people_sent_away, at_lounge"
+				);
+		kb.init(data);
+		
+		Program p = KnowhowBuilder.buildExtendedLogicProgram(kb);
+		p.add(kb.initTree);
+		p.add(kb.nextAction);
+		LOG.info("Program: " + p.toString() + "\n\n");
+		
+		DLVComplex dlvComplex = new DLVComplex(args[0]);
+		AnswerSetList asl = dlvComplex.computeModels(p, 10);
+		LOG.info(asl.toString());
 	}
 }

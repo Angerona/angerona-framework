@@ -49,25 +49,25 @@ public class KnowhowBuilder {
 			}
 		}
 		
-		// add is-atomic facts for skills:
-		for(String skillName : kb.getAgent().getSkills().keySet()) {
-			Rule r = new Rule();
-			Atom isAtomic = new Atom("is_atomic", new Atom(skillName));
-			r.addHead(isAtomic);
-			p.add(r);
-		}
-		
 		// add holds facts for the world knowledge of the agent
+		if(kb.getAgent() != null) {
+			p.add(buildExtendedLogicProgram(kb.getAgent().getSkills().values()));
+			p.add(buildExtendedLogicProgram(kb.getAgent().getBeliefs().getWorldKnowledge()));
+		}
 		// TODO: react to dynamic changes of the Beliefbase. Implement an iterative 
 		// update of the logic program representing the KnowhowBase
-		BaseBeliefbase world = kb.getAgent().getBeliefs().getWorldKnowledge();
-		for(String atom : world.getAtoms()) {
+		
+		return p;
+	}
+	
+	public static Program buildExtendedLogicProgram(BaseBeliefbase bb) {
+		Program p = new Program();
+		for(String atom : bb.getAtoms()) {
 			Rule r = new Rule();
 			Atom holds = new Atom("holds", new Atom(atom));
 			r.addHead(holds);
 			p.add(r);
 		}
-		
 		return p;
 	}
 	
