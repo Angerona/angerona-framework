@@ -5,6 +5,7 @@ import java.util.Collection;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.Skill;
 
 /**
@@ -23,6 +24,7 @@ public class KnowhowBuilder {
 	public static Program buildExtendedLogicProgram(KnowhowBase kb) {
 		Program p = new Program();
 		
+		// create facts for Knowhow-Statements
 		for(KnowhowStatement ks : kb.getStatements()) {
 			// Knowhow Statement
 			Rule r = new Rule();
@@ -45,6 +47,25 @@ public class KnowhowBuilder {
 				r.addHead(new Atom("khCondition", stAtom, a));
 				p.add(r);
 			}
+		}
+		
+		// add is-atomic facts for skills:
+		for(String skillName : kb.getAgent().getSkills().keySet()) {
+			Rule r = new Rule();
+			Atom isAtomic = new Atom("is_atomic", new Atom(skillName));
+			r.addHead(isAtomic);
+			p.add(r);
+		}
+		
+		// add holds facts for the world knowledge of the agent
+		// TODO: react to dynamic changes of the Beliefbase. Implement an iterative 
+		// update of the logic program representing the KnowhowBase
+		BaseBeliefbase world = kb.getAgent().getBeliefs().getWorldKnowledge();
+		for(String atom : world.getAtoms()) {
+			Rule r = new Rule();
+			Atom holds = new Atom("holds", new Atom(atom));
+			r.addHead(holds);
+			p.add(r);
 		}
 		
 		return p;

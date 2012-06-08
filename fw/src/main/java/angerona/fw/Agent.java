@@ -270,6 +270,13 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		return skills.get(name);
 	}
 	
+	/**
+	 * @return the skill map of the agent.
+	 */
+	public Map<String, Skill> getSkills() {
+		return Collections.unmodifiableMap(skills);
+	}
+	
 	@Override
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
