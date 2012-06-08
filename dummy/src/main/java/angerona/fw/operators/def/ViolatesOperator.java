@@ -1,5 +1,4 @@
 package angerona.fw.operators.def;
-import javax.swing.JOptionPane;
 
 import java.util.Map;
 
@@ -9,7 +8,10 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.Skill;
+import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
@@ -18,6 +20,8 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.ConfidentialTarget;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.ViolatesParameter;
+import angerona.fw.reflection.Context;
+import angerona.fw.reflection.ContextFactory;
 
 /**
  * This class is capable of proofing if the applying of an answer
@@ -42,8 +46,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		else if (ansExtended == AnswerValue.AV_FALSE && !ct.contains(AnswerValue.AV_TRUE))
 			{
 				return true;
-			}
-		JOptionPane.showMessageDialog(null, "No confidentiality breached");		 
+			} 
 		return false;
 	}
 	
@@ -62,7 +65,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			if(views.containsKey(a.getReceiverId())) {
 				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); //What if you want to answer to multiple agents?
 			
-				/*****
+				/*
 				 * Redefinition of confidentiality:
 				 * if the attacking agent already holds that information (in the defending agent's view) then no reason to lie.
 				 * */
@@ -73,7 +76,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				{
 					return false;
 				}
-				/******/
+				/* *****/
 				
 				if(a.getAnswer() == AnswerValue.AV_TRUE) {
 					view.addNewKnowledge(a.getRegarding());
@@ -88,7 +91,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 					if(ct.getSubjectName().equals(a.getReceiverId())) {
 						AngeronaAnswer aa = view.reason((FolFormula)ct.getInformation());
 						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
-						/*****
+						/*
 						 * Remove false positives: if the confidential target does not match the question being asked, 
 						 * then don't consider it
 						 */
@@ -100,17 +103,13 @@ public class ViolatesOperator extends BaseViolatesOperator {
 							continue;
 						}
 						
-						/******/
+						/* *****/
 						if (confidentialityViolated(aa.getAnswerExtended(), ct)){
 							report("Confidential-Target: '" + ct + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
-							//conf.removeConfidentialTarget(ct);
+							
 							return new Boolean(true);
 						}
 					}
-					/*else
-					{
-						JOptionPane.showMessageDialog(null, "ct.getSubjectName(): "+ct.getSubjectName()+" a.getReceiverId(): "+a.getReceiverId());
-					}*/
 				}
 			}
 		}

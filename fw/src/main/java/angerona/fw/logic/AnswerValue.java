@@ -17,6 +17,6 @@ public enum AnswerValue {
 	/** answer is not given */
 	AV_REJECT,
 	
-	/** answer is a list of arbitrary elements (a list of one arbitrary element in case of an arbitrary answer) */
-	AV_LIST
+	/** answer is for an open-ended question. Signals the program to go through additional reasoning and answering processes. */
+	AV_OPEN
 }
