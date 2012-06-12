@@ -22,7 +22,6 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
@@ -64,10 +63,7 @@ public class PluginInstantiator {
 
 	/** list of all classes implementing the update operator */
 	private List<Class<? extends BaseUpdateBeliefsOperator>> updateOperators = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
-
-	/** list of all classes implementing the policy-control operator */
-	private List<Class<? extends BasePolicyControlOperator>> policyControlOperators = new LinkedList<Class<? extends BasePolicyControlOperator>>();
-
+	
 	/** list of all classes implementing the violates operator */
 	private List<Class<? extends BaseViolatesOperator>> violatesOperators = new LinkedList<Class<? extends BaseViolatesOperator>>();
 
@@ -132,7 +128,6 @@ public class PluginInstantiator {
 			generateOptionsOperators.addAll(ap.getSupportedGenerateOptionsOperators());
 			filterOperators.addAll(ap.getSupportedFilterOperators());
 			updateOperators.addAll(ap.getSupportedChangeOperators());
-			policyControlOperators.addAll(ap.getSupportedPolicyControlOperators());
 			violatesOperators.addAll(ap.getSupportedViolatesOperators());
 			planers.addAll(ap.getSupportedPlaners());
 			LOG.info("Operator-Plugin '{}' loaded", ap.getClass().getName());
@@ -182,11 +177,6 @@ public class PluginInstantiator {
 	/** @return list with all update operators */
 	public List<Class<? extends BaseUpdateBeliefsOperator>> getUpdateOperators() {
 		return Collections.unmodifiableList(updateOperators);
-	}
-
-	/** @return list with all policy-control operators */
-	public List<Class<? extends BasePolicyControlOperator>> getPolicyControlOperators() {
-		return Collections.unmodifiableList(policyControlOperators);
 	}
 
 	/** @return list with all violates operators */
@@ -284,23 +274,6 @@ public class PluginInstantiator {
 		}
 		
 		throw new InstantiationException("Can't find Update-Operator with name: " + classname );
-	}
-	
-	/**
-	 * creates a new instance of a policy-control operator.
-	 * @param classname class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BasePolicyControlOperator createPolicyControlOperator(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BasePolicyControlOperator> c : getPolicyControlOperators()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-		
-		throw new InstantiationException("Can't find Policy-Control-Operator with name: " + classname );
 	}
 	
 	/**

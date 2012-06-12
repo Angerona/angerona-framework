@@ -2,14 +2,12 @@ package angerona.fw.internal;
 
 import java.util.List;
 
-import angerona.fw.operators.BaseIntentionUpdateOperator;
+import net.xeoh.plugins.base.Plugin;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
-import angerona.fw.operators.BasePolicyControlOperator;
+import angerona.fw.operators.BaseIntentionUpdateOperator;
+import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
-
-import net.xeoh.plugins.base.Plugin;
 
 /**
  * Interface for plugins defining new operator functionality.
@@ -29,9 +27,6 @@ public interface OperatorPlugin extends Plugin {
 	
 	/** @return all the supported Generate-Options Operators defined in this plugin */
 	public List<Class<? extends BaseGenerateOptionsOperator>> getSupportedGenerateOptionsOperators();
-	
-	/** @return all the supported Policy-Control Operators defined in this plugin */
-	public List<Class<? extends BasePolicyControlOperator>> getSupportedPolicyControlOperators();
 	
 	/** @return all the supported Update Operators defined in this plugin */
 	public List<Class<? extends BaseViolatesOperator>> getSupportedViolatesOperators();
