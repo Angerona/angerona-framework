@@ -31,6 +31,7 @@ public class PolicyControlOperator extends BasePolicyControlOperator {
 		AnswerValue newAnswer = aa.getAnswerExtended();
 		String id = param.getPolicyProofer().getName();
 		
+		/*
 		boolean injured = false;
 		if(ct != null) {
 			if(ct.contains(aa)) {
@@ -54,6 +55,7 @@ public class PolicyControlOperator extends BasePolicyControlOperator {
 		
 		if(!injured)
 			report("No policy injured.", param.getPolicyProofer());
+			*/
 		return new AngeronaAnswer(aa.getKnowledgeBase(), aa.getQuery(), newAnswer);
 	}
 	

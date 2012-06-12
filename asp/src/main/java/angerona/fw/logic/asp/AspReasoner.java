@@ -1,5 +1,7 @@
 package angerona.fw.logic.asp;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,8 +14,10 @@ import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,6 +180,50 @@ public class AspReasoner extends BaseReasoner {
 	@Override
 	protected AngeronaAnswer processInt(ReasonerParameter param) {
 		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
+	}
+
+	@Override
+	public Set<FolFormula> infer() {
+		List<AnswerSet> answerSets = processAnswerSets();
+		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
+		Set<FolFormula> reval = new HashSet<FolFormula>();
+		for(AnswerSet as : answerSets) {
+			Set<FolFormula> temp = new HashSet<FolFormula>();
+			for(String name : as.literals.keySet()) {
+				Set<Literal> literals = as.literals.get(name);
+				for(Literal l : literals) {
+					Atom a = new Atom(new Predicate(l.getAtom().getName()));
+					for(int i=0; i<l.getAtom().getArity(); ++i) {
+						a.addArgument(new Constant(l.getAtom().getTerm(i).get()));
+					}
+					if(!l.isTrueNegated()) {
+						temp.add(a);
+					} else {
+						temp.add(new Negation(a));
+					}
+				}
+			}
+			
+			answerSetsTrans.add(temp);
+		}
+		
+		if(semantic == InferenceSemantic.S_CREDULOUS)
+			throw new NotImplementedException();
+		else if(semantic == InferenceSemantic.S_SKEPTICAL) {
+			reval.addAll(answerSetsTrans.get(0));
+			answerSetsTrans.remove(0);
+			Set<FolFormula> toRemove = new HashSet<FolFormula>();
+			for(Set<FolFormula> as : answerSetsTrans) {
+				for(FolFormula a : reval) {
+					if(!as.contains(a)) {
+						toRemove.add(a);
+					}
+				}
+			}
+			reval.removeAll(toRemove);
+		}
+		
+		return reval;
 	}
 
 }

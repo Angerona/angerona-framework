@@ -2,7 +2,6 @@ package angerona.fw.operators.def;
 
 import java.util.Map;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
-import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.ConfidentialTarget;
@@ -57,12 +55,8 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				//given how it's making false positives right now?
 				for(ConfidentialTarget ct : conf.getTargets()) {
 					if(ct.getSubjectName().equals(a.getReceiverId())) {
-						AngeronaAnswer aa = view.reason((FolFormula)ct.getInformation());
 						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
-						if(	(aa.getAnswerExtended() == AnswerValue.AV_TRUE &&
-							 !ct.contains(AnswerValue.AV_FALSE)) ||
-							(aa.getAnswerExtended() == AnswerValue.AV_FALSE &&
-							 !ct.contains(AnswerValue.AV_TRUE)))  {
+						if(	view.infere().contains(ct.getInformation()))  {
 							report("Confidential-Target: '" + ct + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
 							//conf.removeConfidentialTarget(ct);
 							return new Boolean(true);
