@@ -4,19 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-
 import angerona.fw.internal.OperatorPlugin;
-import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
-import angerona.fw.operators.BasePolicyControlOperator;
+import angerona.fw.operators.BaseIntentionUpdateOperator;
+import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
-import angerona.fw.operators.def.UpdateBeliefsOperator;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.def.IntentionUpdateOperator;
-import angerona.fw.operators.def.PolicyControlOperator;
 import angerona.fw.operators.def.SubgoalGenerationOperator;
+import angerona.fw.operators.def.UpdateBeliefsOperator;
 import angerona.fw.operators.def.ViolatesOperator;
 
 /**
@@ -46,13 +43,6 @@ public class DummyOperatorPlugin implements OperatorPlugin {
 	public List<Class<? extends BaseGenerateOptionsOperator>> getSupportedGenerateOptionsOperators() {
 		List<Class<? extends BaseGenerateOptionsOperator>> reval = new LinkedList<Class<? extends BaseGenerateOptionsOperator>>();
 		reval.add(GenerateOptionsOperator.class);
-		return reval;
-	}
-
-	@Override
-	public List<Class<? extends BasePolicyControlOperator>> getSupportedPolicyControlOperators() {
-		List<Class<? extends BasePolicyControlOperator>> reval = new LinkedList<Class<? extends BasePolicyControlOperator>>();
-		reval.add(PolicyControlOperator.class);
 		return reval;
 	}
 

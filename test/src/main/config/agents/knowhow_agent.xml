@@ -4,7 +4,6 @@
 	<intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class>
 	<subgoal-generation-class>angerona.fw.operators.def.SubgoalGenerationOperator</subgoal-generation-class>
 	<update-beliefs-class>angerona.fw.operators.def.UpdateBeliefsOperator</update-beliefs-class>
-	<policy-control-class>angerona.fw.operators.def.PolicyControlOperator</policy-control-class>
 	<violates-class>angerona.fw.operators.def.ViolatesOperator</violates-class>
 	
 	<component-classes class="java.util.LinkedList">

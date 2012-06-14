@@ -32,6 +32,7 @@ public class KnowhowParser
   public static void main(String args []) throws ParseException
   {
    	String expr = "(bel(Y, X), revisionRequest(Y, X), reason(X)) (excused, bel(Boss, excused), ) (attend_scm, excused, )";
+	//String expr = "(target, (subtarget1, subtarget2), condition)";
     System.out.println("Using expresion :" + expr);
 
 	KnowhowParser parser = new KnowhowParser(expr);
@@ -92,7 +93,6 @@ List<KnowhowStatement> start() :
   (   < LBRACE > stmt = statement()
    {
      reval.add(stmt);
-     System.out.println("Add statement");
    }
     < RBRACE >
   )+
@@ -104,6 +104,7 @@ KnowhowStatement statement() :
   KnowhowStatement stmt = null;
   String elpStr = null;
   Atom target = null;
+  List<String > strings = null;
   Vector<Atom> subtargets = new Vector<Atom >();
   Vector<Atom> conditions = new Vector<Atom >();
 }
@@ -111,27 +112,60 @@ KnowhowStatement statement() :
   elpStr = elpString()
   {
     target = new Atom(elpStr + ".");
-    System.out.println("Target: " + elpStr);
+    LOG.debug("Target: " + elpStr);
   }
 
   < COMMA >
   (
-    elpStr = elpString()
+    strings = elpStringList()
     {
-      subtargets.add(new Atom(elpStr + "."));
-      System.out.println("Subtarget: " + elpStr);
+      for(String str : strings) {
+        subtargets.add(new Atom(str + "."));
+      }
+      LOG.debug("Subtargets: " + subtargets);
     }
-  )?
+  )
 
   < COMMA >
   (
-    elpStr = elpString()
-    {      conditions.add(new Atom(elpStr + "."));
-      System.out.println("Condition: " + token.image);;    }
+    strings = elpStringList()
+    {
+      for(String str : strings) {
+        conditions.add(new Atom(str + "."));      }      LOG.debug("Condition: " + conditions);    }
   )?
   
   {    return new KnowhowStatement(target, subtargets, conditions);  }  
 }
+
+List<String > elpStringList() :
+{
+  List<String > reval = new LinkedList<String >();
+  String elpStr = "";
+  Token token = null;}
+{
+  (
+  	(
+    	< LBRACE >
+   		elpStr = elpString()
+		{
+		  reval.add(elpStr);
+    	  LOG.debug("ElpStringList found 1/n string: " + elpStr);
+		}
+		(		  < COMMA > elpStr = elpString()
+		  {		    reval.add(elpStr);
+    	  	LOG.debug("ElpStringList found k/n string: " + elpStr);
+		  }
+		)*
+    	< RBRACE >  	) |
+  	(
+    	elpStr = elpString()
+    	{
+    	  reval.add(elpStr);
+    	  LOG.debug("ElpStringList found one string: " + elpStr);
+    	}  	)
+  )
+  {    return reval;
+  }}
 
 String elpString() :
 {

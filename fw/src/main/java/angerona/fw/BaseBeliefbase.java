@@ -221,6 +221,12 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		return answer;
 	}
 	
+	public Set<FolFormula> infere() {
+		if(reasoningOperator == null) 
+			throw new RuntimeException("Cannot infere on a beliefbase  which does not has a valid reasoning operator");
+		return reasoningOperator.infer(this);
+	}
+	
 	/**
 	 * This method checks if the given formula can be translate into the knowledge base langauge.
 	 * Angerona uses a subset of FOL to communicate between different plugins.

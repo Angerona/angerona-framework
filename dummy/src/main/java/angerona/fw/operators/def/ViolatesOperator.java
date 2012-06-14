@@ -2,7 +2,6 @@ package angerona.fw.operators.def;
 
 import java.util.Map;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
-import angerona.fw.logic.ConfidentialTarget;
+import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.reflection.Context;
@@ -86,27 +85,12 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				
 				//Does it even make sense to go through all confidential targets,
 				//given how it's making false positives right now?
-				//JOptionPane.showMessageDialog(null, conf.getTargets().size());
-				for(ConfidentialTarget ct : conf.getTargets()) {
-					if(ct.getSubjectName().equals(a.getReceiverId())) {
-						AngeronaAnswer aa = view.reason((FolFormula)ct.getInformation());
+				for(Secret secret : conf.getTargets()) {
+					if(secret.getSubjectName().equals(a.getReceiverId())) {
 						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
-						/*
-						 * Remove false positives: if the confidential target does not match the question being asked, 
-						 * then don't consider it
-						 */
-						FolFormula secret = (FolFormula) ct.getInformation();
-						
-						if(!secret.toString().equalsIgnoreCase(question.toString()))
-						{
-							//JOptionPane.showMessageDialog(null, "Continue called");
-							continue;
-						}
-						
-						/* *****/
-						if (confidentialityViolated(aa.getAnswerExtended(), ct)){
-							report("Confidential-Target: '" + ct + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
-							
+						if(	view.infere().contains(secret.getInformation()))  {
+							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
+							//conf.removeConfidentialTarget(ct);
 							return new Boolean(true);
 						}
 					}

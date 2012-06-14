@@ -7,7 +7,6 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.internal.OperatorPlugin;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
@@ -38,13 +37,6 @@ public class Plugin implements OperatorPlugin {
 	//@Override
 	public List<Class<? extends BaseGenerateOptionsOperator>> getSupportedGenerateOptionsOperators() {
 		List<Class<? extends BaseGenerateOptionsOperator>> reval = new LinkedList<Class<? extends BaseGenerateOptionsOperator>>();
-	
-		return reval;
-	}
-
-	//@Override
-	public List<Class<? extends BasePolicyControlOperator>> getSupportedPolicyControlOperators() {
-		List<Class<? extends BasePolicyControlOperator>> reval = new LinkedList<Class<? extends BasePolicyControlOperator>>();
 	
 		return reval;
 	}

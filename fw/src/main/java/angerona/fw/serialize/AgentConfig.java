@@ -16,9 +16,6 @@ public interface AgentConfig {
 	/** @return String identifying the Violates Operator class name */
 	public String getViolatesOperatorClass();
 
-	/** @return String identifying the Policy-Control Operator class name */
-	public String getPolicyControlOperatorClass();
-
 	/** @return String identifying the Update Operator class name */
 	public String getUpdateOperatorClass();
 

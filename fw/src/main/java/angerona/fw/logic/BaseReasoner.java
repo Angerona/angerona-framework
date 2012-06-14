@@ -1,5 +1,7 @@
 package angerona.fw.logic;
 
+import java.util.Set;
+
 import net.sf.tweety.Answer;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
@@ -22,6 +24,22 @@ public abstract class BaseReasoner
 	protected BaseBeliefbase actualBeliefbase;
 	
 	public BaseReasoner() {
+	}
+	
+	/** 
+	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
+	 * @return	A set of FolFormulas representing Cn(Bel).
+	 */
+	public abstract Set<FolFormula> infer();
+	
+	/**
+	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
+	 * @param bb
+	 * @return A set of FolFormulas representing Cn(Bel).
+	 */
+	public Set<FolFormula> infer(BaseBeliefbase bb) {
+		actualBeliefbase = bb;
+		return infer();
 	}
 	
 	/**
