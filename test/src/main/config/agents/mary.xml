@@ -1,0 +1,15 @@
+<agent-configuration>
+	<name>Default Agent Implementation</name>
+	<generate-options-class>angerona.fw.operators.def.GenerateOptionsOperator</generate-options-class>
+	<intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class>
+	<subgoal-generation-class>angerona.fw.mary.SubgoalGenerationOperator</subgoal-generation-class>
+	<update-beliefs-class>angerona.fw.operators.def.UpdateBeliefsOperator</update-beliefs-class>
+	<violates-class>angerona.fw.operators.def.ViolatesOperator</violates-class>
+	<!--   <violates-class>angerona.fw.operators.def.ViolatesOperator</violates-class> -->
+	
+	<component-classes class="java.util.LinkedList">
+		<string>angerona.fw.logic.Desires</string>
+		<string>angerona.fw.logic.ConfidentialKnowledge</string>
+        <string>angerona.fw.MasterPlan</string>
+	</component-classes>	
+</agent-configuration>
