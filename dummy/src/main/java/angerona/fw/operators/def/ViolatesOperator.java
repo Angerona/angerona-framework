@@ -1,5 +1,7 @@
 package angerona.fw.operators.def;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
@@ -7,20 +9,13 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.Skill;
-import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.Query;
-import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.ViolatesParameter;
-import angerona.fw.reflection.Context;
-import angerona.fw.reflection.ContextFactory;
 
 /**
  * This class is capable of proofing if the applying of an answer
@@ -36,19 +31,6 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
 	
-	private boolean confidentialityViolated(AnswerValue ansExtended, ConfidentialTarget ct)
-	{
-		if (ansExtended == AnswerValue.AV_TRUE && !ct.contains(AnswerValue.AV_FALSE))
-				 {
-					return true;
-				 }
-		else if (ansExtended == AnswerValue.AV_FALSE && !ct.contains(AnswerValue.AV_TRUE))
-			{
-				return true;
-			} 
-		return false;
-	}
-	
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
@@ -62,21 +44,24 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 			if(views.containsKey(a.getReceiverId())) {
-				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); //What if you want to answer to multiple agents?
-			
-				/*
-				 * Redefinition of confidentiality:
-				 * if the attacking agent already holds that information (in the defending agent's view) then no reason to lie.
-				 * */
-				Query query = (Query) (param.getAgent().getActualPerception());
-				FolFormula question = (FolFormula)query.getQuestion();
+				// First we check for already unrivaled secrets:
+				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); 
 				
-				if(a.getAnswer()==view.reason(question).getAnswerExtended())
-				{
-					return false;
+				List<Secret> toRemove = new LinkedList<Secret>();
+				for(Secret secret : conf.getTargets()) {
+					if(secret.getSubjectName().equals(a.getReceiverId())) {
+						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
+						if(	view.infere().contains(secret.getInformation()))  {
+							toRemove.add(secret);
+							LOG.warn("Secret-Knowledge inconsistency found and removed by Violates-Operator.");
+						}
+					}
 				}
-				/* *****/
+				for(Secret remove : toRemove) {
+					conf.removeConfidentialTarget(remove);
+				}
 				
+				// Now we adapt the view and check again.
 				if(a.getAnswer() == AnswerValue.AV_TRUE) {
 					view.addNewKnowledge(a.getRegarding());
 				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {
