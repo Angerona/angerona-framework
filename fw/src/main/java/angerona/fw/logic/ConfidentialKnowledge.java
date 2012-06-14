@@ -25,8 +25,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 	private static Logger LOG = LoggerFactory.getLogger(ConfidentialKnowledge.class);
 	
 	/** set of confidential targets defining this beliefbase */
-	private Set<ConfidentialTarget> confidentialTargets = new HashSet<ConfidentialTarget>();
-	
+	private Set<Secret> confidentialTargets = new HashSet<Secret>();
 	
 	private FolSignature signature = new FolSignature();
 	
@@ -35,8 +34,8 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 	}
 	
 	public ConfidentialKnowledge(ConfidentialKnowledge other) {
-		for(ConfidentialTarget ct : other.confidentialTargets) {
-			this.confidentialTargets.add((ConfidentialTarget)ct.clone());
+		for(Secret ct : other.confidentialTargets) {
+			this.confidentialTargets.add((Secret)ct.clone());
 		}
 	}
 	
@@ -52,7 +51,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 	@Override
 	public String toString() {
 		String reval = "";
-		for(ConfidentialTarget ct : confidentialTargets)
+		for(Secret ct : confidentialTargets)
 			reval += ct.toString() + "\n";
 		return reval;
 	}
@@ -62,10 +61,10 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 	 * @param cf	the new confidential target which will be added to the beliefbase.
 	 * @return		true if the beliefbase didn't contain the confidential target, false otherwise.
 	 */
-	public boolean addConfidentialTarget(ConfidentialTarget cf) {
+	public boolean addConfidentialTarget(Secret cf) {
 		return confidentialTargets.add(cf);
 	}
-	public boolean removeConfidentialTarget(ConfidentialTarget cf)
+	public boolean removeConfidentialTarget(Secret cf)
 	{
 		return confidentialTargets.remove(cf);
 	}
@@ -75,14 +74,14 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 	 * @param information	the confidential information itself.
 	 * @return				A confidential target if it exists, null otherwise.
 	 */
-	public ConfidentialTarget getTarget(String subjectName, Formula information) {
-		for(ConfidentialTarget ct : confidentialTargets)
+	public Secret getTarget(String subjectName, Formula information) {
+		for(Secret ct : confidentialTargets)
 			if(ct.getSubjectName().compareTo(subjectName) == 0 && ct.getInformation().equals(information))
 				return ct;
 		return null;
 	}
 	
-	public Set<ConfidentialTarget> getTargets() {
+	public Set<Secret> getTargets() {
 		return Collections.unmodifiableSet(confidentialTargets);
 	}
 
@@ -111,7 +110,6 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 		// 0 = nothing
 		// 1 = agent name
 		// 2 = predicate (use tweety)
-		// 3 = set
 		
 		int state = 0;
 		
@@ -151,7 +149,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 				state = 3;
 			
 				if(info != null)
-					addConfidentialTarget(new ConfidentialTarget(name, info));
+					addConfidentialTarget(new Secret(name, info));
 				else
 					LOG.error("Cant read confidential targets formula!");
 				name = "";

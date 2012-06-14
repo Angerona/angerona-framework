@@ -11,7 +11,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
-import angerona.fw.logic.ConfidentialTarget;
+import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.ViolatesParameter;
 
@@ -53,11 +53,11 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				
 				//Does it even make sense to go through all confidential targets,
 				//given how it's making false positives right now?
-				for(ConfidentialTarget ct : conf.getTargets()) {
-					if(ct.getSubjectName().equals(a.getReceiverId())) {
+				for(Secret secret : conf.getTargets()) {
+					if(secret.getSubjectName().equals(a.getReceiverId())) {
 						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
-						if(	view.infere().contains(ct.getInformation()))  {
-							report("Confidential-Target: '" + ct + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
+						if(	view.infere().contains(secret.getInformation()))  {
+							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
 							//conf.removeConfidentialTarget(ct);
 							return new Boolean(true);
 						}

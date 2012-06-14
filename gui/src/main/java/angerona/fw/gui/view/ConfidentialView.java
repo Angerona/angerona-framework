@@ -5,7 +5,7 @@ import java.util.List;
 
 import angerona.fw.internal.Entity;
 import angerona.fw.logic.ConfidentialKnowledge;
-import angerona.fw.logic.ConfidentialTarget;
+import angerona.fw.logic.Secret;
 
 /**
  * View for the confidential knowledge of the agents. It shows the confidential targets
@@ -29,7 +29,7 @@ public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
 		ConfidentialKnowledge ck = (ConfidentialKnowledge)obj;
 		
 		List<String> reval = new LinkedList<String>();
-		for(ConfidentialTarget ct : ck.getTargets()) {
+		for(Secret ct : ck.getTargets()) {
 			reval.add(ct.toString());
 		}
 		
