@@ -21,6 +21,7 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 //import angerona.fw.logic.asp.AspReasoner;
@@ -175,7 +176,11 @@ public class SubgoalGenerationOperator extends
 		
 		
 		Query query = (Query) (ag.getActualPerception());
-		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
+		//AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
+		AngeronaAnswer ans = new AngeronaAnswer(ag.getBeliefs().getWorldKnowledge(), (FolFormula)query.getQuestion(), AnswerValue.AV_TRUE);
+		AngeronaDetailAnswer realAnswer = ag.getBeliefs().getWorldKnowledge().detailReason((FolFormula)query.getQuestion());
+		
+		System.out.println("ASDF realAnswer: " + realAnswer.getAnswerExtended());
 		
 		AnswerValue lie = new LyingOperator().lie(ans);
 		

@@ -2,6 +2,7 @@ package angerona.fw;
 
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,6 +23,7 @@ import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
@@ -218,6 +220,22 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		else if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
 		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperator.query(this, query);
+		return answer;
+	}
+	
+	/**
+	 * This method returns an AngeronaDetailAnswer, which is based on the FolFormula class instead of the AnswerValue enum.
+	 * NOTE: This class would be better in a custom AngeronaDetailBeliefbase class
+	 * @param query
+	 * @return AngeronaDetailAnswer
+	 */
+	public AngeronaDetailAnswer detailReason(FolFormula query)
+	{
+		if(reasoningOperator == null)
+			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
+		else if(!isFormulaValid(query)) 
+			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
+		AngeronaDetailAnswer answer = (AngeronaDetailAnswer) reasoningOperator.query(this, query);
 		return answer;
 	}
 	

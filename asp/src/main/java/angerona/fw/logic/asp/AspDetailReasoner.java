@@ -22,7 +22,6 @@ public class AspDetailReasoner extends AspReasoner {
 		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
 	}
 	
-	@Override
 	public Answer query(FolFormula query) {
 		/*
 		List<AnswerSet> answerSets = processAnswerSets();
@@ -35,8 +34,8 @@ public class AspDetailReasoner extends AspReasoner {
 		}
 		*/
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
-		return super.query(query);
-		//return new AngeronaDetailAnswer(bb, query, new Atom(new Predicate("FALSE")));
+		//return super.query(query);
+		return new AngeronaDetailAnswer(bb, query, new Atom(new Predicate("FALSE")));
 		//return new AngeronaAnswer(bb, query, AnswerValue.AV_REJECT);
 	}
 
