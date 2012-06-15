@@ -7,6 +7,7 @@ import net.sf.tweety.Answer;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.NotImplementedException;
@@ -33,10 +34,52 @@ public class AspDetailReasoner extends AspReasoner {
 			av = skepticalInference(answerSets, query);
 		}
 		*/
-		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
 		//return super.query(query);
-		return new AngeronaDetailAnswer(bb, query, new Atom(new Predicate("FALSE")));
 		//return new AngeronaAnswer(bb, query, AnswerValue.AV_REJECT);
+		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
+		Predicate p = new Predicate(findAnswer(query).toString());
+		return new AngeronaDetailAnswer(bb, query, new Atom(p));
 	}
-
+	/**
+	 * The AspDetailReasoner parses the string form of the query and looks for a match in the string forms of the knowledge.
+	 * Admittedly a crude way to go about it. 
+	 * @param query
+	 * @return
+	 */
+	protected FolFormula findAnswer(FolFormula query)
+	{
+		Set <FolFormula> knowledge = super.infer();
+		FolFormula answer = null;
+		if (!query.toString().contains("(")) //If the query has 0 arity (if it's a true/false question)
+		{
+			for (FolFormula f : knowledge)
+			{
+				String fString = f.toString();
+				String queryString = query.toString();
+				if(fString.startsWith("!")) //Check if it's a negation
+				{
+					System.out.println("ASDF negation");
+					answer = (Negation) f;
+				}
+				else
+				{
+					if(fString.equals(queryString))
+					{
+						answer = f;
+					}
+					else
+					{
+						System.out.println("ASDF actual string:"+fString);
+					}
+				}
+			}
+		}
+		return answer;
+	}
+	/*
+	public FolFormula skepticalDetailInference(List<AnswerSet> answerSets, FolFormula query)
+	{
+		
+	}
+	*/
 }

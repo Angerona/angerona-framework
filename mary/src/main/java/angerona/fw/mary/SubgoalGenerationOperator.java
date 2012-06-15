@@ -179,8 +179,10 @@ public class SubgoalGenerationOperator extends
 		//AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
 		AngeronaAnswer ans = new AngeronaAnswer(ag.getBeliefs().getWorldKnowledge(), (FolFormula)query.getQuestion(), AnswerValue.AV_TRUE);
 		AngeronaDetailAnswer realAnswer = ag.getBeliefs().getWorldKnowledge().detailReason((FolFormula)query.getQuestion());
+		AngeronaDetailAnswer realLie = new LyingOperator().lie(realAnswer);
 		
 		System.out.println("ASDF realAnswer: " + realAnswer.getAnswerExtended());
+		System.out.println("ASDF realLie: " + realLie.getAnswerExtended());
 		
 		AnswerValue lie = new LyingOperator().lie(ans);
 		
