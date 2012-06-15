@@ -25,7 +25,7 @@ public class DetailPerceptionFactory extends PerceptionFactory{
 	public FolFormula createDetailAnswer(String paramValue, Context context)
 	{
 		if(paramValue.startsWith("$")) {
-			System.out.println("ASDF Answer variable");
+			System.out.println("ASDF Answer variable:"+paramValue);
 			//TODO: support variable names for detail answers
 			return null;
 		}
@@ -65,10 +65,10 @@ public class DetailPerceptionFactory extends PerceptionFactory{
 			{
 				if(commAct instanceof DetailAnswerDO)
 				{
-					System.out.println("ASDF made it within DetailAnswerDO");
 					DetailAnswerDO dado = (DetailAnswerDO) commAct;
 					FolFormula q = createFormula(dado.getQuestion(), context);
-					FolFormula answer = createDetailAnswer(dado.getAnswer(), context);
+					FolFormula answer = createFormula(dado.getAnswer(), context);
+					System.out.println("ASDF FolFormula answer:"+answer.toString());
 					return new DetailQueryAnswer(s, r, q, answer);
 				}
 				else

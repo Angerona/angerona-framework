@@ -75,6 +75,7 @@ public class AspDetailReasoner extends AspReasoner {
 			}
 		}
 		return answer;
+		//return new Atom(new Predicate("TEST"));
 	}
 	/*
 	public FolFormula skepticalDetailInference(List<AnswerSet> answerSets, FolFormula query)

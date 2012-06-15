@@ -12,6 +12,7 @@ public class DetailQueryAnswer extends Answer {
 	public DetailQueryAnswer(String senderId, String receiverId, FolFormula regarding, FolFormula answer) 
 	{
 		super(senderId, receiverId, regarding, AnswerValue.AV_REJECT);
+		detailAnswer = answer;
 	
 	}
 	public FolFormula getDetailAnswer()
@@ -20,6 +21,6 @@ public class DetailQueryAnswer extends Answer {
 	}
 	@Override
 	public String toString() {
-		return "< " + getSenderId() + " gives the detailed answer " + getReceiverId() + " " + getRegarding().toString() + "=" + getAnswer().toString() + " >";
+		return "< " + getSenderId() + " gives the detailed answer " + getReceiverId() + " " + getRegarding().toString() + "=" + detailAnswer.toString() + " >";
 	}
 }

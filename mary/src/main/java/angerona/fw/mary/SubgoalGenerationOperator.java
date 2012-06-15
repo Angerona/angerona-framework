@@ -178,24 +178,24 @@ public class SubgoalGenerationOperator extends
 		
 		Query query = (Query) (ag.getActualPerception()); //This needs to be a DetailQuery at some point
 		//AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
-		AngeronaAnswer ans = new AngeronaAnswer(ag.getBeliefs().getWorldKnowledge(), (FolFormula)query.getQuestion(), AnswerValue.AV_TRUE);
+		//AngeronaAnswer ans = new AngeronaAnswer(ag.getBeliefs().getWorldKnowledge(), (FolFormula)query.getQuestion(), AnswerValue.AV_TRUE);
 		AngeronaDetailAnswer realAnswer = ag.getBeliefs().getWorldKnowledge().detailReason((FolFormula)query.getQuestion());
 		AngeronaDetailAnswer realLie = new LyingOperator().lie(realAnswer);
 		
 		System.out.println("ASDF realAnswer: " + realAnswer.getAnswerExtended());
 		System.out.println("ASDF realLie: " + realLie.getAnswerExtended());
 		
-		AnswerValue lie = new LyingOperator().lie(ans);
+		//AnswerValue lie = new LyingOperator().lie(ans);
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
-		context.set("answer", ans.getAnswerExtended());
+		context.set("answer", realAnswer.getAnswerExtended());
 		
 		Subgoal sg = new Subgoal(ag, des);
 		sg.newStack(qaSkill, context);
 		
 		context = new Context(context);
-		context.set("answer", lie);
+		context.set("answer", realLie.getAnswerExtended());
 		sg.newStack(qaSkill, context);
 		
 		ag.getPlanComponent().addPlan(sg);
