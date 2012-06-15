@@ -52,8 +52,8 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	
 	/** implementation of the factory used for perceptions */
 	//I want this to be plugin-implemented
-	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
-	//private PerceptionFactory perceptionFactory = new DetailPerceptionFactory();
+	//private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
+	private PerceptionFactory perceptionFactory = new DetailPerceptionFactory();
 	
 	/** flag indicating if the environment is currently in its update process */
 	private boolean doingTick = false;

@@ -19,6 +19,7 @@ import angerona.fw.Desire;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+import angerona.fw.comm.DetailQuery;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
@@ -144,7 +145,7 @@ public class SubgoalGenerationOperator extends
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
-				sg.newStack(query, new Query(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
+				sg.newStack(query, new DetailQuery(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
 				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 
@@ -175,7 +176,7 @@ public class SubgoalGenerationOperator extends
 		}
 		
 		
-		Query query = (Query) (ag.getActualPerception());
+		Query query = (Query) (ag.getActualPerception()); //This needs to be a DetailQuery at some point
 		//AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
 		AngeronaAnswer ans = new AngeronaAnswer(ag.getBeliefs().getWorldKnowledge(), (FolFormula)query.getQuestion(), AnswerValue.AV_TRUE);
 		AngeronaDetailAnswer realAnswer = ag.getBeliefs().getWorldKnowledge().detailReason((FolFormula)query.getQuestion());
