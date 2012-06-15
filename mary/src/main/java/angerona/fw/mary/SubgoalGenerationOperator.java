@@ -177,7 +177,7 @@ public class SubgoalGenerationOperator extends
 		Query query = (Query) (ag.getActualPerception());
 		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
 		
-		AnswerValue lie = lie(ans);
+		AnswerValue lie = new LyingOperator().lie(ans);
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());

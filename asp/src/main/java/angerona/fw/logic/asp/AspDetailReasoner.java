@@ -35,8 +35,9 @@ public class AspDetailReasoner extends AspReasoner {
 		}
 		*/
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
+		return super.query(query);
 		//return new AngeronaDetailAnswer(bb, query, new Atom(new Predicate("FALSE")));
-		return new AngeronaAnswer(bb, query, AnswerValue.AV_REJECT);
+		//return new AngeronaAnswer(bb, query, AnswerValue.AV_REJECT);
 	}
 
 }
