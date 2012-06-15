@@ -14,6 +14,7 @@ import angerona.fw.internal.BeliefbasePlugin;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.asp.AspBeliefbase;
+import angerona.fw.logic.asp.AspDetailReasoner;
 import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspRevision;
@@ -32,6 +33,7 @@ public class AspPlugin implements BeliefbasePlugin {
 	public List<Class<? extends BaseReasoner>> getSupportedReasoners() {
 		List<Class<? extends BaseReasoner>> reval = new LinkedList<Class<? extends BaseReasoner>>();
 		reval.add(AspReasoner.class);
+		reval.add(AspDetailReasoner.class);
 		return reval;
 	}
 

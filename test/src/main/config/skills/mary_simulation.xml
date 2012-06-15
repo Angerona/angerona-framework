@@ -11,7 +11,7 @@
         	</config>
          
        	 	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-				<source>config/beliefbases/asp_detail_beliefbase.xml</source>
+				<source>config/beliefbases/asp_beliefbase.xml</source>
         	</beliefbase-config>
          
 		<skill class="angerona.fw.serialize.SkillConfigImport">
@@ -22,7 +22,7 @@
 			<source>config/skills/QueryAnswer.xml</source>
         	</skill>
 
-		<data key="Confidential">(Coroner, someone_argued) 
+		<data key="Confidential">(Coroner, someone_argued, {true}) 
 		</data>   
 	</agent-instance>
       
@@ -35,7 +35,7 @@
       		</config>
       	
       		<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-        	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
+        	    <source>config/beliefbases/asp_beliefbase.xml</source>
         	 </beliefbase-config>
         	
 		<skill class="angerona.fw.serialize.SkillConfigImport">

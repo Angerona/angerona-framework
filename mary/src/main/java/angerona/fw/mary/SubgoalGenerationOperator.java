@@ -137,9 +137,9 @@ public class SubgoalGenerationOperator extends
 				String content = desire.toString().substring(si,li);
 				//Should the snippet above be put in its own subroutine?
 				
-				Skill query = (Skill) ag.getSkill("Query");
+				Skill query = (Skill) ag.getSkill("DetailQuery");
 				if(query == null) {
-					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
+					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "DetailQuery");
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
@@ -167,9 +167,9 @@ public class SubgoalGenerationOperator extends
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
-		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
+		Skill qaSkill = (Skill) ag.getSkill("DetailQueryAnswer");
 		if(qaSkill == null) {
-			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
+			LOG.warn("Agent '{}' does not have Skill: 'DetailQueryAnswer'", ag.getName());
 			return false;
 		}
 		
