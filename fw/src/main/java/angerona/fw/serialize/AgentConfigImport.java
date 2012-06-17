@@ -34,10 +34,6 @@ public class AgentConfigImport implements AgentConfig {
 		throw new IllegalStateException("Method not supported.");
 	}
 
-	@Override
-	public String getPolicyControlOperatorClass() {
-		throw new IllegalStateException("Method not supported.");
-	}
 
 	@Override
 	public String getUpdateOperatorClass() {

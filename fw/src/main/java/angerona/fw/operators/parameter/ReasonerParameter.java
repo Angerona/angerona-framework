@@ -1,14 +1,14 @@
 package angerona.fw.operators.parameter;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 
 public class ReasonerParameter  {
 	private BaseBeliefbase beliefbase;
 	
-	private Formula query;
+	private FolFormula query;
 	
-	public ReasonerParameter(BaseBeliefbase beliefbase, Formula query) {
+	public ReasonerParameter(BaseBeliefbase beliefbase, FolFormula query) {
 		this.beliefbase = beliefbase;
 		this.query = query;
 	}
@@ -17,7 +17,7 @@ public class ReasonerParameter  {
 		return beliefbase;
 	}
 
-	public Formula getQuery() {
+	public FolFormula getQuery() {
 		return query;
 	}
 	

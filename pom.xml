@@ -65,5 +65,7 @@
   	<module>tweety/firstorderlogic</module>
   	<module>gui</module>
   	<module>knowhow</module>
+  	
+  	<module>mary</module>
   </modules>
 </project>

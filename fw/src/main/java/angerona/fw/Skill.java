@@ -7,7 +7,6 @@ import angerona.fw.error.InvokeException;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextVisitor;
-import angerona.fw.reflection.PolicyControlVisitor;
 import angerona.fw.reflection.ReasonVisitor;
 import angerona.fw.reflection.SendActionVisitor;
 import angerona.fw.reflection.UpdateBeliefbaseVisitor;
@@ -69,8 +68,6 @@ public class Skill extends Intention implements Runnable {
 				cv = new SendActionVisitor(
 						a.getEnvironment().getPerceptionFactory(), realRun, a.getBeliefs());
 				sendAction = true;
-			} else if(cmd.equalsIgnoreCase("PolicyControl")) {
-				cv = new PolicyControlVisitor();
 			}
 			
 			if(cv != null) {

@@ -1,5 +1,8 @@
 package angerona.fw.operators.def;
 
+
+//import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,8 +10,13 @@ import angerona.fw.Agent;
 import angerona.fw.Intention;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+//import angerona.fw.comm.Query;
+//import angerona.fw.logic.AngeronaAnswer;
+//import angerona.fw.logic.AnswerValue;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
+//import angerona.fw.reflection.Context;
+//import angerona.fw.reflection.ContextFactory;
 
 /**
  * 
@@ -19,10 +27,15 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
 	
+	private boolean intentionOutdated(Intention intention)
+	{
+		//It seems that this method isn't necessary? Strange
+		return false;
+	}
+	
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {
 		LOG.info("Run Default-Intention-Update");
-		
 		Agent ag = param.getPlan().getAgent();
 		for(Subgoal plan : param.getPlan().getPlans()) {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
@@ -32,10 +45,16 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					report("Performing mental-action applying: '"+intention+"'", ag);
 					intention.run();
 					Skill sk = (Skill)intention;
+					if(intentionOutdated(intention))
+					{
+						continue;
+					}
 					if(!sk.violates()) {
 						report("Mental action successfull, using '" + sk.getName() + "' as next atomic action.", ag);
 						return intention;
 					}
+					
+					
 				}
 			}
 		}

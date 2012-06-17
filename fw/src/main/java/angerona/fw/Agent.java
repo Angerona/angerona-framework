@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import net.sf.beenuts.ap.AgentArchitecture;
-import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
@@ -27,14 +26,12 @@ import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.BasePolicyControlOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
-import angerona.fw.operators.parameter.PolicyControlParameter;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 import angerona.fw.operators.parameter.ViolatesParameter;
@@ -87,9 +84,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	
 	/** The operator used to change the knowledge base when receiving perceptions */
 	BaseUpdateBeliefsOperator changeOperator;
-	
-	/** The operator used for policy control */
-	BasePolicyControlOperator policyControlOperator;
 	
 	/** The operator used for violates proofs */
 	BaseViolatesOperator violatesOperator;
@@ -157,14 +151,12 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 			intentionUpdateOperator = pi.createFilterOperator(ac.getIntentionUpdateOperatorClass());
 			subgoalGenerationOperator = pi.createPlaner(ac.getSubgoalGenerationClass());
 			changeOperator = pi.createUpdateOperator(ac.getUpdateOperatorClass());
-			policyControlOperator = pi.createPolicyControlOperator(ac.getPolicyControlOperatorClass());
 			violatesOperator = pi.createViolatesOperator(ac.getViolatesOperatorClass());
 
 			generateOptionsOperator.setOwner(this);
 			intentionUpdateOperator.setOwner(this);
 			subgoalGenerationOperator.setOwner(this);
 			changeOperator.setOwner(this);
-			policyControlOperator.setOwner(this);
 			violatesOperator.setOwner(this);
 			
 			for(String compName : ac.getComponents()) {
@@ -270,6 +262,13 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		return skills.get(name);
 	}
 	
+	/**
+	 * @return the skill map of the agent.
+	 */
+	public Map<String, Skill> getSkills() {
+		return Collections.unmodifiableMap(skills);
+	}
+	
 	@Override
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
@@ -330,17 +329,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	public void updateBeliefs(Perception perception) {
 		if(perception != null)
 			beliefs = changeOperator.process(new UpdateBeliefsParameter(this, perception));
-	}
-	
-	/**
-	 * Performs the policy control operator.
-	 * @param subjectId		The unique name of the subject.
-	 * @param answer		The true answer (no policy control yet)
-	 * @param question		formula representing the question.
-	 * @return	another answer then trueAnswer if policy would be destroyed by trueAnswer, otherwise trueAnswer.
-	 */
-	public AngeronaAnswer performPolicyControl(String subjectId, AngeronaAnswer answer, Formula question) {
-		return policyControlOperator.process(new PolicyControlParameter(this, subjectId, answer, question));
 	}
 	
 	/**

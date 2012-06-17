@@ -36,10 +36,6 @@ public class AgentConfigReal implements AgentConfig{
 	@Element(name="violates-class")
 	private String violatesOperatorClass;
 
-	/** String identifying the Policy-Control Operator class name for dynamic instantiation */
-	@Element(name="policy-control-class")
-	private String policyControlOperatorClass;
-
 	/** String identifying the Update Operator class name for dynamic instantiation */
 	@Element(name="update-beliefs-class")
 	private String updateBeliefsOperatorClass;
@@ -71,11 +67,6 @@ public class AgentConfigReal implements AgentConfig{
 	}
 
 	@Override
-	public String getPolicyControlOperatorClass() {
-		return policyControlOperatorClass;
-	}
-
-	@Override
 	public String getUpdateOperatorClass() {
 		return updateBeliefsOperatorClass;
 	}
@@ -101,7 +92,6 @@ public class AgentConfigReal implements AgentConfig{
 		test.name = "AgentName";
 		test.generateOptionsOperatorClass = "ggo";
 		test.intentionUpdateOperatorClass = "iuo";
-		test.policyControlOperatorClass = "pco";
 		test.subgoalGenerationClass = "sggo";
 		test.updateBeliefsOperatorClass = "updbop";
 		test.violatesOperatorClass = "violatesop";

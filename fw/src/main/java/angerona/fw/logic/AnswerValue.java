@@ -15,5 +15,8 @@ public enum AnswerValue {
 	AV_UNKNOWN,
 	
 	/** answer is not given */
-	AV_REJECT
+	AV_REJECT,
+	
+	/** answer is for an open-ended question. Signals the program to go through additional reasoning and answering processes. */
+	AV_OPEN
 }

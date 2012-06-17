@@ -83,6 +83,14 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	/** Reference to the used reasoning operator */
 	private BaseReasoner reasoningOperator;
 	
+	public BaseChangeBeliefs getRevisionOperator() {
+		return revisionOperator;
+	}
+
+	public BaseReasoner getReasoningOperator() {
+		return reasoningOperator;
+	}
+
 	/** Default Ctor: Generates an empty belief base which does not supports quantifiers or variables in its formulas */
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
@@ -211,6 +219,12 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
 		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperator.query(this, query);
 		return answer;
+	}
+	
+	public Set<FolFormula> infere() {
+		if(reasoningOperator == null) 
+			throw new RuntimeException("Cannot infere on a beliefbase  which does not has a valid reasoning operator");
+		return reasoningOperator.infer(this);
 	}
 	
 	/**

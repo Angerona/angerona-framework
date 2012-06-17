@@ -1,7 +1,10 @@
 package angerona.fw.logic.dummy;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.tweety.Answer;
-import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -20,7 +23,7 @@ public class DummyReasoner extends BaseReasoner {
 	}
 
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(FolFormula query) {
 		if(this.actualBeliefbase == null)
 			return null;
 		
@@ -34,5 +37,10 @@ public class DummyReasoner extends BaseReasoner {
 	@Override
 	protected AngeronaAnswer processInt(ReasonerParameter param) {
 		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
+	}
+
+	@Override
+	public Set<FolFormula> infer() {
+		return new HashSet<FolFormula>();
 	}
 }
