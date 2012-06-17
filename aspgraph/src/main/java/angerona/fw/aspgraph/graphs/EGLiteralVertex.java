@@ -31,4 +31,18 @@ public class EGLiteralVertex extends EGVertex{
 		return literal + "+";
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		EGLiteralVertex v;
+		if (o instanceof EGLiteralVertex) v = (EGLiteralVertex) o;
+		else return false;
+		if (v.getLiteral().equals(this.getLiteral()) && v.getAnnotation().equals(this.annotation)) return true;
+		else return false;
+	}
+	
+	@Override
+	public int hashCode(){
+		return toString().hashCode();
+	}
+	
 }

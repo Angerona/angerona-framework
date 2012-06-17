@@ -35,11 +35,15 @@ public class ExtendedDependencyGraph extends DirectedSparseGraph<EDGVertex,EDGEd
 	private AnswerSetTwoValued answerSet;
 	private HashSet<EDGVertex> contradictionNodes;
 	private HashMap<String, List<EDGVertex>> nodeMap;
+	private Set<EDGEdge>[][] paths;
+	private HashMap<EDGVertex,Integer> vertexNumber;
+	private EDGEdge[][] adjazenzMatrix;
 
 	public ExtendedDependencyGraph(){
 		super();
 	}
 	
+		
 	
 	public void setAnswerSet(AnswerSet as){
 		answerSet = new AnswerSetTwoValued(nodeMap.keySet(), as);
@@ -76,7 +80,10 @@ public class ExtendedDependencyGraph extends DirectedSparseGraph<EDGVertex,EDGEd
 	private void colorEDG(){
 		if (answerSet != null){
 			HashMap<String,List<EDGVertex>> notColored = new HashMap<String,List<EDGVertex>>();
-			notColored.putAll(nodeMap);
+			for (String key : nodeMap.keySet()){
+				List<EDGVertex> list = new ArrayList<EDGVertex>(nodeMap.get(key));
+				notColored.put(key, list);
+			}
 			
 			/* Color all constraint nodes red */
 			for (EDGVertex v : contradictionNodes){

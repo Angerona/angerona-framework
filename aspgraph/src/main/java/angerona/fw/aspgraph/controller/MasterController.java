@@ -15,6 +15,7 @@ import angerona.fw.aspgraph.exceptions.NotValidProgramException;
 import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
 import angerona.fw.aspgraph.util.AnswerSetTwoValued;
 import angerona.fw.aspgraph.view.EDGView;
+import angerona.fw.aspgraph.view.EGView;
 import angerona.fw.aspgraph.view.GraphView;
 
 public class MasterController {
@@ -36,9 +37,11 @@ public class MasterController {
 		
 		/* Instantiate controllers and views */
 		EDGController edgContr = EDGController.instance();
+		EGController egContr = EGController.instance();
 		GraphView graphView = GraphView.instance();
 		
 		EDGView edgView = graphView.getEDGPanel();
+		EGView egView = graphView.getEGPanel();
 		Solver solver = new Clingo("C:\\clingo.exe");
 		AnswerSetList list;
 		try {
@@ -46,6 +49,9 @@ public class MasterController {
 			edgContr.createEDG(p,list);
 			edgView.initComponents();
 			edgView.setAnswerSets(list);
+			egContr.createEGs(edgContr.getEDGs());
+			egView.initComponents();
+			egView.setAnswerSets(list);
 		} catch (NotValidProgramException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

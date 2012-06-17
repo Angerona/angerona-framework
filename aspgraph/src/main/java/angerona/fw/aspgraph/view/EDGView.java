@@ -24,6 +24,8 @@ import org.apache.commons.collections15.Transformer;
 import angerona.fw.aspgraph.controller.EDGController;
 import angerona.fw.aspgraph.graphs.EDGEdge;
 import angerona.fw.aspgraph.graphs.EDGVertex;
+import angerona.fw.aspgraph.graphs.EGEdge;
+import angerona.fw.aspgraph.graphs.EGVertex;
 import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
 
 import edu.uci.ics.jung.algorithms.layout.BalloonLayout;
@@ -36,6 +38,8 @@ import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.layout.CachingLayout;
@@ -72,15 +76,16 @@ public class EDGView extends JPanel{
 		graphPanel = new JPanel();
 		edg = EDGController.instance().getEDG(null);
 		initLayoutBox();
+		graphPanel.setPreferredSize(new Dimension(800,400));
 
 		/* Visualisierung des Graphen */
 	    l = new ISOMLayout<EDGVertex,EDGEdge>(edg);
 	    //layout.setRepulsionMultiplier(1);
 	    //layout.setAttractionMultiplier(1);
 	    //layout.setMaxIterations(1000);
-	    l.setSize(new Dimension(400,400)); // sets the initial size of the space
+	    l.setSize(new Dimension(800,400)); // sets the initial size of the space
 	    visServer = new BasicVisualizationServer<EDGVertex, EDGEdge>(l);
-	    visServer.setPreferredSize(new Dimension(400,400));
+	    visServer.setPreferredSize(new Dimension(800,400));
 		
 		JPanel selectionPanel = new JPanel();
 		selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.X_AXIS));
@@ -91,10 +96,11 @@ public class EDGView extends JPanel{
 		selectionPanel.add(new JLabel("Layout: "));
 		selectionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		selectionPanel.add(layoutBox);
+		selectionPanel.setMaximumSize(new Dimension(800,600));
 		graphPanel.add(visServer);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(graphPanel);
 		add(selectionPanel);
+		add(graphPanel);
 		
 	     /* Formatierung der Knoten und Kanten anpassen */
 		Transformer<EDGVertex, Paint> vertexPaint = new Transformer<EDGVertex, Paint>() {
@@ -126,12 +132,34 @@ public class EDGView extends JPanel{
 			}	
 		};
 		
+		Transformer<Context<Graph<EDGVertex, EDGEdge>, EDGEdge>, Number> edgeLabelCloseness = new Transformer<Context<Graph<EDGVertex, EDGEdge>, EDGEdge>, Number>(){
+
+			@Override
+			public Number transform(Context<Graph<EDGVertex, EDGEdge>, EDGEdge> arg0) {
+				return 0.5;
+			}
+		};
+		
+		Transformer<EDGEdge, Paint> edgePaint = new Transformer<EDGEdge, Paint>(){
+
+			@Override
+			public Paint transform(EDGEdge e) {
+				if (e.getLabel().equals(EDGEdge.EdgeType.POS)) return Color.GREEN;
+				else return Color.RED;
+			}
+		};
+		
 		visServer.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
 		visServer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<EDGVertex>());
 		visServer.getRenderContext().setVertexShapeTransformer(vertexSize);
 		visServer.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<EDGEdge>());
 		visServer.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
 		visServer.getRenderContext().setEdgeFontTransformer(edgeFont);
+		visServer.getRenderContext().setEdgeDrawPaintTransformer(edgePaint);
+		visServer.getRenderContext().setEdgeLabelClosenessTransformer(edgeLabelCloseness);
+		visServer.getRenderContext().setArrowFillPaintTransformer(edgePaint);
+		visServer.getRenderContext().setArrowDrawPaintTransformer(edgePaint);
+		visServer.getRenderContext().setArrowPlacementTolerance(1);
 	}
 	
 	public void setAnswerSets(AnswerSetList list){
@@ -171,6 +199,7 @@ public class EDGView extends JPanel{
 				case "KKLayout": l = new KKLayout<EDGVertex, EDGEdge>(edg); break;
 				default : l = new ISOMLayout<EDGVertex, EDGEdge>(edg); break;
 				}
+				l.setSize(new Dimension(800,400));
 				visServer.setGraphLayout(l);
 				visServer.doLayout();
 			}			

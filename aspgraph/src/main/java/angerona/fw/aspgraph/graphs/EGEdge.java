@@ -1,12 +1,19 @@
 package angerona.fw.aspgraph.graphs;
 
+import java.io.Serializable;
+
 /**
  * Represents an edge in an Explanation Graph
  * @author ella
  *
  */
-public class EGEdge{
+public class EGEdge implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 288152013006799807L;
+
 	/**
 	 * Defines two edge types:
 	 * <ul>
@@ -51,7 +58,10 @@ public class EGEdge{
 		return label;
 	}
 	
-	public boolean equals(EGEdge e2){
+	public boolean equals(Object o){
+		EGEdge e2;
+		if (o instanceof EGEdge) e2 = (EGEdge)  o;
+		else return false;
 		if (target.equals(e2.getTarget()) && 
 		    source.equals(e2.getSource()) && 
 		    label.equals(e2.getLabel())) return true;
@@ -65,4 +75,11 @@ public class EGEdge{
 			default: return "";
 		}
 	}
+	
+	@Override
+	public int hashCode(){
+		int h = target.hashCode() + source.hashCode() + toString().hashCode();
+		return h;
+	}
+	
 }

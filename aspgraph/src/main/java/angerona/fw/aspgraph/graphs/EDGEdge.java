@@ -64,11 +64,18 @@ public class EDGEdge implements Serializable{
 		return label;
 	}
 	
-	public boolean equals(EDGEdge e2){
-		if (target.equals(e2.getTarget()) && 
-		    source.equals(e2.getSource()) && 
-		    label.equals(e2.getLabel())) return true;
-		else return false;
+	public boolean equals(Object o){
+		if (o instanceof EDGEdge){
+			EDGEdge e2 = (EDGEdge) o;
+			if (target.equals(e2.getTarget()) && 
+					source.equals(e2.getSource()) && 
+					label.equals(e2.getLabel())) return true;
+		}	
+		return false;
+	}
+	
+	public int hashCode(){
+		return source.hashCode() + target.hashCode() + label.hashCode();
 	}
 
 	public String toString(){
