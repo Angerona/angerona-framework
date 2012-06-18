@@ -2,6 +2,8 @@ package angerona.fw.logic;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -167,6 +169,22 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	@Override
 	public void beliefbaseChanged(BaseBeliefbase bb, String space) {
 		if(!space.equals(AgentListener.WORLD)) {
+			// check for unrivaled secrets:
+			List<Secret> toRemove = new LinkedList<Secret>();
+			for(Secret secret : getTargets()) {
+				if(secret.getSubjectName().equals(space)) {
+					if(	bb.infere().contains(secret.getInformation()))  {
+						toRemove.add(secret);
+					}
+				}
+			}
+			
+			if(toRemove.size() > 0) {
+				for(Secret remove : toRemove) {
+					removeConfidentialTarget(remove);
+				}
+				report("Changes of Beliefbase causes Confidential update, "+ toRemove.size() +" secrets removed.");
+			}
 		}
 	}
 
