@@ -1,5 +1,7 @@
 package angerona.fw.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +48,26 @@ public class NavigationPanel extends JPanel implements ActionListener {
 	public NavigationPanel(NavigationUser nu) {
 		this.user = nu;
 		
-		add(new JLabel("Navigation:"));
-		navAllEntries = (NavigationControl) add(new NavigationControl("Gesamte Einträge: "));
-		navAllEntries.addActionListener(this);
+		JPanel navigationPanel = new JPanel();
+		JScrollPane scroll = new JScrollPane(navigationPanel);
 		
-		navTicks = (NavigationControl)add(new NavigationControl("Aktueller Tick: "));
+		navigationPanel.add(new JLabel("Navigation:"));
+		
+		navAllEntries = new NavigationControl("Gesamte Einträge: ");
+		navAllEntries.addActionListener(this);
+		navigationPanel.add(navAllEntries);
+		
+		navTicks = new NavigationControl("Aktueller Tick: ");
 		navTicks.setMin(0);
 		navTicks.addActionListener(this);
+		navigationPanel.add(navTicks);
 		
-		navTickEntries = (NavigationControl)add(new NavigationControl("Einträge im aktuellen Tick: "));
+		navTickEntries = new NavigationControl("Einträge im aktuellen Tick: ");
 		navTickEntries.addActionListener(this);
+		navigationPanel.add(navTickEntries);
+		
+		setLayout(new BorderLayout());
+		add(scroll, BorderLayout.CENTER);
 	}
 	
 	/**
