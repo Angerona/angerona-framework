@@ -192,8 +192,9 @@ public class AspReasoner extends BaseReasoner {
 			for(String name : as.literals.keySet()) {
 				Set<Literal> literals = as.literals.get(name);
 				for(Literal l : literals) {
-					Atom a = new Atom(new Predicate(l.getAtom().getName()));
-					for(int i=0; i<l.getAtom().getArity(); ++i) {
+					int arity = l.getAtom().getArity();
+					Atom a = new Atom(new Predicate(l.getAtom().getName(), arity));
+					for(int i=0; i<arity; ++i) {
 						a.addArgument(new Constant(l.getAtom().getTerm(i).get()));
 					}
 					if(!l.isTrueNegated()) {
