@@ -22,7 +22,7 @@
 			<source>config/skills/QueryAnswer.xml</source>
         	</skill>
 
-		<data key="Confidential">(Coroner, -someone_argued) 
+		<data key="Confidential">(Coroner, !someone_argued) 
 		</data>   
 	</agent-instance>
       
