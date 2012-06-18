@@ -33,6 +33,11 @@ public class Answer extends SpeechAct {
 		return regarding;
 	}
 	
+	/** @return the formula representing the question */
+	public void setAnswer(AnswerValue val) {
+		answer = val;
+	}
+	
 	/** @return the value of the answer */
 	public AnswerValue getAnswer() {
 		return answer;

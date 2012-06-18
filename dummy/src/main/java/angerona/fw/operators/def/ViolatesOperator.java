@@ -1,5 +1,7 @@
 package angerona.fw.operators.def;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
@@ -23,10 +25,7 @@ import angerona.fw.operators.parameter.ViolatesParameter;
  * false.
  * @author Tim Janus
  */
-/*
- * The applying of AN answer shouldn't return true, but rather the applying of THE 
- * answer -- to the question currently being posed. 
- */
+
 public class ViolatesOperator extends BaseViolatesOperator {
 	
 	/** reference to the logback instance used for logging */
@@ -35,6 +34,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
+		//JOptionPane.showMessageDialog(null, param.getAction());
 		if(param.getAction() instanceof Answer) {
 			// only apply violates if confidential knowledge is saved in agent.
 			ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
@@ -44,7 +44,24 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 			if(views.containsKey(a.getReceiverId())) {
-				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone();
+				// First we check for already unrivaled secrets:
+				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); 
+				
+				List<Secret> toRemove = new LinkedList<Secret>();
+				for(Secret secret : conf.getTargets()) {
+					if(secret.getSubjectName().equals(a.getReceiverId())) {
+						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
+						if(	view.infere().contains(secret.getInformation()))  {
+							toRemove.add(secret);
+							LOG.warn("Secret-Knowledge inconsistency found and removed by Violates-Operator.");
+						}
+					}
+				}
+				for(Secret remove : toRemove) {
+					conf.removeConfidentialTarget(remove);
+				}
+				
+				// Now we adapt the view and check again.
 				if(a.getAnswer() == AnswerValue.AV_TRUE) {
 					view.addNewKnowledge(a.getRegarding());
 				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {

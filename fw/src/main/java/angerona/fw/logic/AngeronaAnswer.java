@@ -44,6 +44,9 @@ public class AngeronaAnswer extends GenericAnswer<AnswerValue>{
 		} else if(s.compareToIgnoreCase("reject") == 0) {
 			return AnswerValue.AV_REJECT;
 		}
+		else if(s.compareToIgnoreCase("open") == 0){
+			return AnswerValue.AV_OPEN;
+		}
 		return null;
 	}
 	

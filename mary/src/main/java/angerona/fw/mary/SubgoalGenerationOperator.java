@@ -1,9 +1,11 @@
 package angerona.fw.mary;
 
-import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.Comparator;
+//import java.util.LinkedList;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -19,8 +21,9 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
-import angerona.fw.logic.asp.AspReasoner;
+//import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
@@ -77,18 +80,16 @@ public class SubgoalGenerationOperator extends
 	{
 
 		boolean reval = false;
-//		Set<FolFormula> toRemove = new HashSet<FolFormula>();
-		LinkedList<FolFormula> toRemove = new LinkedList<FolFormula>();
 		if(ag.getDesires() == null)
 			return false;
 		
 		//Sort the desires before using. It would be more modular to have a function
 		//within the Agent class which returns a sorted array
-		/*
-		class DesireComp implements Comparator<FolFormula>
+		
+		class DesireComp implements Comparator<Desire>
 		{
 			
-			public int compare(FolFormula f1, FolFormula f2)
+			public int compare(Desire f1, Desire f2)
 			{
 				String[] f1_s = f1.toString().split("_");
 				String[] f2_s = f2.toString().split("_");
@@ -108,16 +109,17 @@ public class SubgoalGenerationOperator extends
 				return 0;
 			}
 		}
-		*/
-		//FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
-		//FolFormula[] desires = (FolFormula[]) ag.getDesires().getTweety().toArray(new FolFormula[0]);
-		//Arrays.sort(desires, new DesireComp());
-		/*for (FolFormula d : desires)
+		
+		Desire[] desires = (Desire[]) ag.getDesires().getDesires().toArray(new Desire[0]);
+		Arrays.sort(desires, new DesireComp());
+		/*
+		for (Desire d : desires)
 		{
 			JOptionPane.showMessageDialog(null, d.toString());
-		}*/
-		
-		for(Desire desire : ag.getDesires().getDesires())
+		}
+		*/
+		//for(Desire desire : ag.getDesires().getDesires())
+		for(Desire desire: desires)
 		{
 			if(desire.toString().trim().startsWith("q_"))
 			{
@@ -129,7 +131,7 @@ public class SubgoalGenerationOperator extends
 				String recvName = desire.toString().substring(si, li);
 				
 				si = desire.toString().indexOf("(")+1;
-				li = desire.toString().indexOf(")");
+				li = desire.toString().lastIndexOf(")");
 				if(si == -1 || li == -1)
 					continue;
 				String content = desire.toString().substring(si,li);
@@ -152,8 +154,16 @@ public class SubgoalGenerationOperator extends
 		return reval;
 	}
 	
-	//What currently needs work. The program is easily able to ask multiple questions,
-	//but it can't return multiple answers (it just answers its first answer over and over)
+	//The most basic form of the lying operator
+	protected AnswerValue lie(AngeronaAnswer truth)
+	{
+		if(truth.getAnswerExtended() == AnswerValue.AV_TRUE)
+			return AnswerValue.AV_FALSE;
+		else if(truth.getAnswerExtended() == AnswerValue.AV_FALSE)
+			return AnswerValue.AV_TRUE;
+		return AnswerValue.AV_UNKNOWN;
+	}
+	
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
@@ -163,37 +173,26 @@ public class SubgoalGenerationOperator extends
 			return false;
 		}
 		
-		/* Here, rather than hardwire the answer, the answer should be read from the
-		 * belief base of the answering agent, based on the question that was asked. 
-		 * */
-		//That presupposes that you know what question was asked
-		//Unfortunately, the agent does not even have access to the question
 		
-		//JOptionPane.showMessageDialog(null, ag.getActualPerception().toString());
-		Query query = (Query) (ag.getActualPerception()); //How it knows what question was asked
-		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion()); //How it refers to the belief base
-		//ag.getBeliefs().getWorldKnowledge().get
-		//JOptionPane.showMessageDialog(null, ans.getAnswerExtended());
+		Query query = (Query) (ag.getActualPerception());
+		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
+		
+		AnswerValue lie = lie(ans);
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
 		context.set("answer", ans.getAnswerExtended());
 		
-		
-		AspReasoner r = (AspReasoner)ag.getBeliefs().getWorldKnowledge().getReasoningOperator();
-		JOptionPane.showMessageDialog(null, r.processAnswerSets().toString());
-		
-		
-		/*
-		context = new Context(context);
-		context.set("answer", AnswerValue.AV_REJECT);
-		pp.getActualPlan().newStack(qaSkill, context);
-		*/
-		// TODO: Find a better place to remove desire again.
-		
 		Subgoal sg = new Subgoal(ag, des);
 		sg.newStack(qaSkill, context);
+		
+		context = new Context(context);
+		context.set("answer", lie);
+		sg.newStack(qaSkill, context);
+		
 		ag.getPlanComponent().addPlan(sg);
+		
+	
 		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
 		return true;
 	}
