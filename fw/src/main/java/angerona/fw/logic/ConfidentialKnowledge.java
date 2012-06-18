@@ -106,6 +106,13 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			// Check for startup inconsistency:
+			beliefbaseChanged(getAgent().getBeliefs().getWorldKnowledge(), AgentListener.WORLD);
+			for(String agName : getAgent().getBeliefs().getViewKnowledge().keySet()) {
+				beliefbaseChanged(getAgent().getBeliefs().getViewKnowledge().get(agName), 
+					agName);
+			}
 		}
 	}
 	

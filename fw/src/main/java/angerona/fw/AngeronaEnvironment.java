@@ -236,8 +236,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 					entities.put(comp.getGUID(), comp);
 				}
 				
-								
-				highLevelAg.setBeliefs(world, views);		
+				highLevelAg.setBeliefs(world, views);
 				highLevelAg.addSkillsFromConfig(ai.getSkills());
 				addAgent(highLevelAg.getAgentProcess());
 				Desires desires = highLevelAg.getDesires();
@@ -251,7 +250,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 					for(Atom a : ai.getDesires()) {
 						highLevelAg.getDesires().add(new Desire(a));
 					}
-				}
+				}		
 				LOG.info("Agent '{}' added", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {
