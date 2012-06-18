@@ -1,20 +1,12 @@
 package angerona.fw.logic.asp;
 
-import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.Answer;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-import angerona.fw.BaseBeliefbase;
-import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
-import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
 
 public class AspDetailReasoner extends AspReasoner {
@@ -37,8 +29,7 @@ public class AspDetailReasoner extends AspReasoner {
 		//return super.query(query);
 		//return new AngeronaAnswer(bb, query, AnswerValue.AV_REJECT);
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
-		Predicate p = new Predicate(findAnswer(query).toString());
-		return new AngeronaDetailAnswer(bb, query, new Atom(p));
+		return new AngeronaDetailAnswer(bb, query, findAnswer(query));
 	}
 	/**
 	 * The AspDetailReasoner parses the string form of the query and looks for a match in the string forms of the knowledge.
@@ -50,24 +41,40 @@ public class AspDetailReasoner extends AspReasoner {
 	{
 		Set <FolFormula> knowledge = super.infer();
 		FolFormula answer = null;
-		if (!query.toString().contains("(")) //If the query has 0 arity (if it's a true/false question)
+		
+		Predicate qp = query.getPredicates().iterator().next();
+		
+		for (FolFormula f : knowledge)
 		{
-			for (FolFormula f : knowledge)
+			// TODO: Their might be an answer to who(X) which has more than one formula: who(john), who(mary) ect.
+			Predicate fp = f.getPredicates().iterator().next();
+			if(!fp.getName().equals(qp.getName()))
+				continue;
+			
+			answer = f;
+			/*
+			String fString = f.toString();
+			String queryString = query.toString();
+			if(fString.startsWith("!")) //Check if it's a negation
 			{
-				String fString = f.toString();
-				String queryString = query.toString();
-				if(fString.startsWith("!")) //Check if it's a negation
-				{
-					answer = (Negation) f;
-				}
+				Atom a = null;
+				if(f instanceof Negation)
+					a = (Atom)((Negation)f).getFormula();
+				else if(f instanceof Atom)
+					a = (Atom)f;
 				else
+					throw new IllegalArgumentException(f.toString() + " is neither atom nor negation of an atom");
+				Atom newAtom = new Atom(new Predicate(a.getPredicate().getName()), a.getArguments());
+				answer = new Negation(newAtom);
+			}
+			else
+			{
+				if(fString.equals(queryString))
 				{
-					if(fString.equals(queryString))
-					{
-						answer = f;
-					}
+					answer = f;
 				}
 			}
+			*/
 		}
 		return answer;
 		//return new Atom(new Predicate("TEST"));

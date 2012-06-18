@@ -2,13 +2,11 @@ package angerona.fw.mary;
 
 import java.util.Arrays;
 import java.util.Comparator;
-//import java.util.LinkedList;
 import java.util.Set;
-
-//import javax.swing.JOptionPane;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
@@ -25,7 +23,6 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
-//import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
@@ -145,7 +142,12 @@ public class SubgoalGenerationOperator extends
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
-				sg.newStack(query, new DetailQuery(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
+				FolFormula f = new Atom(new Predicate(content));
+				if(content.startsWith("-")) {
+					content = content.substring(1);
+					f = new Negation(new Atom(new Predicate(content)));
+				}
+				sg.newStack(query, new DetailQuery(ag.getName(), recvName, f).getContext());
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
 				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 

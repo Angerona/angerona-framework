@@ -9,6 +9,10 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
@@ -19,6 +23,9 @@ import angerona.fw.operators.parameter.BeliefUpdateParameter;
  */
 public class AspRevision extends BaseChangeBeliefs {
 
+	/** The logger used for output in the angerona Framework */
+	static private Logger LOG = LoggerFactory.getLogger(AspRevision.class);
+	
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {
 		return AspBeliefbase.class;
@@ -38,7 +45,7 @@ public class AspRevision extends BaseChangeBeliefs {
 			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.Atom) {
 				net.sf.tweety.logics.firstorderlogic.syntax.Atom a = 
 						(net.sf.tweety.logics.firstorderlogic.syntax.Atom)ff;
-				System.out.println("ASDF Predicate name:"+a.getPredicate().getName());
+				LOG.info("ASDF Predicate name:"+a.getPredicate().getName());
 				r.addHead(new Atom(a.getPredicate().getName()));
 			} else if(ff instanceof Negation) {
 				Negation n = (Negation)ff;

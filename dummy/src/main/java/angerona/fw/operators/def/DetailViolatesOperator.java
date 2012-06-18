@@ -4,22 +4,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.DetailQueryAnswer;
-import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.parameter.ViolatesParameter;
 
 public class DetailViolatesOperator extends ViolatesOperator {
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(DetailViolatesOperator.class);
 	
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
@@ -59,7 +56,9 @@ public class DetailViolatesOperator extends ViolatesOperator {
 					view.addNewKnowledge(new Negation(a.getRegarding()));
 				}
 		*/
-				view.addNewKnowledge(((DetailQueryAnswer) a).getDetailAnswer());
+				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
+				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
+				view.addNewKnowledge(dqa.getDetailAnswer());
 				
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
