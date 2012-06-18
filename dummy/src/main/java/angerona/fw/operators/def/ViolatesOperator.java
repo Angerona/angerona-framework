@@ -67,9 +67,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {
 					view.addNewKnowledge(new Negation(a.getRegarding()));
 				}
-				
-				//Does it even make sense to go through all confidential targets,
-				//given how it's making false positives right now?
+		
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
 						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);

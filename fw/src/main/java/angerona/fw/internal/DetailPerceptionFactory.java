@@ -21,20 +21,6 @@ import angerona.fw.serialize.perception.QueryDO;
 import angerona.fw.serialize.perception.RevisionRequestDO;
 
 public class DetailPerceptionFactory extends PerceptionFactory{
-
-	public FolFormula createDetailAnswer(String paramValue, Context context)
-	{
-		if(paramValue.startsWith("$")) {
-			System.out.println("ASDF Answer variable:"+paramValue);
-			//TODO: support variable names for detail answers
-			return null;
-		}
-		else
-		{
-			System.out.println("ASDF Answer: "+paramValue);
-			return null;
-		}
-	}
 	
 	@Override
 	public Perception generateFromDataObject(PerceptionDO dataObject,

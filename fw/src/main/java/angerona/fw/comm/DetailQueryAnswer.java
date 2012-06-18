@@ -21,6 +21,17 @@ public class DetailQueryAnswer extends Answer {
 	}
 	@Override
 	public String toString() {
-		return "< " + getSenderId() + " gives the detailed answer " + getReceiverId() + " " + getRegarding().toString() + "=" + detailAnswer.toString() + " >";
+		String questionString = getRegarding().toString();
+		String answerString = null;
+		//Format the output
+		if(detailAnswer.toString().equals(questionString))
+		{
+			answerString = "TRUE";
+		}
+		else
+		{
+			answerString = "FALSE";
+		}
+		return "< " + getSenderId() + " gives the detailed answer " + getReceiverId() + " " + getRegarding().toString() + "=" + answerString + " >";
 	}
 }

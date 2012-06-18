@@ -44,7 +44,7 @@ public class Plugin implements OperatorPlugin {
 	//@Override
 	public List<Class<? extends BaseViolatesOperator>> getSupportedViolatesOperators() {
 		List<Class<? extends BaseViolatesOperator>> reval = new LinkedList<Class<? extends BaseViolatesOperator>>();
-		
+		reval.add(angerona.fw.operators.def.DetailViolatesOperator.class);
 		return reval;
 	}
 

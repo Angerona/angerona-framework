@@ -38,6 +38,7 @@ public class AspRevision extends BaseChangeBeliefs {
 			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.Atom) {
 				net.sf.tweety.logics.firstorderlogic.syntax.Atom a = 
 						(net.sf.tweety.logics.firstorderlogic.syntax.Atom)ff;
+				System.out.println("ASDF Predicate name:"+a.getPredicate().getName());
 				r.addHead(new Atom(a.getPredicate().getName()));
 			} else if(ff instanceof Negation) {
 				Negation n = (Negation)ff;

@@ -31,15 +31,16 @@ public class LyingOperator {
 	 */
 	protected AngeronaDetailAnswer lie(AngeronaDetailAnswer truth)
 	{
-		String trueAnswerString = truth.getAnswerExtended().toString();
+		FolFormula trueAnswer = truth.getAnswerExtended();
+		String trueAnswerString = trueAnswer.toString();
 		FolFormula lie = null;
 		if(trueAnswerString.startsWith("!"))
 		{
-			lie =  (FolFormula) new Atom(new Predicate(trueAnswerString.substring(1)));
+			lie =  (FolFormula) new Atom(new Predicate(trueAnswerString.substring(1))); //Test this parsing-based lying mechanism
 		}
 		else
 		{
-			lie = (FolFormula) new Atom(new Predicate("!"+trueAnswerString));
+			lie = new Negation(trueAnswer);
 		}
 		return new AngeronaDetailAnswer(truth.getKnowledgeBase(), truth.getQuery(), lie);
 	}

@@ -58,7 +58,6 @@ public class AspDetailReasoner extends AspReasoner {
 				String queryString = query.toString();
 				if(fString.startsWith("!")) //Check if it's a negation
 				{
-					System.out.println("ASDF negation");
 					answer = (Negation) f;
 				}
 				else
@@ -66,10 +65,6 @@ public class AspDetailReasoner extends AspReasoner {
 					if(fString.equals(queryString))
 					{
 						answer = f;
-					}
-					else
-					{
-						System.out.println("ASDF actual string:"+fString);
 					}
 				}
 			}
