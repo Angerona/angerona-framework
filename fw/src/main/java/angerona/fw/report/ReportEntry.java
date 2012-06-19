@@ -35,6 +35,9 @@ public class ReportEntry implements Cloneable {
 	private ReportEntry() {}
 	
 	public ReportEntry(String message, ReportPoster poster, Entity attachment) {
+		if(poster.getSimulation() == null)
+			throw new IllegalArgumentException("poster must have a refernce to a simulation.");
+		
 		this.message = message;
 		this.attachment = attachment;
 		this.posterName = poster.getPosterName();
@@ -72,6 +75,8 @@ public class ReportEntry implements Cloneable {
 		ReportEntry reval = new ReportEntry();
 		reval.message = this.message;
 		reval.simulationTick = this.simulationTick;
+		reval.simulation = this.simulation;
+		reval.posterName = this.posterName;
 		reval.realTime = this.realTime;
 		if(this.attachment != null) {
 			if(this.attachment instanceof EntityAtomic) {

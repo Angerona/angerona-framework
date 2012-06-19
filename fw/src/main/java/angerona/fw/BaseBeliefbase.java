@@ -22,6 +22,7 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
@@ -48,6 +49,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	protected Long id;
 	
 	protected Long parentId;
+	
+	private List<BeliefbaseChangeListener> listeners = new LinkedList<BeliefbaseChangeListener>();
 	
 	/**
 	 * Enumeration with different operation types for updating the belief base.
@@ -206,7 +209,31 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		}
 		if(revisionOperator == null)
 			throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");;
-		revisionOperator.process(bup);		
+		revisionOperator.process(bup);
+		onChange();
+	}
+	
+	public void addListener(BeliefbaseChangeListener listener) {
+		this.listeners.add(listener);
+	}
+	
+	public boolean removeListener(BeliefbaseChangeListener listener) {
+		return this.listeners.remove(listener);
+	}
+	
+	public void removeAllListeners() {
+		this.listeners.clear();
+	}
+	
+	/**
+	 * Helper method: is called when the content of the beliefbase is changed
+	 * the basic implementation informs the listeners. Subclasses could implement
+	 * their own reactions.
+	 */
+	protected void onChange() {
+		for(BeliefbaseChangeListener l : listeners) {
+			l.changed(this);
+		}
 	}
 	
 	/**
