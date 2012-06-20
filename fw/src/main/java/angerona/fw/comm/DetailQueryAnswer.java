@@ -28,6 +28,11 @@ public class DetailQueryAnswer extends Answer {
 		{
 			answerString = "TRUE";
 		}
+		else if(detailAnswer.toString().contains("("))
+		{
+			String d = detailAnswer.toString();
+			answerString = d.substring(d.indexOf("(")+1, d.lastIndexOf(")"));
+		}
 		else
 		{
 			answerString = "FALSE";

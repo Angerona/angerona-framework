@@ -134,6 +134,10 @@ public class SubgoalGenerationOperator extends
 				if(si == -1 || li == -1)
 					continue;
 				String content = desire.toString().substring(si,li);
+				//To make detail questions work with arity greater than 0
+				if(content.contains("("))
+					content = content.substring(0, content.indexOf("("));
+				
 				//Should the snippet above be put in its own subroutine?
 				
 				Skill query = (Skill) ag.getSkill("DetailQuery");
@@ -182,7 +186,7 @@ public class SubgoalGenerationOperator extends
 		//AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
 		//AngeronaAnswer ans = new AngeronaAnswer(ag.getBeliefs().getWorldKnowledge(), (FolFormula)query.getQuestion(), AnswerValue.AV_TRUE);
 		AngeronaDetailAnswer realAnswer = ag.getBeliefs().getWorldKnowledge().detailReason((FolFormula)query.getQuestion());
-		AngeronaDetailAnswer realLie = new LyingOperator().lie(realAnswer);
+		AngeronaDetailAnswer realLie = new LyingOperator().lie(realAnswer, ag.getBeliefs().getWorldKnowledge());
 		
 		System.out.println("ASDF realAnswer: " + realAnswer.getAnswerExtended());
 		System.out.println("ASDF realLie: " + realLie.getAnswerExtended());

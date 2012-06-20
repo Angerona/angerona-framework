@@ -1,9 +1,12 @@
 package angerona.fw.mary;
 
+import java.util.Set;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -29,11 +32,43 @@ public class LyingOperator {
 	 * @param truth
 	 * @return
 	 */
-	protected AngeronaDetailAnswer lie(AngeronaDetailAnswer truth)
+	//TODO: make the lying based off of answer sets in the agent's view of the attacking agent, rather than its own worldview
+	//Another LyingOperator could use lying alternatives predefined in XML
+	protected AngeronaDetailAnswer lie(AngeronaDetailAnswer truth, BaseBeliefbase bb)
 	{
 		FolFormula trueAnswer = truth.getAnswerExtended();
 		String trueAnswerString = trueAnswer.toString();
+		FolFormula query = (FolFormula) truth.getQuery();
 		FolFormula lie = null;
+		
+		/* This code doesn't work...
+		if(trueAnswerString.contains("("))
+		{
+			Set<FolFormula> knowledge = bb.getReasoningOperator().infer();
+			for (FolFormula f : knowledge)
+			{
+				if(f.toString().equals(trueAnswerString))
+				{
+					continue;
+				}
+				Predicate fp = f.getPredicates().iterator().next();
+				Predicate qp = query.getPredicates().iterator().next();
+				if(!fp.getName().equals(qp.getName()))
+				{
+					continue;
+				}
+				lie = f;
+			}
+			if (lie != null)
+			{
+				return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
+			}
+			//Maybe I want to return UNKNOWN rather than the negation of a fact when an alternative can't be found
+			lie = new Atom(new Predicate("UNKNOWN"));
+			return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
+		}
+		*/
+		
 		if(trueAnswerString.startsWith("!"))
 		{
 			lie =  (FolFormula) new Atom(new Predicate(trueAnswerString.substring(1))); //Test this parsing-based lying mechanism
@@ -42,6 +77,6 @@ public class LyingOperator {
 		{
 			lie = new Negation(trueAnswer);
 		}
-		return new AngeronaDetailAnswer(truth.getKnowledgeBase(), truth.getQuery(), lie);
+		return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
 	}
 }

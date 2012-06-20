@@ -36,6 +36,7 @@ public class DetailViolatesOperator extends ViolatesOperator {
 				
 				List<Secret> toRemove = new LinkedList<Secret>();
 				for(Secret secret : conf.getTargets()) {
+					System.out.println("ASDF secret:"+secret.toString());
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
 						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
 						if(	view.infere().contains(secret.getInformation()))  {

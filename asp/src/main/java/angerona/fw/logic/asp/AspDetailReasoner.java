@@ -49,7 +49,11 @@ public class AspDetailReasoner extends AspReasoner {
 			// TODO: Their might be an answer to who(X) which has more than one formula: who(john), who(mary) ect.
 			Predicate fp = f.getPredicates().iterator().next();
 			if(!fp.getName().equals(qp.getName()))
+			{
+				//System.out.println("ASDF fp.getName:"+fp.getName());
+				//System.out.println("ASDF qp.getName:"+qp.getName());
 				continue;
+			}
 			
 			answer = f;
 			/*
