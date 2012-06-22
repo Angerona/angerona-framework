@@ -44,24 +44,9 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 			if(views.containsKey(a.getReceiverId())) {
-				// First we check for already unrivaled secrets:
 				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); 
 				
-				List<Secret> toRemove = new LinkedList<Secret>();
-				for(Secret secret : conf.getTargets()) {
-					if(secret.getSubjectName().equals(a.getReceiverId())) {
-						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
-						if(	view.infere().contains(secret.getInformation()))  {
-							toRemove.add(secret);
-							LOG.warn("Secret-Knowledge inconsistency found and removed by Violates-Operator.");
-						}
-					}
-				}
-				for(Secret remove : toRemove) {
-					conf.removeConfidentialTarget(remove);
-				}
-				
-				// Now we adapt the view and check again.
+				// We adapt the view and check for invalidate secrets.
 				if(a.getAnswer() == AnswerValue.AV_TRUE) {
 					view.addNewKnowledge(a.getRegarding());
 				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {

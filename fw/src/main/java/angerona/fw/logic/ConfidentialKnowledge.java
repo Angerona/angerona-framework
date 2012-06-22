@@ -2,6 +2,8 @@ package angerona.fw.logic;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,11 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseAgentComponent;
+import angerona.fw.BaseBeliefbase;
+import angerona.fw.listener.AgentListener;
 /**
  * Data-Component of an agent containing a set of personal confidential targets.
  * @author Tim Janus
  */
-public class ConfidentialKnowledge extends BaseAgentComponent {
+public class ConfidentialKnowledge extends BaseAgentComponent implements AgentListener {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ConfidentialKnowledge.class);
@@ -87,6 +91,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 
 	@Override
 	public void init(Map<String, String> additionalData) {
+		getAgent().addListener(this);
 		if(!additionalData.containsKey("Confidential")) {
 			LOG.warn("Confidential Knowledge of agent '{}' has no initial data.", getAgent().getName());
 			return;
@@ -100,6 +105,13 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+			
+			// Check for startup inconsistency:
+			beliefbaseChanged(getAgent().getBeliefs().getWorldKnowledge(), AgentListener.WORLD);
+			for(String agName : getAgent().getBeliefs().getViewKnowledge().keySet()) {
+				beliefbaseChanged(getAgent().getBeliefs().getViewKnowledge().get(agName), 
+					agName);
 			}
 		}
 	}
@@ -159,5 +171,39 @@ public class ConfidentialKnowledge extends BaseAgentComponent {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void beliefbaseChanged(BaseBeliefbase bb, String space) {
+		if(!space.equals(AgentListener.WORLD)) {
+			// check for unrivaled secrets:
+			List<Secret> toRemove = new LinkedList<Secret>();
+			for(Secret secret : getTargets()) {
+				if(secret.getSubjectName().equals(space)) {
+					if(	bb.infere().contains(secret.getInformation()))  {
+						toRemove.add(secret);
+					}
+				}
+			}
+			
+			if(toRemove.size() > 0) {
+				for(Secret remove : toRemove) {
+					removeConfidentialTarget(remove);
+				}
+				report("Changes of Beliefbase causes Confidential update, "+ toRemove.size() +" secrets removed.");
+			}
+		}
+	}
+
+	@Override
+	public void componentAdded(BaseAgentComponent comp) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentRemoved(BaseAgentComponent comp) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -20,6 +20,8 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.listener.AgentListener;
+import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Beliefs;
@@ -50,7 +52,7 @@ import angerona.fw.serialize.SkillConfig;
  * The agent defines helper methods to use the operators of the agent.
  * @author Tim Janus
  */
-public class Agent extends AgentArchitecture implements ContextProvider, Entity, OperatorVisitor, ReportPoster {
+public class Agent extends AgentArchitecture implements ContextProvider, Entity, OperatorVisitor, ReportPoster, BeliefbaseChangeListener {
 
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Agent.class);
@@ -69,6 +71,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	private List<AgentComponent> customComponents = new LinkedList<AgentComponent>();
 	
 	private List<SubgoalListener> subgoalListeners = new LinkedList<SubgoalListener>();
+	
+	private List<AgentListener> listeners = new LinkedList<AgentListener>();
 	
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
@@ -116,18 +120,22 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	public void setBeliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> views) {
 		if(beliefs != null) {
 			childrenIds.remove(beliefs.getWorldKnowledge().getGUID());
+			beliefs.getWorldKnowledge().removeListener(this);
 			for(String name : beliefs.getViewKnowledge().keySet()) {
 				BaseBeliefbase act = beliefs.getViewKnowledge().get(name);
+				act.removeListener(this);
 				childrenIds.remove(act.getGUID());
 			}
 		}
 		beliefs = new Beliefs(world, views);
 		childrenIds.add(world.getGUID());
 		world.setParent(id);
+		world.addListener(this);
 		for(String name : views.keySet()) {
 			BaseBeliefbase bb = views.get(name);
 			childrenIds.add(bb.getGUID());
 			bb.setParent(id);
+			bb.addListener(this);
 		}
 		regenContext();
 	}
@@ -207,6 +215,14 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	
 	public List<AgentComponent> getComponents() {
 		return Collections.unmodifiableList(customComponents);
+	}
+	
+	public boolean addListener(AgentListener listener) {
+		return listeners.add(listener);
+	}
+	
+	public boolean removeListener(AgentListener listener) {
+		return listeners.remove(listener);
 	}
 	
 	public boolean addSubgoalListener(SubgoalListener listener) {
@@ -512,5 +528,25 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	@Override
 	public void popOperator() {
 		operatorStack.pop();
+	}
+
+	@Override
+	public void changed(BaseBeliefbase bb) {
+		if(bb == beliefs.getWorldKnowledge()) {
+			onBBChanged(bb, AgentListener.WORLD);
+		} else {
+			for(String agName : beliefs.getViewKnowledge().keySet()) {
+				BaseBeliefbase act = beliefs.getViewKnowledge().get(agName);
+				if(act == bb) {
+					onBBChanged(bb, agName);
+				}
+			}
+		}
+	}
+	
+	private void onBBChanged(BaseBeliefbase bb, String space) {
+		for(AgentListener l : listeners) {
+			l.beliefbaseChanged(bb, space);
+		}
 	}
 }
