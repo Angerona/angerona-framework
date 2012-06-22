@@ -1,10 +1,8 @@
 package angerona.fw.aspgraph.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,17 +27,48 @@ import angerona.fw.aspgraph.util.Path;
 import angerona.fw.aspgraph.util.SubEG;
 import angerona.fw.aspgraph.util.Tarjan;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 
+/**
+ * Responsible for construction and administration of Explanation Graphs
+ * @author ella
+ *
+ */
 public class EGController {
 	
+	/**
+	 * Mapping of Explanation Graphs to answer sets
+	 */
 	private HashMap<AnswerSet, EGList> egLists;
+	
+	/**
+	 * Instance of EGController
+	 */
 	private static EGController instance;
+	
+	/**
+	 * Array of Negative Node Explanations
+	 */
 	private Set<String>[] nneArray;
+	
+	/**
+	 * Array of all assumption paths
+	 */
 	private Path[] allAPArray;
+	
+	/**
+	 * Set of local consistent explanations
+	 */
 	private Set<Set<String>> lces;
+	
+	/**
+	 * Mapping of assumptions to answer sets
+	 */
 	private HashMap<AnswerSet, Set<Set<String>>> assumptions; 
+	
+	/**
+	 * Mapping of incomplete explanation graphs to according literal
+	 */
 	private HashMap<String,Set<SubEG>> incompleteEGs;
 
 	
@@ -47,11 +76,19 @@ public class EGController {
 		assumptions = new HashMap<AnswerSet,Set<Set<String>>>();
 	}
 	
+	/**
+	 * Returns instance of EGController
+	 * @return Instance of EGController
+	 */
 	public static EGController instance(){
 		if (instance == null) instance = new EGController();
 		return instance;
 	}
 	
+	/**
+	 * Creates explanation graphs by tranformation from an Extended Dependency graph
+	 * @param edgs Map with all answer sets and according Extended Dependency Graphs
+	 */
 	public void createEGs(Map<AnswerSet,ExtendedDependencyGraph> edgs){
 		egLists = new HashMap<AnswerSet,EGList>();
 		
@@ -85,6 +122,12 @@ public class EGController {
 					for (String literal : literals){
 						Set<String> visitedLits = new HashSet<String>(); // visited literals on the way of calculating EG to literal 
 						createEGsToLiteral(literal, assumption,factNodeSet,unfoundedNodeSet,constraintNodeSet,edg,as,visitedLits);
+						
+						/* Remove EGs with positive cycles */
+						Set<ExplanationGraph> graphs = egLists.get(as).getEGList(literal, assumption);
+						for (ExplanationGraph eg : new HashSet<ExplanationGraph>(graphs)){
+							if (eg.hasPositiveCycle()) graphs.remove(eg);
+						}
 					}
 				}
 			}
@@ -92,14 +135,14 @@ public class EGController {
 	}
 
 	/**
-	 * Creates EGs according to a literal resp. an assumption and an answer set
+	 * Creates EGs according to a literal according to an assumption and an answer set
 	 * @param literal Literal, to which an EGs are created
-	 * @param assumption Assumption resp. which the EGs are created
+	 * @param assumption Assumption according to which the EGs are created
 	 * @param factNodeSet Set of EDG-nodes which represent facts
 	 * @param unfoundedNodeSet Set of EGG-nodes which represent unfounded literals
 	 * @param constraintNodeSet Set of EDG-nodes which represent constraints
 	 * @param edg EDG which is used for transformation between EDG and EGs
-	 * @param as Answer set resp. which the EGs are created
+	 * @param as Answer set according to which the EGs are created
 	 * @param visitedLits Visited Literals on the way of creating an EG to another literal
 	 */
 	private void createEGsToLiteral(String literal, Set<String> assumption, Set<EDGVertex> factNodeSet, Set<EDGVertex> unfoundedNodeSet, Set<EDGVertex> constraintNodeSet, ExtendedDependencyGraph edg, AnswerSet as, Set<String> visitedLits){
@@ -124,10 +167,7 @@ public class EGController {
 					
 				/* dependent of other nodes */
 				} else if (!constraintNodeSet.contains(v)){
-					ExplanationGraph eg = new ExplanationGraph();
-					EGLiteralVertex litVertex = null;
-					Set<Set<SubEG>> subEGs = new HashSet<Set<SubEG>>();
-					
+				
 					/* node is green */
 					if (v.getColor().equals(Color.GREEN)){
 						createPositiveEGs(edg, v, as, assumption, visitedLits, factNodeSet, unfoundedNodeSet, constraintNodeSet);
@@ -146,6 +186,11 @@ public class EGController {
 		
 	}
 	
+	/**
+	 * Creates an EG with a unfounded sink
+	 * @param literal Literal which is unfounded
+	 * @return EG which represents that a literal is unfounded
+	 */
 	private ExplanationGraph createUnfoundedEG(String literal) {
 		ExplanationGraph eg = new ExplanationGraph();
 		EGVertex litVertex = new EGLiteralVertex(Annotation.NEG, literal);
@@ -173,6 +218,18 @@ public class EGController {
 		return eg;
 	}
 
+	/**
+	 * Constructs EGs by appending subgraphs
+	 * @param i Number of subgraph which should be appended
+	 * @param literal Literal according to which the EGs are constructed
+	 * @param assumption Assumption according to which the EGs are constructed
+	 * @param as Answer set according to which the EGs are constructed
+	 * @param eg Explanation graph to which subgraphs are appended
+	 * @param subEGArray Array of subgraphs
+	 * @param litVertex Vertex which represents the literal according to which the EGs are constructed
+	 * @param isIncompleteEG Indicates if EG is incomplete
+	 * @param cycleTarget Literal where the cycle "starts"
+	 */
 	private void constructEG(int i, String literal, Set<String> assumption, AnswerSet as, ExplanationGraph eg, Set<SubEG> subEGArray[], EGVertex litVertex, boolean isIncompleteEG, String cycleTarget){
 		if (i == -1){
 			if (isIncompleteEG){
@@ -200,6 +257,11 @@ public class EGController {
 		}
 	}
 	
+	/**
+	 * Constructs a local consistent explanation 
+	 * @param i Number of Negative Node Explanation from which a literal is added to LCE
+	 * @param lce Local consistent explanation which is constructed yet
+	 */
 	private void constructLCE(int i, Set<String> lce){
 		if (i == -1) lces.add(lce);
 		else{
@@ -212,14 +274,24 @@ public class EGController {
 		}
 	}
 	
+	/**
+	 * Calculates assumptions according to a given answer set
+	 * @param as Two-valued version of answer set
+	 * @param edg Extended Dependency Graph belonging to answer set
+	 * @param asn Normal version of answer set
+	 */
 	private void calculateAssumptions(AnswerSetTwoValued as, ExtendedDependencyGraph edg, AnswerSet asn){
 		Set<Path> allAssumptionPaths = new HashSet<Path>();
+		
+		/* Calculate Linked Cycles */
 		Tarjan t = new Tarjan();
 		List<LinkedCycle> linkedCycles = t.executeTarjan(edg);
+		
+		/* Determine all assumption paths */
 		for (LinkedCycle linkedCycle : linkedCycles){
 			Set<Path> assumptionPath = new HashSet<Path>(linkedCycle.getAssumptionPaths());
-			/* Remove green nodes and nodes without no outgoing negative edges */
 			
+			/* Remove green nodes and nodes without no outgoing negative edges */			
 			for (Path path : assumptionPath){
 				Path path2 = new Path();
 				path2.addAll(path);
@@ -240,6 +312,7 @@ public class EGController {
 				allAssumptionPaths.addAll(assumptionPath);
 			}
 		}
+		
 		/* calculate Assumptions */
 		HashSet<Set<String>> assumptionsAs = new HashSet<Set<String>>();
 		assumptions.put(asn, assumptionsAs);
@@ -259,6 +332,12 @@ public class EGController {
 		}
 	}
 	
+	/**
+	 * Constructs assumptions
+	 * @param i Number of assumption path from which a literal is added
+	 * @param assumption Assumption that is constructed yet
+	 * @param as Answer set according to which the assumptions are constructed
+	 */
 	private void constructAssumption(int i, Set<String> assumption, AnswerSet as){
 		if (i == -1){
 			assumptions.get(as).add(assumption);
@@ -273,10 +352,22 @@ public class EGController {
 		}
 	}
 	
+	/**
+	 * Returns assumptions belonging to given answer set
+	 * @param as Answer set
+	 * @return Assumptions belonging to given answer set
+	 */
 	public Set<Set<String>> getAssumptions(AnswerSet as){
 		return assumptions.get(as);
 	}
 	
+	/**
+	 * Returns explanation graphs according to given answer set, assumption and literal
+	 * @param as Answer set
+	 * @param assumption Assumption
+	 * @param literal Literal
+	 * @return Set of explanation graphs according to given answer set, assumption and literal
+	 */
 	public Set<ExplanationGraph> getEGs(AnswerSet as, Set<String> assumption, String literal){
 		EGList list = egLists.get(as);
 		return list.getEGList(literal, assumption);
@@ -298,6 +389,17 @@ public class EGController {
 		return eg;
 	}
 	
+	/**
+	 * Creates explanation graph with positive root node
+	 * @param edg Extended Dependency Graph which is used to extract explanation graphs
+	 * @param v EDGNode for which explanation graphs should be extracted
+	 * @param as Answer set according to which EGs are created
+	 * @param assumption Assumption according to which EGs are created
+	 * @param visitedLits Literals which were visited on the way of creating EGs
+	 * @param factNodeSet Set of fact nodes in EDG
+	 * @param unfoundedNodeSet Set of unfounded nodes in EDG
+	 * @param constraintNodeSet Set of constraint nodes in EDG
+	 */
 	private void createPositiveEGs(ExtendedDependencyGraph edg, EDGVertex v, AnswerSet as, Set<String> assumption, Set<String> visitedLits, Set<EDGVertex> factNodeSet, Set<EDGVertex> unfoundedNodeSet, Set<EDGVertex> constraintNodeSet){
 		ExplanationGraph eg = new ExplanationGraph();
 		Set<Set<SubEG>> subEGsSet = new HashSet<Set<SubEG>>();
@@ -374,6 +476,17 @@ public class EGController {
 		constructEG(egSetArray.length-1,literal,assumption,as,eg,egSetArray,litVertex, false,null);
 	}
 	
+	/**
+	 * Creates explanation graph with negative root node
+	 * @param edg Extended Dependency Graph which is used to extract explanation graphs
+	 * @param v EDGNode for which explanation graphs should be extracted
+	 * @param as Answer set according to which EGs are created
+	 * @param assumption Assumption according to which EGs are created
+	 * @param visitedLits Literals which were visited on the way of creating EGs
+	 * @param factNodeSet Set of fact nodes in EDG
+	 * @param unfoundedNodeSet Set of unfounded nodes in EDG
+	 * @param constraintNodeSet Set of constraint nodes in EDG
+	 */
 	private void createNegativeEGs(ExtendedDependencyGraph edg, EDGVertex v, AnswerSet as, Set<String> assumption, Set<String> visitedLits, Set<EDGVertex> factNodeSet, Set<EDGVertex> unfoundedNodeSet, Set<EDGVertex> constraintNodeSet){
 		ExplanationGraph eg = new ExplanationGraph();
 		String literal = v.getLiteral();
@@ -453,6 +566,12 @@ public class EGController {
 		}	
 	}
 	
+	/**
+	 * Calculates negative node explanations
+	 * @param edg EDG from which the NNEs are extracted
+	 * @param literal Literal according to which NNEs are calculated
+	 * @return Set of negative node explanation to given literal
+	 */
 	private Set<Set<String>> calculateNNEs(ExtendedDependencyGraph edg, String literal){
 		Set<Set<String>> nnes = new HashSet<Set<String>>();
 		for (EDGVertex node : edg.getNodeMap().get(literal)){
@@ -460,9 +579,13 @@ public class EGController {
 			for (EDGEdge e : edg.getInEdges(node)){
 				EDGVertex source = e.getSource();
 				EDGEdge.EdgeType label = e.getLabel();
+				
+				/* Positive condition */
 				if (source.getColor().equals(Color.GREEN) && label.equals(EDGEdge.EdgeType.NEG)){
 					nne.add(source.getLiteral());
 				}
+				
+				/* Negative condition */
 				if (source.getColor().equals(Color.RED) && label.equals(EDGEdge.EdgeType.POS)){
 					boolean allRed = true;
 					for (EDGVertex v2 : edg.getNodeMap().get(source.getLiteral())){
@@ -476,6 +599,11 @@ public class EGController {
 		return nnes;
 	}
 	
+	/**
+	 * Calculates local consistent explanation
+	 * @param nnes Negative node explanation which are used for calculation
+	 * @return Set of local consistent explanations
+	 */
 	private Set<Set<String>> calculateLCEs(Set<Set<String>> nnes){
 		lces = new HashSet<Set<String>>(); 
 		nneArray = new Set[nnes.size()];
@@ -489,10 +617,5 @@ public class EGController {
 			}
 		}
 		return lces;
-	}
-
-	
-	
-	
-		
+	}		
 }

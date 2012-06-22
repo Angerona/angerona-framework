@@ -1,11 +1,19 @@
 package angerona.fw.aspgraph.graphs;
 
+/**
+ * 
+ * @author ella
+ *
+ */
 public class EGAssumptionVertex extends EGVertex{
 
+	private static final long serialVersionUID = -4684229848256764350L;
 	private String sourceLiteral;
 	
 	public EGAssumptionVertex(String literal){
 		sourceLiteral = literal;
+		index = -1;
+		lowlink = -1;
 	}
 	@Override
 	public String toString() {

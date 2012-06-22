@@ -1,75 +1,90 @@
 package angerona.fw.aspgraph.controller;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import javax.swing.JOptionPane;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+
 import angerona.fw.aspgraph.exceptions.NotValidProgramException;
-import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
-import angerona.fw.aspgraph.util.AnswerSetTwoValued;
 import angerona.fw.aspgraph.view.EDGView;
 import angerona.fw.aspgraph.view.EGView;
 import angerona.fw.aspgraph.view.GraphView;
 
+/**
+ * MasterController who controls construction and visualization of graphs 
+ * @author ella
+ *
+ */
 public class MasterController {
 
+	/**
+	 * Instance of MasterController
+	 */
 	private static MasterController instance;
+	
+	/**
+	 * Logic Program to which graphs are created
+	 */
 	private static Program p;
-	private static HashSet<AnswerSetTwoValued> anwerSets;
 	
-	private MasterController(){	}
+	private static GraphView graphView;
 	
-	public MasterController instance(){
+	private MasterController(){	graphView = new GraphView();}
+	
+	/**
+	 * Return instance of MasterController
+	 * @return Instance of MasterController
+	 */
+	public static MasterController instance(){
 		if (instance == null) instance = new MasterController();
 		return instance;
 	}
 	
-	public static void execute(String filename){
+	/**
+	 * Starts construction and visualization of graphs
+	 * @param path2clingo Path to file clingo.exe
+	 * @param filename Name of file that defines the logic program
+	 */
+	public static void execute(String path2clingo, String filename){
 		/* Load logic program from file */
 		p = Program.loadFrom(filename);
 		
 		/* Instantiate controllers and views */
 		EDGController edgContr = EDGController.instance();
 		EGController egContr = EGController.instance();
-		GraphView graphView = GraphView.instance();
-		
+		graphView = new GraphView();		
 		EDGView edgView = graphView.getEDGPanel();
 		EGView egView = graphView.getEGPanel();
-		Solver solver = new Clingo("C:\\clingo.exe");
+		
+		/* Calculate answer sets */
+		Solver solver = new Clingo(path2clingo);
 		AnswerSetList list;
 		try {
 			list = solver.computeModels(p, 0);
+			
+			/* Instantiate EDGView */
 			edgContr.createEDG(p,list);
 			edgView.initComponents();
 			edgView.setAnswerSets(list);
-			egContr.createEGs(edgContr.getEDGs());
-			egView.initComponents();
-			egView.setAnswerSets(list);
+			
+			/* Instantiate EGView */
+			if (!list.isEmpty()){
+				egContr.createEGs(edgContr.getEDGs());
+				egView.initComponents();
+				egView.setAnswerSets(list);
+			}
+			else egView.setNoAnswerSet();
 		} catch (NotValidProgramException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(graphView, "Program not suitable for representation as graph.", "Not valid program", JOptionPane.WARNING_MESSAGE);
 		} catch (SolverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(graphView, "Path to clingo is not valid. Please set a valid path by choosing Menu->Set path to Clingo.", "No Valid Path to Clingo", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
-	private void calculateAnswerSets(){
-		Solver solver = new Clingo("C:\\clingo.exe");
-		try {
-			AnswerSetList list = solver.computeModels(p, 0);
-			List<Atom> litList = new LinkedList<Atom>(p.getAtoms());
-			for (AnswerSet a : list){
-				
-			}
-		} catch (SolverException e) {
+	public GraphView getGraphView(){
+		return graphView;
 	}
-}
 }

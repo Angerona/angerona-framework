@@ -15,6 +15,7 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,6 +28,7 @@ import angerona.fw.aspgraph.graphs.EDGVertex;
 import angerona.fw.aspgraph.graphs.EGEdge;
 import angerona.fw.aspgraph.graphs.EGVertex;
 import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
+import angerona.fw.aspgraph.view.util.SteppedComboBox;
 
 import edu.uci.ics.jung.algorithms.layout.BalloonLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
@@ -58,11 +60,14 @@ public class EDGView extends JPanel{
 	private static final long serialVersionUID = 6142473502907874961L;
 
 	private JPanel graphPanel;
-	private JComboBox<AnswerSet> answerSetsBox;
+	private SteppedComboBox<AnswerSet> answerSetsBox;
 	private JComboBox<String> layoutBox;
 	private BasicVisualizationServer<EDGVertex, EDGEdge> visServer;
 	private ExtendedDependencyGraph edg;
 	Layout<EDGVertex, EDGEdge> l;
+	private JCheckBox orHandle;
+	private JCheckBox andHandle;
+	private JCheckBox onlyActive;
 	
 	public EDGView(){
 		
@@ -71,7 +76,7 @@ public class EDGView extends JPanel{
 	public void initComponents(){
 		JLabel aspLabel = new JLabel("Answer Set: ");
 		aspLabel.setAlignmentX(RIGHT_ALIGNMENT);
-		answerSetsBox = new JComboBox<AnswerSet>();
+		answerSetsBox = new SteppedComboBox<AnswerSet>();
 		layoutBox = new JComboBox<String>();
 		graphPanel = new JPanel();
 		edg = EDGController.instance().getEDG(null);
@@ -83,7 +88,7 @@ public class EDGView extends JPanel{
 	    //layout.setRepulsionMultiplier(1);
 	    //layout.setAttractionMultiplier(1);
 	    //layout.setMaxIterations(1000);
-	    l.setSize(new Dimension(800,400)); // sets the initial size of the space
+	    l.setSize(new Dimension(780,400)); // sets the initial size of the space
 	    visServer = new BasicVisualizationServer<EDGVertex, EDGEdge>(l);
 	    visServer.setPreferredSize(new Dimension(800,400));
 		
@@ -96,11 +101,35 @@ public class EDGView extends JPanel{
 		selectionPanel.add(new JLabel("Layout: "));
 		selectionPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		selectionPanel.add(layoutBox);
-		selectionPanel.setMaximumSize(new Dimension(800,600));
+		selectionPanel.setMaximumSize(new Dimension(800,20));
 		graphPanel.add(visServer);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(selectionPanel);
 		add(graphPanel);
+		
+		JPanel handlePanel = new JPanel();
+		
+		JLabel orHandleLabel = new JLabel("OR-Handle");
+		orHandle = new JCheckBox();
+		orHandle.setBackground(Color.ORANGE);
+		handlePanel.add(orHandleLabel);
+		handlePanel.add(orHandle);
+		handlePanel.add(Box.createRigidArea(new Dimension(10,0)));
+
+		JLabel andHandleLabel = new JLabel("AND-Handle");
+		andHandle = new JCheckBox();
+		andHandle.setBackground(Color.YELLOW);
+		handlePanel.add(andHandleLabel);
+		handlePanel.add(andHandle);
+		handlePanel.add(Box.createRigidArea(new Dimension(10,0)));
+		
+		JLabel onlyActiveLabel = new JLabel("Show only active handles");
+		onlyActive = new JCheckBox();
+		handlePanel.add(onlyActiveLabel);
+		handlePanel.add(onlyActive);
+		handlePanel.add(Box.createRigidArea(new Dimension(10,0)));
+		
+		add(handlePanel);
 		
 	     /* Formatierung der Knoten und Kanten anpassen */
 		Transformer<EDGVertex, Paint> vertexPaint = new Transformer<EDGVertex, Paint>() {
@@ -120,7 +149,7 @@ public class EDGView extends JPanel{
 	            	Rectangle2D rect = font.getStringBounds(v.pureString(), ((Graphics2D) visServer.getGraphics()).getFontRenderContext());
 	            	double width = rect.getWidth();
 	            	double height = rect.getHeight();
-	                Ellipse2D circle = new Ellipse2D.Double(-15, -15, width+13, height+13);
+	                Ellipse2D circle = new Ellipse2D.Double(-15, -15, width+20, height+22);
 	                // in this case, the vertex is twice as large
 	                return circle;
 	            }
@@ -128,7 +157,7 @@ public class EDGView extends JPanel{
 		
 		Transformer<EDGEdge, Font> edgeFont = new Transformer<EDGEdge, Font>(){
 			public Font transform(EDGEdge arg0) {
-				return new Font("Arial", 1, 14);
+				return new Font("Arial", 0, 14);
 			}	
 		};
 		
@@ -149,7 +178,26 @@ public class EDGView extends JPanel{
 			}
 		};
 		
+		final Transformer<EDGEdge, Paint> edgeFillPaint = new Transformer<EDGEdge,Paint>(){
+
+			@Override
+			public Paint transform(EDGEdge e) {
+				if (onlyActive.isSelected()){
+					if (andHandle.isSelected() && e.isActive() && edg.getAndHandles().contains(e)) return Color.YELLOW;
+					else if (orHandle.isSelected() && e.isActive() && edg.getOrHandles().contains(e)) return Color.ORANGE;
+					
+				} else{
+					if (andHandle.isSelected() && edg.getAndHandles().contains(e)) return Color.YELLOW;
+					else if (orHandle.isSelected() && edg.getOrHandles().contains(e)) return Color.ORANGE;
+				}
+				return null;
+				
+			}
+			
+		};
+		
 		visServer.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
+		visServer.getRenderContext().setEdgeFillPaintTransformer(edgeFillPaint);
 		visServer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<EDGVertex>());
 		visServer.getRenderContext().setVertexShapeTransformer(vertexSize);
 		visServer.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<EDGEdge>());
@@ -160,6 +208,17 @@ public class EDGView extends JPanel{
 		visServer.getRenderContext().setArrowFillPaintTransformer(edgePaint);
 		visServer.getRenderContext().setArrowDrawPaintTransformer(edgePaint);
 		visServer.getRenderContext().setArrowPlacementTolerance(1);
+		
+		ActionListener handleListener = new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				repaint();
+			}
+		};
+		
+		orHandle.addActionListener(handleListener);
+		andHandle.addActionListener(handleListener);
+		onlyActive.addActionListener(handleListener);
 	}
 	
 	public void setAnswerSets(AnswerSetList list){
@@ -179,6 +238,9 @@ public class EDGView extends JPanel{
 			}
 			
 		});
+		revalidate();
+		graphPanel.repaint();
+		graphPanel.revalidate();
 	}
 	
 	private void initLayoutBox(){
@@ -199,7 +261,7 @@ public class EDGView extends JPanel{
 				case "KKLayout": l = new KKLayout<EDGVertex, EDGEdge>(edg); break;
 				default : l = new ISOMLayout<EDGVertex, EDGEdge>(edg); break;
 				}
-				l.setSize(new Dimension(800,400));
+				l.setSize(new Dimension(780,400));
 				visServer.setGraphLayout(l);
 				visServer.doLayout();
 			}			

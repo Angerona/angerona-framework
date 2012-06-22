@@ -11,12 +11,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import angerona.fw.aspgraph.controller.EDGController;
 import angerona.fw.aspgraph.graphs.EDGVertex.Color;
 import angerona.fw.aspgraph.util.AnswerSetTwoValued;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
@@ -35,12 +32,13 @@ public class ExtendedDependencyGraph extends DirectedSparseGraph<EDGVertex,EDGEd
 	private AnswerSetTwoValued answerSet;
 	private HashSet<EDGVertex> contradictionNodes;
 	private HashMap<String, List<EDGVertex>> nodeMap;
-	private Set<EDGEdge>[][] paths;
-	private HashMap<EDGVertex,Integer> vertexNumber;
-	private EDGEdge[][] adjazenzMatrix;
+	private Set<EDGEdge> andHandles;
+	private Set<EDGEdge> orHandles;
 
 	public ExtendedDependencyGraph(){
 		super();
+		andHandles = new HashSet<EDGEdge>();
+		orHandles = new HashSet<EDGEdge>();
 	}
 	
 		
@@ -121,11 +119,11 @@ public class ExtendedDependencyGraph extends DirectedSparseGraph<EDGVertex,EDGEd
 							Collection<EDGEdge> edges = getInEdges(v);
 							Color color = Color.GREEN;
 							for (EDGEdge e : edges){
-								if (e.getSource().getColor().equals(Color.GREEN) && 
+								if (e.getSource().getColor() != null && e.getSource().getColor().equals(Color.GREEN) && 
 									e.getLabel().equals(EDGEdge.EdgeType.NEG)){
 									color = Color.RED;
 								}
-								else if (e.getSource().getColor().equals(Color.RED) &&
+								else if (e.getSource().getColor() != null && e.getSource().getColor().equals(Color.RED) &&
 										 e.getLabel().equals(EDGEdge.EdgeType.POS)){
 										List<EDGVertex> others = nodeMap.get(e.getSource().getLiteral());
 										boolean allRed = true;
@@ -151,6 +149,30 @@ public class ExtendedDependencyGraph extends DirectedSparseGraph<EDGVertex,EDGEd
 	
 	public HashMap<String, List<EDGVertex>> getNodeMap(){
 		return nodeMap;
+	}
+	
+	public void addAndHandles(Set<EDGEdge> edges){
+		andHandles.addAll(edges);
+	}
+	
+	public void addAndHandle(EDGEdge edge){
+		andHandles.add(edge);
+	}
+	
+	public Set<EDGEdge> getAndHandles(){
+		return andHandles;
+	}
+	
+	public void addOrHandles(Set<EDGEdge> edges){
+		orHandles.addAll(edges);
+	}
+	
+	public void addOrHandle(EDGEdge edge){
+		orHandles.add(edge);
+	}
+	
+	public Set<EDGEdge> getOrHandles(){
+		return orHandles;
 	}
 
 }

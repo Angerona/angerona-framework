@@ -2,21 +2,53 @@ package angerona.fw.aspgraph.graphs;
 
 import java.io.Serializable;
 
+/**
+ * Represents a vertex in an Extended Dependency Graph
+ * @author ella
+ *
+ */
 public class EDGVertex implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7777396947071675387L;
 
+	/**
+	 * Defines possible colors for vertex:
+	 * <ul><li>RED</li><li>GREEN</li></ul>
+	 * @author ella
+	 *
+	 */
 	public enum Color{GREEN, RED};
 	
+	/**
+	 * Literal which is represented by vertex
+	 */
 	private String literal;
+	
+	/**
+	 * Rule number 
+	 */
 	private int ruleNo;
+	
+	/**
+	 * Color of vertex
+	 */
 	private Color color;
+	
+	/**
+	 * Index used for tarjan algorithm
+	 */
 	private int index;
+	
+	/**
+	 * Lowlink used for tarjan algorithm
+	 */
 	private int lowlink;
 	
+	/**
+	 * Creates new EDGVertex
+	 * @param literal Literal which is represented
+	 * @param ruleNo Number of rule which is represented
+	 */
 	public EDGVertex(String literal, int ruleNo){
 		this.literal = literal;
 		this.ruleNo = ruleNo;
@@ -50,7 +82,7 @@ public class EDGVertex implements Serializable{
 	
 	/**
 	 * Sets lowlink
-	 * @param lowlink
+	 * @param Lowlink
 	 */
 	public void setLowlink(int lowlink){
 		this.lowlink = lowlink;
@@ -113,13 +145,12 @@ public class EDGVertex implements Serializable{
 		return false;
 	}
 	
+	@Override
 	public int hashCode(){
 		return 2;
 	}
 	
-	/**
-	 * Returns the string representation of the node
-	 */
+	@Override
 	public String toString(){
 		return "<html>" + literal + "<sup>" + ruleNo + "</sup></html>";
 	}

@@ -1,22 +1,17 @@
 package angerona.fw.aspgraph.controller;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import angerona.fw.aspgraph.exceptions.NotValidProgramException;
 import angerona.fw.aspgraph.graphs.EDGEdge;
 import angerona.fw.aspgraph.graphs.EDGEdge.EdgeType;
 import angerona.fw.aspgraph.graphs.EDGVertex;
-import angerona.fw.aspgraph.graphs.EDGVertex.Color;
 import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
-import angerona.fw.aspgraph.util.AnswerSetTwoValued;
 import angerona.fw.aspgraph.util.Contradiction;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
@@ -26,39 +21,39 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
-
+/**
+ * Responsible for construction and administration of Extended Dependency Graphs
+ * @author ella
+ *
+ */
 public class EDGController {
+	
 	/**
 	 * Controlled Extended Dependency Graphs
 	 */
 	private HashMap<AnswerSet,ExtendedDependencyGraph> edgs;
+	
 	/**
 	 * Instance of EDGController
 	 */
 	private static EDGController instance;
-	/**
-	 * Maps names of literal to nodes in EDG
-	 */
-	private HashMap<String,List<EDGVertex>> nodes;
+	
 	/**
 	 * Maps names of positive literal to nodes in EDG
 	 */
 	private HashMap<String,List<EDGVertex>> positiveNodes;
+	
 	/** 
 	 * Maps names of negative literal to nodes in EDG
 	 */
 	private HashMap<String,List<EDGVertex>> negativeNodes;
-	/**
-	 * Set of all "contradiction"-nodes
-	 */
-	private HashSet<EDGVertex> conNodes;
 
 	
 	private EDGController(){}
 	
 	/**
-	 * returns the instance of EDGController
-	 * @return instance of EDGController
+	 * Returns the instance of EDGController
+	 * @return Instance of EDGController
 	 */
 	public static EDGController instance(){
 		if (instance == null) instance = new EDGController();
@@ -67,11 +62,11 @@ public class EDGController {
 	
 	/**
 	 * Creates an Extended Dependency Graph to a logic program
-	 * @param p logic program
-	 * @return 
-	 * @throws NotValidProgramException 
+	 * @param p Logic program
+	 * @throws NotValidProgramException Exception is thrown when program is not suitable for being represented
+	 * as an Extended Dependency Graph
 	 */
-	public ExtendedDependencyGraph createEDG(Program p, AnswerSetList asl) throws NotValidProgramException{
+	public void createEDG(Program p, AnswerSetList asl) throws NotValidProgramException{
 		if (isProgramValid(p)){
 			
 			/* Initialize Maps */
@@ -106,7 +101,7 @@ public class EDGController {
 					
 					/* True negated literal */
 					if (l instanceof Neg){
-						atomName = "-" + l.getAtom().getName();
+						atomName = "-" + l.getAtom().toString();
 						v = new EDGVertex(atomName, ruleNo);
 						if (!negativeNodes.containsKey(atomName)){
 							List<EDGVertex> list = new LinkedList<EDGVertex>();
@@ -129,7 +124,7 @@ public class EDGController {
 					}
 					/* Positive literal */
 					else {
-						atomName = l.getAtom().getName();
+						atomName = l.getAtom().toString();
 						v = new EDGVertex(atomName, ruleNo);
 						if (!positiveNodes.containsKey(atomName)){
 							List<EDGVertex> list = new LinkedList<EDGVertex>();
@@ -165,7 +160,7 @@ public class EDGController {
 				for (Literal lit : body){
 					/* True negated literals */
 					if (lit instanceof Neg){
-						atomName = "-" + lit.getAtom().getName();
+						atomName = "-" + lit.getAtom().toString();
 						if (!negativeNodes.containsKey(atomName)){
 							v = new EDGVertex (atomName, 0);
 							List<EDGVertex> list = new LinkedList<EDGVertex>();
@@ -179,7 +174,7 @@ public class EDGController {
 					}
 					/* Positive literals */
 					else {
-						atomName = lit.getAtom().getName();
+						atomName = lit.getAtom().toString();
 						if (!positiveNodes.containsKey(atomName)){
 							List<EDGVertex> list = new LinkedList<EDGVertex>();
 							v = new EDGVertex(atomName, 0);
@@ -213,18 +208,18 @@ public class EDGController {
 				else
 					/* Head literal is true negated */
 					if (head.get(0) instanceof Neg){
-					headName = "-" + head.get(0).getAtom().getName();
+					headName = "-" + head.get(0).getAtom().toString();
 					}
 					/* Head literal is positive */
-					else headName = head.get(0).getAtom().getName(); 
+					else headName = head.get(0).getAtom().toString(); 
 				
 				/* Rule is not a fact */
 				if (!body.isEmpty()){
 					for (Literal literal : body){
 						String name;
 						
-						if (literal instanceof Neg) name = "-" + literal.getAtom().getName();
-						else name = literal.getAtom().getName();
+						if (literal instanceof Neg) name = "-" + literal.getAtom().toString();
+						else name = literal.getAtom().toString();
 						
 						/* All nodes that represent source literal */
 						List<EDGVertex> sourcelist = nodes.get(name);
@@ -255,6 +250,7 @@ public class EDGController {
 			/* Add edges to represent contradiction between positive and negative literals */
 			HashSet<Contradiction> contradictions = getContradictions();
 			ruleNo = p.size();
+			
 			/* Create contradiction node for each pair of positive and negative literal */
 			for (Contradiction c : contradictions){
 				for (EDGVertex pos : c.getPositive()){
@@ -284,15 +280,14 @@ public class EDGController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
-			return edg;
 		}
 		else throw new NotValidProgramException();
 	}
 		
 	/**
 	 * Checks if program is appropriate for representation as graph
-	 * @param p logic program
-	 * @return true, if program is appropriate
+	 * @param p Logic program
+	 * @return True, if program is appropriate
 	 */
 	private boolean isProgramValid(Program p) {
 		Iterator<Rule> rules = p.iterator();
@@ -345,6 +340,10 @@ public class EDGController {
 		return edgs.get(as);
 	}
 	
+	/**
+	 * Returns Mapping from answer set to the specific Extended Dependency Graph
+	 * @return Map: AnswerSet -> ExtendedDependencyGraph
+	 */
 	public HashMap<AnswerSet, ExtendedDependencyGraph> getEDGs(){
 		return edgs;
 	}

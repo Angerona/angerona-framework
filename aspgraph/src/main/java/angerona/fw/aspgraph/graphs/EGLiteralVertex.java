@@ -9,6 +9,8 @@ public class EGLiteralVertex extends EGVertex{
 	public EGLiteralVertex(Annotation a, String literal){
 		annotation = a;
 		this.literal = literal;
+		index = -1;
+		lowlink = -1;
 	}
 	
 	public String getLiteral(){

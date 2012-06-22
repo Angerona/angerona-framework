@@ -14,20 +14,14 @@ public class GraphView extends BaseView {
 
 	private EDGView edgPanel;
 	private EGView egPanel;
-	private static GraphView instance;
 	
-	private GraphView() {
+	public GraphView() {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		edgPanel = new EDGView();
 		egPanel = new EGView();
 		tabbedPane.add("Extended Dependency Graph", edgPanel);
 		tabbedPane.add("Explanation Graphs", egPanel);
 		add(tabbedPane);
-	}
-	
-	public static GraphView instance(){
-		if (instance == null) instance = new GraphView();
-		return instance;
 	}
 	
 	public void setEDGPanel(EDGView edgv){

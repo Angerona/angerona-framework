@@ -58,15 +58,14 @@ public class EGPanel extends JPanel{
 	            	Rectangle2D rect = font.getStringBounds(v.pureString(), ((Graphics2D) visServer.getGraphics()).getFontRenderContext());
 	            	double width = rect.getWidth();
 	            	double height = rect.getHeight();
-	                Ellipse2D circle = new Ellipse2D.Double(-15, -15, width+13, height+13);
-	                // in this case, the vertex is twice as large
+	                Ellipse2D circle = new Ellipse2D.Double(-15, -15, width+20, height+20);
 	                return circle;
 	            }
 	        };
 		
 		Transformer<EGEdge, Font> edgeFont = new Transformer<EGEdge, Font>(){
 			public Font transform(EGEdge arg0) {
-				return new Font("Arial", 1, 14);
+				return new Font("Arial", 0, 14);
 			}	
 		};
 		
@@ -108,15 +107,12 @@ public class EGPanel extends JPanel{
 	
 	public void setLayout(Layout<EGVertex,EGEdge> l){
 		layout = l;
+		l.setSize(new Dimension(600,400));
 		visServer.setGraphLayout(l);
 		visServer.doLayout();
 	}
 	
 	public ExplanationGraph getEG(){
 		return eg;
-	}
-	
-	public void refresh(){
-		visServer.doLayout();
 	}
 }

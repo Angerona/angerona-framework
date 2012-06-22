@@ -10,10 +10,12 @@ import java.util.Set;
 
 import angerona.fw.aspgraph.graphs.EDGEdge;
 import angerona.fw.aspgraph.graphs.EDGVertex;
+import angerona.fw.aspgraph.graphs.EGEdge;
 import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
 
 public class LinkedCycle {
 	private Set<EDGVertex> vertices;
+	private Set<String> containedLiterals;
 	private Set<EDGVertex> ip_in;
 	private Set<EDGVertex> ip_out;
 	private Set<Path> validPaths;
@@ -24,6 +26,12 @@ public class LinkedCycle {
 	
 	public LinkedCycle(List<EDGVertex> component, ExtendedDependencyGraph edg){
 		this.vertices = new HashSet<EDGVertex>(component);
+		containedLiterals = new HashSet<String>();
+		
+		for(EDGVertex v : vertices){
+			containedLiterals.add(v.getLiteral());
+		}
+		
 		this.edg = edg;
 		externalEdges = new HashSet<EDGEdge>();
 		positiveCycles = new HashSet<Set<EDGVertex>>();
@@ -60,14 +68,18 @@ public class LinkedCycle {
 					}
 				}
 				/* Clean assumption paths */
+				
 				// Remove positive cycles
 				for (Set<EDGVertex> positiveCycle : positiveCycles){
 					for (EDGVertex v : positiveCycle){
-						Path assPath = getAssumptionPath(v);
-						if (assPath != null) assumptionPaths.remove(assPath);
+						if (!hasORHandle(positiveCycle)){
+							Path assPath = getAssumptionPath(v);
+							if (assPath != null) assumptionPaths.remove(assPath);
+						}
 					}
 				}
 			}
+		
 			// Remove assumptions with active edge
 			for (EDGEdge e : externalEdges){
 				if (e.isActive()){
@@ -77,6 +89,13 @@ public class LinkedCycle {
 			}
 		}
 		
+		/* Add external edges as AND-Handles or OR-Handles */
+		for (EDGEdge e : externalEdges){
+			if (vertices.size() > 1){
+				if (containedLiterals.contains(e.getSource().getLiteral())) edg.addOrHandle(e);
+				else edg.addAndHandle(e);
+			}
+		}	
 	}
 	
 	private void calculateAssumptionPaths(Set<Path> paths) {
@@ -197,11 +216,13 @@ public class LinkedCycle {
 		if (path != null) path2 = new HashSet<EDGVertex>(path);
 		else path2 = new HashSet<EDGVertex>();
 		if (!start.equals(next)){
+			if (!path2.contains(next)){
 			for (EDGEdge e : edg.getOutEdges(next)){
 				if (e.getLabel().equals(EDGEdge.EdgeType.POS)){
 					path2.add(next);
 					findPositiveCycle(start,e.getTarget(),path2);
 				}
+			}
 			}
 		} else{
 			path2.add(next);
@@ -241,6 +262,16 @@ public class LinkedCycle {
 	
 	public Set<EDGEdge> getExternalEdges(){
 		return externalEdges;
+	}
+	
+	private boolean hasORHandle(Set<EDGVertex> positiveCycle){
+		for (EDGVertex v : positiveCycle){
+			for (EDGVertex v2 : edg.getNodeMap().get(v.getLiteral())){
+				// there exists an OR-handle for at least one vertex in the positive cycle
+				if (!v.equals(v2) && vertices.contains(v2)) return true;
+			}
+		}
+		return false;
 	}
 	
 }

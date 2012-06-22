@@ -2,10 +2,16 @@ package angerona.fw.aspgraph.graphs;
 
 public class EGTopVertex extends EGVertex{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7344243387453486485L;
 	private String sourceLiteral;
 	
 	public EGTopVertex(String literal){
 		sourceLiteral = literal;
+		index = -1;
+		lowlink = -1;
 	}
 	
 	@Override
@@ -31,5 +37,4 @@ public class EGTopVertex extends EGVertex{
 	public int hashCode(){
 		return 3;
 	}
-
 }

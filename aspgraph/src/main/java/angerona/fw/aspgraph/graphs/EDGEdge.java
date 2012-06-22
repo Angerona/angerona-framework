@@ -10,9 +10,6 @@ import java.io.Serializable;
  */
 public class EDGEdge implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6608667047849968395L;
 
 	/**
@@ -41,9 +38,24 @@ public class EDGEdge implements Serializable{
 	 */
 	private EdgeType label;
 	
+	/**
+	 * Defines if edge is an AND-edge
+	 */
 	private boolean and;
+	
+	/**
+	 * Defines if edge is an OR-edge
+	 */
 	private boolean or;
 	
+	/**
+	 * Creates new EDGEdge
+	 * @param source Source node
+	 * @param target Target node
+	 * @param label Label of edge
+	 * @param and Edge is an AND-edge
+	 * @param or Edge is an OR-edge
+	 */
 	public EDGEdge(EDGVertex source, EDGVertex target, EdgeType label, boolean and, boolean or){
 		this.source = source;
 		this.target = target;
@@ -52,18 +64,31 @@ public class EDGEdge implements Serializable{
 		this.or = or;
 	}
 	
+	/**
+	 * Returns source ode
+	 * @return Source node
+	 */
 	public EDGVertex getSource(){
 		return source;
 	}
 	
+	/**
+	 * Returns target node
+	 * @return Target node
+	 */
 	public EDGVertex getTarget(){
 		return target;
 	}
 	
+	/**
+	 * Returns edge label
+	 * @return Label of edge
+	 */
 	public EdgeType getLabel(){
 		return label;
 	}
 	
+	@Override
 	public boolean equals(Object o){
 		if (o instanceof EDGEdge){
 			EDGEdge e2 = (EDGEdge) o;
@@ -74,10 +99,12 @@ public class EDGEdge implements Serializable{
 		return false;
 	}
 	
+	@Override
 	public int hashCode(){
 		return source.hashCode() + target.hashCode() + label.hashCode();
 	}
 
+	@Override
 	public String toString(){
 		switch(label){
 			case POS: return "+";
@@ -86,11 +113,15 @@ public class EDGEdge implements Serializable{
 		}
 	}
 	
+	/**
+	 * Tells if edge is an active edge
+	 * @return True, if edge is active
+	 */
 	public boolean isActive(){
 		// Edge is an AND-edge
 		if (and){
 			if (source.getColor().equals(EDGVertex.Color.GREEN) && label.equals(EdgeType.NEG)) return true;
-			if (!or && source.getColor().equals(EDGVertex.Color.RED) && label.equals(EdgeType.POS)) return false;
+			if (!or && source.getColor().equals(EDGVertex.Color.RED) && label.equals(EdgeType.POS)) return true;
 		}
 		
 		// Edge is an OR-edge

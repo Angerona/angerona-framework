@@ -6,6 +6,8 @@ public class EGBotVertex extends EGVertex{
 	
 	public EGBotVertex(String literal){
 		sourceLiteral = literal;
+		index = -1;
+		lowlink = -1;
 	}
 	
 	@Override
