@@ -58,6 +58,7 @@ public class MasterController {
 		graphView = new GraphView();		
 		EDGView edgView = graphView.getEDGPanel();
 		EGView egView = graphView.getEGPanel();
+		graphView.setProgramToPanel(p);
 		
 		/* Calculate answer sets */
 		Solver solver = new Clingo(path2clingo);
