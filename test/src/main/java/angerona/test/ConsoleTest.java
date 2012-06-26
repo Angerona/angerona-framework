@@ -53,7 +53,7 @@ public class ConsoleTest {
 		LOG.info("Employee Beliefs:\n" + employee.getBeliefs().toString());
 		LOG.info("Boss Beliefs:\n" + boss.getBeliefs().toString());		
 		
-		env.runTillNoMorePerceptionsLeft();
+		env.run();
 		
 		LOG.info("Employee Beliefs:\n" + employee.getBeliefs().toString());
 		LOG.info("Boss Beliefs:\n" + boss.getBeliefs().toString());
