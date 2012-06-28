@@ -9,6 +9,7 @@ import java.util.Set;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.Signature;
+import net.sf.tweety.SymbolSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
@@ -92,19 +93,21 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	@Override
 	public void init(Map<String, String> additionalData) {
 		getAgent().addListener(this);
-		Signature worldSig = getAgent().getBeliefs().getWorldKnowledge().getSignature();
-		this.signature = new FolSignature( worldSig.getSymbolSet());
+		BaseBeliefbase world = getAgent().getBeliefs().getWorldKnowledge();
+		Signature worldSig = world.getSignature();
+		SymbolSet ss = worldSig.getSymbolSet();
+		LOG.info(ss.toString());
+		this.signature = new FolSignature(ss);
 		if(!additionalData.containsKey("Confidential")) {
 			LOG.warn("Confidential Knowledge of agent '{}' has no initial data.", getAgent().getName());
 			return;
 		} else {
-			this.signature.fromSignature(getAgent().getBeliefs().getWorldKnowledge().getSignature());
 			String str = additionalData.get("Confidential");
 			SecretParser parser = new SecretParser(str, signature);
 			try {
 				confidentialTargets.addAll(parser.Input());
 			} catch (ParseException e) {
-				LOG.error("Cannot parse the secret defined for Agent '{}':\n{}", getAgent().getName(), str);
+				LOG.error("Cannot parse the secret defined for Agent '{}':\n{}", getAgent().getName(), e.getMessage());
 			}
 			
 			// Check for startup inconsistency:

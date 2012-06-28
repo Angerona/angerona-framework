@@ -23,9 +23,6 @@ public class AspBeliefbase extends BaseBeliefbase {
 	/** reference to the logical program */
 	private Program program = new Program();
 	
-	/** a fol signature describing which predicates are used in the logical program */
-	private Signature signature;
-	
 	/** @return the program used as basic for the beliefbase */
 	public Program getProgram() {
 		return program;
@@ -48,8 +45,6 @@ public class AspBeliefbase extends BaseBeliefbase {
 		super(other);
 		
 		this.program = (Program) other.program.clone();
-		this.signature = other.signature;
-		
 	}
 
 	@Override
@@ -60,12 +55,11 @@ public class AspBeliefbase extends BaseBeliefbase {
 	@Override
 	protected void parseInt(BufferedReader br) throws ParserException, IOException {
 		program = Program.loadFrom(br);
-		signature = program.getSignature();
 	}
 
 	@Override
 	public Signature getSignature() {
-		return signature;
+		return program.getSignature();
 	}
 
 	@Override

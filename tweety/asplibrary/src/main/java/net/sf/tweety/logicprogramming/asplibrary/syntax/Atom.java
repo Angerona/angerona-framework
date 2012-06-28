@@ -150,6 +150,28 @@ public class Atom implements Term, Literal, CommonStructure {
 		return ret;
 	}
 	
+	public String detailString() {
+		String reval = toString();
+		reval += "\n";
+		for(int i=0; i<getArity(); i++) {
+			Term t = getTerm(i);
+			reval += String.valueOf(i+1) + ". ";
+			if(t.isConstant()) {
+				reval += "constant: ";
+			} else if(t.isVariable()) {
+				reval += "variable: ";
+			} else if(t.isList()) {
+				reval += "list: ";
+			}else if(t.isSet()) {
+				reval += "set: ";
+			}else if(t.isNumber()) {
+				reval += "number: ";
+			}
+			reval += t.get()+"\n";
+		}
+		return reval;
+	}
+	
 	public Term	getTerm(int index) {
 		if ( (index <0) || (this.terms == null))
 			return null;
