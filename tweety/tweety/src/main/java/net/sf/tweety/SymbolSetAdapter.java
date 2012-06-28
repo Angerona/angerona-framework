@@ -105,4 +105,19 @@ public abstract class SymbolSetAdapter implements SymbolSet {
 		return THING;
 	}
 
+	@Override
+	public String toString() {
+		String reval = "";
+		
+		reval += ("Predicates:\n");
+		for(String symbol : getSymbols()) {
+			reval +=(symbol + "/" +getArity(symbol)+"\n");
+		}
+		
+		reval += ("\nConstants:\n");
+		for(String constant : getConstants()) {
+			reval +=(constant)+"\n";
+		}
+		return reval;
+	}
 }

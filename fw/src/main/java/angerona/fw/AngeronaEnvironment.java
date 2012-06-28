@@ -45,7 +45,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
 	/** the actual simulation tick */
-	private int tick = 0;
+	protected int tick = 0;
 	
 	/** the name of the simulation, for example: 'strike_comittee_meeting' */
 	private String name = "";
@@ -56,7 +56,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	private PerceptionFactory perceptionFactory = new DetailPerceptionFactory();
 	
 	/** flag indicating if the environment is currently in its update process */
-	private boolean doingTick = false;
+	protected boolean doingTick = false;
 	
 	/** flag indicating if the environment is correctly initialized */
 	private boolean ready = false;
@@ -64,8 +64,18 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	/** a map of entity ids to the entity references */
 	private Map<Long, Entity> entities = new HashMap<Long, Entity>();
 	
+	private EnvironmentBehavior behavior;
+	
 	public Map<Long, Entity> getEntityMap() {
 		return Collections.unmodifiableMap(entities);
+	}
+	
+	public AngeronaEnvironment() {
+		this.behavior = new DefaultBehavior();
+	}
+	
+	public AngeronaEnvironment(EnvironmentBehavior behavior) {
+		this.behavior = behavior;
 	}
 	
 	@Override
@@ -109,15 +119,8 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		return (Agent)ap.getAgentArchitecture();
 	}
 	
-	/**
-	 * runs a simulation until no more perceptions are in the queue. 
-	 * During a cycle new perceptions can be generated.
-	 */
-	public void runTillNoMorePerceptionsLeft() {
-		boolean percept = false;
-		do {
-			percept = runOneTick();
-		} while(percept);
+	public boolean run() {
+		return behavior.run(this);
 	}
 	
 	/**
@@ -125,26 +128,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	 * @return true if at least one agents cylce function was called, false otherwise.
 	 */
 	public boolean runOneTick() {
-		doingTick = true;
-		
-		boolean somethingHappens = false;
-		for(AgentProcess ap : agents) {
-			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
-			if(aap.hasPerceptions()) {
-				somethingHappens = true;
-			}
-		}
-		
-		if(!somethingHappens && tick != 0)
-			return false;
-		
-		++tick;
-		for(AgentProcess ap : agents) {
-			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
-			aap.execCycle();
-		}
-		doingTick = false;
-		return true;
+		return behavior.runOneTick(this);
 	}
 	
 	public boolean isDoeingTick() {
@@ -326,17 +310,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	
 	@Override
 	public void sendAction(String agentName, Object action) {
-		// The action send by one agent is the perception of the other one.
-		if(Action.ALL.equals(agentName)) {
-			for(String name : agentMap.keySet()) {
-				agentMap.get(name).perceive(action);
-			}
-		} else {
-			if(!agentMap.containsKey(agentName))
-				LOG.warn("Action was not send, agent '{}' was not found in environment.", agentName);
-			else
-				agentMap.get(agentName).perceive(action);
-		}
+		behavior.sendAction(this, (Action)action);
 	}
 
 	PerceptionFactory getPerceptionFactory() {

@@ -26,7 +26,10 @@
         <desire>v_Boss(excused)</desire>
         <desire>attend_scm</desire>
          
-        <data key="Confidential">(Boss, attend_scm)</data>
+        <data key="Confidential">
+            (Boss, __DEFAULT__, meet_with(andre))
+            (Boss, __DEFAULT__, attend_scm)
+        </data>
 		<data key="KnowHow">
 		 	bel(Y, X), revisionRequest(Y, X), reason(X)
 			excused, bel(Boss, excused), 

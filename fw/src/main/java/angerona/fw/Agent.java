@@ -101,6 +101,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	/** the perception received by the last or running cylce call */
 	private Perception actualPerception;
 	
+	private Action lastAction;
+	
 	/**
 	 * Ctor: Used for creating agents with an automatic assigned id.
 	 * @param ac	Data structure containing configuration options for the agent behavior.
@@ -211,6 +213,10 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 				return (T)ea;
 		}
 		return null;
+	}
+	
+	public Action getLastAction() {
+		return lastAction;
 	}
 	
 	public List<AgentComponent> getComponents() {

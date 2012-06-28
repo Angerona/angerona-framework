@@ -1,6 +1,6 @@
 world {
 	attend_scm.
-	
+	meet_with(andre).
 } view->Boss {
 	fired :- -excused, -attend_work.
 	fired :- attend_scm.

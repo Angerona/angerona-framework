@@ -1,5 +1,5 @@
 package angerona.fw.logic;
-import java.io.IOException;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,9 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
-import net.sf.tweety.ParserException;
-import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.Signature;
+import net.sf.tweety.SymbolSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
@@ -19,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.listener.AgentListener;
+import angerona.fw.parser.ParseException;
+import angerona.fw.parser.SecretParser;
 /**
  * Data-Component of an agent containing a set of personal confidential targets.
  * @author Tim Janus
@@ -92,19 +93,21 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	@Override
 	public void init(Map<String, String> additionalData) {
 		getAgent().addListener(this);
+		BaseBeliefbase world = getAgent().getBeliefs().getWorldKnowledge();
+		Signature worldSig = world.getSignature();
+		SymbolSet ss = worldSig.getSymbolSet();
+		LOG.info(ss.toString());
+		this.signature = new FolSignature(ss);
 		if(!additionalData.containsKey("Confidential")) {
 			LOG.warn("Confidential Knowledge of agent '{}' has no initial data.", getAgent().getName());
 			return;
 		} else {
-			this.signature.fromSignature(getAgent().getBeliefs().getWorldKnowledge().getSignature());
+			String str = additionalData.get("Confidential");
+			SecretParser parser = new SecretParser(str, signature);
 			try {
-				parseInt(additionalData.get("Confidential"));
-			} catch (ParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				confidentialTargets.addAll(parser.Input());
+			} catch (ParseException e) {
+				LOG.error("Cannot parse the secret defined for Agent '{}':\n{}", getAgent().getName(), e.getMessage());
 			}
 			
 			// Check for startup inconsistency:
@@ -116,63 +119,6 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 		}
 	}
 	
-	
-	/** internal helper for parsing confidential data */
-	private void parseInt(String content) throws IOException, ParserException {
-		// 0 = nothing
-		// 1 = agent name
-		// 2 = predicate (use tweety)
-		
-		int state = 0;
-		
-		String name = "";
-		FolFormula info = null;
-		for(int i=0; i<content.length(); ++i) {
-			switch(state) {
-			case 0:
-				if(content.charAt(i) == '(')
-					state = 1;
-				break;
-			
-			case 1:
-				if(content.charAt(i) == ',') {
-					state = 2;
-				}
-				else
-					name += content.charAt(i);
-				break;
-				
-			case 2:
-				FolParser fp = new FolParser();
-				fp.setSignature(signature);
-				int newIndex = content.indexOf(')', i);
-				String formula = content.substring(i, newIndex);
-				LOG.info("Try to parse FolFormula: '{}'", formula);
-				try {
-					info = (FolFormula)fp.parseFormula(formula);
-				} catch (ParserException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				i = newIndex;
-				state = 3;
-			
-				if(info != null)
-					addConfidentialTarget(new Secret(name, info));
-				else
-					LOG.error("Cant read confidential targets formula!");
-				name = "";
-				info = null;
-				state = 0;
-				
-				break;
-			}
-		}
-	}
-
 	@Override
 	public void beliefbaseChanged(BaseBeliefbase bb, String space) {
 		if(!space.equals(AgentListener.WORLD)) {

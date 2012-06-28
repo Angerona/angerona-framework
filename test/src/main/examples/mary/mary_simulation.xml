@@ -21,8 +21,14 @@
 		<skill class="angerona.fw.serialize.SkillConfigImport">
 			<source>config/skills/QueryAnswer.xml</source>
         	</skill>
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/RevisionRequest.xml</source>
+	
+        </skill>
 
-		<data key="Confidential">(Coroner, john_argued) 
+
+		<data key="Confidential"> 
+		    (Coroner, __DEFAULT__, who_argued(john)) 
 		</data>   
 	</agent-instance>
       
