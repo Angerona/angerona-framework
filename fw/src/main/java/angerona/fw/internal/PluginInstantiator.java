@@ -355,7 +355,7 @@ public class PluginInstantiator {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseChangeBeliefs createRevision(String classname) throws InstantiationException, IllegalAccessException {
+	public BaseChangeBeliefs createChange(String classname) throws InstantiationException, IllegalAccessException {
 		for(Class<? extends BaseChangeBeliefs> c : getRevisions()) {
 			if(c.getName().compareTo(classname) == 0) {
 				return c.newInstance();

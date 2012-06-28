@@ -2,8 +2,9 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -21,16 +22,22 @@ import org.xml.sax.SAXException;
  */
 @Root(name="beliefbase-configuration")
 public class BeliefbaseConfigReal implements BeliefbaseConfig {
-	@Element
+	@Element(name="name")
 	private String name;
 	
+	@Element(name="default-reasoner")
+	private String defaultReasonerClass;
+	
+	@Element(name="default-change-operator")
+	private String defaultChangeClass;
+	
 	/** the class name used for the revision operation */
-	@ElementList(name="change-operators")
-	private List<String> changeClassName = new LinkedList<String>();
+	@ElementList(name="change-operators", inline=true, entry="change-operator", empty=false)
+	private Set<String> changeClassNames = new HashSet<String>();
 
 	/** the class name used for the reasoning operations */
-	@Element(name="reasoner-class")
-	private String reasonerClassName;
+	@ElementList(name="reasoner-class", inline=true, entry="reasoner", empty=false)
+	private Set<String> reasonerClassNames = new HashSet<String>();
 	
 	/** the class name of the beliefbase */
 	@Element(name="beliefbase-class")
@@ -50,14 +57,13 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	}
 		
 	@Override
-	public String getRevisionClassName() {
-		// TODO support list in framework
-		return changeClassName.get(0);
+	public Set<String> getRevisionClassName() {
+		return Collections.unmodifiableSet(changeClassNames);
 	}
 
 	@Override
-	public String getReasonerClassName() {
-		return reasonerClassName;
+	public Set<String> getReasonerClassName() {
+		return reasonerClassNames;
 	}
 	
 	@Override
@@ -69,13 +75,25 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	public String getName() {
 		return name;
 	}
+
+	@Override
+	public String getDefaultReasonerClass() {
+		return defaultReasonerClass;
+	}
+
+	@Override
+	public String getDefaultChangeClass() {
+		return defaultChangeClass;
+	}
 	
 	public static void main(String [] args) {
 		BeliefbaseConfigReal test = new BeliefbaseConfigReal();
 		test.beliefbaseClassName = "AspBeliefbase";
-		test.changeClassName.add("ChangeOperator");
-		test.reasonerClassName = "AspReasoner";
+		test.changeClassNames.add("ChangeOperator");
+		test.reasonerClassNames.add("AspReasoner");
 		test.name = "AspBeliefbase";
+		test.defaultChangeClass = "ChangeOperator";
+		test.defaultReasonerClass = "Reasoner";
 		SerializeHelper.outputXml(test, System.out);
 	}
 }

@@ -1,6 +1,7 @@
 package angerona.fw.serialize;
 
 import java.io.File;
+import java.util.Set;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -20,12 +21,12 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 	}
 	
 	@Override
-	public String getRevisionClassName() {
+	public Set<String> getRevisionClassName() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
 	@Override
-	public String getReasonerClassName() {
+	public Set<String> getReasonerClassName() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
@@ -43,5 +44,15 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 		BeliefbaseConfigImport reval = new BeliefbaseConfigImport();
 		reval.source = new File("config/skills/QueryAnswer.xml");
 		return reval;
+	}
+
+	@Override
+	public String getDefaultReasonerClass() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public String getDefaultChangeClass() {
+		throw new IllegalStateException("Method not supported.");
 	}
 }

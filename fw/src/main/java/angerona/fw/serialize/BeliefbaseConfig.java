@@ -1,11 +1,17 @@
 package angerona.fw.serialize;
 
+import java.util.Set;
+
 public interface BeliefbaseConfig {
 	/** @return the class name used for the revision operation */
-	public String getRevisionClassName();
+	public Set<String> getRevisionClassName();
 
 	/** @return the class name used for the reasoning operations */
-	public String getReasonerClassName();
+	public Set<String> getReasonerClassName();
+	
+	public String getDefaultReasonerClass();
+	
+	public String getDefaultChangeClass();
 	
 	/** @return the class name of the beliefbase */
 	public String getBeliefbaseClassName();
