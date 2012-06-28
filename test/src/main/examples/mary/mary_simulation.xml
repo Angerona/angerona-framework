@@ -25,7 +25,8 @@
 	
         </skill>
 
-		<data key="Confidential">(Coroner, someone_argued) 
+		<data key="Confidential">
+		    (Coroner, __DEFAULT__, who_argued(john)) 
 		</data>   
 	</agent-instance>
       
