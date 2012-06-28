@@ -1,5 +1,8 @@
 package angerona.fw.logic.asp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
@@ -19,6 +22,9 @@ import angerona.fw.operators.parameter.BeliefUpdateParameter;
  */
 public class AspRevision extends BaseChangeBeliefs {
 
+	/** The logger used for output in the angerona Framework */
+	static private Logger LOG = LoggerFactory.getLogger(AspRevision.class);
+	
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {
 		return AspBeliefbase.class;
@@ -26,6 +32,7 @@ public class AspRevision extends BaseChangeBeliefs {
 
 	@Override
 	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
+		LOG.info("Perform ASPRevison as change.");
 		PreferenceHandling pf = new PreferenceHandling();
 		if(! (param.getBeliefBase() instanceof AspBeliefbase))
 			throw new RuntimeException("Error: Beliefbase must be of type asp");

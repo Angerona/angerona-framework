@@ -1,7 +1,5 @@
 package angerona.fw.operators.def;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
@@ -44,24 +42,26 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 			if(views.containsKey(a.getReceiverId())) {
-				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); 
-				
-				// We adapt the view and check for invalidate secrets.
-				if(a.getAnswer() == AnswerValue.AV_TRUE) {
-					view.addNewKnowledge(a.getRegarding());
-				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {
-					view.addNewKnowledge(new Negation(a.getRegarding()));
-				}
-				
-				//Does it even make sense to go through all confidential targets,
-				//given how it's making false positives right now?
-				for(Secret secret : conf.getTargets()) {
-					if(secret.getSubjectName().equals(a.getReceiverId())) {
-						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
-						if(	view.infere().contains(secret.getInformation()))  {
-							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
-							//conf.removeConfidentialTarget(ct);
-							return new Boolean(true);
+				for(String changeOp : conf.getTargetsByChangeOperator().keySet()) {
+					BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); 
+					
+					// We adapt the view and check for invalidate secrets.
+					if(a.getAnswer() == AnswerValue.AV_TRUE) {
+						view.addNewKnowledge(a.getRegarding(), changeOp);
+					} else if(a.getAnswer() == AnswerValue.AV_FALSE) {
+						view.addNewKnowledge(new Negation(a.getRegarding()), changeOp);
+					}
+					
+					//Does it even make sense to go through all confidential targets,
+					//given how it's making false positives right now?
+					for(Secret secret : conf.getTargetsByChangeOperator().get(changeOp)) {
+						if(secret.getSubjectName().equals(a.getReceiverId())) {
+							//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
+							if(	view.infere().contains(secret.getInformation()))  {
+								report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
+								//conf.removeConfidentialTarget(ct);
+								return new Boolean(true);
+							}
 						}
 					}
 				}

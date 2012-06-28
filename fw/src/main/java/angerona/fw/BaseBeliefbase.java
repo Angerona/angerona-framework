@@ -72,7 +72,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	private Map<String, BaseChangeBeliefs> changeOperators = new HashMap<>();
 	
-	private Map<String, BaseReasoner> reasonerOperators = new HashMap<>();
+	private Map<String, BaseReasoner> reasoningOperators = new HashMap<>();
 	
 	/** Reference to the used revision operator */
 	private BaseChangeBeliefs defaultChangeOperator;
@@ -119,6 +119,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		
 		defaultChangeOperator = other.defaultChangeOperator;
 		defaultReasoningOperator = other.defaultReasoningOperator;
+		changeOperators.putAll(other.changeOperators);
+		reasoningOperators.putAll(other.reasoningOperators);
 	}
 	
 	/**
@@ -151,13 +153,14 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		for(String reasonerClass : bbc.getReasonerClassName()) {
 			BaseReasoner reasoner = pi.createReasoner(reasonerClass);
-			reasonerOperators.put(reasonerClass, reasoner);
+			reasoningOperators.put(reasonerClass, reasoner);
 			if(bbc.getDefaultReasonerClass().equals(reasonerClass))
 				defaultReasoningOperator = reasoner;
 		}
 		
 		for(String changeClass : bbc.getRevisionClassName()) {
 			BaseChangeBeliefs changeOperator = pi.createChange(changeClass);
+			changeOperators.put(changeClass, changeOperator);
 			if(bbc.getDefaultChangeClass().equals(changeClass)) {
 				defaultChangeOperator = changeOperator;				
 			}
@@ -172,14 +175,17 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			LOG.error("No change operator was given in the beliefbase configuration.");
 		}
 		
-		if(defaultReasoningOperator == null && reasonerOperators.size() > 0) {
-			String name = reasonerOperators.keySet().iterator().next();
-			defaultReasoningOperator = reasonerOperators.get(name);
+		if(defaultReasoningOperator == null && reasoningOperators.size() > 0) {
+			String name = reasoningOperators.keySet().iterator().next();
+			defaultReasoningOperator = reasoningOperators.get(name);
 			LOG.warn("Default reasoing operator with name: '{}' not found, '{}' used insted.",
 					bbc.getDefaultReasonerClass(), name);
-		} else if(defaultReasoningOperator == null && reasonerOperators.size() == 0) {
+		} else if(defaultReasoningOperator == null && reasoningOperators.size() == 0) {
 			LOG.error("No reasoning operator was given in the beliefbase configuration.");
 		}
+		
+		changeOperators.put("__DEFAULT__", defaultChangeOperator);
+		reasoningOperators.put("__DEFAULT__", defaultReasoningOperator);
 		
 		updateOwner();
 	}
@@ -193,9 +199,15 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 */
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
-	public void addNewKnowledge(FolFormula newKnowlege) {
+	public boolean addNewKnowledge(FolFormula newKnowledge, String className) {
 		Set<FolFormula> k = new HashSet<FolFormula>();
-		k.add(newKnowlege);
+		k.add(newKnowledge);
+		return addNewKnowledge(k, className);
+	}
+	
+	public void addNewKnowledge(FolFormula newKnowledge) {
+		Set<FolFormula> k = new HashSet<FolFormula>();
+		k.add(newKnowledge);
 		addNewKnowledge(k);
 	}
 	
@@ -206,6 +218,15 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 */
 	public void addNewKnowledge(Set<FolFormula> newKnowledge) {
 		addNewKnowledge(newKnowledge, defaultChangeOperator);
+	}
+	
+	public boolean addNewKnowledge(Set<FolFormula> newKnowledge, String className) {
+		if(!changeOperators.containsKey(className))
+			return false;
+		
+		BaseChangeBeliefs bcb = changeOperators.get(className);
+		addNewKnowledge(newKnowledge, bcb);
+		return true;
 	}
 	
 	/**
@@ -346,11 +367,11 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	private void updateOwner() {
 		Entity ent = IdGenerator.getEntityWithId(parentId);
 		if(ent != null) {
-			if(defaultReasoningOperator != null) {
-				defaultReasoningOperator.setOwner((Agent)ent);
+			for(BaseReasoner reasoningOperator : this.reasoningOperators.values()) {
+				reasoningOperator.setOwner((Agent)ent);
 			}
-			if(defaultChangeOperator != null) {
-				defaultChangeOperator.setOwner((Agent)ent);
+			for(BaseChangeBeliefs changeOperator : this.changeOperators.values()) {
+				changeOperator.setOwner((Agent)ent);
 			}
 		}
 	}

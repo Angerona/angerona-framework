@@ -1,6 +1,7 @@
 package angerona.fw.logic;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,8 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	
 	/** set of confidential targets defining this beliefbase */
 	private Set<Secret> confidentialTargets = new HashSet<Secret>();
+	
+	private Map<String, Set<Secret>> targetsByChangeOpeator = new HashMap<String, Set<Secret>>();
 	
 	private FolSignature signature = new FolSignature();
 	
@@ -67,11 +70,26 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	 * @return		true if the beliefbase didn't contain the confidential target, false otherwise.
 	 */
 	public boolean addConfidentialTarget(Secret cf) {
-		return confidentialTargets.add(cf);
+		boolean reval = confidentialTargets.add(cf);
+		if(reval) {
+			String key = cf.getBeliefChangeClassName();
+			if(!targetsByChangeOpeator.containsKey(key)) {
+				targetsByChangeOpeator.put(key, new HashSet<Secret>());
+			}
+			targetsByChangeOpeator.get(key).add(cf);
+		}
+		return reval;
 	}
 	public boolean removeConfidentialTarget(Secret cf)
 	{
-		return confidentialTargets.remove(cf);
+		boolean reval = confidentialTargets.remove(cf);
+		if(reval) {
+			String key = cf.getBeliefChangeClassName();
+			targetsByChangeOpeator.get(key).remove(cf);
+			if(targetsByChangeOpeator.get(key).size() == 0)
+				targetsByChangeOpeator.remove(key);
+		}
+		return reval;
 	}
 	/**
 	 * Gets the confidential target defined by the subject and the information which is confidential.
@@ -89,6 +107,10 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	public Set<Secret> getTargets() {
 		return Collections.unmodifiableSet(confidentialTargets);
 	}
+	
+	public Map<String, Set<Secret>> getTargetsByChangeOperator() {
+		return Collections.unmodifiableMap(targetsByChangeOpeator);
+	}
 
 	@Override
 	public void init(Map<String, String> additionalData) {
@@ -105,7 +127,9 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 			String str = additionalData.get("Confidential");
 			SecretParser parser = new SecretParser(str, signature);
 			try {
-				confidentialTargets.addAll(parser.Input());
+				Set<Secret> secrets = (parser.Input());
+				for(Secret s : secrets)
+					addConfidentialTarget(s);
 			} catch (ParseException e) {
 				LOG.error("Cannot parse the secret defined for Agent '{}':\n{}", getAgent().getName(), e.getMessage());
 			}
