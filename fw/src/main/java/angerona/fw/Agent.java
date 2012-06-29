@@ -535,6 +535,11 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	public void popOperator() {
 		operatorStack.pop();
 	}
+	
+	@Override
+	public Stack<BaseOperator> getStack() {
+		return operatorStack;
+	}
 
 	@Override
 	public void changed(BaseBeliefbase bb) {

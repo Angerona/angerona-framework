@@ -1,10 +1,14 @@
 package angerona.fw.report;
 
 import java.util.Date;
+import java.util.Stack;
 
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.BaseOperator;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
+import angerona.fw.internal.IdGenerator;
+import angerona.fw.operators.OperatorVisitor;
 
 /**
  * A ReportEntry contains informations about a report, like the message, the poster or the attachment.
@@ -32,6 +36,8 @@ public class ReportEntry implements Cloneable {
 	
 	private AngeronaEnvironment simulation;
 	
+	private Stack<String> operatorCallstack = new Stack<String>();
+	
 	private ReportEntry() {}
 	
 	public ReportEntry(String message, ReportPoster poster, Entity attachment) {
@@ -44,6 +50,19 @@ public class ReportEntry implements Cloneable {
 		this.simulation = poster.getSimulation();
 		this.simulationTick = poster.getSimulation().getSimulationTick();
 		this.realTime = new Date();
+		
+		Entity temp = attachment;
+		if(temp != null) {
+			while(temp.getParent() != null) {
+				temp = IdGenerator.getEntityWithId(temp.getParent());
+			}
+		}
+		if(temp instanceof OperatorVisitor) {
+			OperatorVisitor ov = (OperatorVisitor)temp;
+			for(BaseOperator op : ov.getStack()) {
+				operatorCallstack.add(op.getClass().getName());
+			}
+		}
 	}
 
 	public int getSimulationTick() {
@@ -70,6 +89,10 @@ public class ReportEntry implements Cloneable {
 		return posterName;
 	}
 	
+	public Stack<String> getStack() {
+		return operatorCallstack;
+	}
+	
 	@Override
 	public Object clone() {
 		ReportEntry reval = new ReportEntry();
@@ -78,6 +101,8 @@ public class ReportEntry implements Cloneable {
 		reval.simulation = this.simulation;
 		reval.posterName = this.posterName;
 		reval.realTime = this.realTime;
+		reval.operatorCallstack = new Stack<String>();
+		reval.operatorCallstack.addAll(operatorCallstack);
 		if(this.attachment != null) {
 			if(this.attachment instanceof EntityAtomic) {
 				EntityAtomic atomic = (EntityAtomic) this.attachment;
