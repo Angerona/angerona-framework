@@ -27,6 +27,9 @@ import angerona.fw.operators.parameter.ViolatesParameter;
  * 
  *  Simple solution: cast BaseBeliefBase to AspBeliefBase, get program, add fact to program
  *  More elegant solution is to create a revision operator which does the same thing
+ * 
+ *  Later *reason* for contradiction should be considered. Distinguish between self-contradiction and other contradiction.
+ *  This will have to be incorporated in more elegant solution. 
  *  
  *  This solution isn't working. Fact and negation of fact remain in belief base Perhaps I'm making the rule to add to the program wrong?
  * 
@@ -76,9 +79,15 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
 				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
 				view.addNewKnowledge(dqa.getDetailAnswer()); //Should I call addNewKnowledge with a new UpdateType?
-				FolFormula newFact = dqa.getDetailAnswer();
+				//FolFormula newFact = dqa.getDetailAnswer();
 				String ruleString = dqa.getDetailAnswer().toString();
 				ruleString += "."; //Assume information given is always a fact
+				//Quick fix to bridge representations of ! and -
+				if(ruleString.startsWith("!"))
+				{
+					ruleString = "-" + ruleString.substring(1);
+				}
+				//TODO: Account for predicates with variables (arity 1+) 
 				Rule rule = new Rule(ruleString);
 				System.out.println("(Delete) Rule: "+rule.toString());
 				//Check program before expansion
@@ -88,7 +97,21 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				//Check program after expansion
 				System.out.println("(Delete) Program after expansion: ");
 				System.out.println(prog.toString());
-				Set<FolFormula> newAns = view.infere();
+				Set<FolFormula> newAns = null;
+				//This try/catch may be a crude solution but...
+				try
+				{
+					newAns = view.infere();
+				}
+				catch (IndexOutOfBoundsException ie)
+				{
+					
+				}
+				if (newAns==null)
+				{
+					report(param.getAgent().getName() + "' creates contradiction by: '" + param.getAction() + "'", view);
+					return new Boolean(true);
+				}
 				System.out.println("(Delete) new answer sets:");
 				System.out.println(newAns.toString());
 				
