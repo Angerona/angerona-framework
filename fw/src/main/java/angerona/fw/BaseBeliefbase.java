@@ -6,15 +6,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
@@ -22,10 +17,13 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
-import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
@@ -70,22 +68,16 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 */
 	protected String reason = "";
 	
-	private Map<String, BaseChangeBeliefs> changeOperators = new HashMap<>();
+	private OperatorSet<BaseChangeBeliefs> changeOperators = new OperatorSet<BaseChangeBeliefs>();
 	
-	private Map<String, BaseReasoner> reasoningOperators = new HashMap<>();
-	
-	/** Reference to the used revision operator */
-	private BaseChangeBeliefs defaultChangeOperator;
-	
-	/** Reference to the used reasoning operator */
-	private BaseReasoner defaultReasoningOperator;
+	private OperatorSet<BaseReasoner> reasoningOperators = new OperatorSet<BaseReasoner>();
 	
 	public BaseChangeBeliefs getRevisionOperator() {
-		return defaultChangeOperator;
+		return changeOperators.getDefault();
 	}
 
 	public BaseReasoner getReasoningOperator() {
-		return defaultReasoningOperator;
+		return reasoningOperators.getDefault();
 	}
 
 	/** Default Ctor: Generates an empty belief base which does not supports quantifiers or variables in its formulas */
@@ -117,10 +109,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			this.parentId = new Long(other.getParent());
 		}
 		
-		defaultChangeOperator = other.defaultChangeOperator;
-		defaultReasoningOperator = other.defaultReasoningOperator;
-		changeOperators.putAll(other.changeOperators);
-		reasoningOperators.putAll(other.reasoningOperators);
+		changeOperators = new OperatorSet<BaseChangeBeliefs>(other.changeOperators);
+		reasoningOperators = new OperatorSet<BaseReasoner>(other.reasoningOperators);
 	}
 	
 	/**
@@ -150,43 +140,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws IllegalAccessException
 	 */
 	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
-		PluginInstantiator pi = PluginInstantiator.getInstance();
-		for(String reasonerClass : bbc.getReasonerClassName()) {
-			BaseReasoner reasoner = pi.createReasoner(reasonerClass);
-			reasoningOperators.put(reasonerClass, reasoner);
-			if(bbc.getDefaultReasonerClass().equals(reasonerClass))
-				defaultReasoningOperator = reasoner;
-		}
-		
-		for(String changeClass : bbc.getRevisionClassName()) {
-			BaseChangeBeliefs changeOperator = pi.createChange(changeClass);
-			changeOperators.put(changeClass, changeOperator);
-			if(bbc.getDefaultChangeClass().equals(changeClass)) {
-				defaultChangeOperator = changeOperator;				
-			}
-		}
-		
-		if(defaultChangeOperator == null && changeOperators.size() > 0) {
-			String name = changeOperators.keySet().iterator().next();
-			defaultChangeOperator = changeOperators.get(name);
-			LOG.warn("Default change operator with name: '{}' not found, '{}' used instead",
-					bbc.getDefaultChangeClass(), name);
-		} else if(defaultChangeOperator == null && changeOperators.size() == 0) {
-			LOG.error("No change operator was given in the beliefbase configuration.");
-		}
-		
-		if(defaultReasoningOperator == null && reasoningOperators.size() > 0) {
-			String name = reasoningOperators.keySet().iterator().next();
-			defaultReasoningOperator = reasoningOperators.get(name);
-			LOG.warn("Default reasoing operator with name: '{}' not found, '{}' used insted.",
-					bbc.getDefaultReasonerClass(), name);
-		} else if(defaultReasoningOperator == null && reasoningOperators.size() == 0) {
-			LOG.error("No reasoning operator was given in the beliefbase configuration.");
-		}
-		
-		changeOperators.put("__DEFAULT__", defaultChangeOperator);
-		reasoningOperators.put("__DEFAULT__", defaultReasoningOperator);
-		
+		changeOperators.set(bbc.getChangeOperators());
+		reasoningOperators.set(bbc.getReasoners());
 		updateOwner();
 	}
 	
@@ -217,14 +172,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @param newKnowledge	set of formulas representing the new knowledge.
 	 */
 	public void addNewKnowledge(Set<FolFormula> newKnowledge) {
-		addNewKnowledge(newKnowledge, defaultChangeOperator);
+		addNewKnowledge(newKnowledge, changeOperators.getDefault());
 	}
 	
 	public boolean addNewKnowledge(Set<FolFormula> newKnowledge, String className) {
-		if(!changeOperators.containsKey(className))
-			return false;
-		
 		BaseChangeBeliefs bcb = changeOperators.get(className);
+		if(bcb == null)
+			return false;
 		addNewKnowledge(newKnowledge, bcb);
 		return true;
 	}
@@ -282,18 +236,14 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @return An instance of angerona Answer containing the answer.
 	 */
 	public AngeronaAnswer reason(FolFormula query) {
-		if(defaultReasoningOperator == null)
-			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
-		else if(!isFormulaValid(query)) 
+		if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaAnswer answer = (AngeronaAnswer)defaultReasoningOperator.query(this, query);
+		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperators.getDefault().query(this, query);
 		return answer;
 	}
 	
 	public Set<FolFormula> infere() {
-		if(defaultReasoningOperator == null) 
-			throw new RuntimeException("Cannot infere on a beliefbase  which does not has a valid reasoning operator");
-		return defaultReasoningOperator.infer(this);
+		return reasoningOperators.getDefault().infer(this);
 	}
 	
 	/**
@@ -365,14 +315,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 
 	private void updateOwner() {
-		Entity ent = IdGenerator.getEntityWithId(parentId);
-		if(ent != null) {
-			for(BaseReasoner reasoningOperator : this.reasoningOperators.values()) {
-				reasoningOperator.setOwner((Agent)ent);
-			}
-			for(BaseChangeBeliefs changeOperator : this.changeOperators.values()) {
-				changeOperator.setOwner((Agent)ent);
-			}
+		Agent agent = (Agent) IdGenerator.getEntityWithId(parentId);
+		if(agent != null) {
+			changeOperators.setOwner(agent);
+			reasoningOperators.setOwner(agent);
+			LOG.info("Set owner '{}' for operators of beliefbase.", agent.getName());
+		} else {
+			LOG.warn("Cannot set the owners for operators.");
 		}
 	}
 	

@@ -1,8 +1,17 @@
 <beliefbase-configuration>
    <name>Dummy Belief base Implementation</name>
-   <change-operators class="java.util.LinkedList">
-      <string>angerona.fw.logic.dummy.DummyExpansion</string>
+   
+   <reasoners class="angerona.fw.serialize.OperatorSetConfigReal">
+      <default-operator-cls>angerona.fw.logic.dummy.DummyReasoner</default-operator-cls>
+      <operator-cls>angerona.fw.logic.dummy.DummyReasoner</operator-cls>
+   </reasoners>
+   <change-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+      <default-operator-cls>angerona.fw.logic.dummy.DummyExpansion</default-operator-cls>
+      <operator-cls>angerona.fw.logic.dummy.DummyExpansion</operator-cls>
    </change-operators>
-   <reasoner-class>angerona.fw.logic.dummy.DummyReasoner</reasoner-class>
+   <translators class="angerona.fw.serialize.OperatorSetConfigReal">
+      <default-operator-cls>empty</default-operator-cls>
+   </translators>
+   
    <beliefbase-class>angerona.fw.logic.dummy.DummyBeliefbase</beliefbase-class>
 </beliefbase-configuration>
