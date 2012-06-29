@@ -80,23 +80,15 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				String ruleString = dqa.getDetailAnswer().toString();
 				ruleString += "."; //Assume information given is always a fact
 				Rule rule = new Rule(ruleString);
-				//System.out.println("(Delete) Rule: "+rule.toString());
+				System.out.println("(Delete) Rule: "+rule.toString());
 				//Check program before expansion
-				//System.out.println("(Delete) Program before expansion: ");
-				//System.out.println(prog.toString());
-				Set<FolFormula> oldAns = view.infere();
-				System.out.println("(Delete) old answer sets:");
-				System.out.println(oldAns.toString());
+				System.out.println("(Delete) Program before expansion: ");
+				System.out.println(prog.toString());
 				prog.add(rule);
 				//Check program after expansion
-				//System.out.println("(Delete) Program after expansion: ");
-				//System.out.println(prog.toString());
+				System.out.println("(Delete) Program after expansion: ");
+				System.out.println(prog.toString());
 				Set<FolFormula> newAns = view.infere();
-				
-				if(newAns == null)
-				{
-					return new Boolean(true);
-				}
 				System.out.println("(Delete) new answer sets:");
 				System.out.println(newAns.toString());
 				
