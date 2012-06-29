@@ -207,8 +207,15 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			Entity ent = IdGenerator.getEntityWithId(getParent());
 			bup = new BeliefUpdateParameter(this, newKnowledge, (Agent)ent);
 		}
+		
+		//If just expansion then don't consolidate
+		if(updateType == UpdateType.U_EXPANSION)
+		{
+			onChange();
+			return;
+		}
 		if(revisionOperator == null)
-			throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");;
+			throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");
 		revisionOperator.process(bup);
 		onChange();
 	}
