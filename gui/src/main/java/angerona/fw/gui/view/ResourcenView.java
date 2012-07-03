@@ -30,7 +30,7 @@ public class ResourcenView extends BaseView {
 	
 	@Override
 	public void init() {
-		setTitle("Resourcen");
+		setTitle("Resources");
 		this.setLayout(new BorderLayout());
 		DefaultMutableTreeNode ar = new DefaultMutableTreeNode("Angerona Resourcen");
 		new TreeController(tree, ar);
