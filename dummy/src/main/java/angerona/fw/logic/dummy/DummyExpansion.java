@@ -1,7 +1,5 @@
 package angerona.fw.logic.dummy;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
@@ -19,13 +17,16 @@ public class DummyExpansion extends BaseChangeBeliefs {
 			throw new ClassCastException("");
 		
 		DummyBeliefbase bb = (DummyBeliefbase) param.getBeliefBase();
+		throw new RuntimeException("DummyExpansion does not support Translate yet");
+		/*
 		for(Formula f : param.getNewKnowledge()) {
 			if(! (f instanceof FolFormula))
 				throw new ClassCastException("Formulas of dummy belief base must be Fol_Formulas");
 			bb.fbs.add((FolFormula) f);
 		}
 		
-		return bb;
+		
+		return bb;*/
 	}
 
 }
