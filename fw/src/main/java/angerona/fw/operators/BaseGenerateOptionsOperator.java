@@ -1,8 +1,5 @@
 package angerona.fw.operators;
 
-import java.util.Set;
-
-import angerona.fw.Desire;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
 /**
@@ -11,5 +8,5 @@ import angerona.fw.operators.parameter.GenerateOptionsParameter;
  * @author Tim Janus
  */
 public abstract class BaseGenerateOptionsOperator extends 
-	Operator<GenerateOptionsParameter, Set<Desire>> {
+	Operator<GenerateOptionsParameter, Integer> {
 }
