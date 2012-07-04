@@ -162,16 +162,6 @@ public class SubgoalGenerationOperator extends
 		return reval;
 	}
 	
-	//The most basic form of the lying operator
-	protected AnswerValue lie(AngeronaAnswer truth)
-	{
-		if(truth.getAnswerExtended() == AnswerValue.AV_TRUE)
-			return AnswerValue.AV_FALSE;
-		else if(truth.getAnswerExtended() == AnswerValue.AV_FALSE)
-			return AnswerValue.AV_TRUE;
-		return AnswerValue.AV_UNKNOWN;
-	}
-	
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{

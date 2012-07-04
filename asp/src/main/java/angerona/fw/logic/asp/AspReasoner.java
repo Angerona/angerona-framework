@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
@@ -226,5 +227,6 @@ public class AspReasoner extends BaseReasoner {
 		
 		return reval;
 	}
+
 
 }

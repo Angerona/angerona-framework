@@ -263,6 +263,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @param query
 	 * @return AngeronaDetailAnswer
 	 */
+	//It's not good that such a specific method for the Mary scenario is in the base class...
 	public AngeronaDetailAnswer detailReason(FolFormula query)
 	{
 		if(reasoningOperator == null)
@@ -271,6 +272,17 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
 		AngeronaDetailAnswer answer = (AngeronaDetailAnswer) reasoningOperator.query(this, query);
 		return answer;
+	}
+	
+	//It's not good that such a specific method for the Mary scenario is in the base class...
+	public Set<AngeronaDetailAnswer> allDetailReasons(FolFormula query)
+	{
+		if(reasoningOperator == null)
+			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
+		else if(!isFormulaValid(query)) 
+			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
+		Set<AngeronaDetailAnswer> answers = reasoningOperator.queryForAllAnswers(this, query);
+		return answers;
 	}
 	
 	public Set<FolFormula> infere() {

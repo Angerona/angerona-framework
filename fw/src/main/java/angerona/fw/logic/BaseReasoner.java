@@ -66,4 +66,10 @@ public abstract class BaseReasoner
 	 * @return the class definition of the belief base this reasoner supports.
 	 */
 	public abstract Class<? extends BaseBeliefbase> getSupportedBeliefbase();
+
+	public Set<AngeronaDetailAnswer> queryForAllAnswers(
+			BaseBeliefbase baseBeliefbase, FolFormula query) {
+		// It's not good that such a specific method for AspDetailReasoners is in here...
+		return null;
+	}
 }
