@@ -21,4 +21,10 @@ public class AngeronaDetailAnswer extends GenericAnswer<FolFormula>{
 		super(beliefBase, query, at);
 	}
 	
+	@Override
+	public String toString()
+	{
+		return this.getAnswerExtended().toString();
+	}
+	
 }

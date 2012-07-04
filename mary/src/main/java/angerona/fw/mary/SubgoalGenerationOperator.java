@@ -173,31 +173,26 @@ public class SubgoalGenerationOperator extends
 		
 		
 		Query query = (Query) (ag.getActualPerception()); //This needs to be a DetailQuery at some point
-		//AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
-		//AngeronaAnswer ans = new AngeronaAnswer(ag.getBeliefs().getWorldKnowledge(), (FolFormula)query.getQuestion(), AnswerValue.AV_TRUE);
-		AngeronaDetailAnswer realAnswer = ag.getBeliefs().getWorldKnowledge().detailReason((FolFormula)query.getQuestion());
-		AngeronaDetailAnswer realLie = new LyingOperator().lie(realAnswer, ag.getBeliefs().getWorldKnowledge());
-		
-		System.out.println("ASDF realAnswer: " + realAnswer.getAnswerExtended());
-		System.out.println("ASDF realLie: " + realLie.getAnswerExtended());
-		
-		//AnswerValue lie = new LyingOperator().lie(ans);
+		AngeronaDetailAnswer[] answers = 
+				ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
-		context.set("answer", realAnswer.getAnswerExtended());
+		context.set("answer", answers[0].getAnswerExtended());
+		
+		//System.out.println("(Delete) answers[0]: "+answers[0]);
 		
 		Subgoal sg = new Subgoal(ag, des);
 		sg.newStack(qaSkill, context);
 		
-		context = new Context(context);
-		context.set("answer", realLie.getAnswerExtended());
-		sg.newStack(qaSkill, context);
+		for(int i=1;i<answers.length;i++)
+		{
+			context = new Context(context);
+			context.set("answer", answers[i].getAnswerExtended());
+			sg.newStack(qaSkill, context);
+		}
 		
 		ag.getPlanComponent().addPlan(sg);
-		
-	
-		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
 		return true;
 	}
 	

@@ -227,6 +227,11 @@ public class AspReasoner extends BaseReasoner {
 		
 		return reval;
 	}
+	@Override
+	public Set<AngeronaDetailAnswer> queryForAllAnswers(FolFormula query) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 }

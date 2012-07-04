@@ -60,6 +60,7 @@ public class AspDetailReasoner extends AspReasoner {
 		return answer;
 		//return new Atom(new Predicate("TEST"));
 	}
+	@Override
 	public Set<AngeronaDetailAnswer> queryForAllAnswers(FolFormula query)
 	{
 		Set<FolFormula> allAnswers = findAllAnswers(query);
@@ -74,6 +75,7 @@ public class AspDetailReasoner extends AspReasoner {
 	protected Set<FolFormula> findAllAnswers(FolFormula query)
 	{
 		Set <FolFormula> knowledge = super.infer();
+		System.out.println("(Delete) knowledge size:"+knowledge.size());
 		Set<FolFormula> answers = new HashSet<FolFormula>(); //Is it really appropriate to use this?
 		
 		Predicate qp = query.getPredicates().iterator().next();
@@ -82,6 +84,9 @@ public class AspDetailReasoner extends AspReasoner {
 		{
 			// TODO: Their might be an answer to who(X) which has more than one formula: who(john), who(mary) ect.
 			Predicate fp = f.getPredicates().iterator().next();
+			System.out.println("(Delete) fp.getName():"+fp.getName());
+			System.out.println("(Delete) qp.getName():"+qp.getName());
+			System.out.println();
 			if(!fp.getName().equals(qp.getName()))
 			{
 				continue;
