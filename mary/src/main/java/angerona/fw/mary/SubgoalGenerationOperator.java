@@ -161,6 +161,14 @@ public class SubgoalGenerationOperator extends
 		
 		return reval;
 	}
+	class AnswerComp implements Comparator<AngeronaDetailAnswer>
+	{
+
+		public int compare(AngeronaDetailAnswer a1, AngeronaDetailAnswer a2) {
+			return a1.toString().compareTo(a2.toString());
+		}
+		
+	}
 	
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
@@ -175,6 +183,8 @@ public class SubgoalGenerationOperator extends
 		Query query = (Query) (ag.getActualPerception()); //This needs to be a DetailQuery at some point
 		AngeronaDetailAnswer[] answers = 
 				ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
+		
+		Arrays.sort(answers, new AnswerComp()); //The answers are sorted alphabetically for testing purposes
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
