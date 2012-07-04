@@ -33,7 +33,6 @@ public class DetailPerceptionFactory extends PerceptionFactory{
 			String r = createString(commAct.getReceiver(), context);
 			if(commAct instanceof QueryDO) 
 			{
-				//Is there any functional difference between a normal query and a detail query? I don't think so. 
 				if(commAct instanceof DetailQueryDO)
 				{
 					DetailQueryDO qdo = (DetailQueryDO)commAct;

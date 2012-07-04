@@ -1,7 +1,9 @@
+//The code in here really needs to be refactored so that it's more readable
 package angerona.fw.mary;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
@@ -136,7 +138,9 @@ public class SubgoalGenerationOperator extends
 				String content = desire.toString().substring(si,li);
 				//To make detail questions work with arity greater than 0
 				if(content.contains("("))
+				{
 					content = content.substring(0, content.indexOf("("));
+				}
 				
 				//Should the snippet above be put in its own subroutine?
 				
@@ -169,7 +173,26 @@ public class SubgoalGenerationOperator extends
 		}
 		
 	}
+
 	
+	//Checks whether the query is a simple true/false type question or not
+	//It does this by checking whether the answer contains a parentheses, which is a terrible solution
+	private boolean simpleQuery(AngeronaDetailAnswer queryAnswer)
+	{
+		if(queryAnswer.toString().contains("("))
+		{
+			return false;
+		}
+		return true;
+	}
+	//Expresses ignorance about a certain topic
+		public AngeronaDetailAnswer expressionOfIgnorance(Query query, Agent ag)
+		{
+			FolFormula question = (FolFormula)query.getQuestion();
+			FolFormula expr = new Atom(new Predicate("dontKnow("+question.toString()+")")); //This solution needs to be fixed...
+			return new AngeronaDetailAnswer(ag.getBeliefs().getWorldKnowledge(), question, expr);
+			
+		}
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
@@ -181,24 +204,42 @@ public class SubgoalGenerationOperator extends
 		
 		
 		Query query = (Query) (ag.getActualPerception()); //This needs to be a DetailQuery at some point
-		AngeronaDetailAnswer[] answers = 
+		AngeronaDetailAnswer[] trueAnswers = 
 				ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
 		
-		Arrays.sort(answers, new AnswerComp()); //The answers are sorted alphabetically for testing purposes
+		Arrays.sort(trueAnswers, new AnswerComp()); //The answers are sorted alphabetically for testing purposes
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
-		context.set("answer", answers[0].getAnswerExtended());
+		context.set("answer", trueAnswers[0].getAnswerExtended());
 		
-		//System.out.println("(Delete) answers[0]: "+answers[0]);
+		LinkedList <AngeronaDetailAnswer> allAnswers = new LinkedList<AngeronaDetailAnswer>();
+		for(AngeronaDetailAnswer truth : trueAnswers)
+		{
+			allAnswers.add(truth);
+		}
+		
+		//Check if query is a simple true/false question
+		if(allAnswers.size()>0 && simpleQuery(allAnswers.get(0)))
+		{
+			System.out.println("(Delete) Adding simple lie");
+			//Add logical negation of fact
+			AngeronaDetailAnswer simpleLie = new LyingOperator().lie(allAnswers.get(0), ag.getBeliefs().getWorldKnowledge());
+			allAnswers.add(simpleLie);
+		}
+		//Expression of ignorance about answer to query
+		//This probably shouldn't come from the "LyingOperator", since the agent could be honestly ignorant
+		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
+		allAnswers.add(ignorance);
+		
 		
 		Subgoal sg = new Subgoal(ag, des);
 		sg.newStack(qaSkill, context);
 		
-		for(int i=1;i<answers.length;i++)
+		for(int i=1;i<allAnswers.size();i++)
 		{
 			context = new Context(context);
-			context.set("answer", answers[i].getAnswerExtended());
+			context.set("answer", allAnswers.get(i).getAnswerExtended());
 			sg.newStack(qaSkill, context);
 		}
 		

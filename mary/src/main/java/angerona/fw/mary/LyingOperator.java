@@ -7,6 +7,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -25,6 +26,7 @@ public class LyingOperator {
 			return AnswerValue.AV_TRUE;
 		return AnswerValue.AV_UNKNOWN;
 	}
+	
 	/**
 	 * Returns the FolFormula version of a lie, wrapped in its own AngeronaDetailAnswer. Not sure yet if it should just return the FolFormula.
 	 * Simply negates it for now. Later there should be an option for lying by choosing an alternative possibility. 
@@ -40,34 +42,6 @@ public class LyingOperator {
 		String trueAnswerString = trueAnswer.toString();
 		FolFormula query = (FolFormula) truth.getQuery();
 		FolFormula lie = null;
-		
-		/* This code doesn't work...
-		if(trueAnswerString.contains("("))
-		{
-			Set<FolFormula> knowledge = bb.getReasoningOperator().infer();
-			for (FolFormula f : knowledge)
-			{
-				if(f.toString().equals(trueAnswerString))
-				{
-					continue;
-				}
-				Predicate fp = f.getPredicates().iterator().next();
-				Predicate qp = query.getPredicates().iterator().next();
-				if(!fp.getName().equals(qp.getName()))
-				{
-					continue;
-				}
-				lie = f;
-			}
-			if (lie != null)
-			{
-				return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
-			}
-			//Maybe I want to return UNKNOWN rather than the negation of a fact when an alternative can't be found
-			lie = new Atom(new Predicate("UNKNOWN"));
-			return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
-		}
-		*/
 		
 		if(trueAnswerString.startsWith("!"))
 		{
