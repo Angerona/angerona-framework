@@ -13,12 +13,12 @@ public class DummyExpansion extends BaseChangeBeliefs {
 
 	@Override
 	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
+		throw new RuntimeException("DummyExpansion does not support Translate yet");
+		/*
 		if(! (param.getBeliefBase() instanceof DummyBeliefbase))
 			throw new ClassCastException("");
 		
 		DummyBeliefbase bb = (DummyBeliefbase) param.getBeliefBase();
-		throw new RuntimeException("DummyExpansion does not support Translate yet");
-		/*
 		for(Formula f : param.getNewKnowledge()) {
 			if(! (f instanceof FolFormula))
 				throw new ClassCastException("Formulas of dummy belief base must be Fol_Formulas");

@@ -1,12 +1,8 @@
 package angerona.fw.gui.view;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import angerona.fw.Intention;
 import angerona.fw.MasterPlan;
-import angerona.fw.Skill;
-import angerona.fw.Subgoal;
 import angerona.fw.internal.Entity;
 
 public class PlanView extends ListViewColored<MasterPlan> {
@@ -30,6 +26,7 @@ public class PlanView extends ListViewColored<MasterPlan> {
 		return null;
 	}
 	
+	/*
 	private List<String> rek(Intention intent, int depth) {
 		List<String> reval = new LinkedList<String>();
 		String prefix = "-";
@@ -50,6 +47,7 @@ public class PlanView extends ListViewColored<MasterPlan> {
 		}
 		return reval;
 	}
+	*/
 
 	@Override
 	public void setObservationObject(Object obj) {

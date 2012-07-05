@@ -22,6 +22,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.listener.PluginListener;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
@@ -102,6 +103,7 @@ public class PluginInstantiator {
 		map.put(BaseBeliefbase.class, new LinkedList<Class<?>>());
 		map.put(BaseReasoner.class, new LinkedList<Class<?>>());
 		map.put(BaseChangeBeliefs.class, new LinkedList<Class<?>>());
+		map.put(BaseTranslator.class, new LinkedList<Class<?>>());
 		map.put(AgentComponent.class, new LinkedList<Class<?>>());
 		
 		
@@ -163,6 +165,7 @@ public class PluginInstantiator {
 			map.get(BaseBeliefbase.class).addAll(bp.getSupportedBeliefbases());
 			map.get(BaseReasoner.class).addAll(bp.getSupportedReasoners());
 			map.get(BaseChangeBeliefs.class).addAll(bp.getSupportedChangeOperations());
+			map.get(BaseTranslator.class).addAll(bp.getSupportedTranslators());
 			
 			beliefbases.addAll(bp.getSupportedBeliefbases());
 			reasoners.addAll(bp.getSupportedReasoners());

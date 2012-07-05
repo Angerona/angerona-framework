@@ -8,6 +8,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.internal.BeliefbasePlugin;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.dummy.DummyBeliefbase;
 import angerona.fw.logic.dummy.DummyExpansion;
 import angerona.fw.logic.dummy.DummyReasoner;
@@ -39,6 +40,12 @@ public class DummyBeliefbasePlugin implements BeliefbasePlugin{
 	public List<Class<? extends BaseChangeBeliefs>> getSupportedChangeOperations() {
 		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
 		reval.add(DummyExpansion.class);
+		return reval;
+	}
+
+	@Override
+	public List<Class<? extends BaseTranslator>> getSupportedTranslators() {
+		List<Class<? extends BaseTranslator>> reval = new LinkedList<Class<? extends BaseTranslator>>();
 		return reval;
 	}
 }

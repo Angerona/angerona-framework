@@ -36,16 +36,18 @@ public class AspTranslator extends BaseTranslator {
 			} else if(answer.getAnswer() == AnswerValue.AV_UNKNOWN) {
 				return reval;
 			}
+
+			formulas.add(knowledge);
 		}
-		
-		reval.setProgram(translate(formulas));
-		return reval;
+
+		return translateFOLInt(formulas);
 	}
 
 	@Override
 	protected BaseBeliefbase translateFOLInt(Set<FolFormula> formulas) {
-		// TODO Auto-generated method stub
-		return null;
+		AspBeliefbase reval = new AspBeliefbase();
+		reval.setProgram(translate(formulas));
+		return reval;
 	}
 
 	private Program translate(Set<FolFormula> formulas) {

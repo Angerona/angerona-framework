@@ -13,10 +13,12 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.internal.BeliefbasePlugin;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspRevision;
+import angerona.fw.logic.asp.AspTranslator;
 
 @PluginImplementation
 public class AspPlugin implements BeliefbasePlugin {
@@ -40,6 +42,13 @@ public class AspPlugin implements BeliefbasePlugin {
 		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
 		reval.add(AspRevision.class);
 		reval.add(AspExpansion.class);
+		return reval;
+	}
+	
+	@Override
+	public List<Class<? extends BaseTranslator>> getSupportedTranslators() {
+		List<Class<? extends BaseTranslator>> reval = new LinkedList<Class<? extends BaseTranslator>>();
+		reval.add(AspTranslator.class);
 		return reval;
 	}
 
@@ -97,5 +106,4 @@ public class AspPlugin implements BeliefbasePlugin {
 		*/
 		
 	}
-
 }

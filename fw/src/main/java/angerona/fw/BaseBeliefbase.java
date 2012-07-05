@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +27,7 @@ import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
@@ -72,6 +72,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	private OperatorSet<BaseReasoner> reasoningOperators = new OperatorSet<BaseReasoner>();
 	
+	private OperatorSet<BaseTranslator> translators = new OperatorSet<BaseTranslator>();
+	
 	public BaseChangeBeliefs getRevisionOperator() {
 		return changeOperators.getDefault();
 	}
@@ -111,6 +113,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		
 		changeOperators = new OperatorSet<BaseChangeBeliefs>(other.changeOperators);
 		reasoningOperators = new OperatorSet<BaseReasoner>(other.reasoningOperators);
+		translators = new OperatorSet<BaseTranslator>(other.translators);
 	}
 	
 	/**
@@ -142,6 +145,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
 		changeOperators.set(bbc.getChangeOperators());
 		reasoningOperators.set(bbc.getReasoners());
+		translators.set(bbc.getTranslators());
 		updateOwner();
 	}
 	
@@ -154,56 +158,41 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 */
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
-	public boolean addNewKnowledge(FolFormula newKnowledge, String className) {
-		Set<FolFormula> k = new HashSet<FolFormula>();
-		k.add(newKnowledge);
-		return addNewKnowledge(k, className);
+	public void addKnowledge(Set<FolFormula> formulas) {
+		addKnowledge(formulas, translators.getDefault(), 
+				changeOperators.getDefault());
 	}
 	
-	public void addNewKnowledge(FolFormula newKnowledge) {
-		Set<FolFormula> k = new HashSet<FolFormula>();
-		k.add(newKnowledge);
-		addNewKnowledge(k);
+	public void addKnowledge(Perception perception) {
+		addKnowledge(perception, translators.getDefault(), 
+				changeOperators.getDefault());
 	}
 	
-	/**
-	 * adds the given formulas to the knowledgebase as new knowledge. Using the default update mechanism
-	 * defined by the config file. If default update behavior was defined in the config file U_EXPANSION is used.
-	 * @param newKnowledge	set of formulas representing the new knowledge.
-	 */
-	public void addNewKnowledge(Set<FolFormula> newKnowledge) {
-		addNewKnowledge(newKnowledge, changeOperators.getDefault());
-	}
-	
-	public boolean addNewKnowledge(Set<FolFormula> newKnowledge, String className) {
-		BaseChangeBeliefs bcb = changeOperators.get(className);
-		if(bcb == null)
-			return false;
-		addNewKnowledge(newKnowledge, bcb);
-		return true;
-	}
-	
-	/**
-	 * adds the given formulas to the knowledgebase as new knowledge. Using the given update mechanism.
-	 * @param newKnowledge		set of formulas representing the new knowledge.
-	 * @param changeOperator	instance of used change operator.
-	 */
-	public void addNewKnowledge(Set<FolFormula> newKnowledge, BaseChangeBeliefs changeOperator) {
-		for(FolFormula ff : newKnowledge) {
-			if(!isFormulaValid(ff)) {
-				throw new RuntimeException("Cant add knowledge, dont support: " + ff + " - reason: " + this.reason);
-			}
-		}
+	public void addKnowledge(Perception perception, BaseTranslator translator, BaseChangeBeliefs changeOperator) {
+		if(translator == null)
+			throw new IllegalArgumentException("Translator-Operator must not be null.");
 		
-		// TODO: Think about local copies and mapping of different knowledge ect.
-		BeliefUpdateParameter bup = new BeliefUpdateParameter(this,  newKnowledge, null);
-		if(getParent() != 0) {
-			Entity ent = IdGenerator.getEntityWithId(getParent());
-			bup = new BeliefUpdateParameter(this, newKnowledge, (Agent)ent);
-		}
+		BaseBeliefbase newK = translator.translatePerception(perception);
+		addKnowledge(newK, changeOperator);
+	}
+	
+	public void addKnowledge(Set<FolFormula> formulas, BaseTranslator translator, 
+			BaseChangeBeliefs changeOperator) {
+		if(translator == null)
+			throw new IllegalArgumentException("Translator-Operator must not be null.");
+		
+		BaseBeliefbase newK = translator.translateFOL(formulas);
+		addKnowledge(newK, changeOperator);
+	}
+	
+	public void addKnowledge(BaseBeliefbase newKnowledge, BaseChangeBeliefs changeOperator) {
 		if(changeOperator == null)
-			throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");;
-		changeOperator.process(bup);
+			throw new IllegalArgumentException("Change-Operator must not be null.");
+		
+		Entity ent = IdGenerator.getEntityWithId(parentId);
+		Agent agent = (Agent)ent;
+		BeliefUpdateParameter param = new BeliefUpdateParameter(this, newKnowledge, agent);
+		changeOperator.process(param);
 		onChange();
 	}
 	
@@ -319,6 +308,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		if(agent != null) {
 			changeOperators.setOwner(agent);
 			reasoningOperators.setOwner(agent);
+			translators.setOwner(agent);
 			LOG.info("Set owner '{}' for operators of beliefbase.", agent.getName());
 		} else {
 			LOG.warn("Cannot set the owners for operators.");
