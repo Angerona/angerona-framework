@@ -37,7 +37,6 @@ public class LyingOperator {
 	protected AngeronaDetailAnswer lie(AngeronaDetailAnswer truth, BaseBeliefbase bb)
 	{
 		FolFormula trueAnswer = truth.getAnswerExtended();
-		String trueAnswerString = trueAnswer.toString();
 		FolFormula query = (FolFormula) truth.getQuery();
 		FolFormula lie = null;
 		
@@ -69,9 +68,12 @@ public class LyingOperator {
 		}
 		*/
 		
-		if(trueAnswerString.startsWith("!"))
+		// You had to use Strings because you got the classes from the asp library.
+		// In this case you get them from the first-order-logic lib.
+		if(trueAnswer instanceof Negation)
 		{
-			lie =  (FolFormula) new Atom(new Predicate(trueAnswerString.substring(1))); //Test this parsing-based lying mechanism
+			Negation neg = (Negation)trueAnswer;
+			lie =  neg.getFormula();
 		}
 		else
 		{
