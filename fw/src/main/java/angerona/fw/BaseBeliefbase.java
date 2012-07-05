@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.BeliefBase;
@@ -233,6 +234,18 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	public Set<FolFormula> infere() {
 		return reasoningOperators.getDefault().infer(this);
+	}
+	
+	public Set<FolFormula> infere(String reasonerCls, Map<String, String> parameters) {
+		Map<String, String> oldParams = null;
+		BaseReasoner reasoner = this.reasoningOperators.get(reasonerCls);
+		if(parameters == null)
+			parameters = reasoner.getParameters();
+		oldParams = reasoner.getParameters();
+		reasoner.setParameters(parameters);
+		Set<FolFormula> reval = reasoner.infer(this);
+		reasoner.setParameters(oldParams);
+		return reval;
 	}
 	
 	/**

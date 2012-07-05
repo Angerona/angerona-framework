@@ -14,6 +14,7 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.ViolatesParameter;
+import angerona.fw.util.Pair;
 
 /**
  * This class is capable of proofing if the applying of an answer
@@ -47,18 +48,17 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			view.addKnowledge(a);
 			
 			if(views.containsKey(a.getReceiverId())) {
-				for(String changeOp : conf.getTargetsByChangeOperator().keySet()) {
+				for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
 					
-					//Does it even make sense to go through all confidential targets,
-					//given how it's making false positives right now?
+					// Infer only once with the ReasoningOperator defined by the pair.
 					Set<FolFormula> origInfere = origView.infere();
 					Set<FolFormula> cloneInfere = view.infere();
-					for(Secret secret : conf.getTargetsByChangeOperator().get(changeOp)) {
+					for(Secret secret : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
 						if(secret.getSubjectName().equals(a.getReceiverId())) {
-							//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
+							// Check for false positives first, output an warning, because secret weaking was not applied correctly then
 							boolean inOrig = origInfere.contains(secret.getInformation());
 							if(inOrig) {
-								LOG.warn("The secret '{}' is already in the original view.", secret.toString());
+								LOG.warn("The secret '{}' is already infered in the original view.", secret.toString());
 								continue;
 							}
 							

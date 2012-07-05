@@ -1,5 +1,8 @@
 package angerona.fw;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import angerona.fw.internal.Entity;
 
 /**
@@ -11,6 +14,8 @@ public class BaseOperator {
 	
 	/** reference to the agent owning the operator */
 	private Agent owner;
+	
+	protected Map<String, String> parameters = new HashMap<String, String>();
 	
 	/** @return reference to the agent owning the operator */
 	public Agent getOwner() {
@@ -28,6 +33,18 @@ public class BaseOperator {
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName();
+	}
+	
+	/**
+	 * Change the user-parameters used by the operator. 
+	 * @param parameters
+	 */
+	public void setParameters(Map<String, String> parameters) {
+		this.parameters = parameters;
+	}
+	
+	public Map<String, String> getParameters() {
+		return this.parameters;
 	}
 	
 	/**
