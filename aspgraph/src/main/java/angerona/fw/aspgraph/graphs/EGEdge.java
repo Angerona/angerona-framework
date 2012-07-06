@@ -40,24 +40,43 @@ public class EGEdge implements Serializable{
 	 */
 	private EdgeType label;
 	
+	/**
+	 * Creates new edge in an Explanation Gaph
+	 * @param source Source vertex
+	 * @param target Target vertex
+	 * @param label Label of edge
+	 */
 	public EGEdge(EGVertex source, EGVertex target, EdgeType label){
 		this.source = source;
 		this.target = target;
 		this.label = label;
 	}
 	
+	/**
+	 * Returns source node
+	 * @return Source node
+	 */
 	public EGVertex getSource(){
 		return source;
 	}
 	
+	/**
+	 * Returns target node
+	 * @return Target node
+	 */
 	public EGVertex getTarget(){
 		return target;
 	}
 	
+	/**
+	 * Returns label of edge
+	 * @return Label of edge
+	 */
 	public EdgeType getLabel(){
 		return label;
 	}
 	
+	@Override
 	public boolean equals(Object o){
 		EGEdge e2;
 		if (o instanceof EGEdge) e2 = (EGEdge)  o;
@@ -68,6 +87,7 @@ public class EGEdge implements Serializable{
 		else return false;
 	}
 
+	@Override
 	public String toString(){
 		switch(label){
 			case POS: return "+";

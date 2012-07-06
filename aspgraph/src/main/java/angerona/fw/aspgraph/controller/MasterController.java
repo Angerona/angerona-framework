@@ -85,6 +85,10 @@ public class MasterController {
 		}
 	}
 	
+	/**
+	 * Return GraphView
+	 * @return GraphView
+	 */
 	public GraphView getGraphView(){
 		return graphView;
 	}

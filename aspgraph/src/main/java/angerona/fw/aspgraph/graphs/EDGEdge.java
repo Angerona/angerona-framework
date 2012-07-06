@@ -125,7 +125,7 @@ public class EDGEdge implements Serializable{
 		}
 		
 		// Edge is an OR-edge
-		if (or){
+		else if (or){
 			if (source.getColor().equals(EDGVertex.Color.GREEN)) return true;
 		}
 		
