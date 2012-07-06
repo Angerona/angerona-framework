@@ -51,8 +51,8 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
 					
 					// Infer only once with the ReasoningOperator defined by the pair.
-					Set<FolFormula> origInfere = origView.infere();
-					Set<FolFormula> cloneInfere = view.infere();
+					Set<FolFormula> origInfere = origView.infere(reasoningOperator.first, reasoningOperator.second);
+					Set<FolFormula> cloneInfere = view.infere(reasoningOperator.first, reasoningOperator.second);
 					for(Secret secret : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
 						if(secret.getSubjectName().equals(a.getReceiverId())) {
 							// Check for false positives first, output an warning, because secret weaking was not applied correctly then
