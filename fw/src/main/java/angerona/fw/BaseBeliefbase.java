@@ -55,6 +55,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	protected Long parentId;
 	
+	private int copyDepth;
+	
 	private List<BeliefbaseChangeListener> listeners = new LinkedList<BeliefbaseChangeListener>();
 	
 	/** flag indicating if this type of beliefbase supports quantified formulas */
@@ -88,6 +90,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
 		id = IdGenerator.generate(this);
+		this.copyDepth = 0;
 	}
 
 	/**
@@ -99,6 +102,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		this.supportsQuantifiers = supportsQuantifiers;;
 		this.supportsVariables = supportVariables;
 		id = IdGenerator.generate(this);
+		this.copyDepth = 0;
 	}
 	
 	/**
@@ -115,6 +119,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		changeOperators = new OperatorSet<BaseChangeBeliefs>(other.changeOperators);
 		reasoningOperators = new OperatorSet<BaseReasoner>(other.reasoningOperators);
 		translators = new OperatorSet<BaseTranslator>(other.translators);
+		this.copyDepth = other.copyDepth + 1;
 	}
 	
 	/**
@@ -337,5 +342,10 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public List<Long> getChilds() {
 		// base beliefs bases are at the bottom of the hierarchy.
 		return new LinkedList<Long>();
+	}
+	
+	@Override
+	public int getCopyDepth() {
+		return copyDepth;
 	}
 }
