@@ -218,11 +218,18 @@ public abstract class ListViewColored<T extends Entity>
 		List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(ref);
 		int index = entries.indexOf(actEntry) - 1;
 
-		if(index >= 0) {
+		EntityAtomic actAtomic = (EntityAtomic)actEntry.getAttachment();
+		while(index >= 0) {
 			ReportEntry prevEntry = entries.get(index);
-			previous = prevEntry.getAttachment();
-		} else {
-			previous = null;
+			EntityAtomic temp = ((EntityAtomic)prevEntry.getAttachment());
+			if(temp.getCopyDepth() <= actAtomic.getCopyDepth()) {
+				previous = temp;
+				break;
+			}
+			
+			if(index == 0)
+				previous = null;
+			--index;
 		}
 	}
 	
