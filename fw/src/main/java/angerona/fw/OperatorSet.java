@@ -1,9 +1,12 @@
 package angerona.fw;
 
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.parser.ParseException;
+import angerona.fw.parser.SecretParser;
 import angerona.fw.serialize.OperatorSetConfig;
 
 /**
@@ -57,17 +60,37 @@ public class OperatorSet<T extends BaseOperator> {
 	public void set(OperatorSetConfig config) throws InstantiationException, IllegalAccessException {
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		for(String clsName : config.getOperatorClassNames()) {
+			SecretParser parser = new SecretParser(new StringReader(clsName));
+			Map<String, String> parameters = new HashMap<>();
+			try {
+				clsName = parser.java_cls(parameters);
+			} catch (ParseException e) {
+				throw new InstantiationException("Cannot parse clsName-Parameter: " + e.getMessage());
+			}
 			Object obj = pi.createInstance(clsName);
 			if(obj instanceof BaseOperator) {
-				operators.put(clsName, (T)obj);
+				T op = (T)obj;
+				operators.put(clsName, op);
+				op.setParameters(parameters);
+			} else {
+				throw new InstantiationException(clsName + " has not the correct type." );
 			}
 		}
 		
 		String clsName = config.getDefaultClassName();
+		SecretParser parser = new SecretParser(new StringReader(clsName));
+		Map<String, String> parameters = new HashMap<>();
+		try {
+			clsName = parser.java_cls(parameters);
+		} catch (ParseException e) {
+			throw new InstantiationException("Cannot parse clsName-Parameter: " + e.getMessage());
+		}
+
 		if(!operators.containsKey(clsName)) {
 			throw new IllegalArgumentException(clsName + " used as default operator but not referenced in the set.");
 		}
 		defaultOperator = operators.get(clsName);
+		defaultOperator.setParameters(parameters);
 	}
 	
 	public T get(String clsName) {
