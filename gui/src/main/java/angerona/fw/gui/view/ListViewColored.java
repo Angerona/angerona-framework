@@ -17,6 +17,7 @@ import angerona.fw.Angerona;
 import angerona.fw.gui.NavigationPanel;
 import angerona.fw.gui.NavigationUser;
 import angerona.fw.internal.Entity;
+import angerona.fw.internal.EntityAtomic;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
@@ -138,9 +139,7 @@ public abstract class ListViewColored<T extends Entity>
 		callstackTree = new JTree();
 		this.add(callstackTree, BorderLayout.SOUTH);
 		
-		defaultUpdatePrevious();
-		update();
-		fillTreeWithCallstack();
+		updateView();
 		Angerona.getInstance().addReportListener(this);
 	}
 	
@@ -170,6 +169,11 @@ public abstract class ListViewColored<T extends Entity>
 					model.add(0, new ListElement(atom, ListElement.ST_DELETED));
 				}
 			}
+		}
+		
+		if(this.actual instanceof EntityAtomic) {
+			int depth = ((EntityAtomic)this.actual).getCopyDepth();
+			model.add(0, new ListElement(String.valueOf(depth), ListElement.ST_NOTCHANGED));
 		}
 	}
 

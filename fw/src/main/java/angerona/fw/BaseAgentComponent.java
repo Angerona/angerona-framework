@@ -22,13 +22,17 @@ public abstract class BaseAgentComponent implements AgentComponent {
 	/** own unique id */
 	private Long id;
 	
+	private int copyDepth;
+	
 	public BaseAgentComponent() {
 		id = IdGenerator.generate(this);
+		copyDepth = 0;
 	}
 	
 	public BaseAgentComponent(BaseAgentComponent other) {
 		this.id = new Long(other.id);
 		this.parentId = new Long(other.parentId);
+		copyDepth = other.copyDepth + 1;
 	}
 	
 	@Override
@@ -67,6 +71,11 @@ public abstract class BaseAgentComponent implements AgentComponent {
 	@Override
 	public List<Long> getChilds() {
 		return new LinkedList<Long>();
+	}
+	
+	@Override
+	public int getCopyDepth() {
+		return copyDepth;
 	}
 	
 	@Override
