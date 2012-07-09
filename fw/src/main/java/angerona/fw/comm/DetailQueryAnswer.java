@@ -30,8 +30,15 @@ public class DetailQueryAnswer extends Answer {
 		}
 		else if(detailAnswer.toString().contains("("))
 		{
-			String d = detailAnswer.toString();
-			answerString = d.substring(d.indexOf("(")+1, d.lastIndexOf(")"));
+			if(detailAnswer.toString().startsWith("dontKnow"))
+			{
+				answerString = detailAnswer.toString();
+			}
+			else
+			{
+				String d = detailAnswer.toString();
+				answerString = d.substring(d.indexOf("(")+1, d.lastIndexOf(")"));
+			}
 		}
 		else
 		{

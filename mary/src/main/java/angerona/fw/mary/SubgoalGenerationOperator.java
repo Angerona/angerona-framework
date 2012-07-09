@@ -229,9 +229,15 @@ public class SubgoalGenerationOperator extends
 		}
 		//Expression of ignorance about answer to query
 		//This probably shouldn't come from the "LyingOperator", since the agent could be honestly ignorant
+		
 		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
 		allAnswers.add(ignorance);
 		
+		System.out.println("(Delete) printing out all answers:");
+		for(AngeronaDetailAnswer ans : allAnswers)
+		{
+			System.out.println("\t"+ans.toString());
+		}
 		
 		Subgoal sg = new Subgoal(ag, des);
 		sg.newStack(qaSkill, context);

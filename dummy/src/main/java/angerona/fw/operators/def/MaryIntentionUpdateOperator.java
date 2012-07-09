@@ -41,7 +41,10 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 						report("Mental action successfull, using '" + sk.getName() + "' as next atomic action.", ag);
 						return intention;
 					}
-					
+					else
+					{
+						
+					}
 					
 				}
 			}
