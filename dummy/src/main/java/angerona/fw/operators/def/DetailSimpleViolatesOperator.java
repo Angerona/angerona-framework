@@ -58,8 +58,8 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				Program prog = view.getProgram();
 				
 				
-				// Check if the information is already present in the view
-				//If it is then no violation possible (not implemented yet -- only for secrets now)
+				//The old way of implementing dynamic secrecy (giving up secrecy)
+				
 				List<Secret> toRemove = new LinkedList<Secret>();
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
@@ -69,7 +69,7 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 						}
 					}
 				}
-				//Should it remove the confidential target or just return FALSE? What if confidential target could be used later?
+				
 				for(Secret remove : toRemove) {
 					conf.removeConfidentialTarget(remove);
 				}
@@ -93,6 +93,13 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				//Check program before expansion
 				System.out.println("(Delete) Program before expansion: ");
 				System.out.println(prog.toString());
+				// Check if the information is already present in the view
+				//If it is then no violation possible
+				/*
+				if(prog.contains(rule)){
+					return new Boolean(false);
+				}
+				*/
 				prog.add(rule);
 				//Check program after expansion
 				System.out.println("(Delete) Program after expansion: ");
