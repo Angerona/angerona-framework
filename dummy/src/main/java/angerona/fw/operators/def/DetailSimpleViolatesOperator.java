@@ -78,7 +78,7 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				
 				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
 				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
-				view.addNewKnowledge(dqa.getDetailAnswer()); //Should I call addNewKnowledge with a new UpdateType?
+				view.addKnowledge(dqa.getDetailAnswer()); //Should I call addNewKnowledge with a new UpdateType?
 				//FolFormula newFact = dqa.getDetailAnswer();
 				String ruleString = dqa.getDetailAnswer().toString();
 				ruleString += "."; //Assume information given is always a fact

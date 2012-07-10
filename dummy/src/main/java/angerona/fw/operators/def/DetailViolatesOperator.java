@@ -59,7 +59,7 @@ public class DetailViolatesOperator extends ViolatesOperator {
 		*/
 				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
 				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
-				view.addNewKnowledge(dqa.getDetailAnswer());
+				view.addKnowledge(dqa.getDetailAnswer());
 				
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {

@@ -92,12 +92,12 @@ public class SecretParser implements SecretParserConstants {
         break label_2;
       }
     }
+    jj_consume_token(COMMA);
     className = java_cls(parameters);
     jj_consume_token(COMMA);
     label_3:
     while (true) {
       label_4:
->>>>>>> master
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case LPARANTHESS:
@@ -171,11 +171,11 @@ public class SecretParser implements SecretParserConstants {
     while (true) {
       token = jj_consume_token(TEXT_CHAR);
             reval += token.image;
+            endWithSymbol = false;
+      if (jj_2_2(2)) {
+        ;
+      } else {
         break label_6;
-        break label_7;
-=======
-        break label_6;
->>>>>>> master
       }
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
