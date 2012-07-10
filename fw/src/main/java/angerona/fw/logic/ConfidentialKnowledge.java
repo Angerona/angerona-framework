@@ -193,7 +193,7 @@ public class ConfidentialKnowledge
 			Map<String, String> newValue = (Map<String, String>)evt.getNewValue();
 			Secret secret = (Secret)evt.getSource();
 			
-			Pair<String, Map<String, String>> key = new Pair<>(secret.getReasonerClassName(), oldValue);
+			Pair<String, Map<String, String>> key = new Pair<String, Map<String, String>>(secret.getReasonerClassName(), oldValue);
 			Set<Secret> secrets = targetsByReasoningOperator.get(key);
 			secrets.remove(secret);
 			if(secrets.size() == 0)
