@@ -1,13 +1,26 @@
 package angerona.fw.aspgraph.graphs;
 
+/**
+ * Represents top vertex of Explanation Graph
+ * @author ella
+ *
+ */
 public class EGTopVertex extends EGVertex{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7344243387453486485L;
+	
+	/**
+	 * Literal which should be represented as fact
+	 */
 	private String sourceLiteral;
 	
+	/**
+	 * Creates new top vertex in Explanation Graph
+	 * @param literal Literal which should be represented as a fact
+	 */
 	public EGTopVertex(String literal){
 		sourceLiteral = literal;
 		index = -1;

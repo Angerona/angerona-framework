@@ -8,12 +8,16 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTree;
 import javax.swing.ListCellRenderer;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import angerona.fw.Angerona;
 import angerona.fw.gui.NavigationPanel;
 import angerona.fw.gui.NavigationUser;
 import angerona.fw.internal.Entity;
+import angerona.fw.internal.EntityAtomic;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
@@ -24,7 +28,9 @@ import angerona.fw.report.ReportListener;
  *
  * @param <T> the type of the observed object
  */
-public abstract class ListViewColored<T extends Entity> extends BaseView implements ReportListener, NavigationUser {
+public abstract class ListViewColored<T extends Entity> 
+	extends BaseView 
+	implements ReportListener, NavigationUser {
 
 	/** kill warning*/
 	private static final long serialVersionUID = 347925312291828783L;
@@ -44,10 +50,14 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 	/** The data model to accessing the JList */
 	private DefaultListModel<ListElement> model;
 	
+	private JTree callstackTree;
+	
 	/** reference to the actually showed report entry. */
 	private ReportEntry actEntry;
 	
 	protected NavigationPanel navPanel;
+	
+	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("operator-callstack:");
 	
 	/**
 	 * Inner class used to represent the elements in a list.
@@ -125,8 +135,11 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 		model = new DefaultListModel<ListElement>();
 		actualLiterals.setModel(model);
 		
-		defaultUpdatePrevious();
-		update();
+		
+		callstackTree = new JTree();
+		this.add(callstackTree, BorderLayout.SOUTH);
+		
+		updateView();
 		Angerona.getInstance().addReportListener(this);
 	}
 	
@@ -157,6 +170,11 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 				}
 			}
 		}
+		
+		if(this.actual instanceof EntityAtomic) {
+			int depth = ((EntityAtomic)this.actual).getCopyDepth();
+			model.add(0, new ListElement(String.valueOf(depth), ListElement.ST_NOTCHANGED));
+		}
 	}
 
 	@Override
@@ -167,15 +185,31 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 				navPanel.setEntry(actEntry);
 				//if(isVisible()) {
 					updateView();
+					fillTreeWithCallstack();
 				//}
 			}
 		}
+	}
+	
+	private void fillTreeWithCallstack() {
+		DefaultTreeModel dtm = (DefaultTreeModel)callstackTree.getModel();
+		dtm.setRoot(rootNode);
+		DefaultMutableTreeNode dmtn = rootNode;
+		dmtn.removeAllChildren();
+		
+		for(String val : actEntry.getStack()) {
+			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(val);
+			dmtn.add(newNode);
+		}
+		
+		callstackTree.repaint();
 	}
 
 	private void updateView() {
 		actual = actEntry.getAttachment();
 		defaultUpdatePrevious();
 		update();
+		fillTreeWithCallstack();
 	}
 
 	/** Helper method: updates the reference of the previous beliefbase */
@@ -184,11 +218,18 @@ public abstract class ListViewColored<T extends Entity> extends BaseView impleme
 		List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(ref);
 		int index = entries.indexOf(actEntry) - 1;
 
-		if(index >= 0) {
+		EntityAtomic actAtomic = (EntityAtomic)actEntry.getAttachment();
+		while(index >= 0) {
 			ReportEntry prevEntry = entries.get(index);
-			previous = prevEntry.getAttachment();
-		} else {
-			previous = null;
+			EntityAtomic temp = ((EntityAtomic)prevEntry.getAttachment());
+			if(temp.getCopyDepth() <= actAtomic.getCopyDepth()) {
+				previous = temp;
+				break;
+			}
+			
+			if(index == 0)
+				previous = null;
+			--index;
 		}
 	}
 	

@@ -1,6 +1,9 @@
 package angerona.fw.logic;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.Set;
 import net.sf.tweety.Formula;
 import net.sf.tweety.Signature;
 import net.sf.tweety.SymbolSet;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
@@ -20,17 +24,22 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.listener.AgentListener;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
+import angerona.fw.util.Pair;
 /**
  * Data-Component of an agent containing a set of personal confidential targets.
  * @author Tim Janus
  */
-public class ConfidentialKnowledge extends BaseAgentComponent implements AgentListener {
+public class ConfidentialKnowledge 
+	extends BaseAgentComponent 
+	implements AgentListener, PropertyChangeListener {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ConfidentialKnowledge.class);
 	
 	/** set of confidential targets defining this beliefbase */
 	private Set<Secret> confidentialTargets = new HashSet<Secret>();
+	
+	private Map<Pair<String, Map<String, String>>, Set<Secret>> targetsByReasoningOperator = new HashMap<Pair<String, Map<String, String>>, Set<Secret>>();
 	
 	private FolSignature signature = new FolSignature();
 	
@@ -67,11 +76,28 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	 * @return		true if the beliefbase didn't contain the confidential target, false otherwise.
 	 */
 	public boolean addConfidentialTarget(Secret cf) {
-		return confidentialTargets.add(cf);
+		boolean reval = confidentialTargets.add(cf);
+		if(reval) {
+			Pair<String, Map<String, String>> key = new Pair<String, Map<String, String>>(cf.getReasonerClassName(), cf.getReasonerParameters());
+			if(!targetsByReasoningOperator.containsKey(key)) {
+				targetsByReasoningOperator.put(key, new HashSet<Secret>());
+			}
+			targetsByReasoningOperator.get(key).add(cf);
+			cf.addPropertyListener(this);
+		}
+		return reval;
 	}
 	public boolean removeConfidentialTarget(Secret cf)
 	{
-		return confidentialTargets.remove(cf);
+		boolean reval = confidentialTargets.remove(cf);
+		if(reval) {
+			Pair<String, Map<String, String>> key = cf.getPair();
+			targetsByReasoningOperator.get(key).remove(cf);
+			if(targetsByReasoningOperator.get(key).size() == 0)
+				targetsByReasoningOperator.remove(key);
+			cf.removePropertyListener(this);
+		}
+		return reval;
 	}
 	/**
 	 * Gets the confidential target defined by the subject and the information which is confidential.
@@ -89,6 +115,10 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	public Set<Secret> getTargets() {
 		return Collections.unmodifiableSet(confidentialTargets);
 	}
+	
+	public Map<Pair<String, Map<String, String>>, Set<Secret>>  getTargetsByReasoningOperator() {
+		return Collections.unmodifiableMap(targetsByReasoningOperator);
+	}
 
 	@Override
 	public void init(Map<String, String> additionalData) {
@@ -105,7 +135,9 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 			String str = additionalData.get("Confidential");
 			SecretParser parser = new SecretParser(str, signature);
 			try {
-				confidentialTargets.addAll(parser.Input());
+				Set<Secret> secrets = (parser.Input());
+				for(Secret s : secrets)
+					addConfidentialTarget(s);
 			} catch (ParseException e) {
 				LOG.error("Cannot parse the secret defined for Agent '{}':\n{}", getAgent().getName(), e.getMessage());
 			}
@@ -124,9 +156,10 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 		if(!space.equals(AgentListener.WORLD)) {
 			// check for unrivaled secrets:
 			List<Secret> toRemove = new LinkedList<Secret>();
+			Set<FolFormula> knowledge = bb.infere();
 			for(Secret secret : getTargets()) {
 				if(secret.getSubjectName().equals(space)) {
-					if(	bb.infere().contains(secret.getInformation()))  {
+					if(	knowledge.contains(secret.getInformation()))  {
 						toRemove.add(secret);
 					}
 				}
@@ -151,5 +184,26 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements AgentLi
 	public void componentRemoved(BaseAgentComponent comp) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getPropertyName().equals("reasonerProperty")) {
+			Map<String, String> oldValue = (Map<String, String>)evt.getOldValue();
+			Map<String, String> newValue = (Map<String, String>)evt.getNewValue();
+			Secret secret = (Secret)evt.getSource();
+			
+			Pair<String, Map<String, String>> key = new Pair<String, Map<String, String>>(secret.getReasonerClassName(), oldValue);
+			Set<Secret> secrets = targetsByReasoningOperator.get(key);
+			secrets.remove(secret);
+			if(secrets.size() == 0)
+				targetsByReasoningOperator.remove(key);
+			
+			key.second = newValue;
+			if(!targetsByReasoningOperator.containsKey(key)) {
+				targetsByReasoningOperator.put(key, new HashSet<Secret>());
+			}
+			targetsByReasoningOperator.get(key).add(secret);
+		}
 	}
 }

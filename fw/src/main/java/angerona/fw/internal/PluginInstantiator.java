@@ -3,8 +3,10 @@ package angerona.fw.internal;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
@@ -20,6 +22,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.listener.PluginListener;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
@@ -82,6 +85,8 @@ public class PluginInstantiator {
 	/** list of all classes implementing a custom agent component */
 	private List<Class<? extends AgentComponent>> components = new LinkedList<Class<? extends AgentComponent>>();
 	
+	private Map<Class<?>, List<Class<?>>> map = new HashMap<Class<?>, List<Class<?>>>();
+	
 	public PluginManagerUtil getPluginUtil() {
 		return util;
 	}
@@ -90,6 +95,18 @@ public class PluginInstantiator {
 	 * Ctor: Initializes the simple plugin framework.
 	 */
 	private PluginInstantiator() {
+		map.put(BaseGenerateOptionsOperator.class, new LinkedList<Class<?>>());
+		map.put(BaseIntentionUpdateOperator.class, new LinkedList<Class<?>>());
+		map.put(BaseUpdateBeliefsOperator.class, new LinkedList<Class<?>>());
+		map.put(BaseViolatesOperator.class, new LinkedList<Class<?>>());
+		map.put(BaseSubgoalGenerationOperator.class, new LinkedList<Class<?>>());
+		map.put(BaseBeliefbase.class, new LinkedList<Class<?>>());
+		map.put(BaseReasoner.class, new LinkedList<Class<?>>());
+		map.put(BaseChangeBeliefs.class, new LinkedList<Class<?>>());
+		map.put(BaseTranslator.class, new LinkedList<Class<?>>());
+		map.put(AgentComponent.class, new LinkedList<Class<?>>());
+		
+		
 		pm = PluginManagerFactory.createPluginManager();
 		util = new PluginManagerUtil(pm);
 	}
@@ -125,6 +142,12 @@ public class PluginInstantiator {
 			if(loadedPlugins.contains(ap))
 				continue;
 			loadedPlugins.add(ap);
+			map.get(BaseGenerateOptionsOperator.class).addAll(ap.getSupportedGenerateOptionsOperators());
+			map.get(BaseIntentionUpdateOperator.class).addAll(ap.getSupportedFilterOperators());
+			map.get(BaseChangeBeliefs.class).addAll(ap.getSupportedChangeOperators());
+			map.get(BaseViolatesOperator.class).addAll(ap.getSupportedViolatesOperators());
+			map.get(BaseSubgoalGenerationOperator.class).addAll(ap.getSupportedPlaners());
+			
 			generateOptionsOperators.addAll(ap.getSupportedGenerateOptionsOperators());
 			filterOperators.addAll(ap.getSupportedFilterOperators());
 			updateOperators.addAll(ap.getSupportedChangeOperators());
@@ -139,6 +162,11 @@ public class PluginInstantiator {
 			if(loadedPlugins.contains(bp))
 				continue;
 			loadedPlugins.add(bp);
+			map.get(BaseBeliefbase.class).addAll(bp.getSupportedBeliefbases());
+			map.get(BaseReasoner.class).addAll(bp.getSupportedReasoners());
+			map.get(BaseChangeBeliefs.class).addAll(bp.getSupportedChangeOperations());
+			map.get(BaseTranslator.class).addAll(bp.getSupportedTranslators());
+			
 			beliefbases.addAll(bp.getSupportedBeliefbases());
 			reasoners.addAll(bp.getSupportedReasoners());
 			revisions.addAll(bp.getSupportedChangeOperations());
@@ -152,6 +180,7 @@ public class PluginInstantiator {
 			if(loadedPlugins.contains(ap))
 				continue;
 			loadedPlugins.add(ap);
+			map.get(AgentComponent.class).addAll(ap.getAgentComponents());
 			components.addAll(ap.getAgentComponents());
 			for(Class<? extends AgentComponent> ac : ap.getAgentComponents()) {
 				LOG.info("Agent-Component: '{}' loaded.", ac.getName());
@@ -355,7 +384,7 @@ public class PluginInstantiator {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseChangeBeliefs createRevision(String classname) throws InstantiationException, IllegalAccessException {
+	public BaseChangeBeliefs createChange(String classname) throws InstantiationException, IllegalAccessException {
 		for(Class<? extends BaseChangeBeliefs> c : getRevisions()) {
 			if(c.getName().compareTo(classname) == 0) {
 				return c.newInstance();
@@ -373,5 +402,17 @@ public class PluginInstantiator {
 		}
 		
 		throw new InstantiationException("Cannot find Agent-Component with name: " + classname);
+	}
+	
+	public Object createInstance(String className) throws InstantiationException, IllegalAccessException {
+		for(Class<?> baseCls : map.keySet()) {
+			for(Class<?> realCls : map.get(baseCls)) {
+				if(realCls.getName().equals(className)) {
+					return realCls.newInstance();
+				}
+			}
+		}
+		
+		throw new InstantiationException("Cannot find Type " + className + " in plugin.");
 	}
 }

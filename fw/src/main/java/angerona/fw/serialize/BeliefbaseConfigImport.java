@@ -20,16 +20,6 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 	}
 	
 	@Override
-	public String getRevisionClassName() {
-		throw new IllegalStateException("Method not supported.");
-	}
-
-	@Override
-	public String getReasonerClassName() {
-		throw new IllegalStateException("Method not supported.");
-	}
-
-	@Override
 	public String getBeliefbaseClassName() {
 		throw new IllegalStateException("Method not supported.");
 	}
@@ -43,5 +33,20 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 		BeliefbaseConfigImport reval = new BeliefbaseConfigImport();
 		reval.source = new File("config/skills/QueryAnswer.xml");
 		return reval;
+	}
+
+	@Override
+	public OperatorSetConfig getReasoners() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public OperatorSetConfig getChangeOperators() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public OperatorSetConfig getTranslators() {
+		throw new IllegalStateException("Method not supported.");
 	}
 }

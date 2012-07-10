@@ -87,7 +87,7 @@ public class AspReasoner extends BaseReasoner {
 	}
 	
 	@Override
-	public Answer query(FolFormula query) {		
+	protected Answer queryInt(FolFormula query) {		
 		List<AnswerSet> answerSets = processAnswerSets();
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 		
@@ -184,7 +184,7 @@ public class AspReasoner extends BaseReasoner {
 	}
 
 	@Override
-	public Set<FolFormula> infer() {
+	protected Set<FolFormula> inferInt() {
 		List<AnswerSet> answerSets = processAnswerSets();
 		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
 		Set<FolFormula> reval = new HashSet<FolFormula>();

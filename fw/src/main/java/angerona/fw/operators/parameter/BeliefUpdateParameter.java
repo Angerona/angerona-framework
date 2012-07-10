@@ -1,8 +1,5 @@
 package angerona.fw.operators.parameter;
 
-import java.util.Set;
-
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.operators.OperatorVisitor;
 
@@ -16,15 +13,15 @@ public class BeliefUpdateParameter extends GenericOperatorParameter {
 	/** Reference a belief base. The update operation will be performed on this belief base.*/
 	private BaseBeliefbase beliefBase;
 	
-	/** set of formulas representing the new knowledge */
-	private Set<FolFormula> newKnowledge;
+	/** belief base representing the new knowledge. */
+	private BaseBeliefbase newKnowledge;
 	
 	/**
 	 * Ctor: Generates the Parameter class
 	 * @param bb			belief base
 	 * @param newKnowledge	set of formula with new knowledge.
 	 */
-	public BeliefUpdateParameter(BaseBeliefbase bb, Set<FolFormula> newKnowledge, OperatorVisitor ov) {
+	public BeliefUpdateParameter(BaseBeliefbase bb, BaseBeliefbase newKnowledge, OperatorVisitor ov) {
 		super(ov);
 		this.beliefBase = bb;
 		this.newKnowledge = newKnowledge;
@@ -36,7 +33,7 @@ public class BeliefUpdateParameter extends GenericOperatorParameter {
 	}
 
 	/** @return a set of formulas representing the new knowledge */
-	public Set<FolFormula> getNewKnowledge() {
+	public BaseBeliefbase getNewKnowledge() {
 		return newKnowledge;
 	}
 }

@@ -1,18 +1,11 @@
 package angerona.fw.operators.def;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
-import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.parameter.UpdateBeliefsParameter;
@@ -40,22 +33,14 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			out += "Answer ";
 			out += (naa.getSenderId().compareTo(id) == 0 ? "as sender (view)" : "as receiver (world)");
 			
-			Set<FolFormula> knowledge = new HashSet<FolFormula>();
-			FolFormula toAdd = naa.getRegarding();
-			if(naa.getAnswer() == AnswerValue.AV_FALSE) {
-				toAdd = new Negation((FolFormula)toAdd);
-			} 
-			knowledge.add(toAdd);
-			
 			BaseBeliefbase bb = null;
 			if(id.compareTo(naa.getReceiverId()) == 0) {
 				bb = reval.getWorldKnowledge();
-				bb.addNewKnowledge(knowledge);
 			} else if (id.compareTo(naa.getSenderId()) == 0){
 				bb = param.getAgent().getBeliefs().getViewKnowledge().get(naa.getReceiverId());
-				bb.addNewKnowledge(knowledge);
 			}
 			
+			bb.addKnowledge(naa);
 			report(out, bb);
 		} else if(param.getPerception() instanceof Query) {
 			Query naq = (Query)param.getPerception();

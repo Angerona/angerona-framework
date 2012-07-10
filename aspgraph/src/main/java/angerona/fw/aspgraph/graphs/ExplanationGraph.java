@@ -15,12 +15,16 @@ import java.util.Set;
 import org.apache.commons.collections15.CollectionUtils;
 
 import angerona.fw.aspgraph.graphs.EGLiteralVertex.Annotation;
-import angerona.fw.aspgraph.util.LinkedCycle;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
 
+/**
+ * Represents an Explanation Graph
+ * @author ella
+ *
+ */
 public class ExplanationGraph extends DirectedSparseGraph<EGVertex, EGEdge> implements Serializable{
 
 	/**
@@ -28,28 +32,51 @@ public class ExplanationGraph extends DirectedSparseGraph<EGVertex, EGEdge> impl
 	 */
 	private static final long serialVersionUID = -9176371316817967877L;
 
+	/**
+	 * Creates a new explanation graph
+	 */
 	public ExplanationGraph() {
 		super();
 	}
 
+	/**
+	 * Adds an edge to the graph
+	 * @param source Source node of edge
+	 * @param target Target node of edge
+	 * @param e EGEdge that should be added
+	 */
 	public void addEdge(EGVertex source, EGVertex target, EGEdge e) {
 		super.addEdge(e, new Pair<EGVertex>(source,target), EdgeType.DIRECTED);	
 	}
 	
+	/**
+	 * Adds an subgraph to the graph
+	 * @param source Source node to which an edge to subgraph should be added
+	 * @param eg Explanation Graph that should be added as subgraph
+	 * @param literal Literal of root node of the passed Explanation Graph
+	 * @param type
+	 */
 	public void addEdge(EGVertex source, ExplanationGraph eg, String literal, EGEdge.EdgeType type){
 		Collection<EGEdge> edges = eg.getEdges();
 		for (EGEdge e : edges){
 			EGVertex s = e.getSource();
 			EGVertex t = e.getTarget();
-			// if (!this.containsVertex(s)) this.addVertex(s);
-			// if (!this.containsVertex(t)) this.addVertex(t);
+			
+			// Add edge from source vertex to root node of passed EG
 			if (s instanceof EGLiteralVertex && ((EGLiteralVertex) s).getLiteral().equals(literal)){
 					this.addEdge(source, s, new EGEdge(source,s,type));
 			}
+			
 			this.addEdge(s, t, e);
 		}
 	}
 	
+	/**
+	 * Creates a deep copy of the Explanation Graph
+	 * @return Copy of the Explanation Graph
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public ExplanationGraph deepCopy() throws IOException, ClassNotFoundException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		new ObjectOutputStream( baos ).writeObject(this);
@@ -79,6 +106,10 @@ public class ExplanationGraph extends DirectedSparseGraph<EGVertex, EGEdge> impl
 		return h;
 	}
 	
+	/**
+	 * Checks if Explanation Graph contains positive cycles
+	 * @return true, if EG contains a positive cycle
+	 */
 	public boolean hasPositiveCycle(){
 		TarjanEG tarjan = new TarjanEG();
 		List<List<EGVertex>> components = tarjan.executeTarjan(this);
@@ -97,10 +128,18 @@ public class ExplanationGraph extends DirectedSparseGraph<EGVertex, EGEdge> impl
 		return false;
 	}
 	
+	/**
+	 * Looks for positive cycles in Explanation Graph
+	 * @param start Start vertex of path
+	 * @param next Next vertex in path, which should be visited
+	 * @param path Visited path
+	 * @return true, if a positive cycle is found
+	 */
 	private boolean findPositiveCycle(EGLiteralVertex start, EGVertex next, Set<EGVertex> path){
 		Set<EGVertex> path2;
 		if (path != null) path2 = new HashSet<EGVertex>(path);
 		else path2 = new HashSet<EGVertex>();
+		
 		if (!start.equals(next)){
 			for (EGEdge e : this.getOutEdges(next)){
 				if (e.getLabel().equals(EGEdge.EdgeType.POS)){
@@ -119,6 +158,11 @@ public class ExplanationGraph extends DirectedSparseGraph<EGVertex, EGEdge> impl
 		return false;
 	}
 	
+	/**
+	 * Tarjan algorithm for Explanation Graphs
+	 * @author ella
+	 *
+	 */
 	class TarjanEG {
 		private int index = 0;
 		private List<EGVertex> stack = new ArrayList<EGVertex>();

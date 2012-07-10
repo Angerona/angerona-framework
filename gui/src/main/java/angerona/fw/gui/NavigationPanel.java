@@ -1,7 +1,6 @@
 package angerona.fw.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -53,16 +52,16 @@ public class NavigationPanel extends JPanel implements ActionListener {
 		
 		navigationPanel.add(new JLabel("Navigation:"));
 		
-		navAllEntries = new NavigationControl("Gesamte Einträge: ");
+		navAllEntries = new NavigationControl("All entries: ");
 		navAllEntries.addActionListener(this);
 		navigationPanel.add(navAllEntries);
 		
-		navTicks = new NavigationControl("Aktueller Tick: ");
+		navTicks = new NavigationControl("Current Tick: ");
 		navTicks.setMin(0);
 		navTicks.addActionListener(this);
 		navigationPanel.add(navTicks);
 		
-		navTickEntries = new NavigationControl("Einträge im aktuellen Tick: ");
+		navTickEntries = new NavigationControl("Entries in current Tick: ");
 		navTickEntries.addActionListener(this);
 		navigationPanel.add(navTickEntries);
 		

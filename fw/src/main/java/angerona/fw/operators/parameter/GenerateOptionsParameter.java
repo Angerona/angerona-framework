@@ -14,40 +14,32 @@ import angerona.fw.logic.Beliefs;
  * @author Tim Janus
  */
 public class GenerateOptionsParameter extends GenericOperatorParameter {
-	/** beliefs of the agent */
-	protected Beliefs beliefs;
-	
-	/** desires of the agent */
-	protected Set<Desire> desires;
+	protected Agent agent;
 	
 	/** the last received perception */
 	protected Perception perception;
-	
-	protected Map<String, Skill> skills;
 	
 	/**
 	 * Ctor: Generates a GenerateOptionsParameter data-structure with the following parameters:
 	 * @param agent			The agent containing the desires and beliefs.
 	 * @param perception	the last received perception
 	 */
-	public GenerateOptionsParameter(Agent agent, Perception perception, Map<String, Skill> skills) {
+	public GenerateOptionsParameter(Agent agent, Perception perception) {
 		super(agent);
-		this.beliefs = agent.getBeliefs();
-		if(agent.getDesires() != null) {
-			this.desires = agent.getDesires().getDesires();
-		}
+		this.agent = agent;
 		this.perception = perception;
-		this.skills = skills;
 	}
 	
-	/** @return beliefs of the agent */
+	/** @return beliefs of the agent 
+	 * @deprecated*/
 	public Beliefs getBeliefs() {
-		return beliefs;
+		return agent.getBeliefs();
 	}
 	
-	/** @return desires of the agent */
+	/** @return desires of the agent 
+	 * @deprecated*/
 	public Set<Desire> getDesires() {
-		return desires;
+		return agent.getDesires().getDesires();
 	}
 	
 	/** @return the last received perception */
@@ -55,7 +47,15 @@ public class GenerateOptionsParameter extends GenericOperatorParameter {
 		return perception;
 	}
 	
+	/**
+	 * @return the skills of the agent
+	 * @deprecated
+	 */
 	public Map<String, Skill> getSkills() {
-		return skills;
+		return agent.getSkills();
+	}
+	
+	public Agent getAgent() {
+		return agent;
 	}
 }

@@ -1,7 +1,17 @@
 package angerona.fw.logic;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.event.ChangeEvent;
+
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.util.Pair;
 
 /**
  * A secret as defined Def. 4 in "Agent-based Epistemic Secrecy" 
@@ -33,21 +43,44 @@ public class Secret implements Cloneable {
 	private FolFormula information;
 	
 	/** the java class name which should be used to proof this secret */
-	private String beliefChangeClassName;
-	/**
-	 * Ctor: Generates a new confidential target with the given parameters.
-	 * @param name					name of the agent who should not get the information
-	 * @param information			formula representing the confidential information
-	 */
-	public Secret(String name, FolFormula information) {
-		this(name, information, DEFAULT_BELIEFCHANGE);
+	private String reasonerClass;
+	
+	/** a map containing parameters for the used reasoner class */
+	private Map<String, String> reasonerParameters;
+	
+	private List<PropertyChangeListener> listeners = new LinkedList<PropertyChangeListener>();
+	
+	public boolean addPropertyListener(PropertyChangeListener listener) {
+		return listeners.add(listener);
+	}
+	
+	public boolean removePropertyListener(PropertyChangeListener listener) {
+		return listeners.remove(listener);
+	}
+	
+	protected void invokePropertyListener(String propertyName, Object oldValue, Object newValue) {
+		for(PropertyChangeListener l : listeners) {
+			l.propertyChange(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
+		}
+	}
+	
+	public Secret(Secret other) {
+		name = other.name;
+		information = other.information;
+		reasonerClass = other.reasonerClass;
+		reasonerParameters = new HashMap<String, String>(other.reasonerParameters);
+	}
+	
+	public Secret(String name, FolFormula information, String reasonerClass) {
+		this(name, information, reasonerClass, new HashMap<String, String>());
 	}
 	
 	public Secret(String name, FolFormula information,
-			String changeClass) {
+			String reasonerClass, Map<String, String> parameters) {
 		this.name = name;
 		this.information = information;
-		this.beliefChangeClassName = changeClass;
+		this.reasonerClass = reasonerClass;
+		this.reasonerParameters = parameters;
 	}
 	
 	/**	@return name of the agent who should not get the information */
@@ -65,17 +98,30 @@ public class Secret implements Cloneable {
 	 *			might be DEFAULT_CHANGEBELIEF with the meaning the default
 	 *			change operator of the beliefbase should be used.
 	 */
-	public String getBeliefChangeClassName() {
-		return beliefChangeClassName;
+	public String getReasonerClassName() {
+		return reasonerClass;
+	}
+	
+	public Map<String, String> getReasonerParameters() {
+		return reasonerParameters;
+	}
+	
+	public Pair<String, Map<String, String>> getPair() {
+		return new Pair<String, Map<String, String>>(reasonerClass, reasonerParameters);
+	}
+	
+	public void setReasonerParameters(Map<String, String> parameters) {
+		invokePropertyListener("reasonerParameters", reasonerParameters, parameters);
+		reasonerParameters = parameters;
 	}
 	
 	@Override
 	public Object clone() {
-		return new Secret(name, information);
+		return new Secret(this);
 	}
 	
 	@Override
 	public String toString() {
-		return "(" + name + ", " + information + ")";
+		return "(" + name + "," + information +  "," + reasonerClass + "(" + reasonerParameters +  "))";
 	}
 }

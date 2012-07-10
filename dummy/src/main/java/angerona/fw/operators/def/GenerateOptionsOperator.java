@@ -38,7 +38,7 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	public static final IdGenerator desireIds = new IdGenerator();
 	
 	@Override
-	protected Set<Desire> processInt(GenerateOptionsParameter param) {
+	protected Integer processInt(GenerateOptionsParameter param) {
 		LOG.info("Run Default-Generate-Options-operator");
 		
 		Atom ad = null;
@@ -54,6 +54,9 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 			ad.addArgument(new Constant(desireIds.getNextId().toString()));
 			reval.add(new Desire(ad, param.getPerception()));
 		}
-		return reval;
+		for(Desire des : reval) {
+			param.getAgent().addDesire(des);
+		}
+		return reval.size();
 	}
 }

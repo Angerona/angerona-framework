@@ -23,7 +23,7 @@ public class DummyReasoner extends BaseReasoner {
 	}
 
 	@Override
-	public Answer query(FolFormula query) {
+	protected Answer queryInt(FolFormula query) {
 		if(this.actualBeliefbase == null)
 			return null;
 		
@@ -40,7 +40,7 @@ public class DummyReasoner extends BaseReasoner {
 	}
 
 	@Override
-	public Set<FolFormula> infer() {
+	protected Set<FolFormula> inferInt() {
 		return new HashSet<FolFormula>();
 	}
 }

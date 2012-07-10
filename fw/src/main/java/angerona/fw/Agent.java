@@ -306,13 +306,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 			
 		updateBeliefs(actualPerception);	
 		// Deliberation:
-		Desires desires = getDesires();
-		if(desires != null) {
-			Set<Desire> options = generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception, skills));
-			for(Desire des : options) {
-				addDesire(des);
-			}
-		}
+		generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception));
 		
 		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		// Means-end-reasoning:
@@ -534,6 +528,11 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	@Override
 	public void popOperator() {
 		operatorStack.pop();
+	}
+	
+	@Override
+	public Stack<BaseOperator> getStack() {
+		return operatorStack;
 	}
 
 	@Override

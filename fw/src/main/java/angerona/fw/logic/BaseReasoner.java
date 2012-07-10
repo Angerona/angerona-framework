@@ -30,7 +30,14 @@ public abstract class BaseReasoner
 	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
 	 * @return	A set of FolFormulas representing Cn(Bel).
 	 */
-	public abstract Set<FolFormula> infer();
+	protected abstract Set<FolFormula> inferInt();
+	
+	public Set<FolFormula> infer() {
+		getOwner().pushOperator(this);
+		Set<FolFormula> reval = inferInt();
+		getOwner().popOperator();
+		return reval;
+	}
 	
 	/**
 	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
@@ -59,8 +66,14 @@ public abstract class BaseReasoner
 	 * @param query a query.
 	 * @return the answer to the query.
 	 */
-	protected abstract Answer query(FolFormula query);
+	protected abstract Answer queryInt(FolFormula query);
 	
+	public Answer query(FolFormula query) {
+		getOwner().pushOperator(this);
+		Answer reval = queryInt(query);
+		getOwner().popOperator();
+		return reval;
+	}
 	
 	/**
 	 * @return the class definition of the belief base this reasoner supports.

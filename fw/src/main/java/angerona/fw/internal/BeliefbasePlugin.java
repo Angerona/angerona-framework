@@ -6,6 +6,7 @@ import net.xeoh.plugins.base.Plugin;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.BaseTranslator;
 
 /**
  * Interface for plugins defining new belief base types.
@@ -23,4 +24,7 @@ public interface BeliefbasePlugin extends Plugin {
 	
 	/** @return all the supported revisions defined in this plugin */
 	public List<Class<? extends BaseChangeBeliefs>> getSupportedChangeOperations();
+	
+	/** @return all the supported translators defined in this plugin */
+	public List<Class<? extends BaseTranslator>> getSupportedTranslators();
 }

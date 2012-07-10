@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.BeliefBase;
@@ -18,15 +18,19 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
-import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
@@ -36,6 +40,9 @@ import angerona.fw.serialize.BeliefbaseConfig;
  * @author Tim Janus
  */
 public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic {
+	
+	/** reference to the logback logger instance */
+	private Logger LOG = LoggerFactory.getLogger(BaseBeliefbase.class);
 	
 	/** default error string if a formula is no FOL formula */
 	protected static String RES_NO_FOL = "formula is no FOL formula.";
@@ -50,25 +57,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	protected Long parentId;
 	
+	private int copyDepth;
+	
 	private List<BeliefbaseChangeListener> listeners = new LinkedList<BeliefbaseChangeListener>();
-	
-	/**
-	 * Enumeration with different operation types for updating the belief base.
-	 * @author Tim Janus
-	 */
-	public enum UpdateType {
-		/** the belief base will be expanded*/
-		U_EXPANSION,
-		
-		/** the belief base will be expanded and then the consolidation will be applied */
-		U_EXPANSION_AND_CONSOLIDATION,
-		
-		/** the belief base will be updated by the revision operator */
-		U_REVISION
-	}
-	
-	/** update behavior used when not explicitly defined by caller */
-	private UpdateType defaultUpdateBehavior = UpdateType.U_EXPANSION;
 	
 	/** flag indicating if this type of beliefbase supports quantified formulas */
 	private boolean supportsQuantifiers;
@@ -82,18 +73,18 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 */
 	protected String reason = "";
 	
-	/** Reference to the used revision operator */
-	private BaseChangeBeliefs revisionOperator;
+	private OperatorSet<BaseChangeBeliefs> changeOperators = new OperatorSet<BaseChangeBeliefs>();
 	
-	/** Reference to the used reasoning operator */
-	private BaseReasoner reasoningOperator;
+	private OperatorSet<BaseReasoner> reasoningOperators = new OperatorSet<BaseReasoner>();
+	
+	private OperatorSet<BaseTranslator> translators = new OperatorSet<BaseTranslator>();
 	
 	public BaseChangeBeliefs getRevisionOperator() {
-		return revisionOperator;
+		return changeOperators.getDefault();
 	}
 
 	public BaseReasoner getReasoningOperator() {
-		return reasoningOperator;
+		return reasoningOperators.getDefault();
 	}
 
 	/** Default Ctor: Generates an empty belief base which does not supports quantifiers or variables in its formulas */
@@ -101,6 +92,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
 		id = IdGenerator.generate(this);
+		this.copyDepth = 0;
 	}
 
 	/**
@@ -112,6 +104,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		this.supportsQuantifiers = supportsQuantifiers;;
 		this.supportsVariables = supportVariables;
 		id = IdGenerator.generate(this);
+		this.copyDepth = 0;
 	}
 	
 	/**
@@ -125,8 +118,10 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			this.parentId = new Long(other.getParent());
 		}
 		
-		revisionOperator = other.revisionOperator;
-		reasoningOperator = other.reasoningOperator;
+		changeOperators = new OperatorSet<BaseChangeBeliefs>(other.changeOperators);
+		reasoningOperators = new OperatorSet<BaseReasoner>(other.reasoningOperators);
+		translators = new OperatorSet<BaseTranslator>(other.translators);
+		this.copyDepth = other.copyDepth + 1;
 	}
 	
 	/**
@@ -156,12 +151,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws IllegalAccessException
 	 */
 	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
-		PluginInstantiator pi = PluginInstantiator.getInstance();
-		reasoningOperator = pi.createReasoner(bbc.getReasonerClassName());
-		
-		if(bbc.getRevisionClassName() != null && !bbc.getRevisionClassName().equals("empty"))
-			revisionOperator = pi.createRevision(bbc.getRevisionClassName());
-		
+		changeOperators.set(bbc.getChangeOperators());
+		reasoningOperators.set(bbc.getReasoners());
+		translators.set(bbc.getTranslators());
 		updateOwner();
 	}
 	
@@ -174,49 +166,41 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 */
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
-	public void addNewKnowledge(FolFormula newKnowlege) {
-		Set<FolFormula> k = new HashSet<FolFormula>();
-		k.add(newKnowlege);
-		addNewKnowledge(k);
+	public void addKnowledge(Set<FolFormula> formulas) {
+		addKnowledge(formulas, translators.getDefault(), 
+				changeOperators.getDefault());
 	}
 	
-	/**
-	 * adds the given formulas to the knowledgebase as new knowledge. Using the default update mechanism
-	 * defined by the config file. If default update behavior was defined in the config file U_EXPANSION is used.
-	 * @param newKnowledge	set of formulas representing the new knowledge.
-	 */
-	public void addNewKnowledge(Set<FolFormula> newKnowledge) {
-		addNewKnowledge(newKnowledge, defaultUpdateBehavior);
+	public void addKnowledge(Perception perception) {
+		addKnowledge(perception, translators.getDefault(), 
+				changeOperators.getDefault());
 	}
 	
-	/**
-	 * adds the given formulas to the knowledgebase as new knowledge. Using the given update mechanism.
-	 * @param newKnowledge	set of formulas representing the new knowledge.
-	 * @param updateType	type of used update behavior.
-	 */
-	public void addNewKnowledge(Set<FolFormula> newKnowledge, UpdateType updateType) {
-		for(FolFormula ff : newKnowledge) {
-			if(!isFormulaValid(ff)) {
-				throw new RuntimeException("Cant add knowledge, dont support: " + ff + " - reason: " + this.reason);
-			}
-		}
+	public void addKnowledge(Perception perception, BaseTranslator translator, BaseChangeBeliefs changeOperator) {
+		if(translator == null)
+			throw new IllegalArgumentException("Translator-Operator must not be null.");
 		
-		// TODO: Think about local copies and mapping of different knowledge ect.
-		BeliefUpdateParameter bup = new BeliefUpdateParameter(this,  newKnowledge, null);
-		if(getParent() != 0) {
-			Entity ent = IdGenerator.getEntityWithId(getParent());
-			bup = new BeliefUpdateParameter(this, newKnowledge, (Agent)ent);
-		}
+		BaseBeliefbase newK = translator.translatePerception(perception);
+		addKnowledge(newK, changeOperator);
+	}
+	
+	public void addKnowledge(Set<FolFormula> formulas, BaseTranslator translator, 
+			BaseChangeBeliefs changeOperator) {
+		if(translator == null)
+			throw new IllegalArgumentException("Translator-Operator must not be null.");
 		
-		//If just expansion then don't consolidate
-		if(updateType == UpdateType.U_EXPANSION)
-		{
-			onChange();
-			return;
-		}
-		if(revisionOperator == null)
-			throw new RuntimeException("Can't use revision on a beliefbase which doesn't has a valid revision operator.");
-		revisionOperator.process(bup);
+		BaseBeliefbase newK = translator.translateFOL(formulas);
+		addKnowledge(newK, changeOperator);
+	}
+	
+	public void addKnowledge(BaseBeliefbase newKnowledge, BaseChangeBeliefs changeOperator) {
+		if(changeOperator == null)
+			throw new IllegalArgumentException("Change-Operator must not be null.");
+		
+		Entity ent = IdGenerator.getEntityWithId(parentId);
+		Agent agent = (Agent)ent;
+		BeliefUpdateParameter param = new BeliefUpdateParameter(this, newKnowledge, agent);
+		changeOperator.process(param);
 		onChange();
 	}
 	
@@ -249,11 +233,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @return An instance of angerona Answer containing the answer.
 	 */
 	public AngeronaAnswer reason(FolFormula query) {
-		if(reasoningOperator == null)
-			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
-		else if(!isFormulaValid(query)) 
+		if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperator.query(this, query);
+		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperators.getDefault().query(this, query);
 		return answer;
 	}
 	
@@ -286,9 +268,19 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 	
 	public Set<FolFormula> infere() {
-		if(reasoningOperator == null) 
-			throw new RuntimeException("Cannot infere on a beliefbase  which does not has a valid reasoning operator");
-		return reasoningOperator.infer(this);
+		return reasoningOperators.getDefault().infer(this);
+	}
+	
+	public Set<FolFormula> infere(String reasonerCls, Map<String, String> parameters) {
+		Map<String, String> oldParams = null;
+		BaseReasoner reasoner = this.reasoningOperators.get(reasonerCls);
+		if(parameters == null)
+			parameters = reasoner.getParameters();
+		oldParams = reasoner.getParameters();
+		reasoner.setParameters(parameters);
+		Set<FolFormula> reval = reasoner.infer(this);
+		reasoner.setParameters(oldParams);
+		return reval;
 	}
 	
 	/**
@@ -360,14 +352,14 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 
 	private void updateOwner() {
-		Entity ent = IdGenerator.getEntityWithId(parentId);
-		if(ent != null) {
-			if(reasoningOperator != null) {
-				reasoningOperator.setOwner((Agent)ent);
-			}
-			if(revisionOperator != null) {
-				revisionOperator.setOwner((Agent)ent);
-			}
+		Agent agent = (Agent) IdGenerator.getEntityWithId(parentId);
+		if(agent != null) {
+			changeOperators.setOwner(agent);
+			reasoningOperators.setOwner(agent);
+			translators.setOwner(agent);
+			LOG.info("Set owner '{}' for operators of beliefbase.", agent.getName());
+		} else {
+			LOG.warn("Cannot set the owners for operators.");
 		}
 	}
 	
@@ -380,5 +372,10 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public List<Long> getChilds() {
 		// base beliefs bases are at the bottom of the hierarchy.
 		return new LinkedList<Long>();
+	}
+	
+	@Override
+	public int getCopyDepth() {
+		return copyDepth;
 	}
 }

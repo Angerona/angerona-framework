@@ -1,5 +1,7 @@
 package angerona.fw.operators;
 
+import java.util.Stack;
+
 import angerona.fw.BaseOperator;
 
 
@@ -18,4 +20,7 @@ public interface OperatorVisitor {
 	
 	/** pops the top operator from the stack */
 	void popOperator();
+	
+	/** returns the actual state of the operator stack */
+	Stack<BaseOperator> getStack();
 }

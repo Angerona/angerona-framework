@@ -28,7 +28,7 @@
          
         <data key="Confidential">
             (Boss, __DEFAULT__, meet_with(andre))
-            (Boss, __DEFAULT__, attend_scm)
+            (Boss, angerona.fw.logic.asp.AspReasoner{d=0.5}, attend_scm)
         </data>
 		<data key="KnowHow">
 		 	bel(Y, X), revisionRequest(Y, X), reason(X)
