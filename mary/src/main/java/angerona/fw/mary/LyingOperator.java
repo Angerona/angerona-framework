@@ -39,13 +39,43 @@ public class LyingOperator {
 	protected AngeronaDetailAnswer lie(AngeronaDetailAnswer truth, BaseBeliefbase bb)
 	{
 		FolFormula trueAnswer = truth.getAnswerExtended();
-		String trueAnswerString = trueAnswer.toString();
 		FolFormula query = (FolFormula) truth.getQuery();
 		FolFormula lie = null;
 		
-		if(trueAnswerString.startsWith("!"))
+		/* This code doesn't work...
+		if(trueAnswerString.contains("("))
 		{
-			lie =  (FolFormula) new Atom(new Predicate(trueAnswerString.substring(1))); //Test this parsing-based lying mechanism
+			Set<FolFormula> knowledge = bb.getReasoningOperator().infer();
+			for (FolFormula f : knowledge)
+			{
+				if(f.toString().equals(trueAnswerString))
+				{
+					continue;
+				}
+				Predicate fp = f.getPredicates().iterator().next();
+				Predicate qp = query.getPredicates().iterator().next();
+				if(!fp.getName().equals(qp.getName()))
+				{
+					continue;
+				}
+				lie = f;
+			}
+			if (lie != null)
+			{
+				return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
+			}
+			//Maybe I want to return UNKNOWN rather than the negation of a fact when an alternative can't be found
+			lie = new Atom(new Predicate("UNKNOWN"));
+			return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
+		}
+		*/
+		
+		// You had to use Strings because you got the classes from the asp library.
+		// In this case you get them from the first-order-logic lib.
+		if(trueAnswer instanceof Negation)
+		{
+			Negation neg = (Negation)trueAnswer;
+			lie =  neg.getFormula();
 		}
 		else
 		{
