@@ -61,7 +61,7 @@ public class OperatorSet<T extends BaseOperator> {
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		for(String clsName : config.getOperatorClassNames()) {
 			SecretParser parser = new SecretParser(new StringReader(clsName));
-			Map<String, String> parameters = new HashMap<>();
+			Map<String, String> parameters = new HashMap<String, String>();
 			try {
 				clsName = parser.java_cls(parameters);
 			} catch (ParseException e) {
@@ -79,7 +79,7 @@ public class OperatorSet<T extends BaseOperator> {
 		
 		String clsName = config.getDefaultClassName();
 		SecretParser parser = new SecretParser(new StringReader(clsName));
-		Map<String, String> parameters = new HashMap<>();
+		Map<String, String> parameters = new HashMap<String, String>();
 		try {
 			clsName = parser.java_cls(parameters);
 		} catch (ParseException e) {
