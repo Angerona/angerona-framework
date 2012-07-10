@@ -12,6 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
+import angerona.fw.comm.DetailQueryAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseTranslator;
 
@@ -38,6 +39,9 @@ public class AspTranslator extends BaseTranslator {
 			}
 
 			formulas.add(knowledge);
+		} else if(p instanceof DetailQueryAnswer) {
+			DetailQueryAnswer da = (DetailQueryAnswer)p;
+			formulas.add(da.getDetailAnswer());
 		}
 
 		return translateFOLInt(formulas);
