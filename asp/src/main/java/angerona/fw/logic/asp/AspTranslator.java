@@ -29,6 +29,8 @@ public class AspTranslator extends BaseTranslator {
 	protected BaseBeliefbase translatePerceptionInt(Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
+		//You could quickly add tagging sources of information...
+		//Here is probably where you would have the asking of questions update beliefs as well
 		if(p instanceof DetailQueryAnswer) {
 			DetailQueryAnswer da = (DetailQueryAnswer)p;
 			formulas.add(da.getDetailAnswer());
@@ -60,11 +62,16 @@ public class AspTranslator extends BaseTranslator {
 		Atom a = new Atom("argued(john)");
 		return a;
 	}
-	private Atom createAtom(FolFormula ff)
+	private Atom createAtom(FolFormula ff, boolean truth)
 	{
 //		Atom a = new Atom(p.getName());
 		System.out.println("(Delete) ff.toString():"+ff.toString());
-		Atom a = new Atom(ff.toString());
+		Atom a = null;
+		if(truth)
+			a = new Atom(ff.toString());
+		else
+			a = new Atom(ff.toString().substring(1));
+			
 		return a;
 	}
 	
@@ -80,7 +87,7 @@ public class AspTranslator extends BaseTranslator {
 			//	r.addHead(new Atom(a.getPredicate().getName()));
 				//There should actually be a method in the predicate that directly translates it to an atom, I think
 				//Atom newAtom = createAtom(a.getPredicate());
-				Atom newAtom = createAtom(ff);
+				Atom newAtom = createAtom(ff, true);
 				
 				r.addHead(newAtom);
 				
@@ -88,7 +95,7 @@ public class AspTranslator extends BaseTranslator {
 				Negation n = (Negation)ff;
 			//	Atom a = new Atom(n.getAtoms().iterator().next().getPredicate().getName());
 				//Atom newAtom = createAtom(n.getAtoms().iterator().next().getPredicate());
-				Atom newAtom = createAtom(ff);
+				Atom newAtom = createAtom(ff, false);
 				r.addHead(new Neg(newAtom));
 				
 			} else {

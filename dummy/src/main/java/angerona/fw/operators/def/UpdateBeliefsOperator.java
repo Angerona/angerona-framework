@@ -43,6 +43,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			bb.addKnowledge(naa);
 			report(out, bb);
 		} else if(param.getPerception() instanceof Query) {
+			
 			Query naq = (Query)param.getPerception();
 			out += "Query ";
 			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (might be an error)" : "as receiver (view)");
