@@ -1,0 +1,8 @@
+Expected output:
+Q: -attend_scm
+A: AV_TRUE
+
+Actual output:
+Q: attend_scm
+A: AV_TRUE
+
