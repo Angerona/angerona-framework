@@ -43,7 +43,7 @@
         	</skill>
 
 	<!-- 	<desire>q_Mary(who_argued(X))_1</desire> -->  
-		<desire>q_Mary(!john_argued)_1</desire>     
+		<desire>q_Mary(-john_argued)_1</desire>     
 	<!--	<desire>q_Mary(someone_argued)_2</desire>   
 		<desire>q_Mary(you_listened)_3</desire>   
 	-->
