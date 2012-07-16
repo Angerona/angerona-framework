@@ -12,6 +12,9 @@ import angerona.fw.listener.SubgoalListener;
  */
 public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnable, Cloneable {
 	
+	/** The cost associated with executing this intention */
+	private double cost = 0;
+	
 	/** the name for the top-level plan of an agent. */
 	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";
 	
@@ -27,10 +30,23 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	/** the context used for dynamic code evaluation */
 	protected Object objectContainingContext;
 		
+	/** Associate new cost with executing this intention */
+	public void setCost(double cost)
+	{
+		this.cost = cost;
+	}
+	
+	/** Get cost associated with executing this intention */
+	public double getCost()
+	{
+		return this.cost;
+	}
+	
 	/**
 	 * Ctor: Creates a new instance of an intention for the given agent.
 	 * @param agent	reference to the agent owning the intention
 	 */
+	
 	public Intention(Agent agent) {
 		this.agent = agent;
 	}

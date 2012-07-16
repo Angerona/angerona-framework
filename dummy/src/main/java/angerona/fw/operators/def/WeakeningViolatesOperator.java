@@ -38,19 +38,28 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		this.weakenings = processIntAndWeaken(param);
 		return super.processInt(param);
 	}
-	private Rule convertToRule(Formula f)
+	private Rule convertToRule(FolFormula f)
 	{
-		return null;
+		String ruleString = f.toString();
+		ruleString += "."; //Assume information given is always a fact
+		//Quick fix to bridge representations of ! and -
+		if(ruleString.startsWith("!"))
+		{
+			ruleString = "-" + ruleString.substring(1);
+		}
+		//TODO: Account for predicates with variables (arity 1+) 
+		Rule rule = new Rule(ruleString);
+		return rule;
 	}
 	private List<SecrecyStrengthPair> representTotalExposure(ConfidentialKnowledge conf)
 	{
 		return null;
 	}
-	private boolean formulaMatchesLiteral(Formula secretInfo, Literal literal)
+	private boolean formulaMatchesLiteral(FolFormula secretInfo, Literal literal)
 	{
 		return false;
 	}
-	private double calculateSecrecyStrength(Formula secretInfo, List<AnswerSet> ansSets)
+	private double calculateSecrecyStrength(FolFormula secretInfo, List<AnswerSet> ansSets)
 	{
 		return 0.0;
 	}
@@ -105,7 +114,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				/* Now the secrecy strengths get added */
 				for(Secret secret : conf.getTargets()) 
 				{
-					Formula secretInfo = secret.getInformation(); //This differs slightly from my pseudocode...
+					FolFormula secretInfo = (FolFormula) secret.getInformation(); //Info stored as a FolFormula in secret, yet access as a Formula...
 					Rule secretRule = convertToRule(secretInfo);
 					if(prog.contains(secretRule))
 					{
