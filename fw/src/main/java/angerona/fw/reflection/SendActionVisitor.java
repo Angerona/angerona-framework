@@ -1,9 +1,13 @@
 package angerona.fw.reflection;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import angerona.fw.Action;
 import angerona.fw.error.InvokeException;
 import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.logic.Beliefs;
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.serialize.Statement;
 import angerona.fw.serialize.perception.PerceptionDO;
 
@@ -22,12 +26,19 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private boolean violates = false;
 	
+	private List<SecrecyStrengthPair> weakenings = new LinkedList<SecrecyStrengthPair>();
+	
 	public SendActionVisitor(PerceptionFactory factory, boolean realRun, Beliefs beliefs) {
 		if(factory == null)
 			throw new IllegalArgumentException("factory must not null!");
 		
 		this.factory = factory;
 		this.realRun = realRun;
+	}
+	
+	public boolean weakenings()
+	{
+		return this.weakenings();
 	}
 	
 	public boolean violates() {
@@ -43,7 +54,10 @@ public class SendActionVisitor extends ContextVisitor {
 		if(realRun)
 			getSelf().performAction(reval);
 		else
+		{
 			violates = getSelf().performThought(beliefs, reval);
+			weakenings = getSelf().considerSecretWeakening(beliefs, reval);
+		}
 		this.setReturnValueIdentifier(statement.getReturnValueIdentifier(), reval);
 	}
 

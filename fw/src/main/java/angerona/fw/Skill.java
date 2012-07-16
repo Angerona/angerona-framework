@@ -1,9 +1,13 @@
 package angerona.fw;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.error.InvokeException;
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextVisitor;
@@ -27,10 +31,17 @@ public class Skill extends Intention implements Runnable {
 	
 	private boolean violates = false;
 	
+	private List<SecrecyStrengthPair> weakenings = new LinkedList<SecrecyStrengthPair>();
+	
 	public Skill(Agent agent, SkillConfig config) {
 		super(agent);
 		this.name = config.getName();
 		this.config = config;
+	}
+	
+	public List<SecrecyStrengthPair> weakenings()
+	{
+		return this.weakenings;
 	}
 	
 	public boolean violates() {
@@ -75,6 +86,7 @@ public class Skill extends Intention implements Runnable {
 					c.Invoke(cv, st);
 					if(sendAction && !realRun) {
 						violates = ((SendActionVisitor)cv).violates();
+						weakenings = ((SendActionVisitor)cv).weakenings();
 					}
 				} catch(InvokeException ex) {
 					ex.printStackTrace();
