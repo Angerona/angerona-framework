@@ -78,7 +78,10 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				
 				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
 				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
-				view.addKnowledge(dqa.getDetailAnswer()); //Should I call addNewKnowledge with a new UpdateType?
+				
+				//Should the line below be present? Would that fix my implicit secrecy issue?
+				//The line below seems to have no effect on the output of the "implicit secrecy not working" test
+				//view.addKnowledge(dqa.getDetailAnswer()); //Should I call addNewKnowledge with a new UpdateType?
 				//FolFormula newFact = dqa.getDetailAnswer();
 				String ruleString = dqa.getDetailAnswer().toString();
 				ruleString += "."; //Assume information given is always a fact

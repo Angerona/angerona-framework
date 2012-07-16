@@ -229,6 +229,7 @@ public class SubgoalGenerationOperator extends
 		}
 		//Expression of ignorance about answer to query
 		//This probably shouldn't come from the "LyingOperator", since the agent could be honestly ignorant
+		//Marking whether saying "I don't know" is a lie might be a useful addition later 
 		
 		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
 		allAnswers.add(ignorance);
