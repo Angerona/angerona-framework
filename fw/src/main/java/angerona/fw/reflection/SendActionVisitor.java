@@ -26,7 +26,7 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private boolean violates = false;
 	
-	private List<SecrecyStrengthPair> weakenings = new LinkedList<SecrecyStrengthPair>();
+	private List<SecrecyStrengthPair> weakenings = null;
 	
 	public SendActionVisitor(PerceptionFactory factory, boolean realRun, Beliefs beliefs) {
 		if(factory == null)
@@ -36,9 +36,9 @@ public class SendActionVisitor extends ContextVisitor {
 		this.realRun = realRun;
 	}
 	
-	public boolean weakenings()
+	public List<SecrecyStrengthPair> weakenings()
 	{
-		return this.weakenings();
+		return this.weakenings;
 	}
 	
 	public boolean violates() {

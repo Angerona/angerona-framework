@@ -33,7 +33,6 @@ import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
-import angerona.fw.operators.def.WeakeningViolatesOperator;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
@@ -361,12 +360,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		return violatesOperator.process(new ViolatesParameter(this, action));
 	}
 	public List<SecrecyStrengthPair> considerSecretWeakening(Beliefs beliefs, Action action)
-	{
-		if(violatesOperator instanceof WeakeningViolatesOperator)
-		{
-			return ((WeakeningViolatesOperator) violatesOperator).processIntAndWeaken(new ViolatesParameter(this, action));
-		}
-		return null;
+	{	
+		return violatesOperator.weakenings();
 	}
 	
 	public AngeronaAnswer reason(FolFormula query) {

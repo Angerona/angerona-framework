@@ -37,8 +37,9 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 					{
 						continue;
 					}
-					if(!sk.violates()) {
+					if(sk.weakenings() != null) {
 						report("Mental action successfull, using '" + sk.getName() + "' as next atomic action.", ag);
+						System.out.println("(Delete) number of weakenings: "+sk.weakenings().size());
 						return intention;
 					}
 					else

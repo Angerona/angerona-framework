@@ -8,12 +8,16 @@ import angerona.fw.logic.Secret;
 public class SecrecyStrengthPair {
 	private Secret secret;
 	private double degreeOfWeakening;
-	
-	public void addSecret(Secret secret)
+	public SecrecyStrengthPair(Secret s, double d)
+	{
+		this.secret = s;
+		this.degreeOfWeakening = d;
+	}
+	public void defineSecret(Secret secret)
 	{
 		this.secret = secret;
 	}
-	public void addDegreeOfWeakening(double degreeOfWeakening)
+	public void defineDegreeOfWeakening(double degreeOfWeakening)
 	{
 		this.degreeOfWeakening = degreeOfWeakening;
 	}

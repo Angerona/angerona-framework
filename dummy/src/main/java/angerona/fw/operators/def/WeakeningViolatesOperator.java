@@ -27,13 +27,14 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 	
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
+		this.weakenings = processIntAndWeaken(param);
 		return false;
 	}
 	protected List<SecrecyStrengthPair> processIntAndWeaken(ViolatesParameter param)
 	{
 		Logger LOG = LoggerFactory.getLogger(DetailViolatesOperator.class);
 		List<SecrecyStrengthPair> secretList = new LinkedList<SecrecyStrengthPair>(); 
-		
+		secretList.add(new SecrecyStrengthPair(null, INFINITY));
 		return secretList;
 	}
 }

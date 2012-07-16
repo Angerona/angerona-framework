@@ -31,7 +31,7 @@ public class Skill extends Intention implements Runnable {
 	
 	private boolean violates = false;
 	
-	private List<SecrecyStrengthPair> weakenings = new LinkedList<SecrecyStrengthPair>();
+	private List<SecrecyStrengthPair> weakenings = null;
 	
 	public Skill(Agent agent, SkillConfig config) {
 		super(agent);
