@@ -36,4 +36,8 @@ public interface SymbolSet {
 	
 	/** @return the sort of given argument of the given symbol or null if either the symbol does not exists or has not so many arguments. */
 	public String getSymbolSort(String symbol, int argument);
+	
+	/** adss the content of the other SymbolSet to this SymbolSet */
+	public void add(SymbolSet other);
+		
 }
