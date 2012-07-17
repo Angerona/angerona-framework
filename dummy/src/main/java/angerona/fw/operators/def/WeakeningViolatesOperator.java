@@ -64,14 +64,15 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	}
 	private double calculateSecrecyStrength(FolFormula secretInfo, List<AnswerSet> ansSets)
 	{
-		/*
 		double numAnsSets = ansSets.size();
 		double setsWithSecret = 0.0;
 		for(AnswerSet as : ansSets)
 		{
 			Program p = as.toProgram();
 			Rule secretRule = convertToRule(secretInfo);
-			if(p.contains(secretRule))
+			System.out.println("(Delete) secretRule: "+secretRule);
+			System.out.println("(Delete) answer set program:"+p.toString());
+			if(p.hasRule(secretRule))
 			{
 				setsWithSecret += 1;
 			}
@@ -80,8 +81,6 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		double strength = 1.0 - quotient;
 		System.out.println("(Delete) Quotient: "+quotient+" strength: "+strength);
 		return strength;
-		*/
-		return 0.0;
 	}
 	protected List<SecrecyStrengthPair> processIntAndWeaken(ViolatesParameter param)
 	{
@@ -122,7 +121,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 					//Ensure the reasoning operator's belief base is up to date
 					//Ask Tim about this solution?
 					AspReasoner ar = (AspReasoner) view.getReasoningOperator();
-					//ar.infer(view);
+					ar.infer(view);
 					newAnsSets = ar.processAnswerSets();
 					//System.out.println("(Delete) newAnsSets:"+newAnsSets.toString());
 				}
@@ -144,7 +143,10 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				{
 					FolFormula secretInfo = (FolFormula) secret.getInformation(); //Info stored as a FolFormula in secret, yet access as a Formula...
 					Rule secretRule = convertToRule(secretInfo);
-					if(prog.contains(secretRule))
+					
+					//better form to use hasRule instead of contains (though technically doesn't matter here)
+					//hasRule is a deep comparison while contains is reference-based (for now)
+					if(prog.hasRule(secretRule))  
 					{
 						report(param.getAgent().getName() + "' weakens secret by: '" + param.getAction() + "'", view);
 						SecrecyStrengthPair sPair = new SecrecyStrengthPair();
