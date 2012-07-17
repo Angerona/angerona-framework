@@ -26,24 +26,54 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 	}
 	private boolean isLie(Intention intention)
 	{
-		return false;
+		
+		if(intention.getHonestyStatus())
+		{
+			return false;
+		}
+		return true;
+		
+		//return false;
 	}
 	private double lyingCost(Intention intention)
 	{
-		return 0.0;
+		return 0.5;
 	}
+	//Which is best for this function? Maximum weakening or sum of weakenings?
 	private double secrecyWeakeningCost(List<SecrecyStrengthPair> weakenings)
 	{
-		return 0.0;
+		double total = 0.0;
+		for (SecrecyStrengthPair pair : weakenings)
+		{
+			total += pair.getDegreeOfWeakening();
+		}
+		return total;
 	}
+	
+	//A more elegant solution for this function would be to use Collections.max
+	//Also note that this function might have to be changed if my definition of INFINITY changes
+	//(Have an interface for constants like INFINITY? Or else some other module for final values?)
 	private Intention minimalCosting(List<Intention> intentions)
 	{
 		if (intentions == null || intentions.size() == 0)
 		{
 			return null;
 		}
-		System.out.println("(Delete) number of atomic intentions:"+intentions.size());
-		return intentions.get(0);
+		Intention minIntent = intentions.get(0);
+		double minCost = 20000.0;
+		System.out.println("(Delete) number of intentions:"+intentions.size());
+		for (Intention intent : intentions)
+		{
+			double curCost = intent.getCost();
+			System.out.println("(Delete) curCost:"+curCost);
+			if(curCost < minCost)
+			{
+				minCost = curCost;
+				minIntent = intent;
+			}
+		}
+		System.out.println("(Delete) minCost:"+minCost);
+		return minIntent;
 	}
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {

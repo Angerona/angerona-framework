@@ -234,6 +234,11 @@ public class SubgoalGenerationOperator extends
 		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
 		allAnswers.add(ignorance);
 		
+		//However, assume an expression of ignorance is always a lie for this scenario (hardwired solution!)
+		Skill qaSkillLie = (Skill) qaSkill.deepCopy(); //There is no deep copy for Skill
+		qaSkillLie.setHonestyStatus(false);
+		//Skill qaSkillLie = new 
+		
 		System.out.println("(Delete) printing out all answers:");
 		for(AngeronaDetailAnswer ans : allAnswers)
 		{
@@ -246,8 +251,16 @@ public class SubgoalGenerationOperator extends
 		for(int i=1;i<allAnswers.size();i++)
 		{
 			context = new Context(context);
-			context.set("answer", allAnswers.get(i).getAnswerExtended());
-			sg.newStack(qaSkill, context);
+			FolFormula answer = allAnswers.get(i).getAnswerExtended();
+			context.set("answer", answer);
+			if(answer.toString().contains("dontKnow"))
+			{
+				sg.newStack(qaSkillLie, context);
+			}
+			else
+			{
+				sg.newStack(qaSkill, context);
+			}
 		}
 		
 		ag.getPlanComponent().addPlan(sg);

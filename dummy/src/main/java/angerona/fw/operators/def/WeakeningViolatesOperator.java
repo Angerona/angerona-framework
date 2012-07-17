@@ -63,6 +63,10 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	}
 	private double calculateSecrecyStrength(FolFormula secretInfo, List<AnswerSet> ansSets)
 	{
+		for(AnswerSet as : ansSets)
+		{
+			System.out.println("(Delete) AnswerSet:"+as);
+		}
 		return 0.0;
 	}
 	protected List<SecrecyStrengthPair> processIntAndWeaken(ViolatesParameter param)
