@@ -1,8 +1,5 @@
 package angerona.fw.operators.def;
 
-
-//import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,19 +7,11 @@ import angerona.fw.Agent;
 import angerona.fw.Intention;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
-//import angerona.fw.comm.Query;
-//import angerona.fw.logic.AngeronaAnswer;
-//import angerona.fw.logic.AnswerValue;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
-//import angerona.fw.reflection.Context;
-//import angerona.fw.reflection.ContextFactory;
 
-/**
- * 
- * @author Tim Janus
- */
-public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
+public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
+	private static double maxWeakening = 0.5; //Probably should be removed later
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
@@ -34,7 +23,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {
-		LOG.info("Run Default-Intention-Update");
+		LOG.info("Run Mary-Intention-Update");
 		Agent ag = param.getPlan().getAgent();
 		for(Subgoal plan : param.getPlan().getPlans()) {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
@@ -52,7 +41,10 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 						report("Mental action successfull, using '" + sk.getName() + "' as next atomic action.", ag);
 						return intention;
 					}
-					
+					else
+					{
+						
+					}
 					
 				}
 			}
@@ -60,5 +52,4 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		report("No atomic step candidate found.", ag);
 		return null;
 	}
-
 }

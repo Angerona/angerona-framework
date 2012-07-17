@@ -2,10 +2,12 @@ package angerona.fw;
 
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
@@ -169,6 +172,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 				changeOperators.getDefault());
 	}
 	
+	public void addKnowledge(FolFormula formula)
+	{
+		Set<FolFormula> formulas = new HashSet<FolFormula>();
+		formulas.add(formula);
+		addKnowledge(formulas);
+	}
+	
 	public void addKnowledge(Perception perception) {
 		addKnowledge(perception, translators.getDefault(), 
 				changeOperators.getDefault());
@@ -235,6 +245,34 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
 		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperators.getDefault().query(this, query);
 		return answer;
+	}
+	
+	/**
+	 * This method returns an AngeronaDetailAnswer, which is based on the FolFormula class instead of the AnswerValue enum.
+	 * NOTE: This class would be better in a custom AngeronaDetailBeliefbase class
+	 * @param query
+	 * @return AngeronaDetailAnswer
+	 */
+	//It's not good that such a specific method for the Mary scenario is in the base class...
+	public AngeronaDetailAnswer detailReason(FolFormula query)
+	{
+		if(reasoningOperators.getDefault() == null)
+			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
+		else if(!isFormulaValid(query)) 
+			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
+		AngeronaDetailAnswer answer = (AngeronaDetailAnswer) reasoningOperators.getDefault().query(this, query);
+		return answer;
+	}
+	//can also use getDefaultReasoningOperator()
+	//It's not good that such a specific method for the Mary scenario is in the base class...
+	public Set<AngeronaDetailAnswer> allDetailReasons(FolFormula query)
+	{
+		if(reasoningOperators.getDefault() == null)
+			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
+		else if(!isFormulaValid(query)) 
+			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
+		Set<AngeronaDetailAnswer> answers = reasoningOperators.getDefault().queryForAllAnswers(this, query);
+		return answers;
 	}
 	
 	public Set<FolFormula> infere() {

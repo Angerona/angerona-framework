@@ -1,0 +1,11 @@
+<skill>
+   <name>DetailQuery</name>
+   <statement>
+      <name>SendAction</name>
+      <complex-info class="angerona.fw.serialize.perception.DetailQueryDO"
+      		sender="$name" receiver="$in.receiverId">
+      		<question>$in.question</question>
+      </complex-info>
+      <return-value-identifier>queryResult</return-value-identifier>
+   </statement>
+</skill>

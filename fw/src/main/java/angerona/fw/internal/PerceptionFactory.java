@@ -6,6 +6,7 @@ import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.Perception;
 import angerona.fw.logic.AngeronaAnswer;
@@ -58,8 +59,13 @@ public abstract class PerceptionFactory {
 				throw new ClassCastException("Cannot cast: " + obj.toString() + " to FolFormula");
 			}
 		}
-		else // TODO: use more generic formula generation.
+		else {
+			if(paramValue.startsWith("-")) {
+				paramValue = paramValue.substring(1);
+				return new Negation(new Atom(new Predicate(paramValue)));
+			}
 			return new Atom(new Predicate(paramValue));
+		}
 	}
 	
 	public static Set<FolFormula> createFormulaSet(String paramValue, Context context) {

@@ -1,5 +1,4 @@
 <simulation-configuration>
-<!-- I need to prune some of these skills off -->
 	<name>Mary Courtroom Scenario</name>
       
 	<agent-instance>
@@ -21,14 +20,9 @@
 		<skill class="angerona.fw.serialize.SkillConfigImport">
 			<source>config/skills/QueryAnswer.xml</source>
         	</skill>
-        <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/RevisionRequest.xml</source>
-	
-        </skill>
-
 
 		<data key="Confidential"> 
-		    (Coroner, __DEFAULT__, who_argued(john)) 
+		    (Coroner, __DEFAULT__, argued(john)) 
 		</data>   
 	</agent-instance>
       
@@ -48,7 +42,7 @@
 			<source>config/skills/DetailQuery.xml</source>
         	</skill>
 
-	   	<desire>q_Mary(who_argued(X))_1</desire>    
+	   	<desire>q_Mary(argued(X))_1</desire>    
 <!--  	  -  <desire>q_Mary(john_argued)_1</desire>     
   	<desire>q_Mary(someone_argued)_2</desire>   
 		<desire>q_Mary(you_listened)_3</desire>   

@@ -1,0 +1,9 @@
+Branch: ddilger-feature
+commit b79e73002b73d25a9e7ac3bca6924a915bc9d6a0
+Merge: 2dcf638 4c15417
+Author: Daniel Dilger <ddilger@purdue.edu>
+Date:   Fri Jun 29 12:25:18 2012 +0200
+
+    Merge branch 'ViolatesOperator' into ddilger-feature
+
+

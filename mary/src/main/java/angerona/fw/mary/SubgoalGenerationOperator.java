@@ -1,14 +1,14 @@
+//The code in here really needs to be refactored so that it's more readable
 package angerona.fw.mary;
 
 import java.util.Arrays;
 import java.util.Comparator;
-//import java.util.LinkedList;
+import java.util.LinkedList;
 import java.util.Set;
-
-//import javax.swing.JOptionPane;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
@@ -19,11 +19,12 @@ import angerona.fw.Desire;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+import angerona.fw.comm.DetailQuery;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
-//import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
@@ -135,15 +136,26 @@ public class SubgoalGenerationOperator extends
 				if(si == -1 || li == -1)
 					continue;
 				String content = desire.toString().substring(si,li);
+				//To make detail questions work with arity greater than 0
+				if(content.contains("("))
+				{
+					content = content.substring(0, content.indexOf("("));
+				}
+				
 				//Should the snippet above be put in its own subroutine?
 				
-				Skill query = (Skill) ag.getSkill("Query");
+				Skill query = (Skill) ag.getSkill("DetailQuery");
 				if(query == null) {
-					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
+					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "DetailQuery");
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
-				sg.newStack(query, new Query(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
+				FolFormula f = new Atom(new Predicate(content));
+				if(content.startsWith("-")) {
+					content = content.substring(1);
+					f = new Negation(new Atom(new Predicate(content)));
+				}
+				sg.newStack(query, new DetailQuery(ag.getName(), recvName, f).getContext());
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
 				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 
@@ -153,47 +165,91 @@ public class SubgoalGenerationOperator extends
 		
 		return reval;
 	}
-	
-	//The most basic form of the lying operator
-	protected AnswerValue lie(AngeronaAnswer truth)
+	class AnswerComp implements Comparator<AngeronaDetailAnswer>
 	{
-		if(truth.getAnswerExtended() == AnswerValue.AV_TRUE)
-			return AnswerValue.AV_FALSE;
-		else if(truth.getAnswerExtended() == AnswerValue.AV_FALSE)
-			return AnswerValue.AV_TRUE;
-		return AnswerValue.AV_UNKNOWN;
+
+		public int compare(AngeronaDetailAnswer a1, AngeronaDetailAnswer a2) {
+			return a1.toString().compareTo(a2.toString());
+		}
+		
 	}
+
 	
+	//Checks whether the query is a simple true/false type question or not
+	//It does this by checking whether the answer contains a parentheses, which is a terrible solution
+	private boolean simpleQuery(AngeronaDetailAnswer queryAnswer)
+	{
+		if(queryAnswer.toString().contains("("))
+		{
+			return false;
+		}
+		return true;
+	}
+	//Expresses ignorance about a certain topic
+		public AngeronaDetailAnswer expressionOfIgnorance(Query query, Agent ag)
+		{
+			FolFormula question = (FolFormula)query.getQuestion();
+			FolFormula expr = new Atom(new Predicate("dontKnow("+question.toString()+")")); //This solution needs to be fixed...
+			return new AngeronaDetailAnswer(ag.getBeliefs().getWorldKnowledge(), question, expr);
+			
+		}
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
-		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
+		Skill qaSkill = (Skill) ag.getSkill("DetailQueryAnswer");
 		if(qaSkill == null) {
-			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
+			LOG.warn("Agent '{}' does not have Skill: 'DetailQueryAnswer'", ag.getName());
 			return false;
 		}
 		
 		
-		Query query = (Query) (ag.getActualPerception());
-		AngeronaAnswer ans = ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
+		Query query = (Query) (ag.getActualPerception()); //This needs to be a DetailQuery at some point
+		AngeronaDetailAnswer[] trueAnswers = 
+				ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
 		
-		AnswerValue lie = lie(ans);
+		Arrays.sort(trueAnswers, new AnswerComp()); //The answers are sorted alphabetically for testing purposes
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
-		context.set("answer", ans.getAnswerExtended());
+		context.set("answer", trueAnswers[0].getAnswerExtended());
+		
+		LinkedList <AngeronaDetailAnswer> allAnswers = new LinkedList<AngeronaDetailAnswer>();
+		for(AngeronaDetailAnswer truth : trueAnswers)
+		{
+			allAnswers.add(truth);
+		}
+		
+		//Check if query is a simple true/false question
+		if(allAnswers.size()>0 && simpleQuery(allAnswers.get(0)))
+		{
+			System.out.println("(Delete) Adding simple lie");
+			//Add logical negation of fact
+			AngeronaDetailAnswer simpleLie = new LyingOperator().lie(allAnswers.get(0), ag.getBeliefs().getWorldKnowledge());
+			allAnswers.add(simpleLie);
+		}
+		//Expression of ignorance about answer to query
+		//This probably shouldn't come from the "LyingOperator", since the agent could be honestly ignorant
+		
+		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
+		allAnswers.add(ignorance);
+		
+		System.out.println("(Delete) printing out all answers:");
+		for(AngeronaDetailAnswer ans : allAnswers)
+		{
+			System.out.println("\t"+ans.toString());
+		}
 		
 		Subgoal sg = new Subgoal(ag, des);
 		sg.newStack(qaSkill, context);
 		
-		context = new Context(context);
-		context.set("answer", lie);
-		sg.newStack(qaSkill, context);
+		for(int i=1;i<allAnswers.size();i++)
+		{
+			context = new Context(context);
+			context.set("answer", allAnswers.get(i).getAnswerExtended());
+			sg.newStack(qaSkill, context);
+		}
 		
 		ag.getPlanComponent().addPlan(sg);
-		
-	
-		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
 		return true;
 	}
 	

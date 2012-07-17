@@ -102,7 +102,7 @@ public class StdTerm implements Term {
 
 	@Override
 	public String get() {
-		return termValue;
+		return this.termValue;
 	}
 
 	@Override

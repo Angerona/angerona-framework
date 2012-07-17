@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.DefaultPerceptionFactory;
+import angerona.fw.internal.DetailPerceptionFactory;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.internal.PluginInstantiator;
@@ -50,7 +51,9 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 	private String name = "";
 	
 	/** implementation of the factory used for perceptions */
-	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
+	//I want this to be plugin-implemented
+	//private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
+	private PerceptionFactory perceptionFactory = new DetailPerceptionFactory();
 	
 	/** flag indicating if the environment is currently in its update process */
 	protected boolean doingTick = false;
