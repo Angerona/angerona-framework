@@ -37,8 +37,8 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	protected Boolean processInt(ViolatesParameter param) {
 		this.weakenings = processIntAndWeaken(param);
 		//Not sure whether or not to call the super.processInt()
-		//return false;
-		return super.processInt(param);
+		return false;
+		//return super.processInt(param);
 	}
 	private Rule convertToRule(FolFormula f)
 	{
@@ -143,7 +143,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				{
 					FolFormula secretInfo = (FolFormula) secret.getInformation(); //Info stored as a FolFormula in secret, yet access as a Formula...
 					Rule secretRule = convertToRule(secretInfo);
-					
+					System.out.println("(Delete) information regarding secret: "+secret.toString());
 					//better form to use hasRule instead of contains (though technically doesn't matter here)
 					//hasRule is a deep comparison while contains is reference-based (for now)
 					if(prog.hasRule(secretRule))  

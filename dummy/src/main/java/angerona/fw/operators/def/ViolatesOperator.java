@@ -55,7 +55,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 					Set<FolFormula> cloneInfere = view.infere(reasoningOperator.first, reasoningOperator.second);
 					for(Secret secret : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
 						if(secret.getSubjectName().equals(a.getReceiverId())) {
-							// Check for false positives first, output an warning, because secret weaking was not applied correctly then
+							// Check for false positives first, output an warning, because secret weakening was not applied correctly then
 							boolean inOrig = origInfere.contains(secret.getInformation());
 							if(inOrig) {
 								LOG.warn("The secret '{}' is already infered in the original view.", secret.toString());

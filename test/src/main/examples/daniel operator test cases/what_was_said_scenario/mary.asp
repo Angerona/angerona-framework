@@ -2,6 +2,7 @@ world {
 	said(youLied).
 	said(youOwe).
 	said(husbandWifeScandal).
+	argued(john).
 } view->Coroner {
 	son(lawrence).
 	son(john).

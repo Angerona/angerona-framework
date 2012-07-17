@@ -18,6 +18,7 @@ import angerona.fw.serialize.SkillConfig;
 import angerona.fw.serialize.Statement;
 
 /** A skill represents an atomic intention an agent can perform */
+//Should this implement Cloneable? --Daniel
 public class Skill extends Intention implements Runnable {
 
 	/** the unique name of the Skill */
