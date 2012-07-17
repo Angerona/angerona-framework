@@ -1,0 +1,282 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.5";
+  static = false;
+}
+
+PARSER_BEGIN(FolParserB)
+package net.sf.tweety.logics.firstorderlogic.parser;
+
+import java.util.*;
+import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.util.Pair;
+
+import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
+
+@SuppressWarnings("all")
+public class FolParserB
+{ 
+  public void setForce(boolean forceDefinitions)  {
+    this.forceDefinitions = forceDefinitions;  }
+  private boolean forceDefinitions = false;
+
+  private FolFormula helper(FolFormula form, Pair<Integer, FolFormula > exform)	throws ParseException
+  {
+    FolFormula reval = null;
+    if(exform.getFirst() == 0)    {
+      return form;    }
+    if(exform.getFirst() == 1)    {
+      return new Conjunction(form, exform.getSecond());    }
+    if(exform.getFirst() == 2)
+    {      return new Disjunction(form, exform.getSecond());    }    throw new ParseException("Error");  }
+}
+
+PARSER_END(FolParserB)
+
+/* BNF: adapt old BNF of fol-tweety to have optional signatures and change negation symbol
+ * from '!' to '-'. Because '-' was used for contradition we use '!' for contradictions now.
+ * knowledge base is given by (starting symbol is KB)
+ *
+ * KB 			::== (SORTSDEC DECLAR)? FORMULAS
+ * DECLAR		::== (FUNCTORDEC | PREDDEC)*
+ * SORTSDEC     ::== ( SORTNAME "=" "{" (CONSTANTNAME ("," CONSTANTNAME)*)? "}" "\n" )*
+ * PREDDEC		::== "type" "(" PREDICATENAME ("(" SORTNAME ("," SORTNAME)* ")")? ")" "\n"
+ * FUNCTORDEC	::== "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
+ * FORMULAS     ::== (FORMULA)*
+ * FORMULA      ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" FORMULA |
+ * 					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "-" FORMULA | "+" | "!"
+ * ATOM			::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
+ * TERM			::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
+ *  
+ * where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
+ * symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
+ *
+ * javacc forbids left recursion therefore we will make FORMULA a non left-recursiv rule:
+ * FORMULA		::== ATOM FORMULAEX | "forall" VARIABLENAME ":" "(" FORMULA FORMULAEX ")" | "exists VARIABLENAME ":" "(" FORMULA FORMULAEX ")" |
+ *					 "(" FORMULA FORMULAEX ")" | "-" FORMULA FORMULAEX | "+" | "!"
+ * FORMULAEX	::== "&&" FORMULA | "||" FORMULA
+ */
+
+SKIP :
+{
+  " "
+| "\n"
+| "\r"
+| "\t"
+| <"%" (~["\n"])*>
+}
+
+TOKEN : /* OPERATORS */
+{
+  < FORALL : "forall" >
+| < EXISTS : "exist" >
+| < DDOT : ":"  >
+| < EQUAL : "=" >
+| < OR : "||" >
+| < AND : "&&" >
+| < NOT: "-" >
+| < TAUTOLOGY: "+" >
+| < CONTRADICTION: "!" >
+| < LBRA : "(" >
+| < RBRA : ")" >
+| < SQLBRA : "[" >
+| < SQRBRA : "]" >
+| < CURLBRA : "{" >
+| < CURRBRA : "}" >
+}
+
+TOKEN :
+{
+  < DIGIT : [ "0"-"9" ] >
+| < NUMBER : (< DIGIT >)+ >
+| < LCHAR : ["a"-"z"]>
+| < UCHAR : ["A"-"Z"] >
+| < SYMBOL: (< LCHAR >|< UCHAR >|< DIGIT >) >
+| < CONSTANT: < LCHAR >(< SYMBOL >)* >
+| < VARIABLE: < UCHAR >(< SYMBOL >)* >
+| < BLANK : "_" >
+| < COMMA : "," >
+}
+
+FolBeliefSet KB() :{
+  List<Sort > sorts;
+  FolFormula ff;
+  FolBeliefSet bb = new FolBeliefSet();}
+{
+ (
+   LOOKAHEAD(2)
+   sorts = sortdecl()
+   {     System.out.println("Sorts:\n" + sorts.toString());
+   } )?
+ (
+   ff = formula()   {
+     bb.add(ff);    }
+ )*
+
+ {
+   return bb; }
+}
+
+FolFormula formula() :
+{
+  Token t;
+  FolFormula temp;
+  Pair<Integer, FolFormula > ex;
+  FolFormula reval;
+  Variable v = null;}
+{
+  (  
+	  (
+	    temp = atom() ex = formulaex()
+	    {
+	      reval = helper(temp, ex);	    }	  )
+	  | 
+	  (
+	    < FORALL > t = < VARIABLE > < DDOT > temp = formula() ex = formulaex()	    {
+	      v = new Variable(t.image);
+	      reval = new ForallQuantifiedFormula(helper(temp, ex), v);	    } 	  )
+	  |
+	  (
+	    < EXISTS > t = < VARIABLE > < DDOT > temp = formula() ex = formulaex()
+	    {
+	      v = new Variable(t.image);
+	      reval = new ExistsQuantifiedFormula(helper(temp, ex), v);	    }	  )
+	  |
+	  (
+	    < NOT > temp = formula() ex = formulaex()
+	    {
+	      reval = new Negation(helper(temp, ex));	    }	  )
+	  |
+	  (
+	    < CONTRADICTION >
+	    {
+	      reval = new Contradiction();	    }	  )
+	  |
+	  (
+	    < TAUTOLOGY >
+	    {
+	      reval = new Tautology();	    }	  )
+  )    
+  {
+    return reval;  } }
+
+Pair<Integer, FolFormula> formulaex() :
+{
+  
+  Integer status = 0; // 0 nothing, 1 and, 2 or
+  FolFormula form = null;
+  Pair<Integer, FolFormula> reval = new Pair<Integer, FolFormula>();}
+{
+  (
+    (   
+      < AND > form = formula()
+      {        status = 1;
+      }    )
+    |
+    (
+      < OR > form = formula()
+      {        status = 2;
+      }    )
+  )?
+  {
+    reval.setFirst(status);
+    reval.setSecond(form);
+    return reval;  }}
+
+Atom atom() :
+{
+  String identifier;
+  Term t;
+  Atom reval;
+  List<Term > terms = new LinkedList<Term >();}
+{
+  identifier = identifier()
+  (
+    < LBRA >
+  	t = term()  	{
+  	  terms.add(t);  	}
+  	(
+  	  < COMMA >
+  	  t = term()
+  	  {
+  	    terms.add(t);  	  }  	)*
+    < RBRA >
+  )?
+  {
+    Predicate p = new Predicate(identifier, terms.size());
+    reval = new Atom(p, terms);    return reval;
+  }}
+
+Term term() :
+{
+  Token token;
+  Term reval;}
+{
+  ( 
+	( 
+	  token = < CONSTANT >
+	  {
+	    reval = new Constant(token.image);	  }
+ 	)
+	|
+	(	  token = < VARIABLE >
+	  {	    reval = new Variable(token.image);
+	  }
+	)
+  )
+  // TODO Functor 
+  {
+    return reval;  }}
+String identifier() :
+{
+  Token t;}
+{
+  (    
+    (      t = < CONSTANT >
+    )
+    |
+    (
+      t = < VARIABLE >    )
+  )
+  {
+    return t.image;  }}
+
+List<Sort > sortdecl() :
+{
+  Set<Constant > temp;
+  List<Sort > reval = new LinkedList<Sort >();
+  String name;}
+{
+  (
+    LOOKAHEAD(2)
+  	(  	  name = identifier()
+  	  < EQUAL >
+  	  < CURLBRA >
+  	  temp = constants()
+  	  < CURRBRA >
+  	)
+  	{
+  	  reval.add(new Sort(name, temp));  	}
+  )+
+  {
+    return reval;  }
+}
+
+Set<Constant > constants() :
+{
+  Token t;
+  Set<Constant > reval = new HashSet<Constant >();}
+{
+  t = < CONSTANT >
+  {
+    reval.add(new Constant(t.image));  }
+  (
+    < COMMA >
+    t = < CONSTANT >
+    {
+      reval.add(new Constant(t.image));    }  )*
+  {
+    return reval;  }}
