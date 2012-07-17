@@ -57,6 +57,10 @@ public class ElpSignature extends Signature {
 	
 	public void add(Object obj) {
 		if(obj == null)	return;
+		if(obj instanceof Neg) {
+			obj = ((Neg)obj).getAtom();
+		}
+		
 		if(obj instanceof Atom) {
 			if(!predicates.contains(obj))
 				predicates.add((CommonStructure)obj);
