@@ -126,6 +126,13 @@ public class ConfidentialKnowledge
 		BaseBeliefbase world = getAgent().getBeliefs().getWorldKnowledge();
 		Signature worldSig = world.getSignature();
 		SymbolSet ss = worldSig.getSymbolSet();
+		Set<String> views = getAgent().getBeliefs().getViewKnowledge().keySet();
+		for(String viewname : views) {
+			BaseBeliefbase view = getAgent().getBeliefs().getViewKnowledge().get(viewname);
+			Signature sig = view.getSignature();
+			ss.add(sig.getSymbolSet());
+		}
+		
 		LOG.info(ss.toString());
 		this.signature = new FolSignature(ss);
 		if(!additionalData.containsKey("Confidential")) {

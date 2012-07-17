@@ -2,6 +2,7 @@ package net.sf.tweety;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,5 +120,30 @@ public abstract class SymbolSetAdapter implements SymbolSet {
 			reval +=(constant)+"\n";
 		}
 		return reval;
+	}
+	
+	@Override
+	public void add(SymbolSet other) {
+		constants.addAll(other.getConstants());
+		symbols.addAll(other.getSymbols());
+		variables.addAll(other.getVariables());
+
+		for(String symbol : other.getSymbols()) {
+			aritys.put(symbol, other.getArity(symbol));
+		}
+		
+		if(other.isSorted() && this.isSorted()) {
+			for(String symbol : other.getSymbols()) {
+				List<String> temp = new LinkedList<String>();
+				for(int i=0; i<other.getArity(symbol); ++i) {
+					temp.add(other.getSymbolSort(symbol, i));
+				}
+				symbolSorts.put(symbol, temp);
+			}
+			
+			for(String constant : other.getConstants()) {
+				constantSorts.put(constant, other.getConstantSort(constant));
+			}
+		}
 	}
 }
