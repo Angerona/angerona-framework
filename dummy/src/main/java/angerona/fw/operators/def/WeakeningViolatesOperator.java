@@ -36,6 +36,8 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
 		this.weakenings = processIntAndWeaken(param);
+		//Not sure whether or not to call the super.processInt()
+		//return false;
 		return super.processInt(param);
 	}
 	private Rule convertToRule(FolFormula f)
@@ -98,14 +100,22 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				//Actually, is try/catch even necessary in this case?
 				try
 				{
-					newAnsSets = ((AspReasoner) view.getReasoningOperator()).processAnswerSets();
+					//Actually I don't think the solution below was even necessary. It wasn't a bug, just bad output
+					//Ensure the reasoning operator's belief base is up to date
+					//Ask Tim about this solution?
+					AspReasoner ar = (AspReasoner) view.getReasoningOperator();
+					//ar.infer(view);
+					newAnsSets = ar.processAnswerSets();
+					//System.out.println("(Delete) newAnsSets:"+newAnsSets.toString());
 				}
 				catch (IndexOutOfBoundsException ie)
 				{
-					
+					//System.out.println("(Delete) IndexOutOfBounds processing answer sets");
 				}
 				if (newAnsSets==null)
 				{
+					//There is a bug with contradiction checking
+					System.out.println("(Delete) contradiction noted here");
 					report(param.getAgent().getName() + "' creates contradiction by: '" + param.getAction() + "'", view);
 					secretList = representTotalExposure(conf);
 					return secretList;
@@ -118,7 +128,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 					Rule secretRule = convertToRule(secretInfo);
 					if(prog.contains(secretRule))
 					{
-						report(param.getAgent().getName() + "' creates contradiction by: '" + param.getAction() + "'", view);
+						report(param.getAgent().getName() + "' weakens secret by: '" + param.getAction() + "'", view);
 						SecrecyStrengthPair sPair = new SecrecyStrengthPair();
 						sPair.defineSecret(secret);
 						double strength = calculateSecrecyStrength(secretInfo, newAnsSets);

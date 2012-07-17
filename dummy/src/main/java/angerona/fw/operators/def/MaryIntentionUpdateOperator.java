@@ -65,6 +65,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 						//add return value of lyingCost(intention) to intention
 						double cost = lyingCost(intention);
 						intention.setCost(cost);
+						System.out.println("(Delete) atomic intention added 1");
 						atomicIntentions.add(intention);
 					}
 					else
@@ -78,6 +79,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 							//System.out.println("(Delete) number of weakenings: "+sk.weakenings().size());
 							double cost = secrecyWeakeningCost(weakenings);
 							intention.setCost(cost);
+							System.out.println("(Delete) atomic intention added 2");
 							atomicIntentions.add(intention);
 							
 						}
