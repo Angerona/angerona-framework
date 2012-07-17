@@ -57,16 +57,30 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	{
 		return null;
 	}
+	//This function no longer needed
 	private boolean formulaMatchesLiteral(FolFormula secretInfo, Literal literal)
 	{
 		return false;
 	}
 	private double calculateSecrecyStrength(FolFormula secretInfo, List<AnswerSet> ansSets)
 	{
+		/*
+		double numAnsSets = ansSets.size();
+		double setsWithSecret = 0.0;
 		for(AnswerSet as : ansSets)
 		{
-			System.out.println("(Delete) AnswerSet:"+as);
+			Program p = as.toProgram();
+			Rule secretRule = convertToRule(secretInfo);
+			if(p.contains(secretRule))
+			{
+				setsWithSecret += 1;
+			}
 		}
+		double quotient = setsWithSecret/numAnsSets;
+		double strength = 1.0 - quotient;
+		System.out.println("(Delete) Quotient: "+quotient+" strength: "+strength);
+		return strength;
+		*/
 		return 0.0;
 	}
 	protected List<SecrecyStrengthPair> processIntAndWeaken(ViolatesParameter param)
@@ -137,6 +151,13 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 						sPair.defineSecret(secret);
 						double strength = calculateSecrecyStrength(secretInfo, newAnsSets);
 						//Not sure how to access the operator yet
+						double degreeOfWeakening = 1.0 - strength;
+						/* Revealing a single secret entirely may not necessarily mean infinite cost...look over semantics again
+						if(degreeOfWeakening == 1.0) //Represent the total weakening of a secret
+							degreeOfWeakening = INFINITY;
+							*/ 
+						sPair.defineDegreeOfWeakening(degreeOfWeakening);
+						secretList.add(sPair);
 					}
 					
 				}
