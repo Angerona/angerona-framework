@@ -66,7 +66,7 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 						Map <String, String> map =  secret.getReasonerParameters();
 						double oldD = Double.parseDouble(map.get("d"));
 						double newD = oldD - sPair.getDegreeOfWeakening();
-						//map.put("d", new Double(newD).toString());
+						map.put("d", new Double(newD).toString());
 						System.out.println("(Delete) newD:"+newD);
 						secret.setReasonerParameters(map); 
 					}
