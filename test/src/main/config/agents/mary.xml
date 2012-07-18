@@ -3,8 +3,8 @@
 	<name>Mary Agent Implementation</name>
 	<!-- I've never actually looked at the Generate Options Operator. I should sometime. -->
 	<generate-options-class>angerona.fw.operators.def.GenerateOptionsOperator</generate-options-class>
-	<!--     <intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class> --> 
-	   <intention-update-class>angerona.fw.operators.def.MaryIntentionUpdateOperator</intention-update-class>   
+	<!--       <intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class> --> 
+	     <intention-update-class>angerona.fw.operators.def.MaryIntentionUpdateOperator</intention-update-class>   
 	  <subgoal-generation-class>angerona.fw.mary.SubgoalGenerationOperator</subgoal-generation-class>
 	<!--  <update-beliefs-class>angerona.fw.operators.def.UpdateBeliefsOperator</update-beliefs-class> -->
 	<update-beliefs-class>angerona.fw.operators.def.MaryUpdateBeliefsOperator</update-beliefs-class>
