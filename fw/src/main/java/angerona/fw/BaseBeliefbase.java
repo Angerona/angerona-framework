@@ -276,6 +276,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 	
 	public Set<FolFormula> infere() {
+		System.out.println("(Delete) reasoningOperators.getDefault().getClass():"+reasoningOperators.getDefault().getClass());
 		return reasoningOperators.getDefault().infer(this);
 	}
 	
