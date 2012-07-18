@@ -1,13 +1,16 @@
 <agent-configuration>
-	<name>Default Agent Implementation</name>
+<!-- This file should be added to the git register so I don't have to change it when switching branches -->
+	<name>Mary Agent Implementation</name>
+	<!-- I've never actually looked at the Generate Options Operator. I should sometime. -->
 	<generate-options-class>angerona.fw.operators.def.GenerateOptionsOperator</generate-options-class>
-	<!--    <intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class> --> 
-	      <intention-update-class>angerona.fw.operators.def.MaryIntentionUpdateOperator</intention-update-class>  
+	<!--     <intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class> --> 
+	   <intention-update-class>angerona.fw.operators.def.MaryIntentionUpdateOperator</intention-update-class>   
 	  <subgoal-generation-class>angerona.fw.mary.SubgoalGenerationOperator</subgoal-generation-class>
-	<update-beliefs-class>angerona.fw.operators.def.UpdateBeliefsOperator</update-beliefs-class>
-	 <violates-class>angerona.fw.operators.def.WeakeningViolatesOperator</violates-class> 
-	 <!--  <violates-class>angerona.fw.operators.def.DetailSimpleViolatesOperator</violates-class> --> 
-	<!--  <violates-class>angerona.fw.operators.def.DetailViolatesOperator</violates-class> -->
+	<!--  <update-beliefs-class>angerona.fw.operators.def.UpdateBeliefsOperator</update-beliefs-class> -->
+	<update-beliefs-class>angerona.fw.operators.def.MaryUpdateBeliefsOperator</update-beliefs-class>
+	   <violates-class>angerona.fw.operators.def.WeakeningViolatesOperator</violates-class> 
+	<!--     <violates-class>angerona.fw.operators.def.DetailSimpleViolatesOperator</violates-class> -->  
+	<!--    <violates-class>angerona.fw.operators.def.DetailViolatesOperator</violates-class> -->
 	<!--    <violates-class>angerona.fw.operators.def.ViolatesOperator</violates-class> -->
 	
 	<component-classes class="java.util.LinkedList">

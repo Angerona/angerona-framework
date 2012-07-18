@@ -151,9 +151,11 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 						report(param.getAgent().getName() + "' weakens secret by: '" + param.getAction() + "'", view);
 						SecrecyStrengthPair sPair = new SecrecyStrengthPair();
 						sPair.defineSecret(secret);
-						double strength = calculateSecrecyStrength(secretInfo, newAnsSets);
-						//Not sure how to access the operator yet
-						double degreeOfWeakening = 1.0 - strength;
+						double newStrength = calculateSecrecyStrength(secretInfo, newAnsSets);
+						double curStrength = Double.parseDouble(secret.getReasonerParameters().get("d"));
+						System.out.println("(Delete) curStrength: "+curStrength);
+						double degreeOfWeakening = curStrength - newStrength;
+						System.out.println("(Delete) degreeOfWeakening: "+degreeOfWeakening);
 						/* Revealing a single secret entirely may not necessarily mean infinite cost...look over semantics again
 						if(degreeOfWeakening == 1.0) //Represent the total weakening of a secret
 							degreeOfWeakening = INFINITY;
