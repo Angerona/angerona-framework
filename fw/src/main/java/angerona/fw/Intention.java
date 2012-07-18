@@ -32,7 +32,7 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	/* begin Daniel's changes */
 	
 	/** The cost associated with executing this intention */
-	protected double cost = 0;
+	protected double cost = 0.0;
 	
 	/** Whether the intention is honest or deceptive */
 	protected boolean honesty = true;

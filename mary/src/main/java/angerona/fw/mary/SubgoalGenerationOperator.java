@@ -224,8 +224,8 @@ public class SubgoalGenerationOperator extends
 		{
 			System.out.println("(Delete) Adding simple lie");
 			//Add logical negation of fact
-		//	AngeronaDetailAnswer simpleLie = new LyingOperator().lie(allAnswers.get(0), ag.getBeliefs().getWorldKnowledge());
-		//	allAnswers.add(simpleLie);
+			AngeronaDetailAnswer simpleLie = new LyingOperator().lie(allAnswers.get(0), ag.getBeliefs().getWorldKnowledge());
+			allAnswers.add(simpleLie);
 		}
 		//Expression of ignorance about answer to query
 		//This probably shouldn't come from the "LyingOperator", since the agent could be honestly ignorant
@@ -255,11 +255,11 @@ public class SubgoalGenerationOperator extends
 			context.set("answer", answer);
 			if(answer.toString().contains("dontKnow"))
 			{
-				sg.newStack(qaSkillLie, context);
+				sg.newStack(qaSkillLie.deepCopy(), context); //Theoretically this should be deepCopied every time too, but not necessary now
 			}
 			else
 			{
-				sg.newStack(qaSkill, context);
+				sg.newStack(qaSkill.deepCopy(), context);
 			}
 		}
 		

@@ -45,8 +45,12 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		double total = 0.0;
 		for (SecrecyStrengthPair pair : weakenings)
 		{
-			total += pair.getDegreeOfWeakening();
+			//Doesn't always work with += for some reason. Interesting...
+			total = total + pair.getDegreeOfWeakening();
+			System.out.println("(Delete) pair secret:"+pair.getSecret().getInformation().toString()
+					+" degreeOfWeakening 3:"+pair.getDegreeOfWeakening());
 		}
+		System.out.println("(Delete) total cost of weakening:"+total);
 		return total;
 	}
 	
@@ -102,14 +106,25 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 					{
 						intention.run();
 						Skill sk = (Skill)intention;
-						//Perhaps the output of sk.weakenings() should be saved rather than accessed twice, but there are dependency issues
+						
 						List<SecrecyStrengthPair> weakenings = sk.weakenings();
+						for(SecrecyStrengthPair sp: weakenings)
+						{
+							System.out.println("(Delete) sp secret:"+sp.getSecret().getInformation().toString()
+									+" degreeOfWeakening 1:"+sp.getDegreeOfWeakening());
+						}
 						if(weakenings != null) {
 							report("Mental action successfull. Now weighing cost of '" + sk.getName() + "' as next atomic action.", ag);
 							//System.out.println("(Delete) number of weakenings: "+sk.weakenings().size());
+							for(SecrecyStrengthPair sp: weakenings)
+							{
+								System.out.println("(Delete) sp secret:"+sp.getSecret().getInformation().toString()
+										+" degreeOfWeakening 2:"+sp.getDegreeOfWeakening());
+							}
 							double cost = secrecyWeakeningCost(weakenings);
 							intention.setCost(cost);
-							System.out.println("(Delete) atomic intention added 2");
+							System.out.println("(Delete) cost:"+cost);
+							System.out.println("(Delete) intention.getcost():"+intention.getCost());
 							atomicIntentions.add(intention);
 							
 						}
@@ -126,6 +141,10 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		else
 		{
 			//Choose atomic intention with minimal cost
+			for(Intention intent : atomicIntentions)
+			{
+				System.out.println("(Delete) intent cost:"+intent.getCost());
+			}
 			return minimalCosting(atomicIntentions);
 		}
 	}
