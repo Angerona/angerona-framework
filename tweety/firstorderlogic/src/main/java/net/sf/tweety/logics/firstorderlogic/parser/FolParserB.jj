@@ -32,6 +32,61 @@ public class FolParserB
       return new Conjunction(form, exform.getSecond());    }
     if(exform.getFirst() == 2)
     {      return new Disjunction(form, exform.getSecond());    }    throw new ParseException("Error");  }
+
+  /**
+   *
+   */
+  private List<Sort > getSorts(FolSignature sig, List<String > names)
+	throws ParseException
+  {
+    List<Sort >reval = new LinkedList<Sort >();
+    for(String name : names)
+    {
+      Sort s = sig.getSort(name);
+      if(s == null)      {
+        if(forceDefinitions)
+        {
+          throw new ParseException("Sort with name '" + name + "' was not defined.");        }
+        else
+        {
+          s = new Sort(name);
+      	  sig.add(s);
+        }      }    }
+    return reval;  }
+
+  private Functor getFunctor(String name, FolSignature signature)
+  {
+    return signature.getFunctor(name);  }
+
+  private Functor getOrCreateFunctor(String name, List<Term >args, Sort targetSort, FolSignature signature)
+  	throws ParseException  {
+    Functor reval = signature.getFunctor(name);
+    if(reval == null)    {
+      if(forceDefinitions)      {
+        throw new ParseException("Functor with name '" + name + "' was not defined.");      }
+      else
+      {
+        List<Sort >sorts = new LinkedList<Sort >();
+        for(Term t : args)        {
+          sorts.add(t.getSort());        }
+        reval = new Functor(name, sorts, targetSort);      }    }
+    return reval;  }
+
+  private Predicate getPredicate(String name, FolSignature sig)
+  {
+    return sig.getPredicate(name);  }
+
+  private Sort getArgumentType(FolBasicStructure fbs, int count)
+    throws ParseException
+  {
+    if(fbs == null)
+    {
+      return Sort.THING;    }
+    if(count >= fbs.getArguments().size())
+    {
+	  return null;    }
+
+    return fbs.getArguments().get(count);  }
 }
 
 PARSER_END(FolParserB)
@@ -54,7 +109,8 @@ PARSER_END(FolParserB)
  * where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
  * symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
  *
- * javacc forbids left recursion therefore we will make FORMULA a non left-recursiv rule:
+ * javacc forbids left recursion therefore we will make FORMULA a non left-recursiv rule
+ * and add the rule FORMULAEX:
  * FORMULA		::== ATOM FORMULAEX | "forall" VARIABLENAME ":" "(" FORMULA FORMULAEX ")" | "exists VARIABLENAME ":" "(" FORMULA FORMULAEX ")" |
  *					 "(" FORMULA FORMULAEX ")" | "-" FORMULA FORMULAEX | "+" | "!"
  * FORMULAEX	::== "&&" FORMULA | "||" FORMULA
@@ -73,6 +129,7 @@ TOKEN : /* OPERATORS */
 {
   < FORALL : "forall" >
 | < EXISTS : "exist" >
+| < TYPE : "type" >
 | < DDOT : ":"  >
 | < EQUAL : "=" >
 | < OR : "||" >
@@ -104,15 +161,19 @@ TOKEN :
 FolBeliefSet KB() :{
   List<Sort > sorts;
   FolFormula ff;
-  FolBeliefSet bb = new FolBeliefSet();}
+  FolBeliefSet bb = new FolBeliefSet();
+  FolSignature signature = (FolSignature)bb.getSignature();}
 {
  (
    LOOKAHEAD(2)
    sorts = sortdecl()
-   {     System.out.println("Sorts:\n" + sorts.toString());
-   } )?
+   {
+     for(Sort s : sorts)     {
+       signature.add(s);     }
+   }
+   declar(signature) )?
  (
-   ff = formula()   {
+   ff = formula(signature)   {
      bb.add(ff);    }
  )*
 
@@ -120,7 +181,7 @@ FolBeliefSet KB() :{
    return bb; }
 }
 
-FolFormula formula() :
+FolFormula formula(FolSignature signature) :
 {
   Token t;
   FolFormula temp;
@@ -130,23 +191,23 @@ FolFormula formula() :
 {
   (  
 	  (
-	    temp = atom() ex = formulaex()
+	    temp = atom(signature) ex = formulaex(signature)
 	    {
 	      reval = helper(temp, ex);	    }	  )
 	  | 
 	  (
-	    < FORALL > t = < VARIABLE > < DDOT > temp = formula() ex = formulaex()	    {
+	    < FORALL > t = < VARIABLE > < DDOT > temp = formula(signature) ex = formulaex(signature)	    {
 	      v = new Variable(t.image);
 	      reval = new ForallQuantifiedFormula(helper(temp, ex), v);	    } 	  )
 	  |
 	  (
-	    < EXISTS > t = < VARIABLE > < DDOT > temp = formula() ex = formulaex()
+	    < EXISTS > t = < VARIABLE > < DDOT > temp = formula(signature) ex = formulaex(signature)
 	    {
 	      v = new Variable(t.image);
 	      reval = new ExistsQuantifiedFormula(helper(temp, ex), v);	    }	  )
 	  |
 	  (
-	    < NOT > temp = formula() ex = formulaex()
+	    < NOT > temp = formula(signature) ex = formulaex(signature)
 	    {
 	      reval = new Negation(helper(temp, ex));	    }	  )
 	  |
@@ -163,7 +224,7 @@ FolFormula formula() :
   {
     return reval;  } }
 
-Pair<Integer, FolFormula> formulaex() :
+Pair<Integer, FolFormula> formulaex(FolSignature signature) :
 {
   
   Integer status = 0; // 0 nothing, 1 and, 2 or
@@ -172,12 +233,12 @@ Pair<Integer, FolFormula> formulaex() :
 {
   (
     (   
-      < AND > form = formula()
+      < AND > form = formula(signature)
       {        status = 1;
       }    )
     |
     (
-      < OR > form = formula()
+      < OR > form = formula(signature)
       {        status = 2;
       }    )
   )?
@@ -186,50 +247,81 @@ Pair<Integer, FolFormula> formulaex() :
     reval.setSecond(form);
     return reval;  }}
 
-Atom atom() :
+Atom atom(FolSignature signature) :
 {
   String identifier;
   Term t;
   Atom reval;
+  Predicate p;
+  int count = 0;
+  Sort type;
   List<Term > terms = new LinkedList<Term >();}
 {
   identifier = identifier()
+  {
+    p = getPredicate(identifier, signature);
+    type = getArgumentType(p, count++);  }
   (
     < LBRA >
-  	t = term()  	{
-  	  terms.add(t);  	}
+  	t = term(signature, type)  	{
+  	  terms.add(t);
+  	  type = getArgumentType(p, count++);  	}
   	(
   	  < COMMA >
-  	  t = term()
+  	  t = term(signature, type)
   	  {
-  	    terms.add(t);  	  }  	)*
+  	    terms.add(t);
+  	    type = getArgumentType(p, count++);  	  }  	)*
     < RBRA >
   )?
   {
-    Predicate p = new Predicate(identifier, terms.size());
+    if(p == null)
+    {
+      p = new Predicate(identifier, terms.size());
+      signature.add(p);
+	}
     reval = new Atom(p, terms);    return reval;
   }}
 
-Term term() :
+Term term(FolSignature signature, Sort type) :
 {
-  Token token;
-  Term reval;}
+  Term temp;
+  String fname;
+  int count = 0;
+  Sort subtype;
+  Functor f;
+  List<Term > terms = new LinkedList<Term >();}
 {
+  fname = identifier()
+  {
+      f = getFunctor(fname, signature);
+      subtype = getArgumentType(f, count++);
+  }
   ( 
-	( 
-	  token = < CONSTANT >
-	  {
-	    reval = new Constant(token.image);	  }
- 	)
-	|
-	(	  token = < VARIABLE >
-	  {	    reval = new Variable(token.image);
-	  }
-	)
-  )
+    < LBRA >
+    temp = term(signature, subtype)
+	{
+	  terms.add(temp);
+	  subtype = getArgumentType(f, count++);
+	}
+    (
+      < COMMA >
+      temp = term(signature, subtype)
+      {
+        terms.add(temp);
+        subtype = getArgumentType(f, count++);      }    )*  
+    < RBRA >
+    {
+      return new FunctionalTerm(getOrCreateFunctor(fname, terms, type, signature), terms);    }  )?
+  
   // TODO Functor 
   {
-    return reval;  }}
+    if(fname.charAt(0) < 97)
+    {
+      return new Variable(fname);    }
+    else
+    {
+      return new Constant(fname);    }  }}
 String identifier() :
 {
   Token t;}
@@ -280,3 +372,44 @@ Set<Constant > constants() :
       reval.add(new Constant(t.image));    }  )*
   {
     return reval;  }}
+
+void declar(FolSignature signature) :
+{
+  boolean ftor = false;
+  String name;
+  String name2 = null;
+  String temp;
+  List<String > sorts = new LinkedList<String >();}
+{
+  (
+    < TYPE > name = identifier()
+    < LBRA >
+    (
+	  < EQUAL > name2 = identifier()
+      {
+        ftor = true;      }        )?
+    < LBRA >
+  	  (
+  	    temp = identifier()
+  	    {
+  	      sorts.add(temp);  	    }
+  	    (
+  	      < COMMA >
+  	      temp = identifier()
+  	      {
+  	        sorts.add(temp);  	      }  	    )*  	  )?
+    < RBRA >
+    < RBRA >
+    {
+      FolBasicStructure fbs;
+      if(ftor)      {
+        List<String > one_elem = new LinkedList<String >();
+        one_elem.add(name);
+        fbs = new Functor(name2,
+        	getSorts(signature, sorts),
+        	getSorts(signature, one_elem).get(0));      }
+      else
+      {
+        fbs = new Predicate(name, getSorts(signature, sorts));      }
+      signature.add(fbs);    }
+  )*}

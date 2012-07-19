@@ -16,13 +16,15 @@ public class FunctionalTest {
 		
 				bb  = "Persons={john,mary}\n";
 				bb += "married(john, mary)\n";
-				bb += "-argued(john)";
+				bb += "-argued(john)\n";
+				bb += "test(wife(john))";
 				
 		FolParserB bp = new FolParserB(new StringReader(bb));
 		
 		try {
 			FolBeliefSet fbs = bp.KB();
-			System.out.println(fbs);
+			System.out.println("Signature: " + fbs.getSignature());
+			System.out.println("Beliefbase: " + fbs);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
