@@ -39,17 +39,28 @@ public class ConfidentialKnowledge
 	/** set of confidential targets defining this beliefbase */
 	private Set<Secret> confidentialTargets = new HashSet<Secret>();
 	
-	private Map<Pair<String, Map<String, String>>, Set<Secret>> targetsByReasoningOperator = new HashMap<Pair<String, Map<String, String>>, Set<Secret>>();
+	/**
+	 * This map is used for optimization purposes. It contains Sets of secrets as values and it keys
+	 * are pairs describing the used Reasoner (ClassName, ParamterMap). 
+	 * This map made it easy to use a minimal amount of infere calls to because it defines a sort
+	 * on the secrets based on the used reasoner.
+	 */
+	private Map<Pair<String, Map<String, String>>, Set<Secret>> optimizationMap = new HashMap<Pair<String, Map<String, String>>, Set<Secret>>();
 	
+	/** The used signature */
 	private FolSignature signature = new FolSignature();
 	
+	/** Default Ctor */
 	public ConfidentialKnowledge() {
 		super();
 	}
 	
+	/** Copy Ctor: The property listeners will be registered for each target and are not copied by secrets clone method */
 	public ConfidentialKnowledge(ConfidentialKnowledge other) {
 		for(Secret ct : other.confidentialTargets) {
-			this.confidentialTargets.add((Secret)ct.clone());
+			Secret clone = (Secret)ct.clone();
+			clone.addPropertyListener(this);
+			this.confidentialTargets.add(clone);
 		}
 	}
 	
@@ -78,27 +89,23 @@ public class ConfidentialKnowledge
 	public boolean addConfidentialTarget(Secret cf) {
 		boolean reval = confidentialTargets.add(cf);
 		if(reval) {
-			Pair<String, Map<String, String>> key = new Pair<String, Map<String, String>>(cf.getReasonerClassName(), cf.getReasonerParameters());
-			if(!targetsByReasoningOperator.containsKey(key)) {
-				targetsByReasoningOperator.put(key, new HashSet<Secret>());
-			}
-			targetsByReasoningOperator.get(key).add(cf);
+			addToMap(cf, cf.getPair());
 			cf.addPropertyListener(this);
+			LOG.info("Add secret '{}' to confidential knowledge of '{}'", cf, getAgent().getName());
 		}
 		return reval;
 	}
+	
 	public boolean removeConfidentialTarget(Secret cf)
 	{
 		boolean reval = confidentialTargets.remove(cf);
 		if(reval) {
-			Pair<String, Map<String, String>> key = cf.getPair();
-			targetsByReasoningOperator.get(key).remove(cf);
-			if(targetsByReasoningOperator.get(key).size() == 0)
-				targetsByReasoningOperator.remove(key);
+			removeFromMap(cf, cf.getPair());
 			cf.removePropertyListener(this);
 		}
 		return reval;
 	}
+
 	/**
 	 * Gets the confidential target defined by the subject and the information which is confidential.
 	 * @param subjectName	name of the agent who should not get the confidential information
@@ -112,12 +119,14 @@ public class ConfidentialKnowledge
 		return null;
 	}
 	
+	/** @return an unmodifiable set of secrets of the confidential knowledge */
 	public Set<Secret> getTargets() {
 		return Collections.unmodifiableSet(confidentialTargets);
 	}
 	
+	/** @return an unmodifiable map. The key is a Pair describing the secrets reasoner (class and parameters) and the values are sets of secrets */
 	public Map<Pair<String, Map<String, String>>, Set<Secret>>  getTargetsByReasoningOperator() {
-		return Collections.unmodifiableMap(targetsByReasoningOperator);
+		return Collections.unmodifiableMap(optimizationMap);
 	}
 
 	@Override
@@ -193,24 +202,60 @@ public class ConfidentialKnowledge
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if(evt.getPropertyName().equals("reasonerProperty")) {
+		if(evt.getPropertyName().equals("reasonerParameters")) {
+			
 			Map<String, String> oldValue = (Map<String, String>)evt.getOldValue();
 			Map<String, String> newValue = (Map<String, String>)evt.getNewValue();
 			Secret secret = (Secret)evt.getSource();
 			
-			Pair<String, Map<String, String>> key = new Pair<String, Map<String, String>>(secret.getReasonerClassName(), oldValue);
-			Set<Secret> secrets = targetsByReasoningOperator.get(key);
-			secrets.remove(secret);
-			if(secrets.size() == 0)
-				targetsByReasoningOperator.remove(key);
+			Pair<String, Map<String, String>> key = new Pair<String, Map<String, String>>(
+					secret.getReasonerClassName(), 
+					new HashMap<String, String>(oldValue));
+			removeFromMap(secret, key);
 			
-			key.second = newValue;
-			if(!targetsByReasoningOperator.containsKey(key)) {
-				targetsByReasoningOperator.put(key, new HashSet<Secret>());
-			}
-			targetsByReasoningOperator.get(key).add(secret);
+			key.second = new HashMap<String, String>(newValue);
+			addToMap(secret, key);
+		} else {
+			// only one observed property...
+			throw new RuntimeException("Did you forgot to rename 'reasonerParameters' everywhere?");
+		}
+	}
+	
+	/**
+	 * Helper method: Adds a secret to the correct position in the optimization map
+	 * @param secret	reference to the secret
+	 * @param key		reference to the used key (might be secret.getPair())
+	 */
+	private void addToMap(Secret secret, Pair<String, Map<String, String>> key) {
+		if(!optimizationMap.containsKey(key)) {
+			optimizationMap.put(key, new HashSet<Secret>());
+		}
+		optimizationMap.get(key).add(secret);
+	}
+	
+	/**
+	 * Helper method:
+	 * @param cf
+	 * @param key
+	 */
+	private void removeFromMap(Secret cf, Pair<String, Map<String, String>> key) {
+		Set<Secret> secrets = optimizationMap.get(key);
+		if(secrets == null) {
+			String error = "Something went wrong in event hierarchy. The searched secret key is not found in keyset of targetsByReasoningOperator map.\n";
+			error += "\nKey: " + key.toString() + " - " + key.hashCode();
+			error += "\nMap-Key-Set:\n";
+			for(Pair<String, Map<String, String>> p : optimizationMap.keySet())
+				error += p.toString() + " - " + p.hashCode() + " - " + p.equals(key) + "\n";
+			throw new RuntimeException(error);
+		}
+		secrets.remove(cf);
+		LOG.info("Removed secret '{}' from Confidential Knowledge of '{}'", cf, getAgent().getName());
+		if(secrets.size() == 0) {
+			optimizationMap.remove(key);
+			LOG.info("Removed Key Pair '{}' from targetsByReasoningOperatorsMap of Agent '{}'", cf, getAgent().getName());
 		}
 	}
 }
