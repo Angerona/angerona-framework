@@ -32,6 +32,14 @@ public class Skill extends Intention implements Runnable {
 	
 	private boolean violates = false;
 	
+	/* Begin Daniel's changes */
+	
+	private Context rememberedContext = null;
+	
+	public Context getRememberedContext()
+	{
+		return rememberedContext;
+	}
 	
 	/* These changes need to be isolate or otherwise changed -- Daniel */
 	private List<SecrecyStrengthPair> weakenings = null;

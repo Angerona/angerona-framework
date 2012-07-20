@@ -37,7 +37,10 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 	}
 	private double lyingCost(Intention intention)
 	{
-		return 0.5;
+		double estimate = 0.5;
+		//Having this line causes a crash in the program...
+		//report(intention+" is a lie. Estimated cost equal to weakening secret by "+estimate);
+		return estimate;
 	}
 	//Which is best for this function? Maximum weakening or sum of weakenings?
 	//Can depend...write about this choice in docs
@@ -65,7 +68,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 			return null;
 		}
 		Intention minIntent = intentions.get(0);
-		double minCost = 20000.0;
+		double minCost = minIntent.getCost();
 		System.out.println("(Delete) number of intentions:"+intentions.size());
 		for (Intention intent : intentions)
 		{

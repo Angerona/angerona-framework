@@ -174,7 +174,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 					}
 					if(secretContained)
 					{
-						report(param.getAgent().getName() + "' weakens secret by: '" + param.getAction() + "'", view);
+						
 						SecrecyStrengthPair sPair = new SecrecyStrengthPair();
 						sPair.defineSecret(secret);
 						double newStrength = calculateSecrecyStrength(secretInfo, newAnsSets);
@@ -189,6 +189,8 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 							*/ 
 						sPair.defineDegreeOfWeakening(degreeOfWeakening);
 						secretList.add(sPair);
+						report(param.getAgent().getName() + "' weakens secret: '"+secretInfo.toString()+"' by: '"+degreeOfWeakening+"' with: '" 
+						+ param.getAction() + "'", view);
 					}
 					
 				}
