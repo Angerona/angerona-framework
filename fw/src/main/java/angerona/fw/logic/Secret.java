@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.event.ChangeEvent;
-
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.util.Pair;
@@ -50,20 +48,37 @@ public class Secret implements Cloneable {
 	
 	private List<PropertyChangeListener> listeners = new LinkedList<PropertyChangeListener>();
 	
+	/** 
+	 * adds a property listener to the secret 
+	 * @param listener	reference to the instance representing the new property-listener.
+	 * @return true 
+	 * */
 	public boolean addPropertyListener(PropertyChangeListener listener) {
 		return listeners.add(listener);
 	}
 	
+	/**
+	 * removes an existing property listener from the secret
+	 * @param listener reference to the listener representing the property-listener.
+	 * @return	true if the Secret contained the specified listener.
+	 */
 	public boolean removePropertyListener(PropertyChangeListener listener) {
 		return listeners.remove(listener);
 	}
 	
+	/**
+	 * Helper method: Invokes all property listeners with the given arguments.
+	 * @param propertyName
+	 * @param oldValue
+	 * @param newValue
+	 */
 	protected void invokePropertyListener(String propertyName, Object oldValue, Object newValue) {
 		for(PropertyChangeListener l : listeners) {
 			l.propertyChange(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
 		}
 	}
 	
+	/** Copy Ctor: Does not copy the listeners into the clone */
 	public Secret(Secret other) {
 		name = other.name;
 		information = other.information;
@@ -71,10 +86,23 @@ public class Secret implements Cloneable {
 		reasonerParameters = new HashMap<String, String>(other.reasonerParameters);
 	}
 	
+	/**
+	 * Ctor:
+	 * @param name			name of the agent
+	 * @param information	formula representing the secret
+	 * @param reasonerClass	name of the used reasoner-class
+	 */
 	public Secret(String name, FolFormula information, String reasonerClass) {
 		this(name, information, reasonerClass, new HashMap<String, String>());
 	}
 	
+	/**
+	 * Ctor:
+	 * @param name			name of the agent
+	 * @param information	formula representing the secret
+	 * @param reasonerClass	name of the used reasoner-class
+	 * @param parameters	map containing the parameters used to invoke the reasoner-class.
+	 */
 	public Secret(String name, FolFormula information,
 			String reasonerClass, Map<String, String> parameters) {
 		this.name = name;
@@ -102,16 +130,31 @@ public class Secret implements Cloneable {
 		return reasonerClass;
 	}
 	
+	/**
+	 * @return  a copy of the map containing the reasoner parameters because its a copy changes did not affect
+	 * 			the event system.
+	 */
 	public Map<String, String> getReasonerParameters() {
-		return reasonerParameters;
+		return new HashMap<>(reasonerParameters);
 	}
 	
+	/**
+	 * @return a pair containing the reasoner class name and the parameters map (copied).
+	 */
 	public Pair<String, Map<String, String>> getPair() {
-		return new Pair<String, Map<String, String>>(reasonerClass, reasonerParameters);
+		return new Pair<String, Map<String, String>>(reasonerClass, 
+				new HashMap<String, String>(reasonerParameters));
 	}
 	
-	public void setReasonerParameters(Map<String, String> parameters) { //I don't think this is always a safe operation
-		invokePropertyListener("reasonerParameters", reasonerParameters, parameters);
+	/**
+	 * changes the reasoner parameters. The change is invoked to interested PropertyListeners like the
+	 * ConfidentialKnowledge for example.
+	 * @param parameters	A map containing the parameters for the reasoner.
+	 */
+	public void setReasonerParameters(Map<String, String> parameters) {
+		invokePropertyListener("reasonerParameters", 
+				reasonerParameters, 
+				parameters);
 		reasonerParameters = parameters;
 	}
 	
