@@ -40,6 +40,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		return 0.5;
 	}
 	//Which is best for this function? Maximum weakening or sum of weakenings?
+	//Can depend...write about this choice in docs
 	private double secrecyWeakeningCost(List<SecrecyStrengthPair> weakenings)
 	{
 		double total = 0.0;

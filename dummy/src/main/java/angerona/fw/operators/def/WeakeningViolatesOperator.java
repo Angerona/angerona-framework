@@ -62,6 +62,10 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	{
 		return false;
 	}
+	
+	//Talk about generalizing the cost of weakening secrecy through either some multiplier coefficient,
+	//or a non-linear cost calculation through either increasing frequency of belief operators 
+	//or cost between the "edges" from one belief operator to another
 	private double calculateSecrecyStrength(FolFormula secretInfo, List<AnswerSet> ansSets)
 	{
 		double numAnsSets = ansSets.size();

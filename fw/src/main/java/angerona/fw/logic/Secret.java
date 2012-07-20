@@ -110,7 +110,7 @@ public class Secret implements Cloneable {
 		return new Pair<String, Map<String, String>>(reasonerClass, reasonerParameters);
 	}
 	
-	public void setReasonerParameters(Map<String, String> parameters) {
+	public void setReasonerParameters(Map<String, String> parameters) { //I don't think this is always a safe operation
 		invokePropertyListener("reasonerParameters", reasonerParameters, parameters);
 		reasonerParameters = parameters;
 	}

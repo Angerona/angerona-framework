@@ -91,16 +91,147 @@ public class AspReasoner extends BaseReasoner {
 		List<AnswerSet> answerSets = processAnswerSets();
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 		
-		if(semantic == InferenceSemantic.S_CREDULOUS) {
-			throw new NotImplementedException();
-		} else if(semantic == InferenceSemantic.S_SKEPTICAL) {
-			av = skepticalInference(answerSets, query);
+		String dParam = null; //Can I access the dParam from the reasoner? I only know how to from the secret. Or is it specified elsewhere?
+		
+		if(dParam != null)
+		{
+			double d = Double.parseDouble(dParam);
+			av = dInference(answerSets, query, d);
+		}
+		else
+		{
+			if(semantic == InferenceSemantic.S_CREDULOUS) {
+				av = credulousInference(answerSets, query);
+			} else if(semantic == InferenceSemantic.S_SKEPTICAL) {
+				av = skepticalInference(answerSets, query);
+			}
 		}
 		
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
 		return new AngeronaAnswer(bb, query, av);
 	}
 
+	/**
+	 *  Generalized inference for any "d" parameter.
+	 */
+	public AnswerValue dInference(List <AnswerSet> answerSets, FolFormula query, double d)
+	{
+		AnswerValue av;
+		int falseInAS = 0;
+		int trueInAS = 0;
+		
+		boolean negate = false;
+		Atom aq = null;
+		if(query instanceof Negation) {
+			negate = true;
+			Negation n = (Negation)query;
+			aq = (Atom)n.getFormula();
+		} else if(query instanceof Atom ){
+			negate = false;
+			aq = (Atom)query;
+		} else {
+			//throw new AngeronaException("The query formula for the ASP Reasoner must be an atom or a negation:");
+			LOG.error("The given query: '{}' is neither a atom nor a negation, so it cannot be process by the ASPReasoner.", query);
+			return AnswerValue.AV_REJECT;
+		}
+		
+		for(AnswerSet as : answerSets) {
+			av = AnswerValue.AV_UNKNOWN;
+			Set<Literal> literals = as.getLiteralsBySymbol(aq.getPredicate().getName());
+			for(Literal l : literals) {
+				if(l.isTrueNegated()) {
+					av = negate ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
+				} else {
+					av = negate ? AnswerValue.AV_FALSE : AnswerValue.AV_TRUE;
+				}
+			}
+			
+			if(av == AnswerValue.AV_TRUE) {
+				trueInAS += 1;
+			} else if(av == AnswerValue.AV_FALSE) {
+				falseInAS += 1;
+			}
+		}
+		
+		double trueQuotient = ((double) (trueInAS))/answerSets.size(); //Check the loss-of-precision of this operation
+		double falseQuotient = ((double) (falseInAS))/answerSets.size();
+		
+		//Which should it choose if both meet the "d" criteria?
+		//Further parameters may be needed for the operator
+		//The behavior here would then be specific to one set of those operators
+		if(trueQuotient >= d && falseQuotient >= d)
+		{
+			if(trueQuotient > falseQuotient)
+				av = AnswerValue.AV_TRUE;
+			else if (falseQuotient > trueQuotient)
+				av = AnswerValue.AV_FALSE;
+			else
+				av = AnswerValue.AV_UNKNOWN;
+		}
+		else if(trueQuotient >= d)
+			av = AnswerValue.AV_TRUE;
+		else if(falseQuotient >= d)
+			av = AnswerValue.AV_FALSE;
+		else 
+			av = AnswerValue.AV_UNKNOWN;
+		return av;
+	}
+	
+	/**
+	 * Implements the credulous asp inference. 
+	 * @param answerSets	List of answer sets representing the solver result.
+	 * @param query			The question must be an atom or an Negation but no complexer formulas
+	 * @return				AV_True, AV_FALSE or AV_UNKNOWN if the inference was successful,
+	 * 						AV_REJECT if an error occured.
+	 */
+	public AnswerValue credulousInference(List <AnswerSet> answerSets, FolFormula query)
+	{
+		AnswerValue av;
+		int falseInAS = 0;
+		int trueInAS = 0;
+		
+		boolean negate = false;
+		Atom aq = null;
+		if(query instanceof Negation) {
+			negate = true;
+			Negation n = (Negation)query;
+			aq = (Atom)n.getFormula();
+		} else if(query instanceof Atom ){
+			negate = false;
+			aq = (Atom)query;
+		} else {
+			//throw new AngeronaException("The query formula for the ASP Reasoner must be an atom or a negation:");
+			LOG.error("The given query: '{}' is neither a atom nor a negation, so it cannot be process by the ASPReasoner.", query);
+			return AnswerValue.AV_REJECT;
+		}
+		
+		for(AnswerSet as : answerSets) {
+			av = AnswerValue.AV_UNKNOWN;
+			Set<Literal> literals = as.getLiteralsBySymbol(aq.getPredicate().getName());
+			for(Literal l : literals) {
+				if(l.isTrueNegated()) {
+					av = negate ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
+				} else {
+					av = negate ? AnswerValue.AV_FALSE : AnswerValue.AV_TRUE;
+				}
+			}
+			
+			if(av == AnswerValue.AV_TRUE) {
+				trueInAS += 1;
+			} else if(av == AnswerValue.AV_FALSE) {
+				falseInAS += 1;
+			}
+		}
+		//Should it give preference to "true" values, or "false" values, if both meet the "d" criteria?
+		if(trueInAS > 0 && falseInAS == 0)
+			av = AnswerValue.AV_TRUE;
+		else if(falseInAS > 0 && trueInAS == 0)
+			av = AnswerValue.AV_FALSE;
+		else 
+			av = AnswerValue.AV_UNKNOWN;
+		return av;
+	}
+	
 	/**
 	 * Implements the skeptical asp inference. 
 	 * @param answerSets	List of answer sets representing the solver result.
@@ -146,9 +277,9 @@ public class AspReasoner extends BaseReasoner {
 			}
 		}
 		
-		if(trueInAS > 0 && falseInAS == 0)
+		if(trueInAS == answerSets.size())
 			av = AnswerValue.AV_TRUE;
-		else if(falseInAS > 0 && trueInAS == 0)
+		else if(falseInAS == answerSets.size())
 			av = AnswerValue.AV_FALSE;
 		else 
 			av = AnswerValue.AV_UNKNOWN;
@@ -184,6 +315,7 @@ public class AspReasoner extends BaseReasoner {
 	}
 
 	@Override
+	//Assumes a skeptical inference operator at the moment, I think
 	protected Set<FolFormula> inferInt() {
 		List<AnswerSet> answerSets = processAnswerSets();
 		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
