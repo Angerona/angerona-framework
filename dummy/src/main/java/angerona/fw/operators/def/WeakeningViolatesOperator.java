@@ -16,6 +16,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.DetailQueryAnswer;
@@ -96,9 +97,26 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		if(conf == null)
 			return secretList;
 		
+		/* Consider self-repeating as bad as revealing all secrets */
+		//Should there be a separate repeatsSelf() method, so that the intention update operator can judge the cost of self-repeating?
+		//Such a method could also allow for easier changes to the definition of "self-repeating" 
+		// e.g. how many new people must be listening for it not to be self-repeating, or how many actions back in history should the function check
+		List<Action> actionsHistory = param.getAgent().getActionsHistory();
+		for(Action act : actionsHistory)
+		{
+			if(param.getAction().equals(act))
+			{
+				//Should be replaced with a report once reporting doesn't crash after a certain amount of use
+				System.out.println("(Delete) "+param.getAgent().getName() 
+						+ "' self-repeats with: '" + param.getAction() + "'"); 
+				secretList = representTotalExposure(conf);
+				return secretList;
+			}
+		}
 		/* Remaining operations depend on whether the action in question is an answer */
 		if(param.getAction() instanceof Answer) 
 		{
+			
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 			if(views.containsKey(a.getReceiverId())) 

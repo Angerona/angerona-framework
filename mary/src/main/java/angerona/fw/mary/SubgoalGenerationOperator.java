@@ -37,7 +37,7 @@ public class SubgoalGenerationOperator extends
 	
 	@Override
 	protected Boolean processInt(SubgoalGenerationParameter pp) {
-		LOG.info("Run Default-Subgoal-Generation");
+		LOG.info("Run Mary-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
 		
 		boolean reval = interrogateOtherAgent(pp, ag);

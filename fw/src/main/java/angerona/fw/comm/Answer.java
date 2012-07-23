@@ -1,6 +1,7 @@
 package angerona.fw.comm;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Action;
 import angerona.fw.logic.AnswerValue;
 
 /**
@@ -47,4 +48,30 @@ public class Answer extends SpeechAct {
 	public String toString() {
 		return "< " + getSenderId() + " answers " + getReceiverId() + " " + regarding.toString() + "=" + answer.toString() + " >";
 	}
+	//************Begin Daniel's changes*************//
+	@Override 
+	public boolean equals(Action a)
+	{
+		if (a instanceof Answer)
+		{
+			Answer ans = (Answer) a;
+			if(!super.equals(a))
+			{
+				return false;
+			}
+			if(!this.regarding.equals(ans.getRegarding()))
+			{
+				return false;
+			}
+			if(this.answer != ans.getAnswer())
+			{
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	//************End Daniel's changes*************//
+	
 }

@@ -105,6 +105,15 @@ public abstract class FolFormula extends RelationalFormula{
     return nnf;
 	}
 	
+	//************Begin Daniel's changes*************//
+	public boolean equals(FolFormula f)
+	{
+		if(f.toString().equals(this.toString()))
+			return true;
+		return false;
+	}
+	//************End Daniel's changes*************//
+	
 	/**
 	 * Makes the negation normal form of this formula.
 	 * @return the NNF of this formula

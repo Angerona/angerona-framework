@@ -52,4 +52,14 @@ public class Action implements Perception, ContextProvider {
 	public Context getContext() {
 		return ContextFactory.createContext(this);
 	}
+	//************Begin Daniel's changes*************//
+	public boolean equals(Action a)
+	{
+		if(!this.sender.equals(this.receiver))
+		{
+			return false;
+		}
+		return true;
+	}
+	//************End Daniel's changes*************//
 }

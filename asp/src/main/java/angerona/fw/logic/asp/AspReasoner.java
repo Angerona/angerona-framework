@@ -1,5 +1,6 @@
 package angerona.fw.logic.asp;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,8 +92,7 @@ public class AspReasoner extends BaseReasoner {
 		List<AnswerSet> answerSets = processAnswerSets();
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 		
-		String dParam = null; //Can I access the dParam from the reasoner? I only know how to from the secret. Or is it specified elsewhere?
-		
+		String dParam = getParameters().get("d");
 		if(dParam != null)
 		{
 			double d = Double.parseDouble(dParam);
@@ -315,7 +315,6 @@ public class AspReasoner extends BaseReasoner {
 	}
 
 	@Override
-	//Assumes a skeptical inference operator at the moment, I think
 	protected Set<FolFormula> inferInt() {
 		List<AnswerSet> answerSets = processAnswerSets();
 		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
@@ -324,6 +323,7 @@ public class AspReasoner extends BaseReasoner {
 			Set<FolFormula> temp = new HashSet<FolFormula>();
 			for(String name : as.literals.keySet()) {
 				Set<Literal> literals = as.literals.get(name);
+				//The code in this loop is mostly conversion. Logic conversion module?
 				for(Literal l : literals) {
 					int arity = l.getAtom().getArity();
 					Atom a = new Atom(new Predicate(l.getAtom().getName(), arity));
@@ -341,22 +341,64 @@ public class AspReasoner extends BaseReasoner {
 			answerSetsTrans.add(temp);
 		}
 		
-		if(semantic == InferenceSemantic.S_CREDULOUS)
-			throw new NotImplementedException();
-		else if(semantic == InferenceSemantic.S_SKEPTICAL) {
-			reval.addAll(answerSetsTrans.get(0));
-			answerSetsTrans.remove(0);
-			Set<FolFormula> toRemove = new HashSet<FolFormula>();
+		//String dParam = getParameters().get("d");
+		String dParam = null;
+		if(dParam != null)
+		{
+			double dValue = Double.parseDouble(dParam);
+			HashMap<FolFormula, Integer> frequencies = new HashMap<FolFormula, Integer>();
+			//Step One: Associate each formula with a frequency
 			for(Set<FolFormula> as : answerSetsTrans) {
-				for(FolFormula a : reval) {
-					if(!as.contains(a)) {
-						toRemove.add(a);
-					}
+				for(FolFormula a : as) {
+					Integer newFreq = frequencies.get(a) + 1;
+					frequencies.put(a, newFreq); //Hopefully these maps can be mutated...
+					reval.add(a);
 				}
 			}
-			reval.removeAll(toRemove);
+			//Step Two: Filter out formulas without proper frequency
+			for(FolFormula a : reval)
+			{
+				if(frequencies.get(a) < dValue)
+				{
+					reval.remove(a);
+				}
+			}
+			
+			//Step Three: resolve contradictions
+			//Requires identifying contradictions first...
 		}
-		
+		else
+		{
+			if(semantic == InferenceSemantic.S_CREDULOUS)
+			{
+			//	throw new NotImplementedException();
+				reval.addAll(answerSetsTrans.get(0)); 
+				answerSetsTrans.remove(0);
+				for(Set<FolFormula> as : answerSetsTrans) {
+					for(FolFormula a : as) {
+						if(!reval.contains(a)) {
+							reval.add(a);
+						}
+					}
+				}
+				
+				//Behavior for resolving contradictions depends on extra parameters (besides d)
+				//This implementation describes only one configuration of such parameters
+			}
+			else if(semantic == InferenceSemantic.S_SKEPTICAL) {
+				reval.addAll(answerSetsTrans.get(0));
+				answerSetsTrans.remove(0); 
+				Set<FolFormula> toRemove = new HashSet<FolFormula>();
+				for(Set<FolFormula> as : answerSetsTrans) {
+					for(FolFormula a : reval) {
+						if(!as.contains(a)) {
+							toRemove.add(a);
+						}
+					}
+				}
+				reval.removeAll(toRemove);
+			}
+		}
 		return reval;
 	}
 	@Override

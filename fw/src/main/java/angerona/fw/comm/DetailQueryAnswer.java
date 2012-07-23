@@ -4,6 +4,7 @@ package angerona.fw.comm;
  * @author Daniel Dilger
  */
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Action;
 import angerona.fw.logic.AnswerValue;
 
 public class DetailQueryAnswer extends Answer {
@@ -45,5 +46,23 @@ public class DetailQueryAnswer extends Answer {
 			answerString = "FALSE";
 		}
 		return "< " + getSenderId() + " gives the detailed answer " + getReceiverId() + " " + getRegarding().toString() + "=" + answerString + " >";
+	}
+	@Override
+	public boolean equals(Action a)
+	{
+		if(a instanceof DetailQueryAnswer)
+		{
+			DetailQueryAnswer dans = (DetailQueryAnswer) a;
+			if(!super.equals(a))
+			{
+				return false;
+			}
+			if(!this.detailAnswer.equals(dans.getDetailAnswer()))
+			{
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 }

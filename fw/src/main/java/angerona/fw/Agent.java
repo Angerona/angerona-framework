@@ -79,6 +79,16 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
 	
+	//************Begin Daniel's changes*************//
+	
+	/** History of actions performed by the agent */
+	private List<Action> actionsHistory = new LinkedList<Action>();
+	
+	/** History of the belief base of the agent (world views and agent views) */
+	private List<Beliefs> beliefsHistory = new LinkedList<Beliefs>();
+	
+	//************End Daniel's changes*************//
+	
 	/** mapping atomic intentions names to the intention references defining the skills of the agent. */
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
 	
@@ -104,6 +114,29 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	private Perception actualPerception;
 	
 	private Action lastAction;
+	
+	//************Begin Daniel's changes*************//
+	
+	public List<Action> getActionsHistory()
+	{
+		return actionsHistory;
+	}
+	public void addAction(Action a)
+	{
+		actionsHistory.add(a);
+	}
+	
+	public List<Beliefs> getBeliefsHistory()
+	{
+		return beliefsHistory;
+	}
+	public void addBeliefSet(Beliefs b)
+	{
+		beliefsHistory.add(b);
+	}
+	
+	
+	//************End Daniel's changes*************//
 	
 	/**
 	 * Ctor: Used for creating agents with an automatic assigned id.
@@ -437,6 +470,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		LOG.info("Action performed: " + act.toString());
 		Angerona.getInstance().report("Action: '"+act.toString()+"' performed.", getEnvironment(), this);
 		Angerona.getInstance().onActionPerformed(this, act);
+		//Record this action
+		this.lastAction = act;
+		actionsHistory.add(act);
 	}
 	
 	public boolean addDesire(Desire desire) {

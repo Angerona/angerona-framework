@@ -59,7 +59,7 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				for (SecrecyStrengthPair sPair : weakenings)
 				{
 					
-					//String based comparision again. Probably not the best solution
+					//String based comparison again. Probably not the best solution
 					//Also, too many nested method calls
 					if(secret.getInformation().toString().equals(sPair.getSecret().getInformation().toString()))
 					{

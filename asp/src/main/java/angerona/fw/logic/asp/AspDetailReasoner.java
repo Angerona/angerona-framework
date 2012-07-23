@@ -61,22 +61,28 @@ public class AspDetailReasoner extends AspReasoner {
 		
 		Predicate qp = query.getPredicates().iterator().next();
 		
-		
-		
+		for (FolFormula f : knowledge)
+		{
+			// TODO: Their might be an answer to who(X) which has more than one formula: who(john), who(mary) ect.
+			Predicate fp = f.getPredicates().iterator().next();
+			System.out.println("(Delete) fp.getName():"+fp.getName());
+			System.out.println("(Delete) qp.getName():"+qp.getName());
+			System.out.println();
+			if(!fp.getName().equals(qp.getName()))
+			{
+				continue;
+			}
+			else
+			{
+				answers.add(f);
+			}
+		}
 			
 		//How to represent negation within the predicate (e.g. -X ?)
 		//That's probably more important than including negations of the predicate
 		//Ex: if you're asking "what was said that happened?" you might not want to hear what wasn't said (-said(scandal)).
 		//But you would want to hear what was said that hadn't happened (said(-scandal)).
 		//Note also for some predicates the two are equivalent, like -happened(scandal) is equivalent to happened(-scandal). 
-				
-		//Step Two: detect contradictions within the set to return 
-				
-				
-		//Step Three: determine which contradictions to remove
-		//More complex belief operators might specify this behavior in their own way
-				
-		//Step Four: return the value
 				
 		return answers; //An empty set would specify "unknown" to the translator
 	}
