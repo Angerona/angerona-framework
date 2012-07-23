@@ -55,7 +55,11 @@ public class Action implements Perception, ContextProvider {
 	//************Begin Daniel's changes*************//
 	public boolean equals(Action a)
 	{
-		if(!this.sender.equals(this.receiver))
+		if(!this.sender.equals(a.sender))
+		{
+			return false;
+		}
+		if(!this.receiver.equals(a.receiver))
 		{
 			return false;
 		}

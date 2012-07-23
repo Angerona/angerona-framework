@@ -56,7 +56,12 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	}
 	private List<SecrecyStrengthPair> representTotalExposure(ConfidentialKnowledge conf)
 	{
-		return null;
+		List<SecrecyStrengthPair> reval = new LinkedList<SecrecyStrengthPair>();
+		for(Secret secret : conf.getTargets()) 
+		{
+			reval.add(new SecrecyStrengthPair(secret, INFINITY));
+		}
+		return reval;
 	}
 	//This function no longer needed
 	private boolean formulaMatchesLiteral(FolFormula secretInfo, Literal literal)
@@ -97,27 +102,31 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		if(conf == null)
 			return secretList;
 		
-		/* Consider self-repeating as bad as revealing all secrets */
-		//Should there be a separate repeatsSelf() method, so that the intention update operator can judge the cost of self-repeating?
-		//Such a method could also allow for easier changes to the definition of "self-repeating" 
-		// e.g. how many new people must be listening for it not to be self-repeating, or how many actions back in history should the function check
-		List<Action> actionsHistory = param.getAgent().getActionsHistory();
-		for(Action act : actionsHistory)
-		{
-			if(param.getAction().equals(act))
-			{
-				//Should be replaced with a report once reporting doesn't crash after a certain amount of use
-				System.out.println("(Delete) "+param.getAgent().getName() 
-						+ "' self-repeats with: '" + param.getAction() + "'"); 
-				secretList = representTotalExposure(conf);
-				return secretList;
-			}
-		}
+		
 		/* Remaining operations depend on whether the action in question is an answer */
 		if(param.getAction() instanceof Answer) 
 		{
 			
 			Answer a = (Answer) param.getAction();
+			
+			/* Consider self-repeating answers (and only answers) as bad as revealing all secrets */
+			//Should there be a separate repeatsSelf() method, so that the intention update operator can judge the cost of self-repeating?
+			//Such a method could also allow for easier changes to the definition of "self-repeating" 
+			// e.g. how many new people must be listening for it not to be self-repeating, or how many actions back in history should the function check
+			List<Action> actionsHistory = param.getAgent().getActionsHistory();
+			System.out.println("(Delete) size of actionsHistory: "+actionsHistory.size());
+			for(Action act : actionsHistory)
+			{
+				if(a.equals(act))
+				{
+					//Should be replaced with a report once reporting doesn't crash after a certain amount of use
+					System.out.println("(Delete) "+param.getAgent().getName() 
+							+ "' self-repeats with: '" + param.getAction() + "'"); 
+					secretList = representTotalExposure(conf);
+					return secretList;
+				}
+			}
+			
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 			if(views.containsKey(a.getReceiverId())) 
 			{

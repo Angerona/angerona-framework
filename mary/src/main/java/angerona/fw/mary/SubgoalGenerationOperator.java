@@ -231,8 +231,10 @@ public class SubgoalGenerationOperator extends
 		//This probably shouldn't come from the "LyingOperator", since the agent could be honestly ignorant
 		//Marking whether saying "I don't know" is a lie might be a useful addition later 
 		
+		
 		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
 		allAnswers.add(ignorance);
+		
 		
 		//However, assume an expression of ignorance is always a lie for this scenario (hardwired solution!)
 		Skill qaSkillLie = (Skill) qaSkill.deepCopy(); //There is no deep copy for Skill

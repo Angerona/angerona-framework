@@ -471,7 +471,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		Angerona.getInstance().report("Action: '"+act.toString()+"' performed.", getEnvironment(), this);
 		Angerona.getInstance().onActionPerformed(this, act);
 		//Record this action
-		this.lastAction = act;
+		//this.lastAction = act;
 		actionsHistory.add(act);
 	}
 	
