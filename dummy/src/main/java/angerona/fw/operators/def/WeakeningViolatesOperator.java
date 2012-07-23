@@ -108,6 +108,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		{
 			
 			Answer a = (Answer) param.getAction();
+			a.setWeakenings(secretList); //Only works because objects are pass-by-reference, so not the most elegant solution
 			
 			/* Consider self-repeating answers (and only answers) as bad as revealing all secrets */
 			//Should there be a separate repeatsSelf() method, so that the intention update operator can judge the cost of self-repeating?

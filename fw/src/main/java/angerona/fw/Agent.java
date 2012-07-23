@@ -392,10 +392,22 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	public boolean performThought(Beliefs beliefs, Action action) {
 		return violatesOperator.process(new ViolatesParameter(this, action));
 	}
+	
 	public List<SecrecyStrengthPair> considerSecretWeakening(Beliefs beliefs, Action action)
 	{	
 		return violatesOperator.weakenings();
 	}
+	
+	private List<SecrecyStrengthPair> weakenings = null;
+	public void setWeakenings(List<SecrecyStrengthPair> weaks)
+	{
+		this.weakenings = weaks;
+	}
+	public List<SecrecyStrengthPair> getWeakenings()
+	{
+		return this.weakenings;
+	}
+	
 	
 	public AngeronaAnswer reason(FolFormula query) {
 		return beliefs.getWorldKnowledge().reason(query);

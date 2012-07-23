@@ -64,13 +64,18 @@ public class Skill extends Intention implements Runnable {
 	}
 	
 
-	/* End of Daniel's changes */
+
 	
-	public List<SecrecyStrengthPair> weakenings()
+	public List<SecrecyStrengthPair> getWeakenings()
 	{
 		return this.weakenings;
 	}
+	public void setWeakenings(List<SecrecyStrengthPair> weaks)
+	{
+		this.weakenings = weaks;
+	}
 	
+	/* End of Daniel's changes */
 	public boolean violates() {
 		return violates;
 	}

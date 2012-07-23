@@ -38,8 +38,9 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			out += (naa.getSenderId().compareTo(id) == 0 ? "as sender (view)" : "as receiver (world)");
 			
 			
-			List<SecrecyStrengthPair> weakenings = param.getAgent().considerSecretWeakening(reval, naa);
-			
+			//List<SecrecyStrengthPair> weakenings = param.getAgent().considerSecretWeakening(reval, naa);
+			//List<SecrecyStrengthPair> weakenings = naa.getWeakenings();
+			List<SecrecyStrengthPair> weakenings = param.getAgent().getWeakenings();
 			
 			
 			BaseBeliefbase bb = null;
@@ -56,6 +57,11 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			{
 				//Should the change in strength take place here or should already have been calculated
 				//when secrets are added to the SecrecyStrengthPair?
+				if(weakenings == null)
+				{
+					continue;
+				}
+					
 				for (SecrecyStrengthPair sPair : weakenings)
 				{
 					

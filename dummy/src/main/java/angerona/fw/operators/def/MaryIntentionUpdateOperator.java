@@ -111,7 +111,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 						intention.run();
 						Skill sk = (Skill)intention;
 						
-						List<SecrecyStrengthPair> weakenings = sk.weakenings();
+						List<SecrecyStrengthPair> weakenings = sk.getWeakenings();
 						for(SecrecyStrengthPair sp: weakenings)
 						{
 							System.out.println("(Delete) sp secret:"+sp.getSecret().getInformation().toString()
@@ -149,7 +149,10 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 			{
 				System.out.println("(Delete) intent cost:"+intent.getCost());
 			}
-			return minimalCosting(atomicIntentions);
+			Intention min = minimalCosting(atomicIntentions);
+			//ag.getViolatesOperator().setWeakenings(((Skill) min).getWeakenings());
+			ag.setWeakenings(((Skill) min).getWeakenings());
+			return min;
 		}
 	}
 }
