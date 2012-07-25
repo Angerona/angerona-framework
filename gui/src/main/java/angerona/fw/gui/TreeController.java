@@ -69,7 +69,7 @@ public class TreeController implements SimulationListener {
 		
 		@Override
 		public String toString() {
-			return simulation.getPosterName();
+			return simulation.getName();
 		}
 	}
 	
@@ -186,7 +186,7 @@ public class TreeController implements SimulationListener {
 	
 	@Override
 	public void simulationStarted(AngeronaEnvironment simulation) {
-		simulation.getPosterName();
+		// Todo: Output name.
 		DefaultMutableTreeNode simNode = new DefaultMutableTreeNode(new SimulationUserObject(simulation));
 		
 		for(String agName : simulation.getAgentNames()) {
