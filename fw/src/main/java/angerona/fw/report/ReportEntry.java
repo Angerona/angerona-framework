@@ -30,24 +30,26 @@ public class ReportEntry implements Cloneable {
 	
 	/** the attachment of the report entry, might be null if no attachment is attached. */
 	private Entity attachment;
-	
-	/** the name of the poster of this entry */
-	private String posterName;
-	
-	private AngeronaEnvironment simulation;
+
+	/** reference to the poster of the report. We assume that the name and the simulation is
+	 * 	never changed during runtime. But the tick changes of course and is therefore saved in
+	 * 	a separate attribute.
+	 */
+	private ReportPoster poster;
 	
 	private Stack<String> operatorCallstack = new Stack<String>();
 	
 	private ReportEntry() {}
 	
 	public ReportEntry(String message, ReportPoster poster, Entity attachment) {
+		if(poster == null)
+			throw new IllegalArgumentException("poster must not be null");
 		if(poster.getSimulation() == null)
 			throw new IllegalArgumentException("poster must have a refernce to a simulation.");
 		
 		this.message = message;
 		this.attachment = attachment;
-		this.posterName = poster.getPosterName();
-		this.simulation = poster.getSimulation();
+		this.poster = poster;
 		this.simulationTick = poster.getSimulation().getSimulationTick();
 		this.realTime = new Date();
 		
@@ -82,11 +84,15 @@ public class ReportEntry implements Cloneable {
 	}
 	
 	public AngeronaEnvironment getSimulation() {
-		return simulation;
+		return poster.getSimulation();
 	}
 	
 	public String getPosterName() {
-		return posterName;
+		return poster.getPosterName();
+	}
+	
+	public ReportPoster getPoster() {
+		return poster;
 	}
 	
 	public Stack<String> getStack() {
@@ -98,8 +104,7 @@ public class ReportEntry implements Cloneable {
 		ReportEntry reval = new ReportEntry();
 		reval.message = this.message;
 		reval.simulationTick = this.simulationTick;
-		reval.simulation = this.simulation;
-		reval.posterName = this.posterName;
+		reval.poster = poster;
 		reval.realTime = this.realTime;
 		reval.operatorCallstack = new Stack<String>();
 		reval.operatorCallstack.addAll(operatorCallstack);

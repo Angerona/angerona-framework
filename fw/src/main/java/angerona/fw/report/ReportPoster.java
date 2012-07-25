@@ -4,7 +4,8 @@ import angerona.fw.AngeronaEnvironment;
 
 /**
  * Every class which implement this interface can be used as information 
- * provider for the report mechanism of Angerona.
+ * provider for the report mechanism of Angerona. Typically this are Agent
+ * and all kind of Operators.
  * 
  * @author Tim Janus
  */
