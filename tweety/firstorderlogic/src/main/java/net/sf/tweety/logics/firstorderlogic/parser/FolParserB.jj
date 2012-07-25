@@ -49,9 +49,10 @@ public class FolParserB
           throw new ParseException("Sort with name '" + name + "' was not defined.");        }
         else
         {
-          s = new Sort(name);
+          s = new Sort(name);          
       	  sig.add(s);
-        }      }    }
+        }      }
+      reval.add(s);    }
     return reval;  }
 
   private Functor getFunctor(String name, FolSignature signature)
@@ -87,6 +88,18 @@ public class FolParserB
 	  return null;    }
 
     return fbs.getArguments().get(count);  }
+
+  private Constant getOrCreateConstant(String name, Sort type, FolSignature sig)
+    throws ParseException  {
+    Constant reval = sig.getConstant(name);
+    if(reval == null)
+    {
+      reval = new Constant(name, type);
+      sig.add(reval);    }
+    else if(!reval.getSort().equals(type))
+    {
+      throw new ParseException("It exists a constant '" + name + "' with type '" + reval.getSort() + "' but asked for type '" + type + "'.");    }
+    return reval;    }
 }
 
 PARSER_END(FolParserB)
@@ -162,7 +175,8 @@ FolBeliefSet KB() :{
   List<Sort > sorts;
   FolFormula ff;
   FolBeliefSet bb = new FolBeliefSet();
-  FolSignature signature = (FolSignature)bb.getSignature();}
+  FolSignature signature = (FolSignature)bb.getSignature();
+  System.out.println("KB");}
 {
  (
    LOOKAHEAD(2)
@@ -171,7 +185,8 @@ FolBeliefSet KB() :{
      for(Sort s : sorts)     {
        signature.add(s);     }
    }
-   declar(signature) )?
+   (     declar(signature)
+   )* )?
  (
    ff = formula(signature)   {
      bb.add(ff);    }
@@ -187,7 +202,8 @@ FolFormula formula(FolSignature signature) :
   FolFormula temp;
   Pair<Integer, FolFormula > ex;
   FolFormula reval;
-  Variable v = null;}
+  Variable v = null;
+  System.out.println("formula");}
 {
   (  
 	  (
@@ -226,7 +242,7 @@ FolFormula formula(FolSignature signature) :
 
 Pair<Integer, FolFormula> formulaex(FolSignature signature) :
 {
-  
+  System.out.println("formulaex");
   Integer status = 0; // 0 nothing, 1 and, 2 or
   FolFormula form = null;
   Pair<Integer, FolFormula> reval = new Pair<Integer, FolFormula>();}
@@ -249,6 +265,7 @@ Pair<Integer, FolFormula> formulaex(FolSignature signature) :
 
 Atom atom(FolSignature signature) :
 {
+  System.out.println("atom");
   String identifier;
   Term t;
   Atom reval;
@@ -260,7 +277,9 @@ Atom atom(FolSignature signature) :
   identifier = identifier()
   {
     p = getPredicate(identifier, signature);
-    type = getArgumentType(p, count++);  }
+    type = getArgumentType(p, count++);
+    if(p==null && this.forceDefinitions)    {
+      throw new ParseException("Predicate '" + identifier + "' was not defined. Do not set the force flag for definitions or define the predicate beforehand.");    }  }
   (
     < LBRA >
   	t = term(signature, type)  	{
@@ -280,11 +299,13 @@ Atom atom(FolSignature signature) :
       p = new Predicate(identifier, terms.size());
       signature.add(p);
 	}
+	System.out.println(p.getSorts() + " - ( " + terms + " )");
     reval = new Atom(p, terms);    return reval;
   }}
 
 Term term(FolSignature signature, Sort type) :
 {
+  System.out.println("term");
   Term temp;
   String fname;
   int count = 0;
@@ -321,9 +342,10 @@ Term term(FolSignature signature, Sort type) :
       return new Variable(fname);    }
     else
     {
-      return new Constant(fname);    }  }}
+      return getOrCreateConstant(fname, type, signature);    }  }}
 String identifier() :
 {
+  System.out.print("identifier: ");
   Token t;}
 {
   (    
@@ -334,82 +356,111 @@ String identifier() :
       t = < VARIABLE >    )
   )
   {
+    System.out.println(t.image);
     return t.image;  }}
 
 List<Sort > sortdecl() :
 {
+  System.out.println("sortdecl");
   Set<Constant > temp;
+  Sort act;
   List<Sort > reval = new LinkedList<Sort >();
   String name;}
 {
   (
     LOOKAHEAD(2)
   	(  	  name = identifier()
+  	  {
+  	    act = new Sort(name);
+  	    reval.add(act);  	  }
   	  < EQUAL >
   	  < CURLBRA >
-  	  temp = constants()
+  	  temp = constants(act)
   	  < CURRBRA >
   	)
   	{
-  	  reval.add(new Sort(name, temp));  	}
+  	  for(Constant c : temp)  	  {
+  	    act.add(c);  	  }
+  	  System.out.println("add sort: " + name);  	}
   )+
   {
     return reval;  }
 }
 
-Set<Constant > constants() :
+Set<Constant > constants(Sort type) :
 {
   Token t;
-  Set<Constant > reval = new HashSet<Constant >();}
+  Set<Constant > reval = new HashSet<Constant >();
+  System.out.println("constants");}
 {
   t = < CONSTANT >
   {
-    reval.add(new Constant(t.image));  }
+    reval.add(new Constant(t.image, type));  }
   (
     < COMMA >
     t = < CONSTANT >
     {
-      reval.add(new Constant(t.image));    }  )*
+      reval.add(new Constant(t.image, type));    }  )*
   {
     return reval;  }}
 
 void declar(FolSignature signature) :
 {
-  boolean ftor = false;
   String name;
-  String name2 = null;
-  String temp;
-  List<String > sorts = new LinkedList<String >();}
+  FolBasicStructure fbs = null;
+  System.out.println("declar");}
+{
+  < TYPE > < LBRA > name = identifier()
+  (
+    fbs = endPredicateDeclar(signature, name)
+  | fbs = endFunctorDeclar(signature, name)  )
+  // < RBRA > needs to be in the end-rules because < RBRA > might the first and only token for a predicate.
+  { 
+    /*
+    if(ftor)    {
+      List<String > one_elem = new LinkedList<String >();
+      one_elem.add(name);
+      fbs = new Functor(name2,
+      	getSorts(signature, sorts),
+      	getSorts(signature, one_elem).get(0));    }
+    else
+    {
+      fbs = new Predicate(name, getSorts(signature, sorts));    }
+    */
+    signature.add(fbs);  }}
+
+FolBasicStructure endPredicateDeclar(FolSignature signature, String name) :
+{
+  String sort;
+  Predicate reval = null;
+  List<String > sorts = new LinkedList<String >();
+  System.out.print("endPredicateDeclar: ");}
 {
   (
-    < TYPE > name = identifier()
     < LBRA >
-    (
-	  < EQUAL > name2 = identifier()
-      {
-        ftor = true;      }        )?
-    < LBRA >
-  	  (
-  	    temp = identifier()
-  	    {
-  	      sorts.add(temp);  	    }
-  	    (
-  	      < COMMA >
-  	      temp = identifier()
-  	      {
-  	        sorts.add(temp);  	      }  	    )*  	  )?
-    < RBRA >
-    < RBRA >
+    sort = identifier()
     {
-      FolBasicStructure fbs;
-      if(ftor)      {
-        List<String > one_elem = new LinkedList<String >();
-        one_elem.add(name);
-        fbs = new Functor(name2,
-        	getSorts(signature, sorts),
-        	getSorts(signature, one_elem).get(0));      }
-      else
+      sorts.add(sort);    }
+    (
+      < COMMA >
+      sort = identifier()
       {
-        fbs = new Predicate(name, getSorts(signature, sorts));      }
-      signature.add(fbs);    }
-  )*}
+        sorts.add(sort);      }    )*
+    < RBRA >  )?
+  < RBRA >
+  {
+    reval = signature.getPredicate(name);
+    if(reval != null)
+    {
+      throw new ParseException("Predicate with name '" + name + "' already exists. Proof your kb for duplicate declarations.");    }
+    reval = new Predicate(name, getSorts(signature, sorts));
+    System.out.println(reval);
+    return reval;  }}
+
+FolBasicStructure endFunctorDeclar(FolSignature signature, String sortName) :
+{
+  System.out.println("endFunctorDeclar");}
+{
+  < EQUAL >
+  {
+    return null;  }}

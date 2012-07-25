@@ -15,11 +15,15 @@ public class FunctionalTest {
 				bb += "-argued(john)";
 		
 				bb  = "Persons={john,mary}\n";
+				bb += "type (married(Persons, Persons))\n";
+				bb += "type (argued(Persons))\n";
+				bb += "type (test(Persons))\n";
 				bb += "married(john, mary)\n";
 				bb += "-argued(john)\n";
-				bb += "test(wife(john))";
+				//bb += "test(wife(john))";
 				
 		FolParserB bp = new FolParserB(new StringReader(bb));
+		bp.setForce(true);
 		
 		try {
 			FolBeliefSet fbs = bp.KB();
