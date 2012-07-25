@@ -120,8 +120,11 @@ public class SubgoalGenerationOperator extends
 		}
 		*/
 		//for(Desire desire : ag.getDesires().getDesires())
-		for(Desire desire: desires)
+		//for(Desire desire: desires)
+		int numDesires = desires.length;
+		for(int i=numDesires-1;i>=0;i--)
 		{
+			Desire desire = desires[i];
 			if(desire.toString().trim().startsWith("q_"))
 			{
 				//Should the snippet below be put in its own subroutine?
