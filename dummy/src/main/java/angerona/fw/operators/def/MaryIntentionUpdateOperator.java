@@ -39,7 +39,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 	{
 		double estimate = 0.5;
 		//Having this line causes a crash in the program...
-		//report(intention+" is a lie. Estimated cost equal to weakening secret by "+estimate);
+		report(intention+" is a lie. Estimated cost equal to weakening secret by "+estimate);
 		return estimate;
 	}
 	//Which is best for this function? Maximum weakening or sum of weakenings?
