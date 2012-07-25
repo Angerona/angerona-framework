@@ -98,7 +98,7 @@ public class FolParserB
       sig.add(reval);    }
     else if(!reval.getSort().equals(type))
     {
-      throw new ParseException("It exists a constant '" + name + "' with type '" + reval.getSort() + "' but asked for type '" + type + "'.");    }
+      throw new ParseException("It exists a constant '" + name + "' with type '" + reval.getSort() + "' but asked for type '" + type + "'. Do not try to mix before-hand declarations without the force-delcaration flag, because every constant defined before hand will be in THING sort and this might generate errors.");    }
     return reval;    }
 }
 
@@ -314,12 +314,15 @@ Term term(FolSignature signature, Sort type) :
   List<Term > terms = new LinkedList<Term >();}
 {
   fname = identifier()
-  {
-      f = getFunctor(fname, signature);
-      subtype = getArgumentType(f, count++);
-  }
   ( 
     < LBRA >
+    {
+      f = getFunctor(fname, signature);
+      if(f == null && this.forceDefinitions)
+      {
+        throw new ParseException("Functor with name '" + fname + "' was not definied. Define it beforehand or did not use the force-delaration flag.");      }
+      subtype = getArgumentType(f, count++);
+    }
     temp = term(signature, subtype)
 	{
 	  terms.add(temp);
@@ -459,8 +462,28 @@ FolBasicStructure endPredicateDeclar(FolSignature signature, String name) :
 
 FolBasicStructure endFunctorDeclar(FolSignature signature, String sortName) :
 {
-  System.out.println("endFunctorDeclar");}
+  System.out.println("endFunctorDeclar");
+  String name;
+  String tempType;
+  List<String >sorts = new LinkedList<String >();
+  FolBasicStructure fbs;}
 {
-  < EQUAL >
+  < EQUAL > name = identifier()
+  < LBRA >
+  	tempType = identifier()
+  	{
+  	  sorts.add(tempType);  	}
+  	(
+  	  < COMMA >
+  	  tempType = identifier()
+  	  {
+  	    sorts.add(tempType);  	  }  	)*
+  < RBRA >
+  < RBRA >
   {
-    return null;  }}
+    List<String > one_elem = new LinkedList<String >();
+    one_elem.add(sortName);
+    fbs = new Functor(name,
+      	getSorts(signature, sorts),
+      	getSorts(signature, one_elem).get(0));
+    return fbs;  }}
