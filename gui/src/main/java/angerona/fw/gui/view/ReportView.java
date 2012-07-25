@@ -13,22 +13,33 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
+import angerona.fw.BaseOperator;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.TreeController;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.IdGenerator;
 import angerona.fw.listener.SimulationAdapter;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
+import angerona.fw.report.ReportPoster;
 
+/**
+ * shows the reports of the actual simulation in a list-view.
+ * @author Tim Janus
+ */
 public class ReportView extends BaseView implements ReportListener {
 
 	/** kill warning */
 	private static final long serialVersionUID = 697392233654570429L;
     
+	/** reference to the logback logger instance */
+	private Logger LOG = LoggerFactory.getLogger(ReportView.class);
+	
     private JTree tree = new JTree();
  
     private TreeModel model = null;
@@ -161,10 +172,8 @@ public class ReportView extends BaseView implements ReportListener {
 	@Override
 	public void reportReceived(ReportEntry entry) {
 		Integer tick = new Integer(entry.getSimulationTick());
-		Entity attach = entry.getAttachment();
-		
 		updateTickNode(tick);
-		boolean useAgentNode = updateAgentNode(attach);
+		boolean useAgentNode = updateAgentNode(entry.getPoster());
 		
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(new Leaf(entry));
 		if(useAgentNode)
@@ -184,27 +193,32 @@ public class ReportView extends BaseView implements ReportListener {
 		}
 	}
 
-	private boolean updateAgentNode(Entity attach) {
-		if(attach != null) {
-			while(attach.getParent() != null) {
-				attach = IdGenerator.getEntityWithId(attach.getParent());
+	private boolean updateAgentNode(ReportPoster poster) {
+		if(poster != null) {
+			Agent ag = null;
+			if(poster instanceof BaseOperator) {
+				ag = ((BaseOperator)poster).getOwner();
+			} else if(poster instanceof Agent) {
+				ag = (Agent)poster;
+			} else {
+				throw new IllegalArgumentException("At the moment only the types: Agent and BaseOperator are supported as ReportPoster by the ReportView.");
 			}
-			if(attach instanceof Agent) {
-				Agent ag = (Agent)attach;
-				for(int i=0; i<actTickNode.getChildCount(); ++i) {
-					DefaultMutableTreeNode child = (DefaultMutableTreeNode)actTickNode.getChildAt(i);
-					AgentNodeUserObject uo = (AgentNodeUserObject)child.getUserObject();
-					if(uo.agent.equals(ag)) {
-						actAgentNode = child;
-						return true;
-					}
+			for(int i=0; i<actTickNode.getChildCount(); ++i) {
+				DefaultMutableTreeNode child = (DefaultMutableTreeNode)actTickNode.getChildAt(i);
+				if(! (child.getUserObject() instanceof AgentNodeUserObject))
+					continue;
+				AgentNodeUserObject uo = (AgentNodeUserObject)child.getUserObject();
+				if(uo.agent.equals(ag)) {
+					actAgentNode = child;
+					return true;
 				}
-				actAgentNode = new DefaultMutableTreeNode(new AgentNodeUserObject(ag));
-				actTickNode.add(actAgentNode);
-				return true;
 			}
+			actAgentNode = new DefaultMutableTreeNode(new AgentNodeUserObject(ag));
+			actTickNode.add(actAgentNode);
+			return true;
 		}
 		
+		LOG.warn("Add a report without poster. The report-system is not capable of link the report to a specific agent. Use the agent as attachment for the default case instead null.");
 		return false;
 	}
 }
