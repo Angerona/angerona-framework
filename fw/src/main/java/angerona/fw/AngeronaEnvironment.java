@@ -31,7 +31,6 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Desires;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
-import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
 import angerona.fw.serialize.perception.PerceptionDO;
@@ -40,15 +39,15 @@ import angerona.fw.serialize.perception.PerceptionDO;
  * A simulation environment for Angerona. This is actually only used for some functional tests.
  * @author Tim Janus
  */
-public class AngeronaEnvironment extends APR implements ReportPoster {
+public class AngeronaEnvironment extends APR {
 
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
 	/** the actual simulation tick */
 	protected int tick = 0;
 	
-	/** the name of the simulation, for example: 'strike_comittee_meeting' */
-	private String name = "";
+	/** the name of the simulation */
+	private String name;
 	
 	/** implementation of the factory used for perceptions */
 	//I want this to be plugin-implemented
@@ -78,13 +77,17 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		this.behavior = behavior;
 	}
 	
+	public Set<String> getAgentNames() {
+		return agentMap.keySet();
+	}
+	
 	@Override
-	public String getPosterName() {
+	public String toString() {
 		return name;
 	}
 	
-	public Set<String> getAgentNames() {
-		return agentMap.keySet();
+	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -163,6 +166,7 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		SimulationConfiguration config = null;
 		
 		config = SimulationConfiguration.loadXml(new File(filename));	
+		name = config.getName();
 		
 		if(config != null && startImmediately) {
 			File f = new File(filename);
@@ -271,23 +275,24 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 		
 		Angerona.getInstance().onNewSimulation(this);
 		// report the initialized data of the agent to the report system.
+		// TOOD: Bad smell here... why didn't do the agents this in their scope???
 		for(String agName : agentMap.keySet()) {
 			Agent agent = getAgentByName(agName);
-			Angerona.getInstance().report("Agent: '" + agent.getName()+"' created.", this, agent);
+			Angerona.getInstance().report("Agent: '" + agent.getName()+"' created.", agent);
 			
-			Angerona.getInstance().report("Desires Set of '" + agent.getName() + "' created.", this, agent.getDesires());
+			Angerona.getInstance().report("Desires Set of '" + agent.getName() + "' created.", agent, agent.getDesires());
 			
 			Beliefs b = agent.getBeliefs();
-			Angerona.getInstance().report("World Beliefbase of '" + agent.getName()+"' created.", this, b.getWorldKnowledge() );
+			Angerona.getInstance().report("World Beliefbase of '" + agent.getName()+"' created.", agent, b.getWorldKnowledge() );
 			
 			Map<String, BaseBeliefbase> views = b.getViewKnowledge();
 			for(String name : views.keySet()) {
 				BaseBeliefbase actView = views.get(name);
-				Angerona.getInstance().report("View->'" + name +"' Beliefbase of '" + agent.getName() + "' created.", this, actView);
+				Angerona.getInstance().report("View->'" + name +"' Beliefbase of '" + agent.getName() + "' created.", agent, actView);
 			}
 			
 			for(AgentComponent ac : agent.getComponents()) {
-				Angerona.getInstance().report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + agent.getName() + "' created.", this, ac);
+				Angerona.getInstance().report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + agent.getName() + "' created.", agent, ac);
 			}
 		}
 		
@@ -319,10 +324,5 @@ public class AngeronaEnvironment extends APR implements ReportPoster {
 
 	public int getSimulationTick() {
 		return tick;
-	}
-
-	@Override
-	public AngeronaEnvironment getSimulation() {
-		return this;
 	}
 }

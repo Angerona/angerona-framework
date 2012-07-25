@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import angerona.fw.internal.Entity;
+import angerona.fw.report.ReportPoster;
 
 /**
  * Base class for all operators for agents
  * implements basic functionality for the report mechanism.
  * @author Tim Janus
  */
-public class BaseOperator {
+public class BaseOperator implements ReportPoster {
 	
 	/** reference to the agent owning the operator */
 	private Agent owner;
@@ -52,7 +53,7 @@ public class BaseOperator {
 	 * @param msg	The message which will be reported.
 	 */
 	protected void report(String msg) {
-		Angerona.getInstance().report(msg, owner);
+		Angerona.getInstance().report(msg, this);
 	}
 	
 	/**
@@ -61,6 +62,16 @@ public class BaseOperator {
 	 * @param attachment	The entity used as attachment for the report.
 	 */
 	protected void report(String msg, Entity attachment) {
-		Angerona.getInstance().report(msg, owner, attachment);
+		Angerona.getInstance().report(msg, this, attachment);
+	}
+
+	@Override
+	public AngeronaEnvironment getSimulation() {
+		return owner.getSimulation();
+	}
+
+	@Override
+	public String getPosterName() {
+		return this.getClass().getSimpleName();
 	}
 }
