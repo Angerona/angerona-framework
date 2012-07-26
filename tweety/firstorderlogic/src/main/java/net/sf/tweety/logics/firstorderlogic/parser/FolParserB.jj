@@ -17,6 +17,11 @@ import net.sf.tweety.util.Pair;
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
 
 @SuppressWarnings("all")
+/**
+ *	A parser for first-order logical knowledge-bases and formulas.
+ *	It supports the 'forceDefinition' flag which turns the before-hand
+ *	definition of sorts, predicates and functors on/off.
+ */
 public class FolParserB
 { 
   public void setForce(boolean forceDefinitions)  {

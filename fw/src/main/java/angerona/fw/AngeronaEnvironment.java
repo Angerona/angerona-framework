@@ -206,7 +206,7 @@ public class AngeronaEnvironment extends APR {
 				StringReader sr = new StringReader(bbsp.worldContent);
 				world.parse(new BufferedReader(sr));
 				
-				// TODO: Move
+				// TODO: Move because it is a AgentComponent 
 				ConfidentialKnowledge conf = new ConfidentialKnowledge();
 				entities.put(conf.getGUID(), conf);
 				FolSignature fsig = new FolSignature();
