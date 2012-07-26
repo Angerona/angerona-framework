@@ -1,0 +1,154 @@
+Blatant contradiction output
+
+I'm testing what Mary's view of the Coroner will internally look like if she believes the Coroner believes -john_argued and then
+she tells him john_argued (a clear contradiction of the view). It turns out that the old information that contradicts the new information is just pushed out.
+
+09:53:30.393 [main] INFO  a.fw.internal.PluginInstantiator - Load Operator-Plugins:
+09:53:30.403 [main] INFO  a.fw.internal.PluginInstantiator - Operator-Plugin 'angerona.fw.dummy.DummyOperatorPlugin' loaded
+09:53:30.403 [main] INFO  a.fw.internal.PluginInstantiator - Operator-Plugin 'angerona.fw.mary.Plugin' loaded
+09:53:30.403 [main] INFO  a.fw.internal.PluginInstantiator - Load Beliefbase-Plugins:
+09:53:30.404 [main] INFO  a.fw.internal.PluginInstantiator - Beliefbase-Plugin 'angerona.fw.asp.AspPlugin' loaded
+09:53:30.405 [main] INFO  a.fw.internal.PluginInstantiator - Beliefbase-Plugin 'angerona.fw.dummy.DummyBeliefbasePlugin' loaded
+09:53:30.405 [main] INFO  a.fw.internal.PluginInstantiator - Load Agent-Plugins:
+09:53:30.415 [main] INFO  a.fw.internal.PluginInstantiator - Agent-Component: 'angerona.fw.logic.ConfidentialKnowledge' loaded.
+09:53:30.416 [main] INFO  a.fw.internal.PluginInstantiator - Agent-Component: 'angerona.fw.MasterPlan' loaded.
+09:53:30.416 [main] INFO  a.fw.internal.PluginInstantiator - Agent-Component: 'angerona.fw.logic.Desires' loaded.
+09:53:30.416 [main] INFO  a.fw.internal.PluginInstantiator - Agent-Pluign 'angerona.fw.internal.DefaultAgentPlugin' loading complete
+09:53:30.416 [main] INFO  a.fw.internal.PluginInstantiator - Agent-Component: 'angerona.fw.knowhow.KnowhowBase' loaded.
+09:53:30.417 [main] INFO  a.fw.internal.PluginInstantiator - Agent-Pluign 'angerona.fw.knowhow.KnowhowPlugin' loading complete
+09:53:30.417 [main] INFO  angerona.fw.gui.AngeronaWindow - Load UI-Plugins
+09:53:30.419 [main] INFO  angerona.fw.gui.AngeronaWindow - UI-Plugin: 'angerona.fw.dummy.DummyUIPlugin' loaded
+09:53:30.420 [main] INFO  angerona.fw.gui.AngeronaWindow - UI-Plugin: 'angerona.fw.knowhow.KnowhowPlugin' loaded
+09:53:30.420 [main] INFO  angerona.fw.gui.AngeronaWindow - UI-Plugin: 'angerona.fw.gui.DefaultUIPlugin' loaded
+Title change failed
+Title change failed
+09:54:01.399 [AWT-EventQueue-0] INFO  angerona.fw.AngeronaEnvironment - Starting simulation: Mary Courtroom Scenario
+09:54:01.429 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Add custom Component 'angerona.fw.logic.Desires' to agent 'Mary'
+09:54:01.434 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Add custom Component 'angerona.fw.logic.ConfidentialKnowledge' to agent 'Mary'
+09:54:01.435 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Add custom Component 'angerona.fw.MasterPlan' to agent 'Mary'
+09:54:01.528 [AWT-EventQueue-0] WARN  a.fw.logic.ConfidentialKnowledge - Confidential Knowledge of agent 'Mary' has no initial data.
+09:54:01.530 [AWT-EventQueue-0] INFO  angerona.fw.AngeronaEnvironment - Agent 'Mary' added
+09:54:01.530 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Add custom Component 'angerona.fw.logic.Desires' to agent 'Coroner'
+09:54:01.531 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Add custom Component 'angerona.fw.logic.ConfidentialKnowledge' to agent 'Coroner'
+09:54:01.531 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Add custom Component 'angerona.fw.MasterPlan' to agent 'Coroner'
+09:54:01.532 [AWT-EventQueue-0] WARN  a.fw.logic.ConfidentialKnowledge - Confidential Knowledge of agent 'Coroner' has no initial data.
+09:54:01.533 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: New desire: q_Mary(john_argued)_1 by Coroner in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.543 [AWT-EventQueue-0] INFO  angerona.fw.AngeronaEnvironment - Agent 'Coroner' added
+09:54:01.564 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Agent: 'Coroner' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.568 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Desires Set of 'Coroner' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.572 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: World Beliefbase of 'Coroner' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.574 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: View->'Mary' Beliefbase of 'Coroner' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.580 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Custom component 'Desires' of 'Coroner' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.583 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Custom component 'ConfidentialKnowledge' of 'Coroner' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.585 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Custom component 'MasterPlan' of 'Coroner' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.588 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Agent: 'Mary' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.592 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Desires Set of 'Mary' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.595 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: World Beliefbase of 'Mary' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.598 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: View->'Coroner' Beliefbase of 'Mary' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.601 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Custom component 'Desires' of 'Mary' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.611 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Custom component 'ConfidentialKnowledge' of 'Mary' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:01.621 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Custom component 'MasterPlan' of 'Mary' created. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.571 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Mary] Cylce starts: null
+09:54:02.575 [AWT-EventQueue-0] INFO  a.f.o.def.GenerateOptionsOperator - Run Default-Generate-Options-operator
+09:54:02.577 [AWT-EventQueue-0] INFO  a.f.o.def.IntentionUpdateOperator - Run Default-Intention-Update
+09:54:02.577 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No atomic step candidate found. by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.586 [AWT-EventQueue-0] INFO  a.fw.mary.SubgoalGenerationOperator - Run Default-Subgoal-Generation
+09:54:02.587 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No new subgoal generated. by SubgoalGenerationOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.590 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Mary] Cycle ends
+09:54:02.591 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Coroner] Cylce starts: null
+09:54:02.591 [AWT-EventQueue-0] INFO  a.f.o.def.GenerateOptionsOperator - Run Default-Generate-Options-operator
+09:54:02.591 [AWT-EventQueue-0] INFO  a.f.o.def.IntentionUpdateOperator - Run Default-Intention-Update
+09:54:02.591 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No atomic step candidate found. by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.595 [AWT-EventQueue-0] INFO  a.fw.mary.SubgoalGenerationOperator - Run Default-Subgoal-Generation
+09:54:02.605 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: New plan for desire 'q_Mary(john_argued)_1' generated. by SubgoalGenerationOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.608 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Add the new atomic action 'DetailQuery' to the plan, chosen by desire: q_Mary(john_argued)_1 by SubgoalGenerationOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.612 [AWT-EventQueue-0] INFO  a.f.o.def.IntentionUpdateOperator - Run Default-Intention-Update
+09:54:02.613 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Performing mental-action applying: 'DetailQuery' by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.619 [AWT-EventQueue-0] INFO  a.f.o.def.DetailViolatesOperator - Run Detail-ViolatesOperator
+09:54:02.621 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No violation applying the action: '< Coroner detailed query Mary john_argued >' by DetailViolatesOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.625 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Mental action successfull, using 'DetailQuery' as next atomic action. by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.630 [AWT-EventQueue-0] INFO  a.f.o.def.UpdateBeliefsOperator - Run Default-Update-Beliefs-Operator
+09:54:02.631 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Update-Beliefs: Query as sender (might be an error) by UpdateBeliefsOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.634 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Action performed: < Coroner detailed query Mary john_argued >
+09:54:02.634 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Action: '< Coroner detailed query Mary john_argued >' performed. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.641 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Removed plan for desire 'q_Mary(john_argued)_1'. by Coroner in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.650 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Removed desire: q_Mary(john_argued)_1 by Coroner in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:02.659 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Coroner] Cycle ends
+09:54:03.387 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Mary] Cylce starts: < Coroner detailed query Mary john_argued >
+09:54:03.388 [AWT-EventQueue-0] INFO  a.f.o.def.UpdateBeliefsOperator - Run Default-Update-Beliefs-Operator
+09:54:03.389 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Update-Beliefs: Query as receiver (view) by UpdateBeliefsOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.396 [AWT-EventQueue-0] INFO  a.f.o.def.GenerateOptionsOperator - Run Default-Generate-Options-operator
+09:54:03.398 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: New desire: queryProcessing(1) by Mary in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.402 [AWT-EventQueue-0] INFO  a.f.o.def.IntentionUpdateOperator - Run Default-Intention-Update
+09:54:03.403 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No atomic step candidate found. by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.406 [AWT-EventQueue-0] INFO  a.fw.mary.SubgoalGenerationOperator - Run Default-Subgoal-Generation
+DLV [build BEN/Jul 13 2011   gcc 4.3.3]
+{john_argued, someone_argued, you_listened}
+09:54:03.436 [AWT-EventQueue-0] INFO  angerona.fw.logic.asp.AspReasoner - Answer Sets: 1
+--------------
+you_listened, john_argued, someone_argued [0,0]
+--------------
+
+ASDF realAnswer: john_argued
+ASDF realLie: !john_argued
+09:54:03.470 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: New plan for desire 'queryProcessing(1)' generated. by SubgoalGenerationOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.482 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Add the new atomic action 'DetailQueryAnswer' to the plan by SubgoalGenerationOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.498 [AWT-EventQueue-0] INFO  a.f.o.def.IntentionUpdateOperator - Run Default-Intention-Update
+09:54:03.505 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Performing mental-action applying: 'DetailQueryAnswer' by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+ASDF FolFormula answer:john_argued
+09:54:03.519 [AWT-EventQueue-0] INFO  a.f.o.def.DetailViolatesOperator - Run Detail-ViolatesOperator
+09:54:03.520 [AWT-EventQueue-0] INFO  a.f.o.def.DetailViolatesOperator - Make Revision for DetailQueryAnswer: 'john_argued'
+09:54:03.533 [AWT-EventQueue-0] INFO  angerona.fw.logic.asp.AspRevision - ASDF Predicate name:john_argued
+DLV [build BEN/Jul 13 2011   gcc 4.3.3]
+{-john_argued}
+{john_argued}
+DLV [build BEN/Jul 13 2011   gcc 4.3.3]
+{john_argued}
+09:54:03.567 [AWT-EventQueue-0] INFO  angerona.fw.logic.asp.AspReasoner - Answer Sets: 1
+--------------
+john_argued [0,0]
+--------------
+
+ASDF printing view: 
+	 ASDF view info:john_argued
+DLV [build BEN/Jul 13 2011   gcc 4.3.3]
+{john_argued}
+09:54:03.589 [AWT-EventQueue-0] INFO  angerona.fw.logic.asp.AspReasoner - Answer Sets: 1
+--------------
+john_argued [0,0]
+--------------
+
+DLV [build BEN/Jul 13 2011   gcc 4.3.3]
+{john_argued}
+09:54:03.602 [AWT-EventQueue-0] INFO  angerona.fw.logic.asp.AspReasoner - Answer Sets: 1
+--------------
+john_argued [0,0]
+--------------
+
+09:54:03.602 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No violation applying the action: '< Mary gives the detailed answer Coroner john_argued=TRUE >' by DetailViolatesOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.610 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Mental action successfull, using 'DetailQueryAnswer' as next atomic action. by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+ASDF FolFormula answer:john_argued
+09:54:03.620 [AWT-EventQueue-0] INFO  a.f.o.def.UpdateBeliefsOperator - Run Default-Update-Beliefs-Operator
+09:54:03.620 [AWT-EventQueue-0] INFO  angerona.fw.logic.asp.AspRevision - ASDF Predicate name:john_argued
+DLV [build BEN/Jul 13 2011   gcc 4.3.3]
+{-john_argued}
+{john_argued}
+09:54:03.637 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Update-Beliefs: Answer as sender (view) by UpdateBeliefsOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.640 [AWT-EventQueue-0] INFO  angerona.fw.Agent - Action performed: < Mary gives the detailed answer Coroner john_argued=TRUE >
+09:54:03.653 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Action: '< Mary gives the detailed answer Coroner john_argued=TRUE >' performed. by  in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.656 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Removed plan for desire 'queryProcessing(1)'. by Mary in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.661 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Removed desire: queryProcessing(1) by Mary in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.669 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Mary] Cycle ends
+09:54:03.677 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Coroner] Cylce starts: < Mary gives the detailed answer Coroner john_argued=TRUE >
+09:54:03.677 [AWT-EventQueue-0] INFO  a.f.o.def.UpdateBeliefsOperator - Run Default-Update-Beliefs-Operator
+09:54:03.677 [AWT-EventQueue-0] INFO  angerona.fw.logic.asp.AspRevision - ASDF Predicate name:john_argued
+DLV [build BEN/Jul 13 2011   gcc 4.3.3]
+{john_argued}
+09:54:03.690 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: Update-Beliefs: Answer as receiver (world) by UpdateBeliefsOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.703 [AWT-EventQueue-0] INFO  a.f.o.def.GenerateOptionsOperator - Run Default-Generate-Options-operator
+09:54:03.713 [AWT-EventQueue-0] INFO  a.f.o.def.IntentionUpdateOperator - Run Default-Intention-Update
+09:54:03.714 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No atomic step candidate found. by IntentionUpdateOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.724 [AWT-EventQueue-0] INFO  a.fw.mary.SubgoalGenerationOperator - Run Default-Subgoal-Generation
+09:54:03.737 [AWT-EventQueue-0] INFO  angerona.fw.Angerona - REPORT: No new subgoal generated. by SubgoalGenerationOperator in angerona.fw.AngeronaEnvironment@f508b9:angerona.fw.AngeronaEnvironment@f508b9
+09:54:03.746 [AWT-EventQueue-0] INFO  angerona.fw.Agent - [Coroner] Cycle ends
+

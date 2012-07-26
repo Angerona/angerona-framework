@@ -4,12 +4,16 @@ package angerona.fw.mary;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import net.sf.tweety.logics.firstorderlogic.syntax.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,13 +143,38 @@ public class SubgoalGenerationOperator extends
 				if(si == -1 || li == -1)
 					continue;
 				String content = desire.toString().substring(si,li);
+				String predName = content;
+				//LinkedList<String> termNames = new LinkedList<String>();
+				String[] termNames = null;
 				//To make detail questions work with arity greater than 0
 				if(content.contains("("))
 				{
-					content = content.substring(0, content.indexOf("("));
+					predName = content.substring(0, content.indexOf("("));
+					//Now determine if the arguments of the predicate are variables or constants
+					//It could refer to the belief base of an agent to see if the terms are declared, or it could just 
+					//check if the terms are uppercase. Uppercase terms are variables
+					//Nested terms like said(dontKnow(d)) are unlikely
+					String termsString = content.substring(content.indexOf("(")+1, content.lastIndexOf(")"));
+					termNames = termsString.split(", ");
 				}
 				
-				//Should the snippet above be put in its own subroutine?
+				LinkedList<Term> terms = new LinkedList<Term>();
+				if(termNames != null)
+				{
+					for(String name : termNames)
+					{
+						if(name.equals(name.toUpperCase()))
+						{
+						//	terms.add(new Variable(name));
+							//Have to use a constant with all upper case, as variables aren't supported
+							terms.add(new Constant(name));
+						}
+						else
+						{
+							terms.add(new Constant(name));
+						}
+					}
+				}
 				
 				Skill query = (Skill) ag.getSkill("DetailQuery");
 				if(query == null) {
@@ -153,10 +182,10 @@ public class SubgoalGenerationOperator extends
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
-				FolFormula f = new Atom(new Predicate(content));
+				FolFormula f = new Atom(new Predicate(predName, terms.size()), terms);
 				if(content.startsWith("-")) {
 					content = content.substring(1);
-					f = new Negation(new Atom(new Predicate(content)));
+					f = new Negation(new Atom(new Predicate(predName, terms.size()), terms));
 				}
 				sg.newStack(query, new DetailQuery(ag.getName(), recvName, f).getContext());
 				ag.getPlanComponent().addPlan(sg);
@@ -179,12 +208,26 @@ public class SubgoalGenerationOperator extends
 
 	
 	//Checks whether the query is a simple true/false type question or not
-	//It does this by checking whether the answer contains a parentheses, which is a terrible solution
+	//Ideally it would check if any arguments are variables, but variables aren't supported yet
 	private boolean simpleQuery(AngeronaDetailAnswer queryAnswer)
 	{
+		/*
 		if(queryAnswer.toString().contains("("))
 		{
 			return false;
+		}
+		return true;
+		*/
+		//The FolFromula will always be a literal when this method is called (rules can't be queries. Should they ever be?)
+		Atom a = (Atom) queryAnswer.getAnswerExtended();
+		if(a.getPredicate().getArity() > 0)
+		{
+			//Just the first argument has to be checked now, since only questions with one argument can be supported anyway
+			List<Term> arguments = a.getArguments();
+			String firstArgName = arguments.get(0).getName();
+			if(firstArgName.equals(firstArgName.toUpperCase()))
+				return false;
+			return true;
 		}
 		return true;
 	}
@@ -223,6 +266,7 @@ public class SubgoalGenerationOperator extends
 		}
 		
 		//Check if query is a simple true/false question
+		System.out.println("(Delete) isGround: "+allAnswers.get(0).getAnswerExtended().isGround());
 		if(allAnswers.size()>0 && simpleQuery(allAnswers.get(0)))
 		{
 			System.out.println("(Delete) Adding simple lie");

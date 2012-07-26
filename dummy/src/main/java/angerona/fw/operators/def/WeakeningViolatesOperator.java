@@ -195,6 +195,8 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 					for(AnswerSet ans : newAnsSets)
 					{
 						//Another temporary string-based solution...
+						System.out.println("(Delete) secret info string:"+secretInfo.toString());
+						System.out.println("(Delete) ans program:"+ans.toString());
 						if(ans.toString().contains(secretInfo.toString()))
 						{
 							int index = ans.toString().indexOf(secretInfo.toString());
