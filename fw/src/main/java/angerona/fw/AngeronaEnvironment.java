@@ -209,6 +209,8 @@ public class AngeronaEnvironment extends APR {
 	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
 		LOG.info("Starting simulation: " + config.getName());
 		this.simDirectory = simulationDirectory;
+		if(!createBehavior(config))
+			return false;
 		
 		Angerona.getInstance().onCreateSimulation(this);
 		tick = 0;
@@ -262,6 +264,43 @@ public class AngeronaEnvironment extends APR {
 			this.sendAction(percept.getReceiverId(), percept);
 		}
 		return ready = true;
+	}
+
+	/**
+	 * Helper method: Creates the correct behavior class with the given class name
+	 * form the simulations xml file.
+	 * @param config		reference to the config.
+	 * @return				true if the creation was successful, false otherwise.
+	 */
+	private boolean createBehavior(SimulationConfiguration config) {
+		if(config.getBehaviorCls() != null) {
+			String error = null;
+			try {
+				Class<? > cls = Class.forName(config.getBehaviorCls());
+				Object temp = cls.newInstance();
+				if(temp instanceof EnvironmentBehavior) {
+					this.behavior = (EnvironmentBehavior) temp;
+				} else {
+					error = "The class: '" + config.getBehaviorCls() + "' is not of type EnvironmentBehavior.";
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				error = "Cannot find class: " + e.getMessage();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+				error = e.getMessage();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				error = e.getMessage();
+			}
+			
+			if(error != null) {
+				Angerona.getInstance().onError("Simulation initialization", error);
+				LOG.error(error);
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
