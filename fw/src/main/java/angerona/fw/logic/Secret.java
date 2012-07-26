@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.util.Pair;
 
@@ -117,7 +116,7 @@ public class Secret implements Cloneable {
 	}
 	
 	/** @return formula representing the confidential information */
-	public Formula getInformation() {
+	public FolFormula getInformation() {
 		return information;
 	}
 	

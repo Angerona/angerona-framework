@@ -2,6 +2,11 @@ package angerona.fw.logic;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import net.sf.tweety.Signature;
+import net.sf.tweety.SymbolSet;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import angerona.fw.BaseBeliefbase;
 
@@ -16,9 +21,6 @@ public class Beliefs implements Cloneable
 	
 	/** a list of views on other agents knowledge (what the agent beliefs about the knowledge of the other agents) */
 	private Map<String, BaseBeliefbase> viewKnowledge = new HashMap<String, BaseBeliefbase>();
-	
-	/** knowledge about confidential informations */
-	private BaseBeliefbase confidentialKnowledge;
 	
 	/**
 	 * Ctor: generates agent beliefs with the given world, view and confidential knowledge.
@@ -64,7 +66,24 @@ public class Beliefs implements Cloneable
 		for(String name : viewKnowledge.keySet()) {
 			reval += name + "\n" + viewKnowledge.get(name).toString() +"\n";
 		}
-		reval+="\nConfidential:\n" + confidentialKnowledge.toString();
 		return reval;
+	}
+	
+	/**
+	 * This method generates a FOL-Signature by the union of the FolSignatures
+	 * of all belief bases in the Beliefs (worlds and views).
+	 * @return
+	 */
+	public FolSignature getSignature() {
+		BaseBeliefbase world = getWorldKnowledge();
+		Signature worldSig = world.getSignature();
+		SymbolSet ss = worldSig.getSymbolSet();
+		Set<String> views = getViewKnowledge().keySet();
+		for(String viewname : views) {
+			BaseBeliefbase view = getViewKnowledge().get(viewname);
+			Signature sig = view.getSignature();
+			ss.add(sig.getSymbolSet());
+		}
+		return new FolSignature(ss);
 	}
 }

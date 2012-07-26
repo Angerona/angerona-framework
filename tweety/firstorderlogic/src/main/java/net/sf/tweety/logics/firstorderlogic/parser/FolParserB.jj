@@ -169,7 +169,7 @@ TOKEN :
 | < NUMBER : (< DIGIT >)+ >
 | < LCHAR : ["a"-"z"]>
 | < UCHAR : ["A"-"Z"] >
-| < SYMBOL: (< LCHAR >|< UCHAR >|< DIGIT >) >
+| < SYMBOL: (< LCHAR >|< UCHAR >|< DIGIT >|"_") >
 | < CONSTANT: < LCHAR >(< SYMBOL >)* >
 | < VARIABLE: < UCHAR >(< SYMBOL >)* >
 | < BLANK : "_" >
