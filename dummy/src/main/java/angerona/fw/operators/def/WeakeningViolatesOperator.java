@@ -169,7 +169,8 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				{
 					//There is a bug with contradiction checking
 					System.out.println("(Delete) contradiction noted here");
-					report(param.getAgent().getName() + "' creates contradiction by: '" + param.getAction() + "'", view);
+					String actString = param.getAction().toString();
+					report(param.getAgent().getName() + "' <b> creates contradiction </b> <br /> by: '" + actString.substring(0, actString.length()-1) + "'", view);
 					secretList = representTotalExposure(conf);
 					return secretList;
 				}
@@ -223,8 +224,10 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 							*/ 
 						sPair.defineDegreeOfWeakening(degreeOfWeakening);
 						secretList.add(sPair);
-						report(param.getAgent().getName() + "' weakens secret: '"+secretInfo.toString()+"' by: '"+degreeOfWeakening+"' with: '" 
-						+ param.getAction() + "'", view);
+						String actString = param.getAction().toString();
+						report(param.getAgent().getName() + "' <b> weakens secret: </b> '"+secretInfo.toString()+"' by: '"+degreeOfWeakening+"' <br /> with: '" 
+						+ actString.substring(0, actString.length()-1) + "'", view);
+						//report(param.getAgent().getName() + "' <b> weakens secret: </b> '"+secretInfo.toString()+"' by: '"+degreeOfWeakening);
 					}
 					
 				}

@@ -44,6 +44,7 @@ public class Skill extends Intention implements Runnable {
 	/* These changes need to be isolate or otherwise changed -- Daniel */
 	private List<SecrecyStrengthPair> weakenings = null;
 	
+	
 	public Skill(Agent agent, SkillConfig config) {
 		super(agent);
 		this.name = config.getName();
@@ -64,8 +65,6 @@ public class Skill extends Intention implements Runnable {
 	}
 	
 
-
-	
 	public List<SecrecyStrengthPair> getWeakenings()
 	{
 		return this.weakenings;
@@ -74,6 +73,7 @@ public class Skill extends Intention implements Runnable {
 	{
 		this.weakenings = weaks;
 	}
+	
 	
 	/* End of Daniel's changes */
 	public boolean violates() {

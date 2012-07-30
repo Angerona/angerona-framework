@@ -49,7 +49,7 @@ public class DetailQueryAnswer extends Answer {
 		{
 			answerString = "FALSE";
 		}
-		return "< " + getSenderId() + " gives the detailed answer " + getReceiverId() + " " + getRegarding().toString() + "=" + answerString + " >";
+		return "< " + getSenderId() + " gives the detailed answer " + getReceiverId() + " <b>" + getRegarding().toString() + "=" + answerString + "</b> >";
 	}
 	@Override
 	public boolean equals(Action a)

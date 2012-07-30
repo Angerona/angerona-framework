@@ -10,12 +10,13 @@ import angerona.fw.Agent;
 import angerona.fw.Intention;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+import angerona.fw.comm.DetailQueryAnswer;
 import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
 
 public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
-	private static double maxWeakening = 0.5; //Probably should be removed later
+	
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
@@ -32,24 +33,18 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 			return false;
 		}
 		return true;
-		
-		//return false;
 	}
 	private double lyingCost(Intention intention)
 	{
 		double estimate = 0.5;
-		//Having this line causes a crash in the program...
-		report(intention+" is a lie. Estimated cost equal to weakening secret by "+estimate);
+		report(intention+" <b> 'dontKnow' is a lie </b>. <br /> Estimated cost equal to weakening secret by "+estimate);
 		return estimate;
 	}
-	//Which is best for this function? Maximum weakening or sum of weakenings?
-	//Can depend...write about this choice in docs
 	private double secrecyWeakeningCost(List<SecrecyStrengthPair> weakenings)
 	{
 		double total = 0.0;
 		for (SecrecyStrengthPair pair : weakenings)
 		{
-			//Doesn't always work with += for some reason. Interesting...
 			total = total + pair.getDegreeOfWeakening();
 			System.out.println("(Delete) pair secret:"+pair.getSecret().getInformation().toString()
 					+" degreeOfWeakening 3:"+pair.getDegreeOfWeakening());
@@ -59,8 +54,6 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 	}
 	
 	//A more elegant solution for this function would be to use Collections.max
-	//Also note that this function might have to be changed if my definition of INFINITY changes
-	//(Have an interface for constants like INFINITY? Or else some other module for final values?)
 	private Intention minimalCosting(List<Intention> intentions)
 	{
 		if (intentions == null || intentions.size() == 0)
@@ -93,7 +86,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 				if(plan.peekStack(i).isAtomic()) {
 					Intention intention = plan.peekStack(i);
 					intention.setRealRun(false);
-					if(intentionOutdated(intention)) //Shouldn't this come before a report of performing that mental action?
+					if(intentionOutdated(intention)) 
 					{
 						continue;
 					}
@@ -118,7 +111,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 									+" degreeOfWeakening 1:"+sp.getDegreeOfWeakening());
 						}
 						if(weakenings != null) {
-							report("Mental action successfull. Now weighing cost of '" + sk.getName() + "' as next atomic action.", ag);
+							//report("Mental action successfull. Now weighing cost of '" + sk.getName() + "' as next atomic action.", ag);
 							//System.out.println("(Delete) number of weakenings: "+sk.weakenings().size());
 							for(SecrecyStrengthPair sp: weakenings)
 							{

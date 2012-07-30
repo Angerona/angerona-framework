@@ -28,6 +28,8 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private List<SecrecyStrengthPair> weakenings = null;
 	
+	private Action act = null;
+	
 	public SendActionVisitor(PerceptionFactory factory, boolean realRun, Beliefs beliefs) {
 		if(factory == null)
 			throw new IllegalArgumentException("factory must not null!");
@@ -44,13 +46,18 @@ public class SendActionVisitor extends ContextVisitor {
 	public boolean violates() {
 		return violates;
 	}
+
+	public Action getAction()
+	{
+		return act;
+	}
 	
 	@Override
 	protected void runImpl(Statement statement) throws InvokeException {
 		// TODO: implement inner element of actions in skill.
 		//Action reval = (Action) factory.generateFromElement(statement.getInnerElement(), context);
 		Action reval = (Action) factory.generateFromDataObject((PerceptionDO)statement.getComplexInfo(), context);
-
+		this.act = reval;
 		if(realRun)
 			getSelf().performAction(reval);
 		else

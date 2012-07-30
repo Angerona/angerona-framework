@@ -9,6 +9,6 @@ public class DetailQuery extends Query{
 	}
 	@Override 
 	public String toString() {
-		return "< " + getSenderId() + " detailed query " + getReceiverId() + " " + super.getQuestion() + " >";
+		return "< " + getSenderId() + " detailed query " + getReceiverId() + " <b>" + super.getQuestion() + " </b> >";
 	}
 }

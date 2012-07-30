@@ -70,7 +70,7 @@ public class ReportView extends BaseView implements ReportListener {
     	
     	@Override
     	public String toString() {
-    		return (action == null ? agent.getName() : action.toString());
+    		return (action == null ? "<html>" + agent.getName() + "</html>" : "<html>" + action.toString() + "</html>");
     	}
     }
     
@@ -84,7 +84,7 @@ public class ReportView extends BaseView implements ReportListener {
     	
     	@Override
     	public String toString() {
-    		return entry.getPosterName() + ": " + entry.getMessage();
+    		return "<html>" + entry.getPosterName() + ": " + entry.getMessage() + "</html>";
     	}
     }
     

@@ -190,7 +190,7 @@ public class SubgoalGenerationOperator extends
 				sg.newStack(query, new DetailQuery(ag.getName(), recvName, f).getContext());
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
-				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 
+				report("Add the new atomic action '"+query.getName()+"' to the plan, <br /> chosen by desire: " + desire.toString(), 
 						ag.getPlanComponent());
 			}
 		}
@@ -226,8 +226,8 @@ public class SubgoalGenerationOperator extends
 			List<Term> arguments = a.getArguments();
 			String firstArgName = arguments.get(0).getName();
 			if(firstArgName.equals(firstArgName.toUpperCase()))
-				return false;
-			return true;
+				return true;
+			return false;
 		}
 		return true;
 	}
@@ -304,11 +304,13 @@ public class SubgoalGenerationOperator extends
 			context.set("answer", answer);
 			if(answer.toString().contains("dontKnow"))
 			{
-				sg.newStack(qaSkillLie.deepCopy(), context); //Theoretically this should be deepCopied every time too, but not necessary now
+				Skill curLie = qaSkillLie.deepCopy();
+				sg.newStack(curLie, context); //Theoretically this should be deepCopied every time too, but not necessary now
 			}
 			else
 			{
-				sg.newStack(qaSkill.deepCopy(), context);
+				Skill curAns = qaSkill.deepCopy();
+				sg.newStack(curAns, context);
 			}
 		}
 		
