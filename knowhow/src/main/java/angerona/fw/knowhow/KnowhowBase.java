@@ -5,13 +5,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Variable;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 import org.slf4j.Logger;
@@ -45,7 +54,7 @@ public class KnowhowBase extends BaseAgentComponent {
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/InitTree");
 		initTree = Program.loadFrom(new InputStreamReader(is));
 		
-		is = this.getClass().getClassLoader().getResourceAsStream("programs/NextAction");
+		is = this.getClass().getClassLoader().getResourceAsStream("programs/NextActionLists");
 		nextAction = Program.loadFrom(new InputStreamReader(is));
 	}
 	
@@ -109,22 +118,68 @@ public class KnowhowBase extends BaseAgentComponent {
 		
 		KnowhowBase kb = new KnowhowBase();
 		Map<String, String> data = new HashMap<String, String>();
-		data.put("KnowHow", 
+		/*data.put("KnowHow", 
 				"cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full\n" +
 				"cleaned_hallway, (at_hallway, vacuumed_hallway), bag_empty\n" +
 				"cleaned_lounge, ordered_robotxy_to_clean_lounge, robotxy_available\n" +
 				"cleaned_lounge, (at_lounge, free_lounge, vacuumed_lounge), bag_empty\n" +
 				"free_lounge, people_sent_away, at_lounge"
-				);
+				);*/
+		data.put("KnowHow", "win, (bluff), ");
 		kb.init(data);
+		KnowhowStatement stmt = new KnowhowStatement(new Atom("bluff"), new Vector<Atom>(), new Vector<Atom>());
+		kb.statements.add(stmt);
 		
 		Program p = KnowhowBuilder.buildExtendedLogicProgram(kb);
+		Rule is_atomic = new Rule();
+		is_atomic.addHead(new Atom("is_atomic", new Constant("bluff")));
+		p.add(is_atomic);
 		p.add(kb.initTree);
 		p.add(kb.nextAction);
-		LOG.info("Program: " + p.toString() + "\n\n");
+		System.out.println(p.toString());
+		System.out.println();
 		
-		DLVComplex dlvComplex = new DLVComplex(args[0]);
-		AnswerSetList asl = dlvComplex.computeModels(p, 10);
-		LOG.info(asl.toString());
+		int maxIt = 10;
+		boolean run = true;
+		AnswerSetList asl = null;
+		while(run) {
+			run = false;
+			DLVComplex dlvComplex = new DLVComplex(args[0]);
+			asl = dlvComplex.computeModels(p, 10);
+			LOG.info(asl.toString());
+			
+			Atom toSearchVariable = new Atom("act", new Variable("A"));
+			Set<Literal> variable = new HashSet<Literal>();
+			variable.add(toSearchVariable);
+			
+			Atom toSearchIdentity = new Atom("act", new Constant("bluff"));
+			Set<Literal> constant = new HashSet<Literal>();
+			constant.add(toSearchIdentity);
+			
+			variable.add(toSearchVariable);
+			for(int i=0; i<asl.size(); ++i) {
+				AnswerSet as = asl.get(i);
+				if(as.containsAll(variable)) {
+					run = true;
+					break;
+				}
+				
+				if(as.containsAll(constant)) {
+					run = true;
+					System.out.println("Only constant worked");
+					break;
+				}
+			}
+			
+			maxIt--;
+			if(maxIt <= 0)
+				run = false;
+			
+			// update program:
+			p = KnowhowBuilder.buildExtendedLogicProgram(kb);
+			p.add(is_atomic);
+			p.add(kb.nextAction);
+			
+		}
 	}
 }
