@@ -1,15 +1,34 @@
 <agent-configuration>
 	<name>Full Agent Implementation</name>
-	<generate-options-class>angerona.fw.operators.def.GenerateOptionsOperator</generate-options-class>
-	<intention-update-class>angerona.fw.operators.def.IntentionUpdateOperator</intention-update-class>
-	<subgoal-generation-class>angerona.fw.operators.def.SubgoalGenerationOperator</subgoal-generation-class>
-	<update-beliefs-class>angerona.fw.operators.def.UpdateBeliefsOperator</update-beliefs-class>
-	<violates-class>angerona.fw.operators.def.ViolatesOperator</violates-class>
 	
-	<component-classes class="java.util.LinkedList">
-		<string>angerona.fw.logic.Desires</string>
-		<string>angerona.fw.logic.ConfidentialKnowledge</string>
-		<string>angerona.fw.knowhow.KnowhowBase</string>
-        <string>angerona.fw.MasterPlan</string>
-	</component-classes>	
+	<generate-options-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+		<default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>
+		<operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</operator-cls>
+    </generate-options-operators>
+    
+    <intention-update-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+        <default-operator-cls>angerona.fw.operators.def.IntentionUpdateOperator</default-operator-cls>
+        <operator-cls>angerona.fw.operators.def.IntentionUpdateOperator</operator-cls>
+    </intention-update-operators>
+    
+    <subgoal-generation-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+		<default-operator-cls>angerona.fw.operators.def.SubgoalGenerationOperator</default-operator-cls>
+		<operator-cls>angerona.fw.operators.def.SubgoalGenerationOperator</operator-cls>
+    </subgoal-generation-operators>
+
+    <update-beliefs-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+    	<default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
+		<operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</operator-cls>
+	</update-beliefs-operators>	
+    
+    <violates-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+		<default-operator-cls>angerona.fw.operators.def.ViolatesOperator</default-operator-cls>
+		<operator-cls>angerona.fw.operators.def.ViolatesOperator</operator-cls>
+	</violates-operators>
+	
+	<component>angerona.fw.logic.Desires</component>
+	<component>angerona.fw.logic.ConfidentialKnowledge</component>
+	<component>angerona.fw.knowhow.KnowhowBase</component>
+	<component>angerona.fw.MasterPlan</component>
+	
 </agent-configuration>

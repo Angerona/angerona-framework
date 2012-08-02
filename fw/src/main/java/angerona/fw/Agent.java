@@ -89,19 +89,19 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
 	
 	/** Reference to the used generate options operator. */
-	BaseGenerateOptionsOperator generateOptionsOperator;
+	OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
 	
 	/** Reference to the used filter operator. */
-	BaseIntentionUpdateOperator intentionUpdateOperator;
+	OperatorSet<BaseIntentionUpdateOperator> intentionUpdateOperators = new OperatorSet<BaseIntentionUpdateOperator>();
 	
 	/** The operator used to change the knowledge base when receiving perceptions */
-	BaseUpdateBeliefsOperator changeOperator;
+	OperatorSet<BaseUpdateBeliefsOperator> changeOperators = new OperatorSet<BaseUpdateBeliefsOperator>();
 	
 	/** The operator used for violates proofs */
-	BaseViolatesOperator violatesOperator;
+	OperatorSet<BaseViolatesOperator> violatesOperators = new OperatorSet<BaseViolatesOperator>();
 	
-	/** Reference to the used planer */
-	BaseSubgoalGenerationOperator subgoalGenerationOperator;
+	/** Reference to the used planer-set */
+	OperatorSet<BaseSubgoalGenerationOperator> subgoalGenerationOperators = new OperatorSet<BaseSubgoalGenerationOperator>();
 	
 	/** reference to the current used operator in the cycle process. */
 	Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
@@ -258,17 +258,17 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		AgentConfig ac = ai.getConfig();
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		try {
-			generateOptionsOperator = pi.createGenerateOptionsOperator(ac.getGenerateOptionsOperatorClass());
-			intentionUpdateOperator = pi.createFilterOperator(ac.getIntentionUpdateOperatorClass());
-			subgoalGenerationOperator = pi.createPlaner(ac.getSubgoalGenerationClass());
-			changeOperator = pi.createUpdateOperator(ac.getUpdateOperatorClass());
-			violatesOperator = pi.createViolatesOperator(ac.getViolatesOperatorClass());
+			genOptionsOperators.set(ac.getGenerateOptionsOperators());
+			intentionUpdateOperators.set(ac.getIntentionUpdateOperators());
+			subgoalGenerationOperators.set(ac.getSubgoalGenerators());
+			changeOperators.set(ac.getUpdateOperators());
+			violatesOperators.set(ac.getViolatesOperators());
 
-			generateOptionsOperator.setOwner(this);
-			intentionUpdateOperator.setOwner(this);
-			subgoalGenerationOperator.setOwner(this);
-			changeOperator.setOwner(this);
-			violatesOperator.setOwner(this);
+			genOptionsOperators.setOwner(this);
+			intentionUpdateOperators.setOwner(this);
+			subgoalGenerationOperators.setOwner(this);
+			changeOperators.setOwner(this);
+			violatesOperators.setOwner(this);
 			
 			for(String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
@@ -419,17 +419,17 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 			
 		updateBeliefs(actualPerception);	
 		// Deliberation:
-		generateOptionsOperator.process(new GenerateOptionsParameter(this, actualPerception));
+		genOptionsOperators.getDefault().process(new GenerateOptionsParameter(this, actualPerception));
 		
 		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		// Means-end-reasoning:
 		MasterPlan masterPlan = getComponent(MasterPlan.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
-				atomic = intentionUpdateOperator.process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
+				atomic = intentionUpdateOperators.getDefault().process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
 				
 				if(atomic == null) {
-					if(!subgoalGenerationOperator.process(new SubgoalGenerationParameter(masterPlan, allSkills)))
+					if(!subgoalGenerationOperators.getDefault().process(new SubgoalGenerationParameter(masterPlan, allSkills)))
 						break;
 				}
 			}
@@ -457,7 +457,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	 */
 	public void updateBeliefs(Perception perception) {
 		if(perception != null)
-			beliefs = changeOperator.process(new UpdateBeliefsParameter(this, perception));
+			beliefs = changeOperators.getDefault().process(new UpdateBeliefsParameter(this, perception));
 	}
 	
 	/**
@@ -468,7 +468,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	 * @return			true if applying the action violates confidential, false otherwise.
 	 */
 	public boolean performThought(Beliefs beliefs, Action action) {
-		return violatesOperator.process(new ViolatesParameter(this, action));
+		return violatesOperators.getDefault().process(new ViolatesParameter(this, action));
 	}
 	
 	public AngeronaAnswer reason(FolFormula query) {

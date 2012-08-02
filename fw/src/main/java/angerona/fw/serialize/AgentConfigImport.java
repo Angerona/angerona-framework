@@ -20,28 +20,27 @@ public class AgentConfigImport implements AgentConfig {
 	}
 	
 	@Override
-	public String getGenerateOptionsOperatorClass() {
+	public OperatorSetConfig getGenerateOptionsOperators() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
 	@Override
-	public String getIntentionUpdateOperatorClass() {
+	public OperatorSetConfig getIntentionUpdateOperators() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
 	@Override
-	public String getViolatesOperatorClass() {
-		throw new IllegalStateException("Method not supported.");
-	}
-
-
-	@Override
-	public String getUpdateOperatorClass() {
+	public OperatorSetConfig getViolatesOperators() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
 	@Override
-	public String getSubgoalGenerationClass() {
+	public OperatorSetConfig getUpdateOperators() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public OperatorSetConfig getSubgoalGenerators() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
@@ -49,12 +48,13 @@ public class AgentConfigImport implements AgentConfig {
 	public String getName() {
 		throw new IllegalStateException("Method not supported.");
 	}
-
+	
 	@Override
 	public List<String> getComponents() {
 		throw new IllegalStateException("Method not supported.");
 	}
 	
+
 	public static AgentConfigImport getTestObject()  {
 		AgentConfigImport reval = new AgentConfigImport();
 		reval.source = new File("config/skills/QueryAnswer.xml");

@@ -8,19 +8,20 @@ import java.util.List;
  */
 public interface AgentConfig {
 	/** @return String identifying the GenerateOptions Operator class name */
-	public String getGenerateOptionsOperatorClass();
+	public OperatorSetConfig getGenerateOptionsOperators();
 	
 	/** @return String identifying the Filter Operator class name */
-	public String getIntentionUpdateOperatorClass();
-
+	public OperatorSetConfig getIntentionUpdateOperators();
+	
 	/** @return String identifying the Violates Operator class name */
-	public String getViolatesOperatorClass();
+	public OperatorSetConfig getViolatesOperators();
+	
 
 	/** @return String identifying the Update Operator class name */
-	public String getUpdateOperatorClass();
-
+	public OperatorSetConfig getUpdateOperators();
+	
 	/** @return String identifying the Planer Operator class name */
-	public String getSubgoalGenerationClass();
+	public OperatorSetConfig getSubgoalGenerators();
 	
 	/** @return String with name of the agent configuration */
 	public String getName();
