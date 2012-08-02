@@ -83,8 +83,6 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		{
 			Program p = as.toProgram();
 			Rule secretRule = convertToRule(secretInfo);
-			System.out.println("(Delete) secretRule: "+secretRule);
-			System.out.println("(Delete) answer set program:"+p.toString());
 			if(p.hasRule(secretRule))
 			{
 				setsWithSecret += 1;
@@ -92,7 +90,6 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		}
 		double quotient = setsWithSecret/numAnsSets;
 		double strength = 1.0 - quotient;
-		System.out.println("(Delete) Quotient: "+quotient+" strength: "+strength);
 		return strength;
 	}
 	
@@ -119,7 +116,6 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 			
 			/* Consider self-repeating answers (and only answers) as bad as revealing all secrets */
 			List<Action> actionsHistory = param.getAgent().getActionsHistory();
-			System.out.println("(Delete) size of actionsHistory: "+actionsHistory.size());
 			for(Action act : actionsHistory)
 			{
 				if(a.equals(act))
@@ -171,9 +167,8 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				/* Now the secrecy strengths get added */
 				for(Secret secret : conf.getTargets()) 
 				{
-					FolFormula secretInfo = (FolFormula) secret.getInformation(); //Info stored as a FolFormula in secret, yet access as a Formula...
+					FolFormula secretInfo = (FolFormula) secret.getInformation(); 
 					Rule secretRule = convertToRule(secretInfo);
-					System.out.println("(Delete) information regarding secret: "+secret.toString());
 					
 					boolean secretContained = false;
 					for(AnswerSet ans : newAnsSets)

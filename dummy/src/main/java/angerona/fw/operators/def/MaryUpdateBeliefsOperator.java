@@ -38,8 +38,6 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			out += (naa.getSenderId().compareTo(id) == 0 ? "as sender (view)" : "as receiver (world)");
 			
 			
-			//List<SecrecyStrengthPair> weakenings = param.getAgent().considerSecretWeakening(reval, naa);
-			//List<SecrecyStrengthPair> weakenings = naa.getWeakenings();
 			List<SecrecyStrengthPair> weakenings = param.getAgent().getWeakenings();
 			
 			
@@ -51,12 +49,10 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			}
 			
 			bb.addKnowledge(naa);
-			//Perhaps not the most efficient way to modify secrets
-			//Also, assumes return-by-reference for the confidential targets
+
 			for(Secret secret : conf.getTargets()) 
 			{
-				//Should the change in strength take place here or should already have been calculated
-				//when secrets are added to the SecrecyStrengthPair?
+
 				if(weakenings == null)
 				{
 					continue;
@@ -65,15 +61,12 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				for (SecrecyStrengthPair sPair : weakenings)
 				{
 					
-					//String based comparison again. Probably not the best solution
-					//Also, too many nested method calls
 					if(secret.getInformation().toString().equals(sPair.getSecret().getInformation().toString()))
 					{
 						Map <String, String> map =  secret.getReasonerParameters();
 						double oldD = Double.parseDouble(map.get("d"));
 						double newD = oldD - sPair.getDegreeOfWeakening();
 						map.put("d", new Double(newD).toString());
-						System.out.println("(Delete) newD:"+newD);
 						secret.setReasonerParameters(map); 
 					}
 				}
