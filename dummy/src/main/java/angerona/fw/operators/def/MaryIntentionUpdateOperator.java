@@ -37,7 +37,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 	private double lyingCost(Intention intention)
 	{
 		double estimate = 0.5;
-		report(intention+" <b> 'dontKnow' is a lie </b>. <br /> Estimated cost equal to weakening secret by "+estimate);
+		report(intention+" <b> 'dontKnow' is a lie </b>. Estimated cost equal to weakening secret by "+estimate);
 		return estimate;
 	}
 	private double secrecyWeakeningCost(List<SecrecyStrengthPair> weakenings)

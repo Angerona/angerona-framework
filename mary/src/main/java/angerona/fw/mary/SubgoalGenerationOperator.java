@@ -190,7 +190,7 @@ public class SubgoalGenerationOperator extends
 				sg.newStack(query, new DetailQuery(ag.getName(), recvName, f).getContext());
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
-				report("Add the new atomic action '"+query.getName()+"' to the plan, <br /> chosen by desire: " + desire.toString(), 
+				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 
 						ag.getPlanComponent());
 			}
 		}
