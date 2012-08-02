@@ -1,0 +1,8 @@
+Branch: ddilger-feature
+commit 3fda5d36057ef0e4132c8b41fe3f579707725632
+Merge: c8a0f8e 924a8a8
+Author: Daniel Dilger <ddilger@purdue.edu>
+Date:   Tue Jun 19 14:34:49 2012 +0200
+
+    Merge branch 'master' into ddilger-feature
+

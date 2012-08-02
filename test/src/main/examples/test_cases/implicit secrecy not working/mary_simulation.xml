@@ -1,0 +1,53 @@
+<simulation-configuration>
+<!-- I need to prune some of these skills off -->
+	<name>Mary Courtroom Scenario</name>
+      
+	<agent-instance>
+		<name>Mary</name>
+        	<default-suffix>mary</default-suffix>
+         
+        	<config class="angerona.fw.serialize.AgentConfigImport">
+				<source>config/agents/mary.xml</source>
+        	</config>
+         
+       	 	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+				<source>config/beliefbases/asp_detail_beliefbase.xml</source>
+        	</beliefbase-config>
+         
+		<skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/DetailQueryAnswer.xml</source>
+        	</skill>
+
+		<skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/QueryAnswer.xml</source>
+        	</skill>
+
+		<data key="Confidential">(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.5}, john_argued) 
+		</data>
+		
+	</agent-instance>
+      
+	<agent-instance>
+      		<name>Coroner</name>
+      		<default-suffix>coroner</default-suffix>
+      	
+      		<config class="angerona.fw.serialize.AgentConfigImport">
+      			<source>config/agents/mary.xml</source>
+      		</config>
+      	
+      		<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+        	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
+        	 </beliefbase-config>
+        	
+		<skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/DetailQuery.xml</source>
+        	</skill>
+
+	<!-- 	<desire>q_Mary(who_argued(X))_1</desire> -->  
+		<desire>q_Mary(john_argued)_1</desire>     
+		<desire>q_Mary(male_argued)_2</desire>   
+	 
+
+	</agent-instance>
+
+</simulation-configuration>
