@@ -203,7 +203,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 						}
 						else
 						{
-							report(param.getAgent().getName() + "' <b> weakens no secrets: </b> ' with: '"
+							report(param.getAgent().getName() + "' <b> weakens no secrets </b> ' with: '"
 									+ actString.substring(0, actString.length()-1) + "'", view);
 						}
 					}

@@ -46,14 +46,13 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		for (SecrecyStrengthPair pair : weakenings)
 		{
 			total = total + pair.getDegreeOfWeakening();
-			System.out.println("(Delete) pair secret:"+pair.getSecret().getInformation().toString()
-					+" degreeOfWeakening 3:"+pair.getDegreeOfWeakening());
 		}
-		System.out.println("(Delete) total cost of weakening:"+total);
 		return total;
 	}
 	
-	//A more elegant solution for this function would be to use Collections.max
+	/**
+	 * A more elegant solution would be to use Collections.max
+	 */
 	private Intention minimalCosting(List<Intention> intentions)
 	{
 		if (intentions == null || intentions.size() == 0)
@@ -62,18 +61,15 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		}
 		Intention minIntent = intentions.get(0);
 		double minCost = minIntent.getCost();
-		System.out.println("(Delete) number of intentions:"+intentions.size());
 		for (Intention intent : intentions)
 		{
 			double curCost = intent.getCost();
-			System.out.println("(Delete) curCost:"+curCost);
 			if(curCost < minCost)
 			{
 				minCost = curCost;
 				minIntent = intent;
 			}
 		}
-		System.out.println("(Delete) minCost:"+minCost);
 		return minIntent;
 	}
 	@Override
@@ -96,7 +92,6 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 						//add return value of lyingCost(intention) to intention
 						double cost = lyingCost(intention);
 						intention.setCost(cost);
-						System.out.println("(Delete) atomic intention added 1");
 						atomicIntentions.add(intention);
 					}
 					else
@@ -105,23 +100,9 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 						Skill sk = (Skill)intention;
 						
 						List<SecrecyStrengthPair> weakenings = sk.getWeakenings();
-						for(SecrecyStrengthPair sp: weakenings)
-						{
-							System.out.println("(Delete) sp secret:"+sp.getSecret().getInformation().toString()
-									+" degreeOfWeakening 1:"+sp.getDegreeOfWeakening());
-						}
 						if(weakenings != null) {
-							//report("Mental action successfull. Now weighing cost of '" + sk.getName() + "' as next atomic action.", ag);
-							//System.out.println("(Delete) number of weakenings: "+sk.weakenings().size());
-							for(SecrecyStrengthPair sp: weakenings)
-							{
-								System.out.println("(Delete) sp secret:"+sp.getSecret().getInformation().toString()
-										+" degreeOfWeakening 2:"+sp.getDegreeOfWeakening());
-							}
 							double cost = secrecyWeakeningCost(weakenings);
 							intention.setCost(cost);
-							System.out.println("(Delete) cost:"+cost);
-							System.out.println("(Delete) intention.getcost():"+intention.getCost());
 							atomicIntentions.add(intention);
 							
 						}
@@ -137,13 +118,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		}
 		else
 		{
-			//Choose atomic intention with minimal cost
-			for(Intention intent : atomicIntentions)
-			{
-				System.out.println("(Delete) intent cost:"+intent.getCost());
-			}
 			Intention min = minimalCosting(atomicIntentions);
-			//ag.getViolatesOperator().setWeakenings(((Skill) min).getWeakenings());
 			ag.setWeakenings(((Skill) min).getWeakenings());
 			return min;
 		}

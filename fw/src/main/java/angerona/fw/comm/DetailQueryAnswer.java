@@ -28,7 +28,6 @@ public class DetailQueryAnswer extends Answer {
 	public String toString() {
 		String questionString = getRegarding().toString();
 		String answerString = null;
-		//Format the output
 		if(detailAnswer.toString().equals(questionString))
 		{
 			answerString = "TRUE";
