@@ -1,4 +1,3 @@
-//The code in here really needs to be refactored so that it's more readable
 package angerona.fw.mary;
 
 import java.util.Arrays;
@@ -88,9 +87,9 @@ public class SubgoalGenerationOperator extends
 		if(ag.getDesires() == null)
 			return false;
 		
-		//Sort the desires before using. It would be more modular to have a function
-		//within the Agent class which returns a sorted array
-		
+		/**
+		 * Should be way to ensure that what is being parsed is in fact an integer
+		 */
 		class DesireComp implements Comparator<Desire>
 		{
 			
@@ -98,8 +97,7 @@ public class SubgoalGenerationOperator extends
 			{
 				String[] f1_s = f1.toString().split("_");
 				String[] f2_s = f2.toString().split("_");
-				//Should be some way to ensure that what's being parsed
-				//is in fact an integer
+
 				int f1_num = Integer.parseInt(f1_s[f1_s.length-1]); 
 				int f2_num = Integer.parseInt(f2_s[f2_s.length-1]);
 				
@@ -117,21 +115,14 @@ public class SubgoalGenerationOperator extends
 		
 		Desire[] desires = (Desire[]) ag.getDesires().getDesires().toArray(new Desire[0]);
 		Arrays.sort(desires, new DesireComp());
-		/*
-		for (Desire d : desires)
-		{
-			JOptionPane.showMessageDialog(null, d.toString());
-		}
-		*/
-		//for(Desire desire : ag.getDesires().getDesires())
-		//for(Desire desire: desires)
+
 		int numDesires = desires.length;
 		for(int i=numDesires-1;i>=0;i--)
 		{
 			Desire desire = desires[i];
 			if(desire.toString().trim().startsWith("q_"))
 			{
-				//Should the snippet below be put in its own subroutine?
+
 				int si = desire.toString().indexOf("_")+1;
 				int li = desire.toString().indexOf("(", si);
 				if(si == -1 || li == -1)
@@ -144,16 +135,10 @@ public class SubgoalGenerationOperator extends
 					continue;
 				String content = desire.toString().substring(si,li);
 				String predName = content;
-				//LinkedList<String> termNames = new LinkedList<String>();
 				String[] termNames = null;
-				//To make detail questions work with arity greater than 0
 				if(content.contains("("))
 				{
 					predName = content.substring(0, content.indexOf("("));
-					//Now determine if the arguments of the predicate are variables or constants
-					//It could refer to the belief base of an agent to see if the terms are declared, or it could just 
-					//check if the terms are uppercase. Uppercase terms are variables
-					//Nested terms like said(dontKnow(d)) are unlikely
 					String termsString = content.substring(content.indexOf("(")+1, content.lastIndexOf(")"));
 					termNames = termsString.split(", ");
 				}
@@ -165,8 +150,6 @@ public class SubgoalGenerationOperator extends
 					{
 						if(name.equals(name.toUpperCase()))
 						{
-						//	terms.add(new Variable(name));
-							//Have to use a constant with all upper case, as variables aren't supported
 							terms.add(new Constant(name));
 						}
 						else
@@ -206,23 +189,15 @@ public class SubgoalGenerationOperator extends
 		
 	}
 
-	
-	//Checks whether the query is a simple true/false type question or not
-	//Ideally it would check if any arguments are variables, but variables aren't supported yet
+	/**
+	 * Checks whether the query is a simple true/false type question or not
+	 * Ideally it would check if any arguments are variables, but variables aren't supported yet
+	 */
 	private boolean simpleQuery(AngeronaDetailAnswer queryAnswer)
 	{
-		/*
-		if(queryAnswer.toString().contains("("))
-		{
-			return false;
-		}
-		return true;
-		*/
-		//The FolFromula will always be a literal when this method is called (rules can't be queries. Should they ever be?)
 		Atom a = (Atom) queryAnswer.getAnswerExtended();
 		if(a.getPredicate().getArity() > 0)
 		{
-			//Just the first argument has to be checked now, since only questions with one argument can be supported anyway
 			List<Term> arguments = a.getArguments();
 			String firstArgName = arguments.get(0).getName();
 			if(firstArgName.equals(firstArgName.toUpperCase()))
@@ -231,11 +206,14 @@ public class SubgoalGenerationOperator extends
 		}
 		return true;
 	}
-	//Expresses ignorance about a certain topic
-		public AngeronaDetailAnswer expressionOfIgnorance(Query query, Agent ag)
+
+	/**
+	 * Expresses ignorance about a certain topic
+	 */
+	public AngeronaDetailAnswer expressionOfIgnorance(Query query, Agent ag)
 		{
 			FolFormula question = (FolFormula)query.getQuestion();
-			FolFormula expr = new Atom(new Predicate("dontKnow("+question.toString()+")")); //This solution needs to be fixed...
+			FolFormula expr = new Atom(new Predicate("dontKnow("+question.toString()+")")); 
 			return new AngeronaDetailAnswer(ag.getBeliefs().getWorldKnowledge(), question, expr);
 			
 		}
@@ -249,11 +227,11 @@ public class SubgoalGenerationOperator extends
 		}
 		
 		
-		Query query = (Query) (ag.getActualPerception()); //This needs to be a DetailQuery at some point
+		Query query = (Query) (ag.getActualPerception()); 
 		AngeronaDetailAnswer[] trueAnswers = 
 				ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
 		
-		Arrays.sort(trueAnswers, new AnswerComp()); //The answers are sorted alphabetically for testing purposes
+		Arrays.sort(trueAnswers, new AnswerComp()); 
 		
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
@@ -265,30 +243,19 @@ public class SubgoalGenerationOperator extends
 			allAnswers.add(truth);
 		}
 		
-		//Check if query is a simple true/false question
-		System.out.println("(Delete) isGround: "+allAnswers.get(0).getAnswerExtended().isGround());
 		if(allAnswers.size()>0 && simpleQuery(allAnswers.get(0)))
 		{
-			System.out.println("(Delete) Adding simple lie");
-			//Add logical negation of fact
 			AngeronaDetailAnswer simpleLie = new LyingOperator().lie(allAnswers.get(0), ag.getBeliefs().getWorldKnowledge());
 			allAnswers.add(simpleLie);
 		}
-		//Expression of ignorance about answer to query
-		//This probably shouldn't come from the "LyingOperator", since the agent could be honestly ignorant
-		//Marking whether saying "I don't know" is a lie might be a useful addition later 
 		
 		
 		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
 		allAnswers.add(ignorance);
 		
+		Skill qaSkillLie = (Skill) qaSkill.deepCopy(); 
+		qaSkillLie.setHonestyStatus(false); 
 		
-		//However, assume an expression of ignorance is always a lie for this scenario (hardwired solution!)
-		Skill qaSkillLie = (Skill) qaSkill.deepCopy(); //There is no deep copy for Skill
-		qaSkillLie.setHonestyStatus(false);
-		//Skill qaSkillLie = new 
-		
-		System.out.println("(Delete) printing out all answers:");
 		for(AngeronaDetailAnswer ans : allAnswers)
 		{
 			System.out.println("\t"+ans.toString());
@@ -305,7 +272,7 @@ public class SubgoalGenerationOperator extends
 			if(answer.toString().contains("dontKnow"))
 			{
 				Skill curLie = qaSkillLie.deepCopy();
-				sg.newStack(curLie, context); //Theoretically this should be deepCopied every time too, but not necessary now
+				sg.newStack(curLie, context);
 			}
 			else
 			{
