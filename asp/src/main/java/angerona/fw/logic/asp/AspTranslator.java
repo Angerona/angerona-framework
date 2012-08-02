@@ -29,8 +29,7 @@ public class AspTranslator extends BaseTranslator {
 	protected BaseBeliefbase translatePerceptionInt(Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
-		//You could quickly add tagging sources of information...
-		//Here is probably where you would have the asking of questions update beliefs as well
+		
 		if(p instanceof DetailQueryAnswer) {
 			DetailQueryAnswer da = (DetailQueryAnswer)p;
 			formulas.add(da.getDetailAnswer());
@@ -56,16 +55,10 @@ public class AspTranslator extends BaseTranslator {
 		reval.setProgram(translate(formulas));
 		return reval;
 	}
-	private Atom createAtom(Predicate p)
-	{
-//		Atom a = new Atom(p.getName());
-		Atom a = new Atom("argued(john)");
-		return a;
-	}
+
 	private Atom createAtom(FolFormula ff, boolean truth)
 	{
-//		Atom a = new Atom(p.getName());
-		System.out.println("(Delete) ff.toString():"+ff.toString());
+
 		Atom a = null;
 		if(truth)
 			a = new Atom(ff.toString());
@@ -75,7 +68,7 @@ public class AspTranslator extends BaseTranslator {
 		return a;
 	}
 	
-//This wasn't adding the arguments before
+
 	private Program translate(Set<FolFormula> formulas) {
 		Program newInfo = new Program();
 		for(FolFormula ff : formulas) {
@@ -84,17 +77,14 @@ public class AspTranslator extends BaseTranslator {
 			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.Atom) {
 				net.sf.tweety.logics.firstorderlogic.syntax.Atom a = 
 						(net.sf.tweety.logics.firstorderlogic.syntax.Atom)ff;
-			//	r.addHead(new Atom(a.getPredicate().getName()));
-				//There should actually be a method in the predicate that directly translates it to an atom, I think
-				//Atom newAtom = createAtom(a.getPredicate());
+
 				Atom newAtom = createAtom(ff, true);
 				
 				r.addHead(newAtom);
 				
 			} else if(ff instanceof Negation) {
 				Negation n = (Negation)ff;
-			//	Atom a = new Atom(n.getAtoms().iterator().next().getPredicate().getName());
-				//Atom newAtom = createAtom(n.getAtoms().iterator().next().getPredicate());
+
 				Atom newAtom = createAtom(ff, false);
 				r.addHead(new Neg(newAtom));
 				
