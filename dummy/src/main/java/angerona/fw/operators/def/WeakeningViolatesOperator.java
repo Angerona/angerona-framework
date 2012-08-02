@@ -225,9 +225,23 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 						sPair.defineDegreeOfWeakening(degreeOfWeakening);
 						secretList.add(sPair);
 						String actString = param.getAction().toString();
-						report(param.getAgent().getName() + "' <b> weakens secret: </b> '"+secretInfo.toString()+"' by: '"+degreeOfWeakening+"' with: '" 
+						if(degreeOfWeakening > 0)
+						{
+							report(param.getAgent().getName() + "' <b> weakens secret: </b> '"+secretInfo.toString()+"' by: '"+degreeOfWeakening+"' with: '"
 						+ actString.substring(0, actString.length()-1) + "'", view);
+						}
+						else
+						{
+							report(param.getAgent().getName() + "' <b> weakens no secrets: </b> ' with: '"
+									+ actString.substring(0, actString.length()-1) + "'", view);
+						}
 						//report(param.getAgent().getName() + "' <b> weakens secret: </b> '"+secretInfo.toString()+"' by: '"+degreeOfWeakening);
+					}
+					else
+					{
+						String actString = param.getAction().toString();
+						report(param.getAgent().getName() + "' <b> weakens no secrets: </b> ' with: '"
+								+ actString.substring(0, actString.length()-1) + "'", view);
 					}
 					
 				}
