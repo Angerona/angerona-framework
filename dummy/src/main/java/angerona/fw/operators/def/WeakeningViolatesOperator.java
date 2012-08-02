@@ -34,25 +34,33 @@ import angerona.fw.operators.parameter.ViolatesParameter;
 public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	static final double INFINITY = 1000.0;
 	
+	/**
+	 * Does not call super().processInt
+	 */
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
 		this.weakenings = processIntAndWeaken(param);
-		//Not sure whether or not to call the super.processInt()
 		return false;
-		//return super.processInt(param);
-	}	private Rule convertToRule(FolFormula f)
+	}	
+	/**
+	 * Assumes information given is always a fact
+	 */
+	private Rule convertToRule(FolFormula f)
 	{
 		String ruleString = f.toString();
-		ruleString += "."; //Assume information given is always a fact
+		ruleString += "."; 
 		//Quick fix to bridge representations of ! and -
 		if(ruleString.startsWith("!"))
 		{
 			ruleString = "-" + ruleString.substring(1);
-		}
-		//TODO: Account for predicates with variables (arity 1+) 
+		} 
 		Rule rule = new Rule(ruleString);
 		return rule;
 	}
+	
+	/**
+	 * 
+	 */
 	private List<SecrecyStrengthPair> representTotalExposure(ConfidentialKnowledge conf)
 	{
 		List<SecrecyStrengthPair> reval = new LinkedList<SecrecyStrengthPair>();
@@ -64,9 +72,9 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	}
 	
 	
-	//Talk about generalizing the cost of weakening secrecy through either some multiplier coefficient,
-	//or a non-linear cost calculation through either increasing frequency of belief operators 
-	//or cost between the "edges" from one belief operator to another
+	/**
+	 * 
+	 */
 	private double calculateSecrecyStrength(FolFormula secretInfo, List<AnswerSet> ansSets)
 	{
 		double numAnsSets = ansSets.size();
@@ -87,6 +95,10 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		System.out.println("(Delete) Quotient: "+quotient+" strength: "+strength);
 		return strength;
 	}
+	
+	/**
+	 * 
+	 */
 	protected List<SecrecyStrengthPair> processIntAndWeaken(ViolatesParameter param)
 	{
 		Logger LOG = LoggerFactory.getLogger(DetailViolatesOperator.class);
@@ -106,17 +118,13 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 			a.setWeakenings(secretList); //Only works because objects are pass-by-reference, so not the most elegant solution
 			
 			/* Consider self-repeating answers (and only answers) as bad as revealing all secrets */
-			//Should there be a separate repeatsSelf() method, so that the intention update operator can judge the cost of self-repeating?
-			//Such a method could also allow for easier changes to the definition of "self-repeating" 
-			// e.g. how many new people must be listening for it not to be self-repeating, or how many actions back in history should the function check
 			List<Action> actionsHistory = param.getAgent().getActionsHistory();
 			System.out.println("(Delete) size of actionsHistory: "+actionsHistory.size());
 			for(Action act : actionsHistory)
 			{
 				if(a.equals(act))
 				{
-					//Should be replaced with a report once reporting doesn't crash after a certain amount of use
-					System.out.println("(Delete) "+param.getAgent().getName() 
+					report(param.getAgent().getName() 
 							+ "' <b> self-repeats </b> with: '" + param.getAction() + "'"); 
 					secretList = representTotalExposure(conf);
 					return secretList;
