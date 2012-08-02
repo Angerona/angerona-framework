@@ -31,10 +31,6 @@ import angerona.fw.operators.parameter.ViolatesParameter;
  *  Later *reason* for contradiction should be considered. Distinguish between self-contradiction and other contradiction.
  *  This will have to be incorporated in more elegant solution. 
  *  
- *  This solution isn't working. Fact and negation of fact remain in belief base Perhaps I'm making the rule to add to the program wrong?
- * 
- * 
- * Other change: any information already present in view cannot violate confidentiality
  */
 public class DetailSimpleViolatesOperator extends ViolatesOperator {
 	/** reference to the logback instance used for logging */
@@ -43,9 +39,7 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
 		LOG.info("Run Detail-Simple-ViolatesOperator");
-		//JOptionPane.showMessageDialog(null, param.getAction());
 		if(param.getAction() instanceof Answer) {
-			// only apply violates if confidential knowledge is saved in agent.
 			ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
 			if(conf == null)
 				return new Boolean(false);
@@ -57,8 +51,6 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				AspBeliefbase view = (AspBeliefbase) views.get(a.getReceiverId()).clone();
 				Program prog = view.getProgram();
 				
-				
-				//The old way of implementing dynamic secrecy (giving up secrecy)
 				
 				List<Secret> toRemove = new LinkedList<Secret>();
 				for(Secret secret : conf.getTargets()) {
@@ -74,41 +66,24 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 					conf.removeConfidentialTarget(remove);
 				}
 				
-				//Adapt the view and check it again
-				
 				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
 				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
 				
-				//Should the line below be present? Would that fix my implicit secrecy issue?
-				//The line below seems to have no effect on the output of the "implicit secrecy not working" test
-				//view.addKnowledge(dqa.getDetailAnswer()); //Should I call addNewKnowledge with a new UpdateType?
-				//FolFormula newFact = dqa.getDetailAnswer();
 				String ruleString = dqa.getDetailAnswer().toString();
-				ruleString += "."; //Assume information given is always a fact
-				//Quick fix to bridge representations of ! and -
+				ruleString += "."; /* Assume information given is always a fact */
+				/* Quick fix to bridge representations of ! and - */
 				if(ruleString.startsWith("!"))
 				{
 					ruleString = "-" + ruleString.substring(1);
 				}
-				//TODO: Account for predicates with variables (arity 1+) 
 				Rule rule = new Rule(ruleString);
-				System.out.println("(Delete) Rule: "+rule.toString());
-				//Check program before expansion
-				System.out.println("(Delete) Program before expansion: ");
 				System.out.println(prog.toString());
-				// Check if the information is already present in the view
-				//If it is then no violation possible
-				/*
-				if(prog.contains(rule)){
-					return new Boolean(false);
-				}
-				*/
+				/* Check if the information is already present in the view
+				If it is then no violation possible */
 				prog.add(rule);
-				//Check program after expansion
-				System.out.println("(Delete) Program after expansion: ");
-				System.out.println(prog.toString());
+				
+				/* Check program after expansion */
 				Set<FolFormula> newAns = null;
-				//This try/catch may be a crude solution but...
 				try
 				{
 					newAns = view.infere();
@@ -122,8 +97,6 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 					report(param.getAgent().getName() + "' creates contradiction by: '" + param.getAction() + "'", view);
 					return new Boolean(true);
 				}
-				System.out.println("(Delete) new answer sets:");
-				System.out.println(newAns.toString());
 				
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {

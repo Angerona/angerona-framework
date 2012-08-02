@@ -18,7 +18,6 @@ import angerona.fw.serialize.SkillConfig;
 import angerona.fw.serialize.Statement;
 
 /** A skill represents an atomic intention an agent can perform */
-//Should this implement Cloneable? --Daniel
 public class Skill extends Intention implements Runnable {
 
 	/** the unique name of the Skill */
@@ -163,8 +162,10 @@ public class Skill extends Intention implements Runnable {
 		return this;
 	}
 	
-	//The need for this is debatable
-	
+	/**
+	 * In the future, Skill probably shouldn't have a deepCopy, as it shouldn't need it. 
+	 * Thus Skill doesn't need to implement cloneable
+	 */
 	public Skill deepCopy()
 	{
 		return new Skill(this);
