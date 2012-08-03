@@ -77,6 +77,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		LOG.info("Run Mary-Intention-Update");
 		Agent ag = param.getPlan().getAgent();
 		List <Intention> atomicIntentions = new LinkedList<Intention>();
+		//Loop needs to be changed so that only options from the same plan are considered
 		for(Subgoal plan : param.getPlan().getPlans()) {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
 				if(plan.peekStack(i).isAtomic()) {

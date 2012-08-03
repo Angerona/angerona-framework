@@ -53,7 +53,6 @@ public class DetailPerceptionFactory extends PerceptionFactory{
 					DetailAnswerDO dado = (DetailAnswerDO) commAct;
 					FolFormula q = createFormula(dado.getQuestion(), context);
 					FolFormula answer = createFormula(dado.getAnswer(), context);
-					System.out.println("ASDF FolFormula answer:"+answer.toString());
 					return new DetailQueryAnswer(s, r, q, answer);
 				}
 				else

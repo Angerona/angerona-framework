@@ -150,7 +150,7 @@ public class SubgoalGenerationOperator extends
 					{
 						if(name.equals(name.toUpperCase()))
 						{
-							terms.add(new Constant(name));
+							terms.add(new Constant(name)); //Variables not supported right now
 						}
 						else
 						{
