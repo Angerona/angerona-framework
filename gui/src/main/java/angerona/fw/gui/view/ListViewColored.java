@@ -222,6 +222,9 @@ public abstract class ListViewColored<T extends Entity>
 		while(index >= 0) {
 			ReportEntry prevEntry = entries.get(index);
 			EntityAtomic temp = ((EntityAtomic)prevEntry.getAttachment());
+			
+			// select the first predecessor which has the same or a lesser copy depth as the
+			// current one as the 'real' previous entry.
 			if(temp.getCopyDepth() <= actAtomic.getCopyDepth()) {
 				previous = temp;
 				break;
