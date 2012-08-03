@@ -1,8 +1,0 @@
-Expected output:
-Q: attend_scm
-A: AV_FALSE
-
-Actual output:
-Q: attend_scm
-A: AV_TRUE
-
