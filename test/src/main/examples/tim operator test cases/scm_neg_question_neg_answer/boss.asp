@@ -1,4 +1,0 @@
-world {
-	
-} view->Employee {
-}
