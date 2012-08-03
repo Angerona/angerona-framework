@@ -1,4 +1,10 @@
 package angerona.fw;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Collections;
 
 import java.util.HashMap;
@@ -15,7 +21,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
@@ -39,11 +44,14 @@ import angerona.fw.operators.parameter.IntentionUpdateParameter;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 import angerona.fw.operators.parameter.ViolatesParameter;
+import angerona.fw.parser.BeliefbaseSetParser;
+import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfig;
+import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SkillConfig;
 
 /**
@@ -113,8 +121,15 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	/** the perception received by the last or running cylce call */
 	private Perception actualPerception;
 	
+	/** object represents the last action performed by the agent. */
 	private Action lastAction;
 	
+	public Agent(String name) {
+		// init beenuts stuff
+		agentProcess = new AngeronaAgentProcess(name);
+		agentProcess.setAgentArchitecture(this);
+		init(agentProcess);
+	}
 	//************Begin Daniel's changes*************//
 	
 	public List<Action> getActionsHistory()
@@ -138,15 +153,6 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	
 	//************End Daniel's changes*************//
 	
-	/**
-	 * Ctor: Used for creating agents with an automatic assigned id.
-	 * @param ac	Data structure containing configuration options for the agent behavior.
-	 * @throws AgentIdException				Is thrown if automatic and manual id assignment are mixed.
-	 * @throws AgentInstantiationException	Is thrown if the dynamic instantiation of a class fails.
-	 */
-	public Agent(AgentConfig ac, String name) throws AgentIdException, AgentInstantiationException {
-		ctor(ac, name);
-	}
 	
 	/**
 	 * Sets the belief bases of the agent.
@@ -178,18 +184,113 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	}
 	
 	/**
-	 * Helper method: is called by every ctor for constructing the object.
-	 * @param ac	The configuration of the agent
+	 * creates the belief bases, operators and components of the agent.
+	 * @param ai	The configuration of the agent
 	 * @throws AgentInstantiationException
 	 */
-	private void ctor(AgentConfig ac, String name) throws AgentInstantiationException {
+	public void create(AgentInstance ai) throws AgentInstantiationException {
 		this.id = new Long(IdGenerator.generate(this));
 		context = new Context();
+		// local variable used to save the output of exceptions...
+		String errorOutput = null;
 		
-		agentProcess = new AngeronaAgentProcess(name);
-		agentProcess.setAgentArchitecture(this);
-		init(agentProcess);
+		createAgentComponents(ai);
 		
+		PluginInstantiator pi = PluginInstantiator.getInstance();
+		BaseBeliefbase world = null;
+		Map<String, BaseBeliefbase> views = null;
+		BeliefbaseSetParser bbsp = null;
+		try {
+			world = pi.createBeliefbase(ai.getBeliefbaseConfig());
+			// TODO: 	it does not only depend on the world belief base, 
+			// 			find a better solution to get the file-suffix. Then move these bunch of 
+			//			code before the creation of the belief bases (lesser code needed then).
+			String fn = getSimulation().getDirectory() + "/" + 
+					ai.getFileSuffix() + "." + world.getFileEnding();
+			
+			FileInputStream fis = new FileInputStream(new File(fn));
+			bbsp = new BeliefbaseSetParser(fis);
+			bbsp.Input();
+			fis.close();
+			
+			
+			views = new HashMap<String, BaseBeliefbase>();
+			for(String key : bbsp.viewContent.keySet()) {
+				BaseBeliefbase actView = pi.createBeliefbase(ai.getBeliefbaseConfig());
+				views.put(key, actView);	
+			}
+		} catch (InstantiationException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' something went wrong during dynamic instantiation: " + e.getMessage();
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' something went wrong during dynamic instantiation: " + e.getMessage();
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' referenced file not found: " + e.getMessage();
+			e.printStackTrace();
+		} catch (ParseException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' parsing error occured: " + e.getMessage();
+			e.printStackTrace();
+		} catch (IOException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' IO-error occured: " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if(errorOutput != null) {
+				throw new AgentInstantiationException(errorOutput);
+			}
+		}
+		
+		// parse the content of the belief-base file.
+		try {
+			StringReader sr = new StringReader(bbsp.worldContent);
+			world.parse(new BufferedReader(sr));
+			for(String key : views.keySet()) {
+				BaseBeliefbase actView = views.get(key);
+				sr = new StringReader(bbsp.viewContent.get(key));
+				actView.parse(new BufferedReader(sr));
+			}
+		} catch (IOException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' IO-error occured: " + e.getMessage();
+			e.printStackTrace();
+		} catch (ParseException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' parsing error occured: " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if(errorOutput != null) {
+				throw new AgentInstantiationException(errorOutput);
+			}
+		}
+	
+		
+		// set beliefs and read skills.
+		setBeliefs(world, views);
+		addSkillsFromConfig(ai.getSkills());
+		Desires desires = getDesires();
+		if(desires == null && ai.getDesires().size() > 0) {
+			LOG.warn("No desire-component added to agent '{}' but desires, auto-add the desire component.", getName());
+			desires = new Desires();
+			addComponent(desires);
+		}
+
+		// init components and default handle desires when no desire component is registered.
+		initComponents(ai.getAdditionalData());
+		if(desires != null) {
+			for(Atom a : ai.getDesires()) {
+				getDesires().add(new Desire(a));
+			}
+		}
+	}
+
+	/**
+	 * Helper method: Creates operators and components for the agent using the definitions
+	 * in the given parameter.
+	 * @param ai	AgentInstance data-structure containing information about the operators /
+	 * 				components used by the agent.
+	 * @throws AgentInstantiationException
+	 */
+	private void createAgentComponents(AgentInstance ai) 
+			throws AgentInstantiationException {
+		AgentConfig ac = ai.getConfig();
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		try {
 			generateOptionsOperator = pi.createGenerateOptionsOperator(ac.getGenerateOptionsOperatorClass());
@@ -207,7 +308,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 			for(String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
 				addComponent(comp);
-				LOG.info("Add custom Component '{}' to agent '{}'", compName, name);
+				LOG.info("Add custom Component '{}' to agent '{}'", compName, getName());
 			}
 		} catch (InstantiationException e) {
 			throw new AgentInstantiationException(e.getMessage());
@@ -216,12 +317,22 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		}
 	}
 	
-	public void initComponents(Map<String, String> additionalData) {
+	/**
+	 * Helper method: Initialize every component of the agent.
+	 * @param additionalData	map containing further parameters which will be used
+	 * 							by the components.
+	 */
+	private void initComponents(Map<String, String> additionalData) {
 		for(AgentComponent ac : customComponents) {
 			ac.init(additionalData);
 		}
 	}
 	
+	/**
+	 * adds the given component to the agent.
+	 * @param component	Reference to the component.
+	 * @return	true if the component was successfully added, false if a component of the type already exists.
+	 */
 	public boolean addComponent(AgentComponent component) {
 		if(component == null)
 			throw new IllegalArgumentException();
@@ -250,10 +361,12 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		return null;
 	}
 	
+	/** @return the last action performed by the agent */
 	public Action getLastAction() {
 		return lastAction;
 	}
 	
+	/** @return an unmodifiable list of components of this agent */
 	public List<AgentComponent> getComponents() {
 		return Collections.unmodifiableList(customComponents);
 	}
@@ -606,6 +719,32 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	private void onBBChanged(BaseBeliefbase bb, String space) {
 		for(AgentListener l : listeners) {
 			l.beliefbaseChanged(bb, space);
+		}
+	}
+	
+	/**
+	 * Helper method: reports the created belief bases and components to
+	 * the report-system.
+	 */
+	protected void reportCreation() {
+		Angerona ang = Angerona.getInstance();
+		ang.report("Agent: '" + getName()+"' created.", this);
+		
+		ang.report("Desires Set of '" + getName() + "' created.", 
+				this, this.getDesires());
+		
+		Beliefs b = getBeliefs();
+		ang.report("World Beliefbase of '" + this.getName()+"' created.", 
+				this, b.getWorldKnowledge() );
+		
+		Map<String, BaseBeliefbase> views = b.getViewKnowledge();
+		for(String name : views.keySet()) {
+			BaseBeliefbase actView = views.get(name);
+			ang.report("View->'" + name +"' Beliefbase of '" + getName() + "' created.", this, actView);
+		}
+		
+		for(AgentComponent ac : getComponents()) {
+			ang.report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", this, ac);
 		}
 	}
 }

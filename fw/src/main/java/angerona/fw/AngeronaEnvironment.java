@@ -1,11 +1,8 @@
 package angerona.fw;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +10,6 @@ import java.util.Set;
 
 import net.sf.beenuts.ap.AgentProcess;
 import net.sf.beenuts.apr.APR;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +20,7 @@ import angerona.fw.internal.DefaultPerceptionFactory;
 import angerona.fw.internal.DetailPerceptionFactory;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PerceptionFactory;
-import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.ConfidentialKnowledge;
-import angerona.fw.logic.Desires;
-import angerona.fw.parser.BeliefbaseSetParser;
-import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
 import angerona.fw.serialize.perception.PerceptionDO;
@@ -41,6 +31,7 @@ import angerona.fw.serialize.perception.PerceptionDO;
  */
 public class AngeronaEnvironment extends APR {
 
+	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
 	/** the actual simulation tick */
@@ -63,20 +54,38 @@ public class AngeronaEnvironment extends APR {
 	/** a map of entity ids to the entity references */
 	private Map<Long, Entity> entities = new HashMap<Long, Entity>();
 	
+	/** the behavior of the environment, allows different communication protocols and external simulations */
 	private EnvironmentBehavior behavior;
 	
+	/** the root folder of the actual loaded simulation in this environment */
+	private String simDirectory;
+	
+	/**
+	 * @return a map of ID --> Entity, the map is not modifiable.
+	 */
 	public Map<Long, Entity> getEntityMap() {
 		return Collections.unmodifiableMap(entities);
 	}
 	
+	/**
+	 * Default Ctor: Generates the default-behavior.
+	 */
 	public AngeronaEnvironment() {
 		this.behavior = new DefaultBehavior();
 	}
 	
+	/**
+	 * Ctor: Give it an specific behavior to define the external and internal
+	 * communication.
+	 * @param behavior	Reference to the EnvironmentBehavior instance containing the logic.
+	 */
 	public AngeronaEnvironment(EnvironmentBehavior behavior) {
 		this.behavior = behavior;
 	}
 	
+	/**
+	 * @return a set of strings containing all agent names.
+	 */
 	public Set<String> getAgentNames() {
 		return agentMap.keySet();
 	}
@@ -86,8 +95,18 @@ public class AngeronaEnvironment extends APR {
 		return name;
 	}
 	
+	/**
+	 * @return the name of the simulation.
+	 */
 	public String getName() {
 		return name;
+	}
+	
+	/** @ return a string identifing the root directory of the actual 
+	 * 			 running simulation or null if no simulation is initialized. 
+	 */
+	public String getDirectory() {
+		return simDirectory;
 	}
 	
 	/**
@@ -122,6 +141,9 @@ public class AngeronaEnvironment extends APR {
 		return (Agent)ap.getAgentArchitecture();
 	}
 	
+	/**
+	 * runs the simulation using the behavior given at construction.
+	 */
 	public boolean run() {
 		return behavior.run(this);
 	}
@@ -134,10 +156,12 @@ public class AngeronaEnvironment extends APR {
 		return behavior.runOneTick(this);
 	}
 	
+	/** @return	true if the environment is actually performing a tick, false otherwise. */
 	public boolean isDoeingTick() {
 		return doingTick;
 	}
 	
+	/** @return true if the simulation is initialized (after the call of initSimulation), false otherwise. */
 	public boolean isReady() {
 		return ready;
 	}
@@ -184,85 +208,38 @@ public class AngeronaEnvironment extends APR {
 	 */
 	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
 		LOG.info("Starting simulation: " + config.getName());
+		this.simDirectory = simulationDirectory;
+		if(!createBehavior(config))
+			return false;
 		
 		Angerona.getInstance().onCreateSimulation(this);
-		PluginInstantiator pi = PluginInstantiator.getInstance();
 		tick = 0;
 		String errorOutput = "";
 		try {
 			for(AgentInstance ai : config.getAgents()) {
-				Agent highLevelAg = new Agent(ai.getConfig(), ai.getName());
+				Agent highLevelAg = new Agent(ai.getName());
+				addAgent(highLevelAg.getAgentProcess());		
+				LOG.info("Start the creation of Agent '{}'.", ai.getName());
+				highLevelAg.create(ai);
+				
+				Beliefs b = highLevelAg.getBeliefs();
+				BaseBeliefbase world = b.getWorldKnowledge();
 				entities.put(highLevelAg.getGUID(), highLevelAg);
-				
-				BaseBeliefbase world = pi.createBeliefbase(ai.getBeliefbaseConfig());
 				entities.put(world.getGUID(), world);
-				String fn = simulationDirectory + "/" + ai.getFileSuffix() + "." + world.getFileEnding();
-				
-				FileInputStream fis = new FileInputStream(new File(fn));
-				BeliefbaseSetParser bbsp = new BeliefbaseSetParser(fis);
-				bbsp.Input();
-				fis.close();
-				
-				StringReader sr = new StringReader(bbsp.worldContent);
-				world.parse(new BufferedReader(sr));
-				
-				// TODO: Move
-				ConfidentialKnowledge conf = new ConfidentialKnowledge();
-				entities.put(conf.getGUID(), conf);
-				FolSignature fsig = new FolSignature();
-				fsig.fromSignature(world.getSignature());
-				
-				Map<String, BaseBeliefbase> views = new HashMap<String, BaseBeliefbase>();
-				
-				for(String key : bbsp.viewContent.keySet()) {
-					BaseBeliefbase actView = pi.createBeliefbase(ai.getBeliefbaseConfig());
+				for(BaseBeliefbase actView : b.getViewKnowledge().values()) {
 					entities.put(actView.getGUID(), actView);
-					sr = new StringReader(bbsp.viewContent.get(key));
-					actView.parse(new BufferedReader(sr));
-					views.put(key, actView);
-					
 				}
 				
 				for(AgentComponent comp : highLevelAg.getComponents()) {
 					entities.put(comp.getGUID(), comp);
 				}
-				
-				highLevelAg.setBeliefs(world, views);
-				highLevelAg.addSkillsFromConfig(ai.getSkills());
-				addAgent(highLevelAg.getAgentProcess());
-				Desires desires = highLevelAg.getDesires();
-				if(desires == null && ai.getDesires().size() > 0) {
-					LOG.warn("No desire-component added to agent '{}' but desires, auto-add the desire component.", highLevelAg.getName());
-					desires = new Desires();
-					highLevelAg.addComponent(desires);
-				}
-				highLevelAg.initComponents(ai.getAdditionalData());
-				if(desires != null) {
-					for(Atom a : ai.getDesires()) {
-						highLevelAg.getDesires().add(new Desire(a));
-					}
-				}		
-				LOG.info("Agent '{}' added", highLevelAg.getName());
+				LOG.info("Agent '{}' fully registered.", highLevelAg.getName());
 			}
 		} catch (AgentIdException e) {
 			errorOutput = "Cannot init simulation, something went wrong during agent registration: " + e.getMessage();
 			e.printStackTrace();
 		} catch (AgentInstantiationException e) {
 			errorOutput = "Cannot init simulation, something went wrong during agent instatiation: " + e.getMessage();
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			errorOutput = "Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage();
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			errorOutput = "Cannot init simulation, something went wrong during dynamic instantiation: " + e.getMessage();
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			errorOutput = "Cannot init simulation, referenced file not found: " + e.getMessage();
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			errorOutput = "Cannot init simulation, parsing error occured: " + e.getMessage();
 			e.printStackTrace();
 		}
 		
@@ -274,26 +251,11 @@ public class AngeronaEnvironment extends APR {
 		}
 		
 		Angerona.getInstance().onNewSimulation(this);
+		
 		// report the initialized data of the agent to the report system.
-		// TOOD: Bad smell here... why didn't do the agents this in their scope???
 		for(String agName : agentMap.keySet()) {
 			Agent agent = getAgentByName(agName);
-			Angerona.getInstance().report("Agent: '" + agent.getName()+"' created.", agent);
-			
-			Angerona.getInstance().report("Desires Set of '" + agent.getName() + "' created.", agent, agent.getDesires());
-			
-			Beliefs b = agent.getBeliefs();
-			Angerona.getInstance().report("World Beliefbase of '" + agent.getName()+"' created.", agent, b.getWorldKnowledge() );
-			
-			Map<String, BaseBeliefbase> views = b.getViewKnowledge();
-			for(String name : views.keySet()) {
-				BaseBeliefbase actView = views.get(name);
-				Angerona.getInstance().report("View->'" + name +"' Beliefbase of '" + agent.getName() + "' created.", agent, actView);
-			}
-			
-			for(AgentComponent ac : agent.getComponents()) {
-				Angerona.getInstance().report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + agent.getName() + "' created.", agent, ac);
-			}
+			agent.reportCreation();
 		}
 		
 		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
@@ -302,6 +264,43 @@ public class AngeronaEnvironment extends APR {
 			this.sendAction(percept.getReceiverId(), percept);
 		}
 		return ready = true;
+	}
+
+	/**
+	 * Helper method: Creates the correct behavior class with the given class name
+	 * form the simulations xml file.
+	 * @param config		reference to the config.
+	 * @return				true if the creation was successful, false otherwise.
+	 */
+	private boolean createBehavior(SimulationConfiguration config) {
+		if(config.getBehaviorCls() != null) {
+			String error = null;
+			try {
+				Class<? > cls = Class.forName(config.getBehaviorCls());
+				Object temp = cls.newInstance();
+				if(temp instanceof EnvironmentBehavior) {
+					this.behavior = (EnvironmentBehavior) temp;
+				} else {
+					error = "The class: '" + config.getBehaviorCls() + "' is not of type EnvironmentBehavior.";
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				error = "Cannot find class: " + e.getMessage();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+				error = e.getMessage();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				error = e.getMessage();
+			}
+			
+			if(error != null) {
+				Angerona.getInstance().onError("Simulation initialization", error);
+				LOG.error(error);
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**

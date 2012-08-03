@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
-import net.sf.tweety.Signature;
-import net.sf.tweety.SymbolSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
@@ -47,9 +45,6 @@ public class ConfidentialKnowledge
 	 */
 	private Map<Pair<String, Map<String, String>>, Set<Secret>> optimizationMap = new HashMap<Pair<String, Map<String, String>>, Set<Secret>>();
 	
-	/** The used signature */
-	private FolSignature signature = new FolSignature();
-	
 	/** Default Ctor */
 	public ConfidentialKnowledge() {
 		super();
@@ -67,10 +62,6 @@ public class ConfidentialKnowledge
 	@Override
 	public Object clone() {
 		return new ConfidentialKnowledge(this);
-	}
-
-	public void setSignature(FolSignature signature) {
-		this.signature = signature;
 	}
 	
 	@Override
@@ -132,30 +123,27 @@ public class ConfidentialKnowledge
 	@Override
 	public void init(Map<String, String> additionalData) {
 		getAgent().addListener(this);
-		BaseBeliefbase world = getAgent().getBeliefs().getWorldKnowledge();
-		Signature worldSig = world.getSignature();
-		SymbolSet ss = worldSig.getSymbolSet();
-		Set<String> views = getAgent().getBeliefs().getViewKnowledge().keySet();
-		for(String viewname : views) {
-			BaseBeliefbase view = getAgent().getBeliefs().getViewKnowledge().get(viewname);
-			Signature sig = view.getSignature();
-			ss.add(sig.getSymbolSet());
-		}
 		
-		LOG.info(ss.toString());
-		this.signature = new FolSignature(ss);
 		if(!additionalData.containsKey("Confidential")) {
 			LOG.warn("Confidential Knowledge of agent '{}' has no initial data.", getAgent().getName());
 			return;
 		} else {
 			String str = additionalData.get("Confidential");
-			SecretParser parser = new SecretParser(str, signature);
+			SecretParser parser = new SecretParser(str);
+			Set<Secret> secrets = null;
 			try {
-				Set<Secret> secrets = (parser.Input());
-				for(Secret s : secrets)
-					addConfidentialTarget(s);
+				secrets = (parser.Input());
 			} catch (ParseException e) {
 				LOG.error("Cannot parse the secret defined for Agent '{}':\n{}", getAgent().getName(), e.getMessage());
+			}
+			
+			FolSignature sig = getAgent().getBeliefs().getSignature();
+			for(Secret s : secrets) {
+				if(!sig.isRepresentable(s.getInformation())) {
+					LOG.info("Secret '{}' is not representable by the agents '{}' beliefs signature yet.", 
+							s, getAgent().getName());
+				}
+				addConfidentialTarget(s);
 			}
 			
 			// Check for startup inconsistency:

@@ -3,7 +3,7 @@ package angerona.fw.parser;
 import java.util.*;
 import angerona.fw.logic.Secret;
 import java.io.*;
-import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
+import net.sf.tweety.logics.firstorderlogic.parser.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 import angerona.fw.util.Pair;
 
@@ -11,38 +11,33 @@ import angerona.fw.util.Pair;
 
 public class SecretParser implements SecretParserConstants {
 
-  private FolSignature signature;
-
-   public SecretParser(String expr, FolSignature signature)
+  public SecretParser(String expr)
   {
     this(new StringReader(expr));
-    this.signature = signature;
   }
 
-  public static void main(String args []) throws ParseException
+  public FolFormula delegateFOLParsing()
+    throws ParseException
   {
-        String expr = "(Boss, java.class.irgendwas, !who_argued(husband_of(mary)))";
-    System.out.println("Using expresion :" + expr);
+    FolFormula reval = null;
+    SecretStreamAdapter a = new SecretStreamAdapter( jj_input_stream );
+    FolParserBTokenManager tm = new FolParserBTokenManager(a);
+    FolParserB parser = new FolParserB(tm);
 
-        SecretParser parser = new SecretParser(expr, null);
+        FolSignature tempSig = new FolSignature();
+
     try
     {
-          Secret lst = parser.secret();
-          System.out.println("Parsing done...");
-          System.out.println(lst.toString());
+      reval = parser.formula(tempSig);
+      jj_input_stream.backup(1);
     }
-    catch (Exception e)
+    catch(net.sf.tweety.logics.firstorderlogic.parser.ParseException e0)
     {
-      System.out.println("NOK.");
-      System.out.println(e.getMessage());
-      e.printStackTrace();
+      ParseException e1 = new ParseException( "Error reported by FOL parser: " +
+                                  e0.getMessage() );
+          throw (ParseException) e1.initCause(e0);
     }
-    catch (Error e)
-    {
-      System.out.println("Oops.");
-      System.out.println(e.getMessage());
-      e.printStackTrace();
-    }
+    return reval;
   }
 
 /** Root production. */
@@ -69,16 +64,12 @@ public class SecretParser implements SecretParserConstants {
   }
 
   final public Secret secret() throws ParseException {
-  boolean openWasZero = false;
-  int open = 0;
   String name = "";
   String className = "";
-  String formula = "";
-  String temp = "";
+  FolFormula formula = null;
   Token token;
   Map<String, String > parameters = new HashMap<String, String >();
     jj_consume_token(LPARANTHESS);
-    open += 1;
     label_2:
     while (true) {
       token = jj_consume_token(TEXT_CHAR);
@@ -95,61 +86,9 @@ public class SecretParser implements SecretParserConstants {
     jj_consume_token(COMMA);
     className = java_cls(parameters);
     jj_consume_token(COMMA);
-    label_3:
-    while (true) {
-      label_4:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case LPARANTHESS:
-          ;
-          break;
-        default:
-          jj_la1[2] = jj_gen;
-          break label_4;
-        }
-        token = jj_consume_token(LPARANTHESS);
-        formula += token.image;
-        open += 1;
-      }
-      temp = logic_identifier();
-          formula += temp;
-      label_5:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case RPARANTHESS:
-          ;
-          break;
-        default:
-          jj_la1[3] = jj_gen;
-          break label_5;
-        }
-        token = jj_consume_token(RPARANTHESS);
-            formula += token.image;
-            open -= 1;
-            if(open == 0)
-            {
-              formula = formula.substring(0, formula.length()-1);
-          System.out.println(formula);
-          FolParser folparser = new FolParser();
-                  FolFormula folform = null;
-          try {
-                StringReader reader = new StringReader(formula);
-                folparser.setSignature(signature);
-                folform = (FolFormula)folparser.parseFormula(reader);
-          } catch (IOException ex) {
-                {if (true) throw new ParseException("Internal Exception: " + ex.getMessage());}
-          }
-          {if (true) return new Secret(name, folform, className, parameters);}
-            }
-      }
-      if (jj_2_1(2)) {
-        ;
-      } else {
-        break label_3;
-      }
-    }
-        {if (true) throw new ParseException(
-          open > 0 ? "missin closing )" : "missing opening (");}
+    formula = delegateFOLParsing();
+    jj_consume_token(RPARANTHESS);
+    {if (true) return new Secret(name, formula, className, parameters);}
     throw new Error("Missing return statement in function");
   }
 
@@ -164,18 +103,18 @@ public class SecretParser implements SecretParserConstants {
       reval += token.image;
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[2] = jj_gen;
       ;
     }
-    label_6:
+    label_3:
     while (true) {
       token = jj_consume_token(TEXT_CHAR);
             reval += token.image;
             endWithSymbol = false;
-      if (jj_2_2(2)) {
+      if (jj_2_1(2)) {
         ;
       } else {
-        break label_6;
+        break label_3;
       }
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -185,7 +124,7 @@ public class SecretParser implements SecretParserConstants {
             endWithSymbol = true;
       break;
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[3] = jj_gen;
       ;
     }
         if(endWithSymbol) {
@@ -199,15 +138,15 @@ public class SecretParser implements SecretParserConstants {
   Token token;
   String reval = "";
   List<Pair<String,String > > temp;
-    label_7:
+    label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case TEXT_CHAR:
         ;
         break;
       default:
-        jj_la1[6] = jj_gen;
-        break label_7;
+        jj_la1[4] = jj_gen;
+        break label_4;
       }
       token = jj_consume_token(TEXT_CHAR);
       reval += token.image;
@@ -222,7 +161,7 @@ public class SecretParser implements SecretParserConstants {
       jj_consume_token(RBRACE);
       break;
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[5] = jj_gen;
       ;
     }
     {if (true) return reval;}
@@ -234,15 +173,15 @@ public class SecretParser implements SecretParserConstants {
   Pair<String, String > temp;
     temp = pair();
     reval.add(temp);
-    label_8:
+    label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case SEMICOLON:
         ;
         break;
       default:
-        jj_la1[8] = jj_gen;
-        break label_8;
+        jj_la1[6] = jj_gen;
+        break label_5;
       }
       jj_consume_token(SEMICOLON);
       temp = pair();
@@ -256,29 +195,29 @@ public class SecretParser implements SecretParserConstants {
   Token token;
   String key = "";
   String value = "";
-    label_9:
+    label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case TEXT_CHAR:
         ;
         break;
       default:
-        jj_la1[9] = jj_gen;
-        break label_9;
+        jj_la1[7] = jj_gen;
+        break label_6;
       }
       token = jj_consume_token(TEXT_CHAR);
       key += token.image;
     }
     jj_consume_token(EQUAL);
-    label_10:
+    label_7:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case TEXT_CHAR:
         ;
         break;
       default:
-        jj_la1[10] = jj_gen;
-        break label_10;
+        jj_la1[8] = jj_gen;
+        break label_7;
       }
       token = jj_consume_token(TEXT_CHAR);
       value += token.image;
@@ -294,63 +233,8 @@ public class SecretParser implements SecretParserConstants {
     finally { jj_save(0, xla); }
   }
 
-  private boolean jj_2_2(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    try { return !jj_3_2(); }
-    catch(LookaheadSuccess ls) { return true; }
-    finally { jj_save(1, xla); }
-  }
-
-  private boolean jj_3R_13() {
-    if (jj_scan_token(RPARANTHESS)) return true;
-    return false;
-  }
-
-  private boolean jj_3_2() {
-    if (jj_scan_token(TEXT_CHAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_14() {
-    if (jj_scan_token(LOGIC_UNARY_SYMBOL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_15() {
-    if (jj_scan_token(LOGIC_BINARY_SYMBOL)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_11() {
-    if (jj_scan_token(LPARANTHESS)) return true;
-    return false;
-  }
-
   private boolean jj_3_1() {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_11()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_3R_12()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_13()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_12() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_14()) jj_scanpos = xsp;
-    if (jj_3_2()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_2()) { jj_scanpos = xsp; break; }
-    }
-    xsp = jj_scanpos;
-    if (jj_3R_15()) jj_scanpos = xsp;
+    if (jj_scan_token(TEXT_CHAR)) return true;
     return false;
   }
 
@@ -365,15 +249,15 @@ public class SecretParser implements SecretParserConstants {
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[11];
+  final private int[] jj_la1 = new int[9];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x40,0x20,0x40,0x80,0x2000,0x4000,0x20,0x100,0x400,0x20,0x20,};
+      jj_la1_0 = new int[] {0x40,0x20,0x2000,0x4000,0x20,0x100,0x400,0x20,0x20,};
    }
-  final private JJCalls[] jj_2_rtns = new JJCalls[2];
+  final private JJCalls[] jj_2_rtns = new JJCalls[1];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
@@ -388,7 +272,7 @@ public class SecretParser implements SecretParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -403,7 +287,7 @@ public class SecretParser implements SecretParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -414,7 +298,7 @@ public class SecretParser implements SecretParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -425,7 +309,7 @@ public class SecretParser implements SecretParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -435,7 +319,7 @@ public class SecretParser implements SecretParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -445,7 +329,7 @@ public class SecretParser implements SecretParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -562,7 +446,7 @@ public class SecretParser implements SecretParserConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 9; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -598,7 +482,7 @@ public class SecretParser implements SecretParserConstants {
 
   private void jj_rescan_token() {
     jj_rescan = true;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
     try {
       JJCalls p = jj_2_rtns[i];
       do {
@@ -606,7 +490,6 @@ public class SecretParser implements SecretParserConstants {
           jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
           switch (i) {
             case 0: jj_3_1(); break;
-            case 1: jj_3_2(); break;
           }
         }
         p = p.next;

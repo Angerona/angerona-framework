@@ -338,4 +338,29 @@ public class FolSignature extends Signature implements LogicalSymbols{
 			}
 		}
 	}
+	
+	@Override
+	public String toString() {
+		String reval = "Sorts:\n";
+		for(Sort s : sorts) {
+			reval += s.getName() + " - " + s.getConstants() + "\n";
+		}
+		
+		reval += "\nPredicates:\n";
+		for(Predicate p : predicates) {
+			reval += p.getName() + "/" + p.getArity() + "\n";
+		}
+		
+		reval += "\nFunctors:\n";
+		for(Functor f : functors) {
+			reval += f.getName() + "(";
+			for(Sort s : f.getArguments()) {
+				reval += s.getName() + ", ";
+			}
+			reval = reval.substring(0, reval.length()-2);
+			reval += ") --> " + f.getTargetSort().getName();
+		}
+		
+		return reval;
+	}
 }
