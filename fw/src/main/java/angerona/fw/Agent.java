@@ -419,17 +419,17 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 			
 		updateBeliefs(actualPerception);	
 		// Deliberation:
-		genOptionsOperators.getDefault().process(new GenerateOptionsParameter(this, actualPerception));
+		genOptionsOperators.def().process(new GenerateOptionsParameter(this, actualPerception));
 		
 		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		// Means-end-reasoning:
 		MasterPlan masterPlan = getComponent(MasterPlan.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
-				atomic = intentionUpdateOperators.getDefault().process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
+				atomic = intentionUpdateOperators.def().process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
 				
 				if(atomic == null) {
-					if(!subgoalGenerationOperators.getDefault().process(new SubgoalGenerationParameter(masterPlan, allSkills)))
+					if(!subgoalGenerationOperators.def().process(new SubgoalGenerationParameter(masterPlan, allSkills)))
 						break;
 				}
 			}
@@ -457,7 +457,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	 */
 	public void updateBeliefs(Perception perception) {
 		if(perception != null)
-			beliefs = changeOperators.getDefault().process(new UpdateBeliefsParameter(this, perception));
+			beliefs = changeOperators.def().process(new UpdateBeliefsParameter(this, perception));
 	}
 	
 	/**
@@ -468,7 +468,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	 * @return			true if applying the action violates confidential, false otherwise.
 	 */
 	public boolean performThought(Beliefs beliefs, Action action) {
-		return violatesOperators.getDefault().process(new ViolatesParameter(this, action));
+		return violatesOperators.def().process(new ViolatesParameter(this, action));
 	}
 	
 	public AngeronaAnswer reason(FolFormula query) {

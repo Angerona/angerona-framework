@@ -55,7 +55,8 @@ public class KnowhowBase extends BaseAgentComponent {
 		initTree = Program.loadFrom(new InputStreamReader(is));
 		
 		is = this.getClass().getClassLoader().getResourceAsStream("programs/NextActionLists");
-		nextAction = Program.loadFrom(new InputStreamReader(is));
+		if(is != null)
+			nextAction = Program.loadFrom(new InputStreamReader(is));
 	}
 	
 	public KnowhowBase(KnowhowBase other) {
