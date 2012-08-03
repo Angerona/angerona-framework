@@ -29,14 +29,14 @@ public class KnowhowBuilder {
 			// Knowhow Statement
 			Rule r = new Rule();
 			Atom stAtom = new Atom(ks.name);
-			r.addHead(new Atom("khStatement", stAtom, ks.getTarget()));
+			r.addHead(new Atom("khstatement", stAtom, ks.getTarget()));
 			p.add(r);
 			
 			// Subtargets
 			int i = 1;
 			for(Atom a : ks.getSubTargets()) {
 				r = new Rule();
-				r.addHead(new Atom("khSubgoal", stAtom, new Atom(new Integer(i).toString()), a));
+				r.addHead(new Atom("khsubgoal", stAtom, new Atom(new Integer(i).toString()), a));
 				p.add(r);
 				i++;
 			}
@@ -44,7 +44,7 @@ public class KnowhowBuilder {
 			// Conditions
 			for(Atom a : ks.getConditions()) {
 				r = new Rule();
-				r.addHead(new Atom("khCondition", stAtom, a));
+				r.addHead(new Atom("khcondition", stAtom, a));
 				p.add(r);
 			}
 		}

@@ -2,7 +2,6 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,77 +23,77 @@ public class AgentConfigReal implements AgentConfig{
 	@Element
 	private String name;
 	
-	/** String identifying the GenerateOptions Operator class name for dynamic instantiation */
-	@Element(name="generate-options-class")
-	private String generateOptionsOperatorClass;
-
-	/** String identifying the Filter Operator class name for dynamic instantiation */
-	@Element(name="intention-update-class")
-	private String intentionUpdateOperatorClass;
-
-	/** String identifying the Violates Operator class name for dynamic instantiation */
-	@Element(name="violates-class")
-	private String violatesOperatorClass;
-
-	/** String identifying the Update Operator class name for dynamic instantiation */
-	@Element(name="update-beliefs-class")
-	private String updateBeliefsOperatorClass;
-
-	/** String identifying the Planer class name for dynamic instantiation */
-	@Element(name="subgoal-generation-class")
-	private String subgoalGenerationClass;
+	/** String identifying the GenerateOptions Operator-Set for dynamic instantiation */
+	@Element(name="generate-options-operators")
+	private OperatorSetConfig generateOptionsOperators;
 	
-	@ElementList(name="component-classes")
+	/** String identifying the Filter Operator-Set for dynamic instantiation */
+	@Element(name="intention-update-operators")
+	private OperatorSetConfig intentionUpdateOperators;
+	
+	/** String identifying the Violates Operator-Set for dynamic instantiation */
+	@Element(name="violates-operators")
+	private OperatorSetConfig violatesOperators;
+
+	/** String identifying the Update Operator-Set for dynamic instantiation */
+	@Element(name="update-beliefs-operators")
+	private OperatorSetConfig updateBeliefsOperators;
+
+	/** String identifying the Planer-Set for dynamic instantiation */
+	@Element(name="subgoal-generation-operators")
+	private OperatorSetConfig subgoalGenerationOperators;
+	
+	@ElementList(name="components", entry="component", inline=true)
 	private List<String> componentClasses = new LinkedList<String>();
 
-	public static AgentConfigReal loadXml(File file) throws IOException {
-		return SerializeHelper.loadXml(AgentConfigReal.class, file);
+	@Override
+	public OperatorSetConfig getGenerateOptionsOperators() {
+		return generateOptionsOperators;
 	}
 
 	@Override
-	public String getGenerateOptionsOperatorClass() {
-		return generateOptionsOperatorClass;
+	public OperatorSetConfig getIntentionUpdateOperators() {
+		return intentionUpdateOperators;
 	}
 
 	@Override
-	public String getIntentionUpdateOperatorClass() {
-		return intentionUpdateOperatorClass;
+	public OperatorSetConfig getViolatesOperators() {
+		return violatesOperators;
 	}
 
 	@Override
-	public String getViolatesOperatorClass() {
-		return violatesOperatorClass;
+	public OperatorSetConfig getUpdateOperators() {
+		return updateBeliefsOperators;
 	}
 
 	@Override
-	public String getUpdateOperatorClass() {
-		return updateBeliefsOperatorClass;
+	public OperatorSetConfig getSubgoalGenerators() {
+		return subgoalGenerationOperators;
 	}
 
-	@Override
-	public String getSubgoalGenerationClass() {
-		return subgoalGenerationClass;
-	}
-	
 	@Override
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public List<String> getComponents() {
-		return Collections.unmodifiableList(componentClasses);
+		return componentClasses;
+	}
+	
+	public static AgentConfigReal loadXml(File file) throws IOException {
+		return SerializeHelper.loadXml(AgentConfigReal.class, file);
 	}
 	
 	public static void main(String [] args) {
 		AgentConfigReal test = new AgentConfigReal();
 		test.componentClasses.add("Knowhow");
 		test.name = "AgentName";
-		test.generateOptionsOperatorClass = "ggo";
-		test.intentionUpdateOperatorClass = "iuo";
-		test.subgoalGenerationClass = "sggo";
-		test.updateBeliefsOperatorClass = "updbop";
-		test.violatesOperatorClass = "violatesop";
+		test.generateOptionsOperators = OperatorSetConfigReal.getExample("goo");
+		test.intentionUpdateOperators = OperatorSetConfigReal.getExample("iuo");
+		test.subgoalGenerationOperators = OperatorSetConfigReal.getExample("sgo");
+		test.updateBeliefsOperators = OperatorSetConfigReal.getExample("updbop");
+		test.violatesOperators = OperatorSetConfigReal.getExample("violatesop");
 		SerializeHelper.outputXml(test, System.out);
 	}
 }

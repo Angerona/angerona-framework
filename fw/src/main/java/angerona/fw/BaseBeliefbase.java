@@ -54,12 +54,16 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	/** default error string if a formula uses variables but the beliefbase does not support them */
 	protected static String RES_HAS_VARIABLES = "formula has variables, they are not supported.";
 	
+	/** the unique id of the beliefbase */
 	protected Long id;
 	
+	/** the unique id of the parent of the beliefbase (atm this is an agent in every case (2012-08-02) */
 	protected Long parentId;
 	
+	/** counter responsible to save the depth of the copy */
 	private int copyDepth;
 	
+	/** a list of listener which are interested in beliefbase changes */
 	private List<BeliefbaseChangeListener> listeners = new LinkedList<BeliefbaseChangeListener>();
 	
 	/** flag indicating if this type of beliefbase supports quantified formulas */
@@ -81,11 +85,11 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	private OperatorSet<BaseTranslator> translators = new OperatorSet<BaseTranslator>();
 	
 	public BaseChangeBeliefs getRevisionOperator() {
-		return changeOperators.getDefault();
+		return changeOperators.def();
 	}
 
 	public BaseReasoner getReasoningOperator() {
-		return reasoningOperators.getDefault();
+		return reasoningOperators.def();
 	}
 
 	/** Default Ctor: Generates an empty belief base which does not supports quantifiers or variables in its formulas */
@@ -168,8 +172,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
 	public void addKnowledge(Set<FolFormula> formulas) {
-		addKnowledge(formulas, translators.getDefault(), 
-				changeOperators.getDefault());
+		addKnowledge(formulas, translators.def(), 
+				changeOperators.def());
 	}
 	
 	public void addKnowledge(FolFormula formula)
@@ -180,8 +184,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 	
 	public void addKnowledge(Perception perception) {
-		addKnowledge(perception, translators.getDefault(), 
-				changeOperators.getDefault());
+		addKnowledge(perception, translators.def(), 
+				changeOperators.def());
 	}
 	
 	public void addKnowledge(Perception perception, BaseTranslator translator, BaseChangeBeliefs changeOperator) {
@@ -243,7 +247,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public AngeronaAnswer reason(FolFormula query) {
 		if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperators.getDefault().query(this, query);
+		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperators.def().query(this, query);
 		return answer;
 	}
 	
@@ -256,27 +260,27 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	//It's not good that such a specific method for the Mary scenario is in the base class...
 	public AngeronaDetailAnswer detailReason(FolFormula query)
 	{
-		if(reasoningOperators.getDefault() == null)
+		if(reasoningOperators.def() == null)
 			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
 		else if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaDetailAnswer answer = (AngeronaDetailAnswer) reasoningOperators.getDefault().query(this, query);
+		AngeronaDetailAnswer answer = (AngeronaDetailAnswer) reasoningOperators.def().query(this, query);
 		return answer;
 	}
 	//can also use getDefaultReasoningOperator()
 	//It's not good that such a specific method for the Mary scenario is in the base class...
 	public Set<AngeronaDetailAnswer> allDetailReasons(FolFormula query)
 	{
-		if(reasoningOperators.getDefault() == null)
+		if(reasoningOperators.def() == null)
 			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
 		else if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		Set<AngeronaDetailAnswer> answers = reasoningOperators.getDefault().queryForAllAnswers(this, query);
+		Set<AngeronaDetailAnswer> answers = reasoningOperators.def().queryForAllAnswers(this, query);
 		return answers;
 	}
 	
 	public Set<FolFormula> infere() {
-		return reasoningOperators.getDefault().infer(this);
+		return reasoningOperators.def().infer(this);
 	}
 	
 	public Set<FolFormula> infere(String reasonerCls, Map<String, String> parameters) {
