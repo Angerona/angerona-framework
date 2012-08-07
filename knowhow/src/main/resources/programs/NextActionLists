@@ -7,14 +7,14 @@
 
 % rules for state: 'intentionAdded'
 new_act(A) :- state(intentionAdded), istack(S), is_atomic(A), #head(S, A).
-new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(L), not khconditionfail(KH), not khfailed([KH|K]), not const_new_act.
+new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(S), #head(S, I), not khconditionfail(KH), not khfailed([KH|K]), not const_new_act.
 new_khfailed(K) :- state(intentionAdded), khstate(K), not const_new_act, not const_new_khstate.
 toparent :- const_new_khfailed.
 % --- READY --- 
 
 % rules for state: 'actionPerformed'
 new_istack([INT_C|INT_B]) :- state(actionPerformed), istack([INT_A|INT_B]), khstate(L), #head(L, KH), khsubgoal(KH, I, INT_A), khsubgoal(KH, J, INT_C), J=I+1.
-new_khperformed(KH) :- khstate(L), #head(L, KH), not khperformed_helper(KH). 
+new_khperformed(KH) :- state(actionPerformed), khstate(L), #head(L, KH), not khperformed_helper(KH). 
 toparent :- new_khperformed(X).
 % --- READY ---
 
@@ -28,6 +28,7 @@ new_state(intentionAdded) :- new_istack(L), not const_new_khperformed. % Regina 
 new_state(khAdded) :- const_new_khstate, not const_new_khperformed, not lastknowhowstatement.
 new_state(intentionAdded) :- const_new_khfailed, not new_istack([]).
 new_state(noop) :- new_istack([]).
+new_khstate(K) :- toparent, khstate([KH|K]).
 % Not sure why Regina used the following rule:
 new_state(noop) :- state(noop). 
 % --- READY ---
