@@ -1,13 +1,13 @@
 % calculates the next action of an agent.
 % Know-How is defined in "Know-How for Motivated
-% BDI Agents" by Matthias Thimm and Patrick Krümpelmann.
+% BDI Agents" by Matthias Thimm and Patrick Krï¿½mpelmann.
 % Adaptions discussed in Regina Fritsch's diploma thesis 
 % to the 'NextAction' program were used.
 % uses the dlv-complex syntax for list operations.
 
 % rules for state: 'intentionAdded'
 new_act(A) :- state(intentionAdded), istack(S), is_atomic(A), #head(S, A).
-new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(L), #last(S, I), not khconditionfail(KH), not khfailed([KH|K]), not const_new_act.
+new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(L), not khconditionfail(KH), not khfailed([KH|K]), not const_new_act.
 new_khfailed(K) :- state(intentionAdded), khstate(K), not const_new_act, not const_new_khstate.
 toparent :- const_new_khfailed.
 % --- READY --- 
@@ -46,7 +46,7 @@ toparent :- lastknowhowstatement.
 % helper rules. Without these rules one would create unsafe rules and dlv-complex would complain.
 const_new_khperformed :- new_khperformed(P).
 const_new_act :- new_act(A).
-const_new_khstate :- new_khsate(KH).
+const_new_khstate :- new_khstate(KH).
 const_new_khfailed :- new_khfailed(KH).
 const_new_istack :- new_istack(I).
 khperformed_helper(KH) :-  istack(S), #head(S,A), khsubgoal(KH,I,A), khsubgoal(KH,J,_), J=I+1.
