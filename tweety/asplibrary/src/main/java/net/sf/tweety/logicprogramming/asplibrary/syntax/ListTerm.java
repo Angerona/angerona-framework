@@ -14,8 +14,13 @@ public class ListTerm implements Term {
 	Collection<Term>	listHead;
 	Collection<Term>	listTail;
 	
+	public ListTerm() {
+		this.listHead = new LinkedList<Term>();
+		this.listTail = new LinkedList<Term>();
+	}
+	
 	/**
-	 * default constructor for list elements
+	 * constructor for list elements with given [head|tail].
 	 * @param head
 	 * @param tail
 	 */

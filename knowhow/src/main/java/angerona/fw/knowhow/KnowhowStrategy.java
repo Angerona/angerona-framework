@@ -1,0 +1,212 @@
+package angerona.fw.knowhow;
+
+import java.io.StringReader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
+import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
+import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ListTerm;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.StdTerm;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * The default knowhow strategy.
+ * @author Tim Janus
+ */
+public class KnowhowStrategy {
+	
+	/** reference to the logback logger instance */
+	static private Logger LOG = LoggerFactory.getLogger(KnowhowBase.class);
+	
+	private int step;
+	
+	/** program contains the world-knowledge of the agent */
+	private Program worldKnowledge;
+	
+	/** program contains atomic actions of the agent */
+	private Program atomicActions;
+	
+	/** the knowhow program containing the knowhow-statement and the rule for nextAction. */
+	private Program knowhow;
+	
+	/** program representing the actual intention tree */
+	private Program intentionTree;
+	
+	/** name of the actual state of the transition system as string */
+	private String stateStr;
+	
+	/** reference to the used solver */
+	private DLVComplex solver;
+	
+	/** the actions in the correct odering to fullfil the plan */
+	private List<String> actions = new LinkedList<String>();
+	
+	/**
+	 * Ctor: Creates the default Knowhow-Strategy
+	 * @param pathtodlv	String with path to the dlv-complex solver
+	 */
+	public KnowhowStrategy(String pathtodlv) {
+		solver = new DLVComplex(pathtodlv);
+	}
+	
+	/**
+	 * @return the last performed step.
+	 */
+	public int getStep() {
+		return step;
+	}
+	
+	/** @return an unmodifiable list of the actions found by the planning yet */
+	public List<String> getActions() {
+		return Collections.unmodifiableList(actions);
+	}
+	
+	/** informs the knowhow-strategy that he agent has performed one action 
+	 * 	the knowhow-strategy removes the action from its list of open actions.
+	 */
+	public void actionDone() {
+		actions.remove(0);
+	}
+	
+	/**
+	 * Initialize the knowhow-strategy to calculate plans for a specific agent
+	 * @param kb				Reference to the knowhow-base
+	 * @param initialIntention	the name of the intention which should be fullfilled by the plan.
+	 * @param atomicActions		collection of strings identifying the atomic actions
+	 * @param worldKnowledge	collection of strings identifying the world knowledge of the agent.
+	 */
+	public void init(KnowhowBase kb, String initialIntention, Collection<String> atomicActions, Collection<String> worldKnowledge) {
+		stateStr = "intentionAdded";
+		intentionTree = new Program();
+
+		ELPParser parser = new ELPParser(new StringReader("istack(["+initialIntention+"])."));
+		Rule r = null;
+		try {
+			r = parser.rule();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(r != null) {
+			intentionTree.add(r); 
+		}
+		
+		intentionTree.add(new Atom("khstate", new ListTerm(new LinkedList<Term>(), 
+				new LinkedList<Term>())));
+		intentionTree.add(new Atom("state", new StdTerm(stateStr)));
+		
+		knowhow = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
+		knowhow.add(kb.getNextActionProgram());
+		this.atomicActions = KnowhowBuilder.buildAtomicProgram(atomicActions);
+		this.worldKnowledge = KnowhowBuilder.buildHoldsProgram(worldKnowledge);
+		
+		step = 0;
+	}
+	
+	/**
+	 * Performs one step in the context of the knowhow. This means the dlv-complex program
+	 * is called once.
+	 * @return	 0 	if the processing must be continued
+	 * 			-1	if the plan can not be created (no plans to fullfil the intention)
+	 * 			>0	the count of actions which must be processed.
+	 * @throws SolverException
+	 */
+	public int performStep() throws SolverException {
+		step+=1;
+		
+		// make union of program parts:
+		Program p = new Program();
+		p.add(intentionTree);
+		p.add(worldKnowledge);
+		p.add(atomicActions);
+		p.add(knowhow);
+		
+		// calculate answer sets using dlv-complex:
+		AnswerSetList asl = solver.computeModels(p, 10);
+		
+		// find new literals for the new intention-tree program:
+		Atom new_state = updateAtom(asl, "state");
+		Atom new_khstate = updateAtom(asl, "khstate");
+		Atom new_istack = null;
+		if(	stateStr.equals("actionPerformed") ||
+			stateStr.equals("khAdded")	) {
+			new_istack = updateAtom(asl, "istack");
+		} else {
+			new_istack = (Atom)asl.getFactsByName("istack").iterator().next();
+		}
+		// rebuild intention-tree program:
+		intentionTree.clear();
+		intentionTree.add(new Atom("state", new_state.getTerm(0)));
+		intentionTree.add(new Atom("khstate", new_khstate.getTerm(0)));
+		intentionTree.add(new Atom("istack", new_istack.getTerm(0)));
+		
+		// update state:
+		if(new_state != null)
+			stateStr = new_state.getTermStr(0);
+		
+		// proof if a change occured
+		Set<Literal> act = asl.getFactsByName("new_act");
+		boolean changed = 
+				new_state != null ||
+				new_istack != null ||
+				new_khstate != null ||
+				act.size() > 0;
+				
+		if(!changed) {
+			return -1;
+		} else {
+			for(Literal action : act) {
+				Atom a = (Atom)action;
+				actions.add(a.getTermStr(0));
+			}
+			return act.size();
+		}
+	}
+	
+	/**
+	 * Helper method: finds the new version of the atom in the answerset list.
+	 * @param asl	Reference to the answer-set list
+	 * @param name	The name of the atom like 'state'
+	 * @return	the new atom or null if no new atom exists.
+	 */
+	private Atom updateAtom(AnswerSetList asl, String name) {
+		// get new state...
+		String error = null;
+		Set<Literal> lits = asl.getFactsByName("new_" + name);
+		if(lits.size() == 1) {
+			Literal new_literal = lits.iterator().next();
+			if(new_literal instanceof Atom) {
+				Atom a = (Atom)new_literal;
+				if(a.getArity() == 1) {
+					Term t = a.getTerm(0);
+					Atom state = new Atom(name, t);
+					return state;
+				} else {
+					error = "The arity must be 1. But arity of '" + a.getName() + "' is: " + a.getArity();
+				}
+			} else {
+				error = "'" + new_literal.toString() + "' is no atom. new_ literals must be facts.";
+			}
+		} else if(lits.size() > 1) {
+			error = "There are more than one 'new_" + name + "' literals.";
+		}
+		if(error != null)
+			LOG.error(error);
+		
+		return (Atom)asl.getFactsByName(name).iterator().next();
+	}
+}

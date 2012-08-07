@@ -5,21 +5,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +52,10 @@ public class KnowhowBase extends BaseAgentComponent {
 			nextAction = Program.loadFrom(new InputStreamReader(is));
 	}
 	
+	/**
+	 * Copy-Ctor copies the knowhow base.
+	 * @param other	reference to the other knowhow base.
+	 */
 	public KnowhowBase(KnowhowBase other) {
 		super(other);
 		nextAction = (Program)other.nextAction.clone();
@@ -104,6 +103,10 @@ public class KnowhowBase extends BaseAgentComponent {
 		return new KnowhowBase(this);
 	}
 	
+	public Program getNextActionProgram() {
+		return nextAction;
+	}
+	
 	public static void main(String [] args) throws SolverException {
 		LOG.info("Programm arguments: '{}'", args);
 		
@@ -129,7 +132,24 @@ public class KnowhowBase extends BaseAgentComponent {
 		KnowhowStatement stmt = new KnowhowStatement(new Atom("bluff"), new Vector<Atom>(), new Vector<Atom>());
 		kb.statements.add(stmt);
 		
-		Program p = KnowhowBuilder.buildExtendedLogicProgram(kb);
+		KnowhowStrategy ks = new KnowhowStrategy(args[0]);
+		Set<String> actions = new HashSet<String>();
+		actions.add("bluff");
+		Set<String> world = new HashSet<String>();
+		world.add("i_play_poker");
+		ks.init(kb, "win", actions, world);
+		for(int i=0; i<10; i++) {
+			int reval = ks.performStep();
+			if(reval == -1) {
+				LOG.info("NO Plan");
+			} else if(reval == 1) {
+				LOG.info("Action: " + ks.getActions());
+				break;
+			}
+		}
+		
+		/*
+		Program p = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
 		Rule is_atomic = new Rule();
 		is_atomic.addHead(new Atom("is_atomic", new Constant("bluff")));
 		p.add(is_atomic);
@@ -189,37 +209,11 @@ public class KnowhowBase extends BaseAgentComponent {
 			LOG.info(newInit.toString());
 			
 			// update program:
-			p = KnowhowBuilder.buildExtendedLogicProgram(kb);
+			p = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
 			p.add(is_atomic);
 			p.add(kb.nextAction);
 			p.add(newInit);
 		}
-	}
-
-	private static Atom temp(AnswerSetList asl, String postfix) {
-		// get new state...
-		String error = null;
-		Set<Literal> lits = asl.getFactsByName("new_" + postfix);
-		if(lits.size() == 1) {
-			Literal new_literal = lits.iterator().next();
-			if(new_literal instanceof Atom) {
-				Atom a = (Atom)new_literal;
-				if(a.getArity() == 1) {
-					Term t = a.getTerm(0);
-					Atom state = new Atom(postfix, t);
-					return state;
-				} else {
-					error = "The arity must be 1. But arity of '" + a.getName() + "' is: " + a.getArity();
-				}
-			} else {
-				error = "'" + new_literal.toString() + "' is no atom. new_ literals must be facts.";
-			}
-		} else if(lits.size() == 0) {
-			error = "no literal 'new_"+postfix+"' found in answerset.";
-		} else {
-			error = "There are more than one 'new_"+postfix+"' literals.";
-		}
-		LOG.error(error);
-		return null;
+		*/
 	}
 }

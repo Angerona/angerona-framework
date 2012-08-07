@@ -72,7 +72,7 @@ public class KnowhowView extends BaseView implements ReportListener{
 			stmtListModel.add(0, stmt.toString());
 		}
 		
-		Program p = KnowhowBuilder.buildExtendedLogicProgram(actual);
+		Program p = KnowhowBuilder.buildKnowhowBaseProgram(actual, true);
 		stmtListModel.addElement("---");
 		stmtListModel.addElement("as ELP");
 		stmtListModel.addElement("---");

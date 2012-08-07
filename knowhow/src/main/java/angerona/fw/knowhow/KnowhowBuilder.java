@@ -1,12 +1,12 @@
 package angerona.fw.knowhow;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import angerona.fw.BaseBeliefbase;
-import angerona.fw.Skill;
 
 /**
  * Helper class responsible for translating the know-how base into other data-structures like
@@ -21,7 +21,7 @@ public class KnowhowBuilder {
 	 * @param kb	reference to the knowhow base.
 	 * @return		extended logic program representing the given KnowhowBase.
 	 */
-	public static Program buildExtendedLogicProgram(KnowhowBase kb) {
+	public static Program buildKnowhowBaseProgram(KnowhowBase kb, boolean everything) {
 		Program p = new Program();
 		
 		// create facts for Knowhow-Statements
@@ -49,24 +49,21 @@ public class KnowhowBuilder {
 			}
 		}
 		
-		// add holds facts for the world knowledge of the agent
-		if(kb.getAgent() != null) {
-			p.add(buildExtendedLogicProgram(kb.getAgent().getSkills().values()));
-			p.add(buildExtendedLogicProgram(kb.getAgent().getBeliefs().getWorldKnowledge()));
+		if(everything) {
+			List<String> holds = kb.getAgent().getBeliefs().getWorldKnowledge().getAtoms();
+			p.add(buildHoldsProgram(holds));
+			
+			Set<String> atomic_actions = kb.getAgent().getSkills().keySet();
+			p.add(buildAtomicProgram(atomic_actions));
 		}
-		// TODO: react to dynamic changes of the Beliefbase. Implement an iterative 
-		// update of the logic program representing the KnowhowBase
 		
 		return p;
 	}
 	
-	public static Program buildExtendedLogicProgram(BaseBeliefbase bb) {
+	public static Program buildHoldsProgram(Collection<String> literals) {
 		Program p = new Program();
-		for(String atom : bb.getAtoms()) {
-			Rule r = new Rule();
-			Atom holds = new Atom("holds", new Atom(atom));
-			r.addHead(holds);
-			p.add(r);
+		for(String atom : literals) {
+			p.add(new Atom("holds", new Atom(atom)));
 		}
 		return p;
 	}
@@ -76,12 +73,11 @@ public class KnowhowBuilder {
 	 * @param skills	all skills which are atomic actions of the agent
 	 * @return			An extended logic program containing all is_atomic facts for the agent
 	 */
-	public static Program buildExtendedLogicProgram(Collection<Skill> skills) {
+	public static Program buildAtomicProgram(Collection<String> atomic_actions) {
 		Program p = new Program();
 		
-		for(Skill s : skills) {
-			Rule r = new Rule();
-			r.addHead(new Atom("is_atomic", new Atom(s.getName())));
+		for(String action : atomic_actions) {
+			p.add(new Atom("is_atomic", new Atom(action)));
 		}
 		
 		return p;
