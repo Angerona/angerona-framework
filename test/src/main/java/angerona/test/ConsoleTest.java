@@ -59,9 +59,9 @@ public class ConsoleTest {
 		LOG.info("Boss Beliefs:\n" + boss.getBeliefs().toString());
 		
 		AngeronaAnswer aa = boss.reason(new Atom(new Predicate("attends")));
-		if(aa.getAnswerExtended() == AnswerValue.AV_TRUE)
+		if(aa.getAnswerValue() == AnswerValue.AV_TRUE)
 			LOG.info("Boss thinks the employee attends to the meeting");
-		else if(aa.getAnswerExtended() == AnswerValue.AV_FALSE)
+		else if(aa.getAnswerValue() == AnswerValue.AV_FALSE)
 			LOG.info("Boss thinks the empolyee doesn't attends to the meeting-");
 		else
 			LOG.info("Boss does not know.");

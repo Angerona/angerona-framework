@@ -102,7 +102,7 @@ public abstract class PerceptionFactory {
 		if(paramValue.startsWith("$")) {
 			Object obj = context.get(paramValue.substring(1));
 			if(obj instanceof AngeronaAnswer)
-				return ((AngeronaAnswer)obj).getAnswerExtended();
+				return ((AngeronaAnswer)obj).getAnswerValue();
 			else 
 				return (AnswerValue)obj;
 		}

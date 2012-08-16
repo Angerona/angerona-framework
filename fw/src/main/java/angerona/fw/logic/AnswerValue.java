@@ -17,6 +17,10 @@ public enum AnswerValue {
 	/** answer is not given */
 	AV_REJECT,
 	
-	/** answer is for an open-ended question. Signals the program to go through additional reasoning and answering processes. */
-	AV_OPEN
+	/** 
+	 * answer is for an open-ended question. Signals the 
+	 * program to go through additional reasoning and 
+	 * answering processes. 
+	 */
+	AV_COMPLEX
 }

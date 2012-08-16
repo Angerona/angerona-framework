@@ -136,13 +136,13 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			if(ff.toString().equals("excused")) {
 				Atom reasonToFire = new Atom(new Predicate("attend_scm"));
 				AngeronaAnswer aa = ag.getBeliefs().getWorldKnowledge().reason(reasonToFire);
-				if(aa.getAnswerExtended() == AnswerValue.AV_UNKNOWN) {
+				if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
 					Skill query = (Skill) ag.getSkill("Query");
 					Subgoal sg = new Subgoal(ag, des);
 					sg.newStack(query, new Query(ag.getName(), rr.getSenderId(), reasonToFire).getContext());
 					ag.getPlanComponent().addPlan(sg);
 					report("Add the new atomic action '" + query.getName() + "' to the plan.", ag.getPlanComponent());
-				} else if(aa.getAnswerExtended() == AnswerValue.AV_FALSE) {
+				} else if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
 					return false;
 				}
 				return true;

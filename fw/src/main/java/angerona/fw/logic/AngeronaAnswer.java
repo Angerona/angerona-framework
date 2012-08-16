@@ -1,10 +1,13 @@
 package angerona.fw.logic;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.Answer;
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 /**
  * An answer in the Angerona framework. Extends the GenericAnswer by an extended 
@@ -12,8 +15,14 @@ import net.sf.tweety.Formula;
  * @see angerona.fw.logic.AnswerValue
  * @author Tim Janus
  */
-public class AngeronaAnswer extends GenericAnswer<AnswerValue>{
+public class AngeronaAnswer extends Answer {
 
+	/** representation of the answer as a enumeration (true,false,unknown,reject or complex) */
+	private AnswerValue answerValue;
+
+	/** sets of answers used for complex answers (for open queries) */
+	private Set<FolFormula> answers;
+	
 	/**
 	 * Ctor: Generates an answer for the given query on the given belief base with the default answer-value false.
 	 * @param beliefBase	the belief base used for performing the query
@@ -30,9 +39,22 @@ public class AngeronaAnswer extends GenericAnswer<AnswerValue>{
 	 * @param at			the AnswerValue representing the value of the Answer.
 	 */
 	public AngeronaAnswer(BeliefBase beliefBase, Formula query, AnswerValue at) {
-		super(beliefBase, query, at);
+		super(beliefBase, query);
+		this.answerValue = at;
+		if(at == AnswerValue.AV_COMPLEX) {
+			answers = new HashSet<>();
+		}
+		this.setAnswer(at == AnswerValue.AV_TRUE ? true : false);
+		this.setAnswer(at == AnswerValue.AV_TRUE ? 1.0 : 0.0);
 	}
 	
+	public Set<FolFormula> getAnswers() {
+		return Collections.unmodifiableSet(answers);
+	}
+	
+	public AnswerValue getAnswerValue() {
+		return answerValue;
+	}
 
 	public static AnswerValue valueOf(String s) {
 		if(s.compareToIgnoreCase("true") == 0) {
@@ -43,9 +65,8 @@ public class AngeronaAnswer extends GenericAnswer<AnswerValue>{
 			return AnswerValue.AV_UNKNOWN;
 		} else if(s.compareToIgnoreCase("reject") == 0) {
 			return AnswerValue.AV_REJECT;
-		}
-		else if(s.compareToIgnoreCase("open") == 0){
-			return AnswerValue.AV_OPEN;
+		} else if(s.compareToIgnoreCase("complex") == 0){
+			return AnswerValue.AV_COMPLEX;
 		}
 		return null;
 	}
