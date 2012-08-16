@@ -12,7 +12,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,15 +23,21 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.DetailQuery;
 import angerona.fw.comm.Query;
-import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
-import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 
+/**
+* This implementation of a subgoal generation operator allows for the asking of multiple, detail query-type questions. 
+* Agents can respond to open queries by considering one of many truthful answers.
+* For a closed query they are capable of considering telling the opposite of the truth.
+* They can also consider an answer of "I don't know" for any query.
+* The expression of ignorance "I don't know" is always marked as a lie by this operator. 
+* @author Daniel Dilger
+*/
 
 public class SubgoalGenerationOperator extends
 		angerona.fw.operators.def.SubgoalGenerationOperator {

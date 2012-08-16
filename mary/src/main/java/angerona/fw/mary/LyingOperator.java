@@ -1,17 +1,16 @@
 package angerona.fw.mary;
 
-import java.util.Set;
-
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
-
+/**
+* This file does not correspond to any theoretical operator.
+* The class exists to specify the means by which a lie is generated
+* @author Daniel Dilger
+*/
 public class LyingOperator {
 	/**
 	 * Returns the AnswerValue version of a lie, given the AngeronaAnswer containing the truth. Simply negates it. 

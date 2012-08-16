@@ -1,13 +1,9 @@
 package angerona.fw.operators.def;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
@@ -21,13 +17,15 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.DetailQueryAnswer;
 import angerona.fw.logic.ConfidentialKnowledge;
-import angerona.fw.logic.Secret;
 import angerona.fw.logic.SecrecyStrengthPair;
+import angerona.fw.logic.Secret;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.operators.parameter.ViolatesParameter;
 /**
- * Extension of my DetailSimpleViolatesOperator which enables one to weaken secrecy
+ * Extension of my DetailSimpleViolatesOperator which enables one to weaken secrecy.
+ * The operator determines which secrets would be affected by an action.
+ * It returns a list of pairs containing the secret and the degree by which it would be weakened. 
  * @author dilger
  *
  */
@@ -168,7 +166,8 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				for(Secret secret : conf.getTargets()) 
 				{
 					FolFormula secretInfo = (FolFormula) secret.getInformation(); 
-					Rule secretRule = convertToRule(secretInfo);
+					// not used: (kill warning TJ)
+					//	Rule secretRule = convertToRule(secretInfo);
 					
 					boolean secretContained = false;
 					for(AnswerSet ans : newAnsSets)

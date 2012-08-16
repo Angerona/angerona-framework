@@ -12,6 +12,9 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
  */
 public class AnswerSetList extends ArrayList<AnswerSet> {
 
+	/** kill warning */
+	private static final long serialVersionUID = -1116543381944735639L;
+
 	/**
 	 * this method returns true if at least one
 	 * answer set support q.

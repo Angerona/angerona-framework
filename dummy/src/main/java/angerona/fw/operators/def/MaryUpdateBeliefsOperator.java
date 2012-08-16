@@ -17,10 +17,10 @@ import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 /**
  * Update Beliefs Operator which enables the weakening of secrets.
+ * The major difference between this operator and the previous belief update operator is that this one records the degree by which an agent has weakened its secrets by its actions.
  * @author dilger
  *
  */
-//Not sure about all the details of how the update beliefs operator works...
 public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(UpdateBeliefsOperator.class);

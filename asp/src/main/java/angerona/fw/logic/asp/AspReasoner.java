@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;

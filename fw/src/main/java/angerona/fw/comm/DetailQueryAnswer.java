@@ -3,11 +3,7 @@ package angerona.fw.comm;
  * Implementation of the speech act "Answer", but extended for more open ("detail") questions
  * @author Daniel Dilger
  */
-import java.util.List;
-
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 import angerona.fw.Action;
 import angerona.fw.logic.AnswerValue;
 

@@ -1,17 +1,19 @@
 package angerona.fw.logic.asp;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.Answer;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.operators.parameter.ReasonerParameter;
+
+/**
+* This reasoning operator determines what answers satisfy a query of the detail query or open query types. 
+* @author Daniel Dilger
+*/
 
 public class AspDetailReasoner extends AspReasoner {
 	@Override

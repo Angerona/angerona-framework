@@ -3,12 +3,6 @@ package angerona.fw.logic.asp;
 import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

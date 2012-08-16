@@ -14,6 +14,11 @@ import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.parameter.ViolatesParameter;
 
+/**
+* This version of the violates operator allows for answers of the detail answer speech act type. 
+* @author Daniel Dilger
+*/
+
 public class DetailViolatesOperator extends ViolatesOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(DetailViolatesOperator.class);

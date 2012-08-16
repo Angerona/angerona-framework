@@ -22,7 +22,6 @@ import angerona.fw.Angerona;
 import angerona.fw.BaseOperator;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.TreeController;
-import angerona.fw.internal.Entity;
 import angerona.fw.listener.SimulationAdapter;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;

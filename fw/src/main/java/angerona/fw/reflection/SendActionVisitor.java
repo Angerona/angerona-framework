@@ -1,6 +1,5 @@
 package angerona.fw.reflection;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import angerona.fw.Action;

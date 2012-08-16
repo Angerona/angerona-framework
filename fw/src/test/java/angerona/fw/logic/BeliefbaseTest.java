@@ -21,6 +21,7 @@ public abstract class BeliefbaseTest<T extends BaseBeliefbase> extends TestCase 
 	 */
 	public void testCopy() {
 		T bb = createBeliefbase();
+		@SuppressWarnings("unchecked")
 		T copy = (T)bb.clone();
 		assertEquals(bb.getGUID(), copy.getGUID());
 		assertEquals(bb.getParent(), copy.getParent());

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.DetailQueryAnswer;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;

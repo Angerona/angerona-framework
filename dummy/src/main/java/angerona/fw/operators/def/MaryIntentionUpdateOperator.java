@@ -10,11 +10,18 @@ import angerona.fw.Agent;
 import angerona.fw.Intention;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
-import angerona.fw.comm.DetailQueryAnswer;
 import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
-
+/**
+* The intention update operator suitable for the "Mary Courtroom Scenario"
+* The previous intention update operator chose the first intentino not to violate secrecy
+* This operator considers all options at once and then chooses an optimal one
+* It picks the optimal one by assigning a cost to weakening secrets and to telling lies
+* For further use of the operator, the operator should be made to distinguish between all options available in particular plans.
+* The operator currently chooses from all options from all plans.
+* @author Daniel Dilger
+*/
 public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 	
 

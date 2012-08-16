@@ -1,6 +1,5 @@
 package angerona.fw;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
