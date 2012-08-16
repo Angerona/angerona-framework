@@ -171,8 +171,8 @@ public class SubgoalGenerationOperator extends
 				}
 				Subgoal sg = new Subgoal(ag, desire);
 				FolFormula f = new Atom(new Predicate(predName, terms.size()), terms);
-				if(content.startsWith("-")) {
-					content = content.substring(1);
+				if(predName.startsWith("-")) {
+					predName = predName.substring(1);
 					f = new Negation(new Atom(new Predicate(predName, terms.size()), terms));
 				}
 				sg.newStack(query, new DetailQuery(ag.getName(), recvName, f).getContext());
@@ -200,7 +200,16 @@ public class SubgoalGenerationOperator extends
 	 */
 	private boolean simpleQuery(AngeronaDetailAnswer queryAnswer)
 	{
-		Atom a = (Atom) queryAnswer.getAnswerExtended();
+		Atom a = null;
+		FolFormula f = queryAnswer.getAnswerExtended();
+		if(f instanceof Atom) {
+			a = (Atom)f;
+		} else if(f instanceof Negation) {
+			a = ((Negation)f).getAtoms().iterator().next();
+		} else {
+			throw new RuntimeException("'" + f.toString() + "' must be an atom or a negation.");
+		}
+		
 		if(a.getPredicate().getArity() > 0)
 		{
 			List<Term> arguments = a.getArguments();

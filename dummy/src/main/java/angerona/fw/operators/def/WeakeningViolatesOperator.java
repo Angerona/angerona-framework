@@ -185,7 +185,15 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 						SecrecyStrengthPair sPair = new SecrecyStrengthPair();
 						sPair.defineSecret(secret);
 						double newStrength = calculateSecrecyStrength(secretInfo, newAnsSets);
-						double curStrength = Double.parseDouble(secret.getReasonerParameters().get("d"));
+						
+						// TODO: Find default policy like a default parameter value if not set yet.
+						String d = secret.getReasonerParameters().get("d");
+						double curStrength = 0;
+						if(d == null) {
+							curStrength = 1;
+						} else {
+							curStrength = Double.parseDouble(d);
+						}
 						double degreeOfWeakening = curStrength - newStrength;
 						sPair.defineDegreeOfWeakening(degreeOfWeakening);
 						secretList.add(sPair);
