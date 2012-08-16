@@ -59,7 +59,7 @@ import angerona.fw.serialize.SkillConfig;
  * data structure AgentConfiguration is used to dynamically instantiate
  * an agent.
  * The agent defines helper methods to use the operators of the agent.
- * @author Tim Janus
+ * @author Tim Janus, Daniel Dilger
  */
 public class Agent extends AgentArchitecture implements ContextProvider, Entity, OperatorVisitor, ReportPoster, BeliefbaseChangeListener {
 
@@ -86,15 +86,8 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
 	
-	//************Begin Daniel's changes*************//
-	
 	/** History of actions performed by the agent */
 	private List<Action> actionsHistory = new LinkedList<Action>();
-	
-	/** History of the belief base of the agent (world views and agent views) */
-	private List<Beliefs> beliefsHistory = new LinkedList<Beliefs>();
-	
-	//************End Daniel's changes*************//
 	
 	/** mapping atomic intentions names to the intention references defining the skills of the agent. */
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
@@ -129,28 +122,12 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		agentProcess.setAgentArchitecture(this);
 		init(agentProcess);
 	}
-	//************Begin Daniel's changes*************//
 	
-	public List<Action> getActionsHistory()
+	/** @return a list containing all actions peformed by the agent. */
+	public List<Action> getActionHistory()
 	{
 		return actionsHistory;
-	}
-	public void addAction(Action a)
-	{
-		actionsHistory.add(a);
-	}
-	
-	public List<Beliefs> getBeliefsHistory()
-	{
-		return beliefsHistory;
-	}
-	public void addBeliefSet(Beliefs b)
-	{
-		beliefsHistory.add(b);
-	}
-	
-	
-	//************End Daniel's changes*************//
+	}	
 	
 	
 	/**

@@ -113,7 +113,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 			a.setWeakenings(secretList); //Only works because objects are pass-by-reference, so not the most elegant solution
 			
 			/* Consider self-repeating answers (and only answers) as bad as revealing all secrets */
-			List<Action> actionsHistory = param.getAgent().getActionsHistory();
+			List<Action> actionsHistory = param.getAgent().getActionHistory();
 			for(Action act : actionsHistory)
 			{
 				if(a.equals(act))
