@@ -2,7 +2,6 @@ package angerona.fw;
 
 
 import java.io.BufferedReader;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -28,7 +27,6 @@ import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
@@ -257,7 +255,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @param query
 	 * @return AngeronaDetailAnswer
 	 */
-	//It's not good that such a specific method for the Mary scenario is in the base class...
+	/*It's not good that such a specific method for the Mary scenario is in the base class...
 	public AngeronaDetailAnswer detailReason(FolFormula query)
 	{
 		if(reasoningOperators.def() == null)
@@ -267,8 +265,9 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		AngeronaDetailAnswer answer = (AngeronaDetailAnswer) reasoningOperators.def().query(this, query);
 		return answer;
 	}
+	*/
 	//can also use getDefaultReasoningOperator()
-	//It's not good that such a specific method for the Mary scenario is in the base class...
+	/*It's not good that such a specific method for the Mary scenario is in the base class...
 	public Set<AngeronaDetailAnswer> allDetailReasons(FolFormula query)
 	{
 		if(reasoningOperators.def() == null)
@@ -278,7 +277,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		Set<AngeronaDetailAnswer> answers = reasoningOperators.def().queryForAllAnswers(this, query);
 		return answers;
 	}
-	
+	*/
 	public Set<FolFormula> infere() {
 		return reasoningOperators.def().infer(this);
 	}

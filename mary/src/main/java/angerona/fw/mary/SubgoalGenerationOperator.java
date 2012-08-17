@@ -1,6 +1,7 @@
 package angerona.fw.mary;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,7 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.DetailQuery;
 import angerona.fw.comm.Query;
-import angerona.fw.logic.AngeronaDetailAnswer;
+import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
@@ -36,12 +37,11 @@ import angerona.fw.reflection.ContextFactory;
 * For a closed query they are capable of considering telling the opposite of the truth.
 * They can also consider an answer of "I don't know" for any query.
 * The expression of ignorance "I don't know" is always marked as a lie by this operator. 
-* @author Daniel Dilger
+* @author Daniel Dilger, Tim Janus
 */
-
 public class SubgoalGenerationOperator extends
 		angerona.fw.operators.def.SubgoalGenerationOperator {
-	Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
 	
 	@Override
 	protected Boolean processInt(SubgoalGenerationParameter pp) {
@@ -85,8 +85,8 @@ public class SubgoalGenerationOperator extends
 			report("No new subgoal generated.", ag);
 		return reval;
 	}
-	public boolean interrogateOtherAgent(SubgoalGenerationParameter pp, Agent ag)
-	{
+	
+	public boolean interrogateOtherAgent(SubgoalGenerationParameter pp, Agent ag) {
 
 		boolean reval = false;
 		if(ag.getDesires() == null)
@@ -185,29 +185,36 @@ public class SubgoalGenerationOperator extends
 		
 		return reval;
 	}
-	class AnswerComp implements Comparator<AngeronaDetailAnswer>
-	{
-
-		public int compare(AngeronaDetailAnswer a1, AngeronaDetailAnswer a2) {
+	
+	class AnswerComp implements Comparator<FolFormula> {
+		public int compare(FolFormula a1, FolFormula a2) {
 			return a1.toString().compareTo(a2.toString());
 		}
-		
 	}
 
+	/**
+	 * Expresses ignorance about a certain topic
+	 */
+	public FolFormula expressionOfIgnorance(Query query) {
+		FolFormula question = (FolFormula)query.getQuestion();
+		FolFormula expr = new Atom(new Predicate("dontKnow("+question.toString()+")")); 
+		return expr;
+		
+	}
+	
 	/**
 	 * Checks whether the query is a simple true/false type question or not
 	 * Ideally it would check if any arguments are variables, but variables aren't supported yet
 	 */
-	private boolean simpleQuery(AngeronaDetailAnswer queryAnswer)
+	public boolean isClosedQuery(FolFormula query)
 	{
 		Atom a = null;
-		FolFormula f = queryAnswer.getAnswerExtended();
-		if(f instanceof Atom) {
-			a = (Atom)f;
-		} else if(f instanceof Negation) {
-			a = ((Negation)f).getAtoms().iterator().next();
+		if(query instanceof Atom) {
+			a = (Atom)query;
+		} else if(query instanceof Negation) {
+			a = ((Negation)query).getAtoms().iterator().next();
 		} else {
-			throw new RuntimeException("'" + f.toString() + "' must be an atom or a negation.");
+			throw new RuntimeException("'" + query.toString() + "' must be an atom or a negation.");
 		}
 		
 		if(a.getPredicate().getArity() > 0)
@@ -220,17 +227,7 @@ public class SubgoalGenerationOperator extends
 		}
 		return true;
 	}
-
-	/**
-	 * Expresses ignorance about a certain topic
-	 */
-	public AngeronaDetailAnswer expressionOfIgnorance(Query query, Agent ag)
-		{
-			FolFormula question = (FolFormula)query.getQuestion();
-			FolFormula expr = new Atom(new Predicate("dontKnow("+question.toString()+")")); 
-			return new AngeronaDetailAnswer(ag.getBeliefs().getWorldKnowledge(), question, expr);
-			
-		}
+	
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
@@ -242,46 +239,40 @@ public class SubgoalGenerationOperator extends
 		
 		
 		Query query = (Query) (ag.getActualPerception()); 
-		AngeronaDetailAnswer[] trueAnswers = 
-				ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
+		AngeronaAnswer trueAnswers = 
+				ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
+			//ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
 		
-		Arrays.sort(trueAnswers, new AnswerComp()); 
+		List<FolFormula> answers = new LinkedList<>(trueAnswers.getAnswers());
+		Collections.sort(answers, new AnswerComp()); 
 		
-		Context context = ContextFactory.createContext(
-				pp.getActualPlan().getAgent().getActualPerception());
-		context.set("answer", trueAnswers[0].getAnswerExtended());
-		
-		LinkedList <AngeronaDetailAnswer> allAnswers = new LinkedList<AngeronaDetailAnswer>();
-		for(AngeronaDetailAnswer truth : trueAnswers)
-		{
-			allAnswers.add(truth);
+		// create lieing alternatives:
+		for(int i=0; i<answers.size(); i++) {
+			if(isClosedQuery(answers.get(0))) {
+				FolFormula simpleLie = new LyingOperator().lie(answers.get(i));
+				answers.add(simpleLie);
+			}
 		}
 		
-		if(allAnswers.size()>0 && simpleQuery(allAnswers.get(0)))
-		{
-			AngeronaDetailAnswer simpleLie = new LyingOperator().lie(allAnswers.get(0), ag.getBeliefs().getWorldKnowledge());
-			allAnswers.add(simpleLie);
-		}
-		
-		
-		AngeronaDetailAnswer ignorance = expressionOfIgnorance(query, ag);
-		allAnswers.add(ignorance);
+		// create ignorance alternative:
+		FolFormula ignorance = expressionOfIgnorance(query);
+		answers.add(ignorance);
 		
 		Skill qaSkillLie = (Skill) qaSkill.deepCopy(); 
 		qaSkillLie.setHonestyStatus(false); 
 		
-		for(AngeronaDetailAnswer ans : allAnswers)
-		{
-			System.out.println("\t"+ans.toString());
+		for(FolFormula ans : answers) {
+			LOG.info("\t"+ans.toString());
 		}
 		
+
+		Context context = ContextFactory.createContext(
+				pp.getActualPlan().getAgent().getActualPerception());
 		Subgoal sg = new Subgoal(ag, des);
-		sg.newStack(qaSkill, context);
-		
-		for(int i=1;i<allAnswers.size();i++)
+		for(int i=0;i<answers.size();i++)
 		{
 			context = new Context(context);
-			FolFormula answer = allAnswers.get(i).getAnswerExtended();
+			FolFormula answer = answers.get(i);
 			context.set("answer", answer);
 			if(answer.toString().contains("dontKnow"))
 			{

@@ -2,14 +2,12 @@ package angerona.fw.mary;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
 /**
 * This file does not correspond to any theoretical operator.
 * The class exists to specify the means by which a lie is generated
-* @author Daniel Dilger
+* @author Daniel Dilger, Tim Janus
 */
 public class LyingOperator {
 	/**
@@ -35,25 +33,18 @@ public class LyingOperator {
 	 */
 	//TODO: make the lying based off of answer sets in the agent's view of the attacking agent, rather than its own worldview
 	//Another LyingOperator could use lying alternatives predefined in XML
-	protected AngeronaDetailAnswer lie(AngeronaDetailAnswer truth, BaseBeliefbase bb)
+	protected FolFormula lie(FolFormula truth)
 	{
-		FolFormula trueAnswer = truth.getAnswerExtended();
-		FolFormula query = (FolFormula) truth.getQuery();
 		FolFormula lie = null;
 		
-		// You had to use Strings because you got the classes from the asp library.
-		// In this case you get them from the first-order-logic lib.
-		if(trueAnswer instanceof Negation)
-		{
-			Negation neg = (Negation)trueAnswer;
+		if(truth instanceof Negation) {
+			Negation neg = (Negation)truth;
 			lie =  neg.getFormula();
 
-		}
-		else
-		{
-			lie = new Negation(trueAnswer);
+		} else {
+			lie = new Negation(truth);
 	
 		}
-		return new AngeronaDetailAnswer(truth.getKnowledgeBase(), query, lie);
+		return lie;
 	}
 }

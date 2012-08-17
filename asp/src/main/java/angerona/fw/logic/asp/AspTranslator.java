@@ -57,7 +57,6 @@ public class AspTranslator extends BaseTranslator {
 
 	private Atom createAtom(FolFormula ff, boolean truth)
 	{
-
 		Atom a = null;
 		if(truth)
 			a = new Atom(ff.toString());
@@ -74,16 +73,9 @@ public class AspTranslator extends BaseTranslator {
 			Rule r = new Rule();
 			
 			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.Atom) {
-				net.sf.tweety.logics.firstorderlogic.syntax.Atom a = 
-						(net.sf.tweety.logics.firstorderlogic.syntax.Atom)ff;
-
 				Atom newAtom = createAtom(ff, true);
-				
 				r.addHead(newAtom);
-				
 			} else if(ff instanceof Negation) {
-				Negation n = (Negation)ff;
-
 				Atom newAtom = createAtom(ff, false);
 				r.addHead(new Neg(newAtom));
 				

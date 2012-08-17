@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
@@ -35,7 +34,7 @@ import angerona.fw.operators.parameter.ReasonerParameter;
  * It supports multiple semantics and has a three valued answer behavior:
  * true, false, unknown
  * 
- * @author Tim Janus
+ * @author Tim Janus, Daniel Dilger
  */
 public class AspReasoner extends BaseReasoner {
 
@@ -400,11 +399,4 @@ public class AspReasoner extends BaseReasoner {
 		}
 		return reval;
 	}
-	@Override
-	public Set<AngeronaDetailAnswer> queryForAllAnswers(FolFormula query) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 }
