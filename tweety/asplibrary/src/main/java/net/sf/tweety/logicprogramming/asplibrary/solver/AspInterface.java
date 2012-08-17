@@ -1,6 +1,7 @@
 package net.sf.tweety.logicprogramming.asplibrary.solver;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,9 +53,16 @@ public class AspInterface
 		  runcmd = cmdIter.next();
 	  while (cmdIter.hasNext())
 		  runcmd = runcmd + " " + cmdIter.next();
-	  
+	
+	/*
+	ProcessBuilder builder = new ProcessBuilder();
+	File wdir = new File(runcmd.substring(0, runcmd.lastIndexOf('/')));
+	builder.directory(wdir);
+	builder.command(cmd);
+	final Process process = builder.start();
+	*/
     final Process process = Runtime.getRuntime().exec( runcmd );
-    
+	
     OutputStream stdin = process.getOutputStream();
     StreamFlusher stdoutFlusher = new StreamFlusher( process.getInputStream() );
     StreamFlusher erroutFlusher = new StreamFlusher( process.getErrorStream() );
@@ -70,8 +78,9 @@ public class AspInterface
     
     stdoutFlusher.start();
     erroutFlusher.start();
+    int reval = 0;
     try {
-      process.waitFor();
+      reval = process.waitFor();
     }
     catch ( InterruptedException e ) {
       e.printStackTrace();
@@ -79,7 +88,12 @@ public class AspInterface
     
     this.outputData = stdoutFlusher.getOutput();
     this.errorData = erroutFlusher.getOutput();
-    
+    if(reval != 0) {
+    	if(reval == -1073741515)
+    		this.errorData.add("process did not exit normally: a dll is missing. - To determine which dll try to start '" + cmd.get(0) + "' from the command line and read the error message.");
+    	else
+    		this.errorData.add("prcoess did not exit normally: " + reval);
+    }
   }
   
   public void executeProgram(String... args) throws IOException {
