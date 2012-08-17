@@ -25,7 +25,15 @@
     </snapshotRepository>
   </distributionManagement>
   
-  
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+	  </snapshots>
+      <id>nexus-angerona-repository</id>
+      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/groups/public</url>
+    </repository>
+  </repositories>
   
   <build>
     <plugins>
