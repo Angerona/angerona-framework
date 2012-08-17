@@ -169,6 +169,17 @@ public class Program extends ArrayList<Rule> {
 		return reval;
 	}
 	
+	/**
+	 * Adds the given atom as fact to the logical program.
+	 * @param fact	atom representing the fact.
+	 * @return
+	 */
+	public boolean add(Atom fact) {
+		Rule r = new Rule();
+		r.addHead(fact);
+		return add(r);
+	}
+	
 	// overload array list methods to keep track of the atoms
 	@Override
 	public boolean add(Rule r) {

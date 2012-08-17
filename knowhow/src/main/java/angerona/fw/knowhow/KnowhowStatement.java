@@ -11,8 +11,13 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
  */
 public class KnowhowStatement {
 	
+	/** the target of the knowhow represent as an elp atom. */
 	private Atom target;
+	
+	/** sub targets of the knowhow-statement, this might be skills or other knowhow statements */
 	private Vector<Atom> subTargets = new Vector<Atom>();
+	
+	/** conditions which have to be true in the beliefbase of the agent */
 	private Vector<Atom> conditions = new Vector<Atom>();
 	
 	/** internal name of the knowhow statement */

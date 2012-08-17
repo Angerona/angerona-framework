@@ -12,16 +12,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Variable;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +52,10 @@ public class KnowhowBase extends BaseAgentComponent {
 			nextAction = Program.loadFrom(new InputStreamReader(is));
 	}
 	
+	/**
+	 * Copy-Ctor copies the knowhow base.
+	 * @param other	reference to the other knowhow base.
+	 */
 	public KnowhowBase(KnowhowBase other) {
 		super(other);
 		nextAction = (Program)other.nextAction.clone();
@@ -106,6 +103,10 @@ public class KnowhowBase extends BaseAgentComponent {
 		return new KnowhowBase(this);
 	}
 	
+	public Program getNextActionProgram() {
+		return nextAction;
+	}
+	
 	public static void main(String [] args) throws SolverException {
 		LOG.info("Programm arguments: '{}'", args);
 		
@@ -131,11 +132,29 @@ public class KnowhowBase extends BaseAgentComponent {
 		KnowhowStatement stmt = new KnowhowStatement(new Atom("bluff"), new Vector<Atom>(), new Vector<Atom>());
 		kb.statements.add(stmt);
 		
-		Program p = KnowhowBuilder.buildExtendedLogicProgram(kb);
+		KnowhowStrategy ks = new KnowhowStrategy(args[0]);
+		Set<String> actions = new HashSet<String>();
+		actions.add("bluff");
+		Set<String> world = new HashSet<String>();
+		world.add("i_play_poker");
+		ks.init(kb, "win", actions, world);
+		for(int i=0; i<10; i++) {
+			int reval = ks.performStep();
+			if(reval == -1) {
+				LOG.info("NO Plan");
+			} else if(reval == 1) {
+				LOG.info("Action: " + ks.getActions());
+				break;
+			}
+		}
+		
+		/*
+		Program p = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
 		Rule is_atomic = new Rule();
 		is_atomic.addHead(new Atom("is_atomic", new Constant("bluff")));
 		p.add(is_atomic);
 		p.add(kb.initTree);
+		
 		p.add(kb.nextAction);
 		System.out.println(p.toString());
 		System.out.println();
@@ -143,44 +162,58 @@ public class KnowhowBase extends BaseAgentComponent {
 		int maxIt = 10;
 		boolean run = true;
 		AnswerSetList asl = null;
+		String state_str = "intentionAdded";
 		while(run) {
-			run = false;
 			DLVComplex dlvComplex = new DLVComplex(args[0]);
 			asl = dlvComplex.computeModels(p, 10);
-			LOG.info(asl.toString());
-			
-			Atom toSearchVariable = new Atom("act", new Variable("A"));
-			Set<Literal> variable = new HashSet<Literal>();
-			variable.add(toSearchVariable);
-			
-			Atom toSearchIdentity = new Atom("act", new Constant("bluff"));
-			Set<Literal> constant = new HashSet<Literal>();
-			constant.add(toSearchIdentity);
-			
-			variable.add(toSearchVariable);
-			for(int i=0; i<asl.size(); ++i) {
-				AnswerSet as = asl.get(i);
-				if(as.containsAll(variable)) {
-					run = true;
-					break;
-				}
-				
-				if(as.containsAll(constant)) {
-					run = true;
-					System.out.println("Only constant worked");
-					break;
-				}
-			}
 			
 			maxIt--;
 			if(maxIt <= 0)
 				run = false;
 			
+			// proof if we have an atomar action:
+			Set<Literal> act = asl.getFactsByName("new_act");
+			if(act.size()!=0) {
+				LOG.info("Next action: " + act.iterator().next().toString());
+				break;
+			}
+			
+			// create new intention tree:
+			Program newInit = new Program();
+			Atom new_state = temp(asl, "state");
+			if(new_state == null)
+				newInit.add((Atom)asl.getFactsByName("state").iterator().next());
+			else
+				newInit.add(new_state);
+			
+			Atom new_khstate = temp(asl, "khstate");
+			if(new_khstate == null)
+				newInit.add((Atom)asl.getFactsByName("khstate").iterator().next());
+			else
+				newInit.add(new_khstate);
+			
+			if(	state_str.equals("actionPerformed") ||
+				state_str.equals("khAdded")	) {
+				Atom new_istack = temp(asl, "istack");
+				if(new_istack == null)
+					break;
+				newInit.add(new_istack);
+			} else {
+				Literal old_istack = asl.getFactsByName("istack").iterator().next();
+				newInit.add((Atom)old_istack);
+			}
+			
+			// update state:
+			if(new_state != null)
+				state_str = new_state.getTermStr(0);
+			LOG.info(newInit.toString());
+			
 			// update program:
-			p = KnowhowBuilder.buildExtendedLogicProgram(kb);
+			p = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
 			p.add(is_atomic);
 			p.add(kb.nextAction);
-			
+			p.add(newInit);
 		}
+		*/
 	}
 }
