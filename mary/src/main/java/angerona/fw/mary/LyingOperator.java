@@ -31,8 +31,6 @@ public class LyingOperator {
 	 * @param truth
 	 * @return
 	 */
-	//TODO: make the lying based off of answer sets in the agent's view of the attacking agent, rather than its own worldview
-	//Another LyingOperator could use lying alternatives predefined in XML
 	protected FolFormula lie(FolFormula truth)
 	{
 		FolFormula lie = null;

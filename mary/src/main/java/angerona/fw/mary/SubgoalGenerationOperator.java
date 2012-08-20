@@ -246,17 +246,20 @@ public class SubgoalGenerationOperator extends
 		List<FolFormula> answers = new LinkedList<>(trueAnswers.getAnswers());
 		Collections.sort(answers, new AnswerComp()); 
 		
+		List<FolFormula> lies = new LinkedList<>();
 		// create lieing alternatives:
 		for(int i=0; i<answers.size(); i++) {
-			if(isClosedQuery(answers.get(0))) {
+			//if(isClosedQuery(answers.get(i))) {
+			if(answers.get(i).isGround()) {
 				FolFormula simpleLie = new LyingOperator().lie(answers.get(i));
-				answers.add(simpleLie);
+				lies.add(simpleLie);
 			}
 		}
 		
+		
 		// create ignorance alternative:
 		FolFormula ignorance = expressionOfIgnorance(query);
-		answers.add(ignorance);
+		lies.add(ignorance);
 		
 		Skill qaSkillLie = (Skill) qaSkill.deepCopy(); 
 		qaSkillLie.setHonestyStatus(false); 
@@ -265,29 +268,24 @@ public class SubgoalGenerationOperator extends
 			LOG.info("\t"+ans.toString());
 		}
 		
-
 		Context context = ContextFactory.createContext(
 				pp.getActualPlan().getAgent().getActualPerception());
 		Subgoal sg = new Subgoal(ag, des);
-		for(int i=0;i<answers.size();i++)
-		{
+		createSubgoals(answers, qaSkill, sg, context);
+		createSubgoals(lies, qaSkillLie, sg, context);
+		ag.getPlanComponent().addPlan(sg);
+		
+		return true;
+	}
+	
+	private void createSubgoals(List<FolFormula> answers, Skill usedSkill, Subgoal sg, Context context) {
+		for(int i=0;i<answers.size();i++) {
 			context = new Context(context);
 			FolFormula answer = answers.get(i);
 			context.set("answer", answer);
-			if(answer.toString().contains("dontKnow"))
-			{
-				Skill curLie = qaSkillLie.deepCopy();
-				sg.newStack(curLie, context);
-			}
-			else
-			{
-				Skill curAns = qaSkill.deepCopy();
-				sg.newStack(curAns, context);
-			}
+			Skill curSkill = usedSkill.deepCopy();
+			sg.newStack(curSkill, context);
 		}
-		
-		ag.getPlanComponent().addPlan(sg);
-		return true;
 	}
 	
 }
