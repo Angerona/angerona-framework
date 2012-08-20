@@ -4,11 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
@@ -23,7 +28,9 @@ import angerona.fw.logic.BaseTranslator;
  * @author Tim Janus
  */
 public class AspTranslator extends BaseTranslator {
-
+	/** reference to the logback instance used for logging */
+	private static Logger LOG = LoggerFactory.getLogger(AspTranslator.class);
+	
 	@Override
 	protected BaseBeliefbase translatePerceptionInt(Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
@@ -55,13 +62,13 @@ public class AspTranslator extends BaseTranslator {
 		return reval;
 	}
 
-	private Atom createAtom(FolFormula ff, boolean truth)
+	private Literal createLiteral(FolFormula ff, boolean truth)
 	{
-		Atom a = null;
+		Literal a = null;
 		if(truth)
 			a = new Atom(ff.toString());
 		else
-			a = new Atom(ff.toString().substring(1));
+			a = new Neg(new Atom(ff.toString().substring(1)));
 			
 		return a;
 	}
@@ -73,16 +80,20 @@ public class AspTranslator extends BaseTranslator {
 			Rule r = new Rule();
 			
 			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.Atom) {
-				Atom newAtom = createAtom(ff, true);
+				Literal newAtom = createLiteral(ff, true);
 				r.addHead(newAtom);
 			} else if(ff instanceof Negation) {
-				Atom newAtom = createAtom(ff, false);
-				r.addHead(new Neg(newAtom));
+				Literal newAtom = createLiteral(ff, false);
+				r.addHead(newAtom);
 				
 			} else {
 				continue;
 			}
-			newInfo.add(r);
+			if(r.isSafe())
+				newInfo.add(r);
+			else
+				LOG.warn("Translate skips the unsafe rule: '{}', might produce strange behavior.", r.toString());
+				
 		}
 		return newInfo;
 	}

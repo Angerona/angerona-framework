@@ -204,32 +204,6 @@ public class SubgoalGenerationOperator extends
 		
 	}
 	
-	/**
-	 * Checks whether the query is a simple true/false type question or not
-	 * Ideally it would check if any arguments are variables, but variables aren't supported yet
-	 */
-	public boolean isClosedQuery(FolFormula query)
-	{
-		Atom a = null;
-		if(query instanceof Atom) {
-			a = (Atom)query;
-		} else if(query instanceof Negation) {
-			a = ((Negation)query).getAtoms().iterator().next();
-		} else {
-			throw new RuntimeException("'" + query.toString() + "' must be an atom or a negation.");
-		}
-		
-		if(a.getPredicate().getArity() > 0)
-		{
-			List<Term> arguments = a.getArguments();
-			String firstArgName = arguments.get(0).getName();
-			if(firstArgName.equals(firstArgName.toUpperCase()))
-				return true;
-			return false;
-		}
-		return true;
-	}
-	
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{

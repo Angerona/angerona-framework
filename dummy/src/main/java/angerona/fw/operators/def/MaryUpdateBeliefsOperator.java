@@ -18,7 +18,7 @@ import angerona.fw.operators.parameter.UpdateBeliefsParameter;
 /**
  * Update Beliefs Operator which enables the weakening of secrets.
  * The major difference between this operator and the previous belief update operator is that this one records the degree by which an agent has weakened its secrets by its actions.
- * @author dilger
+ * @author Dilger, Janus
  *
  */
 public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
@@ -50,8 +50,7 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			
 			bb.addKnowledge(naa);
 
-			for(Secret secret : conf.getTargets()) 
-			{
+			for(Secret secret : conf.getTargets())  {
 
 				if(weakenings == null)
 				{

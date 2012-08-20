@@ -72,4 +72,9 @@ public class Neg implements Literal {
 			return false;
 		}
 	}
+
+	@Override
+	public boolean isGround() {
+		return atom.isGround();
+	}
 }
