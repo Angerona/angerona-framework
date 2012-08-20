@@ -249,35 +249,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		return answer;
 	}
 	
-	/**
-	 * This method returns an AngeronaDetailAnswer, which is based on the FolFormula class instead of the AnswerValue enum.
-	 * NOTE: This class would be better in a custom AngeronaDetailBeliefbase class
-	 * @param query
-	 * @return AngeronaDetailAnswer
-	 */
-	/*It's not good that such a specific method for the Mary scenario is in the base class...
-	public AngeronaDetailAnswer detailReason(FolFormula query)
-	{
-		if(reasoningOperators.def() == null)
-			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
-		else if(!isFormulaValid(query)) 
-			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaDetailAnswer answer = (AngeronaDetailAnswer) reasoningOperators.def().query(this, query);
-		return answer;
-	}
-	*/
-	//can also use getDefaultReasoningOperator()
-	/*It's not good that such a specific method for the Mary scenario is in the base class...
-	public Set<AngeronaDetailAnswer> allDetailReasons(FolFormula query)
-	{
-		if(reasoningOperators.def() == null)
-			throw new RuntimeException("Can't reason on a beliefbase which doesn't has a valid reasoning Operator");
-		else if(!isFormulaValid(query)) 
-			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		Set<AngeronaDetailAnswer> answers = reasoningOperators.def().queryForAllAnswers(this, query);
-		return answers;
-	}
-	*/
+
 	public Set<FolFormula> infere() {
 		return reasoningOperators.def().infer(this);
 	}
@@ -309,11 +281,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		RelationalFormula fol = (RelationalFormula)query;
 		if(!supportsQuantifiers && fol.containsQuantifier()) {
 			reason = RES_HAS_QUANTIFIERS;
-			return false;
-		}
-		
-		if(!supportsVariables && !fol.isGround()) {
-			reason = RES_HAS_VARIABLES;
 			return false;
 		}
 		

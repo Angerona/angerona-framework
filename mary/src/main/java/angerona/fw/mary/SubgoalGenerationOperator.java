@@ -13,6 +13,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
+import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,6 @@ import angerona.fw.Desire;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
-import angerona.fw.comm.DetailQuery;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Desires;
@@ -42,6 +42,9 @@ import angerona.fw.reflection.ContextFactory;
 public class SubgoalGenerationOperator extends
 		angerona.fw.operators.def.SubgoalGenerationOperator {
 	private static Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
+	
+	/** flag indicating if the lies should be generated. */
+	private boolean generateLies = false;
 	
 	@Override
 	protected Boolean processInt(SubgoalGenerationParameter pp) {
@@ -95,8 +98,7 @@ public class SubgoalGenerationOperator extends
 		/**
 		 * Should be way to ensure that what is being parsed is in fact an integer
 		 */
-		class DesireComp implements Comparator<Desire>
-		{
+		class DesireComp implements Comparator<Desire> {
 			
 			public int compare(Desire f1, Desire f2)
 			{
@@ -155,7 +157,7 @@ public class SubgoalGenerationOperator extends
 					{
 						if(name.equals(name.toUpperCase()))
 						{
-							terms.add(new Constant(name)); //Variables not supported right now
+							terms.add(new Variable(name)); //Variables not supported right now
 						}
 						else
 						{
@@ -164,9 +166,9 @@ public class SubgoalGenerationOperator extends
 					}
 				}
 				
-				Skill query = (Skill) ag.getSkill("DetailQuery");
+				Skill query = (Skill) ag.getSkill("Query");
 				if(query == null) {
-					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "DetailQuery");
+					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
@@ -175,7 +177,7 @@ public class SubgoalGenerationOperator extends
 					predName = predName.substring(1);
 					f = new Negation(new Atom(new Predicate(predName, terms.size()), terms));
 				}
-				sg.newStack(query, new DetailQuery(ag.getName(), recvName, f).getContext());
+				sg.newStack(query, new Query(ag.getName(), recvName, f).getContext());
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
 				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 
@@ -231,28 +233,29 @@ public class SubgoalGenerationOperator extends
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
-		Skill qaSkill = (Skill) ag.getSkill("DetailQueryAnswer");
+		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
 		if(qaSkill == null) {
-			LOG.warn("Agent '{}' does not have Skill: 'DetailQueryAnswer'", ag.getName());
+			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
 			return false;
 		}
 		
 		
 		Query query = (Query) (ag.getActualPerception()); 
-		AngeronaAnswer trueAnswers = 
+		AngeronaAnswer trueAnswer = 
 				ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
-			//ag.getBeliefs().getWorldKnowledge().allDetailReasons((FolFormula)query.getQuestion()).toArray(new AngeronaDetailAnswer[0]);
 		
-		List<FolFormula> answers = new LinkedList<>(trueAnswers.getAnswers());
+		List<FolFormula> answers = new LinkedList<>(trueAnswer.getAnswers());
 		Collections.sort(answers, new AnswerComp()); 
 		
 		List<FolFormula> lies = new LinkedList<>();
-		// create lieing alternatives:
-		for(int i=0; i<answers.size(); i++) {
-			//if(isClosedQuery(answers.get(i))) {
-			if(answers.get(i).isGround()) {
-				FolFormula simpleLie = new LyingOperator().lie(answers.get(i));
-				lies.add(simpleLie);
+		if(generateLies) {
+			// create lieing alternatives:
+			for(int i=0; i<answers.size(); i++) {
+				//if(isClosedQuery(answers.get(i))) {
+				if(answers.get(i).isGround()) {
+					FolFormula simpleLie = new LyingOperator().lie(answers.get(i));
+					lies.add(simpleLie);
+				}
 			}
 		}
 		

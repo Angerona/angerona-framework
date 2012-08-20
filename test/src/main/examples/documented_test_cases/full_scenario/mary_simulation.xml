@@ -15,10 +15,6 @@
         	</beliefbase-config>
          
 		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/DetailQueryAnswer.xml</source>
-        	</skill>
-
-		<skill class="angerona.fw.serialize.SkillConfigImport">
 			<source>config/skills/QueryAnswer.xml</source>
         	</skill>
 
@@ -40,7 +36,7 @@
         	 </beliefbase-config>
         	
 		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/DetailQuery.xml</source>
+			<source>config/skills/Query.xml</source>
         	</skill>
 
 	 	<desire>q_Mary(said(X))_1</desire>   

@@ -42,6 +42,13 @@ public class AngeronaAnswer extends Answer {
 		setAnswer(av);
 	}
 	
+	public AngeronaAnswer(BeliefBase beliefBase, FolFormula query, FolFormula answer) {
+		super(beliefBase, query);
+		Set<FolFormula> answers = new HashSet<>();
+		answers.add(answer);
+		setAnswer(answers);
+	}
+	
 	public AngeronaAnswer(BeliefBase beliefBase, FolFormula query, Set<FolFormula> formulas) {
 		super(beliefBase, query);
 		setAnswer(formulas);
@@ -66,6 +73,7 @@ public class AngeronaAnswer extends Answer {
 			throw new IllegalArgumentException("Parameter formulas must not be null.");
 		}
 		answers = new HashSet<>(formulas);
+		this.answerValue = AnswerValue.AV_COMPLEX;
 		updateValues(!formulas.isEmpty());
 	}
 	
@@ -80,6 +88,32 @@ public class AngeronaAnswer extends Answer {
 	
 	public AnswerValue getAnswerValue() {
 		return answerValue;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof AngeronaAnswer))
+			return false;
+		
+		AngeronaAnswer aa = (AngeronaAnswer)other;
+		if(this.answerValue != aa.answerValue)
+			return false;
+		
+		if(this.answerValue == AnswerValue.AV_COMPLEX) {
+			if(!this.answers.equals(aa.answers))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		if(answerValue == AnswerValue.AV_COMPLEX) {
+			return answers.toString();
+		} else {
+			return answerValue.toString();
+		}
 	}
 
 	public static AnswerValue valueOf(String s) {

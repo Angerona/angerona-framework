@@ -1,5 +1,6 @@
 package angerona.fw.operators.def;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.DetailQueryAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.asp.AspBeliefbase;
@@ -46,7 +47,7 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 			
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
-			if(views.containsKey(a.getReceiverId())) {
+			if(views.containsKey(a.getReceiverId()) && a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) {
 				
 				AspBeliefbase view = (AspBeliefbase) views.get(a.getReceiverId()).clone();
 				Program prog = view.getProgram();
@@ -66,17 +67,20 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 					conf.removeConfidentialTarget(remove);
 				}
 				
-				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
-				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
+				// TODO: Merge the violates operators... this one only supports open questions...
 				
-				String ruleString = dqa.getDetailAnswer().toString();
-				ruleString += "."; /* Assume information given is always a fact */
-				/* Quick fix to bridge representations of ! and - */
-				if(ruleString.startsWith("!"))
-				{
-					ruleString = "-" + ruleString.substring(1);
+				Set<FolFormula> answers = new HashSet<>();
+				answers = a.getAnswer().getAnswers();
+				if(answers.size() > 1) {
+					LOG.warn("More than one answer but '" + this.getClass().getSimpleName() + "' only works with one (first).");
+				} else if(answers.size() == 0) {
+					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
+					return new Boolean(false);
 				}
-				Rule rule = new Rule(ruleString);
+				FolFormula answer = answers.iterator().next();
+				LOG.info("Make Revision for DetailQueryAnswer: '{}'", answer);
+				
+				Rule rule = new Rule(answer.toString());
 				System.out.println(prog.toString());
 				/* Check if the information is already present in the view
 				If it is then no violation possible */
@@ -84,14 +88,8 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				
 				/* Check program after expansion */
 				Set<FolFormula> newAns = null;
-				try
-				{
-					newAns = view.infere();
-				}
-				catch (IndexOutOfBoundsException ie)
-				{
+				newAns = view.infere();
 					
-				}
 				if (newAns==null)
 				{
 					report(param.getAgent().getName() + "' creates contradiction by: '" + param.getAction() + "'", view);

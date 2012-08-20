@@ -1,8 +1,7 @@
 package angerona.fw.comm;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import angerona.fw.Action;
-import angerona.fw.logic.AnswerValue;
+import angerona.fw.logic.AngeronaAnswer;
 
 /**
  * Implementation of the speech act "Answer".
@@ -13,8 +12,8 @@ public class Answer extends SpeechAct {
 	/** the formula representing the question */
 	private FolFormula regarding;
 	
-	/** the value of the answer */
-	private AnswerValue answer;
+	/** the object containing information about the answer. */
+	private AngeronaAnswer answer;
 	
 	/**
 	 * Ctor: Generates the Answer speech act by the following parameters.
@@ -23,7 +22,7 @@ public class Answer extends SpeechAct {
 	 * @param regarding		formula representing the question
 	 * @param answer		the value of the answer.
 	 */
-	public Answer(String senderId, String receiverId, FolFormula regarding, AnswerValue answer) {
+	public Answer(String senderId, String receiverId, FolFormula regarding, AngeronaAnswer answer) {
 		super(senderId, receiverId);
 		this.regarding = regarding;
 		this.answer = answer;
@@ -34,13 +33,12 @@ public class Answer extends SpeechAct {
 		return regarding;
 	}
 	
-	/** @return the formula representing the question */
-	public void setAnswer(AnswerValue val) {
+	public void setAnswer(AngeronaAnswer val) {
 		answer = val;
 	}
 	
 	/** @return the value of the answer */
-	public AnswerValue getAnswer() {
+	public AngeronaAnswer getAnswer() {
 		return answer;
 	}
 	
@@ -48,30 +46,24 @@ public class Answer extends SpeechAct {
 	public String toString() {
 		return "< " + getSenderId() + " answers " + getReceiverId() + " " + regarding.toString() + "=" + answer.toString() + " >";
 	}
-	//************Begin Daniel's changes*************//
+	
 	@Override 
-	public boolean equals(Action a)
+	public boolean equals(Object obj)
 	{
-		if (a instanceof Answer)
+		if (obj instanceof Answer)
 		{
-			Answer ans = (Answer) a;
-			if(!super.equals(a))
-			{
+			Answer ans = (Answer) obj;
+			if(!super.equals(obj)) {
 				return false;
 			}
-			if(!this.regarding.equals(ans.getRegarding()))
-			{
+			if(!this.regarding.equals(ans.getRegarding())) {
 				return false;
 			}
-			if(this.answer != ans.getAnswer())
-			{
+			if(!this.answer.equals(ans.getAnswer())) {
 				return false;
 			}
 			return true;
 		}
 		return false;
 	}
-	
-	//************End Daniel's changes*************//
-	
 }

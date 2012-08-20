@@ -3,6 +3,7 @@ package angerona.fw.operators.def;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.DetailQueryAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.logic.Secret;
@@ -26,7 +27,7 @@ import angerona.fw.operators.parameter.ViolatesParameter;
  * Extension of my DetailSimpleViolatesOperator which enables one to weaken secrecy.
  * The operator determines which secrets would be affected by an action.
  * It returns a list of pairs containing the secret and the degree by which it would be weakened. 
- * @author dilger
+ * @author Dilger
  *
  */
 public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
@@ -126,34 +127,36 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 			}
 			
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
-			if(views.containsKey(a.getReceiverId())) 
+			if(views.containsKey(a.getReceiverId()) && a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) 
 			{
 				
+				// TODO: Merge violates operators
 				AspBeliefbase view = (AspBeliefbase) views.get(a.getReceiverId()).clone();
 				Program prog = view.getProgram();
 				
-				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
-				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
+				Set<FolFormula> answers = a.getAnswer().getAnswers();
+				if(answers.size() > 1) {
+					LOG.warn("More than one answer but '" + this.getClass().getSimpleName() + "' only works with one (first).");
+				} else if(answers.size() == 0) {
+					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
+					return secretList;
+				}
+				FolFormula answer = answers.iterator().next();
+				LOG.info("Make Revision for QueryAnswer: '{}'", answer);
 				
-				FolFormula answerFormula = dqa.getDetailAnswer();
-				Rule rule = convertToRule(answerFormula);
+				Rule rule = convertToRule(answer);
 				
 				prog.add(rule);
 				
 				/*Check for contradictions. If one is found consider all secrets totally revealed*/ 
 				List<AnswerSet> newAnsSets = null;
-				try
-				{
-					AspReasoner ar = (AspReasoner) view.getReasoningOperator();
-					ar.infer(view);
-					view.infere();
-					newAnsSets = ar.processAnswerSets();
-					prog = view.getProgram();
-				}
-				catch (IndexOutOfBoundsException ie)
-				{
-					
-				}
+				
+				AspReasoner ar = (AspReasoner) view.getReasoningOperator();
+				ar.infer(view);
+				view.infere();
+				newAnsSets = ar.processAnswerSets();
+				prog = view.getProgram();
+			
 				if (newAnsSets==null)
 				{
 					String actString = param.getAction().toString();
@@ -163,8 +166,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 				}
 				
 				/* Now the secrecy strengths get added */
-				for(Secret secret : conf.getTargets()) 
-				{
+				for(Secret secret : conf.getTargets())  {
 					FolFormula secretInfo = (FolFormula) secret.getInformation(); 
 					// not used: (kill warning TJ)
 					//	Rule secretRule = convertToRule(secretInfo);
@@ -198,24 +200,18 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 						sPair.defineDegreeOfWeakening(degreeOfWeakening);
 						secretList.add(sPair);
 						String actString = param.getAction().toString();
-						if(degreeOfWeakening > 0)
-						{
+						if(degreeOfWeakening > 0) {
 							report(param.getAgent().getName() + "' <b> weakens secret: </b> '"+secretInfo.toString()+"' by: '"+degreeOfWeakening+"' with: '"
 						+ actString.substring(0, actString.length()-1) + "'", view);
-						}
-						else
-						{
+						} else {
 							report(param.getAgent().getName() + "' <b> weakens no secrets </b> ' with: '"
 									+ actString.substring(0, actString.length()-1) + "'", view);
 						}
-					}
-					else
-					{
+					} else {
 						String actString = param.getAction().toString();
 						report(param.getAgent().getName() + "' <b> weakens no secrets: </b> ' with: '"
 								+ actString.substring(0, actString.length()-1) + "'", view);
 					}
-					
 				}
 			}
 		}

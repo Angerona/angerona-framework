@@ -1,11 +1,15 @@
 package angerona.fw.internal;
 
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.Perception;
@@ -54,7 +58,17 @@ public abstract class PerceptionFactory {
 			if(obj instanceof FolFormula) {
 				return (FolFormula)obj;
 			} else if(obj instanceof String) {
-				return new Atom(new Predicate(obj.toString()));
+				String str = (String)obj;
+				FolParserB parser = new FolParserB(new StringReader(str));
+				Atom reval = null;
+				try {
+					reval = parser.atom(new FolSignature());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return reval;
 			} else {
 				throw new ClassCastException("Cannot cast: " + obj.toString() + " to FolFormula");
 			}

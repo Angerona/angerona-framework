@@ -56,10 +56,13 @@ public class Action implements Perception, ContextProvider {
 		return ContextFactory.createContext(this);
 	}
 	//************Begin Daniel's changes*************//
-	public boolean equals(Action a)
+	public boolean equals(Object obj)
 	{
-		if(!this.sender.equals(a.sender))
-		{
+		if(!(obj instanceof Action)) 
+			return false;
+		
+		Action a = (Action)obj;
+		if(!this.sender.equals(a.sender)) {
 			return false;
 		}
 		if(!this.receiver.equals(a.receiver))

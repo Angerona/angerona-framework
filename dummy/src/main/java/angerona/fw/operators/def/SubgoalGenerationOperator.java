@@ -1,9 +1,13 @@
 package angerona.fw.operators.def;
 
+import java.io.StringReader;
 import java.util.Set;
 
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
@@ -92,7 +96,17 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
-				sg.newStack(rr, new RevisionRequest(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
+				FolParserB parser = new FolParserB(new StringReader(content));
+				Atom a = null;
+				try {
+					a = parser.atom(new FolSignature());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				Context c = new RevisionRequest(ag.getName(), recvName, a).getContext();
+				sg.newStack(rr, c);
 				ag.getPlanComponent().addPlan(sg);
 				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), ag.getPlanComponent());
 				reval = true;

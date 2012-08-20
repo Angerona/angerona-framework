@@ -12,7 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.DetailQueryAnswer;
+import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseTranslator;
 
@@ -29,20 +29,20 @@ public class AspTranslator extends BaseTranslator {
 		AspBeliefbase reval = new AspBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
 		
-		if(p instanceof DetailQueryAnswer) {
-			DetailQueryAnswer da = (DetailQueryAnswer)p;
-			formulas.add(da.getDetailAnswer());
-		}
-		else if(p instanceof Answer) {
+		if(p instanceof Answer) {
 			Answer answer = (Answer)p;
-			FolFormula knowledge = answer.getRegarding();
-			if(answer.getAnswer() == AnswerValue.AV_FALSE) {
-				knowledge = new Negation(knowledge);
-			} else if(answer.getAnswer() == AnswerValue.AV_UNKNOWN) {
-				return reval;
+			AngeronaAnswer aa = answer.getAnswer();
+			if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
+				return translateFOL(aa.getAnswers());
+			} else {
+				FolFormula knowledge = answer.getRegarding();
+				if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
+					knowledge = new Negation(knowledge);
+				} else if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
+					return reval;
+				}
+				formulas.add(knowledge);
 			}
-
-			formulas.add(knowledge);
 		} 
 
 		return translateFOLInt(formulas);

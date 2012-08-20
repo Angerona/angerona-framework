@@ -13,12 +13,9 @@
 				<source>config/beliefbases/asp_detail_beliefbase.xml</source>
         	</beliefbase-config>
          
-		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/DetailQueryAnswer.xml</source>
-        	</skill>
 
-		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/QueryAnswer.xml</source>
+			<skill class="angerona.fw.serialize.SkillConfigImport">
+				<source>config/skills/QueryAnswer.xml</source>
         	</skill>
 	</agent-instance>
       
@@ -34,8 +31,8 @@
         	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
         	 </beliefbase-config>
         	
-		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/DetailQuery.xml</source>
+			<skill class="angerona.fw.serialize.SkillConfigImport">
+				<source>config/skills/Query.xml</source>
         	</skill>
 
 	<!-- 	<desire>q_Mary(who_argued(X))_1</desire> -->  

@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.DefaultPerceptionFactory;
-import angerona.fw.internal.DetailPerceptionFactory;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.logic.Beliefs;
@@ -43,7 +42,7 @@ public class AngeronaEnvironment extends APR {
 	/** implementation of the factory used for perceptions */
 	//I want this to be plugin-implemented
 	//private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
-	private PerceptionFactory perceptionFactory = new DetailPerceptionFactory();
+	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
 	
 	/** flag indicating if the environment is currently in its update process */
 	protected boolean doingTick = false;

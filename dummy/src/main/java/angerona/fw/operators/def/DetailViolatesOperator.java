@@ -3,20 +3,23 @@ package angerona.fw.operators.def;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.DetailQueryAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.parameter.ViolatesParameter;
 
 /**
 * This version of the violates operator allows for answers of the detail answer speech act type. 
-* @author Daniel Dilger
+* @author Daniel Dilger, Tim Janus
 */
 
 public class DetailViolatesOperator extends ViolatesOperator {
@@ -33,7 +36,7 @@ public class DetailViolatesOperator extends ViolatesOperator {
 			
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
-			if(views.containsKey(a.getReceiverId())) {
+			if(views.containsKey(a.getReceiverId()) && a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) {
 				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); 
 				
 				List<Secret> toRemove = new LinkedList<Secret>();
@@ -49,9 +52,18 @@ public class DetailViolatesOperator extends ViolatesOperator {
 					conf.removeConfidentialTarget(remove);
 				}
 				
-				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
-				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
-				view.addKnowledge(dqa.getDetailAnswer());
+				Set<FolFormula> answers = a.getAnswer().getAnswers();
+				if(answers.size() > 1) {
+					LOG.warn("More than one answer but '" + this.getClass().getSimpleName() + "' only works with one (first).");
+				} else if(answers.size() == 0) {
+					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
+					return new Boolean(false);
+				}
+				
+				FolFormula answer = answers.iterator().next();
+				// TODO: Move this into the default Violates Operator and let it support open and closed queries / answers.
+				LOG.info("Make Revision for DetailQueryAnswer: '{}'", answer);
+				view.addKnowledge(answer);
 				
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
