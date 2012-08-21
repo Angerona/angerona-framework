@@ -2,52 +2,31 @@ package angerona.fw;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import angerona.fw.error.InvokeException;
 import angerona.fw.logic.SecrecyStrengthPair;
-import angerona.fw.reflection.Context;
-import angerona.fw.reflection.ContextFactory;
-import angerona.fw.reflection.ContextVisitor;
-import angerona.fw.reflection.ReasonVisitor;
-import angerona.fw.reflection.SendActionVisitor;
-import angerona.fw.reflection.UpdateBeliefbaseVisitor;
-import angerona.fw.serialize.SkillConfig;
-import angerona.fw.serialize.Statement;
 
-/** A skill represents an atomic intention an agent can perform */
-public class Skill extends Intention implements Runnable {
+/** 
+ * 	A skill represents an atomic intention an agent can perform.
+ * 	This is the abstract base class for a Skill. Subclasses can implement
+ *  the run method to give the skill its own behavior.
+ *  
+ * 	@see angerona.fw.internal.XMLSkill
+ * 	@author Tim Janus
+ */
+public abstract class Skill extends Intention implements Runnable {
 
 	/** the unique name of the Skill */
 	private String name;
 	
-	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(Skill.class);
-	
-	/** data-structure containing the configuration of the skill (set of operations) */
-	private SkillConfig config;
-	
-	private boolean violates = false;
-	
-	/* Begin Daniel's changes */
-	
-	private Context rememberedContext = null;
-	
-	public Context getRememberedContext()
-	{
-		return rememberedContext;
-	}
+	protected boolean violates = false;
 	
 	/* These changes need to be isolate or otherwise changed -- Daniel */
-	private List<SecrecyStrengthPair> weakenings = null;
+	protected List<SecrecyStrengthPair> weakenings = null;
 	
-	
-	public Skill(Agent agent, SkillConfig config) {
+	public Skill(Agent agent, String name) {
 		super(agent);
-		this.name = config.getName();
-		this.config = config;
+		this.name = name;
 	}
+	
 	public Skill(Skill s)
 	{
 		super(s.agent);
@@ -57,7 +36,6 @@ public class Skill extends Intention implements Runnable {
 		this.cost = s.cost;
 		this.honesty = s.honesty;
 		this.name = s.name;
-		this.config = s.config;
 		this.violates = s.violates;
 		this.weakenings = s.weakenings;
 	}
@@ -81,54 +59,6 @@ public class Skill extends Intention implements Runnable {
 	/** @return the unique name of the Skill */
 	public String getName() {
 		return name;
-	}
-	
-	@Override
-	public void run() {
-		Agent a = getAgent();
-		violates = false;
-		Context c = a.getContext();
-		Context in = null;
-		if(objectContainingContext instanceof Context) {
-			in = (Context) objectContainingContext;
-		} else {
-			in = ContextFactory.createContext(objectContainingContext);
-		}
-		c.attachContext("in", in);
-		
-		for(Statement st : config.getStatements()) {
-			ContextVisitor cv = null;
-			String cmd = st.getCommandoName();
-			boolean sendAction = false;
-			
-			if(cmd.equalsIgnoreCase("UpdateBB")) {
-				cv = new UpdateBeliefbaseVisitor();
-			} else if(cmd.equalsIgnoreCase("Reason")) {
-				cv = new ReasonVisitor();
-			} else if(cmd.equalsIgnoreCase("SendAction")) {
-				cv = new SendActionVisitor(
-						a.getEnvironment().getPerceptionFactory(), realRun, a.getBeliefs());
-				sendAction = true;
-			}
-			
-			if(cv != null) {
-				try {
-					c.Invoke(cv, st);
-					if(sendAction && !realRun) {
-						violates = ((SendActionVisitor)cv).violates();
-						weakenings = ((SendActionVisitor)cv).weakenings();
-					}
-				} catch(InvokeException ex) {
-					ex.printStackTrace();
-					LOG.error("Invoke-Exception during Agent cycle: " + ex.getMessage());
-				}
-			}
-		}
-		
-		c.detachContext("in");
-		
-		if(parent != null && realRun)
-			parent.onSubgoalFinished(this);
 	}
 
 	@Override
@@ -165,9 +95,5 @@ public class Skill extends Intention implements Runnable {
 	 * In the future, Skill probably shouldn't have a deepCopy, as it shouldn't need it. 
 	 * Thus Skill doesn't need to implement cloneable
 	 */
-	public Skill deepCopy()
-	{
-		return new Skill(this);
-	}
-	
+	public abstract Skill deepCopy();
 }

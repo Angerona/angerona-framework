@@ -316,7 +316,7 @@ public class AngeronaEnvironment extends APR {
 		behavior.sendAction(this, (Action)action);
 	}
 
-	PerceptionFactory getPerceptionFactory() {
+	public PerceptionFactory getPerceptionFactory() {
 		return perceptionFactory;
 	}
 

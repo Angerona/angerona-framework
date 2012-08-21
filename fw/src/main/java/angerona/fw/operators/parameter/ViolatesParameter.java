@@ -6,6 +6,7 @@ import angerona.fw.AngeronaAtom;
 import angerona.fw.logic.Beliefs;
 
 public class ViolatesParameter extends GenericOperatorParameter {
+	/** reference to the agent which will apply the action */
 	private Agent agent;
 	
 	/** the action applied before proofing for violation */

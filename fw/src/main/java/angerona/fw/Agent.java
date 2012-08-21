@@ -25,6 +25,7 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.internal.XMLSkill;
 import angerona.fw.listener.AgentListener;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.listener.SubgoalListener;
@@ -391,7 +392,7 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	 * @throws AgentInstantiationException
 	 */
 	public void addSkill(SkillConfig skillConfig) throws AgentInstantiationException {
-		Skill act = new Skill(this, skillConfig);
+		Skill act = new XMLSkill(this, skillConfig);
 		if(skills.containsKey(skillConfig.getName())) {
 			throw new AgentInstantiationException("Skill with name: '" + skillConfig.getName() + "' already exists. Names of atomic Intentions / Skills must be unique.");
 		} else {
