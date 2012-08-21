@@ -24,6 +24,10 @@ public class SimulationConfiguration {
 	@Element(name="name")
 	private String name;
 	
+	/** used behavior implementation */
+	@Element(name="behavior", required=false)
+	private String behaviorCls;
+	
 	/** collection of data structure containing the agents of the simulation */
 	@ElementList(name="agents", inline=true)
 	private List<AgentInstance> agents = new LinkedList<AgentInstance>();
@@ -36,6 +40,11 @@ public class SimulationConfiguration {
 		return name;
 	}
 
+	/** @return the name of the class of the used behavior implementation */
+	public String getBehaviorCls() {
+		return behaviorCls;
+	}
+	
 	/** @return collection of data structure containing the agents of the simulation */
 	public List<AgentInstance> getAgents() {
 		return Collections.unmodifiableList(agents);
@@ -58,6 +67,7 @@ public class SimulationConfiguration {
 	public static void main(String [] args)  {
 		SimulationConfiguration conf = new SimulationConfiguration();
 		conf.name = "SCM";
+		conf.behaviorCls = "net.sf.Behavior";
 		AgentInstance agent = AgentInstance.getTestObject();
 		conf.agents.add(agent);
 		

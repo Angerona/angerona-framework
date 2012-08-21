@@ -40,7 +40,23 @@ public class Program extends ArrayList<Rule> {
 		return atoms;
 	}
 	
-	
+	//Differs from contains in that it does a deep comparision of the rules rather than a reference-based one
+	//Could be turned into an override of the ArrayList contains method later
+	//--Daniel
+	public boolean hasRule(Rule compRule)
+	{
+		/*
+		for(Rule r : this)
+		{
+			//This solution depends on the rule.equals being a deep comparision
+			if(compRule.equals(r))
+				return true;
+		}
+		*/
+		if (this.toString().contains(compRule.toString())) //Temporary fix
+			return true;
+		return false;
+	}
 	
 	public void add(Program other) {
 		this.addAll( other );

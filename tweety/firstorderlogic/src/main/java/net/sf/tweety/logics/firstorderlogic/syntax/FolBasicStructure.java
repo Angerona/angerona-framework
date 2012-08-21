@@ -110,7 +110,6 @@ public abstract class FolBasicStructure implements CommonStructure {
 		s += ")";*/		
 		return s;
 	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

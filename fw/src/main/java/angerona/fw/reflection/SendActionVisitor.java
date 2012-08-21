@@ -1,9 +1,12 @@
 package angerona.fw.reflection;
 
+import java.util.List;
+
 import angerona.fw.Action;
 import angerona.fw.error.InvokeException;
 import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.logic.Beliefs;
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.serialize.Statement;
 import angerona.fw.serialize.perception.PerceptionDO;
 
@@ -22,6 +25,10 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private boolean violates = false;
 	
+	private List<SecrecyStrengthPair> weakenings = null;
+	
+	private Action act = null;
+	
 	public SendActionVisitor(PerceptionFactory factory, boolean realRun, Beliefs beliefs) {
 		if(factory == null)
 			throw new IllegalArgumentException("factory must not null!");
@@ -30,8 +37,18 @@ public class SendActionVisitor extends ContextVisitor {
 		this.realRun = realRun;
 	}
 	
+	public List<SecrecyStrengthPair> weakenings()
+	{
+		return this.weakenings;
+	}
+	
 	public boolean violates() {
 		return violates;
+	}
+
+	public Action getAction()
+	{
+		return act;
 	}
 	
 	@Override
@@ -39,11 +56,14 @@ public class SendActionVisitor extends ContextVisitor {
 		// TODO: implement inner element of actions in skill.
 		//Action reval = (Action) factory.generateFromElement(statement.getInnerElement(), context);
 		Action reval = (Action) factory.generateFromDataObject((PerceptionDO)statement.getComplexInfo(), context);
-
+		this.act = reval;
 		if(realRun)
 			getSelf().performAction(reval);
 		else
+		{
 			violates = getSelf().performThought(beliefs, reval);
+			weakenings = getSelf().considerSecretWeakening(beliefs, reval);
+		}
 		this.setReturnValueIdentifier(statement.getReturnValueIdentifier(), reval);
 	}
 

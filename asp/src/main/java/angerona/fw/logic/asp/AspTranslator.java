@@ -4,15 +4,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.DetailQueryAnswer;
+import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseTranslator;
 
@@ -23,7 +28,9 @@ import angerona.fw.logic.BaseTranslator;
  * @author Tim Janus
  */
 public class AspTranslator extends BaseTranslator {
-
+	/** reference to the logback instance used for logging */
+	private static Logger LOG = LoggerFactory.getLogger(AspTranslator.class);
+	
 	@Override
 	protected BaseBeliefbase translatePerceptionInt(Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
@@ -31,18 +38,19 @@ public class AspTranslator extends BaseTranslator {
 		
 		if(p instanceof Answer) {
 			Answer answer = (Answer)p;
-			FolFormula knowledge = answer.getRegarding();
-			if(answer.getAnswer() == AnswerValue.AV_FALSE) {
-				knowledge = new Negation(knowledge);
-			} else if(answer.getAnswer() == AnswerValue.AV_UNKNOWN) {
-				return reval;
+			AngeronaAnswer aa = answer.getAnswer();
+			if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
+				return translateFOL(aa.getAnswers());
+			} else {
+				FolFormula knowledge = answer.getRegarding();
+				if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
+					knowledge = new Negation(knowledge);
+				} else if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
+					return reval;
+				}
+				formulas.add(knowledge);
 			}
-
-			formulas.add(knowledge);
-		} else if(p instanceof DetailQueryAnswer) {
-			DetailQueryAnswer da = (DetailQueryAnswer)p;
-			formulas.add(da.getDetailAnswer());
-		}
+		} 
 
 		return translateFOLInt(formulas);
 	}
@@ -54,23 +62,38 @@ public class AspTranslator extends BaseTranslator {
 		return reval;
 	}
 
+	private Literal createLiteral(FolFormula ff, boolean truth)
+	{
+		Literal a = null;
+		if(truth)
+			a = new Atom(ff.toString());
+		else
+			a = new Neg(new Atom(ff.toString().substring(1)));
+			
+		return a;
+	}
+	
+
 	private Program translate(Set<FolFormula> formulas) {
 		Program newInfo = new Program();
 		for(FolFormula ff : formulas) {
 			Rule r = new Rule();
 			
 			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.Atom) {
-				net.sf.tweety.logics.firstorderlogic.syntax.Atom a = 
-						(net.sf.tweety.logics.firstorderlogic.syntax.Atom)ff;
-				r.addHead(new Atom(a.getPredicate().getName()));
+				Literal newAtom = createLiteral(ff, true);
+				r.addHead(newAtom);
 			} else if(ff instanceof Negation) {
-				Negation n = (Negation)ff;
-				Atom a = new Atom(n.getAtoms().iterator().next().getPredicate().getName());
-				r.addHead(new Neg(a));
+				Literal newAtom = createLiteral(ff, false);
+				r.addHead(newAtom);
+				
 			} else {
 				continue;
 			}
-			newInfo.add(r);
+			if(r.isSafe())
+				newInfo.add(r);
+			else
+				LOG.warn("Translate skips the unsafe rule: '{}', might produce strange behavior.", r.toString());
+				
 		}
 		return newInfo;
 	}

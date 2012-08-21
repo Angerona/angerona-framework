@@ -1,0 +1,45 @@
+<simulation-configuration>
+	<name>Mary Courtroom Scenario</name>
+      
+	<agent-instance>
+		<name>Mary</name>
+        	<default-suffix>mary</default-suffix>
+         
+        	<config class="angerona.fw.serialize.AgentConfigImport">
+				<source>config/agents/mary.xml</source>
+        	</config>
+         	<data key="Confidential">(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.5}, argued(john))
+		</data>       	 	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+				<source>config/beliefbases/asp_detail_beliefbase.xml</source>
+        	</beliefbase-config>
+         
+
+		<skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/QueryAnswer.xml</source>
+        </skill>
+	</agent-instance>
+      
+	<agent-instance>
+      		<name>Coroner</name>
+      		<default-suffix>coroner</default-suffix>
+      	
+      		<config class="angerona.fw.serialize.AgentConfigImport">
+      			<source>config/agents/mary.xml</source>
+      		</config>
+      	
+      		<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+        	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
+        	 </beliefbase-config>
+        	
+		<skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/Query.xml</source>
+        	</skill>
+
+	<!-- 	<desire>q_Mary(who_argued(X))_1</desire> -->  
+		<desire>q_Mary(john_argued)_1</desire>     
+	<!--	<desire>q_Mary(someone_argued)_2</desire>   
+		<desire>q_Mary(you_listened)_3</desire>   
+	-->
+	</agent-instance>
+
+</simulation-configuration>

@@ -79,15 +79,4 @@ public abstract class BaseReasoner
 	 * @return the class definition of the belief base this reasoner supports.
 	 */
 	public abstract Class<? extends BaseBeliefbase> getSupportedBeliefbase();
-
-	//This ought to return a Set rather than a LinkedList. Currently a LinkedList for testing purposes (ordering is easier)
-	public Set<AngeronaDetailAnswer> queryForAllAnswers(BaseBeliefbase bb, FolFormula question) {
-		// It's not good that such a specific method for AspDetailReasoners is in here...
-		actualBeliefbase = bb;
-		return queryForAllAnswers(question);	
-	}
-	public Set<AngeronaDetailAnswer> queryForAllAnswers(FolFormula query) {
-		// It's not good that such a specific method for AspDetailReasoners is in here...
-		return null;
-	}
 }

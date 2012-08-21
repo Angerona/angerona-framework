@@ -1,9 +1,12 @@
 package angerona.fw;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.error.InvokeException;
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextVisitor;
@@ -27,12 +30,50 @@ public class Skill extends Intention implements Runnable {
 	
 	private boolean violates = false;
 	
+	/* Begin Daniel's changes */
+	
+	private Context rememberedContext = null;
+	
+	public Context getRememberedContext()
+	{
+		return rememberedContext;
+	}
+	
+	/* These changes need to be isolate or otherwise changed -- Daniel */
+	private List<SecrecyStrengthPair> weakenings = null;
+	
+	
 	public Skill(Agent agent, SkillConfig config) {
 		super(agent);
 		this.name = config.getName();
 		this.config = config;
 	}
+	public Skill(Skill s)
+	{
+		super(s.agent);
+		this.parent = s.parent;
+		this.realRun = s.realRun;
+		this.objectContainingContext = s.objectContainingContext;
+		this.cost = s.cost;
+		this.honesty = s.honesty;
+		this.name = s.name;
+		this.config = s.config;
+		this.violates = s.violates;
+		this.weakenings = s.weakenings;
+	}
 	
+
+	public List<SecrecyStrengthPair> getWeakenings()
+	{
+		return this.weakenings;
+	}
+	public void setWeakenings(List<SecrecyStrengthPair> weaks)
+	{
+		this.weakenings = weaks;
+	}
+	
+	
+	/* End of Daniel's changes */
 	public boolean violates() {
 		return violates;
 	}
@@ -75,6 +116,7 @@ public class Skill extends Intention implements Runnable {
 					c.Invoke(cv, st);
 					if(sendAction && !realRun) {
 						violates = ((SendActionVisitor)cv).violates();
+						weakenings = ((SendActionVisitor)cv).weakenings();
 					}
 				} catch(InvokeException ex) {
 					ex.printStackTrace();
@@ -118,4 +160,14 @@ public class Skill extends Intention implements Runnable {
 	public Object clone() {
 		return this;
 	}
+	
+	/**
+	 * In the future, Skill probably shouldn't have a deepCopy, as it shouldn't need it. 
+	 * Thus Skill doesn't need to implement cloneable
+	 */
+	public Skill deepCopy()
+	{
+		return new Skill(this);
+	}
+	
 }

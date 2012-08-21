@@ -6,10 +6,13 @@ import java.util.Set;
 import net.sf.tweety.Answer;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.operators.parameter.ReasonerParameter;
+
+/**
+* This reasoning operator determines what answers satisfy a query of the detail query or open query types. 
+* @author Daniel Dilger, Tim Janus
+*/
 
 public class AspDetailReasoner extends AspReasoner {
 	@Override
@@ -18,31 +21,20 @@ public class AspDetailReasoner extends AspReasoner {
 	}
 	
 	public Answer query(FolFormula query) {
-		/*
-		List<AnswerSet> answerSets = processAnswerSets();
-		AnswerValue av = AnswerValue.AV_UNKNOWN;
-		
-		if(semantic == InferenceSemantic.S_CREDULOUS) {
-			throw new NotImplementedException();
-		} else if(semantic == InferenceSemantic.S_SKEPTICAL) {
-			av = skepticalInference(answerSets, query);
-		}
-		*/
-		//return super.query(query);
-		//return new AngeronaAnswer(bb, query, AnswerValue.AV_REJECT);
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
-		return new AngeronaDetailAnswer(bb, query, findAnswer(query));
+		return new AngeronaAnswer(bb, query, findAnswer(query));
 	}
-	/**
-	 * The AspDetailReasoner parses the string form of the query and looks for a match in the string forms of the knowledge.
-	 * Admittedly a crude way to go about it. 
-	 * @param query
-	 * @return
+	
+	
+	/** Method for 
+	 * @param FolFormula query
+	 * @return Set<AngeronaDetailAnswer> answers
 	 */
-	protected FolFormula findAnswer(FolFormula query)
+	protected Set<FolFormula> openQueryAnswers(FolFormula query)
 	{
-		Set <FolFormula> knowledge = super.infer();
-		FolFormula answer = null;
+
+		Set <FolFormula> knowledge = super.infer(); 
+		Set<FolFormula> answers = new HashSet<FolFormula>();
 		
 		Predicate qp = query.getPredicates().iterator().next();
 		
@@ -50,43 +42,6 @@ public class AspDetailReasoner extends AspReasoner {
 		{
 			// TODO: Their might be an answer to who(X) which has more than one formula: who(john), who(mary) ect.
 			Predicate fp = f.getPredicates().iterator().next();
-			if(!fp.getName().equals(qp.getName()))
-			{
-				continue;
-			}
-			
-			answer = f;
-		}
-		return answer;
-		//return new Atom(new Predicate("TEST"));
-	}
-	@Override
-	public Set<AngeronaDetailAnswer> queryForAllAnswers(FolFormula query)
-	{
-		Set<FolFormula> allAnswers = findAllAnswers(query);
-		Set<AngeronaDetailAnswer> detailAnswers = new HashSet<AngeronaDetailAnswer>();
-		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
-		for (FolFormula answer : allAnswers)
-		{
-			detailAnswers.add(new AngeronaDetailAnswer(bb, query, answer));
-		}
-		return detailAnswers;
-	}
-	protected Set<FolFormula> findAllAnswers(FolFormula query)
-	{
-		Set <FolFormula> knowledge = super.infer();
-		System.out.println("(Delete) knowledge size:"+knowledge.size());
-		Set<FolFormula> answers = new HashSet<FolFormula>(); //Is it really appropriate to use this?
-		
-		Predicate qp = query.getPredicates().iterator().next();
-		
-		for (FolFormula f : knowledge)
-		{
-			// TODO: Their might be an answer to who(X) which has more than one formula: who(john), who(mary) ect.
-			Predicate fp = f.getPredicates().iterator().next();
-			System.out.println("(Delete) fp.getName():"+fp.getName());
-			System.out.println("(Delete) qp.getName():"+qp.getName());
-			System.out.println();
 			if(!fp.getName().equals(qp.getName()))
 			{
 				continue;
@@ -96,7 +51,34 @@ public class AspDetailReasoner extends AspReasoner {
 				answers.add(f);
 			}
 		}
+				
 		return answers;
-		//return new Atom(new Predicate("TEST"));
 	}
+	
+	/**
+	 * Deprecated
+	 * Special case where d = 0. That is, a credulous operator
+	 * @param query
+	 * @return
+	 */
+	protected Set<FolFormula> findAnswer(FolFormula query)
+	{
+		Set <FolFormula> knowledge = super.infer();
+		Set<FolFormula> answers = new HashSet<>();
+		
+		Predicate qp = query.getPredicates().iterator().next();
+		
+		for (FolFormula f : knowledge)
+		{
+			Predicate fp = f.getPredicates().iterator().next();
+			if(!fp.getName().equals(qp.getName()))
+			{
+				continue;
+			}
+			
+			answers.add(f);
+		}
+		return answers;
+	}
+	
 }

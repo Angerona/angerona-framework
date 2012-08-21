@@ -1,5 +1,6 @@
 package angerona.fw.logic.asp;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,9 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AngeronaAnswer;
-import angerona.fw.logic.AngeronaDetailAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
@@ -35,7 +34,7 @@ import angerona.fw.operators.parameter.ReasonerParameter;
  * It supports multiple semantics and has a three valued answer behavior:
  * true, false, unknown
  * 
- * @author Tim Janus
+ * @author Tim Janus, Daniel Dilger
  */
 public class AspReasoner extends BaseReasoner {
 
@@ -91,16 +90,146 @@ public class AspReasoner extends BaseReasoner {
 		List<AnswerSet> answerSets = processAnswerSets();
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 		
-		if(semantic == InferenceSemantic.S_CREDULOUS) {
-			throw new NotImplementedException();
-		} else if(semantic == InferenceSemantic.S_SKEPTICAL) {
-			av = skepticalInference(answerSets, query);
+		String dParam = getParameters().get("d");
+		if(dParam != null)
+		{
+			double d = Double.parseDouble(dParam);
+			av = dInference(answerSets, query, d);
+		}
+		else
+		{
+			if(semantic == InferenceSemantic.S_CREDULOUS) {
+				av = credulousInference(answerSets, query);
+			} else if(semantic == InferenceSemantic.S_SKEPTICAL) {
+				av = skepticalInference(answerSets, query);
+			}
 		}
 		
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
 		return new AngeronaAnswer(bb, query, av);
 	}
 
+	/**
+	 *  Generalized inference for any "d" parameter.
+	 */
+	public AnswerValue dInference(List <AnswerSet> answerSets, FolFormula query, double d)
+	{
+		AnswerValue av;
+		int falseInAS = 0;
+		int trueInAS = 0;
+		
+		boolean negate = false;
+		Atom aq = null;
+		if(query instanceof Negation) {
+			negate = true;
+			Negation n = (Negation)query;
+			aq = (Atom)n.getFormula();
+		} else if(query instanceof Atom ){
+			negate = false;
+			aq = (Atom)query;
+		} else {
+			//throw new AngeronaException("The query formula for the ASP Reasoner must be an atom or a negation:");
+			LOG.error("The given query: '{}' is neither a atom nor a negation, so it cannot be process by the ASPReasoner.", query);
+			return AnswerValue.AV_REJECT;
+		}
+		
+		for(AnswerSet as : answerSets) {
+			av = AnswerValue.AV_UNKNOWN;
+			Set<Literal> literals = as.getLiteralsBySymbol(aq.getPredicate().getName());
+			for(Literal l : literals) {
+				if(l.isTrueNegated()) {
+					av = negate ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
+				} else {
+					av = negate ? AnswerValue.AV_FALSE : AnswerValue.AV_TRUE;
+				}
+			}
+			
+			if(av == AnswerValue.AV_TRUE) {
+				trueInAS += 1;
+			} else if(av == AnswerValue.AV_FALSE) {
+				falseInAS += 1;
+			}
+		}
+		
+		double trueQuotient = ((double) (trueInAS))/answerSets.size(); //Check the loss-of-precision of this operation
+		double falseQuotient = ((double) (falseInAS))/answerSets.size();
+		
+		//Which should it choose if both meet the "d" criteria?
+		//Further parameters may be needed for the operator
+		//The behavior here would then be specific to one set of those operators
+		if(trueQuotient >= d && falseQuotient >= d)
+		{
+			if(trueQuotient > falseQuotient)
+				av = AnswerValue.AV_TRUE;
+			else if (falseQuotient > trueQuotient)
+				av = AnswerValue.AV_FALSE;
+			else
+				av = AnswerValue.AV_UNKNOWN;
+		}
+		else if(trueQuotient >= d)
+			av = AnswerValue.AV_TRUE;
+		else if(falseQuotient >= d)
+			av = AnswerValue.AV_FALSE;
+		else 
+			av = AnswerValue.AV_UNKNOWN;
+		return av;
+	}
+	
+	/**
+	 * Implements the credulous asp inference. 
+	 * @param answerSets	List of answer sets representing the solver result.
+	 * @param query			The question must be an atom or an Negation but no complexer formulas
+	 * @return				AV_True, AV_FALSE or AV_UNKNOWN if the inference was successful,
+	 * 						AV_REJECT if an error occured.
+	 */
+	public AnswerValue credulousInference(List <AnswerSet> answerSets, FolFormula query)
+	{
+		AnswerValue av;
+		int falseInAS = 0;
+		int trueInAS = 0;
+		
+		boolean negate = false;
+		Atom aq = null;
+		if(query instanceof Negation) {
+			negate = true;
+			Negation n = (Negation)query;
+			aq = (Atom)n.getFormula();
+		} else if(query instanceof Atom ){
+			negate = false;
+			aq = (Atom)query;
+		} else {
+			//throw new AngeronaException("The query formula for the ASP Reasoner must be an atom or a negation:");
+			LOG.error("The given query: '{}' is neither a atom nor a negation, so it cannot be process by the ASPReasoner.", query);
+			return AnswerValue.AV_REJECT;
+		}
+		
+		for(AnswerSet as : answerSets) {
+			av = AnswerValue.AV_UNKNOWN;
+			Set<Literal> literals = as.getLiteralsBySymbol(aq.getPredicate().getName());
+			for(Literal l : literals) {
+				if(l.isTrueNegated()) {
+					av = negate ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
+				} else {
+					av = negate ? AnswerValue.AV_FALSE : AnswerValue.AV_TRUE;
+				}
+			}
+			
+			if(av == AnswerValue.AV_TRUE) {
+				trueInAS += 1;
+			} else if(av == AnswerValue.AV_FALSE) {
+				falseInAS += 1;
+			}
+		}
+		//Should it give preference to "true" values, or "false" values, if both meet the "d" criteria?
+		if(trueInAS > 0 && falseInAS == 0)
+			av = AnswerValue.AV_TRUE;
+		else if(falseInAS > 0 && trueInAS == 0)
+			av = AnswerValue.AV_FALSE;
+		else 
+			av = AnswerValue.AV_UNKNOWN;
+		return av;
+	}
+	
 	/**
 	 * Implements the skeptical asp inference. 
 	 * @param answerSets	List of answer sets representing the solver result.
@@ -146,9 +275,9 @@ public class AspReasoner extends BaseReasoner {
 			}
 		}
 		
-		if(trueInAS > 0 && falseInAS == 0)
+		if(trueInAS == answerSets.size())
 			av = AnswerValue.AV_TRUE;
-		else if(falseInAS > 0 && trueInAS == 0)
+		else if(falseInAS == answerSets.size())
 			av = AnswerValue.AV_FALSE;
 		else 
 			av = AnswerValue.AV_UNKNOWN;
@@ -192,6 +321,7 @@ public class AspReasoner extends BaseReasoner {
 			Set<FolFormula> temp = new HashSet<FolFormula>();
 			for(String name : as.literals.keySet()) {
 				Set<Literal> literals = as.literals.get(name);
+				//The code in this loop is mostly conversion. Logic conversion module?
 				for(Literal l : literals) {
 					int arity = l.getAtom().getArity();
 					Atom a = new Atom(new Predicate(l.getAtom().getName(), arity));
@@ -209,29 +339,64 @@ public class AspReasoner extends BaseReasoner {
 			answerSetsTrans.add(temp);
 		}
 		
-		if(semantic == InferenceSemantic.S_CREDULOUS)
-			throw new NotImplementedException();
-		else if(semantic == InferenceSemantic.S_SKEPTICAL) {
-			reval.addAll(answerSetsTrans.get(0));
-			answerSetsTrans.remove(0);
-			Set<FolFormula> toRemove = new HashSet<FolFormula>();
+		//String dParam = getParameters().get("d");
+		String dParam = null;
+		if(dParam != null)
+		{
+			double dValue = Double.parseDouble(dParam);
+			HashMap<FolFormula, Integer> frequencies = new HashMap<FolFormula, Integer>();
+			//Step One: Associate each formula with a frequency
 			for(Set<FolFormula> as : answerSetsTrans) {
-				for(FolFormula a : reval) {
-					if(!as.contains(a)) {
-						toRemove.add(a);
-					}
+				for(FolFormula a : as) {
+					Integer newFreq = frequencies.get(a) + 1;
+					frequencies.put(a, newFreq); //Hopefully these maps can be mutated...
+					reval.add(a);
 				}
 			}
-			reval.removeAll(toRemove);
+			//Step Two: Filter out formulas without proper frequency
+			for(FolFormula a : reval)
+			{
+				if(frequencies.get(a) < dValue)
+				{
+					reval.remove(a);
+				}
+			}
+			
+			//Step Three: resolve contradictions
+			//Requires identifying contradictions first...
 		}
-		
+		else
+		{
+			if(semantic == InferenceSemantic.S_CREDULOUS)
+			{
+			//	throw new NotImplementedException();
+				reval.addAll(answerSetsTrans.get(0)); 
+				answerSetsTrans.remove(0);
+				for(Set<FolFormula> as : answerSetsTrans) {
+					for(FolFormula a : as) {
+						if(!reval.contains(a)) {
+							reval.add(a);
+						}
+					}
+				}
+				
+				//Behavior for resolving contradictions depends on extra parameters (besides d)
+				//This implementation describes only one configuration of such parameters
+			}
+			else if(semantic == InferenceSemantic.S_SKEPTICAL) {
+				reval.addAll(answerSetsTrans.get(0));
+				answerSetsTrans.remove(0); 
+				Set<FolFormula> toRemove = new HashSet<FolFormula>();
+				for(Set<FolFormula> as : answerSetsTrans) {
+					for(FolFormula a : reval) {
+						if(!as.contains(a)) {
+							toRemove.add(a);
+						}
+					}
+				}
+				reval.removeAll(toRemove);
+			}
+		}
 		return reval;
 	}
-	@Override
-	public Set<AngeronaDetailAnswer> queryForAllAnswers(FolFormula query) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 }

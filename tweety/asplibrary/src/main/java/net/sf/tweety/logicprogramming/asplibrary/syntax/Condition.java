@@ -73,4 +73,9 @@ public class Condition implements Literal {
 	public boolean isRelational() {
 		return false;
 	}
+
+	@Override
+	public boolean isGround() {
+		return lArg.isGround() && rArg.isGround();
+	}
 }

@@ -30,6 +30,7 @@ public class Pair<TF, TS> {
 	@Override
 	public boolean equals(Object other) {
 		if(! (other instanceof Pair)) return false;
+		@SuppressWarnings("unchecked")
 		Pair<TF, TS> op = (Pair<TF, TS>)other;
 		boolean eqF = first == null ? op.first == null : first.equals(op.first);
 		boolean eqS = second == null ? op.second == null : second.equals(op.second);

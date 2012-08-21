@@ -3,16 +3,24 @@ package angerona.fw.operators.def;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.DetailQueryAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.parameter.ViolatesParameter;
+
+/**
+* This version of the violates operator allows for answers of the detail answer speech act type. 
+* @author Daniel Dilger, Tim Janus
+*/
 
 public class DetailViolatesOperator extends ViolatesOperator {
 	/** reference to the logback instance used for logging */
@@ -21,24 +29,19 @@ public class DetailViolatesOperator extends ViolatesOperator {
 	@Override
 	protected Boolean processInt(ViolatesParameter param) {
 		LOG.info("Run Detail-ViolatesOperator");
-		//JOptionPane.showMessageDialog(null, param.getAction());
 		if(param.getAction() instanceof Answer) {
-			// only apply violates if confidential knowledge is saved in agent.
 			ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
 			if(conf == null)
 				return new Boolean(false);
 			
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
-			if(views.containsKey(a.getReceiverId())) {
-				// First we check for already unrivaled secrets:
+			if(views.containsKey(a.getReceiverId()) && a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) {
 				BaseBeliefbase view = (BaseBeliefbase) views.get(a.getReceiverId()).clone(); 
 				
 				List<Secret> toRemove = new LinkedList<Secret>();
 				for(Secret secret : conf.getTargets()) {
-					System.out.println("ASDF secret:"+secret.toString());
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
-						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
 						if(	view.infere().contains(secret.getInformation()))  {
 							toRemove.add(secret);
 							LOG.warn("Secret-Knowledge inconsistency found and removed by Violates-Operator.");
@@ -49,24 +52,24 @@ public class DetailViolatesOperator extends ViolatesOperator {
 					conf.removeConfidentialTarget(remove);
 				}
 				
-				// Now we adapt the view and check again.
-				/*
-				if(a.getAnswer() == AnswerValue.AV_TRUE) {
-					view.addNewKnowledge(a.getRegarding());
-				} else if(a.getAnswer() == AnswerValue.AV_FALSE) {
-					view.addNewKnowledge(new Negation(a.getRegarding()));
+				Set<FolFormula> answers = a.getAnswer().getAnswers();
+				if(answers.size() > 1) {
+					LOG.warn("More than one answer but '" + this.getClass().getSimpleName() + "' only works with one (first).");
+				} else if(answers.size() == 0) {
+					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
+					return new Boolean(false);
 				}
-		*/
-				DetailQueryAnswer dqa = ((DetailQueryAnswer) a);
-				LOG.info("Make Revision for DetailQueryAnswer: '{}'", dqa.getDetailAnswer());
-				view.addKnowledge(dqa.getDetailAnswer());
+				
+				FolFormula answer = answers.iterator().next();
+				// TODO: Move this into the default Violates Operator and let it support open and closed queries / answers.
+				LOG.info("Make Revision for DetailQueryAnswer: '{}'", answer);
+				view.addKnowledge(answer);
 				
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
-						//LOG.info(id + " Found CF=" + ct + " and answer=" + aa);
 						if(	view.infere().contains(secret.getInformation()))  {
 							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
-							//conf.removeConfidentialTarget(ct);
+				
 							return new Boolean(true);
 						}
 					}

@@ -1,0 +1,5 @@
+world {
+
+} view->Mary {
+
+}

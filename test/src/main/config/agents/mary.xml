@@ -1,12 +1,14 @@
 <agent-configuration>
-	<name>Default Agent Implementation</name>
+<!-- This file should be added to the git register so I don't have to change it when switching branches -->
+	<name>Mary Agent Implementation</name>
+	<!-- I've never actually looked at the Generate Options Operator. I should sometime. -->
 	
 	<generate-options-operators class="angerona.fw.serialize.OperatorSetConfigReal">
 		<default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>
     </generate-options-operators>
     
     <intention-update-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-        <default-operator-cls>angerona.fw.operators.def.IntentionUpdateOperator</default-operator-cls>
+        <default-operator-cls>angerona.fw.operators.def.MaryIntentionUpdateOperator</default-operator-cls>
     </intention-update-operators>
     
     <subgoal-generation-operators class="angerona.fw.serialize.OperatorSetConfigReal">
@@ -15,11 +17,11 @@
     </subgoal-generation-operators>
 
     <update-beliefs-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-    	<default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
+    	<default-operator-cls>angerona.fw.operators.def.MaryUpdateBeliefsOperator</default-operator-cls>
 	</update-beliefs-operators>	
     
     <violates-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.operators.def.ViolatesOperator</default-operator-cls>
+		<default-operator-cls>angerona.fw.operators.def.WeakeningViolatesOperator</default-operator-cls>
 	</violates-operators>
 	
 	<component>angerona.fw.logic.Desires</component>

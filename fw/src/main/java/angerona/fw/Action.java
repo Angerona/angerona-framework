@@ -1,5 +1,8 @@
 package angerona.fw;
 
+import java.util.List;
+
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
@@ -52,4 +55,28 @@ public class Action implements Perception, ContextProvider {
 	public Context getContext() {
 		return ContextFactory.createContext(this);
 	}
+	//************Begin Daniel's changes*************//
+	public boolean equals(Object obj)
+	{
+		if(!(obj instanceof Action)) 
+			return false;
+		
+		Action a = (Action)obj;
+		if(!this.sender.equals(a.sender)) {
+			return false;
+		}
+		if(!this.receiver.equals(a.receiver))
+		{
+			return false;
+		}
+		return true;
+	}
+	protected List<SecrecyStrengthPair> weakenings = null;
+	public List<SecrecyStrengthPair> getWeakenings() {
+		return this.weakenings;
+	}
+	public void setWeakenings(List<SecrecyStrengthPair> weaks) {
+		this.weakenings = weaks;
+	}
+	//************End Daniel's changes*************//
 }

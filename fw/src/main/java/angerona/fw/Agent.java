@@ -31,6 +31,7 @@ import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
@@ -58,7 +59,7 @@ import angerona.fw.serialize.SkillConfig;
  * data structure AgentConfiguration is used to dynamically instantiate
  * an agent.
  * The agent defines helper methods to use the operators of the agent.
- * @author Tim Janus
+ * @author Tim Janus, Daniel Dilger
  */
 public class Agent extends AgentArchitecture implements ContextProvider, Entity, OperatorVisitor, ReportPoster, BeliefbaseChangeListener {
 
@@ -84,6 +85,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
+	
+	/** History of actions performed by the agent */
+	private List<Action> actionsHistory = new LinkedList<Action>();
 	
 	/** mapping atomic intentions names to the intention references defining the skills of the agent. */
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
@@ -118,6 +122,13 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		agentProcess.setAgentArchitecture(this);
 		init(agentProcess);
 	}
+	
+	/** @return a list containing all actions peformed by the agent. */
+	public List<Action> getActionHistory()
+	{
+		return actionsHistory;
+	}	
+	
 	
 	/**
 	 * Sets the belief bases of the agent.
@@ -471,6 +482,22 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		return violatesOperators.def().process(new ViolatesParameter(this, action));
 	}
 	
+	public List<SecrecyStrengthPair> considerSecretWeakening(Beliefs beliefs, Action action)
+	{	
+		return violatesOperators.def().weakenings();
+	}
+	
+	private List<SecrecyStrengthPair> weakenings = null;
+	public void setWeakenings(List<SecrecyStrengthPair> weaks)
+	{
+		this.weakenings = weaks;
+	}
+	public List<SecrecyStrengthPair> getWeakenings()
+	{
+		return this.weakenings;
+	}
+	
+	
 	public AngeronaAnswer reason(FolFormula query) {
 		return beliefs.getWorldKnowledge().reason(query);
 	}
@@ -544,6 +571,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		LOG.info("Action performed: " + act.toString());
 		Angerona.getInstance().report("Action: '"+act.toString()+"' performed.", this);
 		Angerona.getInstance().onActionPerformed(this, act);
+		//Record this action
+		//this.lastAction = act;
+		actionsHistory.add(act);
 	}
 	
 	public boolean addDesire(Desire desire) {
