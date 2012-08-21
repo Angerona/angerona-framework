@@ -1,0 +1,55 @@
+<simulation-configuration>
+	<name>Strike Committee Meeting</name>
+    <behavior>angerona.fw.DefaultBehavior</behavior>
+	<agent-instance>
+		<name>Employee</name>
+        <default-suffix>employee</default-suffix>
+         
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/full_agent.xml</source>
+        </config>
+         
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+			<source>config/beliefbases/asp_beliefbase.xml</source>
+        </beliefbase-config>
+         
+		<skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/QueryAnswer.xml</source>
+        </skill>
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/RevisionRequest.xml</source>
+        </skill>
+        
+        <desire>not_fired</desire>
+        <desire>attend_scm</desire>
+         
+        <data key="Confidential">
+            (Boss, angerona.fw.logic.asp.AspReasoner{d=1.0}, attend_scm)
+        </data>
+		<data key="KnowHow">
+		 	bel(Y, X), revisionRequest(Y, X), reason(X)
+			excused, bel(Boss, excused), 
+			attend_scm, excused, 
+		</data>
+	</agent-instance>
+      
+	<agent-instance>
+      	<name>Boss</name>
+      	<default-suffix>boss</default-suffix>
+      	
+      	<config class="angerona.fw.serialize.AgentConfigImport">
+      		<source>config/agents/default_agent.xml</source>
+      	</config>
+      	
+      	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/asp_beliefbase.xml</source>
+         </beliefbase-config>
+         
+         <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/QueryAnswer.xml</source>
+        </skill>
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/Query.xml</source>
+        </skill>
+	</agent-instance>
+</simulation-configuration>

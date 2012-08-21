@@ -144,7 +144,7 @@ public class Program extends ArrayList<Rule> {
 			Rule r = rIter.next();
 			if (r.isComment())
 				continue;
-			sb.append(r.toString());
+			sb.append(r.toString()+"\n");
 		}
 		
 		return sb.toString();
