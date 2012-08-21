@@ -1,6 +1,7 @@
 package angerona.fw;
 
 import angerona.fw.listener.SubgoalListener;
+import angerona.fw.logic.Beliefs;
 
 
 /**
@@ -30,6 +31,8 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	
 	/** the context used for dynamic code evaluation */
 	protected Object objectContainingContext;
+	
+	protected Beliefs actBeliefs;
 		
 	/* begin Daniel's changes */
 	
@@ -61,6 +64,14 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	}
 	
 	/* End Daniel's changes */
+	
+	public Beliefs getBeliefs() {
+		return actBeliefs;
+	}
+	
+	public void setBeliefs(Beliefs beliefs) {
+		actBeliefs = beliefs;
+	}
 	
 	/**
 	 * Ctor: Creates a new instance of an intention for the given agent.

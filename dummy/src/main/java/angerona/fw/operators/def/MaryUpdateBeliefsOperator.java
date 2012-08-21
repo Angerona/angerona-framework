@@ -36,7 +36,7 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		ConfidentialKnowledge conf = param.getAgent().getComponent(
 				ConfidentialKnowledge.class);
 
-		Beliefs reval = param.getAgent().getBeliefs();
+		Beliefs reval = param.getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		String out = "Update-Beliefs: ";
 		if (param.getPerception() instanceof Answer) {

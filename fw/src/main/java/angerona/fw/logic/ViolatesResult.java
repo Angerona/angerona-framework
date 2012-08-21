@@ -16,6 +16,8 @@ public class ViolatesResult {
 	/** flag indicating if everything is alright (no secret weakend) */
 	private boolean alright;
 	
+	private Beliefs changedBeliefs;
+	
 	/** Default Ctor: Everything is allright */
 	public ViolatesResult() {
 		this(true);
@@ -56,6 +58,14 @@ public class ViolatesResult {
 	/** @return unmodifiable list of pairs */
 	public List<Pair<Secret, Double>> getPairs() {
 		return Collections.unmodifiableList(pairs);
+	}
+	
+	void setBeliefs(Beliefs beliefs) {
+		this.changedBeliefs = beliefs;
+	}
+	
+	public Beliefs getBeliefs() {
+		return this.changedBeliefs;
 	}
 	
 	/**

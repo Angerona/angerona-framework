@@ -169,12 +169,14 @@ public class ConfidentialKnowledge
 				}
 			}
 			
+			/* //TODO: FInd a better policy - allow the weaken of secrets 
 			if(toRemove.size() > 0) {
 				for(Secret remove : toRemove) {
 					removeConfidentialTarget(remove);
 				}
 				report("Changes of Beliefbase causes Confidential update, "+ toRemove.size() +" secrets removed.");
 			}
+			*/
 		}
 	}
 

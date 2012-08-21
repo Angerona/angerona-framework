@@ -90,7 +90,7 @@ public class XMLSkill extends Skill {
 				cv = new ReasonVisitor();
 			} else if(cmd.equalsIgnoreCase("SendAction")) {
 				cv = new SendActionVisitor(
-						a.getEnvironment().getPerceptionFactory(), realRun, a.getBeliefs());
+						a.getEnvironment().getPerceptionFactory(), realRun, actBeliefs);
 				sendAction = true;
 			}
 			
@@ -98,8 +98,10 @@ public class XMLSkill extends Skill {
 			if(cv != null) {
 				try {
 					c.Invoke(cv, st);
+					
+					// send action is an command which needs a violation check:
 					if(sendAction && !realRun) {
-						violates = ((SendActionVisitor)cv).violates();
+						violates = violates.combine(((SendActionVisitor)cv).violates());
 					}
 				} catch(InvokeException ex) {
 					ex.printStackTrace();

@@ -24,9 +24,10 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	@Override
 	protected Beliefs processInt(UpdateBeliefsParameter param) {
 		LOG.info("Run Default-Update-Beliefs-Operator");
-		Beliefs reval = param.getAgent().getBeliefs();
+		Beliefs beliefs = param.getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		String out = "Update-Beliefs: ";
+		
 		if(param.getPerception() instanceof Answer) {
 			Answer naa = (Answer)param.getPerception();
 			out += "Answer ";
@@ -34,9 +35,9 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			
 			BaseBeliefbase bb = null;
 			if(id.compareTo(naa.getReceiverId()) == 0) {
-				bb = reval.getWorldKnowledge();
+				bb = beliefs.getWorldKnowledge();
 			} else if (id.compareTo(naa.getSenderId()) == 0){
-				bb = param.getAgent().getBeliefs().getViewKnowledge().get(naa.getReceiverId());
+				bb = beliefs.getViewKnowledge().get(naa.getReceiverId());
 			}
 			
 			bb.addKnowledge(naa);
@@ -45,13 +46,13 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			
 			Query naq = (Query)param.getPerception();
 			out += "Query ";
-			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (might be an error)" : "as receiver (view)");
+			out += (naq.getSenderId().compareTo(id) == 0 ? "as sender (normally no changes)" : "as receiver (view)");
 			
 			report(out, param.getAgent());
 		} else {
 			LOG.warn("Update-Operator: Cant handle perception of type: " + param.getPerception().getClass().getName());
 		}
 		
-		return reval;
+		return beliefs;
 	}
 }

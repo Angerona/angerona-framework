@@ -23,12 +23,11 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private ViolatesResult violates = null;
 	
-	private Action act = null;
-	
 	public SendActionVisitor(PerceptionFactory factory, boolean realRun, Beliefs beliefs) {
 		if(factory == null)
 			throw new IllegalArgumentException("factory must not null!");
 		
+		this.beliefs = beliefs;
 		this.factory = factory;
 		this.realRun = realRun;
 	}
@@ -37,22 +36,17 @@ public class SendActionVisitor extends ContextVisitor {
 		return violates;
 	}
 
-	public Action getAction()
-	{
-		return act;
-	}
 	
 	@Override
 	protected void runImpl(Statement statement) throws InvokeException {
-		// TODO: implement inner element of actions in skill.
-		//Action reval = (Action) factory.generateFromElement(statement.getInnerElement(), context);
 		Action reval = (Action) factory.generateFromDataObject((PerceptionDO)statement.getComplexInfo(), context);
-		this.act = reval;
+
 		if(realRun)
 			getSelf().performAction(reval);
 		else
 		{
 			violates = getSelf().performThought(beliefs, reval);
+			beliefs = violates.getBeliefs();
 		}
 		this.setReturnValueIdentifier(statement.getReturnValueIdentifier(), reval);
 	}

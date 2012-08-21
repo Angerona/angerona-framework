@@ -8,29 +8,18 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
 import angerona.fw.Intention;
-import angerona.fw.Skill;
 import angerona.fw.Subgoal;
-//import angerona.fw.comm.Query;
-//import angerona.fw.logic.AngeronaAnswer;
-//import angerona.fw.logic.AnswerValue;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
-//import angerona.fw.reflection.Context;
-//import angerona.fw.reflection.ContextFactory;
 
 /**
- * 
- * @author Tim Janus
+ * 	
+ * 	@author Tim Janus
  */
 public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
-	
-	private boolean intentionOutdated(Intention intention)
-	{
-		return false;
-	}
 	
 	@Override
 	protected Intention processInt(IntentionUpdateParameter param) {
@@ -40,20 +29,22 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
 				if(plan.peekStack(i).isAtomic()) {
 					Intention intention = plan.peekStack(i);
+					
+					/*
 					intention.setRealRun(false);
 					report("Performing mental-action applying: '"+intention+"'", ag);
 					intention.run();
 					Skill sk = (Skill)intention;
-					if(intentionOutdated(intention))
-					{
-						continue;
-					}
-					if(sk.violates().isAlright()) {
-						report("Mental action successfull, using '" + sk.getName() + "' as next atomic action.", ag);
-						return intention;
-					}
+					*/
 					
+					if(intention.isAtomic()) {
+						boolean alright = ag.performThought(ag.getBeliefs(), intention).isAlright();
 					
+						if(alright) {
+							report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.", ag);
+							return intention;
+						}
+					}
 				}
 			}
 		}
