@@ -351,6 +351,9 @@ public class Atom implements Term, Literal, CommonStructure {
 
 	@Override
 	public boolean isGround() {
+		if(terms == null)
+			return true;
+		
 		for(Term t : terms) {
 			if(t.isVariable())
 				return false;

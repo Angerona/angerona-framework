@@ -132,7 +132,7 @@ public class Rule {
 		allLit.addAll(body);
 		
 		// TODO: only depth of one... the entire asp-library has major desing issues... best solution: Redesign core interfaces
-		// TOTALLY HACKED WILL NOT WOKR FOR EVERYTHING:...
+		// TOTALLY HACKED WILL NOT WORK FOR EVERYTHING:...
 		for(Literal l : allLit) {
 			if(!l.isGround()) {
 				for(Term t : l.getAtom().getTerms()) {
