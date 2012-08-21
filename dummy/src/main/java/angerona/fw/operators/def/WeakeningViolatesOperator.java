@@ -18,12 +18,11 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.logic.Secret;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.operators.parameter.ViolatesParameter;
-import angerona.fw.util.Pair;
 /**
  * Extension of my DetailSimpleViolatesOperator which enables one to weaken secrecy.
  * The operator determines which secrets would be affected by an action.
@@ -38,8 +37,9 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	 * Does not call super().processInt
 	 */
 	@Override
-	protected ViolatesResult processInt(ViolatesParameter param) {
-		return processIntAndWeaken(param);
+	protected Boolean processInt(ViolatesParameter param) {
+		this.weakenings = processIntAndWeaken(param);
+		return false;
 	}	
 	/**
 	 * Assumes information given is always a fact
@@ -60,11 +60,12 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	/**
 	 * 
 	 */
-	private List<Pair<Secret, Double>> representTotalExposure(ConfidentialKnowledge conf)
+	private List<SecrecyStrengthPair> representTotalExposure(ConfidentialKnowledge conf)
 	{
-		List<Pair<Secret, Double>> reval = new LinkedList<>();
-		for(Secret secret : conf.getTargets())  {
-			reval.add(new Pair<>(secret, INFINITY));
+		List<SecrecyStrengthPair> reval = new LinkedList<SecrecyStrengthPair>();
+		for(Secret secret : conf.getTargets()) 
+		{
+			reval.add(new SecrecyStrengthPair(secret, INFINITY));
 		}
 		return reval;
 	}
@@ -94,15 +95,15 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 	/**
 	 * 
 	 */
-	protected ViolatesResult processIntAndWeaken(ViolatesParameter param)
+	protected List<SecrecyStrengthPair> processIntAndWeaken(ViolatesParameter param)
 	{
 		Logger LOG = LoggerFactory.getLogger(DetailViolatesOperator.class);
-		List<Pair<Secret, Double>> secretList = new LinkedList<>(); 
+		List<SecrecyStrengthPair> secretList = new LinkedList<SecrecyStrengthPair>(); 
 		
 		/* Check if any confidential knowledge present. If none then no secrecy weakening possible */
 		ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
 		if(conf == null)
-			return new ViolatesResult();
+			return secretList;
 		
 		
 		/* Remaining operations depend on whether the action in question is an answer */
@@ -110,15 +111,18 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 		{
 			
 			Answer a = (Answer) param.getAction();
+			a.setWeakenings(secretList); //Only works because objects are pass-by-reference, so not the most elegant solution
 			
 			/* Consider self-repeating answers (and only answers) as bad as revealing all secrets */
 			List<Action> actionsHistory = param.getAgent().getActionHistory();
-			for(Action act : actionsHistory) {
-				if(a.equals(act)) {
+			for(Action act : actionsHistory)
+			{
+				if(a.equals(act))
+				{
 					report(param.getAgent().getName() 
 							+ "' <b> self-repeats </b> with: '" + param.getAction() + "'"); 
 					secretList = representTotalExposure(conf);
-					return new ViolatesResult(secretList);
+					return secretList;
 				}
 			}
 			
@@ -135,7 +139,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 					LOG.warn("More than one answer but '" + this.getClass().getSimpleName() + "' only works with one (first).");
 				} else if(answers.size() == 0) {
 					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
-					return new ViolatesResult();
+					return secretList;
 				}
 				FolFormula answer = answers.iterator().next();
 				LOG.info("Make Revision for QueryAnswer: '{}'", answer);
@@ -158,7 +162,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 					String actString = param.getAction().toString();
 					report(param.getAgent().getName() + "' <b> creates contradiction </b> by: '" + actString.substring(0, actString.length()-1) + "'", view);
 					secretList = representTotalExposure(conf);
-					return new ViolatesResult(secretList);
+					return secretList;
 				}
 				
 				/* Now the secrecy strengths get added */
@@ -177,9 +181,11 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 								secretContained = true;
 						}
 					}
-					if(secretContained) {
-						Pair<Secret, Double> sPair = new Pair<>();
-						sPair.first = secret;
+					if(secretContained)
+					{
+						
+						SecrecyStrengthPair sPair = new SecrecyStrengthPair();
+						sPair.defineSecret(secret);
 						double newStrength = calculateSecrecyStrength(secretInfo, newAnsSets);
 						
 						// TODO: Find default policy like a default parameter value if not set yet.
@@ -191,8 +197,7 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 							curStrength = Double.parseDouble(d);
 						}
 						double degreeOfWeakening = curStrength - newStrength;
-						sPair.second = degreeOfWeakening;
-						
+						sPair.defineDegreeOfWeakening(degreeOfWeakening);
 						secretList.add(sPair);
 						String actString = param.getAction().toString();
 						if(degreeOfWeakening > 0) {
@@ -211,6 +216,6 @@ public class WeakeningViolatesOperator extends DetailSimpleViolatesOperator {
 			}
 		}
 		
-		return new ViolatesResult(secretList);
+		return secretList;
 	}
 }

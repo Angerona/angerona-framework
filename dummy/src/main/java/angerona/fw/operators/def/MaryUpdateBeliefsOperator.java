@@ -11,10 +11,10 @@ import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.parameter.UpdateBeliefsParameter;
-import angerona.fw.util.Pair;
 /**
  * Update Beliefs Operator which enables the weakening of secrets.
  * The major difference between this operator and the previous belief update operator is that this one records the degree by which an agent has weakened its secrets by its actions.
@@ -38,7 +38,8 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			out += (naa.getSenderId().compareTo(id) == 0 ? "as sender (view)" : "as receiver (world)");
 			
 			
-			List<Pair<Secret, Double>> weakenings = param.getAgent().getWeakenings().getPairs();
+			List<SecrecyStrengthPair> weakenings = param.getAgent().getWeakenings();
+			
 			
 			BaseBeliefbase bb = null;
 			if(id.compareTo(naa.getReceiverId()) == 0) {
@@ -56,12 +57,14 @@ public class MaryUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 					continue;
 				}
 					
-				for (Pair<Secret, Double> sPair : weakenings) {
-					if(secret.alike(sPair.first))
+				for (SecrecyStrengthPair sPair : weakenings)
+				{
+					
+					if(secret.getInformation().toString().equals(sPair.getSecret().getInformation().toString()))
 					{
 						Map <String, String> map =  secret.getReasonerParameters();
 						double oldD = Double.parseDouble(map.get("d"));
-						double newD = oldD - sPair.second;
+						double newD = oldD - sPair.getDegreeOfWeakening();
 						map.put("d", new Double(newD).toString());
 						secret.setReasonerParameters(map); 
 					}
