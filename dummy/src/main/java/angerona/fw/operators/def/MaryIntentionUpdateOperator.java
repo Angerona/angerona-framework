@@ -10,9 +10,10 @@ import angerona.fw.Agent;
 import angerona.fw.Intention;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
-import angerona.fw.logic.SecrecyStrengthPair;
+import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
+import angerona.fw.util.Pair;
 /**
 * The intention update operator suitable for the "Mary Courtroom Scenario"
 * The previous intention update operator chose the first intentino not to violate secrecy
@@ -47,12 +48,12 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		report(intention+" <b> 'dontKnow' is a lie </b>. Estimated cost equal to weakening secret by "+estimate);
 		return estimate;
 	}
-	private double secrecyWeakeningCost(List<SecrecyStrengthPair> weakenings)
-	{
+
+	private double secrecyWeakeningCost(List<Pair<Secret, Double>> weakenings) {
 		double total = 0.0;
-		for (SecrecyStrengthPair pair : weakenings)
+		for (Pair<Secret, Double> pair : weakenings)
 		{
-			total = total + pair.getDegreeOfWeakening();
+			total = total + pair.second;
 		}
 		return total;
 	}
@@ -107,7 +108,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 						intention.run();
 						Skill sk = (Skill)intention;
 						
-						List<SecrecyStrengthPair> weakenings = sk.getWeakenings();
+						List<Pair<Secret, Double>> weakenings = sk.violates().getPairs();
 						if(weakenings != null) {
 							double cost = secrecyWeakeningCost(weakenings);
 							intention.setCost(cost);
@@ -127,7 +128,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator{
 		else
 		{
 			Intention min = minimalCosting(atomicIntentions);
-			ag.setWeakenings(((Skill) min).getWeakenings());
+			ag.setWeakenings(((Skill) min).violates());
 			return min;
 		}
 	}

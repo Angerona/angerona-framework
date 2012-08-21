@@ -1,5 +1,7 @@
 package angerona.fw.operators.def;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.ViolatesParameter;
@@ -31,13 +34,13 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
 	
 	@Override
-	protected Boolean processInt(ViolatesParameter param) {
+	protected ViolatesResult processInt(ViolatesParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
 		
 		// only apply violates if confidential knowledge is saved in agent.
 		ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
 		if(conf == null)
-			return new Boolean(false);
+			return new ViolatesResult();
 		
 		//JOptionPane.showMessageDialog(null, param.getAction());
 		if(param.getAction() instanceof Answer) {
@@ -47,6 +50,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			BaseBeliefbase view = (BaseBeliefbase) origView.clone(); 
 			view.addKnowledge(a);
 			
+			List<Pair<Secret, Double>> pairs = new LinkedList<>();
 			if(views.containsKey(a.getReceiverId())) {
 				for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
 					
@@ -65,14 +69,15 @@ public class ViolatesOperator extends BaseViolatesOperator {
 							boolean inClone = cloneInfere.contains(secret.getInformation());
 							if(	inClone )  {
 								report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
-								return new Boolean(true);
+								pairs.add(new Pair<>(secret, 1.0));
 							}
 						}
 					}
 				}
 			}
+			return new ViolatesResult(pairs);
 		}
 		report("No violation applying the action: '" + param.getAction() + "'", param.getAgent());
-		return new Boolean(false);
+		return new ViolatesResult();
 	}
 }

@@ -1,8 +1,5 @@
 package angerona.fw;
 
-import java.util.List;
-
-import angerona.fw.logic.SecrecyStrengthPair;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
@@ -70,13 +67,6 @@ public class Action implements Perception, ContextProvider {
 			return false;
 		}
 		return true;
-	}
-	protected List<SecrecyStrengthPair> weakenings = null;
-	public List<SecrecyStrengthPair> getWeakenings() {
-		return this.weakenings;
-	}
-	public void setWeakenings(List<SecrecyStrengthPair> weaks) {
-		this.weakenings = weaks;
 	}
 	//************End Daniel's changes*************//
 }

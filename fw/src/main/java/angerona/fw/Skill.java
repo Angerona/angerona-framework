@@ -2,7 +2,7 @@ package angerona.fw;
 
 import java.util.List;
 
-import angerona.fw.logic.SecrecyStrengthPair;
+import angerona.fw.logic.ViolatesResult;
 
 /** 
  * 	A skill represents an atomic intention an agent can perform.
@@ -17,10 +17,10 @@ public abstract class Skill extends Intention implements Runnable {
 	/** the unique name of the Skill */
 	private String name;
 	
-	protected boolean violates = false;
+	protected ViolatesResult violates = new ViolatesResult();
 	
 	/* These changes need to be isolate or otherwise changed -- Daniel */
-	protected List<SecrecyStrengthPair> weakenings = null;
+	protected List<ViolatesResult> weakenings = null;
 	
 	public Skill(Agent agent, String name) {
 		super(agent);
@@ -40,19 +40,7 @@ public abstract class Skill extends Intention implements Runnable {
 		this.weakenings = s.weakenings;
 	}
 	
-
-	public List<SecrecyStrengthPair> getWeakenings()
-	{
-		return this.weakenings;
-	}
-	public void setWeakenings(List<SecrecyStrengthPair> weaks)
-	{
-		this.weakenings = weaks;
-	}
-	
-	
-	/* End of Daniel's changes */
-	public boolean violates() {
+	public ViolatesResult violates() {
 		return violates;
 	}
 	

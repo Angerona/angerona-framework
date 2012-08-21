@@ -32,7 +32,7 @@ import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
-import angerona.fw.logic.SecrecyStrengthPair;
+import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
@@ -479,21 +479,16 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	 * @param action	The action which should be applied before testing for violation.
 	 * @return			true if applying the action violates confidential, false otherwise.
 	 */
-	public boolean performThought(Beliefs beliefs, Action action) {
+	public ViolatesResult performThought(Beliefs beliefs, Action action) {
 		return violatesOperators.def().process(new ViolatesParameter(this, action));
 	}
 	
-	public List<SecrecyStrengthPair> considerSecretWeakening(Beliefs beliefs, Action action)
-	{	
-		return violatesOperators.def().weakenings();
-	}
-	
-	private List<SecrecyStrengthPair> weakenings = null;
-	public void setWeakenings(List<SecrecyStrengthPair> weaks)
+	private ViolatesResult weakenings = null;
+	public void setWeakenings(ViolatesResult weaks)
 	{
 		this.weakenings = weaks;
 	}
-	public List<SecrecyStrengthPair> getWeakenings()
+	public ViolatesResult getWeakenings()
 	{
 		return this.weakenings;
 	}

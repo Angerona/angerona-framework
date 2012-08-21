@@ -157,6 +157,21 @@ public class Secret implements Cloneable {
 		reasonerParameters = parameters;
 	}
 	
+	/**
+	 * Tests if two secrets are alike. That means they have the same information
+	 * and agent who is not allowed to unreveile the information. The used reasoner
+	 * and its parameters are not important for this method.
+	 * @param other		Reference to the other secret object for the alike-test.
+	 * @return			true if the both objects are alike, false otherwise.
+	 */
+	public boolean alike(Secret other) {
+		if(!this.information.equals(other.information))
+			return false;
+		if(!this.name.equals(other.name))
+			return false;
+		return true;
+	}
+	
 	@Override
 	public Object clone() {
 		return new Secret(this);

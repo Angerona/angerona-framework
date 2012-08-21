@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Agent;
 import angerona.fw.Skill;
 import angerona.fw.error.InvokeException;
+import angerona.fw.logic.ViolatesResult;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextVisitor;
@@ -64,7 +65,7 @@ public class XMLSkill extends Skill {
 		Agent a = getAgent();
 		
 		// clear violate flag
-		violates = false;
+		violates = new ViolatesResult();
 		
 		// create context for xml processing:
 		Context c = a.getContext();
@@ -99,7 +100,6 @@ public class XMLSkill extends Skill {
 					c.Invoke(cv, st);
 					if(sendAction && !realRun) {
 						violates = ((SendActionVisitor)cv).violates();
-						weakenings = ((SendActionVisitor)cv).weakenings();
 					}
 				} catch(InvokeException ex) {
 					ex.printStackTrace();

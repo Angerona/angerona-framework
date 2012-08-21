@@ -48,7 +48,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					{
 						continue;
 					}
-					if(!sk.violates()) {
+					if(sk.violates().isAlright()) {
 						report("Mental action successfull, using '" + sk.getName() + "' as next atomic action.", ag);
 						return intention;
 					}

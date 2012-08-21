@@ -17,9 +17,11 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.operators.parameter.ViolatesParameter;
+import angerona.fw.util.Pair;
 
 /**
  * This version of the Violates Operator supports Detail Answers and checks confidentiality violation more simply:
@@ -38,12 +40,13 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 	private static Logger LOG = LoggerFactory.getLogger(DetailViolatesOperator.class);
 	
 	@Override
-	protected Boolean processInt(ViolatesParameter param) {
+	protected ViolatesResult processInt(ViolatesParameter param) {
+		
 		LOG.info("Run Detail-Simple-ViolatesOperator");
 		if(param.getAction() instanceof Answer) {
 			ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
 			if(conf == null)
-				return new Boolean(false);
+				return new ViolatesResult();
 			
 			Answer a = (Answer) param.getAction();
 			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
@@ -75,7 +78,7 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 					LOG.warn("More than one answer but '" + this.getClass().getSimpleName() + "' only works with one (first).");
 				} else if(answers.size() == 0) {
 					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
-					return new Boolean(false);
+					return new ViolatesResult();
 				}
 				FolFormula answer = answers.iterator().next();
 				LOG.info("Make Revision for DetailQueryAnswer: '{}'", answer);
@@ -93,20 +96,22 @@ public class DetailSimpleViolatesOperator extends ViolatesOperator {
 				if (newAns==null)
 				{
 					report(param.getAgent().getName() + "' creates contradiction by: '" + param.getAction() + "'", view);
-					return new Boolean(true);
+					return new ViolatesResult(false);
 				}
 				
+				List<Pair<Secret, Double>> pairs = new LinkedList<>();
 				for(Secret secret : conf.getTargets()) {
 					if(secret.getSubjectName().equals(a.getReceiverId())) {
 						if(	view.infere().contains(secret.getInformation()))  {
 							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
-							return new Boolean(true);
+							pairs.add(new Pair<>(secret, 1.0));
 						}
 					}
 				}
+				return new ViolatesResult(pairs);
 			}
 		}
 		report("No violation applying the action: '" + param.getAction() + "'", param.getAgent());
-		return new Boolean(false);
+		return new ViolatesResult();
 	}
 }

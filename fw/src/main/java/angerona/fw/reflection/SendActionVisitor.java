@@ -1,12 +1,10 @@
 package angerona.fw.reflection;
 
-import java.util.List;
-
 import angerona.fw.Action;
 import angerona.fw.error.InvokeException;
 import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.SecrecyStrengthPair;
+import angerona.fw.logic.ViolatesResult;
 import angerona.fw.serialize.Statement;
 import angerona.fw.serialize.perception.PerceptionDO;
 
@@ -23,9 +21,7 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private boolean realRun;
 	
-	private boolean violates = false;
-	
-	private List<SecrecyStrengthPair> weakenings = null;
+	private ViolatesResult violates = null;
 	
 	private Action act = null;
 	
@@ -37,12 +33,7 @@ public class SendActionVisitor extends ContextVisitor {
 		this.realRun = realRun;
 	}
 	
-	public List<SecrecyStrengthPair> weakenings()
-	{
-		return this.weakenings;
-	}
-	
-	public boolean violates() {
+	public ViolatesResult violates() {
 		return violates;
 	}
 
@@ -62,7 +53,6 @@ public class SendActionVisitor extends ContextVisitor {
 		else
 		{
 			violates = getSelf().performThought(beliefs, reval);
-			weakenings = getSelf().considerSecretWeakening(beliefs, reval);
 		}
 		this.setReturnValueIdentifier(statement.getReturnValueIdentifier(), reval);
 	}
