@@ -6,6 +6,10 @@ import angerona.fw.listener.SubgoalListener;
 /**
  * An intention is either atomic, then it is called Skill or it is complex
  * then it is called Plan. 
+ * 
+ * To support the Angerona violates structure an intention can save if it is a
+ * real-run or a mental-run of the intention (the plan).
+ * 
  * @see Skill
  * @see Subgoal
  * @author Tim Janus
@@ -27,10 +31,42 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	/** the context used for dynamic code evaluation */
 	protected Object objectContainingContext;
 		
+	/* begin Daniel's changes */
+	
+	/** The cost associated with executing this intention */
+	protected double cost = 0.0;
+	
+	/** Whether the intention is honest or deceptive */
+	protected boolean honesty = true;
+	
+	/** Associate new cost with executing this intention */
+	public void setCost(double cost)
+	{
+		this.cost = cost;
+	}
+	
+	/** Get cost associated with executing this intention */
+	public double getCost()
+	{
+		return this.cost;
+	}
+	
+	public void setHonestyStatus(boolean honesty)
+	{
+		this.honesty = honesty;
+	}
+	public boolean getHonestyStatus()
+	{
+		return this.honesty;
+	}
+	
+	/* End Daniel's changes */
+	
 	/**
 	 * Ctor: Creates a new instance of an intention for the given agent.
 	 * @param agent	reference to the agent owning the intention
 	 */
+	
 	public Intention(Agent agent) {
 		this.agent = agent;
 	}
