@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.Skill;
+import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
@@ -242,5 +244,23 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 		}
 
 		return new ViolatesResult(secretList);
+	}
+
+	@Override
+	protected ViolatesResult onAction(Action action, ViolatesParameter param) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ViolatesResult onSkill(Skill skill, ViolatesParameter param) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ViolatesResult onPlan(Subgoal plan, ViolatesParameter param) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

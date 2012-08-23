@@ -39,64 +39,69 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
 	
 	@Override
-	protected ViolatesResult processInt(ViolatesParameter param) {
+	protected ViolatesResult onAction(Action act, ViolatesParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
-		
-		Agent ag = param.getAgent();
 		
 		// only apply violates if confidential knowledge is saved in agent.
 		ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
 		if(conf == null)
 			return new ViolatesResult();
 		
+		Agent ag = param.getAgent();
 		Beliefs beliefs = param.getBeliefs();
-		if(param.getAction() instanceof Action) {
-			Action p = (Action) param.getAction();
-			
-			// TODO: Clone internally???
-			Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAction(), (Beliefs)beliefs.clone());
-			Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
-			BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());
-			BaseBeliefbase view = newBeliefs.getViewKnowledge().get(p.getReceiverId()); 
-			
-			List<Pair<Secret, Double>> pairs = new LinkedList<>();
-			if(views.containsKey(p.getReceiverId())) {
-				for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
-					
-					// Infer only once with the ReasoningOperator defined by the pair.
-					Set<FolFormula> origInfere = origView.infere(reasoningOperator.first, reasoningOperator.second);
-					Set<FolFormula> cloneInfere = view.infere(reasoningOperator.first, reasoningOperator.second);
-					for(Secret secret : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
-						if(secret.getSubjectName().equals(p.getReceiverId())) {
-							// Check for false positives first, output an warning, because secret weakening was not applied correctly then
-							boolean inOrig = origInfere.contains(secret.getInformation());
-							if(inOrig) {
-								LOG.warn("The secret '{}' is already infered in the original view.", secret.toString());
-								continue;
-							}
-							
-							boolean inClone = cloneInfere.contains(secret.getInformation());
-							if(	inClone )  {
-								report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
-								pairs.add(new Pair<>(secret, 1.0));
-							}
+		Action p = (Action) param.getAction();
+		
+		// TODO: Clone internally???
+		Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAction(), (Beliefs)beliefs.clone());
+		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
+		BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());
+		BaseBeliefbase view = newBeliefs.getViewKnowledge().get(p.getReceiverId()); 
+		
+		List<Pair<Secret, Double>> pairs = new LinkedList<>();
+		if(views.containsKey(p.getReceiverId())) {
+			for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
+				
+				// Infer only once with the ReasoningOperator defined by the pair.
+				Set<FolFormula> origInfere = origView.infere(reasoningOperator.first, reasoningOperator.second);
+				Set<FolFormula> cloneInfere = view.infere(reasoningOperator.first, reasoningOperator.second);
+				for(Secret secret : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
+					if(secret.getSubjectName().equals(p.getReceiverId())) {
+						// Check for false positives first, output an warning, because secret weakening was not applied correctly then
+						boolean inOrig = origInfere.contains(secret.getInformation());
+						if(inOrig) {
+							LOG.warn("The secret '{}' is already infered in the original view.", secret.toString());
+							continue;
+						}
+						
+						boolean inClone = cloneInfere.contains(secret.getInformation());
+						if(	inClone )  {
+							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
+							pairs.add(new Pair<>(secret, 1.0));
 						}
 					}
 				}
 			}
-			return new ViolatesResult(pairs);
-		} else if(param.getAction() instanceof Skill) {
-			Skill skill = (Skill)param.getAction();
-			skill.setBeliefs(beliefs);
-			skill.setRealRun(false);
-			report("Performing mental-action applying: '"+skill.getName()+"'");
-			skill.run();
-			return skill.violates();
-		} else if(param.getAction() instanceof Subgoal) {
-			throw new NotImplementedException("The support for subgoals is not implemented by '" + this.getClass().getSimpleName() +  "'.");
 		}
-		
-		report("No violation applying the action: '" + param.getAction() + "'", param.getAgent());
-		return new ViolatesResult();
+		ViolatesResult reval = new ViolatesResult(pairs);
+	
+		if(reval.isAlright())
+			report("No violation applying the action: '" + act + "'");
+		else
+			report("Violation by appling the action: '" + act + "'");
+		return reval;
+	}
+	
+	@Override
+	protected ViolatesResult onSkill(Skill skill, ViolatesParameter param) {
+		skill.setBeliefs(param.getBeliefs());
+		skill.setRealRun(false);
+		report("Performing mental-action applying: '"+skill.getName()+"'");
+		skill.run();
+		return skill.violates();
+	}
+	
+	@Override
+	protected ViolatesResult onPlan(Subgoal plan, ViolatesParameter param) {
+		throw new NotImplementedException("The support for subgoals is not implemented by '" + this.getClass().getSimpleName() +  "'.");
 	}
 }
