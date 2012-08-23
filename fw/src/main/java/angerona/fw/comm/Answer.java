@@ -1,7 +1,11 @@
 package angerona.fw.comm;
 
+import java.util.Set;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AnswerValue;
+import angerona.fw.reflection.Context;
 
 /**
  * Implementation of the speech act "Answer".
@@ -26,6 +30,18 @@ public class Answer extends SpeechAct {
 		super(senderId, receiverId);
 		this.regarding = regarding;
 		this.answer = answer;
+	}
+	
+	public Answer(String senderId, String receiverId, FolFormula regarding, AnswerValue av) {
+		this(senderId, receiverId, regarding, new AngeronaAnswer(null, regarding, av));
+	}
+	
+	public Answer(String senderId, String receiverId, FolFormula regarding, FolFormula answer) {
+		this(senderId, receiverId, regarding, new AngeronaAnswer(null, regarding, answer));
+	}
+	
+	public Answer(String senderId, String receiverId, FolFormula regarding, Set<FolFormula> answers) {
+		this(senderId, receiverId, regarding, new AngeronaAnswer(null, regarding, answers));
 	}
 
 	/** @return the formula representing the question */
@@ -65,5 +81,18 @@ public class Answer extends SpeechAct {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override 
+	public Context getContext() {
+		Context reval = super.getContext();
+		AngeronaAnswer answer = getAnswer();
+		if(answer.getAnswerValue() == AnswerValue.AV_COMPLEX) {
+			// TODO: Support more than one answer
+			reval.set("answer", answer.getAnswers().iterator().next());
+		} else {
+			reval.set("answer", answer.getAnswerValue());
+		}
+		return reval;
 	}
 }

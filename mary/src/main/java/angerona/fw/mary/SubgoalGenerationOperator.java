@@ -23,13 +23,12 @@ import angerona.fw.Desire;
 import angerona.fw.MasterPlan;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
-import angerona.fw.reflection.Context;
-import angerona.fw.reflection.ContextFactory;
 
 /**
 * This implementation of a subgoal generation operator allows for the asking of multiple, detail query-type questions. 
@@ -245,23 +244,20 @@ public class SubgoalGenerationOperator extends
 			LOG.info("\t"+ans.toString());
 		}
 		
-		Context context = ContextFactory.createContext(
-				pp.getActualPlan().getAgent().getActualPerception());
+		Query q = (Query) des.getPerception();
 		Subgoal sg = new Subgoal(ag, des);
-		createSubgoals(answers, qaSkill, sg, context);
-		createSubgoals(lies, qaSkillLie, sg, context);
+		createSubgoals(answers, qaSkill, sg, q);
+		createSubgoals(lies, qaSkillLie, sg, q);
 		ag.getPlanComponent().addPlan(sg);
 		
 		return true;
 	}
 	
-	private void createSubgoals(List<FolFormula> answers, Skill usedSkill, Subgoal sg, Context context) {
+	private void createSubgoals(List<FolFormula> answers, Skill usedSkill, Subgoal sg, Query q) {
 		for(int i=0;i<answers.size();i++) {
-			context = new Context(context);
-			FolFormula answer = answers.get(i);
-			context.set("answer", answer);
+			Answer a = new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), answers.get(i));
 			Skill curSkill = usedSkill.deepCopy();
-			sg.newStack(curSkill, context);
+			sg.newStack(curSkill, a);
 		}
 	}
 	

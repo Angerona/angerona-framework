@@ -3,8 +3,8 @@
 	<statement>
       <name>SendAction</name>
       <complex-info class="angerona.fw.serialize.perception.AnswerDO"
-      		sender="$name" receiver="$in.senderId">
-      		<question>$in.question</question>
+      		sender="$name" receiver="$in.receiverId">
+      		<question>$in.regarding</question>
       		<answer>$in.answer</answer>
       </complex-info>
       <return-value-identifier>answerAction</return-value-identifier>

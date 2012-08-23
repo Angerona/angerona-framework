@@ -17,6 +17,7 @@ import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.RevisionRequest;
 import angerona.fw.logic.AngeronaAnswer;
@@ -25,7 +26,6 @@ import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
-import angerona.fw.reflection.ContextFactory;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the
@@ -123,14 +123,13 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		Subgoal answer = new Subgoal(ag, des);
-		// TODO: create alternative later
-		Context context = ContextFactory.createContext(des.getPerception());
-		context.set("answer", AnswerValue.AV_TRUE);
-		answer.newStack(qaSkill, context);
+		Query q = (Query) des.getPerception();
+		answer.newStack(qaSkill, 
+				new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), AnswerValue.AV_TRUE));
 		
-		context = new Context(context);
-		context.set("answer", AnswerValue.AV_FALSE);
-		answer.newStack(qaSkill, context);
+		answer.newStack(qaSkill,
+				new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), AnswerValue.AV_FALSE));
+		
 		ag.getPlanComponent().addPlan(answer);
 		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
 		return true;

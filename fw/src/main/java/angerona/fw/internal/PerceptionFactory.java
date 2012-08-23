@@ -36,10 +36,15 @@ public abstract class PerceptionFactory {
 	 * 			is returned.
 	 */
 	public static String createString(String paramValue, Context context) {
-		if(paramValue.startsWith("$"))
-			return (String)context.get(paramValue.substring(1));
-		else
+		if(paramValue.startsWith("$")) {
+			Object ob = context.get(paramValue.substring(1));
+			if(ob == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context:\n"+context.toString());
+			}
+			return (String)ob;
+		} else {
 			return paramValue;
+		}
 	}
 	
 	/**
@@ -55,6 +60,9 @@ public abstract class PerceptionFactory {
 	public static FolFormula createFormula(String paramValue, Context context) {
 		if(paramValue.startsWith("$")) {
 			Object obj = context.get(paramValue.substring(1));
+			if(obj == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context:\n" + context.toString());
+			}
 			if(obj instanceof FolFormula) {
 				return (FolFormula)obj;
 			} else if(obj instanceof String) {
@@ -87,6 +95,9 @@ public abstract class PerceptionFactory {
 		
 		if(paramValue.startsWith("$")) {
 			Object obj = context.get(paramValue.substring(1));
+			if(obj == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context:\n"+context.toString());
+			}
 			if(obj instanceof Collection<?>) {
 				for(Object element : (Collection<?>)obj) {
 					if(element instanceof FolFormula)
@@ -115,6 +126,9 @@ public abstract class PerceptionFactory {
 	public static AnswerValue createAnswerValue(String paramValue, Context context) {
 		if(paramValue.startsWith("$")) {
 			Object obj = context.get(paramValue.substring(1));
+			if(obj == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context");
+			}
 			if(obj instanceof AngeronaAnswer)
 				return ((AngeronaAnswer)obj).getAnswerValue();
 			else 

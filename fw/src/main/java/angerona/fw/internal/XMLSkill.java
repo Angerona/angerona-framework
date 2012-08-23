@@ -9,6 +9,7 @@ import angerona.fw.error.InvokeException;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
+import angerona.fw.reflection.ContextProvider;
 import angerona.fw.reflection.ContextVisitor;
 import angerona.fw.reflection.ReasonVisitor;
 import angerona.fw.reflection.SendActionVisitor;
@@ -84,10 +85,13 @@ public class XMLSkill extends Skill {
 		// also define the reason for the action, this might be a perception like
 		// query if the XMLSkill is performing an answer.
 		Context in = null;
-		if(!(objectContainingContext instanceof Context))
-			in = ContextFactory.createContext(objectContainingContext);
-		else 
+		if(objectContainingContext instanceof Context) {
 			in = (Context) objectContainingContext;
+		} else if(objectContainingContext instanceof ContextProvider) {
+			in = ((ContextProvider)objectContainingContext).getContext();
+		} else {
+			in = ContextFactory.createContext(objectContainingContext);
+		}
 		c.attachContext("in", in);
 		
 		// iterate through all statements.

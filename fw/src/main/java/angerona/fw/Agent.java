@@ -62,7 +62,12 @@ import angerona.fw.serialize.SkillConfig;
  * The agent defines helper methods to use the operators of the agent.
  * @author Tim Janus, Daniel Dilger
  */
-public class Agent extends AgentArchitecture implements ContextProvider, Entity, OperatorVisitor, ReportPoster, BeliefbaseChangeListener {
+public class Agent extends AgentArchitecture 
+	implements ContextProvider
+	, Entity
+	, OperatorVisitor
+	, ReportPoster
+	, BeliefbaseChangeListener {
 
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Agent.class);
