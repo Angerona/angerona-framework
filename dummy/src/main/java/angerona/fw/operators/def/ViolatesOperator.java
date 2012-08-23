@@ -39,7 +39,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
 	
 	@Override
-	protected ViolatesResult onAction(Action act, ViolatesParameter param) {
+	protected ViolatesResult onPerception(Perception percept, ViolatesParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
 		
 		// only apply violates if confidential knowledge is saved in agent.
@@ -49,10 +49,10 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		Agent ag = param.getAgent();
 		Beliefs beliefs = param.getBeliefs();
-		Action p = (Action) param.getAction();
+		Action p = (Action) param.getAtom();
 		
 		// TODO: Clone internally???
-		Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAction(), (Beliefs)beliefs.clone());
+		Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAtom(), (Beliefs)beliefs.clone());
 		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 		BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());
 		BaseBeliefbase view = newBeliefs.getViewKnowledge().get(p.getReceiverId()); 
@@ -75,7 +75,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						
 						boolean inClone = cloneInfere.contains(secret.getInformation());
 						if(	inClone )  {
-							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAction() + "'", view);
+							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'", view);
 							pairs.add(new Pair<>(secret, 1.0));
 						}
 					}
@@ -85,9 +85,9 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		ViolatesResult reval = new ViolatesResult(pairs);
 	
 		if(reval.isAlright())
-			report("No violation applying the action: '" + act + "'");
+			report("No violation applying the perception/action: '" + percept + "'");
 		else
-			report("Violation by appling the action: '" + act + "'");
+			report("Violation by appling the perception/action: '" + percept + "'");
 		return reval;
 	}
 	

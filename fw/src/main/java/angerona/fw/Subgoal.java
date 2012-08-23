@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import angerona.fw.logic.ViolatesResult;
+
 /**
  * A subgoal is a complex intention. It can realize sub plans by using stacks. 
  * It gives the user the possibility of using more than one sub-plan, this allows the implementation of
@@ -190,5 +192,11 @@ public class Subgoal extends Intention {
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	@Override 
+	public ViolatesResult violates() {
+		// TODO:
+		return null;
 	}
 }

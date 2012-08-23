@@ -1,7 +1,5 @@
 package angerona.fw;
 
-import java.util.List;
-
 import angerona.fw.logic.ViolatesResult;
 
 /** 
@@ -19,9 +17,6 @@ public abstract class Skill extends Intention implements Runnable {
 	
 	protected ViolatesResult violates = new ViolatesResult();
 	
-	/* These changes need to be isolate or otherwise changed -- Daniel */
-	protected List<ViolatesResult> weakenings = null;
-	
 	public Skill(Agent agent, String name) {
 		super(agent);
 		this.name = name;
@@ -37,9 +32,9 @@ public abstract class Skill extends Intention implements Runnable {
 		this.honesty = s.honesty;
 		this.name = s.name;
 		this.violates = s.violates;
-		this.weakenings = s.weakenings;
 	}
 	
+	@Override
 	public ViolatesResult violates() {
 		return violates;
 	}

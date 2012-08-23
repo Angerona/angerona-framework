@@ -65,7 +65,8 @@ public class XMLSkill extends Skill {
 		Agent a = getAgent();
 		
 		// clear violate flag
-		violates = new ViolatesResult();
+		if(!realRun)
+			violates = new ViolatesResult();
 		
 		// create context for xml processing:
 		Context c = a.getContext();
@@ -97,6 +98,11 @@ public class XMLSkill extends Skill {
 			// invoke the command if one was found.
 			if(cv != null) {
 				try {
+					// TODO: hacky violate shifting... too complex...
+					if(sendAction && realRun) {
+						((SendActionVisitor)cv).setViolates(violates);
+					}
+					
 					c.Invoke(cv, st);
 					
 					// send action is an command which needs a violation check:

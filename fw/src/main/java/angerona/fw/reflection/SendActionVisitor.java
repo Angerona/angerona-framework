@@ -23,6 +23,10 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private ViolatesResult violates = null;
 	
+	public void setViolates(ViolatesResult vr) {
+		violates = vr;
+	}
+	
 	public SendActionVisitor(PerceptionFactory factory, boolean realRun, Beliefs beliefs) {
 		if(factory == null)
 			throw new IllegalArgumentException("factory must not null!");
@@ -41,10 +45,10 @@ public class SendActionVisitor extends ContextVisitor {
 	protected void runImpl(Statement statement) throws InvokeException {
 		Action reval = (Action) factory.generateFromDataObject((PerceptionDO)statement.getComplexInfo(), context);
 
-		if(realRun)
+		if(realRun) {
+			reval.setViolates(violates);
 			getSelf().performAction(reval);
-		else
-		{
+		} else {
 			violates = getSelf().performThought(beliefs, reval);
 			beliefs = violates.getBeliefs();
 		}

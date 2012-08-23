@@ -48,7 +48,7 @@ public class ViolatesParameter extends GenericOperatorParameter {
 	}
 	
 	/** @return the action applied before proofing for violation */
-	public AngeronaAtom getAction() {
+	public AngeronaAtom getAtom() {
 		return action;
 	}
 }

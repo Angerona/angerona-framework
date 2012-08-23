@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
@@ -83,7 +84,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 	}
 
 	@Override
-	protected ViolatesResult onAction(Action action, ViolatesParameter param) {
+	protected ViolatesResult onPerception(Perception percept, ViolatesParameter param) {
 		Logger LOG = LoggerFactory.getLogger(WeakeningViolatesOperator.class);
 		List<Pair<Secret, Double>> secretList = new LinkedList<>();
 
@@ -99,9 +100,9 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		/*
 		 * Remaining operations depend on whether the action in question is an answer
 		 */
-		if (param.getAction() instanceof Answer) {
+		if (param.getAtom() instanceof Answer) {
 
-			Answer a = (Answer) param.getAction();
+			Answer a = (Answer) param.getAtom();
 
 			/*
 			 * Consider self-repeating answers (and only answers) as bad as
@@ -112,7 +113,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				if (a.equals(act)) {
 					report(param.getAgent().getName()
 							+ "' <b> self-repeats </b> with: '"
-							+ param.getAction() + "'");
+							+ param.getAtom() + "'");
 					secretList = representTotalExposure(conf);
 					return new ViolatesResult(secretList);
 				}
@@ -154,7 +155,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				prog = view.getProgram();
 
 				if (newAnsSets == null) {
-					String actString = param.getAction().toString();
+					String actString = param.getAtom().toString();
 					report(param.getAgent().getName() + "' <b> creates contradiction </b> by: '"
 							+ actString.substring(0, actString.length() - 1) + "'", view);
 					secretList = representTotalExposure(conf);
@@ -194,7 +195,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 						sPair.second = degreeOfWeakening;
 
 						secretList.add(sPair);
-						String actString = param.getAction().toString();
+						String actString = param.getAtom().toString();
 						if (degreeOfWeakening > 0) {
 							report(param.getAgent().getName()
 									+ "' <b> weakens secret: </b> '"
@@ -211,7 +212,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 											actString.length() - 1) + "'", view);
 						}
 					} else {
-						String actString = param.getAction().toString();
+						String actString = param.getAtom().toString();
 						report(param.getAgent().getName()
 								+ "' <b> weakens no secrets: </b> ' with: '"
 								+ actString.substring(0, actString.length() - 1)

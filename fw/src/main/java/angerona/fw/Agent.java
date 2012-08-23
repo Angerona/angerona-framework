@@ -114,6 +114,9 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	/** the perception received by the last or running cylce call */
 	private Perception actualPerception;
 	
+	/** the last perception used in the updateBeliefs Method */
+	private Perception lastUpdateBeliefsPercept;
+	
 	/** object represents the last action performed by the agent. */
 	private Action lastAction;
 	
@@ -472,8 +475,11 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 	 * @param perception	the perception causing the update
 	 */
 	public Beliefs updateBeliefs(Perception perception, Beliefs beliefs) {
-		if(perception != null)
+		if(perception != null) {
+			// save the perception for later use in messaging system.
+			lastUpdateBeliefsPercept = perception;
 			return changeOperators.def().process(new UpdateBeliefsParameter(this, beliefs, perception));
+		}
 		return beliefs;
 	}
 	
@@ -681,21 +687,22 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 
 	@Override
 	public void changed(BaseBeliefbase bb) {
+		// TODO: Document the flow of the messaging system for update-beliefs more technically.
 		if(bb == beliefs.getWorldKnowledge()) {
-			onBBChanged(bb, AgentListener.WORLD);
+			onBBChanged(bb, lastUpdateBeliefsPercept, AgentListener.WORLD);
 		} else {
 			for(String agName : beliefs.getViewKnowledge().keySet()) {
 				BaseBeliefbase act = beliefs.getViewKnowledge().get(agName);
 				if(act == bb) {
-					onBBChanged(bb, agName);
+					onBBChanged(bb, lastUpdateBeliefsPercept, agName);
 				}
 			}
 		}
 	}
 	
-	private void onBBChanged(BaseBeliefbase bb, String space) {
+	private void onBBChanged(BaseBeliefbase bb, Perception percept, String space) {
 		for(AgentListener l : listeners) {
-			l.beliefbaseChanged(bb, space);
+			l.beliefbaseChanged(bb, percept, space);
 		}
 	}
 	
