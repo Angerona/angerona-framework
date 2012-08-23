@@ -22,7 +22,7 @@ import angerona.fw.serialize.Statement;
  * files.
  * 
  * The Skill reads an xml file for a list of statements which represent commandos:
- * First of all it searchs for the correct visitor implementation for the actual commando.
+ * First of all it searches for the correct visitor implementation for the actual commando.
  * Then it uses the Context of the agent to determine what a '$world' or '$in.answer' 
  * in the xml file means. 
  * 

@@ -56,10 +56,10 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 	 * are not copied by secrets clone method
 	 */
 	public ConfidentialKnowledge(ConfidentialKnowledge other) {
+		super(other);
 		for (Secret ct : other.confidentialTargets) {
 			Secret clone = (Secret) ct.clone();
-			clone.addPropertyListener(this);
-			this.confidentialTargets.add(clone);
+			addConfidentialTarget(clone);
 		}
 	}
 

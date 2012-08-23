@@ -151,10 +151,11 @@ public class Secret implements Cloneable {
 	 * @param parameters	A map containing the parameters for the reasoner.
 	 */
 	public void setReasonerParameters(Map<String, String> parameters) {
-		invokePropertyListener("reasonerParameters", 
-				reasonerParameters, 
-				parameters);
+		Map<String, String> old = new HashMap<>(reasonerParameters);
 		reasonerParameters = parameters;
+		invokePropertyListener("reasonerParameters", 
+				old, 
+				parameters);
 	}
 	
 	/**
