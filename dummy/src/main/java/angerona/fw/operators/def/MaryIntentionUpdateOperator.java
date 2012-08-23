@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
 import angerona.fw.Intention;
+import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
@@ -58,14 +59,15 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	/**
 	 * A more elegant solution would be to use Collections.max
 	 */
-	private Intention minimalCosting(List<Intention> intentions) {
+	private PlanElement minimalCosting(List<PlanElement> intentions) {
 		if (intentions == null || intentions.size() == 0) {
 			return null;
 		}
-		Intention minIntent = intentions.get(0);
-		double minCost = minIntent.getCost();
-		for (Intention intent : intentions) {
-			double curCost = intent.getCost();
+		PlanElement minIntent = null;
+		double minCost = Double.MAX_VALUE;
+		
+		for (PlanElement intent : intentions) {
+			double curCost = intent.getCosts();
 			if (curCost < minCost) {
 				minCost = curCost;
 				minIntent = intent;
@@ -78,28 +80,28 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	protected Intention processInt(IntentionUpdateParameter param) {
 		LOG.info("Run Mary-Intention-Update");
 		Agent ag = param.getPlan().getAgent();
-		List<Intention> atomicIntentions = new LinkedList<Intention>();
+		List<PlanElement> atomicIntentions = new LinkedList<PlanElement>();
 		// Loop needs to be changed so that only options from the same plan are
 		// considered
 		for (Subgoal plan : param.getPlan().getPlans()) {
 			for (int i = 0; i < plan.getNumberOfStacks(); ++i) {
-				if (plan.peekStack(i).isAtomic()) {
-					Intention intention = plan.peekStack(i);
+				PlanElement pe = plan.peekStack(i);
+				if (pe.getIntention().isAtomic()) {
+					Intention intention = pe.getIntention();
 					intention.setRealRun(false);
 
 					if (isLie(intention)) {
 						// add return value of lyingCost(intention) to intention
 						double cost = lyingCost(intention);
-						intention.setCost(cost);
-						atomicIntentions.add(intention);
+						pe.setCosts(cost + pe.getCosts());
+						atomicIntentions.add(pe);
 					} else {
 						List<Pair<Secret, Double>> weakenings = ag.performThought(ag.getBeliefs(), intention).getPairs();
 						
 						if (weakenings != null) {
 							double cost = secrecyWeakeningCost(weakenings);
-							intention.setCost(cost);
-							atomicIntentions.add(intention);
-
+							pe.setCosts(cost);
+							atomicIntentions.add(pe);
 						}
 					}
 
@@ -110,8 +112,9 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 			report("No atomic step candidate found.");
 			return null;
 		} else {
-			Intention min = minimalCosting(atomicIntentions);
-			return min;
+			PlanElement min = minimalCosting(atomicIntentions);
+			min.prepare();
+			return min.getIntention();
 		}
 	}
 }

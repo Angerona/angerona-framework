@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
 import angerona.fw.Intention;
+import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
@@ -27,15 +28,9 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		Agent ag = param.getPlan().getAgent();
 		for(Subgoal plan : param.getPlan().getPlans()) {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
-				if(plan.peekStack(i).isAtomic()) {
-					Intention intention = plan.peekStack(i);
-					
-					/*
-					intention.setRealRun(false);
-					report("Performing mental-action applying: '"+intention+"'", ag);
-					intention.run();
-					Skill sk = (Skill)intention;
-					*/
+				PlanElement pe = plan.peekStack(i);
+				if(pe.getIntention().isAtomic()) {
+					Intention intention = pe.getIntention();
 					
 					if(intention.isAtomic()) {
 						boolean alright = ag.performThought(ag.getBeliefs(), intention).isAlright();

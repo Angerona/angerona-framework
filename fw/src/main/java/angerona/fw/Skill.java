@@ -27,8 +27,7 @@ public abstract class Skill extends Intention implements Runnable {
 		super(s.agent);
 		this.parent = s.parent;
 		this.realRun = s.realRun;
-		this.objectContainingContext = s.objectContainingContext;
-		this.cost = s.cost;
+		this.dataObject = s.dataObject;
 		this.honesty = s.honesty;
 		this.name = s.name;
 		this.violates = s.violates;

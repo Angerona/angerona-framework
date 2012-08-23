@@ -29,30 +29,17 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	/** flag indicating if the actions in this Intention should be send to the environment */
 	protected boolean realRun = false;
 	
-	/** the context used for dynamic code evaluation */
-	protected Object objectContainingContext;
+	/** the context used for dynamic code evaluation, allows the access on data saved to for
+	 *  evaluating the intention
+	 */
+	protected Object dataObject;
 	
 	protected Beliefs actBeliefs;
 		
 	/* begin Daniel's changes */
 	
-	/** The cost associated with executing this intention */
-	protected double cost = 0.0;
-	
 	/** Whether the intention is honest or deceptive */
 	protected boolean honesty = true;
-	
-	/** Associate new cost with executing this intention */
-	public void setCost(double cost)
-	{
-		this.cost = cost;
-	}
-	
-	/** Get cost associated with executing this intention */
-	public double getCost()
-	{
-		return this.cost;
-	}
 	
 	public void setHonestyStatus(boolean honesty)
 	{
@@ -89,7 +76,7 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 		this.realRun = other.realRun;
 		
 		// TODO: This should have no side-effects, but not sure yet.
-		this.objectContainingContext = null;
+		this.dataObject = null;
 	}
 	
 	/** @return reference to the agent owning this Intention */
@@ -118,8 +105,8 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	}
 	
 	/** setting the object which contains the input context for this intention */
-	public void setObjectContainingContext(Object obj) {
-		this.objectContainingContext = obj;
+	public void setDataObject(Object obj) {
+		this.dataObject = obj;
 	}
 	
 	public void setParent(Intention parent) {

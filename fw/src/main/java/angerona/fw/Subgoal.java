@@ -19,29 +19,8 @@ public class Subgoal extends Intention {
 	/** a collection of desires which will be fulfilled if this Intention was processed */
 	private Desire	fulfillsDesire;
 	
-	/**
-	 * Represents a stack element. Skills need to save their context object to perform
-	 * the correct actions
-	 * @author Tim Janus
-	 */
-	protected class StackElement {
-		private Intention intention;
-		
-		private Object context;
-		
-		public StackElement(StackElement other) {
-			this.intention = (Intention)other.intention.clone();
-			this.context = other.context;
-		}
-		
-		public StackElement(Intention intention, Object context) {
-			this.intention = intention;
-			this.context = context;
-		}
-	}
-	
 	/** a collection of stacks with sub-intentions defining the subgoals of this intention */
-	private List<Stack<StackElement>> stacks = new LinkedList<Stack<StackElement>>();
+	private List<Stack<PlanElement>> stacks = new LinkedList<Stack<PlanElement>>();
 	
 	public Subgoal(Agent agent) {
 		this(agent, null);
@@ -54,10 +33,10 @@ public class Subgoal extends Intention {
 	
 	protected Subgoal(Subgoal other) {
 		super(other);
-		for(Stack<StackElement> stack : other.stacks) {
-			Stack<StackElement> newOne = new Stack<Subgoal.StackElement>();
+		for(Stack<PlanElement> stack : other.stacks) {
+			Stack<PlanElement> newOne = new Stack<PlanElement>();
 			for(int i=0; i<stack.size(); ++i) {
-				newOne.add(new StackElement(stack.get(i)));
+				newOne.add(new PlanElement(stack.get(i)));
 			}
 			this.stacks.add(newOne);
 		}
@@ -87,8 +66,8 @@ public class Subgoal extends Intention {
 	 * @return			true
 	 */
 	public boolean newStack(Intention intention, Object context) {
-		Stack<StackElement> newStack = new Stack<Subgoal.StackElement>();
-		newStack.add(new StackElement(intention, context));
+		Stack<PlanElement> newStack = new Stack<PlanElement>();
+		newStack.add(new PlanElement(intention, context));
 		return stacks.add(newStack);
 	}
 	
@@ -97,7 +76,7 @@ public class Subgoal extends Intention {
 	}
 	
 	public boolean addToStack(Intention intention, Object context, int index) {
-		return stacks.get(index).add(new StackElement(intention, context));
+		return stacks.get(index).add(new PlanElement(intention, context));
 	}
 	
 	/**
@@ -105,36 +84,12 @@ public class Subgoal extends Intention {
 	 * @param index	index of the used stack
 	 * @return intention on-top of the stack with the given index.
 	 */
-	public Intention peekStack(int index) {
-		StackElement se = stacks.get(index).peek();
-		se.intention.setObjectContainingContext(se.context); //What do these side effects do?
-		se.intention.setParent(this);
-		return se.intention;
+	public PlanElement peekStack(int index) {
+		PlanElement pe = stacks.get(index).peek();
+		pe.getIntention().setParent(this);
+		pe.prepare();
+		return pe;
 	}
-	
-	
-	public List<Intention> getStackAsIntentionList(int index) {
-		List<Intention> reval = new LinkedList<Intention>();
-		Stack<StackElement> st = stacks.get(index);
-		for(int i=0; i<st.size(); ++i) {
-			reval.add(st.get(i).intention);
-		}
-		return reval;
-	}
-	
-	/**
-	 * Returns and removes the top-stack element of the stack wit the given index.
-	 * @param index	index of used stack.
-	 * @return	intention on-top of the stack with the given index.
-	 */
-	/*
-	public Intention popStack(int index) {
-		StackElement se = stacks.get(index).pop();
-		se.intention.setObjectContainingContext(se.context);
-		se.intention.setParent(this);
-		return se.intention;
-	}
-	*/
 
 	@Override
 	public void run() {
@@ -158,9 +113,9 @@ public class Subgoal extends Intention {
 
 	@Override
 	public void onSubgoalFinished(Intention subgoal) {
-		Stack<StackElement> toDel = null;
-		for(Stack<StackElement> s : stacks) {
-			if(s.peek().intention.equals( subgoal )) {
+		Stack<PlanElement> toDel = null;
+		for(Stack<PlanElement> s : stacks) {
+			if(s.peek().getIntention().equals( subgoal )) {
 				s.pop();
 				if(s.isEmpty()) {
 					toDel = s;

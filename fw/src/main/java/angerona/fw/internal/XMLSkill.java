@@ -85,12 +85,12 @@ public class XMLSkill extends Skill {
 		// also define the reason for the action, this might be a perception like
 		// query if the XMLSkill is performing an answer.
 		Context in = null;
-		if(objectContainingContext instanceof Context) {
-			in = (Context) objectContainingContext;
-		} else if(objectContainingContext instanceof ContextProvider) {
-			in = ((ContextProvider)objectContainingContext).getContext();
+		if(dataObject instanceof Context) {
+			in = (Context) dataObject;
+		} else if(dataObject instanceof ContextProvider) {
+			in = ((ContextProvider)dataObject).getContext();
 		} else {
-			in = ContextFactory.createContext(objectContainingContext);
+			in = ContextFactory.createContext(dataObject);
 		}
 		c.attachContext("in", in);
 		
