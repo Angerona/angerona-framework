@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.Skill;
-import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ConfidentialKnowledge;
@@ -24,7 +22,6 @@ import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
-import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.util.Pair;
 
@@ -37,16 +34,8 @@ import angerona.fw.util.Pair;
  * @author Daniel Dilger, Tim Janus
  * 
  */
-public class WeakeningViolatesOperator extends BaseViolatesOperator {
+public class WeakeningViolatesOperator extends ViolatesOperator {
 	static final double INFINITY = 1000.0;
-
-	/**
-	 * Does not call super().processInt
-	 */
-	@Override
-	protected ViolatesResult processInt(ViolatesParameter param) {
-		return processIntAndWeaken(param);
-	}
 
 	/**
 	 * Assumes information given is always a fact
@@ -93,10 +82,8 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 		return strength;
 	}
 
-	/**
-	 * 
-	 */
-	protected ViolatesResult processIntAndWeaken(ViolatesParameter param) {
+	@Override
+	protected ViolatesResult onAction(Action action, ViolatesParameter param) {
 		Logger LOG = LoggerFactory.getLogger(WeakeningViolatesOperator.class);
 		List<Pair<Secret, Double>> secretList = new LinkedList<>();
 
@@ -110,8 +97,7 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 			return new ViolatesResult();
 
 		/*
-		 * Remaining operations depend on whether the action in question is an
-		 * answer
+		 * Remaining operations depend on whether the action in question is an answer
 		 */
 		if (param.getAction() instanceof Answer) {
 
@@ -138,14 +124,12 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 					&& a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) {
 
 				// TODO: Merge violates operators
-				AspBeliefbase view = (AspBeliefbase) views.get(
-						a.getReceiverId()).clone();
+				AspBeliefbase view = (AspBeliefbase) views.get(a.getReceiverId()).clone();
 				Program prog = view.getProgram();
 
 				Set<FolFormula> answers = a.getAnswer().getAnswers();
 				if (answers.size() > 1) {
-					LOG.warn("More than one answer but '"
-							+ this.getClass().getSimpleName()
+					LOG.warn("More than one answer but '" + this.getClass().getSimpleName()
 							+ "' only works with one (first).");
 				} else if (answers.size() == 0) {
 					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
@@ -155,7 +139,6 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 				LOG.info("Make Revision for QueryAnswer: '{}'", answer);
 
 				Rule rule = convertToRule(answer);
-
 				prog.add(rule);
 
 				/*
@@ -172,36 +155,30 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 
 				if (newAnsSets == null) {
 					String actString = param.getAction().toString();
-					report(param.getAgent().getName()
-							+ "' <b> creates contradiction </b> by: '"
-							+ actString.substring(0, actString.length() - 1)
-							+ "'", view);
+					report(param.getAgent().getName() + "' <b> creates contradiction </b> by: '"
+							+ actString.substring(0, actString.length() - 1) + "'", view);
 					secretList = representTotalExposure(conf);
 					return new ViolatesResult(secretList);
 				}
 
 				/* Now the secrecy strengths get added */
 				for (Secret secret : conf.getTargets()) {
-					FolFormula secretInfo = (FolFormula) secret
-							.getInformation();
-					// not used: (kill warning TJ)
-					// Rule secretRule = convertToRule(secretInfo);
+					FolFormula secretInfo = secret.getInformation();
 
 					boolean secretContained = false;
 					for (AnswerSet ans : newAnsSets) {
 						if (ans.toString().contains(secretInfo.toString())) {
 							int index = ans.toString().indexOf(
 									secretInfo.toString());
-							if (index == 0
-									|| ans.toString().charAt(index - 1) != '-')
+							if (index == 0 || ans.toString().charAt(index - 1) != '-') {
 								secretContained = true;
+							}
 						}
 					}
 					if (secretContained) {
 						Pair<Secret, Double> sPair = new Pair<>();
 						sPair.first = secret;
-						double newStrength = calculateSecrecyStrength(
-								secretInfo, newAnsSets);
+						double newStrength = calculateSecrecyStrength(secretInfo, newAnsSets);
 
 						// TODO: Find default policy like a default parameter
 						// value if not set yet.
@@ -212,6 +189,7 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 						} else {
 							curStrength = Double.parseDouble(d);
 						}
+						
 						double degreeOfWeakening = curStrength - newStrength;
 						sPair.second = degreeOfWeakening;
 
@@ -244,23 +222,5 @@ public class WeakeningViolatesOperator extends BaseViolatesOperator {
 		}
 
 		return new ViolatesResult(secretList);
-	}
-
-	@Override
-	protected ViolatesResult onAction(Action action, ViolatesParameter param) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected ViolatesResult onSkill(Skill skill, ViolatesParameter param) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected ViolatesResult onPlan(Subgoal plan, ViolatesParameter param) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

@@ -17,7 +17,7 @@ import angerona.fw.util.Pair;
 
 /**
  * The intention update operator suitable for the "Mary Courtroom Scenario" The
- * previous intention update operator chose the first intentino not to violate
+ * previous intention update operator chose the first intention not to violate
  * secrecy This operator considers all options at once and then chooses an
  * optimal one It picks the optimal one by assigning a cost to weakening secrets
  * and to telling lies For further use of the operator, the operator should be
@@ -31,10 +31,6 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory
 			.getLogger(IntentionUpdateOperator.class);
-
-	private boolean intentionOutdated(Intention intention) {
-		return false;
-	}
 
 	private boolean isLie(Intention intention) {
 
@@ -91,22 +87,16 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 				if (plan.peekStack(i).isAtomic()) {
 					Intention intention = plan.peekStack(i);
 					intention.setRealRun(false);
-					if (intentionOutdated(intention)) {
-						continue;
-					}
-					report("Performing mental-action applying: '" + intention
-							+ "'", ag);
+
+					report("Performing mental-action applying: '" + intention + "'", ag);
 					if (isLie(intention)) {
 						// add return value of lyingCost(intention) to intention
 						double cost = lyingCost(intention);
 						intention.setCost(cost);
 						atomicIntentions.add(intention);
 					} else {
-						intention.run();
-						Skill sk = (Skill) intention;
-
-						List<Pair<Secret, Double>> weakenings = sk.violates()
-								.getPairs();
+						List<Pair<Secret, Double>> weakenings = ag.performThought(ag.getBeliefs(), intention).getPairs();
+						
 						if (weakenings != null) {
 							double cost = secrecyWeakeningCost(weakenings);
 							intention.setCost(cost);
