@@ -24,7 +24,6 @@ public class Plugin implements OperatorPlugin {
 	//@Override
 	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators() {
 		List<Class<? extends BaseUpdateBeliefsOperator>> reval = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
-		reval.add(angerona.fw.operators.def.MaryUpdateBeliefsOperator.class);
 		return reval;
 	}
 

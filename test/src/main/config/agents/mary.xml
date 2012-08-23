@@ -17,7 +17,7 @@
     </subgoal-generation-operators>
 
     <update-beliefs-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-    	<default-operator-cls>angerona.fw.operators.def.MaryUpdateBeliefsOperator</default-operator-cls>
+    	<default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
 	</update-beliefs-operators>	
     
     <violates-operators class="angerona.fw.serialize.OperatorSetConfigReal">
