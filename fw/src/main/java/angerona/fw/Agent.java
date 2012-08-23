@@ -494,17 +494,11 @@ public class Agent extends AgentArchitecture implements ContextProvider, Entity,
 		return violatesOperators.def().process(new ViolatesParameter(this, beliefs, intent));
 	}
 	
-	private ViolatesResult weakenings = null;
-	public void setWeakenings(ViolatesResult weaks)
-	{
-		this.weakenings = weaks;
-	}
-	public ViolatesResult getWeakenings()
-	{
-		return this.weakenings;
-	}
-	
-	
+	/**
+	 * Reasons the given query on the world knowledge using the default reasoning operator.
+	 * @param query		Formula representing the question.
+	 * @return			An Angerona Answer containing the result of the reasoning.
+	 */
 	public AngeronaAnswer reason(FolFormula query) {
 		return beliefs.getWorldKnowledge().reason(query);
 	}

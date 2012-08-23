@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
 import angerona.fw.Intention;
-import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
@@ -88,7 +87,6 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					Intention intention = plan.peekStack(i);
 					intention.setRealRun(false);
 
-					report("Performing mental-action applying: '" + intention + "'", ag);
 					if (isLie(intention)) {
 						// add return value of lyingCost(intention) to intention
 						double cost = lyingCost(intention);
@@ -109,11 +107,10 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 			}
 		}
 		if (atomicIntentions.size() == 0) {
-			report("No atomic step candidate found.", ag);
+			report("No atomic step candidate found.");
 			return null;
 		} else {
 			Intention min = minimalCosting(atomicIntentions);
-			ag.setWeakenings(((Skill) min).violates());
 			return min;
 		}
 	}
