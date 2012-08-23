@@ -52,15 +52,6 @@ public class XMLSkill extends Skill {
 		this.config = config;
 	}
 	
-	/**
-	 * Copy-Ctor: (Daniels Code)
-	 * @param other
-	 */
-	public XMLSkill(XMLSkill other) {
-		super(other);
-		this.config = other.config;
-	}
-	
 	@Override
 	public void run() {
 		Agent a = getAgent();
@@ -137,10 +128,5 @@ public class XMLSkill extends Skill {
 		
 		if(parent != null && realRun)
 			parent.onSubgoalFinished(this);
-	}
-
-	@Override
-	public Skill deepCopy() {
-		return new XMLSkill(this);
 	}
 }

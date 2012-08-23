@@ -22,17 +22,6 @@ public abstract class Skill extends Intention implements Runnable {
 		this.name = name;
 	}
 	
-	public Skill(Skill s)
-	{
-		super(s.agent);
-		this.parent = s.parent;
-		this.realRun = s.realRun;
-		this.dataObject = s.dataObject;
-		this.honesty = s.honesty;
-		this.name = s.name;
-		this.violates = s.violates;
-	}
-	
 	@Override
 	public ViolatesResult violates() {
 		return violates;
@@ -72,10 +61,4 @@ public abstract class Skill extends Intention implements Runnable {
 	public Object clone() {
 		return this;
 	}
-	
-	/**
-	 * In the future, Skill probably shouldn't have a deepCopy, as it shouldn't need it. 
-	 * Thus Skill doesn't need to implement cloneable
-	 */
-	public abstract Skill deepCopy();
 }

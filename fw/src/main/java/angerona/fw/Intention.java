@@ -34,23 +34,8 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	 */
 	protected Object dataObject;
 	
+	// TODO: get the beliefs from plan element...
 	protected Beliefs actBeliefs;
-		
-	/* begin Daniel's changes */
-	
-	/** Whether the intention is honest or deceptive */
-	protected boolean honesty = true;
-	
-	public void setHonestyStatus(boolean honesty)
-	{
-		this.honesty = honesty;
-	}
-	public boolean getHonestyStatus()
-	{
-		return this.honesty;
-	}
-	
-	/* End Daniel's changes */
 	
 	public Beliefs getBeliefs() {
 		return actBeliefs;

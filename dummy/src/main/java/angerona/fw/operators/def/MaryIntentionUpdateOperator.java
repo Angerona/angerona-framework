@@ -32,12 +32,11 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	private static Logger LOG = LoggerFactory
 			.getLogger(IntentionUpdateOperator.class);
 
-	private boolean isLie(Intention intention) {
-
-		if (intention.getHonestyStatus()) {
-			return false;
+	private boolean isLie(PlanElement pe) {
+		if(pe.getUserData() instanceof Boolean) {
+			return (Boolean)pe.getUserData();
 		}
-		return true;
+		return false;
 	}
 
 	private double lyingCost(Intention intention) {
@@ -90,7 +89,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					Intention intention = pe.getIntention();
 					intention.setRealRun(false);
 
-					if (isLie(intention)) {
+					if (isLie(pe)) {
 						// add return value of lyingCost(intention) to intention
 						double cost = lyingCost(intention);
 						pe.setCosts(cost + pe.getCosts());

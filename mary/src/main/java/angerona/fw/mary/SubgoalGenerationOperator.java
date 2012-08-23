@@ -237,27 +237,20 @@ public class SubgoalGenerationOperator extends
 		FolFormula ignorance = expressionOfIgnorance(query);
 		lies.add(ignorance);
 		
-		Skill qaSkillLie = (Skill) qaSkill.deepCopy(); 
-		qaSkillLie.setHonestyStatus(false); 
-		
-		for(FolFormula ans : answers) {
-			LOG.info("\t"+ans.toString());
-		}
-		
 		Query q = (Query) des.getPerception();
 		Subgoal sg = new Subgoal(ag, des);
-		createSubgoals(answers, qaSkill, sg, q);
-		createSubgoals(lies, qaSkillLie, sg, q);
+		createSubgoals(answers, qaSkill, sg, q, new Boolean(false));
+		createSubgoals(lies, qaSkill, sg, q, new Boolean(true));
 		ag.getPlanComponent().addPlan(sg);
 		
 		return true;
 	}
 	
-	private void createSubgoals(List<FolFormula> answers, Skill usedSkill, Subgoal sg, Query q) {
+	private void createSubgoals(List<FolFormula> answers, Skill usedSkill, Subgoal sg, Query q, Boolean ud) {
 		for(int i=0;i<answers.size();i++) {
 			Answer a = new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), answers.get(i));
-			Skill curSkill = usedSkill.deepCopy();
-			sg.newStack(curSkill, a);
+			sg.newStack(usedSkill, a);
+			sg.peekStack(sg.getNumberOfStacks()-1).setUserData(ud);
 		}
 	}
 	
