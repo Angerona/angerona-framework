@@ -95,7 +95,8 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 						pe.setCosts(cost + pe.getCosts());
 						atomicIntentions.add(pe);
 					} else {
-						List<Pair<Secret, Double>> weakenings = ag.performThought(ag.getBeliefs(), intention).getPairs();
+						List<Pair<Secret, Double>> weakenings = 
+								ag.performThought(ag.getBeliefs(), pe).getPairs();
 						
 						if (weakenings != null) {
 							double cost = secrecyWeakeningCost(weakenings);

@@ -17,14 +17,13 @@ public abstract class Skill extends Intention implements Runnable {
 	
 	protected ViolatesResult violates = new ViolatesResult();
 	
+	public ViolatesResult violates() {
+		return violates;
+	}
+	
 	public Skill(Agent agent, String name) {
 		super(agent);
 		this.name = name;
-	}
-	
-	@Override
-	public ViolatesResult violates() {
-		return violates;
 	}
 	
 	/** @return the unique name of the Skill */
@@ -55,10 +54,5 @@ public abstract class Skill extends Intention implements Runnable {
 	@Override
 	public String toString() {
 		return name;
-	}
-
-	@Override
-	public Object clone() {
-		return this;
 	}
 }

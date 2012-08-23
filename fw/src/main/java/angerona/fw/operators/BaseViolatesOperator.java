@@ -1,8 +1,7 @@
 package angerona.fw.operators;
 
 import angerona.fw.Perception;
-import angerona.fw.Skill;
-import angerona.fw.Subgoal;
+import angerona.fw.PlanElement;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.parameter.ViolatesParameter;
@@ -30,10 +29,8 @@ public abstract class BaseViolatesOperator extends
 			Perception p = (Perception)param.getAtom();
 			reval = onPerception(p, param);
 			p.setViolates(reval);
-		} else if(param.getAtom() instanceof Skill) {
-			reval = onSkill((Skill)param.getAtom(), param);
-		} else if(param.getAtom() instanceof Subgoal) {
-			reval = onPlan((Subgoal)param.getAtom(), param);
+		} else if(param.getAtom() instanceof PlanElement) {
+			reval = onPlan((PlanElement)param.getAtom(), param);
 		}
 		
 		if(reval != null)
@@ -50,18 +47,10 @@ public abstract class BaseViolatesOperator extends
 	protected abstract ViolatesResult onPerception(Perception percept, ViolatesParameter param);
 	
 	/**
-	 * Is called by the processInt method when an Skill was given for violation checking.
-	 * @param action	Casted Reference to the action
-	 * @param param		The rest parameters for the violation invoking.
-	 * @return			A ViolatesResult structure containing information about secrecy violation 
-	 */
-	protected abstract ViolatesResult onSkill(Skill skill, ViolatesParameter param);
-	
-	/**
 	 * Is called by the processInt method when a Plan was given for violation checking..
 	 * @param action	Casted Reference to the action
 	 * @param param		The rest parameters for the violation invoking.
 	 * @return			A ViolatesResult structure containing information about secrecy violation 
 	 */
-	protected abstract ViolatesResult onPlan(Subgoal plan, ViolatesParameter param);
+	protected abstract ViolatesResult onPlan(PlanElement plan, ViolatesParameter param);
 }

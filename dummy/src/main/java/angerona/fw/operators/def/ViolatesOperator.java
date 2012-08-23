@@ -14,8 +14,8 @@ import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
+import angerona.fw.PlanElement;
 import angerona.fw.Skill;
-import angerona.fw.Subgoal;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
@@ -92,16 +92,17 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	}
 	
 	@Override
-	protected ViolatesResult onSkill(Skill skill, ViolatesParameter param) {
-		skill.setBeliefs(param.getBeliefs());
-		skill.setRealRun(false);
-		report("Performing mental-action applying: '"+skill.getName()+"'");
-		skill.run();
-		return skill.violates();
-	}
-	
-	@Override
-	protected ViolatesResult onPlan(Subgoal plan, ViolatesParameter param) {
-		throw new NotImplementedException("The support for subgoals is not implemented by '" + this.getClass().getSimpleName() +  "'.");
+	protected ViolatesResult onPlan(PlanElement pe, ViolatesParameter param) {
+		if(pe.getIntention() instanceof Skill) {
+			Skill skill = (Skill)pe.getIntention();
+			skill.setBeliefs(param.getBeliefs());
+			skill.setRealRun(false);
+			report("Performing mental-action applying: '"+skill.getName()+"'");
+			skill.run();
+			ViolatesResult res = skill.violates();
+			pe.setViolatesResult(res);
+			return res;
+		}
+		throw new NotImplementedException("No complex plans supported by violate operator yet.");
 	}
 }

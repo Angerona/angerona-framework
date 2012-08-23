@@ -15,7 +15,7 @@ import angerona.fw.logic.Beliefs;
  * @see Subgoal
  * @author Tim Janus
  */
-public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnable, Cloneable {
+public abstract class Intention implements SubgoalListener, Runnable {
 	
 	/** the name for the top-level plan of an agent. */
 	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";
@@ -118,6 +118,4 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	
 	/** @return	true if this instance is a sub-intention but no atomic intention in a plan of the agent */
 	public abstract boolean isSubPlan();	
-	
-	public abstract Object clone();
 }

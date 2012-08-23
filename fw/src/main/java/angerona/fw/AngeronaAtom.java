@@ -4,7 +4,8 @@ import angerona.fw.logic.ViolatesResult;
 
 /**
  * Base interface for atomar Angerona constructs like:
- * Intentions (Skills), perceptions, actions...
+ * perceptions, actions and plan elements everything whats 
+ * an input for an violation check.
  * @author Tim Janus
  */
 public interface AngeronaAtom {

@@ -1,16 +1,20 @@
 package angerona.fw;
 
+import angerona.fw.logic.ViolatesResult;
+
 /**
  * Represents a stack element. Skills need to save their context object to perform
  * the correct actions
  * @author Tim Janus
  */
-public class PlanElement {
+public class PlanElement implements AngeronaAtom {
 	private Intention intention;
 	
 	private Object executionData;
 	
 	private double costs;
+	
+	ViolatesResult res;
 	
 	/** use this object to give information about the PlanElement from Generation to
 	 * 	selection. For example one could save if the intention represent by this plan
@@ -19,7 +23,12 @@ public class PlanElement {
 	private Object userData;
 	
 	public PlanElement(PlanElement other) {
-		this.intention = (Intention)other.intention.clone();
+		if(other.intention instanceof Skill) {
+			this.intention = other.intention;
+		} else {
+			Subgoal sg = (Subgoal)other.intention;
+			this.intention = (Intention)sg.clone();
+		}
 		this.executionData = other.executionData;
 	}
 	
@@ -50,5 +59,14 @@ public class PlanElement {
 	
 	public Object getUserData() {
 		return userData;
+	}
+
+	@Override
+	public ViolatesResult violates() {
+		return res;
+	}
+	
+	public void setViolatesResult(ViolatesResult res) {
+		this.res = res;
 	}
 }
