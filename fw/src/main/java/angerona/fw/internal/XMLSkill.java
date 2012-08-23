@@ -68,14 +68,26 @@ public class XMLSkill extends Skill {
 		if(!realRun)
 			violates = new ViolatesResult();
 		
-		// create context for xml processing:
-		Context c = a.getContext();
-		Context in = null;
-		if(objectContainingContext instanceof Context) {
-			in = (Context) objectContainingContext;
-		} else {
-			in = ContextFactory.createContext(objectContainingContext);
+		// create the context for running the Skills... 
+		Context c = new Context();
+		c.set("self", a);
+		c.set("name", a.getName());
+		
+		c.set("beliefs", actBeliefs);
+		c.set("world", actBeliefs.getWorldKnowledge());
+		Context views = new Context();
+		for(String name : actBeliefs.getViewKnowledge().keySet()) {
+			views.set(name, actBeliefs.getViewKnowledge().get(name));
 		}
+		c.attachContext("views", views);
+	
+		// also define the reason for the action, this might be a perception like
+		// query if the XMLSkill is performing an answer.
+		Context in = null;
+		if(!(objectContainingContext instanceof Context))
+			in = ContextFactory.createContext(objectContainingContext);
+		else 
+			in = (Context) objectContainingContext;
 		c.attachContext("in", in);
 		
 		// iterate through all statements.
@@ -87,11 +99,12 @@ public class XMLSkill extends Skill {
 			// find the command and create correct visitor.
 			if(cmd.equalsIgnoreCase("UpdateBB")) {
 				cv = new UpdateBeliefbaseVisitor();
+				LOG.warn("UpdateBB XML-Commando was not used for a while. Better test if the resuls are correct.");
 			} else if(cmd.equalsIgnoreCase("Reason")) {
 				cv = new ReasonVisitor();
+				LOG.warn("Reason XML-Commando was not used for a while. Better test if the resuls are correct.");
 			} else if(cmd.equalsIgnoreCase("SendAction")) {
-				cv = new SendActionVisitor(
-						a.getEnvironment().getPerceptionFactory(), realRun, actBeliefs);
+				cv = new SendActionVisitor(a.getEnvironment().getPerceptionFactory(), realRun, actBeliefs);
 				sendAction = true;
 			}
 			
