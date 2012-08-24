@@ -28,9 +28,9 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	public Set<Literal> getFactsByName(String name) {
 		return getFactsByName(name, POLICY_SKEPTICAL);
 	}
-	
+
 	/**
-	 * Returns all the literals in the answerset with have a given name.
+	 * Returns all the literals in the answer-set which have a given name.
 	 * @param name		the name of the literal 'married' as example.
 	 * @param policy	The used policy might be skeptical or credolous.
 	 * @return			A set of literals which are also in the answerset.

@@ -8,6 +8,7 @@ import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.RevisionRequest;
 import angerona.fw.error.NotImplementedException;
+import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
 import angerona.fw.serialize.perception.AnswerDO;
@@ -20,11 +21,11 @@ import angerona.fw.serialize.perception.RevisionRequestDO;
  * A factory for creating perceptions from data objects. The default
  * implementation supports Queries and Answers.
  * 
- * By inherting from this class one can define more perception types
+ * By inheriting from this class one can define more perception types
  * in plugins.
  * BEWARE in the actual implementation is no PerceptionFactory plugin.
  * 
- * @author Tim Janus
+ * @author Tim Janus, Daniel Dilger
  */
 public class DefaultPerceptionFactory extends PerceptionFactory {
 
@@ -41,8 +42,15 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 			} else if(commAct instanceof AnswerDO) {
 				AnswerDO ado = (AnswerDO)commAct;
 				FolFormula q = createFormula(ado.getQuestion(), context);
-				AnswerValue av = createAnswerValue(ado.getAnswer(), context);
-				return new Answer(s, r, q, av);
+				AngeronaAnswer aa = null;
+				if(q.isGround()) {
+					AnswerValue av = createAnswerValue(ado.getAnswer(), context);
+					aa = new AngeronaAnswer(null, q, av);
+				} else {
+					FolFormula an = createFormula(ado.getAnswer(), context);
+					aa = new AngeronaAnswer(null, q, an);
+				}
+				return new Answer(s, r, q, aa);
 			} else if (commAct instanceof RevisionRequestDO) {
 				RevisionRequestDO rrdo = (RevisionRequestDO) commAct;
 				Set<FolFormula> fs = createFormulaSet(rrdo.getSentences(), context);

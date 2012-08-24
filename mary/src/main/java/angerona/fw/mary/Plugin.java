@@ -1,4 +1,5 @@
 package angerona.fw.mary;
+//This file should be added to the git register so I don't have to change it when switching branches
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,6 @@ public class Plugin implements OperatorPlugin {
 	//@Override
 	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators() {
 		List<Class<? extends BaseUpdateBeliefsOperator>> reval = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
-		
 		return reval;
 	}
 
@@ -44,7 +44,7 @@ public class Plugin implements OperatorPlugin {
 	//@Override
 	public List<Class<? extends BaseViolatesOperator>> getSupportedViolatesOperators() {
 		List<Class<? extends BaseViolatesOperator>> reval = new LinkedList<Class<? extends BaseViolatesOperator>>();
-		reval.add(angerona.fw.operators.def.DetailSimpleViolatesOperator.class);
+		reval.add(angerona.fw.operators.def.WeakeningViolatesOperator.class);
 		return reval;
 	}
 

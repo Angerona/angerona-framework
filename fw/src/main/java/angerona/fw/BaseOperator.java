@@ -8,7 +8,7 @@ import angerona.fw.report.ReportPoster;
 
 /**
  * Base class for all operators for agents
- * implements basic functionality for the report mechanism.
+ * implements basic functionality for easier use of the report mechanism.
  * @author Tim Janus
  */
 public class BaseOperator implements ReportPoster {
@@ -16,6 +16,7 @@ public class BaseOperator implements ReportPoster {
 	/** reference to the agent owning the operator */
 	private Agent owner;
 	
+	/** a map containg parameters for the operator */
 	protected Map<String, String> parameters = new HashMap<String, String>();
 	
 	/** @return reference to the agent owning the operator */

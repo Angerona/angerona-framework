@@ -37,4 +37,10 @@
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <parent>
+  	<groupId>angerona.fw</groupId>
+  	<artifactId>maven-build-all</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  	<relativePath>..</relativePath>
+  </parent>
 </project>

@@ -80,4 +80,10 @@ public interface Literal {
 	 * @return
 	 */
 	public Atom		getAtom();
+	
+	/**
+	 * returns if the atom is grounded or has variables.
+	 * @return	true if no variables are bound in the literal, false otherwise.
+	 */
+	public boolean isGround();
 }

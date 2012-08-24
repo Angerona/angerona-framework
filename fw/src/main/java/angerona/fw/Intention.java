@@ -1,16 +1,21 @@
 package angerona.fw;
 
 import angerona.fw.listener.SubgoalListener;
+import angerona.fw.logic.Beliefs;
 
 
 /**
  * An intention is either atomic, then it is called Skill or it is complex
  * then it is called Plan. 
+ * 
+ * To support the Angerona violates structure an intention can save if it is a
+ * real-run or a mental-run of the intention (the plan).
+ * 
  * @see Skill
  * @see Subgoal
  * @author Tim Janus
  */
-public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnable, Cloneable {
+public abstract class Intention implements SubgoalListener, Runnable {
 	
 	/** the name for the top-level plan of an agent. */
 	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";
@@ -24,13 +29,27 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	/** flag indicating if the actions in this Intention should be send to the environment */
 	protected boolean realRun = false;
 	
-	/** the context used for dynamic code evaluation */
-	protected Object objectContainingContext;
-		
+	/** the context used for dynamic code evaluation, allows the access on data saved to for
+	 *  evaluating the intention
+	 */
+	protected Object dataObject;
+	
+	// TODO: get the beliefs from plan element...
+	protected Beliefs actBeliefs;
+	
+	public Beliefs getBeliefs() {
+		return actBeliefs;
+	}
+	
+	public void setBeliefs(Beliefs beliefs) {
+		actBeliefs = beliefs;
+	}
+	
 	/**
 	 * Ctor: Creates a new instance of an intention for the given agent.
 	 * @param agent	reference to the agent owning the intention
 	 */
+	
 	public Intention(Agent agent) {
 		this.agent = agent;
 	}
@@ -42,7 +61,7 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 		this.realRun = other.realRun;
 		
 		// TODO: This should have no side-effects, but not sure yet.
-		this.objectContainingContext = null;
+		this.dataObject = null;
 	}
 	
 	/** @return reference to the agent owning this Intention */
@@ -71,8 +90,8 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	}
 	
 	/** setting the object which contains the input context for this intention */
-	public void setObjectContainingContext(Object obj) {
-		this.objectContainingContext = obj;
+	public void setDataObject(Object obj) {
+		this.dataObject = obj;
 	}
 	
 	public void setParent(Intention parent) {
@@ -99,6 +118,4 @@ public abstract class Intention implements AngeronaAtom, SubgoalListener, Runnab
 	
 	/** @return	true if this instance is a sub-intention but no atomic intention in a plan of the agent */
 	public abstract boolean isSubPlan();	
-	
-	public abstract Object clone();
 }

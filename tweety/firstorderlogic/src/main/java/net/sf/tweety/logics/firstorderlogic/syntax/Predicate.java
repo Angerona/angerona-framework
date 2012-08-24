@@ -24,6 +24,7 @@ public class Predicate extends FolBasicStructure  {
 		super(name,arity);
 	}
 	
+	
 	/**
 	 * Initializes a predicate with the given name and the given list
 	 * of argument sorts.
@@ -46,7 +47,7 @@ public class Predicate extends FolBasicStructure  {
 		this.setArguments(arguments);
 		return this;
 	}
-		
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#hashCode()
 	 */

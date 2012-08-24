@@ -1,11 +1,15 @@
 package angerona.fw.internal;
 
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.Perception;
@@ -32,10 +36,15 @@ public abstract class PerceptionFactory {
 	 * 			is returned.
 	 */
 	public static String createString(String paramValue, Context context) {
-		if(paramValue.startsWith("$"))
-			return (String)context.get(paramValue.substring(1));
-		else
+		if(paramValue.startsWith("$")) {
+			Object ob = context.get(paramValue.substring(1));
+			if(ob == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context:\n"+context.toString());
+			}
+			return (String)ob;
+		} else {
 			return paramValue;
+		}
 	}
 	
 	/**
@@ -51,10 +60,23 @@ public abstract class PerceptionFactory {
 	public static FolFormula createFormula(String paramValue, Context context) {
 		if(paramValue.startsWith("$")) {
 			Object obj = context.get(paramValue.substring(1));
+			if(obj == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context:\n" + context.toString());
+			}
 			if(obj instanceof FolFormula) {
 				return (FolFormula)obj;
 			} else if(obj instanceof String) {
-				return new Atom(new Predicate(obj.toString()));
+				String str = (String)obj;
+				FolParserB parser = new FolParserB(new StringReader(str));
+				Atom reval = null;
+				try {
+					reval = parser.atom(new FolSignature());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return reval;
 			} else {
 				throw new ClassCastException("Cannot cast: " + obj.toString() + " to FolFormula");
 			}
@@ -73,6 +95,9 @@ public abstract class PerceptionFactory {
 		
 		if(paramValue.startsWith("$")) {
 			Object obj = context.get(paramValue.substring(1));
+			if(obj == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context:\n"+context.toString());
+			}
 			if(obj instanceof Collection<?>) {
 				for(Object element : (Collection<?>)obj) {
 					if(element instanceof FolFormula)
@@ -101,8 +126,11 @@ public abstract class PerceptionFactory {
 	public static AnswerValue createAnswerValue(String paramValue, Context context) {
 		if(paramValue.startsWith("$")) {
 			Object obj = context.get(paramValue.substring(1));
+			if(obj == null) {
+				throw new RuntimeException("Cannot find '" + paramValue.substring(1) + "' in Context");
+			}
 			if(obj instanceof AngeronaAnswer)
-				return ((AngeronaAnswer)obj).getAnswerExtended();
+				return ((AngeronaAnswer)obj).getAnswerValue();
 			else 
 				return (AnswerValue)obj;
 		}

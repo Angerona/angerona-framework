@@ -151,10 +151,26 @@ public class Secret implements Cloneable {
 	 * @param parameters	A map containing the parameters for the reasoner.
 	 */
 	public void setReasonerParameters(Map<String, String> parameters) {
-		invokePropertyListener("reasonerParameters", 
-				reasonerParameters, 
-				parameters);
+		Map<String, String> old = new HashMap<>(reasonerParameters);
 		reasonerParameters = parameters;
+		invokePropertyListener("reasonerParameters", 
+				old, 
+				parameters);
+	}
+	
+	/**
+	 * Tests if two secrets are alike. That means they have the same information
+	 * and agent who is not allowed to unreveile the information. The used reasoner
+	 * and its parameters are not important for this method.
+	 * @param other		Reference to the other secret object for the alike-test.
+	 * @return			true if the both objects are alike, false otherwise.
+	 */
+	public boolean alike(Secret other) {
+		if(!this.information.equals(other.information))
+			return false;
+		if(!this.name.equals(other.name))
+			return false;
+		return true;
 	}
 	
 	@Override

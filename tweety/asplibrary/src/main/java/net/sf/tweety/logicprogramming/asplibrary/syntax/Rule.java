@@ -12,7 +12,7 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
  * of literals, with separate lists for the
  * head and the body.
  * 
- * @author Thomas Vengels
+ * @author Thomas Vengels, Tim Janus
  *
  */
 public class Rule {
@@ -21,8 +21,8 @@ public class Rule {
 	List<Literal>	body;
 	
 	public Rule() {
-		this.head = null;
-		this.body = null;
+		this.head = new LinkedList<Literal>();
+		this.body = new LinkedList<Literal>();
 	}
 	
 	public Rule(List<Literal> litsHead, List<Literal> litsBody) {
@@ -110,6 +110,73 @@ public class Rule {
 	
 	public boolean		isComment() {
 		return false;
+	}
+	
+	/**
+	 * Proofs if the given rule is safe for use in a solver.
+	 * To get a felling when a rule is safe read the following text
+	 * from the dlv documentation:
+	 * 
+	 * A variable X in an aggregate-free rule is safe if at least one of the following conditions is satisfied:
+	 * X occurs in a positive standard predicate in the body of the rule;
+	 * X occurs in a true negated standard predicate in the body of the rule;
+	 * X occurs in the last argument of an arithmetic predicate A and all other arguments of A are safe. (*not supported yet)
+	 * A rule is safe if all its variables are safe. However, cyclic dependencies are disallowed, e.g., :- #succ(X,Y), #succ(Y,X) is not safe.
+	 * 
+	 * @return true if the rule is safe considering the above conditions, false otherwise.
+	 */
+	public boolean isSafe() {
+		Set<Term> variables = new HashSet<Term>();
+		Set<Literal> allLit = new HashSet<Literal>();
+		allLit.addAll(head);
+		allLit.addAll(body);
+		
+		// TODO: only depth of one... the entire asp-library has major desing issues... best solution: Redesign core interfaces
+		// TOTALLY HACKED WILL NOT WORK FOR EVERYTHING:...
+		for(Literal l : allLit) {
+			if(!l.isGround()) {
+				for(Term t : l.getAtom().getTerms()) {
+					if(t instanceof Variable) {
+						variables.add((Variable)t);
+					} else if(t instanceof Atom) {
+						if(!((Atom)t).isGround()) {
+							for(Term t2 : ((Atom)t).getTerms()) {
+								if(t2 instanceof Variable) {
+									variables.add((Variable)t2);
+								} else if(t2 instanceof StdTerm) {
+									StdTerm st = (StdTerm) t2;
+									if(st.get().charAt(0) >= 65 && st.get().charAt(0) <= 90) {
+										variables.add(st);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		if(variables.size() == 0)
+			return true;
+		
+		for(Term x : variables) {
+			boolean safe = false;
+			for(Literal l : allLit) {
+				if(	(!l.isAggregate() && !l.isArithmetic() && !l.isCondition() && !l.isDefaultNegated() && !l.isTrueNegated() && !l.isRelational() && !l.isWeightLiteral()) ||
+					(l.isTrueNegated()) ) {
+					for(Term t : l.getAtom().getTerms()) {
+						if(t.equals(x)) {
+							safe = true;
+						}
+					}
+				}
+			}
+			
+			if(!safe)
+				return false;
+		}
+		
+		return true;
 	}
 	
 	@Override

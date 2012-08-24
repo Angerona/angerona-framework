@@ -1,9 +1,13 @@
 package angerona.fw.operators.def;
 
+import java.io.StringReader;
 import java.util.Set;
 
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
@@ -13,6 +17,7 @@ import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.RevisionRequest;
 import angerona.fw.logic.AngeronaAnswer;
@@ -21,7 +26,6 @@ import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.reflection.Context;
-import angerona.fw.reflection.ContextFactory;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the
@@ -92,7 +96,17 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					continue;
 				}
 				Subgoal sg = new Subgoal(ag, desire);
-				sg.newStack(rr, new RevisionRequest(ag.getName(), recvName, new Atom(new Predicate(content))).getContext());
+				FolParserB parser = new FolParserB(new StringReader(content));
+				Atom a = null;
+				try {
+					a = parser.atom(new FolSignature());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				Context c = new RevisionRequest(ag.getName(), recvName, a).getContext();
+				sg.newStack(rr, c);
 				ag.getPlanComponent().addPlan(sg);
 				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), ag.getPlanComponent());
 				reval = true;
@@ -109,14 +123,13 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		Subgoal answer = new Subgoal(ag, des);
-		// TODO: create alternative later
-		Context context = ContextFactory.createContext(des.getPerception());
-		context.set("answer", AnswerValue.AV_TRUE);
-		answer.newStack(qaSkill, context);
+		Query q = (Query) des.getPerception();
+		answer.newStack(qaSkill, 
+				new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), AnswerValue.AV_TRUE));
 		
-		context = new Context(context);
-		context.set("answer", AnswerValue.AV_FALSE);
-		answer.newStack(qaSkill, context);
+		answer.newStack(qaSkill,
+				new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), AnswerValue.AV_FALSE));
+		
 		ag.getPlanComponent().addPlan(answer);
 		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
 		return true;
@@ -136,13 +149,13 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			if(ff.toString().equals("excused")) {
 				Atom reasonToFire = new Atom(new Predicate("attend_scm"));
 				AngeronaAnswer aa = ag.getBeliefs().getWorldKnowledge().reason(reasonToFire);
-				if(aa.getAnswerExtended() == AnswerValue.AV_UNKNOWN) {
+				if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
 					Skill query = (Skill) ag.getSkill("Query");
 					Subgoal sg = new Subgoal(ag, des);
 					sg.newStack(query, new Query(ag.getName(), rr.getSenderId(), reasonToFire).getContext());
 					ag.getPlanComponent().addPlan(sg);
 					report("Add the new atomic action '" + query.getName() + "' to the plan.", ag.getPlanComponent());
-				} else if(aa.getAnswerExtended() == AnswerValue.AV_FALSE) {
+				} else if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
 					return false;
 				}
 				return true;

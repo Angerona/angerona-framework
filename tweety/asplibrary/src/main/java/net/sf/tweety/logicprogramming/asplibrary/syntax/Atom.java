@@ -348,4 +348,19 @@ public class Atom implements Term, Literal, CommonStructure {
 			reval.add(SymbolSet.THING);
 		return reval;
 	}
+
+	@Override
+	public boolean isGround() {
+		if(terms == null)
+			return true;
+		
+		for(Term t : terms) {
+			if(t.isVariable())
+				return false;
+			else if(t instanceof Atom) {
+				return ((Atom)t).isGround();
+			}
+		}
+		return true;
+	}
 }

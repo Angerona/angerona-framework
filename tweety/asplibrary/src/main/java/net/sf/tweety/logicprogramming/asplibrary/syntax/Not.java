@@ -80,4 +80,9 @@ public class Not implements Literal {
 			return false;
 		}
 	}
+
+	@Override
+	public boolean isGround() {
+		return lit.isGround();
+	}
 }
