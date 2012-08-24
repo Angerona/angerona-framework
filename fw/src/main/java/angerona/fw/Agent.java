@@ -27,6 +27,7 @@ import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.internal.XMLSkill;
 import angerona.fw.listener.AgentListener;
+import angerona.fw.listener.ActionProcessor;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
@@ -67,6 +68,7 @@ public class Agent extends AgentArchitecture
 	, Entity
 	, OperatorVisitor
 	, ReportPoster
+	, ActionProcessor
 	, BeliefbaseChangeListener {
 
 	/** reference to the logback logger instance */
@@ -99,22 +101,22 @@ public class Agent extends AgentArchitecture
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
 	
 	/** Reference to the used generate options operator. */
-	OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
+	private OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
 	
 	/** Reference to the used filter operator. */
-	OperatorSet<BaseIntentionUpdateOperator> intentionUpdateOperators = new OperatorSet<BaseIntentionUpdateOperator>();
+	private OperatorSet<BaseIntentionUpdateOperator> intentionUpdateOperators = new OperatorSet<BaseIntentionUpdateOperator>();
 	
 	/** The operator used to change the knowledge base when receiving perceptions */
-	OperatorSet<BaseUpdateBeliefsOperator> changeOperators = new OperatorSet<BaseUpdateBeliefsOperator>();
+	private OperatorSet<BaseUpdateBeliefsOperator> changeOperators = new OperatorSet<BaseUpdateBeliefsOperator>();
 	
 	/** The operator used for violates proofs */
-	OperatorSet<BaseViolatesOperator> violatesOperators = new OperatorSet<BaseViolatesOperator>();
+	private OperatorSet<BaseViolatesOperator> violatesOperators = new OperatorSet<BaseViolatesOperator>();
 	
 	/** Reference to the used planer-set */
-	OperatorSet<BaseSubgoalGenerationOperator> subgoalGenerationOperators = new OperatorSet<BaseSubgoalGenerationOperator>();
+	private OperatorSet<BaseSubgoalGenerationOperator> subgoalGenerationOperators = new OperatorSet<BaseSubgoalGenerationOperator>();
 	
 	/** reference to the current used operator in the cycle process. */
-	Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
+	private Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
 	
 	/** the perception received by the last or running cylce call */
 	private Perception actualPerception;
@@ -124,6 +126,9 @@ public class Agent extends AgentArchitecture
 	
 	/** object represents the last action performed by the agent. */
 	private Action lastAction;
+	
+	/** internal data structure containing the violates information for the action which is in processing */
+	private ViolatesResult violates;
 	
 	public Agent(String name) {
 		// init beenuts stuff
@@ -137,6 +142,10 @@ public class Agent extends AgentArchitecture
 	{
 		return actionsHistory;
 	}	
+	
+	public OperatorSet<BaseViolatesOperator> getViolatesOperators() {
+		return this.violatesOperators;
+	}
 	
 	/**
 	 * Sets the belief bases of the agent.
@@ -427,7 +436,7 @@ public class Agent extends AgentArchitecture
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
 		
-		Intention atomic = null;
+		PlanElement atomic = null;
 		
 		if(perception != null && ! (perception instanceof Perception)) {
 			LOG.error("object must be of type Perception");
@@ -450,6 +459,11 @@ public class Agent extends AgentArchitecture
 				if(atomic == null) {
 					if(!subgoalGenerationOperators.def().process(new SubgoalGenerationParameter(masterPlan, allSkills)))
 						break;
+				} else {
+					if(!(atomic.getIntention().isAtomic())) {
+						LOG.error("intentionUpdateOperator '" + intentionUpdateOperators.def().getPosterName() + "' returns not atomic intentions, this is a failure.");
+						atomic = null;
+					}
 				}
 			}
 		} else {
@@ -457,8 +471,11 @@ public class Agent extends AgentArchitecture
 		}
 	
 		if(atomic != null) {
-			atomic.setRealRun(true);
-			atomic.setBeliefs(beliefs);
+			// TODO: What happens when two Speech-Acts are send by this skill:
+			// 		 It would send both speech-acts with the combined violates information, therefore the secrets would be updated in the
+			//		 first run. No Problem yet, but conceptual not really clean.
+			violates = atomic.violates();
+			atomic.prepare(this, getBeliefs());
 			atomic.run();
 		}
 		
@@ -572,6 +589,8 @@ public class Agent extends AgentArchitecture
 	}
 	
 	public void performAction(Action act) {
+		act.setViolates(violates);
+		violates = null;
 		getAgentProcess().act(act);
 		updateBeliefs(act);
 		LOG.info("Action performed: " + act.toString());
@@ -581,6 +600,12 @@ public class Agent extends AgentArchitecture
 		//this.lastAction = act;
 		actionsHistory.add(act);
 	}
+	
+	@Override 
+	public void performAction(Action action, Agent ag, Beliefs beliefs) {
+		// ignore beliefs parameter because we really perform the action:
+		performAction(action);
+	};
 	
 	public boolean addDesire(Desire desire) {
 		Desires desires = getDesires();
@@ -730,4 +755,5 @@ public class Agent extends AgentArchitecture
 			ang.report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", this, ac);
 		}
 	}
+
 }

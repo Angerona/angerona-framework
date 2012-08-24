@@ -1,8 +1,11 @@
 package angerona.fw.operators;
 
+import angerona.fw.Action;
 import angerona.fw.Perception;
 import angerona.fw.PlanElement;
 import angerona.fw.error.NotImplementedException;
+import angerona.fw.listener.ActionProcessor;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.parameter.ViolatesParameter;
 
@@ -20,7 +23,9 @@ import angerona.fw.operators.parameter.ViolatesParameter;
  * @author Tim Janus
  */
 public abstract class BaseViolatesOperator extends 
-	Operator<ViolatesParameter, ViolatesResult> {
+	Operator<ViolatesParameter, ViolatesResult> 
+	implements ActionProcessor
+	{
 	
 	@Override
 	protected ViolatesResult processInt(ViolatesParameter param) {
@@ -53,4 +58,8 @@ public abstract class BaseViolatesOperator extends
 	 * @return			A ViolatesResult structure containing information about secrecy violation 
 	 */
 	protected abstract ViolatesResult onPlan(PlanElement plan, ViolatesParameter param);
+	
+	public void applyAction(Action action, Beliefs beliefs) {
+		
+	}
 }

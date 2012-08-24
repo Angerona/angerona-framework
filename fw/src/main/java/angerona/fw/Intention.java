@@ -1,12 +1,13 @@
 package angerona.fw;
 
-import angerona.fw.listener.SubgoalListener;
-import angerona.fw.logic.Beliefs;
+import java.util.List;
+import java.util.Stack;
 
+import angerona.fw.listener.SubgoalListener;
 
 /**
- * An intention is either atomic, then it is called Skill or it is complex
- * then it is called Plan. 
+ * An intention is either atomic, then it is called Skill or it is complex then
+ * it is called Plan.
  * 
  * To support the Angerona violates structure an intention can save if it is a
  * real-run or a mental-run of the intention (the plan).
@@ -15,107 +16,68 @@ import angerona.fw.logic.Beliefs;
  * @see Subgoal
  * @author Tim Janus
  */
-public abstract class Intention implements SubgoalListener, Runnable {
-	
-	/** the name for the top-level plan of an agent. */
-	public static final String ID_AGENT_PLAN = "_AGENT_PLAN_";
-	
+public abstract class Intention implements SubgoalListener {
+
 	/** reference to the agent who is owner of this Intention */
 	protected Agent agent;
-	
+
 	/** the parent intention of this instance */
 	protected Intention parent;
 	
-	/** flag indicating if the actions in this Intention should be send to the environment */
-	protected boolean realRun = false;
-	
-	/** the context used for dynamic code evaluation, allows the access on data saved to for
-	 *  evaluating the intention
-	 */
-	protected Object dataObject;
-	
-	// TODO: get the beliefs from plan element...
-	protected Beliefs actBeliefs;
-	
-	public Beliefs getBeliefs() {
-		return actBeliefs;
-	}
-	
-	public void setBeliefs(Beliefs beliefs) {
-		actBeliefs = beliefs;
-	}
-	
+	/** a collection of stacks with sub-intentions defining the subgoals of this intention */
+	protected List<Stack<PlanElement>> stacks;
+
 	/**
 	 * Ctor: Creates a new instance of an intention for the given agent.
 	 * @param agent	reference to the agent owning the intention
 	 */
-	
 	public Intention(Agent agent) {
 		this.agent = agent;
 	}
-	
-	
+
 	protected Intention(Intention other) {
 		this.parent = other.parent;
 		this.agent = other.agent;
-		this.realRun = other.realRun;
-		
-		// TODO: This should have no side-effects, but not sure yet.
-		this.dataObject = null;
 	}
-	
+
 	/** @return reference to the agent owning this Intention */
 	public Agent getAgent() {
 		return agent;
 	}
-	
-	/**
-	 * Sets the flag which indicates if the Intention run should communicate with the environment (true behavior) or
-	 * if the changes should only occur locally (false behavior).
-	 * The false behavior is used for Violates reasons and so so on.
-	 * @param realRun	boolean flag.
-	 */
-	public void setRealRun(boolean realRun) {
-		this.realRun = realRun;
-	}
-	
-	/**
-	 * Gets the flag which indicates if the Intention run should communicate with the environment (true behavior) or
-	 * if the changes should only occurs locally (false behavior).
-	 * The false behavior is used for Violates reasons and so so on.
-	 * @return boolean flag.
-	 */
-	public boolean isRealRun() {
-		return realRun;
-	}
-	
-	/** setting the object which contains the input context for this intention */
-	public void setDataObject(Object obj) {
-		this.dataObject = obj;
-	}
-	
+
 	public void setParent(Intention parent) {
 		this.parent = parent;
 	}
-	
-	public Intention getParentGoal() {
+
+	public Intention getParent() {
 		return parent;
 	}
-	
+
 	/**
-	 * Is called when an sub goal is finished by an agent. For example a Skill was performed or 
-	 * a complex plan was finished. The given subgoal must be removed from the subgoals by the
-	 * implementation and is a child of the called object.
-	 * @param subgoal reference to the finished subgoal
+	 * Is called when an sub goal is finished by an agent. For example a Skill
+	 * was performed or a complex plan was finished. The given subgoal must be
+	 * removed from the subgoals by the implementation and is a child of the
+	 * called object.
+	 * 
+	 * @param subgoal
+	 *            reference to the finished subgoal
 	 */
 	public abstract void onSubgoalFinished(Intention subgoal);
-	
-	/** returns true if this is an atomic intention, an intention which can pe performed in one step */
+
+	/**
+	 * returns true if this is an atomic intention, an intention which can pe
+	 * performed in one step
+	 */
 	public abstract boolean isAtomic();
+
+	/**
+	 * @return true if this instance is a sub-intention but no atomic intention
+	 *         in a plan of the agent
+	 */
+	public abstract boolean isSubPlan();
 	
-	/** returns true if this is the high level plan of an agent. */
-	public abstract boolean isPlan();
-	
-	/** @return	true if this instance is a sub-intention but no atomic intention in a plan of the agent */
-	public abstract boolean isSubPlan();	
+	/** @return true if this is the high level plan of an agent. */
+	public boolean isPlan() {
+		return parent == null;
+	}
 }

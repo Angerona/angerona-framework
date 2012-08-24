@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Agent;
 import angerona.fw.Skill;
 import angerona.fw.error.InvokeException;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
@@ -56,20 +55,16 @@ public class XMLSkill extends Skill {
 	public void run() {
 		Agent a = getAgent();
 		
-		// clear violate flag
-		if(!realRun)
-			violates = new ViolatesResult();
-		
 		// create the context for running the Skills... 
 		Context c = new Context();
 		c.set("self", a);
 		c.set("name", a.getName());
 		
-		c.set("beliefs", actBeliefs);
-		c.set("world", actBeliefs.getWorldKnowledge());
+		c.set("beliefs", beliefs);
+		c.set("world", beliefs.getWorldKnowledge());
 		Context views = new Context();
-		for(String name : actBeliefs.getViewKnowledge().keySet()) {
-			views.set(name, actBeliefs.getViewKnowledge().get(name));
+		for(String name : beliefs.getViewKnowledge().keySet()) {
+			views.set(name, beliefs.getViewKnowledge().get(name));
 		}
 		c.attachContext("views", views);
 	
@@ -85,11 +80,11 @@ public class XMLSkill extends Skill {
 		}
 		c.attachContext("in", in);
 		
+		// TODO Move the next block into a class responsible for xml-script execution...
 		// iterate through all statements.
 		for(Statement st : config.getStatements()) {
 			ContextVisitor cv = null;
 			String cmd = st.getCommandoName();
-			boolean sendAction = false;
 			
 			// find the command and create correct visitor.
 			if(cmd.equalsIgnoreCase("UpdateBB")) {
@@ -99,24 +94,13 @@ public class XMLSkill extends Skill {
 				cv = new ReasonVisitor();
 				LOG.warn("Reason XML-Commando was not used for a while. Better test if the resuls are correct.");
 			} else if(cmd.equalsIgnoreCase("SendAction")) {
-				cv = new SendActionVisitor(a.getEnvironment().getPerceptionFactory(), realRun, actBeliefs);
-				sendAction = true;
+				cv = new SendActionVisitor(a.getEnvironment().getPerceptionFactory(), actionProcessor, beliefs, this.agent);
 			}
 			
 			// invoke the command if one was found.
 			if(cv != null) {
 				try {
-					// TODO: hacky violate shifting... too complex...
-					if(sendAction && realRun) {
-						((SendActionVisitor)cv).setViolates(violates);
-					}
-					
 					c.Invoke(cv, st);
-					
-					// send action is an command which needs a violation check:
-					if(sendAction && !realRun) {
-						violates = violates.combine(((SendActionVisitor)cv).violates());
-					}
 				} catch(InvokeException ex) {
 					ex.printStackTrace();
 					LOG.error("Invoke-Exception during Agent cycle: " + ex.getMessage());
@@ -126,7 +110,7 @@ public class XMLSkill extends Skill {
 		
 		c.detachContext("in");
 		
-		if(parent != null && realRun)
+		if(parent != null && isRealRun())
 			parent.onSubgoalFinished(this);
 	}
 }

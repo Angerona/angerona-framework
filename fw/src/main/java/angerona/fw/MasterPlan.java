@@ -54,7 +54,7 @@ public class MasterPlan extends BaseAgentComponent implements SubgoalListener{
 
 	@Override
 	public void onSubgoalFinished(Intention subgoal) {
-		if(subgoal.getParentGoal() == null) {
+		if(subgoal.getParent() == null) {
 			Subgoal sg = (Subgoal) subgoal;
 			removePlan(sg);
 			if(sg.getFulfillsDesire() != null) {

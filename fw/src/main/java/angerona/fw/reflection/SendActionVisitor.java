@@ -1,10 +1,11 @@
 package angerona.fw.reflection;
 
 import angerona.fw.Action;
+import angerona.fw.Agent;
 import angerona.fw.error.InvokeException;
 import angerona.fw.internal.PerceptionFactory;
+import angerona.fw.listener.ActionProcessor;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.serialize.Statement;
 import angerona.fw.serialize.perception.PerceptionDO;
 
@@ -19,39 +20,24 @@ public class SendActionVisitor extends ContextVisitor {
 	
 	private PerceptionFactory factory;
 	
-	private boolean realRun;
+	private ActionProcessor actionListener;
 	
-	private ViolatesResult violates = null;
+	private Agent ag;
 	
-	public void setViolates(ViolatesResult vr) {
-		violates = vr;
-	}
-	
-	public SendActionVisitor(PerceptionFactory factory, boolean realRun, Beliefs beliefs) {
+	public SendActionVisitor(PerceptionFactory factory, ActionProcessor actionListener, Beliefs beliefs, Agent ag) {
 		if(factory == null)
 			throw new IllegalArgumentException("factory must not null!");
 		
 		this.beliefs = beliefs;
 		this.factory = factory;
-		this.realRun = realRun;
+		this.actionListener = actionListener;
+		this.ag = ag;
 	}
-	
-	public ViolatesResult violates() {
-		return violates;
-	}
-
 	
 	@Override
 	protected void runImpl(Statement statement) throws InvokeException {
 		Action reval = (Action) factory.generateFromDataObject((PerceptionDO)statement.getComplexInfo(), context);
-
-		if(realRun) {
-			reval.setViolates(violates);
-			getSelf().performAction(reval);
-		} else {
-			violates = getSelf().performThought(beliefs, reval);
-			beliefs = violates.getBeliefs();
-		}
+		actionListener.performAction(reval, ag, beliefs);
 		this.setReturnValueIdentifier(statement.getReturnValueIdentifier(), reval);
 	}
 

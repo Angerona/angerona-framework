@@ -76,7 +76,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	}
 
 	@Override
-	protected Intention processInt(IntentionUpdateParameter param) {
+	protected PlanElement processInt(IntentionUpdateParameter param) {
 		LOG.info("Run Mary-Intention-Update");
 		Agent ag = param.getPlan().getAgent();
 		List<PlanElement> atomicIntentions = new LinkedList<PlanElement>();
@@ -85,13 +85,11 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		for (Subgoal plan : param.getPlan().getPlans()) {
 			for (int i = 0; i < plan.getNumberOfStacks(); ++i) {
 				PlanElement pe = plan.peekStack(i);
-				if (pe.getIntention().isAtomic()) {
-					Intention intention = pe.getIntention();
-					intention.setRealRun(false);
-
+				if (pe.isAtomic()) {
+					
 					if (isLie(pe)) {
 						// add return value of lyingCost(intention) to intention
-						double cost = lyingCost(intention);
+						double cost = lyingCost(pe.getIntention());
 						pe.setCosts(cost + pe.getCosts());
 						atomicIntentions.add(pe);
 					} else {
@@ -113,8 +111,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 			return null;
 		} else {
 			PlanElement min = minimalCosting(atomicIntentions);
-			min.prepare();
-			return min.getIntention();
+			return min;
 		}
 	}
 }

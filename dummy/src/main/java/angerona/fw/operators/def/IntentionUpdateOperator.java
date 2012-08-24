@@ -23,7 +23,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
 	
 	@Override
-	protected Intention processInt(IntentionUpdateParameter param) {
+	protected PlanElement processInt(IntentionUpdateParameter param) {
 		LOG.info("Run Default-Intention-Update");
 		Agent ag = param.getPlan().getAgent();
 		for(Subgoal plan : param.getPlan().getPlans()) {
@@ -37,7 +37,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					
 						if(alright) {
 							report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.", ag);
-							return intention;
+							return pe;
 						}
 					}
 				}

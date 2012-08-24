@@ -6,28 +6,53 @@ import java.util.List;
 
 import angerona.fw.util.Pair;
 
-/** A mapping between Secrets and doubles representing a secret's in strength
- * @author Tim Janus, Daniel Dilger
+/** 
+ *	A data-structure containing information about the result of a violation processing.
+ *	The base idea was given by Daniels SecrecyStrength-Pair.
+ *	The flag alright is used to determine if a secret has to be weaken or if no secrecy violation occurs.
+ *	List of Pairs is used to save the needed weakening for the secrets to perform the action which was
+ *	checked for violating secrecy. Every Pair consists of an Secret and a Double where the Secret references
+ *	the Secret to be weaken and the double the amount of weakening. We assume that 1.0 is the strongest secret
+ *	and 0.0 the weakest secret (no secret at all anymore). 
+ *	This parameter between 0 and 1 can directly be mapped to the reasoner-parameter d. Which is defined for 
+ *	AnswerSets for example.
+ *
+ *	The ViolatesResult data-structure can be combined with each other to support saving the ViolatesResult
+ *	for performing multiple actions.
+ *
+ *	@author Tim Janus, Daniel Dilger
  */
-public class ViolatesResult {
+public class ViolatesResult implements Cloneable {
 	/** a list of pairs of secrets mapped to their degree of weaking */
 	private List<Pair<Secret, Double>> pairs;
 	
 	/** flag indicating if everything is alright (no secret weakend) */
 	private boolean alright;
 	
-	private Beliefs changedBeliefs;
-	
-	/** Default Ctor: Everything is allright */
+	/** Default Ctor: Assumes that everything is alright (no violation occurs) */
 	public ViolatesResult() {
 		this(true);
 	}
 	
+	/** Copy-Ctor */
+	public ViolatesResult(ViolatesResult other) {
+		this.alright = other.alright;
+		this.pairs = new LinkedList<>(other.pairs);
+	}
+	
+	/**
+	 * Set the alright flag but dont save more sophisticated information about secret weakening
+	 * @param alright	flag indicating if an violation occured.
+	 */
 	public ViolatesResult(boolean alright) {
 		this.alright = alright;
 		pairs = new LinkedList<>();
 	}
 	
+	/**
+	 * CTor: Fill the ViolatesResult with the given Secret Pair, will also set the alright flag.
+	 * @param pair	Secret-Weakening-Pair
+	 */
 	public ViolatesResult(Pair<Secret, Double> pair) {
 		alright = pair.second == 0;
 		pairs = new LinkedList<>();
@@ -35,7 +60,7 @@ public class ViolatesResult {
 	}
 	
 	/** 
-	 * CTor getting a list of secret-degreeOfWeakening Pairs.
+	 * CTor: getting a list of secret-degreeOfWeakening Pairs.
 	 * Alright might be true if all the pairs have 0.0 as their second component.
 	 * @param pairs		list of pairs.
 	 */
@@ -60,14 +85,6 @@ public class ViolatesResult {
 		return Collections.unmodifiableList(pairs);
 	}
 	
-	void setBeliefs(Beliefs beliefs) {
-		this.changedBeliefs = beliefs;
-	}
-	
-	public Beliefs getBeliefs() {
-		return this.changedBeliefs;
-	}
-	
 	/**
 	 * combines two ViolatesResult to one. If a Pair is only
 	 * in one ViolatesResult it will also be in the combined Result. 
@@ -75,7 +92,7 @@ public class ViolatesResult {
 	 * the modified pair will be saved in the
 	 * combined ViolatesResult.
 	 * Two pairs will be combined if the secrets are alike.
-	 * @see Secret.alike
+	 * @see angerona.fw.logic.Secret
 	 * @param other		Reference to the other ViolatesResult to combine.
 	 * @return
 	 */
@@ -97,5 +114,10 @@ public class ViolatesResult {
 		}
 		
 		return new ViolatesResult(l1);
+	}
+	
+	@Override
+	public Object clone() {
+		return new ViolatesResult(this);
 	}
 }

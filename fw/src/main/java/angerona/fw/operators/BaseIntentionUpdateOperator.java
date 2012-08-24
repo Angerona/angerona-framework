@@ -1,6 +1,6 @@
 package angerona.fw.operators;
 
-import angerona.fw.Intention;
+import angerona.fw.PlanElement;
 import angerona.fw.operators.parameter.IntentionUpdateParameter;
 
 /**
@@ -8,6 +8,6 @@ import angerona.fw.operators.parameter.IntentionUpdateParameter;
  * @author Tim Janus
  */
 public abstract class BaseIntentionUpdateOperator extends 
-	Operator<IntentionUpdateParameter, Intention> {
+	Operator<IntentionUpdateParameter, PlanElement> {
 	
 }

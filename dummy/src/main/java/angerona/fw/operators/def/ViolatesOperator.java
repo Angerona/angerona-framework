@@ -15,7 +15,6 @@ import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.PlanElement;
-import angerona.fw.Skill;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
@@ -37,6 +36,8 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
+	
+	private ViolatesResult violates;
 	
 	@Override
 	protected ViolatesResult onPerception(Perception percept, ViolatesParameter param) {
@@ -93,16 +94,24 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	@Override
 	protected ViolatesResult onPlan(PlanElement pe, ViolatesParameter param) {
-		if(pe.getIntention() instanceof Skill) {
-			Skill skill = (Skill)pe.getIntention();
-			skill.setBeliefs(param.getBeliefs());
-			skill.setRealRun(false);
-			report("Performing mental-action applying: '"+skill.getName()+"'");
-			skill.run();
-			ViolatesResult res = skill.violates();
-			pe.setViolatesResult(res);
-			return res;
+		if(pe.isAtomic()) {
+			// clear ViolatesResult state:
+			violates = new ViolatesResult();
+			
+			// prepare and run the plan-element:
+			pe.prepare(this, param.getBeliefs());
+			pe.run();
+			
+			// save the violates result in the plan-element.
+			pe.setViolatesResult(violates);
+			return violates;
 		}
 		throw new NotImplementedException("No complex plans supported by violate operator yet.");
+	}
+	
+	@Override
+	public void performAction(Action action, Agent agent, Beliefs beliefs) {
+		ViolatesParameter param = new ViolatesParameter(agent, beliefs, action);
+		violates = violates.combine(onPerception(action, param));
 	}
 }
