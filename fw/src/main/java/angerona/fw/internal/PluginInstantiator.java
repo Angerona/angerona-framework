@@ -56,8 +56,6 @@ public class PluginInstantiator {
 	/** the plugin manager utiltiy */
 	private PluginManagerUtil util;
 	
-	private List<Plugin> loadedPlugins = new LinkedList<Plugin>();
-	
 	/** list of all classes implementing the generate options operator */
 	private List<Class<? extends BaseGenerateOptionsOperator>> generateOptionsOperators = new LinkedList<Class<? extends BaseGenerateOptionsOperator>>();
 
@@ -136,6 +134,7 @@ public class PluginInstantiator {
 	}
 	
 	private void loadAllPlugins() {
+		List<Plugin> loadedPlugins = new LinkedList<Plugin>();
 		Collection<OperatorPlugin> opPlugins = new LinkedList<OperatorPlugin>(util.getPlugins(OperatorPlugin.class));
 		LOG.info("Load Operator-Plugins:");
 		for(OperatorPlugin ap : opPlugins) {
@@ -157,6 +156,7 @@ public class PluginInstantiator {
 		}
 		
 		LOG.info("Load Beliefbase-Plugins:");
+		loadedPlugins.clear();
 		Collection<BeliefbasePlugin> bbPlugins = new LinkedList<BeliefbasePlugin>(util.getPlugins(BeliefbasePlugin.class));
 		for(BeliefbasePlugin bp : bbPlugins) {
 			if(loadedPlugins.contains(bp))
@@ -174,6 +174,7 @@ public class PluginInstantiator {
 		}
 		
 		LOG.info("Load Agent-Plugins:");
+		loadedPlugins.clear();
 		util.addPluginsFrom(ClassURI.PLUGIN(DefaultAgentPlugin.class));
 		Collection<AgentPlugin> aPlugins = new LinkedList<AgentPlugin>(util.getPlugins(AgentPlugin.class));
 		for(AgentPlugin ap : aPlugins) {
