@@ -120,7 +120,9 @@ public class KnowhowStrategy {
 		knowhow = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
 		knowhow.add(kb.getNextActionProgram());
 		this.atomicActions = KnowhowBuilder.buildAtomicProgram(atomicActions);
-		this.worldKnowledge = KnowhowBuilder.buildHoldsProgram(worldKnowledge);
+		// TODO: Find a way to handle negations as holds... perhaps a new atom hold_neg?
+		//this.worldKnowledge = KnowhowBuilder.buildHoldsProgram(worldKnowledge);
+		this.worldKnowledge = new Program();
 		
 		step = 0;
 	}

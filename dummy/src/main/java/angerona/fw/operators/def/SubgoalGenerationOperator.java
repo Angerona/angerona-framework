@@ -146,7 +146,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		RevisionRequest rr = (RevisionRequest) des.getPerception();
 		if(rr.getSentences().size() == 1) {
 			FolFormula ff = rr.getSentences().iterator().next();
-			if(ff.toString().equals("excused")) {
+			if(	ff instanceof Atom && 
+				((Atom)ff).getPredicate().getName().equalsIgnoreCase("excused")) {
 				Atom reasonToFire = new Atom(new Predicate("attend_scm"));
 				AngeronaAnswer aa = ag.getBeliefs().getWorldKnowledge().reason(reasonToFire);
 				if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {

@@ -49,7 +49,7 @@
         </skill>
         
         <data key="KnowHow">
-			not_sure(attend_scm(a_Employee)), s_Query(v_self, a_Employee, attend_scm(a_Employee)), 
+			not_sure(attend_scm), s_Query(v_self, a_Employee, attend_scm(a_Employee)), 
 		</data> 
 		
 	</agent-instance>

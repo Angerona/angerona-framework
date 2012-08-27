@@ -25,8 +25,10 @@ import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
+import angerona.fw.comm.Query;
 import angerona.fw.comm.RevisionRequest;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
+import angerona.fw.comm.SpeechAct;
+import angerona.fw.operators.def.SubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.util.Pair;
 
@@ -34,7 +36,7 @@ import angerona.fw.util.Pair;
  * Subgoal Generation using Knowhow as basic.
  * @author Tim Janus
  */
-public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
+public class KnowhowSubgoal extends SubgoalGenerationOperator {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(KnowhowSubgoal.class);
@@ -48,16 +50,37 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 			// scenario specific tests:
 			boolean revReq = des.getAtom().getPredicate().getName().equals("attend_scm");
 			if(revReq) {
-				gen = gen || runKnowhow("attend_scm(v_self)", param);
+				Subgoal sg = new Subgoal(param.getActualPlan().getAgent(), des);
+				gen = gen || runKnowhow("attend_scm(v_self)", param, sg);
 			}	
-		
-			// TODO: other scenario specific desires:
+
+			gen = gen || revisionRequest(des, param, param.getActualPlan().getAgent());
 		}
+		
 		
 		return gen;
 	}
+	
+	// Adapt the default behavior for strike-committee meeting.
+	@Override
+	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
+		if(! (des.getPerception() instanceof RevisionRequest))
+			return false;
+		
+		RevisionRequest rr = (RevisionRequest) des.getPerception();
+		if(rr.getSentences().size() == 1) {
+			FolFormula ff = rr.getSentences().iterator().next();
+			if(	ff instanceof Atom && 
+				((Atom)ff).getPredicate().getName().equalsIgnoreCase("excused")) {
+				Subgoal sg = new Subgoal(ag, des);
+				return runKnowhow("not_sure(attend_scm)", pp, sg);
+			}
+		}
+		
+		return false;
+	}
 
-	private boolean runKnowhow(String intention, SubgoalGenerationParameter param) {
+	private boolean runKnowhow(String intention, SubgoalGenerationParameter param, Subgoal sg) {
 		
 		// TODO: Move path to config
 		String solverpath = "D:/wichtig/Hiwi/workspace/a5/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
@@ -106,7 +129,6 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 		boolean gen = false;
 		for(Pair<String, HashMap<Integer, String>> action : ks.getActions()) {
 			report("Knowhow generates Action: " + action);
-			Subgoal sg = new Subgoal(ag, null);
 			
 			String skillName = action.first.substring(2);
 			Skill skill = ag.getSkill(skillName);
@@ -115,12 +137,16 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 				continue;
 			}
 			
+			SpeechAct act = null;
 			if(skillName.equals("RevisionRequest")) {
-				sg.newStack(ag.getSkill(skillName), createRevisionRequest(action.second));
+				act = createRevisionRequest(action.second);
+			} else if(skillName.equals("Query")) {
+				act = createQuery(action.second);
 			} else {
 				LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
 				continue;
 			}
+			sg.newStack(ag.getSkill(skillName), act);
 			
 			gen = true;
 			param.getActualPlan().addPlan(sg);
@@ -145,6 +171,19 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 		FolFormula atom = processVariable(var);
 		
 		return new RevisionRequest(self.getName(), receiver.getName(), atom);
+	}
+	
+	protected Query createQuery(Map<Integer, String> paramMap) {
+		String var = getVarWithPrefix(0, paramMap);
+		Agent self = processVariable(var);
+		
+		var = getVarWithPrefix(1, paramMap);
+		Agent receiver = processVariable(var);
+		
+		var = getVarWithPrefix(2, paramMap);
+		FolFormula atom = processVariable(var);
+		
+		return new Query(self.getName(), receiver.getName(), atom);
 	}
 	
 	protected String getVarWithPrefix(int index, Map<Integer, String> paramMap) {

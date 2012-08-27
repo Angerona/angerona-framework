@@ -437,11 +437,10 @@ public class Agent extends AgentArchitecture
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
 		
 		PlanElement atomic = null;
-		
-		if(perception != null && ! (perception instanceof Perception)) {
+		if(!(perception instanceof Perception)) {
 			LOG.error("object must be of type Perception");
 			actualPerception = null;
-		} else if(perception instanceof Perception) {
+		} else {
 			actualPerception = (Perception)perception;
 		}
 			
