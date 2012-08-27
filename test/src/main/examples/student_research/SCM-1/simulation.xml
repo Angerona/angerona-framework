@@ -6,7 +6,7 @@
         <default-suffix>employee</default-suffix>
          
         <config class="angerona.fw.serialize.AgentConfigImport">
-			<source>config/agents/full_agent.xml</source>
+			<source>config/agents/knowhow_agent.xml</source>
         </config>
          
         <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
@@ -27,9 +27,8 @@
             (Boss, angerona.fw.logic.asp.AspReasoner{d=1.0}, attend_scm)
         </data>
 		<data key="KnowHow">
-		 	bel(Y, X), revisionRequest(Y, X), reason(X)
-			excused, bel(Boss, excused), 
 			attend_scm, excused, 
+		 	excused, revisionrequest,
 		</data>
 	</agent-instance>
       

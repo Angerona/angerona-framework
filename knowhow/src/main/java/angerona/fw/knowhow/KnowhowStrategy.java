@@ -151,14 +151,16 @@ public class KnowhowStrategy {
 			Set<Literal> newLits = asl.getFactsByName("istack");
 			if(newLits.size() == 1) {
 				new_istack = (Atom)newLits.iterator().next();
+			} else {
+				return -1;
 			}
 		}
 		
 		// rebuild intention-tree program:
 		intentionTree.clear();
-		intentionTree.add(new Atom("state", new_state.getTerm(0)));
-		intentionTree.add(new Atom("khstate", new_khstate.getTerm(0)));
-		intentionTree.add(new Atom("istack", new_istack.getTerm(0)));
+		intentionTree.add(new Atom("state", new_state.getTerms()));
+		intentionTree.add(new Atom("khstate", new_khstate.getTerms()));
+		intentionTree.add(new Atom("istack", new_istack.getTerms()));
 		
 		// update state:
 		if(new_state != null)
