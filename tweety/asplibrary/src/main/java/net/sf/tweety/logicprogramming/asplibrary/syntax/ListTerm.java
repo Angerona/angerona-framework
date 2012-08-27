@@ -11,8 +11,8 @@ import java.util.*;
  */
 public class ListTerm implements Term {
 
-	Collection<Term>	listHead;
-	Collection<Term>	listTail;
+	List<Term>	listHead;
+	List<Term>	listTail;
 	
 	public ListTerm() {
 		this.listHead = new LinkedList<Term>();
@@ -24,7 +24,7 @@ public class ListTerm implements Term {
 	 * @param head
 	 * @param tail
 	 */
-	public ListTerm(Collection<Term> head, Collection<Term> tail) {
+	public ListTerm(List<Term> head, List<Term> tail) {
 		this.listHead = head;
 		this.listTail = tail;
 	}
@@ -108,6 +108,12 @@ public class ListTerm implements Term {
 		return ret;
 	}
 
+	public Term head() {
+		if(listHead.isEmpty())
+			return null;
+		return listHead.get(0);
+	}
+	
 	@Override
 	public boolean isString() {
 		return false;

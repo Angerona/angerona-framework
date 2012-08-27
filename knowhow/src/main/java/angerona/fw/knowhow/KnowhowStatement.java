@@ -11,6 +11,8 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
  */
 public class KnowhowStatement {
 	
+	private int id;
+	
 	/** the target of the knowhow represent as an elp atom. */
 	private Atom target;
 	
@@ -27,12 +29,17 @@ public class KnowhowStatement {
 	private static int counter = 1;
 	
 	public KnowhowStatement(Atom target, Vector<Atom> subTargets, Vector<Atom> conditions) {
-		name = "kh_stmt_"+counter;
+		id = counter;
+		name = "kh_stmt_"+id;
 		++counter;
 		
 		this.target = target;
 		this.subTargets.addAll(subTargets);
 		this.conditions.addAll(conditions);
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public Atom getTarget() {

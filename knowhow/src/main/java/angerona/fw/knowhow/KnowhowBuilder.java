@@ -1,13 +1,13 @@
 package angerona.fw.knowhow;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.StdTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
 
 import org.slf4j.Logger;
@@ -32,8 +32,9 @@ public class KnowhowBuilder {
 	 * @param kb	reference to the knowhow base.
 	 * @return		extended logic program representing the given KnowhowBase.
 	 */
-	public static Program buildKnowhowBaseProgram(KnowhowBase kb, boolean everything) {
+	public static Pair<Program, LinkedList<SkillParameter>> buildKnowhowbaseProgram(KnowhowBase kb, boolean everything) {
 		Program p = new Program();
+		Pair<Program, LinkedList<SkillParameter>> pair = new Pair<>(p, new LinkedList<SkillParameter>());
 		
 		// create facts for Knowhow-Statements
 		for(KnowhowStatement ks : kb.getStatements()) {
@@ -54,12 +55,17 @@ public class KnowhowBuilder {
 					// search parameters:
 					int c = 0;
 					for(Term t : a.getTerms()) {
-						// prepare the four parameters of the action_parameter atom:
-						Term skillReference = new Constant(a.getName());
-						Term index = new StdTerm(c++);
-						
-						// create action_parameter atom and add to program:
-						p.add(new Atom("skill_parameter", skillReference, index, t));
+						SkillParameter sp = new SkillParameter();
+						sp.skillName = a.getName().substring(2);
+						sp.numKnowhowStatement = ks.getId();
+						sp.numSubgoal = i;
+						sp.paramIndex = c++;
+						if(t instanceof Atom) {
+							sp.paramValue = ((Atom)t).toString();
+						} else {
+							sp.paramValue = t.get();
+						}
+						pair.second.add(sp);
 					}
 					
 					a = new Atom(a.getName());
@@ -86,7 +92,7 @@ public class KnowhowBuilder {
 
 			throw new NotImplementedException("The everything-flag=true is not implemented for KnowhowBuilder.buildKnowhowBaseProgram().");
 		}
-		return p;
+		return pair;
 	}
 	
 	public static Program buildHoldsProgram(Collection<String> literals) {

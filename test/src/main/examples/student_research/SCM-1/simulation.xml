@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Strike Committee Meeting</name>
+	<name>Strike Committee Meeting - Using Knowhow</name>
     <behavior>angerona.fw.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Employee</name>
@@ -29,6 +29,8 @@
 		<data key="KnowHow">
 			attend_scm(v_self), excused(v_self), 
 		 	excused(v_self), s_RevisionRequest(v_self, a_Boss, excused(v_self)),
+		 	answer_query, s_AnswerQuery(v_self, a_Boss, r_honest),
+		 	answer_query, s_AnswerQuery(v_self, a_Boss, r_lie),
 		</data>
 	</agent-instance>
       

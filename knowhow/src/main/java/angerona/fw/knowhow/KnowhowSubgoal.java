@@ -128,7 +128,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		// otherwise update Angerona plan component
 		boolean gen = false;
 		for(Pair<String, HashMap<Integer, String>> action : ks.getActions()) {
-			report("Knowhow generates Action: " + action);
+			report("Knowhow generates Action: " + action.toString());
 			
 			String skillName = action.first.substring(2);
 			Skill skill = ag.getSkill(skillName);

@@ -23,8 +23,8 @@ public class Pair<TF, TS> {
 	
 	@Override
 	public String toString() {
-		return first == null ? "null" : first.toString() + ";" 
-				+ second == null ? "null" : second.toString();
+		return (first == null ? "null" : first.toString()) + ";" 
+				+ (second == null ? "null" : second.toString());
 	}
 	
 	@Override

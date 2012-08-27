@@ -1,6 +1,7 @@
 package angerona.fw.knowhow.gui;
 
 import java.awt.BorderLayout;
+import java.util.LinkedList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -11,8 +12,10 @@ import angerona.fw.gui.view.BaseView;
 import angerona.fw.knowhow.KnowhowBase;
 import angerona.fw.knowhow.KnowhowBuilder;
 import angerona.fw.knowhow.KnowhowStatement;
+import angerona.fw.knowhow.SkillParameter;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
+import angerona.fw.util.Pair;
 
 /**
  * A UI-Component responsible to show the KnowhowBase of an agent.
@@ -72,12 +75,19 @@ public class KnowhowView extends BaseView implements ReportListener{
 			stmtListModel.add(0, stmt.toString());
 		}
 		
-		Program p = KnowhowBuilder.buildKnowhowBaseProgram(actual, false);
+		Pair<Program, LinkedList<SkillParameter>> pair = KnowhowBuilder.buildKnowhowbaseProgram(actual, false);
 		stmtListModel.addElement("---");
-		stmtListModel.addElement("as ELP");
+		stmtListModel.addElement("parameters");
+		stmtListModel.addElement("---");
+		for(SkillParameter sp : pair.second) {
+			stmtListModel.addElement(sp.toString());
+		}
+		
+		stmtListModel.addElement("---");
+		stmtListModel.addElement("and ELP");
 		stmtListModel.addElement("---");
 		
-		for(Rule r : p) {
+		for(Rule r : pair.first) {
 			stmtListModel.addElement(r.toString());
 		}
 	}

@@ -37,6 +37,8 @@ public class KnowhowStrategy {
 	
 	private int step;
 	
+	private KnowhowBase knowhowBase;
+	
 	/** program contains the world-knowledge of the agent */
 	private Program worldKnowledge;
 	
@@ -97,6 +99,7 @@ public class KnowhowStrategy {
 	 * @param worldKnowledge	collection of strings identifying the world knowledge of the agent.
 	 */
 	public void init(KnowhowBase kb, String initialIntention, Collection<Pair<String, Integer>> atomicActions, Collection<String> worldKnowledge) {
+		this.knowhowBase = kb;
 		stateStr = "intentionAdded";
 		intentionTree = new Program();
 
@@ -116,9 +119,11 @@ public class KnowhowStrategy {
 				new LinkedList<Term>()));
 		intentionTree.add(oldState);
 		intentionTree.add(new Atom("state", new StdTerm(stateStr)));
-		
-		knowhow = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
+		Pair<Program, LinkedList<SkillParameter>> reval = null;
+		reval = KnowhowBuilder.buildKnowhowbaseProgram(kb, false);
+		knowhow = reval.first;
 		knowhow.add(kb.getNextActionProgram());
+		knowhowBase.setParameters(reval.second);
 		this.atomicActions = KnowhowBuilder.buildAtomicProgram(atomicActions);
 		// TODO: Find a way to handle negations as holds... perhaps a new atom hold_neg?
 		//this.worldKnowledge = KnowhowBuilder.buildHoldsProgram(worldKnowledge);
@@ -182,7 +187,7 @@ public class KnowhowStrategy {
 		if(new_state != null)
 			stateStr = new_state.getTermStr(0);
 		
-		// proof if a change occured
+		// proof if a change occurred
 		Set<Literal> act = asl.getFactsByName("new_act");
 		boolean changed = 
 				new_state != null ||
@@ -193,18 +198,37 @@ public class KnowhowStrategy {
 		if(!changed) {
 			return -1;
 		} else {
+			
 			for(Literal action : act) {
+				int kh_index = -1;
+				int subgoal_index = -1;
+				
+				// find knowhow index:
+				Set<Literal> khstatements = asl.getFactsByName("khstate");
+				if(khstatements.size() == 1) {
+					ListTerm lst = (ListTerm) khstatements.iterator().next().getAtom().getTerm(0);
+					Term t = lst.head();
+					int start = t.get().lastIndexOf('_') + 1;
+					String toParse = t.get().substring(start);
+					kh_index = Integer.parseInt(toParse);
+				} else {
+					// TODO:
+				}
+				
+				// find subgoal index for parameter:
+				Set<Literal> subgoal = asl.getFactsByName("new_subgoal");
+				if(subgoal.size() == 1) {
+					subgoal_index = subgoal.iterator().next().getAtom().getTermInt(0);
+				} else {
+					// TODO:
+				}
+				
 				Atom a = (Atom)action;
 				Pair<String, HashMap<Integer, String>> pair = new Pair<>(a.getTerm(0).get(), 
 						new HashMap<Integer, String>());
-				Set<Literal> skillLits = asl.getFactsByName("skill_parameter");
-				for(Literal sLit : skillLits) {
-					Atom atom = sLit.getAtom();
-					// proof if the parameter belongs to the selected skill:
-					if(atom.getTerm(0).get().equals(a.getTermStr(0))) {
-						Integer index = atom.getTermInt(1);
-						pair.second.put(index, atom.getTermStr(2));
-					}
+				Set<SkillParameter> parameters = knowhowBase.findParameters(kh_index, subgoal_index);
+				for(SkillParameter param : parameters) {
+					pair.second.put(param.paramIndex, param.paramValue);
 				}
 				actions.add(pair);
 			}

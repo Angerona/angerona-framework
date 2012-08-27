@@ -41,6 +41,8 @@ public class KnowhowBase extends BaseAgentComponent {
 	/** the KnowhowStatements which define this KnowhowBase */
 	private List<KnowhowStatement> statements = new LinkedList<KnowhowStatement>();
 	
+	private List<SkillParameter> parameters = new LinkedList<>();
+	
 	public KnowhowBase() {
 		super();
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/InitTree");
@@ -87,9 +89,28 @@ public class KnowhowBase extends BaseAgentComponent {
 		}
 	}
 	
+	public void setParameters(List<SkillParameter> parameters) {
+		this.parameters = parameters;
+	}
+	
+	public Set<SkillParameter> findParameters(int kh_index, int subgoal_index) {
+		Set<SkillParameter> reval = new HashSet<>();
+		for(SkillParameter sp : parameters) {
+			if(	sp.numKnowhowStatement == kh_index && 
+				sp.numSubgoal == subgoal_index) {
+				reval.add(sp);
+			}
+		}
+		return reval;
+	}
+	
 	/** @return unmodifiable list of all KnowhowStatements saved in this KnowhowBase */
 	public List<KnowhowStatement> getStatements() {
 		return Collections.unmodifiableList(statements);
+	}
+	
+	public List<SkillParameter> getParameters() {
+		return Collections.unmodifiableList(parameters);
 	}
 	
 	@Override
