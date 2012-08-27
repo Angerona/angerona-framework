@@ -10,10 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 
 import org.slf4j.Logger;
@@ -127,14 +125,12 @@ public class KnowhowBase extends BaseAgentComponent {
 				"cleaned_lounge, (at_lounge, free_lounge, vacuumed_lounge), bag_empty\n" +
 				"free_lounge, people_sent_away, at_lounge"
 				);*/
-		data.put("KnowHow", "win, (bluff), ");
+		data.put("KnowHow", "win, bluff, \nbluff, smile, ");
 		kb.init(data);
-		KnowhowStatement stmt = new KnowhowStatement(new Atom("bluff"), new Vector<Atom>(), new Vector<Atom>());
-		kb.statements.add(stmt);
 		
 		KnowhowStrategy ks = new KnowhowStrategy(args[0]);
 		Set<String> actions = new HashSet<String>();
-		actions.add("bluff");
+		actions.add("smile");
 		Set<String> world = new HashSet<String>();
 		world.add("i_play_poker");
 		ks.init(kb, "win", actions, world);

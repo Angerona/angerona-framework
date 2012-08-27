@@ -136,6 +136,8 @@ public class KnowhowStrategy {
 		p.add(knowhow);
 		
 		// calculate answer sets using dlv-complex:
+		LOG.info("\n");
+		LOG.info(p.toString());
 		AnswerSetList asl = solver.computeModels(p, 10);
 		
 		// find new literals for the new intention-tree program:
@@ -146,8 +148,12 @@ public class KnowhowStrategy {
 			stateStr.equals("khAdded")	) {
 			new_istack = updateAtom(asl, "istack");
 		} else {
-			new_istack = (Atom)asl.getFactsByName("istack").iterator().next();
+			Set<Literal> newLits = asl.getFactsByName("istack");
+			if(newLits.size() == 1) {
+				new_istack = (Atom)newLits.iterator().next();
+			}
 		}
+		
 		// rebuild intention-tree program:
 		intentionTree.clear();
 		intentionTree.add(new Atom("state", new_state.getTerm(0)));
@@ -191,22 +197,21 @@ public class KnowhowStrategy {
 			Literal new_literal = lits.iterator().next();
 			if(new_literal instanceof Atom) {
 				Atom a = (Atom)new_literal;
-				if(a.getArity() == 1) {
-					Term t = a.getTerm(0);
-					Atom state = new Atom(name, t);
-					return state;
-				} else {
-					error = "The arity must be 1. But arity of '" + a.getName() + "' is: " + a.getArity();
-				}
+				Atom state = new Atom(name, a.getTerms());
+				return state; 
 			} else {
 				error = "'" + new_literal.toString() + "' is no atom. new_ literals must be facts.";
 			}
 		} else if(lits.size() > 1) {
-			error = "There are more than one 'new_" + name + "' literals.";
+			error = "There are more than one 'new_" + name + "' literals: " + lits.toString();
 		}
 		if(error != null)
 			LOG.error(error);
 		
-		return (Atom)asl.getFactsByName(name).iterator().next();
+		Set<Literal> newLits = asl.getFactsByName(name);
+		if(newLits.size() == 0) {
+			return null;
+		}
+		return (Atom)newLits.iterator().next();
 	}
 }
