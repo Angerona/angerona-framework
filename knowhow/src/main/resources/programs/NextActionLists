@@ -8,7 +8,7 @@
 % rules for state: 'intentionAdded'
 new_act(A) :- state(intentionAdded), istack(S), is_atomic(A), #head(S, A).
 new_subgoal(I) :- state(intentionAdded), istack(S), is_atomic(A), #head(S, A), khsubgoal(KH, I, A).
-new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(S), #head(S, I), not khconditionfail(KH), not khfailed([KH|K]), not const_new_act.
+new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(S), #head(S, I), not khconditionfail(K), not khfailed([KH|K]), not const_new_act.
 new_khfailed(K) :- state(intentionAdded), khstate(K), not const_new_act, not const_new_khstate.
 toparent :- const_new_khfailed.
 % --- READY --- 

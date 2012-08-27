@@ -241,6 +241,16 @@ public class AngeronaEnvironment extends APR {
 			errorOutput = "Cannot init simulation, something went wrong during agent instatiation: " + e.getMessage();
 			e.printStackTrace();
 		}
+
+		for(String agentName : getAgentNames()) {
+			Agent ag = getAgentByName(agentName);
+			for(String viewName : ag.getBeliefs().getViewKnowledge().keySet()) {
+				if(!getAgentNames().contains(viewName)) {
+					errorOutput = "Cannot init simulation: The agent '"+agentName+"' has a view on agent '"+viewName+"' but this agent does not exists.";
+					break;
+				}
+			}
+		}
 		
 		if(!errorOutput.isEmpty()) {
 			LOG.error(errorOutput);

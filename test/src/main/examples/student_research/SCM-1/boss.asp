@@ -10,5 +10,5 @@ world {
 	
 	attend_work(employee).
 	-sport_club_member(employee).
-} view->Employee {
+} view->employee {
 }

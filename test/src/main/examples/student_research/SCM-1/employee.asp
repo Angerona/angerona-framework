@@ -1,5 +1,6 @@
 world {
-} view->Boss {
+	attend_scm(employee).
+} view->boss {
 	fire(X)			:- attend_scm(X).
 	fire(X)			:- -attend_work(X), not excused(X).
 	attend_scm(X)	:- lies(X).

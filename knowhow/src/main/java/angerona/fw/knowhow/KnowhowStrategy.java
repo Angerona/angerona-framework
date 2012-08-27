@@ -37,6 +37,8 @@ public class KnowhowStrategy {
 	
 	private int step;
 	
+	private String initialIntention;
+	
 	private KnowhowBase knowhowBase;
 	
 	/** program contains the world-knowledge of the agent */
@@ -102,6 +104,7 @@ public class KnowhowStrategy {
 		this.knowhowBase = kb;
 		stateStr = "intentionAdded";
 		intentionTree = new Program();
+		this.initialIntention = initialIntention;
 
 		ELPParser parser = new ELPParser(new StringReader("istack(["+initialIntention+"])."));
 		Rule r = null;
@@ -169,7 +172,7 @@ public class KnowhowStrategy {
 			}
 		}
 		
-		if(new_state.getTermStr(0).equals(oldState.getTermStr(0))) {
+		if(	new_state.getTermStr(0).equals(oldState.getTermStr(0))) {
 			LOG.error("Old-State and new State are the same: " + new_state.getTermStr(0));
 			return -1;
 		} 
@@ -266,5 +269,9 @@ public class KnowhowStrategy {
 			return null;
 		}
 		return (Atom)newLits.iterator().next();
+	}
+	
+	public String getInitialIntention() {
+		return initialIntention;
 	}
 }

@@ -2,7 +2,7 @@
 	<name>Strike Committee Meeting - Using Knowhow</name>
     <behavior>angerona.fw.DefaultBehavior</behavior>
 	<agent-instance>
-		<name>Employee</name>
+		<name>employee</name>
         <default-suffix>employee</default-suffix>
          
         <config class="angerona.fw.serialize.AgentConfigImport">
@@ -24,18 +24,20 @@
         <desire>attend_scm</desire>
          
         <data key="Confidential">
-            (Boss, angerona.fw.logic.asp.AspReasoner{d=1.0}, attend_scm)
+            (boss, angerona.fw.logic.asp.AspReasoner{d=1.0}, attend_scm(employee))
         </data>
 		<data key="KnowHow">
 			attend_scm(v_self), excused(v_self), 
-		 	excused(v_self), s_RevisionRequest(v_self, a_Boss, excused(v_self)),
-		 	answer_query, s_AnswerQuery(v_self, a_Boss, r_honest),
-		 	answer_query, s_AnswerQuery(v_self, a_Boss, r_lie),
+		 	excused(v_self), s_RevisionRequest(v_self, a_boss, excused(v_self)),
+		 	answer_query, honest_answer, 
+		 	<!-- answer_query, lie, -->
+		 	honest_answer, s_QueryAnswer(r_honest),  
+		 	lie, s_QueryAnswer(r_lie),
 		</data>
 	</agent-instance>
       
 	<agent-instance>
-      	<name>Boss</name>
+      	<name>boss</name>
       	<default-suffix>boss</default-suffix>
       	
       	<config class="angerona.fw.serialize.AgentConfigImport">
@@ -51,7 +53,7 @@
         </skill>
         
         <data key="KnowHow">
-			not_sure(attend_scm), s_Query(v_self, a_Employee, attend_scm(a_Employee)), 
+			not_sure(attend_scm), s_Query(v_self, a_employee, attend_scm(a_employee)), 
 		</data> 
 		
 	</agent-instance>
