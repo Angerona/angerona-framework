@@ -100,7 +100,7 @@ public class KnowhowStrategy {
 	 * @param atomicActions		collection of strings identifying the atomic actions
 	 * @param worldKnowledge	collection of strings identifying the world knowledge of the agent.
 	 */
-	public void init(KnowhowBase kb, String initialIntention, Collection<Pair<String, Integer>> atomicActions, Collection<String> worldKnowledge) {
+	public void init(KnowhowBase kb, String initialIntention, Collection<String> atomicActions, Collection<String> worldKnowledge) {
 		this.knowhowBase = kb;
 		stateStr = "intentionAdded";
 		intentionTree = new Program();
@@ -152,6 +152,9 @@ public class KnowhowStrategy {
 		p.add(worldKnowledge);
 		p.add(atomicActions);
 		p.add(knowhow);
+		
+		LOG.trace("\n");
+		LOG.trace(p.toString());
 		
 		// calculate answer sets using dlv-complex:
 		AnswerSetList asl = solver.computeModels(p, 10);

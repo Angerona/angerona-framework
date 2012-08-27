@@ -3,11 +3,9 @@ package angerona.fw.knowhow;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
@@ -128,11 +126,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		// create and initialize the knowhow strategy
 		lastUsedStrategy = new KnowhowStrategy(solverpath);
-		Set<Pair<String, Integer>> realActions = new HashSet<>();
-		for(String action : actions) {
-			realActions.add(new Pair<>("s_"+action, 0));
-		}
-		lastUsedStrategy.init(kb, intention, realActions, worldKB);
+		lastUsedStrategy.init(kb, intention, actions, worldKB);
 		
 		return iterateKnowhow(param, des, ag);
 	}
@@ -310,5 +304,4 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		return reval;
 	}
-
 }

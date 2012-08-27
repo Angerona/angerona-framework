@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
@@ -108,12 +107,11 @@ public class KnowhowBuilder {
 	 * @param skills	all skills which are atomic actions of the agent
 	 * @return			An extended logic program containing all is_atomic facts for the agent
 	 */
-	public static Program buildAtomicProgram(Collection<Pair<String, Integer>> atomic_actions) {
+	public static Program buildAtomicProgram(Collection<String> atomic_actions) {
 		Program p = new Program();
 		
-		for(Pair<String, Integer> action : atomic_actions) {
-			p.add(new Atom("is_atomic", new Atom(action.first)));
-			p.add(new Atom("action_parameters", new Constant(action.second.toString())));
+		for(String action : atomic_actions) {
+			p.add(new Atom("is_atomic", new Atom("s_"+action)));
 		}
 		
 		return p;
