@@ -2,11 +2,19 @@ package angerona.fw.knowhow;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.StdTerm;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import angerona.fw.error.NotImplementedException;
+import angerona.fw.util.Pair;
 
 /**
  * Helper class responsible for translating the know-how base into other data-structures like
@@ -15,6 +23,9 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
  * @author Tim Janus
  */
 public class KnowhowBuilder {
+	
+	/** reference to the logback instance used for logging */
+	private static Logger LOG = LoggerFactory.getLogger(KnowhowBuilder.class);
 	
 	/**
 	 * Creates an extended Logic program from the given KnowhowBase.
@@ -36,6 +47,23 @@ public class KnowhowBuilder {
 			int i = 1;
 			for(Atom a : ks.getSubTargets()) {
 				r = new Rule();
+				
+				// if the subgoal is an skill then we have to find the parameter mappings
+				// and encode them in the logic program:
+				if(a.toString().startsWith("s_")) {
+					// search parameters:
+					int c = 0;
+					for(Term t : a.getTerms()) {
+						// prepare the four parameters of the action_parameter atom:
+						Term skillReference = new Constant(a.getName());
+						Term index = new StdTerm(c++);
+						
+						// create action_parameter atom and add to program:
+						p.add(new Atom("skill_parameter", skillReference, index, t));
+					}
+					
+					a = new Atom(a.getName());
+				}
 				r.addHead(new Atom("khsubgoal", stAtom, new Atom(new Integer(i).toString()), a));
 				p.add(r);
 				i++;
@@ -53,10 +81,11 @@ public class KnowhowBuilder {
 			List<String> holds = kb.getAgent().getBeliefs().getWorldKnowledge().getAtoms();
 			p.add(buildHoldsProgram(holds));
 			
-			Set<String> atomic_actions = kb.getAgent().getSkills().keySet();
-			p.add(buildAtomicProgram(atomic_actions));
+			//Set<String> atomic_actions = kb.getAgent().getSkills().keySet();
+			//p.add(buildAtomicProgram(atomic_actions));
+
+			throw new NotImplementedException("The everything-flag=true is not implemented for KnowhowBuilder.buildKnowhowBaseProgram().");
 		}
-		
 		return p;
 	}
 	
@@ -73,11 +102,12 @@ public class KnowhowBuilder {
 	 * @param skills	all skills which are atomic actions of the agent
 	 * @return			An extended logic program containing all is_atomic facts for the agent
 	 */
-	public static Program buildAtomicProgram(Collection<String> atomic_actions) {
+	public static Program buildAtomicProgram(Collection<Pair<String, Integer>> atomic_actions) {
 		Program p = new Program();
 		
-		for(String action : atomic_actions) {
-			p.add(new Atom("is_atomic", new Atom(action)));
+		for(Pair<String, Integer> action : atomic_actions) {
+			p.add(new Atom("is_atomic", new Atom(action.first)));
+			p.add(new Atom("action_parameters", new Constant(action.second.toString())));
 		}
 		
 		return p;

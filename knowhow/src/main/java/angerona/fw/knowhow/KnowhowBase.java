@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.knowhow.parser.KnowhowParser;
 import angerona.fw.knowhow.parser.ParseException;
+import angerona.fw.util.Pair;
 
 /**
  * A KnowhowBase is an AgentComponent adding the concept of knowhow to an Angerona agent.
@@ -129,8 +130,8 @@ public class KnowhowBase extends BaseAgentComponent {
 		kb.init(data);
 		
 		KnowhowStrategy ks = new KnowhowStrategy(args[0]);
-		Set<String> actions = new HashSet<String>();
-		actions.add("smile");
+		Set<Pair<String, Integer>> actions = new HashSet<>();
+		actions.add(new Pair<>("smile", 0));
 		Set<String> world = new HashSet<String>();
 		world.add("i_play_poker");
 		ks.init(kb, "win", actions, world);

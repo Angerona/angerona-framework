@@ -421,7 +421,7 @@ public class Agent extends AgentArchitecture
 	 * @param name	the name of the intention
 	 * @return		reference to the intention.
 	 */
-	public Intention getSkill(String name) {
+	public Skill getSkill(String name) {
 		return skills.get(name);
 	}
 	

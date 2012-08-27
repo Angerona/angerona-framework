@@ -1,25 +1,33 @@
 package angerona.fw.knowhow;
 
+import java.io.StringReader;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
+import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.RevisionRequest;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
+import angerona.fw.util.Pair;
 
 /**
  * Subgoal Generation using Knowhow as basic.
@@ -46,11 +54,11 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 		}
 		
 		// create and initialize the knowhow strategy
-		String intention = "attend_scm";
+		String intention = "attend_scm(v_self)";
 		KnowhowStrategy ks = new KnowhowStrategy(solverpath);
-		Set<String> realActions = new HashSet<>();
+		Set<Pair<String, Integer>> realActions = new HashSet<>();
 		for(String action : actions) {
-			realActions.add(action.toLowerCase());
+			realActions.add(new Pair<>("s_"+action, 0));
 		}
 		ks.init(kb, intention, realActions, worldKB);
 		
@@ -79,24 +87,104 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 		
 		// otherwise update Angerona plan component
 		boolean gen = false;
-		for(String action : ks.getActions()) {
+		for(Pair<String, HashMap<Integer, String>> action : ks.getActions()) {
 			report("Knowhow generates Action: " + action);
 			Subgoal sg = new Subgoal(ag, null);
-			for(String skill : ag.getSkills().keySet()) {
-				if(skill.equalsIgnoreCase(action)) {
-					List<Term> terms = new LinkedList<>();
-					// TODO: Encode this somehow in the knowhow:
-					terms.add(new Constant("employee"));
-					sg.newStack(ag.getSkill(skill), new RevisionRequest(ag.getName(), "Boss", 
-							new Atom(new Predicate("excused", 1), terms)));
-					gen = true;
-					break;
-				}
+			
+			String skillName = action.first.substring(2);
+			Skill skill = ag.getSkill(skillName);
+			if(skill == null) {
+				LOG.warn("Knowhow found Skill '{}' but the Agent '{}' does not support the Skill.", skillName, ag.getName());
+				continue;
 			}
+			
+			if(skillName.equals("RevisionRequest")) {
+				sg.newStack(ag.getSkill(skillName), createRevisionRequest(action.second));
+			} else {
+				LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
+				continue;
+			}
+			
+			gen = true;
 			param.getActualPlan().addPlan(sg);
+			report("Add the new atomic action '"+skillName+"' to the plan using knowhow.", ag.getPlanComponent());
 		}
 		
 		return gen;
+	}
+	
+	protected RevisionRequest createRevisionRequest(Map<Integer, String> paramMap) {
+		if(paramMap.size() != 3) {
+			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 3", "RevisionRequest", paramMap.size());
+			return null;
+		}
+		
+		String var = getVarWithPrefix(0, paramMap);
+		Agent self = processVariable(var);
+		
+		var = getVarWithPrefix(1, paramMap);
+		Agent receiver = processVariable(var);
+		
+		var = getVarWithPrefix(2, paramMap);
+		FolFormula atom = processVariable(var);
+		
+		return new RevisionRequest(self.getName(), receiver.getName(), atom);
+	}
+	
+	protected String getVarWithPrefix(int index, Map<Integer, String> paramMap) {
+		String var = paramMap.get(index);
+		if(var == null) {
+			LOG.error("The mapping of the variables is wrong. We assume index 0-x are used to represent the x variables of the used Skill.");
+		}
+		return var;
+	}
+	
+	protected <T> T processVariable(String variableWithPrefix) {
+		if(variableWithPrefix.startsWith("v_")) {
+			return this.getVariable(variableWithPrefix.substring(2));
+		} else if(variableWithPrefix.startsWith("a_")) {
+			return (T) this.getAgent(variableWithPrefix.substring(2));
+		} else {
+			Atom temp =  createAtom(variableWithPrefix);
+			List<Term> terms = new LinkedList<>();
+			for(Term t : temp.getArguments()) {
+				if(t.getName().startsWith("v_")) {
+					Agent newName = processVariable(t.getName());
+					terms.add(new Constant(newName.getName()));
+				} else {
+					terms.add(t);
+				}
+			}
+			return (T) new Atom(temp.getPredicate(), terms);
+		}
+	}
+	
+	private Atom createAtom(String formula) {
+		FolParserB parser = new FolParserB(new StringReader(formula));
+		try {
+			Atom reval = parser.atom(new FolSignature());
+			return reval;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private <T> T getVariable(String name) {
+		if(name.equalsIgnoreCase("self")) {
+			return (T) Agent.class.cast(getOwner());
+		} else {
+			LOG.error("Cannot convert variable with name '{}'.", name);
+			return null;
+		}
+	}
+	
+	private Agent getAgent(String name) {
+		Agent reval = this.getOwner().getEnvironment().getAgentByName(name);
+		if(reval == null) {
+			LOG.warn("Knowhow tries to find Agent with name '{}' but its not part of the Enviornment", name);
+		}
+		return reval;
 	}
 
 }

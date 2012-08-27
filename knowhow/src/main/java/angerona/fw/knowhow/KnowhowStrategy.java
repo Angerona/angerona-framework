@@ -3,6 +3,7 @@ package angerona.fw.knowhow;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,8 @@ import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import angerona.fw.util.Pair;
 
 /**
  * The default knowhow strategy.
@@ -53,7 +56,11 @@ public class KnowhowStrategy {
 	private DLVComplex solver;
 	
 	/** the actions in the correct odering to fullfil the plan */
-	private List<String> actions = new LinkedList<String>();
+	private List<Pair<String, HashMap<Integer, String>>> actions = new LinkedList<>();
+	
+	/** saving the last state used for processing */
+	private Atom oldState;
+	
 	
 	/**
 	 * Ctor: Creates the default Knowhow-Strategy
@@ -71,7 +78,7 @@ public class KnowhowStrategy {
 	}
 	
 	/** @return an unmodifiable list of the actions found by the planning yet */
-	public List<String> getActions() {
+	public List<Pair<String, HashMap<Integer, String>>> getActions() {
 		return Collections.unmodifiableList(actions);
 	}
 	
@@ -89,7 +96,7 @@ public class KnowhowStrategy {
 	 * @param atomicActions		collection of strings identifying the atomic actions
 	 * @param worldKnowledge	collection of strings identifying the world knowledge of the agent.
 	 */
-	public void init(KnowhowBase kb, String initialIntention, Collection<String> atomicActions, Collection<String> worldKnowledge) {
+	public void init(KnowhowBase kb, String initialIntention, Collection<Pair<String, Integer>> atomicActions, Collection<String> worldKnowledge) {
 		stateStr = "intentionAdded";
 		intentionTree = new Program();
 
@@ -105,8 +112,9 @@ public class KnowhowStrategy {
 			intentionTree.add(r); 
 		}
 		
-		intentionTree.add(new Atom("khstate", new ListTerm(new LinkedList<Term>(), 
-				new LinkedList<Term>())));
+		oldState = new Atom("khstate", new ListTerm(new LinkedList<Term>(), 
+				new LinkedList<Term>()));
+		intentionTree.add(oldState);
 		intentionTree.add(new Atom("state", new StdTerm(stateStr)));
 		
 		knowhow = KnowhowBuilder.buildKnowhowBaseProgram(kb, false);
@@ -136,8 +144,6 @@ public class KnowhowStrategy {
 		p.add(knowhow);
 		
 		// calculate answer sets using dlv-complex:
-		LOG.info("\n");
-		LOG.info(p.toString());
 		AnswerSetList asl = solver.computeModels(p, 10);
 		
 		// find new literals for the new intention-tree program:
@@ -156,11 +162,19 @@ public class KnowhowStrategy {
 			}
 		}
 		
+		if(new_state.getTermStr(0).equals(oldState.getTermStr(0))) {
+			LOG.error("Old-State and new State are the same: " + new_state.getTermStr(0));
+			return -1;
+		} 
+		
 		// rebuild intention-tree program:
 		intentionTree.clear();
-		intentionTree.add(new Atom("state", new_state.getTerms()));
+		oldState = new Atom("state", new_state.getTerms());
+		intentionTree.add(oldState);
 		intentionTree.add(new Atom("khstate", new_khstate.getTerms()));
 		intentionTree.add(new Atom("istack", new_istack.getTerms()));
+		LOG.info("\n");
+		LOG.info(intentionTree.toString());
 		
 		// update state:
 		if(new_state != null)
@@ -179,7 +193,18 @@ public class KnowhowStrategy {
 		} else {
 			for(Literal action : act) {
 				Atom a = (Atom)action;
-				actions.add(a.getTermStr(0));
+				Pair<String, HashMap<Integer, String>> pair = new Pair<>(a.getTerm(0).get(), 
+						new HashMap<Integer, String>());
+				Set<Literal> skillLits = asl.getFactsByName("skill_parameter");
+				for(Literal sLit : skillLits) {
+					Atom atom = sLit.getAtom();
+					// proof if the parameter belongs to the selected skill:
+					if(atom.getTerm(0).get().equals(a.getTermStr(0))) {
+						Integer index = atom.getTermInt(1);
+						pair.second.put(index, atom.getTermStr(2));
+					}
+				}
+				actions.add(pair);
 			}
 			return act.size();
 		}

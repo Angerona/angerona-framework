@@ -27,8 +27,8 @@
             (Boss, angerona.fw.logic.asp.AspReasoner{d=1.0}, attend_scm)
         </data>
 		<data key="KnowHow">
-			attend_scm, excused, 
-		 	excused, revisionrequest,
+			attend_scm(v_self), excused(v_self), 
+		 	excused(v_self), s_RevisionRequest(v_self, a_Boss, excused(v_self)),
 		</data>
 	</agent-instance>
       
@@ -42,13 +42,15 @@
       	
       	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
             <source>config/beliefbases/asp_beliefbase.xml</source>
-         </beliefbase-config>
+        </beliefbase-config>
          
-         <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/QueryAnswer.xml</source>
-        </skill>
         <skill class="angerona.fw.serialize.SkillConfigImport">
 			<source>config/skills/Query.xml</source>
         </skill>
+        
+        <!--  <data key="KnowHow">
+			not_sure(attend_scm(a_Employee)), s_Query(v_self, a_Employee, attend_scm(a_Employee)), 
+		</data>--> 
+		
 	</agent-instance>
 </simulation-configuration>
