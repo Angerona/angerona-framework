@@ -11,6 +11,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
  */
 public class KnowhowStatement {
 	
+	/** the id of the knowhow-statement (useable as index) */
 	private int id;
 	
 	/** the target of the knowhow represent as an elp atom. */
@@ -38,6 +39,7 @@ public class KnowhowStatement {
 		this.conditions.addAll(conditions);
 	}
 	
+	/** @return	the id of the knowhow-statement (useable as index) */
 	public int getId() {
 		return id;
 	}

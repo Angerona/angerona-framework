@@ -34,20 +34,17 @@ public class KnowhowBase extends BaseAgentComponent {
 	/** the program responsible to calculate the next action, nextAction4 of Regina Fritsch was used as basic */
 	private Program nextAction;
 	
-	/** the program responsible for initialization of the intention tree */
-	private Program initTree;
-	
 	/** the KnowhowStatements which define this KnowhowBase */
 	private List<KnowhowStatement> statements = new LinkedList<KnowhowStatement>();
 	
+	/** a list of skill-parameters helping to map atomic actions in knowhow to map to the correct Action in Angerona */
 	private List<SkillParameter> parameters = new LinkedList<>();
 	
+	/** Default Ctor: Generates the NextActiono program */
 	public KnowhowBase() {
 		super();
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/InitTree");
-		initTree = Program.loadFrom(new InputStreamReader(is));
 		
-		is = this.getClass().getClassLoader().getResourceAsStream("programs/NextActionLists");
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/NextActionLists");
 		if(is != null)
 			nextAction = Program.loadFrom(new InputStreamReader(is));
 	}
@@ -59,10 +56,12 @@ public class KnowhowBase extends BaseAgentComponent {
 	public KnowhowBase(KnowhowBase other) {
 		super(other);
 		nextAction = (Program)other.nextAction.clone();
-		initTree = (Program)other.initTree.clone();
 		this.statements = new LinkedList<KnowhowStatement>(other.statements);
 	}
 
+	/**
+	 * parses the Knowhow Data defined in the agent section of the simulation.xml
+	 */
 	@Override
 	public void init(Map<String, String> data) {
 		if(!data.containsKey("KnowHow")) {
@@ -88,10 +87,20 @@ public class KnowhowBase extends BaseAgentComponent {
 		}
 	}
 	
+	/**
+	 * changes the skill-parameters (by reference).
+	 * @param parameters	the new list of SkillParameter
+	 */
 	public void setParameters(List<SkillParameter> parameters) {
 		this.parameters = parameters;
 	}
 	
+	/**
+	 * finds the Skill-parameter for a specific knowhow-statements subgoal.
+	 * @param kh_index			the index (id) of the knowhow-statement
+	 * @param subgoal_index		the index of the subgoal.
+	 * @return
+	 */
 	public Set<SkillParameter> findParameters(int kh_index, int subgoal_index) {
 		Set<SkillParameter> reval = new HashSet<>();
 		for(SkillParameter sp : parameters) {
@@ -108,6 +117,7 @@ public class KnowhowBase extends BaseAgentComponent {
 		return Collections.unmodifiableList(statements);
 	}
 	
+	/** @return unmodifiable list of all SkillParameters used for mapping between Knowhow and Angerona */
 	public List<SkillParameter> getParameters() {
 		return Collections.unmodifiableList(parameters);
 	}
@@ -122,10 +132,16 @@ public class KnowhowBase extends BaseAgentComponent {
 		return new KnowhowBase(this);
 	}
 	
+	/** @return	the program used to determine the next action (knowhow) */
 	public Program getNextActionProgram() {
 		return nextAction;
 	}
 	
+	/**
+	 * A functional test for the Knowhow program iterations... tests the KnowhowStrategy.
+	 * @param args				Assumes that the first parameter is the path to the dlv-complex solver
+	 * @throws SolverException
+	 */
 	public static void main(String [] args) throws SolverException {
 		LOG.info("Programm arguments: '{}'", args);
 		

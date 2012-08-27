@@ -43,6 +43,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(KnowhowSubgoal.class);
 	
+	/** reference to the knowhow-strategy which was used at last */
 	private KnowhowStrategy lastUsedStrategy;
 	
 	@Override
@@ -69,12 +70,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return gen;
 	}
 	
-	// Adapt the default behavior for strike-committee meeting.
+	/** Adapt the default behavior for strike-committee meeting. */
 	@Override
 	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		if(! (des.getPerception() instanceof RevisionRequest))
 			return false;
 		
+		// test if the revision request is excused, if yes then run the knowhow not_sure
 		RevisionRequest rr = (RevisionRequest) des.getPerception();
 		if(rr.getSentences().size() == 1) {
 			FolFormula ff = rr.getSentences().iterator().next();
@@ -89,11 +91,14 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return false;
 	}
 
+	/** adapt the default behavior for strike-committee meeting. */
 	@Override 
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		if(!(des.getPerception() instanceof Query))
 			return false;
 		
+		// run the answer_query knowhow-statement till no more answers are found or an answer
+		// was found which does not violates secrecy.
 		Subgoal sg = runKnowhow("answer_query", pp, des);
 		while(sg != null) {
 			ViolatesResult res = ag.performThought(ag.getBeliefs(), 
@@ -111,6 +116,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return false;
 	}
 	
+	/**
+	 * Helper method: Starts the knowhow processing:
+	 * @param intention		start intention used in the intention-tree
+	 * @param param			the subgoal-generation parameter data-structure
+	 * @param des			The associated desire.
+	 * @return				A subgoal containing one atomic-action.
+	 */
 	private Subgoal runKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
 		// TODO: Move path to config
 		String solverpath = "D:/wichtig/Hiwi/workspace/a5/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
@@ -131,6 +143,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return iterateKnowhow(param, des, ag);
 	}
 
+	/**
+	 * Tries to re-iterate over the knowhow to find more actions
+	 * @param param	The subgoal-genaration data-structure
+	 * @param des	The associated desire
+	 * @param ag	reference to the agent
+	 * @return
+	 */
 	private Subgoal iterateKnowhow(SubgoalGenerationParameter param, Desire des, Agent ag) {
 		// iterate knowhow algorithm until a action is found.
 		int reval = 0;
@@ -159,12 +178,22 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return createAtomicAction(param, des, ag);
 	}
 
+	/**
+	 * This method creates a Subgoal containing an atomic action by mapping the action found by the knowhow
+	 * into the Angerona System.
+	 * @param param		Subgoal-Generation parameter data-structure
+	 * @param des		The associated desire.
+	 * @param ag		Reference to the agent
+	 * @return			A subgoal containing an atomic action (Skill)
+	 */
 	private Subgoal createAtomicAction(SubgoalGenerationParameter param, Desire des,
 			Agent ag) {
 		Subgoal reval = null;
+		// iterate over all actions found by the Knowhow (at the moment this is only one)
 		for(Pair<String, HashMap<Integer, String>> action : lastUsedStrategy.getActions()) {
 			report("Knowhow generates Action: " + action.toString());
 			
+			// test if the skill exists
 			String skillName = action.first.substring(2);
 			Skill skill = ag.getSkill(skillName);
 			if(skill == null) {
@@ -172,6 +201,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				continue;
 			}
 			
+			// create the action using the SkillParameter map and the name of the skill
 			SpeechAct act = null;
 			if(skillName.equals("RevisionRequest")) {
 				act = createRevisionRequest(action.second);
@@ -184,14 +214,21 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				continue;
 			}
 			
+			// create the Subgoal which will be returned and report this step to Angerona.
 			reval = new Subgoal(ag, des);
 			reval.newStack(ag.getSkill(skillName), act);
-			
 			report("Knowhow finds new atomic action '"+skillName+"'");
 		}
 		return reval;
 	}
 	
+	/**
+	 * Helper method: Creates an instance of the RevisionRequest class from the parameter-map given
+	 * by the knowhow part of the program.
+	 * @param paramMap		Reference to the map representing the parameters
+	 * @return				An object of type RevisionReqeust which represents the Angerona version of the
+	 * 						action found by the knowhow.
+	 */
 	protected RevisionRequest createRevisionRequest(Map<Integer, String> paramMap) {
 		if(paramMap.size() != 3) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 3", "RevisionRequest", paramMap.size());
@@ -210,6 +247,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return new RevisionRequest(self.getName(), receiver.getName(), atom);
 	}
 	
+	/**
+	 * Helper method: Creates an instance of the Query class from the parameter-map given
+	 * by the knowhow part of the program.
+	 * @param paramMap		Reference to the map representing the parameters
+	 * @return				An object of type Query which represents the Angerona version of the
+	 * 						action found by the knowhow.
+	 */
 	protected Query createQuery(Map<Integer, String> paramMap) {
 		String var = getVarWithPrefix(0, paramMap);
 		Agent self = processVariable(var);
@@ -223,6 +267,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return new Query(self.getName(), receiver.getName(), atom);
 	}
 	
+	/**
+	 * Helper method: Creates an instance of the QueryAnswer class from the parameter-map given
+	 * by the knowhow part of the program.
+	 * @param paramMap		Reference to the map representing the parameters
+	 * @return				An object of type QueryAnswer which represents the Angerona version of the
+	 * 						action found by the knowhow.
+	 */
 	protected Answer createQueryAnswer(Map<Integer, String> paramMap, Query reason) {
 		String var = getVarWithPrefix(0, paramMap);
 		boolean honest = var.equals("r_honest");
@@ -249,6 +300,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return new Answer(getOwner().getName(), reason.getSenderId(), reason.getQuestion(), aa);
 	}
 	
+	/**
+	 * Helper method: checks if the given index is in the parameter map, if this is not the case some error output
+	 * is produced.
+	 * @param index		index of the parameter
+	 * @param paramMap	the parameter-map 
+	 * @return			A String representing the value of the parameter.
+	 */
 	protected String getVarWithPrefix(int index, Map<Integer, String> paramMap) {
 		String var = paramMap.get(index);
 		if(var == null) {
@@ -257,6 +315,11 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return var;
 	}
 	
+	/**
+	 * Helper method: checks for prefixes and creates the correct objects from the given parameter/variable.
+	 * @param variableWithPrefix	String containing the value
+	 * @return	An object of generic Type. Might be an agent or an FOL-Atom or a string.
+	 */
 	protected <T> T processVariable(String variableWithPrefix) {
 		if(variableWithPrefix.startsWith("v_")) {
 			return this.getVariable(variableWithPrefix.substring(2));
@@ -277,6 +340,11 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 	}
 	
+	/**
+	 * Helper method: Creates a FOL-Atom using the given string
+	 * @param formula	String which will be parsed to a FolFormula (Atom).
+	 * @return			The FOL-Atom of the given String
+	 */
 	private Atom createAtom(String formula) {
 		FolParserB parser = new FolParserB(new StringReader(formula));
 		try {
@@ -288,6 +356,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 	}
 	
+	/**
+	 * Gets a variable of the given name... actually there is only self
+	 * but a TODO is to use the Context system to give the knowhow more
+	 * access to the Angerona internal systems.
+	 * @param name		The name of the variable
+	 * @return			An Object representing the variable.
+	 */
 	private <T> T getVariable(String name) {
 		if(name.equalsIgnoreCase("self")) {
 			return (T) Agent.class.cast(getOwner());
@@ -297,6 +372,12 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 	}
 	
+	/**
+	 * Helper method: Searchs for the agent with the given name.
+	 * @param name		The agent's name
+	 * @return			Reference to the Agent with the given name or null if
+	 * 					no such Agent exists.
+	 */
 	private Agent getAgent(String name) {
 		Agent reval = this.getOwner().getEnvironment().getAgentByName(name);
 		if(reval == null) {
