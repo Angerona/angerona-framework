@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
+import angerona.fw.Desire;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.RevisionRequest;
@@ -41,10 +42,27 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 	@Override
 	protected Boolean processInt(SubgoalGenerationParameter param) {
 		report("Using Knowhow for Subgoal Generation.");
+		
+		boolean gen  = false;
+		for (Desire des : getOwner().getDesires().getDesires()) {
+			// scenario specific tests:
+			boolean revReq = des.getAtom().getPredicate().getName().equals("attend_scm");
+			if(revReq) {
+				gen = gen || runKnowhow("attend_scm(v_self)", param);
+			}	
+		
+			// TODO: other scenario specific desires:
+		}
+		
+		return gen;
+	}
+
+	private boolean runKnowhow(String intention, SubgoalGenerationParameter param) {
+		
 		// TODO: Move path to config
 		String solverpath = "D:/wichtig/Hiwi/workspace/a5/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
 		Agent ag = param.getActualPlan().getAgent();
-		
+				
 		// Gathering knowhow information
 		Collection<String> worldKB = ag.getBeliefs().getWorldKnowledge().getAtoms();
 		Collection<String> actions = ag.getSkills().keySet();
@@ -54,7 +72,6 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 		}
 		
 		// create and initialize the knowhow strategy
-		String intention = "attend_scm(v_self)";
 		KnowhowStrategy ks = new KnowhowStrategy(solverpath);
 		Set<Pair<String, Integer>> realActions = new HashSet<>();
 		for(String action : actions) {
@@ -109,7 +126,6 @@ public class KnowhowSubgoal extends BaseSubgoalGenerationOperator {
 			param.getActualPlan().addPlan(sg);
 			report("Add the new atomic action '"+skillName+"' to the plan using knowhow.", ag.getPlanComponent());
 		}
-		
 		return gen;
 	}
 	

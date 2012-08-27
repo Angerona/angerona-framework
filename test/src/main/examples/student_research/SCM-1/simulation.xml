@@ -37,7 +37,7 @@
       	<default-suffix>boss</default-suffix>
       	
       	<config class="angerona.fw.serialize.AgentConfigImport">
-      		<source>config/agents/default_agent.xml</source>
+      		<source>config/agents/knowhow_agent.xml</source>
       	</config>
       	
       	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
@@ -48,9 +48,9 @@
 			<source>config/skills/Query.xml</source>
         </skill>
         
-        <!--  <data key="KnowHow">
+        <data key="KnowHow">
 			not_sure(attend_scm(a_Employee)), s_Query(v_self, a_Employee, attend_scm(a_Employee)), 
-		</data>--> 
+		</data> 
 		
 	</agent-instance>
 </simulation-configuration>
