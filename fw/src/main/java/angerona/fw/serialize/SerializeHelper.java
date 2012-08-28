@@ -58,6 +58,7 @@ public class SerializeHelper {
 		} catch (Exception e) {
 			LOG.error("Something went wrong during loading of '{}': {}", source.getPath(), e.getMessage());
 			e.printStackTrace();
+			return null;
 		}
 		return obj;
 	}

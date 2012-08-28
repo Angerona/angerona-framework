@@ -1,7 +1,8 @@
 package angerona.fw.logic.asp;
 
+import java.io.FileNotFoundException;
+
 import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ public class AspRevision extends BaseChangeBeliefs {
 
 	/** The logger used for output in the angerona Framework */
 	static private Logger LOG = LoggerFactory.getLogger(AspRevision.class);
+	
+	private SolverWrapper wrapper = SolverWrapper.DLV_COMPLEX;
 	
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {
@@ -38,19 +41,13 @@ public class AspRevision extends BaseChangeBeliefs {
 		
 		AspBeliefbase newK = (AspBeliefbase)param.getNewKnowledge();
 		
-		try {
-
-			// TODO: Find better solution replace duplo (REASONER)
-			String postfix = "";
-			postfix += System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ".exe" : "";
-			postfix += System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0 ? ".bin" : "";
-			// no postfix for unix.
-			
+		try {			
 			bb.setProgram(pf.revision(bb.getProgram(), newK.getProgram(), 
-					new DLVComplex("tools/solver/asp/dlv/dlv-complex"+postfix)));
+					wrapper.getSolver()));
 		} catch (SolverException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
 		}
 		
 		return bb;

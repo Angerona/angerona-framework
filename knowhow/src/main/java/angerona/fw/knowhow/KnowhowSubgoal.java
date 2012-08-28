@@ -125,7 +125,8 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 */
 	private Subgoal runKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
 		// TODO: Move path to config
-		String solverpath = "D:/wichtig/Hiwi/workspace/a5/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
+		//String solverpath = "D:/wichtig/Hiwi/workspace/a5/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
+		String solverpath = "D:/Tim/HiWi/angerona/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
 		Agent ag = param.getActualPlan().getAgent();
 				
 		// Gathering knowhow information

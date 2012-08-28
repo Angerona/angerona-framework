@@ -2,12 +2,16 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -17,11 +21,35 @@ import org.xml.sax.SAXException;
 @Root(name="config")
 public class GlobalConfiguration {
 	
-	@ElementList(name="plugins")
+	@ElementList(name="plugins", inline=true, entry="plugin")
 	private List<String>	pluginPaths = new LinkedList<String>();
 	
+	@ElementMap(entry="parameter", key="name", value="value", attribute=true, inline=true)
+	private Map<String, String>	parameters = new HashMap<>();
+	
 	public List<String> getPluginPaths() {
-		return pluginPaths;
+		return Collections.unmodifiableList(pluginPaths);
+	}
+	
+	public Map<String, String> getParameters() {
+		return Collections.unmodifiableMap(parameters);
+	}
+	
+	/**
+	 * Adds to the parameter with the given name a postfix for representing the 
+	 * executables on different OSes.
+	 * @param name	The name of the parameter
+	 * @return		A string representing the path to the exeutable inclusive os-dependent postfix.
+	 */
+	public String getAsExecutable(String name) {
+		String reval = null;
+		if(parameters.containsKey(name)) {
+			String postfix = "";
+			postfix += System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ".exe" : "";
+			postfix += System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0 ? ".bin" : "";
+			reval = parameters.get(name) + postfix;
+		}
+		return reval;
 	}
 	
 	/**
@@ -45,6 +73,8 @@ public class GlobalConfiguration {
 		GlobalConfiguration test = new GlobalConfiguration();
 		test.pluginPaths.add("AspPlugin.jar");
 		test.pluginPaths.add("DummyPlugin.jar");
+		
+		test.parameters.put("path-dlv-complex", "D:/dlv-complex");
 		try {
 			serializer.write(test, System.out);
 		} catch (Exception e) {

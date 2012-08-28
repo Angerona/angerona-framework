@@ -1,5 +1,6 @@
 package angerona.fw.logic.asp;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -7,9 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.Answer;
-import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
@@ -47,15 +45,8 @@ public class AspReasoner extends BaseReasoner {
 		S_CREDULOUS
 	}
 	
-	/** enum encoding the possible solver backends which can be use to retrieve the answer sets*/
-	private enum SolverType {
-		CLINGO,
-		DLV,
-		DLV_COMPLEX
-	}
-	
 	/** the solver type used by this class instance */
-	private SolverType solver = SolverType.DLV_COMPLEX;
+	private SolverWrapper solver = SolverWrapper.DLV_COMPLEX;
 	
 	/** the actual used semantic for interpreting the received answer sets */
 	private InferenceSemantic semantic = InferenceSemantic.S_SKEPTICAL;
@@ -292,19 +283,12 @@ public class AspReasoner extends BaseReasoner {
 	 * @throws SolverException
 	 */
 	private List<AnswerSet> runSolver(AspBeliefbase bb) throws SolverException {
-		Solver solver = null;
-		// TODO: Find better solution replace duplo (REVISION)
-		String postfix = "";
-		postfix += System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ".exe" : "";
-		postfix += System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0 ? ".bin" : "";
-		
-		if(this.solver == SolverType.CLINGO)
-			solver = new Clingo("tools/solver/asp/clingo/clingo");
-		else if(this.solver == SolverType.DLV)
-			solver = new DLV("tools/solver/asp/dlv/dlv"+postfix);
-		else if(this.solver == SolverType.DLV_COMPLEX)
-			solver = new DLVComplex("./tools/solver/asp/dlv/dlv-complex"+postfix);
-		return solver.computeModels(bb.getProgram(), 10);
+		try {
+			Solver s = solver.getSolver();
+			return s.computeModels(bb.getProgram(), 10);
+		} catch (FileNotFoundException fnfe) {
+			throw new SolverException(fnfe.getMessage(), SolverException.SE_CANNOT_FIND_SOLVER);
+		}
 	}
 
 	@Override
