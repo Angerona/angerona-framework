@@ -64,9 +64,6 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		return reval;
 	}
 
-	/**
-	 * 
-	 */
 	private double calculateSecrecyStrength(FolFormula secretInfo,
 			List<AnswerSet> ansSets) {
 		double numAnsSets = ansSets.size();
@@ -88,26 +85,20 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		Logger LOG = LoggerFactory.getLogger(WeakeningViolatesOperator.class);
 		List<Pair<Secret, Double>> secretList = new LinkedList<>();
 
-		/*
-		 * Check if any confidential knowledge present. If none then no secrecy
-		 * weakening possible
-		 */
+		
+		// Check if any confidential knowledge present. If none then no secrecy
+		//weakening possible
 		ConfidentialKnowledge conf = param.getAgent().getComponent(
 				ConfidentialKnowledge.class);
 		if (conf == null)
 			return new ViolatesResult();
 
-		/*
-		 * Remaining operations depend on whether the action in question is an answer
-		 */
+		// Remaining operations depend on whether the action in question is an answer
 		if (param.getAtom() instanceof Answer) {
-
 			Answer a = (Answer) param.getAtom();
 
-			/*
-			 * Consider self-repeating answers (and only answers) as bad as
-			 * revealing all secrets
-			 */
+			// Consider self-repeating answers (and only answers) as bad as
+			// revealing all secrets			
 			List<Action> actionsHistory = param.getAgent().getActionHistory();
 			for (Action act : actionsHistory) {
 				if (a.equals(act)) {
@@ -126,8 +117,6 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 
 				// TODO: Merge violates operators
 				AspBeliefbase view = (AspBeliefbase) views.get(a.getReceiverId()).clone();
-				Program prog = view.getProgram();
-
 				Set<FolFormula> answers = a.getAnswer().getAnswers();
 				if (answers.size() > 1) {
 					LOG.warn("More than one answer but '" + this.getClass().getSimpleName()
@@ -139,20 +128,15 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				FolFormula answer = answers.iterator().next();
 				LOG.info("Make Revision for QueryAnswer: '{}'", answer);
 
-				Rule rule = convertToRule(answer);
-				prog.add(rule);
-
-				/*
-				 * Check for contradictions. If one is found consider all
-				 * secrets totally revealed
-				 */
+				
+				// Check for contradictions. If one is found consider all
+				// secrets totally revealed
 				List<AnswerSet> newAnsSets = null;
 
 				AspReasoner ar = (AspReasoner) view.getReasoningOperator();
 				ar.infer(view);
 				view.infere();
 				newAnsSets = ar.processAnswerSets();
-				prog = view.getProgram();
 
 				if (newAnsSets == null) {
 					String actString = param.getAtom().toString();
@@ -162,7 +146,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 					return new ViolatesResult(secretList);
 				}
 
-				/* Now the secrecy strengths get added */
+				// Now the secrecy strengths get added
 				for (Secret secret : conf.getTargets()) {
 					FolFormula secretInfo = secret.getInformation();
 
