@@ -53,18 +53,20 @@ public class KnowhowBuilder {
 				if(a.toString().startsWith("s_")) {
 					// search parameters:
 					int c = 0;
-					for(Term t : a.getTerms()) {
-						SkillParameter sp = new SkillParameter();
-						sp.skillName = a.getName().substring(2);
-						sp.numKnowhowStatement = ks.getId();
-						sp.numSubgoal = i;
-						sp.paramIndex = c++;
-						if(t instanceof Atom) {
-							sp.paramValue = ((Atom)t).toString();
-						} else {
-							sp.paramValue = t.get();
+					if(a.getTerms() != null) {
+						for(Term t : a.getTerms()) {
+							SkillParameter sp = new SkillParameter();
+							sp.skillName = a.getName().substring(2);
+							sp.numKnowhowStatement = ks.getId();
+							sp.numSubgoal = i;
+							sp.paramIndex = c++;
+							if(t instanceof Atom) {
+								sp.paramValue = ((Atom)t).toString();
+							} else {
+								sp.paramValue = t.get();
+							}
+							pair.second.add(sp);
 						}
-						pair.second.add(sp);
 					}
 					
 					a = new Atom(a.getName());

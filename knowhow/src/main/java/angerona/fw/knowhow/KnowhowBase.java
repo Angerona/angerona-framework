@@ -162,7 +162,8 @@ public class KnowhowBase extends BaseAgentComponent {
 				"cleaned_lounge, (at_lounge, free_lounge, vacuumed_lounge), bag_empty\n" +
 				"free_lounge, people_sent_away, at_lounge"
 				);*/
-		data.put("KnowHow", "win, bluff, \nbluff, smile, \nbluff, laugth, ");
+		data.put("KnowHow", "win, bluff, \nbluff, s_smile, \nbluff, s_laugth, ");
+		//data.put("KnowHow", "win, bluff, \nbluff, (s_smile, s_laugth), ");
 		kb.init(data);
 		
 		KnowhowStrategy ks = new KnowhowStrategy(args[0]);
