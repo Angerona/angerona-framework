@@ -60,10 +60,7 @@ public class AspReasoner extends BaseReasoner {
 	 * Process the answer sets for the beliefbase owning the operator.
 	 * @return a list of answer sets representing the solver output.
 	 */
-	public List<AnswerSet> processAnswerSets() {
-		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
-		if(bb == null)
-			return null;
+	public List<AnswerSet> processAnswerSets(AspBeliefbase bb) {
 		
 		List<AnswerSet> reval = null;
 		try {
@@ -78,7 +75,7 @@ public class AspReasoner extends BaseReasoner {
 	
 	@Override
 	protected Answer queryInt(FolFormula query) {		
-		List<AnswerSet> answerSets = processAnswerSets();
+		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)actualBeliefbase);
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 		
 		String dParam = getParameters().get("d");
@@ -298,7 +295,7 @@ public class AspReasoner extends BaseReasoner {
 
 	@Override
 	protected Set<FolFormula> inferInt() {
-		List<AnswerSet> answerSets = processAnswerSets();
+		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)actualBeliefbase);
 		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
 		Set<FolFormula> reval = new HashSet<FolFormula>();
 		for(AnswerSet as : answerSets) {

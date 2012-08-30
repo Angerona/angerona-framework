@@ -82,14 +82,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	private OperatorSet<BaseTranslator> translators = new OperatorSet<BaseTranslator>();
 	
-	public BaseChangeBeliefs getRevisionOperator() {
-		return changeOperators.def();
-	}
-
-	public BaseReasoner getReasoningOperator() {
-		return reasoningOperators.def();
-	}
-
 	/** Default Ctor: Generates an empty belief base which does not supports quantifiers or variables in its formulas */
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
@@ -128,6 +120,45 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 	
 	/**
+	 * Helper method: Instantiates the used operators for performing operations on this belief base.
+	 * THis is called at by PluginInstatiator when creating new belief bases.
+	 * @param bbc	Data-structure with information about the classes which will be used for the different
+	 * 				operations.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
+		changeOperators.set(bbc.getChangeOperators());
+		reasoningOperators.set(bbc.getReasoners());
+		translators.set(bbc.getTranslators());
+		updateOwner();
+	}
+
+	public BaseChangeBeliefs getRevisionOperator() {
+		return changeOperators.def();
+	}
+
+	public BaseReasoner getReasoningOperator() {
+		return reasoningOperators.def();
+	}
+
+	public BaseTranslator getTranslator() {
+		return translators.def();
+	}
+	
+	public OperatorSet<BaseChangeBeliefs> getChangeOperators() {
+		return changeOperators;
+	}
+
+	public OperatorSet<BaseReasoner> getReasoningOperators() {
+		return reasoningOperators;
+	}
+
+	public OperatorSet<BaseTranslator> getTranslators() {
+		return translators;
+	}
+
+	/**
 	 * Generates the content of this beliefbase by parsing a file
 	 * @param filepath	path to the file containing the representation of the belief base.
 	 * @throws FileNotFoundException
@@ -146,21 +177,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 	
 	/**
-	 * Helper method: Instantiates the used operators for performing operations on this belief base.
-	 * THis is called at by PluginInstatiator when creating new belief bases.
-	 * @param bbc	Data-structure with information about the classes which will be used for the different
-	 * 				operations.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
-		changeOperators.set(bbc.getChangeOperators());
-		reasoningOperators.set(bbc.getReasoners());
-		translators.set(bbc.getTranslators());
-		updateOwner();
-	}
-	
-	/**
 	 * The internal parse function for the belief base.
 	 * Sub classes must implement this method to parse a string representation into a belief base living in memory.
 	 * @param content	The string representing the belief base. (Content of a file on the filesystem as an example)
@@ -170,8 +186,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
 	public void addKnowledge(Set<FolFormula> formulas) {
-		addKnowledge(formulas, translators.def(), 
-				changeOperators.def());
+		addKnowledge(formulas, null, null);
 	}
 	
 	public void addKnowledge(FolFormula formula)
@@ -182,13 +197,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 	
 	public void addKnowledge(Perception perception) {
-		addKnowledge(perception, translators.def(), 
-				changeOperators.def());
+		addKnowledge(perception, null, null);
 	}
 	
-	public void addKnowledge(Perception perception, BaseTranslator translator, BaseChangeBeliefs changeOperator) {
+	public void addKnowledge(Perception perception, BaseTranslator translator, 
+			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
-			throw new IllegalArgumentException("Translator-Operator must not be null.");
+			translator = translators.def();
 		
 		BaseBeliefbase newK = translator.translatePerception(perception);
 		addKnowledge(newK, changeOperator);
@@ -197,7 +212,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public void addKnowledge(Set<FolFormula> formulas, BaseTranslator translator, 
 			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
-			throw new IllegalArgumentException("Translator-Operator must not be null.");
+			translator = translators.def();
 		
 		BaseBeliefbase newK = translator.translateFOL(formulas);
 		addKnowledge(newK, changeOperator);
@@ -205,7 +220,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	public void addKnowledge(BaseBeliefbase newKnowledge, BaseChangeBeliefs changeOperator) {
 		if(changeOperator == null)
-			throw new IllegalArgumentException("Change-Operator must not be null.");
+			changeOperator = changeOperators.def();
 		
 		Entity ent = IdGenerator.getEntityWithId(parentId);
 		Agent agent = (Agent)ent;

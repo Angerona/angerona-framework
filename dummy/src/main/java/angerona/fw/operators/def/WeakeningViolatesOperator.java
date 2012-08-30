@@ -18,6 +18,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.ConfidentialKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
@@ -38,6 +39,8 @@ import angerona.fw.util.Pair;
 public class WeakeningViolatesOperator extends ViolatesOperator {
 	static final double INFINITY = 1000.0;
 
+	private static final String EXPANSION = "angerona.fw.logic.asp.AspExpansion";
+	
 	/**
 	 * Assumes information given is always a fact
 	 */
@@ -115,28 +118,29 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 			if (views.containsKey(a.getReceiverId())
 					&& a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) {
 
+				BaseBeliefbase view = views.get(a.getReceiverId());
+				
 				// TODO: Merge violates operators
-				AspBeliefbase view = (AspBeliefbase) views.get(a.getReceiverId()).clone();
 				Set<FolFormula> answers = a.getAnswer().getAnswers();
-				if (answers.size() > 1) {
-					LOG.warn("More than one answer but '" + this.getClass().getSimpleName()
-							+ "' only works with one (first).");
-				} else if (answers.size() == 0) {
+				if (answers.size() == 0) {
 					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
 					return new ViolatesResult();
 				}
-				FolFormula answer = answers.iterator().next();
-				LOG.info("Make Revision for QueryAnswer: '{}'", answer);
-
 				
+				LOG.info("Make Revision for QueryAnswer: '{}'", answers);
+				Pair<BaseChangeBeliefs, Boolean> pair = view.getChangeOperators().getFallback(EXPANSION);
+				if(!pair.second)
+					LOG.warn("The Weakening Operator wants to use '{}' " +
+							"for revision. But it was not found and '{}' " +
+							"will be used as default alternative.", EXPANSION, 
+							pair.first.getClass().getName());
+				view.addKnowledge(answers, null, pair.first);
+
 				// Check for contradictions. If one is found consider all
 				// secrets totally revealed
-				List<AnswerSet> newAnsSets = null;
-
+				List<AnswerSet> newAnsSets = null;				
 				AspReasoner ar = (AspReasoner) view.getReasoningOperator();
-				ar.infer(view);
-				view.infere();
-				newAnsSets = ar.processAnswerSets();
+				newAnsSets = ar.processAnswerSets((AspBeliefbase)view);
 
 				if (newAnsSets == null) {
 					String actString = param.getAtom().toString();

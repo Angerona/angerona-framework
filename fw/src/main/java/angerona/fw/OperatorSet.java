@@ -23,6 +23,7 @@ public class OperatorSet<T extends BaseOperator> {
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(OperatorSet.class);
 	
+	/** reference to the owner of the OperatorSet */
 	private Agent owner;
 	
 	/** map from full java-class names to the right operator instances */
@@ -110,6 +111,10 @@ public class OperatorSet<T extends BaseOperator> {
 		Pair<String, T> p = create(config.getDefaultClassName());
 		operators.put(p.first, p.second);
 		defaultOperator = p.second;
+		if(defaultOperator == null) {
+			LOG.error("The default operator with name: '{}' was not found, critical error.", 
+					config.getDefaultClassName());
+		}
 		
 		for(String instantiationName : config.getOperatorClassNames()) {
 			p = create(instantiationName);
@@ -180,6 +185,25 @@ public class OperatorSet<T extends BaseOperator> {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * gets the operator with the given full-java-class name uses the default
+	 * operator as alternative if the given class-name was not found.
+	 * @param clsName		the full java-class name
+	 * @return				A Pair containg the reference to the operator or the default operator 
+	 * 						if the operator of the given java-class name does 
+	 * 						not exists in the operator set. The second Element contains a
+	 * 						boolean which is true if the given class-name was found and
+	 * 						false otherwise.
+	 */
+	public Pair<T, Boolean> getFallback(String clsName) {
+		Pair<T, Boolean> reval = new Pair<>();
+		reval.first = get(clsName);
+		reval.second = reval.first != null;
+		if(!reval.second)
+			reval.first = def();
+		return reval;
 	}
 	
 	/**
