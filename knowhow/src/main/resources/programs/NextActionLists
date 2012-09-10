@@ -28,7 +28,6 @@ new_istack([INT_I|INT_B]) :- state(khAdded), istack(INT_B), khsubgoal(KH,1,INT_I
 new_state(actionPerformed) :- new_act(A).
 new_state(intentionAdded) :- new_istack(L), not const_new_khperformed. % Regina uses another version but I think this will do the same.
 new_state(intentionAdded) :- const_new_khfailed, not new_istack([]).
-%new_state(intentionAdded) :- toparent.
 new_state(khAdded) :- const_new_khstate, not const_new_khperformed, not lastknowhowstatement.
 new_state(noop) :- new_istack([]).
 new_khstate(K) :- toparent, khstate([KH|K]).

@@ -4,7 +4,6 @@ import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -36,10 +35,13 @@ public class KnowhowStrategy {
 	/** reference to the logback logger instance */
 	static private Logger LOG = LoggerFactory.getLogger(KnowhowBase.class);
 	
+	/** the internal step-counter */
 	private int step;
 	
+	/** the name of the initial intention */
 	private String initialIntention;
 	
+	/** the used knowhow-base */
 	private KnowhowBase knowhowBase;
 	
 	/** program contains the world-knowledge of the agent */
@@ -54,8 +56,6 @@ public class KnowhowStrategy {
 	/** program representing the actual intention tree */
 	private Program intentionTree;
 	
-	private Program visited;
-	
 	/** name of the actual state of the transition system as string */
 	private String stateStr;
 	
@@ -68,6 +68,7 @@ public class KnowhowStrategy {
 	/** saving the last state used for processing */
 	private Atom oldState;
 	
+	/** a stack of answerset-lists which represents the options for backtracking */
 	private Stack<AnswerSetList> alternatives = new Stack<>();
 	
 	/**
@@ -79,7 +80,7 @@ public class KnowhowStrategy {
 	}
 	
 	/**
-	 * @return the last performed step.
+	 * @return the number of the last performed step.
 	 */
 	public int getStep() {
 		return step;
@@ -94,13 +95,6 @@ public class KnowhowStrategy {
 		reval.first = action.first;
 		reval.second = new HashMap<>(action.second);
 		return reval;
-	}
-	
-	/** informs the knowhow-strategy that he agent has performed one action 
-	 * 	the knowhow-strategy removes the action from its list of open actions.
-	 */
-	public void actionDone() {
-		// TODO
 	}
 	
 	/**
@@ -129,7 +123,6 @@ public class KnowhowStrategy {
 		}
 		
 		action = null;
-		visited = new Program();
 		oldState = new Atom("khstate", new ListTerm(new LinkedList<Term>(), 
 				new LinkedList<Term>()));
 		intentionTree.add(oldState);
@@ -164,7 +157,6 @@ public class KnowhowStrategy {
 		p.add(worldKnowledge);
 		p.add(atomicActions);
 		p.add(knowhow);
-		p.add(visited);
 		
 		// calculate answer sets using dlv-complex:
 		AnswerSetList asl = solver.computeModels(p, 10);
@@ -187,11 +179,39 @@ public class KnowhowStrategy {
 		} else {
 			// mapParameter if action was found
 			// return 0 if no action was found yet.
-			return mapParameter(as) ? 1 : 0;
+			return mapAction(as) ? 1 : 0;
 		}
 	}
+	
+	/**
+	 * Searches for an alternative way in the intention tree. 
+	 * If an alternative is found the intention tree is prepared
+	 * using the alternative
+	 * @return	true if an alternative was found, false otherwise.
+	 */
+	public boolean fallback() {
+		action = null;
+		if(alternatives.size() == 0)
+			return false;
+		
+		AnswerSetList asl = alternatives.peek();
+		AnswerSet as = asl.get(0);
+		LOG.info("Fallback to AnswerSet: '{}'", as);
+		updateIntentionTree(as);
+		asl.remove(0);
+		if(asl.size() == 0)
+			alternatives.pop();
+		return true;
+	}
 
-	private boolean mapParameter(AnswerSet as) {
+	/**
+	 * Helper method: Checks if an action is saved in the given answer-set. 
+	 * Then it Maps parameters to the action using the prefix-syntax in the 
+	 * knowhow representation.
+	 * @param as	Reference to the actual answer-set
+	 * @return		true if an action was found and mapped successful, false otherwise.
+	 */
+	private boolean mapAction(AnswerSet as) {
 		Set<Literal> act = as.getLiteralsBySymbol("new_act");
 		
 		for(Literal action : act) {
@@ -230,6 +250,13 @@ public class KnowhowStrategy {
 		return this.action != null;
 	}
 	
+	/**
+	 * Searches the given answer set for the new_* facts and uses them
+	 * to create the intention tree for the next iteration.
+	 * @param as The actual answer-set.
+	 * @return		true if the given answer-set is valid and the intention tree
+	 * 				was created successful, false otherwise.
+	 */
 	private boolean updateIntentionTree(AnswerSet as) {
 		// find new literals for the new intention-tree program:
 		Atom new_state = updateAtom(as, "state");
@@ -274,23 +301,8 @@ public class KnowhowStrategy {
 				act.size() > 0;
 	}
 	
-	public boolean fallback() {
-		action = null;
-		if(alternatives.size() == 0)
-			return false;
-		
-		AnswerSetList asl = alternatives.peek();
-		AnswerSet as = asl.get(0);
-		LOG.info("Fallback to AnswerSet: '{}'", as);
-		updateIntentionTree(as);
-		asl.remove(0);
-		if(asl.size() == 0)
-			alternatives.pop();
-		return true;
-	}
-	
 	/**
-	 * Helper method: finds the new version of the atom in the answerset list.
+	 * Helper method: finds the new version of the atom in the answer set list.
 	 * @param asl	Reference to the answer-set list
 	 * @param name	The name of the atom like 'state'
 	 * @return	the new atom or null if no new atom exists.

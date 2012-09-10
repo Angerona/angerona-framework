@@ -71,7 +71,12 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return gen;
 	}
 	
-	/** Adapt the default behavior for strike-committee meeting. */
+	/**
+	 *  Adapt the default behavior for strike-committee meeting:
+	 *  If the revision-request 'excused' is received the knowhow is runned with the target:
+	 *  'not_sure(attend_scm)'. The actual generation of the plan is handled by the runKnowhow
+	 *  method.
+	 */
 	@Override
 	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		if(! (des.getPerception() instanceof RevisionRequest))
@@ -92,7 +97,12 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return false;
 	}
 
-	/** adapt the default behavior for strike-committee meeting. */
+	/** 
+	 * adapt the default behavior for strike-committee meeting: 
+	 * Searches for a valid answer in the knowhow until one answer was
+	 * found. If no answer is found no reaction is given by the agent.
+	 * TODO: Answer with Unknown if no valid answer is found.
+	 */
 	@Override 
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		if(!(des.getPerception() instanceof Query))
@@ -113,13 +123,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			sg = iterateKnowhow(pp, des, ag);
 		}
 		
-		
-		
 		return false;
 	}
 	
 	/**
-	 * Helper method: Starts the knowhow processing:
+	 * Helper method: Starts the knowhow processing: It fetches the data for the creation of
+	 * the knowhow-strategy. This method initializes a new knowhow-strategy and iterates its once.
+	 * This means the strategy loops the elp until it finds the next-action.
 	 * @param intention		start intention used in the intention-tree
 	 * @param param			the subgoal-generation parameter data-structure
 	 * @param des			The associated desire.

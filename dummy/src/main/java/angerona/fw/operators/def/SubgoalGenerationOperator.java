@@ -67,6 +67,13 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		return reval;
 	}
 
+	/**
+	 * This is a helper method: Which searches for desires starting with the prefix 'v_'.
+	 * It creates RevisionRequests for such desires.
+	 * @param pp		The data-structure containing parameters for the operator.
+	 * @param ag		The agent.
+	 * @return			true if a new subgoal was created and added to the master-plan, false otherwise.
+	 */
 	protected boolean processPersuadeOtherAgentsDesires(
 			SubgoalGenerationParameter pp, Agent ag) {
 		boolean reval = false;
@@ -115,6 +122,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		return reval;
 	}
 
+	/**
+	 * Helper method: Reacts on desires which were created by a Query. The default implementation creates two answers for the query:
+	 * one with the answer-value true the other with the answer-value false. Complex queries are not supported by this method.
+	 * @param des	The desire containing the query to answer
+	 * @param pp	The data-structure containing parameters for the operator.
+	 * @param ag	The agent
+	 * @return		true if a new subgoal was created and added to the master-plan, false otherwise.
+	 */
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
 		if(qaSkill == null) {
@@ -135,6 +150,16 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		return true;
 	}
 	
+	/**
+	 * Helper method for handling desires which are created by a revision-request of an other agent.
+	 * The default implementation does nothing generic and subclasses are free to implement their own
+	 * behavior. Nevertheless the method 'implements' the default behavior for the simple SCM 
+	 * scenario: It queries the sender of the revision-request 'excused' for 'attend_scm'.
+	 * @param des	The desire created by the revision-request perception
+	 * @param pp	The data-structure containing parameters for the operator.
+	 * @param ag	The agent.
+	 * @return		true if a new subgoal was created and added to the master-plan, false otherwise.
+	 */
 	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
 		// three cases: accept, query (to ensure about something) or deny.
 		// in general we will accept all Revision queries but for the scm example
