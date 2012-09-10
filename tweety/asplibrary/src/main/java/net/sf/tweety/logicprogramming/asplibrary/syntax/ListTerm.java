@@ -89,7 +89,7 @@ public class ListTerm implements Term {
 		if ((this.listHead != null) && (this.listHead.size() > 0)) {
 			// draw list, separate head and tail!
 			ret += listPrint(this.listHead);
-			if (this.listTail != null)
+			if (this.listTail != null && this.listTail.size() > 0)
 				ret += "|" + listPrint(this.listTail);
 		} else {
 			// empty list here!
@@ -122,5 +122,9 @@ public class ListTerm implements Term {
 	@Override
 	public TermType type() {
 		return TermType.List;
+	}
+	
+	public List<Term> getHead() {
+		return listHead;
 	}
 }

@@ -2,11 +2,11 @@ package angerona.fw.knowhow;
 
 import java.io.StringReader;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
@@ -19,6 +19,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.StdTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 import org.slf4j.Logger;
@@ -53,6 +54,8 @@ public class KnowhowStrategy {
 	/** program representing the actual intention tree */
 	private Program intentionTree;
 	
+	private Program visited;
+	
 	/** name of the actual state of the transition system as string */
 	private String stateStr;
 	
@@ -60,18 +63,19 @@ public class KnowhowStrategy {
 	private DLVComplex solver;
 	
 	/** the actions in the correct odering to fullfil the plan */
-	private List<Pair<String, HashMap<Integer, String>>> actions = new LinkedList<>();
+	private Pair<String, HashMap<Integer, String>> action;
 	
 	/** saving the last state used for processing */
 	private Atom oldState;
 	
+	private Stack<AnswerSetList> alternatives = new Stack<>();
 	
 	/**
 	 * Ctor: Creates the default Knowhow-Strategy
 	 * @param pathtodlv	String with path to the dlv-complex solver
 	 */
-	public KnowhowStrategy(String pathtodlv) {
-		solver = new DLVComplex(pathtodlv);
+	public KnowhowStrategy(String solverpath) {
+		solver = new DLVComplex(solverpath);
 	}
 	
 	/**
@@ -81,16 +85,22 @@ public class KnowhowStrategy {
 		return step;
 	}
 	
-	/** @return an unmodifiable list of the actions found by the planning yet */
-	public List<Pair<String, HashMap<Integer, String>>> getActions() {
-		return Collections.unmodifiableList(actions);
+	/** @return an unmodifiable version of the action found by the planning yet */
+	public Pair<String, HashMap<Integer, String>> getAction() {
+		if(action == null)
+			return null;
+		
+		Pair<String, HashMap<Integer, String>> reval = new Pair<>();
+		reval.first = action.first;
+		reval.second = new HashMap<>(action.second);
+		return reval;
 	}
 	
 	/** informs the knowhow-strategy that he agent has performed one action 
 	 * 	the knowhow-strategy removes the action from its list of open actions.
 	 */
 	public void actionDone() {
-		actions.remove(0);
+		// TODO
 	}
 	
 	/**
@@ -118,6 +128,8 @@ public class KnowhowStrategy {
 			intentionTree.add(r); 
 		}
 		
+		action = null;
+		visited = new Program();
 		oldState = new Atom("khstate", new ListTerm(new LinkedList<Term>(), 
 				new LinkedList<Term>()));
 		intentionTree.add(oldState);
@@ -152,94 +164,129 @@ public class KnowhowStrategy {
 		p.add(worldKnowledge);
 		p.add(atomicActions);
 		p.add(knowhow);
-		
-		LOG.trace("\n");
-		LOG.trace(p.toString());
+		p.add(visited);
 		
 		// calculate answer sets using dlv-complex:
 		AnswerSetList asl = solver.computeModels(p, 10);
+		if(asl.size() == 0) {
+			return -1;
+		}
 		
+		LOG.trace("AnswerSets:\n'{}'\nfor IntentionTree: '{}'", asl, intentionTree.toString());
+		
+		// save the answer set as alternative for backtracking
+		AnswerSet as = asl.get(0);
+		if(asl.size() > 1) {
+			asl.remove(0);
+			alternatives.push(asl);
+		}
+				
+		// update the intention tree
+		if(!updateIntentionTree(as)) {
+			return -1;
+		} else {
+			// mapParameter if action was found
+			// return 0 if no action was found yet.
+			return mapParameter(as) ? 1 : 0;
+		}
+	}
+
+	private boolean mapParameter(AnswerSet as) {
+		Set<Literal> act = as.getLiteralsBySymbol("new_act");
+		
+		for(Literal action : act) {
+			int kh_index = -1;
+			int subgoal_index = -1;
+			
+			// find knowhow index:
+			Set<Literal> khstatements = as.getLiteralsBySymbol("khstate");
+			if(khstatements.size() == 1) {
+				ListTerm lst = (ListTerm) khstatements.iterator().next().getAtom().getTerm(0);
+				Term t = lst.head();
+				int start = t.get().lastIndexOf('_') + 1;
+				String toParse = t.get().substring(start);
+				kh_index = Integer.parseInt(toParse);
+			} else {
+				// TODO:
+			}
+			
+			// find subgoal index for parameter:
+			Set<Literal> subgoal = as.getLiteralsBySymbol("new_subgoal");
+			if(subgoal.size() == 1) {
+				subgoal_index = subgoal.iterator().next().getAtom().getTermInt(0);
+			} else {
+				// TODO:
+			}
+			
+			Atom a = (Atom)action;
+			Pair<String, HashMap<Integer, String>> pair = new Pair<>(a.getTerm(0).get(), 
+					new HashMap<Integer, String>());
+			Set<SkillParameter> parameters = knowhowBase.findParameters(kh_index, subgoal_index);
+			for(SkillParameter param : parameters) {
+				pair.second.put(param.paramIndex, param.paramValue);
+			}
+			this.action = pair;
+		}
+		return this.action != null;
+	}
+	
+	private boolean updateIntentionTree(AnswerSet as) {
 		// find new literals for the new intention-tree program:
-		Atom new_state = updateAtom(asl, "state");
-		Atom new_khstate = updateAtom(asl, "khstate");
+		Atom new_state = updateAtom(as, "state");
+		Atom new_khstate = updateAtom(as, "khstate");
 		Atom new_istack = null;
 		if(	stateStr.equals("actionPerformed") ||
 			stateStr.equals("khAdded")	) {
-			new_istack = updateAtom(asl, "istack");
+			new_istack = updateAtom(as, "istack");
 		} else {
-			Set<Literal> newLits = asl.getFactsByName("istack");
+			Set<Literal> newLits = as.getLiteralsBySymbol("istack");
 			if(newLits.size() == 1) {
 				new_istack = (Atom)newLits.iterator().next();
 			} else {
-				return -1;
+				return false;
 			}
 		}
 		
 		if(	new_state.getTermStr(0).equals(oldState.getTermStr(0))) {
 			LOG.error("Old-State and new State are the same: " + new_state.getTermStr(0));
-			return -1;
+			return false;
 		} 
-		
+		Program toOutput = new Program();
+		toOutput.add(intentionTree);
 		// rebuild intention-tree program:
 		intentionTree.clear();
 		oldState = new Atom("state", new_state.getTerms());
 		intentionTree.add(oldState);
 		intentionTree.add(new Atom("khstate", new_khstate.getTerms()));
 		intentionTree.add(new Atom("istack", new_istack.getTerms()));
-		LOG.info("\n");
-		LOG.info(intentionTree.toString());
+		
+		LOG.info("\n'{}'\nbecomes\n'{}'", toOutput, intentionTree);
 		
 		// update state:
 		if(new_state != null)
 			stateStr = new_state.getTermStr(0);
 		
 		// proof if a change occurred
-		Set<Literal> act = asl.getFactsByName("new_act");
-		boolean changed = 
-				new_state != null ||
+		Set<Literal> act = as.getLiteralsBySymbol("new_act");
+		return  new_state != null ||
 				new_istack != null ||
 				new_khstate != null ||
 				act.size() > 0;
-				
-		if(!changed) {
-			return -1;
-		} else {
-			
-			for(Literal action : act) {
-				int kh_index = -1;
-				int subgoal_index = -1;
-				
-				// find knowhow index:
-				Set<Literal> khstatements = asl.getFactsByName("khstate");
-				if(khstatements.size() == 1) {
-					ListTerm lst = (ListTerm) khstatements.iterator().next().getAtom().getTerm(0);
-					Term t = lst.head();
-					int start = t.get().lastIndexOf('_') + 1;
-					String toParse = t.get().substring(start);
-					kh_index = Integer.parseInt(toParse);
-				} else {
-					// TODO:
-				}
-				
-				// find subgoal index for parameter:
-				Set<Literal> subgoal = asl.getFactsByName("new_subgoal");
-				if(subgoal.size() == 1) {
-					subgoal_index = subgoal.iterator().next().getAtom().getTermInt(0);
-				} else {
-					// TODO:
-				}
-				
-				Atom a = (Atom)action;
-				Pair<String, HashMap<Integer, String>> pair = new Pair<>(a.getTerm(0).get(), 
-						new HashMap<Integer, String>());
-				Set<SkillParameter> parameters = knowhowBase.findParameters(kh_index, subgoal_index);
-				for(SkillParameter param : parameters) {
-					pair.second.put(param.paramIndex, param.paramValue);
-				}
-				actions.add(pair);
-			}
-			return act.size();
-		}
+	}
+	
+	public boolean fallback() {
+		action = null;
+		if(alternatives.size() == 0)
+			return false;
+		
+		AnswerSetList asl = alternatives.peek();
+		AnswerSet as = asl.get(0);
+		LOG.info("Fallback to AnswerSet: '{}'", as);
+		updateIntentionTree(as);
+		asl.remove(0);
+		if(asl.size() == 0)
+			alternatives.pop();
+		return true;
 	}
 	
 	/**
@@ -248,10 +295,10 @@ public class KnowhowStrategy {
 	 * @param name	The name of the atom like 'state'
 	 * @return	the new atom or null if no new atom exists.
 	 */
-	private Atom updateAtom(AnswerSetList asl, String name) {
+	private Atom updateAtom(AnswerSet asl, String name) {
 		// get new state...
 		String error = null;
-		Set<Literal> lits = asl.getFactsByName("new_" + name);
+		Set<Literal> lits = asl.getLiteralsBySymbol("new_" + name);
 		if(lits.size() == 1) {
 			Literal new_literal = lits.iterator().next();
 			if(new_literal instanceof Atom) {
@@ -267,7 +314,7 @@ public class KnowhowStrategy {
 		if(error != null)
 			LOG.error(error);
 		
-		Set<Literal> newLits = asl.getFactsByName(name);
+		Set<Literal> newLits = asl.getLiteralsBySymbol(name);
 		if(newLits.size() == 0) {
 			return null;
 		}

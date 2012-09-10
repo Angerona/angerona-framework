@@ -55,7 +55,7 @@ public class Atom implements Term, Literal, CommonStructure {
 		}
 	}
 	
-	protected Atom(String functor, Collection<Term> terms) {
+	public Atom(String functor, Collection<Term> terms) {
 		this.name = functor;
 		if ((terms != null) && (terms.size() > 0))  {
 			this.terms = new Term[terms.size()];

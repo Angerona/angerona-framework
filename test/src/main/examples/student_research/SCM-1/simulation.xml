@@ -30,7 +30,7 @@
 			attend_scm(v_self), excused(v_self), 
 		 	excused(v_self), s_RevisionRequest(v_self, a_boss, excused(v_self)),
 		 	answer_query, honest_answer, 
-		 	<!-- answer_query, lie, -->
+		 	answer_query, lie,
 		 	honest_answer, s_QueryAnswer(r_honest),  
 		 	lie, s_QueryAnswer(r_lie),
 		</data>

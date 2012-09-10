@@ -30,6 +30,7 @@ import angerona.fw.comm.SpeechAct;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ViolatesResult;
+import angerona.fw.logic.asp.SolverWrapper;
 import angerona.fw.operators.def.SubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
 import angerona.fw.util.Pair;
@@ -108,6 +109,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				return true;
 			}
 			
+			lastUsedStrategy.fallback();
 			sg = iterateKnowhow(pp, des, ag);
 		}
 		
@@ -125,8 +127,6 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 */
 	private Subgoal runKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
 		// TODO: Move path to config
-		//String solverpath = "D:/wichtig/Hiwi/workspace/a5/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
-		String solverpath = "D:/Tim/HiWi/angerona/software/test/src/main/tools/win/solver/asp/dlv/dlv-complex.exe";
 		Agent ag = param.getActualPlan().getAgent();
 				
 		// Gathering knowhow information
@@ -138,7 +138,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		// create and initialize the knowhow strategy
-		lastUsedStrategy = new KnowhowStrategy(solverpath);
+		lastUsedStrategy = new KnowhowStrategy(SolverWrapper.DLV_COMPLEX.getSolverPath());
 		lastUsedStrategy.init(kb, intention, actions, worldKB);
 		
 		return iterateKnowhow(param, des, ag);
@@ -170,7 +170,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		// if no action was found return false
-		if(reval == -1 || lastUsedStrategy.getActions().size() == 0) {
+		if(reval == -1 || lastUsedStrategy.getAction() == null) {
 			report("Knowhow was not able to generate atomic action for: '"+lastUsedStrategy.getInitialIntention()+"'");
 			return null;
 		}
@@ -191,35 +191,34 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			Agent ag) {
 		Subgoal reval = null;
 		// iterate over all actions found by the Knowhow (at the moment this is only one)
-		for(Pair<String, HashMap<Integer, String>> action : lastUsedStrategy.getActions()) {
-			report("Knowhow generates Action: " + action.toString());
-			
-			// test if the skill exists
-			String skillName = action.first.substring(2);
-			Skill skill = ag.getSkill(skillName);
-			if(skill == null) {
-				LOG.warn("Knowhow found Skill '{}' but the Agent '{}' does not support the Skill.", skillName, ag.getName());
-				continue;
-			}
-			
-			// create the action using the SkillParameter map and the name of the skill
-			SpeechAct act = null;
-			if(skillName.equals("RevisionRequest")) {
-				act = createRevisionRequest(action.second);
-			} else if(skillName.equals("Query")) {
-				act = createQuery(action.second);
-			} else if(skillName.equals("QueryAnswer")) {
-				act = createQueryAnswer(action.second, (Query)des.getPerception());
-			} else {
-				LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
-				continue;
-			}
-			
-			// create the Subgoal which will be returned and report this step to Angerona.
-			reval = new Subgoal(ag, des);
-			reval.newStack(ag.getSkill(skillName), act);
-			report("Knowhow finds new atomic action '"+skillName+"'");
+		Pair<String, HashMap<Integer, String>> action = lastUsedStrategy.getAction();
+		report("Knowhow generates Action: " + action.toString());
+		
+		// test if the skill exists
+		String skillName = action.first.substring(2);
+		Skill skill = ag.getSkill(skillName);
+		if(skill == null) {
+			LOG.warn("Knowhow found Skill '{}' but the Agent '{}' does not support the Skill.", skillName, ag.getName());
+			return reval;
 		}
+		
+		// create the action using the SkillParameter map and the name of the skill
+		SpeechAct act = null;
+		if(skillName.equals("RevisionRequest")) {
+			act = createRevisionRequest(action.second);
+		} else if(skillName.equals("Query")) {
+			act = createQuery(action.second);
+		} else if(skillName.equals("QueryAnswer")) {
+			act = createQueryAnswer(action.second, (Query)des.getPerception());
+		} else {
+			LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
+			return reval;
+		}
+		
+		// create the Subgoal which will be returned and report this step to Angerona.
+		reval = new Subgoal(ag, des);
+		reval.newStack(ag.getSkill(skillName), act);
+		report("Knowhow finds new atomic action '"+skillName+"'");
 		return reval;
 	}
 	

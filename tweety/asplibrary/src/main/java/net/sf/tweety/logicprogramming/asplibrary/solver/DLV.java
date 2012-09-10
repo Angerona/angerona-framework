@@ -118,7 +118,6 @@ public class DLV extends SolverBase {
 			System.out.println("dlv error!");
 			e.printStackTrace();
 		}
-		
 		checkErrors();	
 		return parseResults();
 	}

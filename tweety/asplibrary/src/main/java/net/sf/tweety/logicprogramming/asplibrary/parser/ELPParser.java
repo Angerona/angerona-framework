@@ -298,7 +298,7 @@ public class ELPParser implements ELPParserConstants {
       case NOT:
       case SYMBOL:
       case VAR:
-      case 34:
+      case 35:
         ;
         break;
       default:
@@ -320,7 +320,7 @@ public class ELPParser implements ELPParserConstants {
     case NOT:
     case SYMBOL:
     case VAR:
-    case 34:
+    case 35:
       l = literal();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case 26:
@@ -353,7 +353,7 @@ public class ELPParser implements ELPParserConstants {
     case NOT:
     case SYMBOL:
     case VAR:
-    case 34:
+    case 35:
       l = LiteralExpr();
                                     lits.add(l);
       label_4:
@@ -387,7 +387,7 @@ public class ELPParser implements ELPParserConstants {
     case NOT:
     case SYMBOL:
     case VAR:
-    case 34:
+    case 35:
       l = literal();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PIPE:
@@ -435,6 +435,7 @@ public class ELPParser implements ELPParserConstants {
     case 29:
     case 30:
     case 31:
+    case 32:
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case 27:
         jj_consume_token(27);
@@ -456,6 +457,10 @@ public class ELPParser implements ELPParserConstants {
         jj_consume_token(31);
                                op01 = ">";
         break;
+      case 32:
+        jj_consume_token(32);
+                                op01 = "!=";
+        break;
       default:
         jj_la1[21] = jj_gen;
         jj_consume_token(-1);
@@ -468,10 +473,15 @@ public class ELPParser implements ELPParserConstants {
       case 29:
       case 32:
       case 33:
+      case 34:
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case 27:
           jj_consume_token(27);
                                       op12 = "=";
+          break;
+        case 32:
+          jj_consume_token(32);
+                                        op12 = "!=";
           break;
         case 28:
           jj_consume_token(28);
@@ -481,12 +491,12 @@ public class ELPParser implements ELPParserConstants {
           jj_consume_token(29);
                                        op12 = "<";
           break;
-        case 32:
-          jj_consume_token(32);
-                                       op12 = "+";
-          break;
         case 33:
           jj_consume_token(33);
+                                       op12 = "+";
+          break;
+        case 34:
+          jj_consume_token(34);
                                        op12 = "*";
           break;
         default:
@@ -579,8 +589,8 @@ public class ELPParser implements ELPParserConstants {
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 34:
-      jj_consume_token(34);
+    case 35:
+      jj_consume_token(35);
                         tneg = true;
       break;
     default:
@@ -618,7 +628,7 @@ public class ELPParser implements ELPParserConstants {
       case NOT:
       case SYMBOL:
       case VAR:
-      case 34:
+      case 35:
         ;
         break;
       default:
@@ -653,7 +663,7 @@ public class ELPParser implements ELPParserConstants {
       jj_la1_0 = new int[] {0x1100,0x1100,0x620000,0x4000000,0x4000000,0x2400000,0x100,0x4000,0x3621400,0x3621400,0x18000,0x18000,0x400,0x6b8040,0x4000000,0x6a0000,0x4000000,0x6a0000,0x104000,0x104000,0x6a0000,0xf8000000,0x38000000,0x38000000,0xf8000000,0x80000,0x0,0x6a0000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x4,0x0,0x4,0x0,0x4,0x0,0x0,0x4,0x0,0x3,0x3,0x0,0x0,0x4,0x4,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x8,0x0,0x8,0x0,0x0,0x8,0x1,0x7,0x7,0x1,0x0,0x8,0x8,};
    }
 
   /** Constructor with InputStream. */
@@ -770,7 +780,7 @@ public class ELPParser implements ELPParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[35];
+    boolean[] la1tokens = new boolean[36];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -787,7 +797,7 @@ public class ELPParser implements ELPParserConstants {
         }
       }
     }
-    for (int i = 0; i < 35; i++) {
+    for (int i = 0; i < 36; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

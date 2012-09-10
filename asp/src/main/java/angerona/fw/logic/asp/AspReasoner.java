@@ -71,7 +71,7 @@ public class AspReasoner extends BaseReasoner {
 				
 		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
 		if(query.isGround()) {
-			// Check if the infered answer-set contains the query or its
+			// Check if the inferred answer-set contains the query or its
 			// negation and adapt the AnswerValue:
 			if(answers.contains(query)) {
 				av = AnswerValue.AV_TRUE;

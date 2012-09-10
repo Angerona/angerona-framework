@@ -96,7 +96,7 @@ public class Program extends ArrayList<Rule> {
 			ret.addAll(lr);
 			ret.calcSignature();
 		} catch (Exception e) {
-			System.err.println("Error while loading program ");
+			System.err.println("Error while loading program: " + e.getMessage());
 			e.printStackTrace();
 		}
 		

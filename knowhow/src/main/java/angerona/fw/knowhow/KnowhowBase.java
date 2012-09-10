@@ -178,7 +178,7 @@ public class KnowhowBase extends BaseAgentComponent {
 			if(reval == -1) {
 				LOG.info("NO Plan");
 			} else if(reval == 1) {
-				LOG.info("Action: " + ks.getActions());
+				LOG.info("Action: " + ks.getAction());
 				break;
 			}
 		}

@@ -8,7 +8,8 @@
 % rules for state: 'intentionAdded'
 new_act(A) :- state(intentionAdded), istack(S), is_atomic(A), #head(S, A).
 new_subgoal(I) :- state(intentionAdded), istack(S), is_atomic(A), #head(S, A), khsubgoal(KH, I, A).
-new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(S), #head(S, I), not khconditionfail(K), not khfailed([KH|K]), not const_new_act.
+new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), istack(S), #head(S, I), not khconditionfail(K), not khfailed([KH|K]), not const_new_act, not multiple.
+new_khstate([KH|K]) :- state(intentionAdded), khstate(K), khstatement(KH, I), khstatement(KHA, I), istack(S), #head(S, I), not khconditionfail(K), not khfailed([KH|K]), not const_new_act, multiple, not new_khstate([KHA|K]), KHA!=KH.
 new_khfailed(K) :- state(intentionAdded), khstate(K), not const_new_act, not const_new_khstate.
 toparent :- const_new_khfailed.
 % --- READY --- 
@@ -26,8 +27,9 @@ new_istack([INT_I|INT_B]) :- state(khAdded), istack(INT_B), khsubgoal(KH,1,INT_I
 % state transition rules:
 new_state(actionPerformed) :- new_act(A).
 new_state(intentionAdded) :- new_istack(L), not const_new_khperformed. % Regina uses another version but I think this will do the same.
-new_state(khAdded) :- const_new_khstate, not const_new_khperformed, not lastknowhowstatement.
 new_state(intentionAdded) :- const_new_khfailed, not new_istack([]).
+%new_state(intentionAdded) :- toparent.
+new_state(khAdded) :- const_new_khstate, not const_new_khperformed, not lastknowhowstatement.
 new_state(noop) :- new_istack([]).
 new_khstate(K) :- toparent, khstate([KH|K]).
 % Not sure why Regina used the following rule:
@@ -52,4 +54,8 @@ const_new_khstate :- new_khstate(KH).
 const_new_khfailed :- new_khfailed(KH).
 const_new_istack :- new_istack(I).
 khperformed_helper(KH) :-  istack(S), #head(S,A), khsubgoal(KH,I,A), khsubgoal(KH,J,_), J=I+1.
+
+% multiple is used to determine which new_khstate rule should be used.
+multiple :- khstatement(KHA, I), khstatement(KHB, I), istack(S), #head(S, I), KHA!=KHB.
+
 % --- READY ---
