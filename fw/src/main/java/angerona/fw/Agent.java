@@ -453,10 +453,12 @@ public class Agent extends AgentArchitecture
 		MasterPlan masterPlan = getComponent(MasterPlan.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
-				atomic = intentionUpdateOperators.def().process(new IntentionUpdateParameter(masterPlan, allSkills, actualPerception));
+				atomic = intentionUpdateOperators.def().process(
+						new IntentionUpdateParameter(masterPlan, allSkills));
 				
 				if(atomic == null) {
-					if(!subgoalGenerationOperators.def().process(new SubgoalGenerationParameter(masterPlan, allSkills)))
+					if(!subgoalGenerationOperators.def().process(
+							new SubgoalGenerationParameter(masterPlan, allSkills)))
 						break;
 				} else {
 					if(!(atomic.getIntention().isAtomic())) {

@@ -3,7 +3,6 @@ package angerona.fw.operators.parameter;
 import java.util.List;
 
 import angerona.fw.MasterPlan;
-import angerona.fw.Perception;
 import angerona.fw.Skill;
 
 public class IntentionUpdateParameter extends GenericOperatorParameter {
@@ -11,12 +10,9 @@ public class IntentionUpdateParameter extends GenericOperatorParameter {
 	
 	protected MasterPlan plan;
 	
-	protected Perception perception;
-	
-	public IntentionUpdateParameter(MasterPlan plan, List<Skill> skills, Perception perception) {
+	public IntentionUpdateParameter(MasterPlan plan, List<Skill> skills) {
 		super(plan.getAgent());
 		this.plan= plan;
-		this.perception = perception;
 	}
 	
 	public List<Skill> getSkills() {
@@ -27,7 +23,4 @@ public class IntentionUpdateParameter extends GenericOperatorParameter {
 		return plan;
 	}
 	
-	public Perception getPerception() {
-		return perception;
-	}
 }
