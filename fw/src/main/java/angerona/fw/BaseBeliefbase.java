@@ -164,7 +164,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void parse(String filepath) throws FileNotFoundException, IOException, ParseException {
+	public void parse(String filepath) 
+			throws FileNotFoundException, IOException, ParseException {
 		File f = new File(filepath);
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);

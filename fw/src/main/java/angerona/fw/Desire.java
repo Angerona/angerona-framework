@@ -43,17 +43,24 @@ public class Desire {
 	/**
 	 * Sets the given plan as actual linked plan of the desire
 	 * @param plan reference to a plan
+	 * @deprecated
 	 */
 	void setPlan(Subgoal plan) {
 		this.plan = plan;
 	}
 	
-	/** @return true if a plan is linked to the desire, false otherwise. */
+	/** 
+	 * @deprecated
+	 * @return true if a plan is linked to the desire, false otherwise. 
+	 * */
 	boolean hasPlan() {
 		return plan != null;
 	}
 	
-	/** @return reference to the plan linked to the desire, this might be null */
+	/** 
+	 * @deprecated
+	 * @return reference to the plan linked to the desire, this might be null
+	 */
 	public Subgoal getPlan() {
 		return plan;
 	}
