@@ -1,6 +1,7 @@
 package angerona.fw.operators;
 
 import angerona.fw.Action;
+import angerona.fw.Agent;
 import angerona.fw.Perception;
 import angerona.fw.PlanElement;
 import angerona.fw.error.NotImplementedException;
@@ -26,7 +27,7 @@ public abstract class BaseViolatesOperator extends
 	Operator<ViolatesParameter, ViolatesResult> 
 	implements ActionProcessor
 	{
-	
+
 	@Override
 	protected ViolatesResult processInt(ViolatesParameter param) {
 		ViolatesResult reval = null;
@@ -59,7 +60,10 @@ public abstract class BaseViolatesOperator extends
 	 */
 	protected abstract ViolatesResult onPlan(PlanElement plan, ViolatesParameter param);
 	
-	public void applyAction(Action action, Beliefs beliefs) {
-		
-	}
+	/**
+	 * Is called if the given agent wants to peform the given action in its mental state.
+	 * Subclasses must implement this method to allow the Violates-Operator to be an
+	 * Action-Processor for working through a plan for example.y
+	 */
+	public abstract void performAction(Action action, Agent agent, Beliefs beliefs);
 }

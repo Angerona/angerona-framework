@@ -37,6 +37,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
 	
+	/** The ViolatesResult reference used internally if working on a plan in mental state */
 	private ViolatesResult violates;
 	
 	@Override
