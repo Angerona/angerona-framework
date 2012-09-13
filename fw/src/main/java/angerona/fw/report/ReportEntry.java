@@ -37,28 +37,40 @@ public class ReportEntry implements Cloneable {
 	 */
 	private ReportPoster poster;
 	
+	/** a stack of strings representing the operators callstack which create this entry */
 	private Stack<String> operatorCallstack = new Stack<String>();
 	
-	private ReportEntry() {}
-	
+	/**
+	 * Ctor: Creates a new report entry with the given message, poster and attachment.
+	 * @param message		A string representing the message saved in the report entry
+	 * @param poster		A reference to the poster of the entry, in most cases an operator.
+	 * @param attachment	An optional attachment like a belief base or a data component like 
+	 * 						Secrecy Knowledge.
+	 */
 	public ReportEntry(String message, ReportPoster poster, Entity attachment) {
+		// check for valid parameters
 		if(poster == null)
 			throw new IllegalArgumentException("poster must not be null");
 		if(poster.getSimulation() == null)
 			throw new IllegalArgumentException("poster must have a refernce to a simulation.");
 		
+		// set the parameters
 		this.message = message;
 		this.attachment = attachment;
 		this.poster = poster;
 		this.simulationTick = poster.getSimulation().getSimulationTick();
 		this.realTime = new Date();
 		
+		// search for the parent in attachment hierarchy (an agent in most cases)
 		Entity temp = attachment;
 		if(temp != null) {
 			while(temp.getParent() != null) {
 				temp = IdGenerator.getEntityWithId(temp.getParent());
 			}
 		}
+		
+		// if the parent implements OperatorVisitor interface, then copy the
+		// callstack
 		if(temp instanceof OperatorVisitor) {
 			OperatorVisitor ov = (OperatorVisitor)temp;
 			for(BaseOperator op : ov.getStack()) {
@@ -98,6 +110,9 @@ public class ReportEntry implements Cloneable {
 	public Stack<String> getStack() {
 		return operatorCallstack;
 	}
+	
+	/** Default Ctor: is private and does nothing cause it is used by objects clone method */
+	private ReportEntry() {}
 	
 	@Override
 	public Object clone() {

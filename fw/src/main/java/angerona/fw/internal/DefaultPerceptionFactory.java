@@ -6,7 +6,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
-import angerona.fw.comm.RevisionRequest;
+import angerona.fw.comm.Inform;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -55,7 +55,7 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 				RevisionRequestDO rrdo = (RevisionRequestDO) commAct;
 				Set<FolFormula> fs = createFormulaSet(rrdo.getSentences(), context);
 				
-				return new RevisionRequest(s, r, fs);
+				return new Inform(s, r, fs);
 			}
 		} 
 		

@@ -25,7 +25,7 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
-import angerona.fw.comm.RevisionRequest;
+import angerona.fw.comm.Inform;
 import angerona.fw.comm.SpeechAct;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -79,11 +79,11 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 */
 	@Override
 	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
-		if(! (des.getPerception() instanceof RevisionRequest))
+		if(! (des.getPerception() instanceof Inform))
 			return false;
 		
 		// test if the revision request is excused, if yes then run the knowhow not_sure
-		RevisionRequest rr = (RevisionRequest) des.getPerception();
+		Inform rr = (Inform) des.getPerception();
 		if(rr.getSentences().size() == 1) {
 			FolFormula ff = rr.getSentences().iterator().next();
 			if(	ff instanceof Atom && 
@@ -239,7 +239,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type RevisionReqeust which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected RevisionRequest createRevisionRequest(Map<Integer, String> paramMap) {
+	protected Inform createRevisionRequest(Map<Integer, String> paramMap) {
 		if(paramMap.size() != 3) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 3", "RevisionRequest", paramMap.size());
 			return null;
@@ -254,7 +254,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		var = getVarWithPrefix(2, paramMap);
 		FolFormula atom = processVariable(var);
 		
-		return new RevisionRequest(self.getName(), receiver.getName(), atom);
+		return new Inform(self.getName(), receiver.getName(), atom);
 	}
 	
 	/**

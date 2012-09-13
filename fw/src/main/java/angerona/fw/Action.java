@@ -58,11 +58,6 @@ public class Action implements Perception, ContextProvider {
 		return "A: " + sender + " --> " + receiver;
 	}
 	
-	/** @return true cause every subclass is an action */
-	public boolean isAction() {
-		return true;
-	}
-	
 	@Override
 	public Context getContext() {
 		return ContextFactory.createContext(this);

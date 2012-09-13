@@ -19,7 +19,7 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
-import angerona.fw.comm.RevisionRequest;
+import angerona.fw.comm.Inform;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
@@ -112,7 +112,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					e.printStackTrace();
 				}
 				
-				Context c = new RevisionRequest(ag.getName(), recvName, a).getContext();
+				Context c = new Inform(ag.getName(), recvName, a).getContext();
 				sg.newStack(rr, c);
 				ag.getPlanComponent().addPlan(sg);
 				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), ag.getPlanComponent());
@@ -165,10 +165,10 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		// in general we will accept all Revision queries but for the scm example
 		// it is proofed if the given atom is 'excused' and if this is the case
 		// first of all attend_scm is queried.
-		if(!(des.getPerception() instanceof RevisionRequest))
+		if(!(des.getPerception() instanceof Inform))
 			return false;
 		
-		RevisionRequest rr = (RevisionRequest) des.getPerception();
+		Inform rr = (Inform) des.getPerception();
 		if(rr.getSentences().size() == 1) {
 			FolFormula ff = rr.getSentences().iterator().next();
 			if(	ff instanceof Atom && 

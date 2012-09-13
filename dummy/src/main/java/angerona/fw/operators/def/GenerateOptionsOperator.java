@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Desire;
 import angerona.fw.comm.Query;
-import angerona.fw.comm.RevisionRequest;
-import angerona.fw.comm.Why;
+import angerona.fw.comm.Inform;
+import angerona.fw.comm.Justify;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
@@ -45,9 +45,9 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 		Set<Desire> reval = new HashSet<Desire>();
 		if(param.getPerception() instanceof Query) {
 			ad = new Atom(prepareQueryProcessing);
-		} else if(param.getPerception() instanceof RevisionRequest) {
+		} else if(param.getPerception() instanceof Inform) {
 			ad = new Atom(prepareRevisionRequestProcessing);
-		} else if(param.getPerception() instanceof Why) {
+		} else if(param.getPerception() instanceof Justify) {
 			ad = new Atom(prepareReasonCalculation);
 		}
 		if(ad != null) {
