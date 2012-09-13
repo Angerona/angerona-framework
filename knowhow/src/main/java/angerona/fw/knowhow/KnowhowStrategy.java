@@ -128,7 +128,7 @@ public class KnowhowStrategy {
 		intentionTree.add(oldState);
 		intentionTree.add(new Atom("state", new StdTerm(stateStr)));
 		Pair<Program, LinkedList<SkillParameter>> reval = null;
-		reval = KnowhowBuilder.buildKnowhowbaseProgram(kb, false);
+		reval = KnowhowBuilder.buildKnowhowbaseProgram(kb);
 		knowhow = reval.first;
 		knowhow.add(kb.getNextActionProgram());
 		knowhowBase.setParameters(reval.second);

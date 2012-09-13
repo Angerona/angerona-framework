@@ -56,6 +56,16 @@ public class KnowhowStatement {
 		return conditions;
 	}
 	
+	@Override 
+	public boolean equals(Object other) {
+		if(!(other instanceof KnowhowStatement))	return false;
+		KnowhowStatement o = (KnowhowStatement)other;
+		
+		return 	target.equals(o.target) &&
+				subTargets.equals(o.subTargets) &&
+				conditions.equals(o.conditions);
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + target.toString() + ", " + subTargets.toString() + ", " + conditions.toString() + ")";

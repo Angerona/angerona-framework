@@ -24,8 +24,8 @@ import angerona.fw.Desire;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.Query;
 import angerona.fw.comm.Inform;
+import angerona.fw.comm.Query;
 import angerona.fw.comm.SpeechAct;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -56,7 +56,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			// scenario specific tests:
 			boolean revReq = des.getAtom().getPredicate().getName().equals("attend_scm");
 			if(revReq) {
-				Subgoal sg = runKnowhow("attend_scm(v_self)", param, des);
+				Subgoal sg = runKnowhow("attend_scm", param, des);
 				if(sg != null) {
 					gen = true;
 					param.getActualPlan().addPlan(sg);
@@ -138,7 +138,10 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	private Subgoal runKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
 		// TODO: Move path to config
 		Agent ag = param.getActualPlan().getAgent();
-				
+		
+		LOG.info("Running Knowhow with intention: '{}' for desire: '{}'.", 
+				intention, des.toString());
+		
 		// Gathering knowhow information
 		Collection<String> worldKB = ag.getBeliefs().getWorldKnowledge().getAtoms();
 		Collection<String> actions = ag.getSkills().keySet();
@@ -156,7 +159,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 
 	/**
 	 * Tries to re-iterate over the knowhow to find more actions
-	 * @param param	The subgoal-genaration data-structure
+	 * @param param	The subgoal-generation data-structure
 	 * @param des	The associated desire
 	 * @param ag	reference to the agent
 	 * @return
@@ -202,7 +205,6 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		Subgoal reval = null;
 		// iterate over all actions found by the Knowhow (at the moment this is only one)
 		Pair<String, HashMap<Integer, String>> action = lastUsedStrategy.getAction();
-		report("Knowhow generates Action: " + action.toString());
 		
 		// test if the skill exists
 		String skillName = action.first.substring(2);
@@ -225,6 +227,12 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			return reval;
 		}
 		
+		if(act == null) {
+			LOG.error("The Skill '{}' could not be created, subgoal processing canceled.", skillName);
+			return reval;
+		}
+		report("Knowhow generated Action: " + action.toString());
+		
 		// create the Subgoal which will be returned and report this step to Angerona.
 		reval = new Subgoal(ag, des);
 		reval.newStack(ag.getSkill(skillName), act);
@@ -240,21 +248,18 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * 						action found by the knowhow.
 	 */
 	protected Inform createRevisionRequest(Map<Integer, String> paramMap) {
-		if(paramMap.size() != 3) {
-			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 3", "RevisionRequest", paramMap.size());
+		if(paramMap.size() != 2) {
+			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", "RevisionRequest", paramMap.size());
 			return null;
 		}
 		
 		String var = getVarWithPrefix(0, paramMap);
-		Agent self = processVariable(var);
-		
-		var = getVarWithPrefix(1, paramMap);
 		Agent receiver = processVariable(var);
 		
-		var = getVarWithPrefix(2, paramMap);
+		var = getVarWithPrefix(1, paramMap);
 		FolFormula atom = processVariable(var);
 		
-		return new Inform(self.getName(), receiver.getName(), atom);
+		return new Inform(getOwner().getName(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -266,15 +271,12 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 */
 	protected Query createQuery(Map<Integer, String> paramMap) {
 		String var = getVarWithPrefix(0, paramMap);
-		Agent self = processVariable(var);
-		
-		var = getVarWithPrefix(1, paramMap);
 		Agent receiver = processVariable(var);
 		
-		var = getVarWithPrefix(2, paramMap);
+		var = getVarWithPrefix(1, paramMap);
 		FolFormula atom = processVariable(var);
 		
-		return new Query(self.getName(), receiver.getName(), atom);
+		return new Query(getOwner().getName(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -286,7 +288,16 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 */
 	protected Answer createQueryAnswer(Map<Integer, String> paramMap, Query reason) {
 		String var = getVarWithPrefix(0, paramMap);
-		boolean honest = var.equals("r_honest");
+		boolean honest = false;
+		if(var.equals("p_honest")) {
+			honest = true;
+		} else if(var.equals("p_lie")) {
+			honest = false;
+		} else {
+			LOG.error("The first parameter of s_Answer has to be: " +
+						"'p_honest' or 'p_lie' but '{}' was given.", var);
+			return null;
+		}
 		AngeronaAnswer aa = getOwner().reason(reason.getQuestion());
 		if(!honest) {
 			// TODO: Move into lying operator... 
@@ -330,10 +341,9 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param variableWithPrefix	String containing the value
 	 * @return	An object of generic Type. Might be an agent or an FOL-Atom or a string.
 	 */
+	@SuppressWarnings("unchecked")
 	protected <T> T processVariable(String variableWithPrefix) {
-		if(variableWithPrefix.startsWith("v_")) {
-			return this.getVariable(variableWithPrefix.substring(2));
-		} else if(variableWithPrefix.startsWith("a_")) {
+		if(variableWithPrefix.startsWith("a_")) {
 			return (T) this.getAgent(variableWithPrefix.substring(2));
 		} else {
 			Atom temp =  createAtom(variableWithPrefix);
@@ -367,28 +377,15 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	}
 	
 	/**
-	 * Gets a variable of the given name... actually there is only self
-	 * but a TODO is to use the Context system to give the knowhow more
-	 * access to the Angerona internal systems.
-	 * @param name		The name of the variable
-	 * @return			An Object representing the variable.
-	 */
-	private <T> T getVariable(String name) {
-		if(name.equalsIgnoreCase("self")) {
-			return (T) Agent.class.cast(getOwner());
-		} else {
-			LOG.error("Cannot convert variable with name '{}'.", name);
-			return null;
-		}
-	}
-	
-	/**
 	 * Helper method: Searchs for the agent with the given name.
 	 * @param name		The agent's name
 	 * @return			Reference to the Agent with the given name or null if
 	 * 					no such Agent exists.
 	 */
 	private Agent getAgent(String name) {
+		if(name.equals("SELF"))
+			return getOwner();
+		
 		Agent reval = this.getOwner().getEnvironment().getAgentByName(name);
 		if(reval == null) {
 			LOG.warn("Knowhow tries to find Agent with name '{}' but its not part of the Enviornment", name);

@@ -75,7 +75,8 @@ public class KnowhowView extends BaseView implements ReportListener{
 			stmtListModel.add(0, stmt.toString());
 		}
 		
-		Pair<Program, LinkedList<SkillParameter>> pair = KnowhowBuilder.buildKnowhowbaseProgram(actual, false);
+		Pair<Program, LinkedList<SkillParameter>> pair = 
+				KnowhowBuilder.buildKnowhowbaseProgram(actual);
 		stmtListModel.addElement("---");
 		stmtListModel.addElement("parameters");
 		stmtListModel.addElement("---");

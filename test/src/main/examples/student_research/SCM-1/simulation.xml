@@ -27,12 +27,12 @@
             (boss, angerona.fw.logic.asp.AspReasoner{d=1.0}, attend_scm(employee))
         </data>
 		<data key="KnowHow">
-			attend_scm(v_self), excused(v_self), 
-		 	excused(v_self), s_RevisionRequest(v_self, a_boss, excused(v_self)),
+			attend_scm, excused(a_SELF), 
+		 	excused(a_SELF), s_RevisionRequest(a_boss, excused(a_SELF)),
 		 	answer_query, honest_answer, 
 		 	answer_query, lie,
-		 	honest_answer, s_QueryAnswer(r_honest),  
-		 	lie, s_QueryAnswer(r_lie),
+		 	honest_answer, s_QueryAnswer(p_honest),  
+		 	lie, s_QueryAnswer(p_lie),
 		</data>
 	</agent-instance>
       
@@ -53,7 +53,7 @@
         </skill>
         
         <data key="KnowHow">
-			not_sure(attend_scm), s_Query(v_self, a_employee, attend_scm(a_employee)), 
+			not_sure(attend_scm), s_Query(a_employee, attend_scm(a_employee)), 
 		</data> 
 		
 	</agent-instance>

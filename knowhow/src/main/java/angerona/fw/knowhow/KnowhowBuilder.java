@@ -31,69 +31,102 @@ public class KnowhowBuilder {
 	 * @param kb	reference to the knowhow base.
 	 * @return		extended logic program representing the given KnowhowBase.
 	 */
-	public static Pair<Program, LinkedList<SkillParameter>> buildKnowhowbaseProgram(KnowhowBase kb, boolean everything) {
+	public static Pair<Program, LinkedList<SkillParameter>> 
+		buildKnowhowbaseProgram(KnowhowBase kb) {
 		Program p = new Program();
-		Pair<Program, LinkedList<SkillParameter>> pair = new Pair<>(p, new LinkedList<SkillParameter>());
+		Pair<Program, LinkedList<SkillParameter>> reval 
+			= new Pair<>(p, new LinkedList<SkillParameter>());
 		
-		// create facts for Knowhow-Statements
+		List<KnowhowStatement> reconsider = new LinkedList<>();
 		for(KnowhowStatement ks : kb.getStatements()) {
-			// Knowhow Statement
-			Rule r = new Rule();
-			Atom stAtom = new Atom(ks.name);
-			r.addHead(new Atom("khstatement", stAtom, ks.getTarget()));
-			p.add(r);
-			
-			// Subtargets
-			int i = 1;
-			for(Atom a : ks.getSubTargets()) {
-				r = new Rule();
-				
-				// if the subgoal is an skill then we have to find the parameter mappings
-				// and encode them in the logic program:
-				if(a.toString().startsWith("s_")) {
-					// search parameters:
-					int c = 0;
-					if(a.getTerms() != null) {
-						for(Term t : a.getTerms()) {
-							SkillParameter sp = new SkillParameter();
-							sp.skillName = a.getName().substring(2);
-							sp.numKnowhowStatement = ks.getId();
-							sp.numSubgoal = i;
-							sp.paramIndex = c++;
-							if(t instanceof Atom) {
-								sp.paramValue = ((Atom)t).toString();
-							} else {
-								sp.paramValue = t.get();
-							}
-							pair.second.add(sp);
-						}
-					}
-					
-					a = new Atom(a.getName());
+			boolean closed = true;
+			for(int i=0; i<ks.getTarget().getArity(); ++i) {
+				Term t = ks.getTarget().getTerm(i);
+				if(t.get().startsWith("v_")) {
+					closed = false;
+					break;
 				}
-				r.addHead(new Atom("khsubgoal", stAtom, new Atom(new Integer(i).toString()), a));
-				p.add(r);
-				i++;
 			}
-			
-			// Conditions
-			for(Atom a : ks.getConditions()) {
-				r = new Rule();
-				r.addHead(new Atom("khcondition", stAtom, a));
-				p.add(r);
+
+			if(!closed) {
+				// TODO: Implement variables:
+				reconsider.add(ks);
+				throw new NotImplementedException("variables are not supported by Knowhow yet");
+			} else {
+				reval.second.addAll(createFactsForKnowstatement(p, ks));
 			}
 		}
 		
-		if(everything) {
-			List<String> holds = kb.getAgent().getBeliefs().getWorldKnowledge().getAtoms();
-			p.add(buildHoldsProgram(holds));
-			
-			//Set<String> atomic_actions = kb.getAgent().getSkills().keySet();
-			//p.add(buildAtomicProgram(atomic_actions));
-
-			throw new NotImplementedException("The everything-flag=true is not implemented for KnowhowBuilder.buildKnowhowBaseProgram().");
+		/*
+		boolean changed = false;
+		for(KnowhowStatement vks : reconsider) {
+			for(KnowhowStatement cks : kb.getStatements()) {
+				
+			}
 		}
-		return pair;
+		*/
+		
+		return reval;
+	}
+
+	/**
+	 * Helper method: Adds all facts of the given Knowhow statement to the given
+	 * program and also creates a list of SkillParameters which has the parameters
+	 * for Skills used as subtargets.
+	 * @param p		The ELP program
+	 * @param ks	The knowhow statement.
+	 * @return		A list of SkillParameters containing the parameters needed subtargets
+	 * 				which are Skills.
+	 */
+	private static List<SkillParameter> createFactsForKnowstatement(Program p, KnowhowStatement ks) {
+		List<SkillParameter> params = new LinkedList<>();
+		// Knowhow Statement
+		Rule r = new Rule();
+		Atom stAtom = new Atom(ks.name);
+		r.addHead(new Atom("khstatement", stAtom, ks.getTarget()));
+		p.add(r);
+		
+		// Subtargets
+		int i = 1;
+		for(Atom a : ks.getSubTargets()) {
+			r = new Rule();
+			
+			// if the subgoal is an skill then we have to find the parameter mappings
+			// and encode them in the logic program:
+			if(a.toString().startsWith("s_")) {
+				// search parameters:
+				int c = 0;
+				if(a.getTerms() != null) {
+					for(Term t : a.getTerms()) {
+						SkillParameter sp = new SkillParameter();
+						sp.skillName = a.getName().substring(2);
+						sp.numKnowhowStatement = ks.getId();
+						sp.numSubgoal = i;
+						sp.paramIndex = c++;
+						if(t instanceof Atom) {
+							sp.paramValue = ((Atom)t).toString();
+						} else {
+							sp.paramValue = t.get();
+						}
+						params.add(sp);
+					}
+				}
+				
+				a = new Atom(a.getName());
+			}
+			r.addHead(new Atom("khsubgoal", stAtom, new Atom(new Integer(i).toString()), a));
+			p.add(r);
+			i++;
+		}
+		
+		// Conditions
+		for(Atom a : ks.getConditions()) {
+			r = new Rule();
+			r.addHead(new Atom("khcondition", stAtom, a));
+			p.add(r);
+		}
+		
+		return params;
 	}
 	
 	public static Program buildHoldsProgram(Collection<String> literals) {
