@@ -19,33 +19,47 @@ import angerona.fw.logic.AnswerValue;
 public class Justification extends SpeechAct {
 
 	/** the formula which has to be justified. */
-	private FolFormula regarding;
+	private FolFormula proposition;
 	
 	/** the answer to the formula: only {true, false, unknown} are allowed. */
 	private AnswerValue answerValue;
 	
 	/** a set of fol formulas explaining the deduction */
-	private Set<FolFormula> reason = new HashSet<>();
+	private Set<FolFormula> justifications = new HashSet<>();
 	
-	public Justification(Justify source, Set<FolFormula> reason) {
+	public Justification(Justify source, FolFormula justification) {
 		this(source.getReceiverId(), source.getSenderId(), source.getProposition(), 
-				source.getAnswerValue(), reason);
+				source.getAnswerValue(), justification);
 	}
 	
-	public Justification(String sender, String receiver, FolFormula regarding, 
-			AnswerValue answerValue, Set<FolFormula> reason) {
-		super(sender, receiver);
-		this.regarding = regarding;
+	public Justification(String sender, String receiver, FolFormula proposition, 
+			AnswerValue answerValue, FolFormula justification) {
+		super(sender,receiver);
+		this.proposition = proposition;
 		this.answerValue = answerValue;
-		this.reason = reason;
+		this.justifications = new HashSet<>();
+		this.justifications.add(justification);
+	}
+	
+	public Justification(Justify source, Set<FolFormula> justifications) {
+		this(source.getReceiverId(), source.getSenderId(), source.getProposition(), 
+				source.getAnswerValue(), justifications);
+	}
+	
+	public Justification(String sender, String receiver, FolFormula proposition, 
+			AnswerValue answerValue, Set<FolFormula> justifications) {
+		super(sender, receiver);
+		this.proposition = proposition;
+		this.answerValue = answerValue;
+		this.justifications = justifications;
 	}
 
-	public FolFormula getRegarding() {
-		return regarding;
+	public FolFormula getProposition() {
+		return proposition;
 	}
 	
-	public Set<FolFormula> getReason() {
-		return Collections.unmodifiableSet(reason);
+	public Set<FolFormula> getJustifications() {
+		return Collections.unmodifiableSet(justifications);
 	}
 	
 	public AnswerValue getAnswerValue() {
@@ -55,6 +69,6 @@ public class Justification extends SpeechAct {
 	@Override
 	public String toString() {
 		return "< " + getSenderId() + " justification " + getReceiverId() + " " 
-					+ regarding + " " + answerValue + " " + reason + " >";
+					+ proposition + " " + answerValue + " " + justifications + " >";
 	}
 }

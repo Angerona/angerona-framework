@@ -6,6 +6,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
+import angerona.fw.comm.Justification;
 import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
 import angerona.fw.error.NotImplementedException;
@@ -14,6 +15,7 @@ import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
 import angerona.fw.serialize.perception.AnswerDO;
 import angerona.fw.serialize.perception.CommunicationActDO;
+import angerona.fw.serialize.perception.JustificationDO;
 import angerona.fw.serialize.perception.JustifyDO;
 import angerona.fw.serialize.perception.PerceptionDO;
 import angerona.fw.serialize.perception.QueryDO;
@@ -64,6 +66,14 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 				AnswerValue av = createAnswerValue(jdo.getAnswerValue(), context);
 				
 				return new Justify(s, r, proposition, av);
+			} else if(commAct instanceof JustificationDO) {
+				JustificationDO jdo = (JustificationDO)commAct;
+				
+				FolFormula proposition = createFormula(jdo.getProposition(), context);
+				AnswerValue av = createAnswerValue(jdo.getAnswerValue(), context);
+				Set<FolFormula> j = createFormulaSet(jdo.getJustifications(), context);
+				
+				return new Justification(s, r, proposition, av, j);
 			}
 		} 
 		

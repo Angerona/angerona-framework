@@ -1,0 +1,13 @@
+<skill>
+   <name>Justification</name>
+   <statement>
+      <name>SendAction</name>
+      <complex-info class="angerona.fw.serialize.perception.JustificationDO"
+      		sender="$name" receiver="$in.receiverId">
+      		<proposition>$in.proposition</proposition>
+      		<answerValue>$in.answerValue</answerValue>
+      		<justifications>$in.justifications</justifications>
+      </complex-info>
+      <return-value-identifier>justifyResult</return-value-identifier>
+   </statement>
+</skill>

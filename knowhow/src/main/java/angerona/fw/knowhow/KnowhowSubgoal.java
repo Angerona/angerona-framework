@@ -25,6 +25,7 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
+import angerona.fw.comm.Justification;
 import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.SpeechAct;
@@ -66,10 +67,25 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 
 			gen = gen || revisionRequest(des, param, param.getActualPlan().getAgent());
 			gen = gen || answerQuery(des, param, param.getActualPlan().getAgent());
+			gen = gen || onJustify(des, param);
 		}
 		
 		lastUsedStrategy = null;
 		return gen;
+	}
+	
+	protected Boolean onJustify(Desire des, SubgoalGenerationParameter pp) {
+		if(! (des.getPerception() instanceof Justify)) 
+			return false;
+		
+		Justify j = (Justify)des.getPerception();
+		Subgoal sg = runKnowhow("justification("+ j.getProposition().toString() + ")", pp, des);
+		if(sg == null) {
+			return false;
+		} else {
+			pp.getActualPlan().addPlan(sg);
+			return true;
+		}
 	}
 	
 	/**
@@ -228,6 +244,8 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			act = createQueryAnswer(action.second, (Query)des.getPerception());
 		} else if (skillName.equals("Justify")) { 
 			act = createJustify(action.second, (Inform)des.getPerception());
+		} else if(skillName.equals("Justification")) {
+			act = createJustification(action.second, (Justify)des.getPerception());
 		} else {
 			LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
 			return reval;
@@ -246,6 +264,20 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return reval;
 	}
 	
+	protected Justification createJustification(Map<Integer, String> paramMap, Justify reason) {
+		if(paramMap.size() != 1) {
+			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
+					"Justification", paramMap.size());
+			return null;
+		}
+		
+		String var = getVarWithPrefix(0, paramMap);
+		FolFormula atom = processVariable(var);
+		
+		
+		return new Justification(reason, atom);
+		
+	}
 	
 	protected Justify createJustify(Map<Integer, String> paramMap, Inform reason) {
 		if(paramMap.size() != 2) {

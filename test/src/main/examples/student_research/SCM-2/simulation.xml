@@ -14,7 +14,7 @@
         </beliefbase-config>
          
 		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/QueryAnswer.xml</source>
+			<source>config/skills/Justification.xml</source>
         </skill>
         <skill class="angerona.fw.serialize.SkillConfigImport">
 			<source>config/skills/Inform.xml</source>
@@ -29,8 +29,10 @@
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
 		 	excused(a_SELF), s_Inform(a_boss, excused(a_SELF)),
-		 	justification, intelligent_justification, 
-		 	intelligent_justification, s_Justification(),  
+		 	justification(excused(employee)), sport_event_reason,
+		 	justification(excused(employee)), burial_reason, 
+		 	burial_reason, s_Justification(attend_burial(employee)),  
+		 	sport_event_reason, s_Justification(attend_sport_event(employee)),
 		</data>
 	</agent-instance>
       
