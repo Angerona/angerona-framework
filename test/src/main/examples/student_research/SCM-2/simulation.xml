@@ -29,10 +29,8 @@
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
 		 	excused(a_SELF), s_RevisionRequest(a_boss, excused(a_SELF)),
-		 	answer_query, honest_answer, 
-		 	answer_query, lie,
-		 	honest_answer, s_QueryAnswer(p_honest),  
-		 	lie, s_QueryAnswer(p_lie),
+		 	justification, intelligent_justification, 
+		 	intelligent_justification, s_Justification(),  
 		</data>
 	</agent-instance>
       
@@ -53,7 +51,7 @@
         </skill>
         
         <data key="KnowHow">
-			not_sure(excused(employee)), s_Query(a_employee, attend_scm(employee)), 
+			not_sure(excused(employee)), s_Justify(a_employee, excused(employee)), 
 		</data> 
 		
 	</agent-instance>

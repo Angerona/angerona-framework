@@ -42,6 +42,11 @@ public class KnowhowBuilder {
 			boolean closed = true;
 			for(int i=0; i<ks.getTarget().getArity(); ++i) {
 				Term t = ks.getTarget().getTerm(i);
+				// This is just another border case never handled by tweety asp_library
+				// TODO: FIX ASP_LIBRARY
+				if(t.get() == null)
+					continue;
+				
 				if(t.get().startsWith("v_")) {
 					closed = false;
 					break;

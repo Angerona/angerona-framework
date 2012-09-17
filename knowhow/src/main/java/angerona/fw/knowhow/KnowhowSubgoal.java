@@ -73,8 +73,8 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	
 	/**
 	 *  Adapt the default behavior for strike-committee meeting:
-	 *  If the revision-request 'excused' is received the knowhow is runned with the target:
-	 *  'not_sure(attend_scm)'. The actual generation of the plan is handled by the runKnowhow
+	 *  If the revision-request with atom a is received the knowhow is runned with the target:
+	 *  'not_sure(a)'. The actual generation of the plan is handled by the runKnowhow
 	 *  method.
 	 */
 	@Override
@@ -86,11 +86,15 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		Inform rr = (Inform) des.getPerception();
 		if(rr.getSentences().size() == 1) {
 			FolFormula ff = rr.getSentences().iterator().next();
-			if(	ff instanceof Atom && 
-				((Atom)ff).getPredicate().getName().equalsIgnoreCase("excused")) {
-				Subgoal sg = runKnowhow("not_sure(attend_scm)", pp, des);
-				pp.getActualPlan().addPlan(sg);
-				return true;
+			if(	ff instanceof Atom ) {
+				Atom atom = (Atom)ff;
+				Subgoal sg = runKnowhow("not_sure("+atom.toString() + ")", pp, des);
+				if(sg == null) {
+					return false;
+				} else {
+					pp.getActualPlan().addPlan(sg);
+					return true;	
+				}
 			}
 		}
 		
@@ -120,7 +124,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			}
 			
 			lastUsedStrategy.fallback();
-			sg = iterateKnowhow(pp, des, ag);
+			sg = iterateKnowhow(pp, des);
 		}
 		
 		return false;
@@ -136,8 +140,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				A subgoal containing one atomic-action.
 	 */
 	private Subgoal runKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
-		// TODO: Move path to config
-		Agent ag = param.getActualPlan().getAgent();
+		Agent ag = getOwner();
 		
 		LOG.info("Running Knowhow with intention: '{}' for desire: '{}'.", 
 				intention, des.toString());
@@ -154,17 +157,16 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		lastUsedStrategy = new KnowhowStrategy(SolverWrapper.DLV_COMPLEX.getSolverPath());
 		lastUsedStrategy.init(kb, intention, actions, worldKB);
 		
-		return iterateKnowhow(param, des, ag);
+		return iterateKnowhow(param, des);
 	}
 
 	/**
 	 * Tries to re-iterate over the knowhow to find more actions
 	 * @param param	The subgoal-generation data-structure
 	 * @param des	The associated desire
-	 * @param ag	reference to the agent
 	 * @return
 	 */
-	private Subgoal iterateKnowhow(SubgoalGenerationParameter param, Desire des, Agent ag) {
+	private Subgoal iterateKnowhow(SubgoalGenerationParameter param, Desire des) {
 		// iterate knowhow algorithm until a action is found.
 		int reval = 0;
 		boolean calcKH = true;
@@ -189,7 +191,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		// otherwise update Angerona plan component
-		return createAtomicAction(param, des, ag);
+		return createAtomicAction(param, des);
 	}
 
 	/**
@@ -200,13 +202,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param ag		Reference to the agent
 	 * @return			A subgoal containing an atomic action (Skill)
 	 */
-	private Subgoal createAtomicAction(SubgoalGenerationParameter param, Desire des,
-			Agent ag) {
+	private Subgoal createAtomicAction(SubgoalGenerationParameter param, Desire des) {
 		Subgoal reval = null;
 		// iterate over all actions found by the Knowhow (at the moment this is only one)
 		Pair<String, HashMap<Integer, String>> action = lastUsedStrategy.getAction();
 		
 		// test if the skill exists
+		Agent ag = getOwner();
 		String skillName = action.first.substring(2);
 		Skill skill = ag.getSkill(skillName);
 		if(skill == null) {
