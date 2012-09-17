@@ -36,11 +36,14 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 						boolean select = Boolean.parseBoolean(
 								getParameter("allowUnsafe", String.valueOf(false)));
 						
-						if(!select)
+						if(!select) {
 							select = ag.performThought(ag.getBeliefs(), pe).isAlright();
-					
+							if(select) {
+								report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.", ag);
+							}
+						}
+						
 						if(select) {
-							report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.", ag);
 							return pe;
 						}
 					}

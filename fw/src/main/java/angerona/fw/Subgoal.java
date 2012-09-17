@@ -65,8 +65,15 @@ public class Subgoal extends Intention implements Cloneable {
 	 * @return			true
 	 */
 	public boolean newStack(Intention intention, Object context) {
+		return newStack(new PlanElement(intention, context));
+	}
+	
+	public boolean newStack(PlanElement pe) {
+		if(pe == null)
+			throw new IllegalArgumentException("PlanElement parameter must not be null.");
+		
 		Stack<PlanElement> newStack = new Stack<PlanElement>();
-		newStack.add(new PlanElement(intention, context));
+		newStack.add(pe);
 		return stacks.add(newStack);
 	}
 	
@@ -75,8 +82,15 @@ public class Subgoal extends Intention implements Cloneable {
 	}
 	
 	public boolean addToStack(Intention intention, Object context, int index) {
-		return stacks.get(index).add(new PlanElement(intention, context));
+		return addToStack(new PlanElement(intention, context), index);
 	}
+	
+	public boolean addToStack(PlanElement pe, int index) {
+		if(pe == null)
+			throw new IllegalArgumentException("PlanElement parameter must not be null.");
+		return stacks.get(index).add(pe);
+	}
+	
 	
 	/**
 	 * Looks at the top-stack element of the stack with the given index.

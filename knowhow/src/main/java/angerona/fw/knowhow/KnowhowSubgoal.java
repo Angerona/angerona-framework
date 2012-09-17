@@ -3,6 +3,7 @@ package angerona.fw.knowhow;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,13 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 
-import org.simpleframework.xml.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Desire;
+import angerona.fw.PlanElement;
 import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
@@ -29,7 +31,6 @@ import angerona.fw.comm.Inform;
 import angerona.fw.comm.Justification;
 import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
-import angerona.fw.comm.SpeechAct;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ViolatesResult;
@@ -59,10 +60,11 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			// scenario specific tests:
 			boolean revReq = des.getAtom().getPredicate().getName().equals("attend_scm");
 			if(revReq) {
-				Subgoal sg = runKnowhow("attend_scm", param, des);
-				if(sg != null) {
-					gen = true;
-					param.getActualPlan().addPlan(sg);
+				PlanElement next = nextSafeAction("attend_scm", param, des);
+				if(next != null) {
+					Subgoal sg = new Subgoal(getOwner(), des);
+					sg.newStack(next);
+					gen = gen || param.getActualPlan().addPlan(sg);
 				}
 			}	
 
@@ -75,42 +77,25 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return gen;
 	}
 	
+	/**
+	 * If a justify request is received this method handles it and calls the knowhow with the correct 
+	 * start intention
+	 * @param des		The desire to react to the justify.
+	 * @param pp		The subgoal generation parameter data structure.
+	 * @return
+	 */
 	protected Boolean onJustify(Desire des, SubgoalGenerationParameter pp) {
 		if(! (des.getPerception() instanceof Justify)) 
 			return false;
 		
 		Justify j = (Justify)des.getPerception();
-		Subgoal sg = runKnowhow("justification("+ j.getProposition().toString() + ")", pp, des);
-		if(sg == null) {
+		PlanElement next = nextSafeAction("justification("+ j.getProposition().toString() + ")", pp, des);
+		if(next == null)
 			return false;
-		} else {
-			boolean safe = !Boolean.parseBoolean(getParameter("allowUnsafe", String.valueOf(false)));
-			if(safe) {
-				sg = saveSubgoal(sg, pp, des);
-				pp.getActualPlan().addPlan(sg);
-				return sg != null;
-			} else {
-				boolean reval = pp.getActualPlan().addPlan(sg);
-				if(!reval)
-					report("The generated subgoal already exists in the plan. No change to planning component.");
-				return reval;
-			}
-		}
-	}
-	
-	private Subgoal saveSubgoal(Subgoal sg, 
-			SubgoalGenerationParameter param, Desire des) {
-		ViolatesResult res = getOwner().performThought(
-				getOwner().getBeliefs(), sg.peekStack(0));
-		while(!res.isAlright()) {
-			lastUsedStrategy.fallback();
-			sg = iterateKnowhow(param, des);
-			if(sg == null)
-				return null;
-			res = getOwner().performThought(
-					getOwner().getBeliefs(), sg.peekStack(0));
-		}
-		return sg;
+		Subgoal sg = new Subgoal(getOwner(), des);
+		sg.newStack(next);
+		boolean reval = pp.getActualPlan().addPlan(sg);
+		return reval;
 	}
 	
 	/**
@@ -124,23 +109,24 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		if(! (des.getPerception() instanceof Inform))
 			return false;
 		
-		// test if the revision request is excused, if yes then run the knowhow not_sure
+		boolean reval = false;
 		Inform rr = (Inform) des.getPerception();
-		if(rr.getSentences().size() == 1) {
-			FolFormula ff = rr.getSentences().iterator().next();
+		Iterator<FolFormula> itFormulas = rr.getSentences().iterator();
+		while(itFormulas.hasNext()) {
+			FolFormula ff = itFormulas.next();
 			if(	ff instanceof Atom ) {
 				Atom atom = (Atom)ff;
-				Subgoal sg = runKnowhow("not_sure("+atom.toString() + ")", pp, des);
-				if(sg == null) {
-					return false;
-				} else {
-					pp.getActualPlan().addPlan(sg);
-					return true;	
+				PlanElement next = nextSafeAction("not_sure("+atom.toString() + ")", pp, des);
+				if(next == null) {
+					continue;
 				}
+				Subgoal sg = new Subgoal(getOwner(), des);
+				sg.newStack(next);
+				reval = reval || pp.getActualPlan().addPlan(sg);
 			}
 		}
 		
-		return false;
+		return reval;
 	}
 
 	/** 
@@ -150,38 +136,68 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * TODO: Answer with Unknown if no valid answer is found.
 	 */
 	@Override 
-	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) {
+	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter param, Agent ag) {
 		if(!(des.getPerception() instanceof Query))
 			return false;
 		
 		// run the answer_query knowhow-statement till no more answers are found or an answer
 		// was found which does not violates secrecy.
-		Subgoal sg = runKnowhow("answer_query", pp, des);
-		while(sg != null) {
-			ViolatesResult res = ag.performThought(ag.getBeliefs(), 
-					sg.peekStack(0));
-			if(res.isAlright()) {
-				pp.getActualPlan().addPlan(sg);
-				return true;
-			}
-			
-			lastUsedStrategy.fallback();
-			sg = iterateKnowhow(pp, des);
+		PlanElement next = nextSafeAction("answer_query", param, des);
+		if(next == null) {
+			return false;
 		}
 		
-		return false;
+		Subgoal sg = new Subgoal(getOwner(), des);
+		sg.newStack(next);
+		return param.getActualPlan().addPlan(sg);
 	}
 	
 	/**
-	 * Helper method: Starts the knowhow processing: It fetches the data for the creation of
-	 * the knowhow-strategy. This method initializes a new knowhow-strategy and iterates its once.
-	 * This means the strategy loops the elp until it finds the next-action.
+	 * Finds the next safe action by appying different knowhow processes until a action is found which
+	 * does not violates secrecy.
+	 * @param intention		The intitial intention for searching the next safe action
+	 * @param param			The subgoal generation parameter data structrue
+	 * @param des			The desire which will be fulfilled by the next safe action.
+	 * @return
+	 */
+	public PlanElement nextSafeAction(String intention, SubgoalGenerationParameter param, Desire des) {
+		prepareKnowhow(intention, param, des);
+		
+		PlanElement candidate = null;
+		ViolatesResult res = new ViolatesResult(false);
+		while(!res.isAlright()) {
+			candidate = iterateKnowhow(param, des);
+			if(candidate == null)
+				return null;
+			res = getOwner().performThought(
+					getOwner().getBeliefs(), candidate);
+			if(!res.isAlright())
+				lastUsedStrategy.fallback();
+		}
+		return candidate;
+	}
+	
+	/**
+	 * Finds the next action without violation checking.
+	 * @param intention		The initial intention for searching the next action.
+	 * @param param			The subgoal generation parameter data structure
+	 * @param des			The desire which will be fulfilled by the next action.
+	 * @return
+	 */
+	public PlanElement nextAction(String intention, SubgoalGenerationParameter param, Desire des) {
+		prepareKnowhow(intention, param, des);
+		return iterateKnowhow(param, des);
+	}
+	
+	/**
+	 * Helper method: prepares the knowhow processing: It fetches the data for the creation of
+	 * the knowhow-strategy. This method initializes a new knowhow-strategy so after the execution
+	 * the strategy is ready for iterateKnowhow.
 	 * @param intention		start intention used in the intention-tree
 	 * @param param			the subgoal-generation parameter data-structure
 	 * @param des			The associated desire.
-	 * @return				A subgoal containing one atomic-action.
 	 */
-	private Subgoal runKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
+	private void prepareKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
 		Agent ag = getOwner();
 		
 		LOG.info("Running Knowhow with intention: '{}' for desire: '{}'.", 
@@ -190,6 +206,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		// Gathering knowhow information
 		Collection<String> worldKB = ag.getBeliefs().getWorldKnowledge().getAtoms();
 		Collection<String> actions = ag.getSkills().keySet();
+
 		KnowhowBase kb = (KnowhowBase)ag.getComponent(KnowhowBase.class);
 		if(kb == null) {
 			throw new RuntimeException("Agent '"+ag.getName()+"' has no KnowhowBase but tries to using '"+this.getClass().getSimpleName()+"'.");
@@ -198,17 +215,16 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		// create and initialize the knowhow strategy
 		lastUsedStrategy = new KnowhowStrategy(SolverWrapper.DLV_COMPLEX.getSolverPath());
 		lastUsedStrategy.init(kb, intention, actions, worldKB);
-		
-		return iterateKnowhow(param, des);
 	}
 
 	/**
-	 * Tries to re-iterate over the knowhow to find more actions
+	 * Iterates the Knwohow this means the next-action program is called until the
+	 * entire knowhow was searched or the first atomic intention was found.
 	 * @param param	The subgoal-generation data-structure
 	 * @param des	The associated desire
-	 * @return
+	 * @return		
 	 */
-	private Subgoal iterateKnowhow(SubgoalGenerationParameter param, Desire des) {
+	private PlanElement iterateKnowhow(SubgoalGenerationParameter param, Desire des) {
 		// iterate knowhow algorithm until a action is found.
 		int reval = 0;
 		boolean calcKH = true;
@@ -242,10 +258,9 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param param		Subgoal-Generation parameter data-structure
 	 * @param des		The associated desire.
 	 * @param ag		Reference to the agent
-	 * @return			A subgoal containing an atomic action (Skill)
+	 * @return			A Skill context pair representing the last found atomic action or null if an error occurred.
 	 */
-	private Subgoal createAtomicAction(SubgoalGenerationParameter param, Desire des) {
-		Subgoal reval = null;
+	private PlanElement createAtomicAction(SubgoalGenerationParameter param, Desire des) {
 		// iterate over all actions found by the Knowhow (at the moment this is only one)
 		Pair<String, HashMap<Integer, String>> action = lastUsedStrategy.getAction();
 		
@@ -255,11 +270,11 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		Skill skill = ag.getSkill(skillName);
 		if(skill == null) {
 			LOG.warn("Knowhow found Skill '{}' but the Agent '{}' does not support the Skill.", skillName, ag.getName());
-			return reval;
+			return null;
 		}
 		
 		// create the action using the SkillParameter map and the name of the skill
-		SpeechAct act = null;
+		Action act = null;
 		// TODO: String tests are not perfect here.
 		if(skillName.equals("Inform")) {
 			act = createInform(action.second);
@@ -273,22 +288,26 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			act = createJustification(action.second, (Justify)des.getPerception());
 		} else {
 			LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
-			return reval;
+			return null;
 		}
 		
 		if(act == null) {
 			LOG.error("The Skill '{}' could not be created, subgoal processing canceled.", skillName);
-			return reval;
+			return null;
 		}
-		report("Knowhow generated Action: " + action.toString());
 		
 		// create the Subgoal which will be returned and report this step to Angerona.
-		reval = new Subgoal(ag, des);
-		reval.newStack(ag.getSkill(skillName), act);
 		report("Knowhow finds new atomic action '"+skillName+"'");
-		return reval;
+		return new PlanElement(skill, act);
 	}
 	
+	/**
+	 * Helper method: Creates an instance of the Justification class from the parameter-map given
+	 * by the knowhow part of the program.
+	 * @param paramMap		Reference to the map representing the parameters
+	 * @return				An object of type Justification which represents the Angerona version of the
+	 * 						action found by the knowhow.
+	 */
 	protected Justification createJustification(Map<Integer, String> paramMap, Justify reason) {
 		if(paramMap.size() != 1) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
@@ -301,9 +320,15 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		
 		return new Justification(reason, atom);
-		
 	}
 	
+	/**
+	 * Helper method: Creates an instance of the Justify class from the parameter-map given
+	 * by the knowhow part of the program.
+	 * @param paramMap		Reference to the map representing the parameters
+	 * @return				An object of type Justify which represents the Angerona version of the
+	 * 						action found by the knowhow.
+	 */
 	protected Justify createJustify(Map<Integer, String> paramMap, Inform reason) {
 		if(paramMap.size() != 2) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
@@ -321,10 +346,10 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	}
 	
 	/**
-	 * Helper method: Creates an instance of the RevisionRequest class from the parameter-map given
+	 * Helper method: Creates an instance of the Inform class from the parameter-map given
 	 * by the knowhow part of the program.
 	 * @param paramMap		Reference to the map representing the parameters
-	 * @return				An object of type RevisionReqeust which represents the Angerona version of the
+	 * @return				An object of type Inform which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
 	protected Inform createInform(Map<Integer, String> paramMap) {

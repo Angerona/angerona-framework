@@ -6,7 +6,7 @@
     </generate-options-operators>
     
     <intention-update-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-        <default-operator-cls>angerona.fw.operators.def.IntentionUpdateOperator</default-operator-cls>
+        <default-operator-cls>angerona.fw.operators.def.IntentionUpdateOperator{allowUnsafe=true}</default-operator-cls>
     </intention-update-operators>
     
     <subgoal-generation-operators class="angerona.fw.serialize.OperatorSetConfigReal">
