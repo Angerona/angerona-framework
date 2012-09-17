@@ -1,0 +1,11 @@
+README
+Documentation of this directory.
+
+NextAction.asp:
+...............
+Calculates the next action of an agent.
+Know-How is defined in "Know-How for Motivated
+BDI Agents" by Matthias Thimm and Patrick Kr�mpelmann.
+Adaptions discussed in Regina Fritsch's diploma thesis 
+to the 'NextAction' program were used.
+uses the dlv-complex syntax for list operations.

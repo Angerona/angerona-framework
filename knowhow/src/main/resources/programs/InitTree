@@ -1,3 +1,0 @@
-khstate([]).
-state(intentionAdded).
-istack([win]).

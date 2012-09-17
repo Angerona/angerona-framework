@@ -44,7 +44,7 @@ public class KnowhowBase extends BaseAgentComponent {
 	public KnowhowBase() {
 		super();
 		
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/NextActionLists");
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/NextAction.asp");
 		if(is != null)
 			nextAction = Program.loadFrom(new InputStreamReader(is));
 	}
