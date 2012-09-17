@@ -1,5 +1,6 @@
 world {
 	attend_scm(employee).
+	excused(employee) :- not -excused(employee).
 } view->boss {
 	fire(X)			:- attend_scm(X).
 	fire(X)			:- -attend_work(X), not excused(X).
