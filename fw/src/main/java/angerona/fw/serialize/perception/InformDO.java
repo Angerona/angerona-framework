@@ -3,8 +3,8 @@ package angerona.fw.serialize.perception;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-@Root(name="revision-request")
-public class RevisionRequestDO extends CommunicationActDO {
+@Root(name="inform")
+public class InformDO extends CommunicationActDO {
 	@Element
 	private String sentences;
 
@@ -15,11 +15,11 @@ public class RevisionRequestDO extends CommunicationActDO {
 
 	@Override
 	public String getPerception() {
-		return "RevisionRequest";
+		return "Inform";
 	}
 	
-	public static RevisionRequestDO getTestObject() {
-		RevisionRequestDO test = new RevisionRequestDO();
+	public static InformDO getTestObject() {
+		InformDO test = new InformDO();
 		test.sender = "Tim";
 		test.receiver = "Tom";
 		test.sentences = "at_home";

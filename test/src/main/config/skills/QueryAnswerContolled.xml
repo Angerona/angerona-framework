@@ -1,3 +1,7 @@
+<!-- 
+	This is a more complex query answer which is not used anymore.
+	But it shows how one can define complexer behavior using xml files.
+ -->
 <skill>
    <name>QueryAnswerControlled</name>
    <statement>

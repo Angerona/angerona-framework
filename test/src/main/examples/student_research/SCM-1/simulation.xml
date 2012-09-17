@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Strike Committee Meeting - Using Knowhow</name>
+	<name>SCM-1 - Using Knowhow</name>
     <behavior>angerona.fw.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>employee</name>
@@ -17,7 +17,7 @@
 			<source>config/skills/QueryAnswer.xml</source>
         </skill>
         <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/RevisionRequest.xml</source>
+			<source>config/skills/Inform.xml</source>
         </skill>
         
         <desire>not_fired</desire>
@@ -28,7 +28,7 @@
         </data>
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
-		 	excused(a_SELF), s_RevisionRequest(a_boss, excused(a_SELF)),
+		 	excused(a_SELF), s_Inform(a_boss, excused(a_SELF)),
 		 	answer_query, honest_answer, 
 		 	answer_query, lie,
 		 	honest_answer, s_QueryAnswer(p_honest),  

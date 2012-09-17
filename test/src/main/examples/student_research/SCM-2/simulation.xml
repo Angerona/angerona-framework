@@ -17,7 +17,7 @@
 			<source>config/skills/QueryAnswer.xml</source>
         </skill>
         <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/RevisionRequest.xml</source>
+			<source>config/skills/Inform.xml</source>
         </skill>
         
         <desire>not_fired</desire>
@@ -28,7 +28,7 @@
         </data>
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
-		 	excused(a_SELF), s_RevisionRequest(a_boss, excused(a_SELF)),
+		 	excused(a_SELF), s_Inform(a_boss, excused(a_SELF)),
 		 	justification, intelligent_justification, 
 		 	intelligent_justification, s_Justification(),  
 		</data>
@@ -47,7 +47,11 @@
         </beliefbase-config>
          
         <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/Query.xml</source>
+			<source>config/skills/Inform.xml</source>
+        </skill>
+        
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/Justify.xml</source>
         </skill>
         
         <data key="KnowHow">

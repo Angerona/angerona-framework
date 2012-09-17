@@ -25,6 +25,7 @@ import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
+import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.SpeechAct;
 import angerona.fw.logic.AngeronaAnswer;
@@ -218,12 +219,15 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		// create the action using the SkillParameter map and the name of the skill
 		SpeechAct act = null;
-		if(skillName.equals("RevisionRequest")) {
-			act = createRevisionRequest(action.second);
+		// TODO: String tests are not perfect here.
+		if(skillName.equals("Inform")) {
+			act = createInform(action.second);
 		} else if(skillName.equals("Query")) {
 			act = createQuery(action.second);
 		} else if(skillName.equals("QueryAnswer")) {
 			act = createQueryAnswer(action.second, (Query)des.getPerception());
+		} else if (skillName.equals("Justify")) { 
+			act = createJustify(action.second, (Inform)des.getPerception());
 		} else {
 			LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
 			return reval;
@@ -242,6 +246,23 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return reval;
 	}
 	
+	
+	protected Justify createJustify(Map<Integer, String> paramMap, Inform reason) {
+		if(paramMap.size() != 2) {
+			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
+					"Justify", paramMap.size());
+			return null;
+		}
+		
+		String var = getVarWithPrefix(0, paramMap);
+		Agent receiver = processVariable(var);
+		
+		var = getVarWithPrefix(1, paramMap);
+		FolFormula atom = processVariable(var);
+		
+		return new Justify(getOwner().getName(), receiver.getName(), atom);
+	}
+	
 	/**
 	 * Helper method: Creates an instance of the RevisionRequest class from the parameter-map given
 	 * by the knowhow part of the program.
@@ -249,9 +270,9 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type RevisionReqeust which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Inform createRevisionRequest(Map<Integer, String> paramMap) {
+	protected Inform createInform(Map<Integer, String> paramMap) {
 		if(paramMap.size() != 2) {
-			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", "RevisionRequest", paramMap.size());
+			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", "Inform", paramMap.size());
 			return null;
 		}
 		

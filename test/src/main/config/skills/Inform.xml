@@ -1,8 +1,8 @@
 <skill>
-   <name>RevisionRequest</name>
+   <name>Inform</name>
    <statement>
       <name>SendAction</name>
-      <complex-info class="angerona.fw.serialize.perception.RevisionRequestDO"
+      <complex-info class="angerona.fw.serialize.perception.InformDO"
       		sender="$name" receiver="$in.receiverId">
       		<sentences>$in.sentences</sentences>
       </complex-info>

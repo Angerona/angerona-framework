@@ -20,7 +20,7 @@
 			<source>config/skills/Query.xml</source>
         </skill>
         <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/RevisionRequest.xml</source>
+			<source>config/skills/Inform.xml</source>
         </skill>
         
         <desire>v_Boss(excused)</desire>

@@ -50,6 +50,6 @@ public class Inform extends SpeechAct
 	
 	@Override 
 	public String toString() {
-		return "< " + this.getSenderId() + " revision-request " + this.getReceiverId() + " " + sentences + " >";
+		return "< " + this.getSenderId() + " inform " + this.getReceiverId() + " " + sentences + " >";
 	}
 }

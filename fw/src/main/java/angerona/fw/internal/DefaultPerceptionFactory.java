@@ -5,17 +5,19 @@ import java.util.Set;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.Query;
 import angerona.fw.comm.Inform;
+import angerona.fw.comm.Justify;
+import angerona.fw.comm.Query;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
 import angerona.fw.serialize.perception.AnswerDO;
 import angerona.fw.serialize.perception.CommunicationActDO;
+import angerona.fw.serialize.perception.JustifyDO;
 import angerona.fw.serialize.perception.PerceptionDO;
 import angerona.fw.serialize.perception.QueryDO;
-import angerona.fw.serialize.perception.RevisionRequestDO;
+import angerona.fw.serialize.perception.InformDO;
 
 /**
  * A factory for creating perceptions from data objects. The default
@@ -51,11 +53,17 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 					aa = new AngeronaAnswer(null, q, an);
 				}
 				return new Answer(s, r, q, aa);
-			} else if (commAct instanceof RevisionRequestDO) {
-				RevisionRequestDO rrdo = (RevisionRequestDO) commAct;
+			} else if (commAct instanceof InformDO) {
+				InformDO rrdo = (InformDO) commAct;
 				Set<FolFormula> fs = createFormulaSet(rrdo.getSentences(), context);
 				
 				return new Inform(s, r, fs);
+			} else if (commAct instanceof JustifyDO) {
+				JustifyDO jdo = (JustifyDO)commAct;
+				FolFormula proposition = createFormula(jdo.getProposition(), context);
+				AnswerValue av = createAnswerValue(jdo.getAnswerValue(), context);
+				
+				return new Justify(s, r, proposition, av);
 			}
 		} 
 		
