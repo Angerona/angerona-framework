@@ -137,7 +137,12 @@ public class KnowhowBuilder {
 	public static Program buildHoldsProgram(Collection<String> literals) {
 		Program p = new Program();
 		for(String atom : literals) {
-			p.add(new Atom("holds", new Atom(atom)));
+			if(atom.startsWith("NEG_")) {
+				p.add(new Atom("nholds", new Atom(atom.substring(4))));
+			} else {
+				p.add(new Atom("holds", new Atom(atom)));
+			}
+			
 		}
 		return p;
 	}

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Desire;
+import angerona.fw.comm.Justification;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.Inform;
 import angerona.fw.comm.Justify;
@@ -35,6 +36,8 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	
 	public static final Predicate prepareReasonCalculation = new Predicate("reasonProcessing", 1);
 	
+	public static final Predicate prepareJustificationReaction = new Predicate("justificationProcessing", 1);
+	
 	public static final IdGenerator desireIds = new IdGenerator();
 	
 	@Override
@@ -49,6 +52,8 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 			ad = new Atom(prepareRevisionRequestProcessing);
 		} else if(param.getPerception() instanceof Justify) {
 			ad = new Atom(prepareReasonCalculation);
+		} else if(param.getPerception() instanceof Justification) {
+			ad = new Atom(prepareJustificationReaction);
 		}
 		if(ad != null) {
 			ad.addArgument(new Constant(desireIds.getNextId().toString()));

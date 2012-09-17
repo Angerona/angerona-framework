@@ -134,8 +134,8 @@ public class KnowhowStrategy {
 		knowhowBase.setParameters(reval.second);
 		this.atomicActions = KnowhowBuilder.buildAtomicProgram(atomicActions);
 		// TODO: Find a way to handle negations as holds... perhaps a new atom hold_neg?
-		//this.worldKnowledge = KnowhowBuilder.buildHoldsProgram(worldKnowledge);
-		this.worldKnowledge = new Program();
+		this.worldKnowledge = KnowhowBuilder.buildHoldsProgram(worldKnowledge);
+		//this.worldKnowledge = new Program();
 		
 		step = 0;
 	}
@@ -157,6 +157,8 @@ public class KnowhowStrategy {
 		p.add(worldKnowledge);
 		p.add(atomicActions);
 		p.add(knowhow);
+		
+		//LOG.info(p.toString());
 		
 		// calculate answer sets using dlv-complex:
 		AnswerSetList asl = solver.computeModels(p, 10);

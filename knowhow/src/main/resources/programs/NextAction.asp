@@ -4,11 +4,11 @@ new_subgoal(I) :- state(intentionAdded), istack([A|R]), is_atomic(A),
                   khsubgoal(KH, I, A).
 new_khstate([KH|K]) :- state(intentionAdded), khstate(K), 
                        khstatement(KH, I), istack([I|R]), 
-                       not khconditionfail(K), not khfailed([KH|K]), 
+                       not khconditionfail(KH), not khfailed([KH|K]), 
                        not const_new_act, not multiple.
 new_khstate([KH|K]) :- state(intentionAdded), khstate(K), 
                        khstatement(KH, I), khstatement(KHA, I), 
-                       istack([I|R]), not khconditionfail(K), 
+                       istack([I|R]), not khconditionfail(KH), 
                        not khfailed([KH|K]), not const_new_act, 
                        multiple, not new_khstate([KHA|K]), 
                        KHA!=KH.

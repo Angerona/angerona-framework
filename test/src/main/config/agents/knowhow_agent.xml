@@ -10,7 +10,7 @@
     </intention-update-operators>
     
     <subgoal-generation-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.knowhow.KnowhowSubgoal</default-operator-cls>
+		<default-operator-cls>angerona.fw.knowhow.KnowhowSubgoal{allowUnsafe=false}</default-operator-cls>
     </subgoal-generation-operators>
 
     <update-beliefs-operators class="angerona.fw.serialize.OperatorSetConfigReal">

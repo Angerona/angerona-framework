@@ -3,10 +3,12 @@ package angerona.fw.knowhow;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
@@ -15,6 +17,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 
 import org.slf4j.Logger;
@@ -71,10 +74,25 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			gen = gen || revisionRequest(des, param, param.getActualPlan().getAgent());
 			gen = gen || answerQuery(des, param, param.getActualPlan().getAgent());
 			gen = gen || onJustify(des, param);
+			gen = gen || onJustification(des, param);
 		}
 		
 		lastUsedStrategy = null;
 		return gen;
+	}
+	
+	protected Boolean onJustification(Desire des, SubgoalGenerationParameter pp) {
+		if(! (des.getPerception() instanceof Justification)) return false;
+		Justification j = (Justification)des.getPerception();
+		
+		PlanElement next = nextSafeAction("got_justification", pp, des);
+		if(next == null)
+			return false;
+		
+		Subgoal sg = new Subgoal(getOwner(), des);
+		sg.newStack(next);
+		
+		return pp.getActualPlan().addPlan(sg);
 	}
 	
 	/**
@@ -111,10 +129,17 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		boolean reval = false;
 		Inform rr = (Inform) des.getPerception();
+		if(rr.getSentences().size() == 0)
+			return false;
+		
+		Set<FolFormula> infered = ag.getBeliefs().getWorldKnowledge().infere();
+		
 		Iterator<FolFormula> itFormulas = rr.getSentences().iterator();
 		while(itFormulas.hasNext()) {
 			FolFormula ff = itFormulas.next();
 			if(	ff instanceof Atom ) {
+				if(infered.contains(ff))
+					continue;
 				Atom atom = (Atom)ff;
 				PlanElement next = nextSafeAction("not_sure("+atom.toString() + ")", pp, des);
 				if(next == null) {
@@ -169,6 +194,8 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			candidate = iterateKnowhow(param, des);
 			if(candidate == null)
 				return null;
+			if(Boolean.parseBoolean(getParameter("allowUnsafe", String.valueOf(false))))
+				return candidate;
 			res = getOwner().performThought(
 					getOwner().getBeliefs(), candidate);
 			if(!res.isAlright())
@@ -204,7 +231,16 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				intention, des.toString());
 		
 		// Gathering knowhow information
-		Collection<String> worldKB = ag.getBeliefs().getWorldKnowledge().getAtoms();
+		Set<FolFormula> infered = ag.getBeliefs().getWorldKnowledge().infere();
+		
+		Collection<String> worldKB = new HashSet<>();
+		for(FolFormula f : infered) {
+			if(f instanceof Negation) {
+				worldKB.add("NEG_"+f.toString().substring(1));
+			} else if (f instanceof Atom ){
+				worldKB.add(f.toString());
+			}
+		}
 		Collection<String> actions = ag.getSkills().keySet();
 
 		KnowhowBase kb = (KnowhowBase)ag.getComponent(KnowhowBase.class);
