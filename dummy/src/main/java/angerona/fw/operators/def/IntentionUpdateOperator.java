@@ -33,9 +33,13 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					Intention intention = pe.getIntention();
 					
 					if(intention.isAtomic()) {
-						boolean alright = ag.performThought(ag.getBeliefs(), pe).isAlright();
+						boolean select = Boolean.parseBoolean(
+								getParameter("allowUnsafe", String.valueOf(false)));
+						
+						if(!select)
+							select = ag.performThought(ag.getBeliefs(), pe).isAlright();
 					
-						if(alright) {
+						if(select) {
 							report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.", ag);
 							return pe;
 						}

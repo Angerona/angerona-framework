@@ -16,6 +16,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 
+import org.simpleframework.xml.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,9 +84,33 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		if(sg == null) {
 			return false;
 		} else {
-			pp.getActualPlan().addPlan(sg);
-			return true;
+			boolean safe = !Boolean.parseBoolean(getParameter("allowUnsafe", String.valueOf(false)));
+			if(safe) {
+				sg = saveSubgoal(sg, pp, des);
+				pp.getActualPlan().addPlan(sg);
+				return sg != null;
+			} else {
+				boolean reval = pp.getActualPlan().addPlan(sg);
+				if(!reval)
+					report("The generated subgoal already exists in the plan. No change to planning component.");
+				return reval;
+			}
 		}
+	}
+	
+	private Subgoal saveSubgoal(Subgoal sg, 
+			SubgoalGenerationParameter param, Desire des) {
+		ViolatesResult res = getOwner().performThought(
+				getOwner().getBeliefs(), sg.peekStack(0));
+		while(!res.isAlright()) {
+			lastUsedStrategy.fallback();
+			sg = iterateKnowhow(param, des);
+			if(sg == null)
+				return null;
+			res = getOwner().performThought(
+					getOwner().getBeliefs(), sg.peekStack(0));
+		}
+		return sg;
 	}
 	
 	/**

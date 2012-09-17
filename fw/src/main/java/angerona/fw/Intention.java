@@ -1,8 +1,5 @@
 package angerona.fw;
 
-import java.util.List;
-import java.util.Stack;
-
 import angerona.fw.listener.SubgoalListener;
 
 /**
@@ -23,9 +20,6 @@ public abstract class Intention implements SubgoalListener {
 
 	/** the parent intention of this instance */
 	protected Intention parent;
-	
-	/** a collection of stacks with sub-intentions defining the subgoals of this intention */
-	protected List<Stack<PlanElement>> stacks;
 
 	/**
 	 * Ctor: Creates a new instance of an intention for the given agent.

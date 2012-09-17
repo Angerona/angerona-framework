@@ -23,8 +23,8 @@ public class MasterPlan extends BaseAgentComponent implements SubgoalListener{
 	}
 	
 	public boolean addPlan(Subgoal plan) {
-		if(plan == null)
-			throw new IllegalArgumentException("plan must not be null.");
+		if(plan == null || plans.contains(plan))
+			return false;
 		
 		boolean reval = plans.add(plan);
 		if(reval) {

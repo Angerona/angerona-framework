@@ -57,7 +57,9 @@
         </skill>
         
         <data key="KnowHow">
-			not_sure(excused(employee)), s_Justify(a_employee, excused(employee)), 
+			not_sure(excused(employee)), s_Justify(a_employee, excused(employee)),
+			got_justification, s_Inform(a_employee, fired(employee)), fired(employee) 
+			got_justification, s_Inform(a_employee, excused(employee)), excused(employee)  
 		</data> 
 		
 	</agent-instance>

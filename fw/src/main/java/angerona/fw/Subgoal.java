@@ -1,6 +1,7 @@
 package angerona.fw;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -15,6 +16,9 @@ public class Subgoal extends Intention implements Cloneable {
 	
 	/** a collection of desires which will be fulfilled if this Intention was processed */
 	private Desire	fulfillsDesire;
+	
+	/** a collection of stacks with sub-intentions defining the subgoals of this intention */
+	protected List<Stack<PlanElement>> stacks;
 	
 	public Subgoal(Agent agent) {
 		this(agent, null);
@@ -131,5 +135,17 @@ public class Subgoal extends Intention implements Cloneable {
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(! (other instanceof Subgoal)) {
+			return false;
+		}
+		
+		Subgoal sg = (Subgoal)other;
+		return 	name.equals(sg.name) && 
+				fulfillsDesire.equals(sg.fulfillsDesire) &&
+				stacks.equals(sg.stacks);
 	}
 }

@@ -10,6 +10,6 @@ world {
 	excused(X)		:- attend_sport_event(X), not lies(X).
 	excused(X)		:- attend_burial(X), not lies(X).
 	
-	attend_work(employee).
+	attend_work(employee) :- not -attend_work(employee).
 	-sport_club_member(employee).
 }

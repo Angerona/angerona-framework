@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
+import angerona.fw.comm.Inform;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseTranslator;
@@ -50,6 +51,9 @@ public class AspTranslator extends BaseTranslator {
 				}
 				formulas.add(knowledge);
 			}
+		} else if(p instanceof Inform) {
+			Inform i = (Inform)p;
+			formulas.addAll(i.getSentences());
 		} 
 
 		return translateFOLInt(formulas);

@@ -88,4 +88,11 @@ public abstract class Skill extends Intention implements Runnable {
 	public String toString() {
 		return name;
 	}
+	
+	@Override 
+	public boolean equals(Object other) {
+		if(! (other instanceof Skill)) return false;
+		Skill s = (Skill)other;
+		return name.equals(s.name);
+	}
 }

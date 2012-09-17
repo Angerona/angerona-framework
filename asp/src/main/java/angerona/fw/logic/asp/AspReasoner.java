@@ -234,8 +234,10 @@ public class AspReasoner extends BaseReasoner {
 	private Set<FolFormula> skepticalSelection(
 			List<Set<FolFormula>> answerSetsTrans) {
 		Set<FolFormula> reval = new HashSet<>();
-		reval.addAll(answerSetsTrans.get(0));
-		answerSetsTrans.remove(0); 
+		if(answerSetsTrans.size() > 0) {
+			reval.addAll(answerSetsTrans.get(0));
+			answerSetsTrans.remove(0); 
+		}
 		Set<FolFormula> toRemove = new HashSet<FolFormula>();
 		for(Set<FolFormula> as : answerSetsTrans) {
 			for(FolFormula a : reval) {

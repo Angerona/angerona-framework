@@ -49,6 +49,15 @@ public class BaseOperator implements ReportPoster {
 		return this.parameters;
 	}
 	
+	public String getParameter(String name, String def) {
+		if(!this.parameters.containsKey(name)) {
+			this.parameters.put(name, def);
+			return def;
+		} else {
+			return this.parameters.get(name);
+		}
+	}
+	
 	/**
 	 * Helper method: Allows sub classes to easily use the report mechanisms of Angerona.
 	 * @param msg	The message which will be reported.

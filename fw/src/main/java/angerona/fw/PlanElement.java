@@ -171,4 +171,11 @@ public class PlanElement implements AngeronaAtom, Runnable {
 			prepared = false;
 		}
 	}
+	
+	public boolean equals(Object other) {
+		if(! (other instanceof PlanElement)) return false;
+		
+		PlanElement pe = (PlanElement)other;
+		return intention.equals(pe.intention);
+	}
 }

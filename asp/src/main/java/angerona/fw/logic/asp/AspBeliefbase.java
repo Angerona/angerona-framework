@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.ParserException;
@@ -11,6 +12,7 @@ import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.BaseBeliefbase;
 
@@ -92,9 +94,21 @@ public class AspBeliefbase extends BaseBeliefbase {
 
 	@Override
 	public List<String> getAtoms() {
+		boolean usedReasoner = false;
 		List<String> reval = new LinkedList<String>();
+		
+		// TODO: Think about caching here...
+		if(getReasoningOperator() != null) {
+			Set<FolFormula> atoms = getReasoningOperator().infer(this);
+			for(FolFormula atom : atoms) {
+				reval.add(atom.toString() + ".");
+			}
+			usedReasoner = true;
+		}
+		
 		for(Rule r : program) {
-			reval.add(r.toString());
+			if(!usedReasoner || r.getBody().size() != 0)
+				reval.add(r.toString());
 		}
 		return reval;
 	}
