@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>SCM-2 - Using Knowhow</name>
+	<name>SCM-2 - Knowhow</name>
     <behavior>angerona.fw.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>employee</name>

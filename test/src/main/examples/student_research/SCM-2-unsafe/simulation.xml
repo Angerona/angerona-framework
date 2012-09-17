@@ -1,12 +1,12 @@
 <simulation-configuration>
-	<name>SCM-1 - Knowhow</name>
+	<name>SCM-2-unsafe - Knowhow</name>
     <behavior>angerona.fw.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>employee</name>
         <default-suffix>employee</default-suffix>
          
         <config class="angerona.fw.serialize.AgentConfigImport">
-			<source>config/agents/knowhow_agent.xml</source>
+			<source>config/agents/knowhow_agent_unsafe.xml</source>
         </config>
          
         <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
@@ -14,7 +14,7 @@
         </beliefbase-config>
          
 		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/QueryAnswer.xml</source>
+			<source>config/skills/Justification.xml</source>
         </skill>
         <skill class="angerona.fw.serialize.SkillConfigImport">
 			<source>config/skills/Inform.xml</source>
@@ -29,10 +29,10 @@
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
 		 	excused(a_SELF), s_Inform(a_boss, excused(a_SELF)),
-		 	answer_query, honest_answer, 
-		 	answer_query, lie,
-		 	honest_answer, s_QueryAnswer(p_honest),  
-		 	lie, s_QueryAnswer(p_lie),
+		 	justification(excused(employee)), sport_event_reason,
+		 	justification(excused(employee)), burial_reason, 
+		 	burial_reason, s_Justification(attend_burial(employee)),  
+		 	sport_event_reason, s_Justification(attend_sport_event(employee)),
 		</data>
 	</agent-instance>
       
@@ -41,7 +41,7 @@
       	<default-suffix>boss</default-suffix>
       	
       	<config class="angerona.fw.serialize.AgentConfigImport">
-      		<source>config/agents/knowhow_agent.xml</source>
+      		<source>config/agents/knowhow_agent_unsafe.xml</source>
       	</config>
       	
       	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
@@ -49,11 +49,17 @@
         </beliefbase-config>
          
         <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/Query.xml</source>
+			<source>config/skills/Inform.xml</source>
+        </skill>
+        
+        <skill class="angerona.fw.serialize.SkillConfigImport">
+			<source>config/skills/Justify.xml</source>
         </skill>
         
         <data key="KnowHow">
-			not_sure(excused(employee)), s_Query(a_employee, attend_scm(employee)), 
+			not_sure(excused(employee)), s_Justify(a_employee, excused(employee)),
+			got_justification, s_Inform(a_employee, fire(employee)), fire(employee) 
+			got_justification, s_Inform(a_employee, excused(employee)), excused(employee)  
 		</data> 
 		
 	</agent-instance>
