@@ -14,7 +14,7 @@ import angerona.fw.logic.AnswerValue;
 public class Justify extends SpeechAct {
 
 	/** The FOL formula representing the sentence the receiver has to justify. */
-	private FolFormula sentence;
+	private FolFormula propositon;
 	
 	/** the answer which is given to the sentence */
 	private AnswerValue answerValue;
@@ -42,12 +42,12 @@ public class Justify extends SpeechAct {
 			throw new IllegalArgumentException("The Justify speech act only allows the " +
 					"following answers. {true, false, unknown}.");
 
-		this.sentence = sentence;
+		this.propositon = sentence;
 		this.answerValue = AnswerValue.AV_TRUE;
 	}
 
-	public FolFormula getSentence() {
-		return sentence;
+	public FolFormula getProposition() {
+		return propositon;
 	}
 	
 	public AnswerValue getAnswerValue() {
@@ -56,7 +56,7 @@ public class Justify extends SpeechAct {
 	
 	@Override
 	public String toString() {
-		return "< " +getSenderId() + " justify " + getReceiverId() + " " + sentence + " " +
+		return "< " +getSenderId() + " justify " + getReceiverId() + " " + propositon + " " +
 					answerValue + ">";
 	}
 }

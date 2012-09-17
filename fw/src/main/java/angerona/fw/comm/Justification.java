@@ -28,7 +28,7 @@ public class Justification extends SpeechAct {
 	private Set<FolFormula> reason = new HashSet<>();
 	
 	public Justification(Justify source, Set<FolFormula> reason) {
-		this(source.getReceiverId(), source.getSenderId(), source.getSentence(), 
+		this(source.getReceiverId(), source.getSenderId(), source.getProposition(), 
 				source.getAnswerValue(), reason);
 	}
 	
