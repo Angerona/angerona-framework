@@ -85,6 +85,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		if(! (des.getPerception() instanceof Justification)) return false;
 		Justification j = (Justification)des.getPerception();
 		
+		// scenario dependent:
 		PlanElement next = nextSafeAction("got_justification", pp, des);
 		if(next == null)
 			return false;

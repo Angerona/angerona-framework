@@ -52,12 +52,12 @@ toparent :- lastknowhowstatement.
 
 % helper rules: Without these rules unsafe rules 
 % are created and dlv-complex complains.
-const_new_khperformed 	:- new_khperformed(P).
-const_new_act 			:- new_act(A).
-const_new_khstate 		:- new_khstate(KH).
-const_new_khfailed 		:- new_khfailed(KH).
-const_new_istack 		:- new_istack(I).
-khperformed_helper(KH) 	:- istack([A|R]), khsubgoal(KH,I,A), 
+const_new_khperformed   :- new_khperformed(P).
+const_new_act           :- new_act(A).
+const_new_khstate       :- new_khstate(KH).
+const_new_khfailed      :- new_khfailed(KH).
+const_new_istack        :- new_istack(I).
+khperformed_helper(KH)  :- istack([A|R]), khsubgoal(KH,I,A), 
                            khsubgoal(KH,J,_), J=I+1.
 
 % multiple determines which new_khstate rule to use.
