@@ -95,6 +95,9 @@ public class Agent extends AgentArchitecture
 	/** History of actions performed by the agent */
 	private List<Action> actionsHistory = new LinkedList<Action>();
 	
+	/** a list of skills which are known by the agent */
+	private List<String> skills = new LinkedList<>();
+	
 	/** Reference to the used generate options operator. */
 	private OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
 	
@@ -137,6 +140,14 @@ public class Agent extends AgentArchitecture
 	{
 		return actionsHistory;
 	}	
+	
+	public List<String> getSkills() {
+		return Collections.unmodifiableList(skills);
+	}
+	
+	public boolean hasSkill(String skillName) {
+		return skills.contains(skillName);
+	}
 	
 	public OperatorSet<BaseViolatesOperator> getViolatesOperators() {
 		return this.violatesOperators;
@@ -181,6 +192,8 @@ public class Agent extends AgentArchitecture
 		context = new Context();
 		// local variable used to save the output of exceptions...
 		String errorOutput = null;
+		
+		skills.addAll(ai.getSkills());
 		
 		createAgentComponents(ai);
 		

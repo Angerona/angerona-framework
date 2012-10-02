@@ -17,6 +17,7 @@ import net.xeoh.plugins.base.util.uri.ClassURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.listener.PluginListener;
@@ -83,6 +84,9 @@ public class PluginInstantiator {
 	/** list of all classes implementing a custom agent component */
 	private List<Class<? extends AgentComponent>> components = new LinkedList<Class<? extends AgentComponent>>();
 	
+	/** list of all classes implementing a action component */
+	private List<Class<? extends Action>> actions = new LinkedList<>();
+	
 	private Map<Class<?>, List<Class<?>>> map = new HashMap<Class<?>, List<Class<?>>>();
 	
 	public PluginManagerUtil getPluginUtil() {
@@ -103,6 +107,7 @@ public class PluginInstantiator {
 		map.put(BaseChangeBeliefs.class, new LinkedList<Class<?>>());
 		map.put(BaseTranslator.class, new LinkedList<Class<?>>());
 		map.put(AgentComponent.class, new LinkedList<Class<?>>());
+		map.put(Action.class, new LinkedList<Class<?>>());
 		
 		
 		pm = PluginManagerFactory.createPluginManager();
@@ -181,11 +186,19 @@ public class PluginInstantiator {
 			if(loadedPlugins.contains(ap))
 				continue;
 			loadedPlugins.add(ap);
+
 			map.get(AgentComponent.class).addAll(ap.getAgentComponents());
 			components.addAll(ap.getAgentComponents());
 			for(Class<? extends AgentComponent> ac : ap.getAgentComponents()) {
 				LOG.info("Agent-Component: '{}' loaded.", ac.getName());
 			}
+			
+			map.get(Action.class).addAll(ap.getActions());
+			actions.addAll(ap.getActions());
+			for(Class<? extends Action> actc : ap.getActions()) {
+				LOG.info("Agent-Action: '{}' loaded.", actc.getSimpleName());
+			}
+			
 			LOG.info("Agent-Pluign '{}' loading complete", ap.getClass().getName());
 		}
 		
@@ -236,6 +249,10 @@ public class PluginInstantiator {
 	
 	public List<Class<? extends AgentComponent>> getComponents() {
 		return Collections.unmodifiableList(components);
+	}
+	
+	public List<Class<? extends Action>> getActions() {
+		return Collections.unmodifiableList(actions);
 	}
 	
 	/**

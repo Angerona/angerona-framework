@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.view.BaseView;
@@ -61,6 +62,11 @@ public class KnowhowPlugin implements
 		List<Class<? extends BaseSubgoalGenerationOperator>> reval = new LinkedList<>();
 		reval.add(KnowhowSubgoal.class);
 		return reval;
+	}
+
+	@Override
+	public List<Class<? extends Action>> getActions() {
+		return new LinkedList<>();
 	}
 
 }

@@ -82,7 +82,6 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	
 	protected Boolean onJustification(Desire des, SubgoalGenerationParameter pp) {
 		if(! (des.getPerception() instanceof Justification)) return false;
-		Justification j = (Justification)des.getPerception();
 		
 		// scenario dependent:
 		PlanElement next = nextSafeAction("got_justification", pp, des);
@@ -241,7 +240,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				worldKB.add(f.toString());
 			}
 		}
-		Collection<String> actions = ag.getSkills().keySet();
+		Collection<String> actions = ag.getSkills();
 
 		KnowhowBase kb = (KnowhowBase)ag.getComponent(KnowhowBase.class);
 		if(kb == null) {
@@ -303,8 +302,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		// test if the skill exists
 		Agent ag = getOwner();
 		String skillName = action.first.substring(2);
-		Skill skill = ag.getSkill(skillName);
-		if(skill == null) {
+		if(!ag.hasSkill(skillName)) {
 			LOG.warn("Knowhow found Skill '{}' but the Agent '{}' does not support the Skill.", skillName, ag.getName());
 			return null;
 		}
@@ -333,8 +331,8 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		// create the Subgoal which will be returned and report this step to Angerona.
-		report("Knowhow finds new atomic action '"+skillName+"'");
-		return new PlanElement(skill, act);
+		report("Knowhow finds new atomic action '" + act.getClass().getSimpleName() + "'");
+		return new PlanElement(act);
 	}
 	
 	/**
@@ -378,7 +376,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		var = getVarWithPrefix(1, paramMap);
 		FolFormula atom = processVariable(var);
 		
-		return new Justify(getOwner().getName(), receiver.getName(), atom);
+		return new Justify(getOwner(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -400,7 +398,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		var = getVarWithPrefix(1, paramMap);
 		FolFormula atom = processVariable(var);
 		
-		return new Inform(getOwner().getName(), receiver.getName(), atom);
+		return new Inform(getOwner(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -417,7 +415,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		var = getVarWithPrefix(1, paramMap);
 		FolFormula atom = processVariable(var);
 		
-		return new Query(getOwner().getName(), receiver.getName(), atom);
+		return new Query(getOwner(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -459,7 +457,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		report((honest ? "Honest answer " : "Lie ") + "for: '"+reason.getQuestion().toString()+"' = " + aa.getAnswerValue().toString());
 
-		return new Answer(getOwner().getName(), reason.getSenderId(), reason.getQuestion(), aa);
+		return new Answer(getOwner(), reason.getSenderId(), reason.getQuestion(), aa);
 	}
 	
 	/**

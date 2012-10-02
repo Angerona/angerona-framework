@@ -13,13 +13,9 @@
 			<source>config/beliefbases/asp_beliefbase.xml</source>
         </beliefbase-config>
          
-		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/Justification.xml</source>
-        </skill>
-        <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/Inform.xml</source>
-        </skill>
-        
+        <skill>Justification</skill>
+        <skill>Inform</skill>
+		
         <desire>not_fired</desire>
         <desire>attend_scm</desire>
          
@@ -48,13 +44,8 @@
             <source>config/beliefbases/asp_beliefbase.xml</source>
         </beliefbase-config>
          
-        <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/Inform.xml</source>
-        </skill>
-        
-        <skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/Justify.xml</source>
-        </skill>
+      	<skill>Inform</skill>
+      	<skill>Justify</skill>
         
         <data key="KnowHow">
 			not_sure(excused(employee)), s_Justify(a_employee, excused(employee)),

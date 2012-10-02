@@ -41,6 +41,9 @@ public class AgentInstance {
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
 	private List<Atom> desires = new LinkedList<Atom>();
 	
+	@ElementList(entry="skill", inline=true, required=false, empty=false)
+	private List<String> skills;
+	
 	@ElementMap(key="key", entry="data", attribute=true, inline=true, empty=false, required=false)
 	private Map<String, String> additionalData = new HashMap<String, String>();
 
@@ -55,9 +58,12 @@ public class AgentInstance {
 	}
 	
 	public List<Atom> getDesires() {
-		return desires;
+		return Collections.unmodifiableList(desires);
 	}
 	
+	public List<String> getSkills() {
+		return Collections.unmodifiableList(skills);
+	}
 	
 	public Map<String, String> getAdditionalData() {
 		return Collections.unmodifiableMap(additionalData);
