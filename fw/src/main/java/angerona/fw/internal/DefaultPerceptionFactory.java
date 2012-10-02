@@ -3,6 +3,8 @@ package angerona.fw.internal;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Agent;
+import angerona.fw.Angerona;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
@@ -15,11 +17,11 @@ import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
 import angerona.fw.serialize.perception.AnswerDO;
 import angerona.fw.serialize.perception.CommunicationActDO;
+import angerona.fw.serialize.perception.InformDO;
 import angerona.fw.serialize.perception.JustificationDO;
 import angerona.fw.serialize.perception.JustifyDO;
 import angerona.fw.serialize.perception.PerceptionDO;
 import angerona.fw.serialize.perception.QueryDO;
-import angerona.fw.serialize.perception.InformDO;
 
 /**
  * A factory for creating perceptions from data objects. The default
@@ -37,7 +39,8 @@ public class DefaultPerceptionFactory extends PerceptionFactory {
 	public Perception generateFromDataObject(PerceptionDO dataObject, Context context) {
 		if(dataObject instanceof CommunicationActDO) {
 			CommunicationActDO commAct = (CommunicationActDO)dataObject;
-			String s = createString(commAct.getSender(), context);
+			String name = commAct.getSender();
+			Agent s = Angerona.getInstance().getActualSimulation().getAgentByName(name);
 			String r = createString(commAct.getReceiver(), context);
 			if(commAct instanceof QueryDO) {
 				QueryDO qdo = (QueryDO)commAct;

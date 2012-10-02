@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Agent;
 
 /**
  * Implementation of the speech act "Inform"
@@ -22,23 +23,23 @@ public class Inform extends SpeechAct
 	
 	/**
 	 * Ctor: Creates an Inform speech act with one piece of information.
-	 * @param sender	The name of the sender
+	 * @param sender	The reference to the sendeing agent
 	 * @param receiver	The name of the receiver
 	 * @param sentence	The piece of information as FOL formula.
 	 */
-	public Inform(String sender, String receiver, FolFormula sentence) {
+	public Inform(Agent sender, String receiver, FolFormula sentence) {
 		super(sender, receiver);
 		this.sentences.add(sentence);
 	}	
 	
 	/**
 	 * Ctor: Creates an Inform speech act with a set of FOL formulas
-	 * @param sender	The name of the sender
+	 * @param sender	The reference to the sendeing agent
 	 * @param receiver	The name of the receiver
 	 * @param sentences	The set containg multiple pieces of information as FOL
 	 * 					formulas.
 	 */
-	public Inform(String sender, String receiver, Set<FolFormula> sentences) {
+	public Inform(Agent sender, String receiver, Set<FolFormula> sentences) {
 		super(sender, receiver);
 		this.sentences.addAll(sentences);
 	}

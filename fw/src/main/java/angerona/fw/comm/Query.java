@@ -1,6 +1,7 @@
 package angerona.fw.comm;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Agent;
 
 /**
  * Implementation of the Speech-Act: Query. 
@@ -18,12 +19,12 @@ public class Query extends SpeechAct {
 	
 	/**
 	 * Ctor: generating the query speech act with the following parameters.
-	 * @param senderId		unique name  of the sender of the query.
+	 * @param sender		The reference to the sendeing agent
 	 * @param receiverId	unique name  of the receiver of the query.
 	 * @param question		formula representing the query question.
 	 */
-	public Query(String senderId, String receiverId, FolFormula question) {
-		super(senderId, receiverId);
+	public Query(Agent sender, String receiverId, FolFormula question) {
+		super(sender, receiverId);
 		this.question = question;
 	}
 	

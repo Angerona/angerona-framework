@@ -108,15 +108,21 @@ public class OperatorSet<T extends BaseOperator> {
 	 * @throws IllegalAccessException
 	 */
 	public void set(OperatorSetConfig config) throws InstantiationException, IllegalAccessException {
-		Pair<String, T> p = create(config.getDefaultClassName());
-		operators.put(p.first, p.second);
-		defaultOperator = p.second;
-		if(defaultOperator == null) {
-			LOG.error("The default operator with name: '{}' was not found, critical error.", 
-					config.getDefaultClassName());
+		Pair<String, T> p = null;
+		
+		if(!config.getDefaultClassName().equalsIgnoreCase("empty")) {
+			p = create(config.getDefaultClassName());
+			operators.put(p.first, p.second);
+			defaultOperator = p.second;
+			if(defaultOperator == null) {
+				LOG.error("The default operator with name: '{}' was not found, critical error.", 
+						config.getDefaultClassName());
+			}
 		}
 		
 		for(String instantiationName : config.getOperatorClassNames()) {
+			if(!instantiationName.equalsIgnoreCase("empty"))
+				continue;
 			p = create(instantiationName);
 			
 			if(p == null) {

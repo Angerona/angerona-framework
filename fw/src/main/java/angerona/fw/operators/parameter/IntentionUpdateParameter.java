@@ -2,21 +2,21 @@ package angerona.fw.operators.parameter;
 
 import java.util.List;
 
+import angerona.fw.Action;
 import angerona.fw.MasterPlan;
-import angerona.fw.Skill;
 
 public class IntentionUpdateParameter extends GenericOperatorParameter {
-	protected List<Skill> skills;
+	protected List<Action> forbiddenActions;
 	
 	protected MasterPlan plan;
 	
-	public IntentionUpdateParameter(MasterPlan plan, List<Skill> skills) {
+	public IntentionUpdateParameter(MasterPlan plan, List<Action> forbidden) {
 		super(plan.getAgent());
 		this.plan= plan;
 	}
 	
-	public List<Skill> getSkills() {
-		return skills;
+	public List<Action> getForbiddenActions() {
+		return forbiddenActions;
 	}
 	
 	public MasterPlan getPlan() {

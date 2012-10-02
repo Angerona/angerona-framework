@@ -45,6 +45,10 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	 */
 	private Object userData;
 	
+	private ActionProcessor processor;
+	
+	private Beliefs usedBeliefs;
+	
 	/**
 	 * CTor: Creates an Initial plan element
 	 * @param intention		Reference to the Intention which will be used as behavior for this PlanElement.
@@ -92,7 +96,8 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	 * @param other	Reference to the PlanElement which is source of the copy.
 	 */
 	public PlanElement(PlanElement other) {
-		if(other.intention instanceof Skill) {
+		// TODO: Implement deep copy correctly
+		if(other.intention instanceof Action) {
 			this.intention = other.intention;
 		} else {
 			Subgoal sg = (Subgoal)other.intention;
@@ -112,17 +117,18 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	}
 	
 	/**
-	 * Prepares the intention for execution. Therefore the intention has to be a Skill.
+	 * Prepares the intention for execution. Therefore the intention has to be an Action.
 	 * The parameters and the executionData object will be given to the skill to prepare it.
 	 * @param actionProcessor	The processor used to process the Action
 	 * @param usedBeliefs		The Beliefs used to perform the Skill.
-	 * @return	true if the preparation was successful, false if the intention is no Skill.
+	 * @return	true if the preparation was successful, false if the intention is no Action.
 	 */
 	public boolean prepare(ActionProcessor actionProcessor, Beliefs usedBeliefs) {
 		if(!isAtomic())
-			return false;
+			return prepared = false;
 		
-		((Skill)intention).prepare(actionProcessor, usedBeliefs, executionData);
+		this.processor = actionProcessor;
+		this.usedBeliefs = usedBeliefs;
 		return prepared = true;
 	}
 	
@@ -161,15 +167,7 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	
 	/** @return true if the intention of this PlanElement is a Skill otherwise false */
 	public boolean isAtomic() {
-		return this.intention instanceof Skill;
-	}
-
-	@Override
-	public void run() {
-		if(prepared) {
-			((Skill)intention).run();
-			prepared = false;
-		}
+		return this.intention.isAtomic();
 	}
 	
 	public boolean equals(Object other) {
@@ -177,5 +175,14 @@ public class PlanElement implements AngeronaAtom, Runnable {
 		
 		PlanElement pe = (PlanElement)other;
 		return intention.equals(pe.intention);
+	}
+
+	@Override
+	public void run() {
+		if(prepared) {
+			processor.performAction((Action)intention, intention.getAgent(), usedBeliefs);
+		} else {
+			throw new RuntimeException("Plan-Element was not prepared");
+		}
 	}
 }

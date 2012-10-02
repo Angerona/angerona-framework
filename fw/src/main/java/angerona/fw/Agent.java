@@ -25,9 +25,8 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
-import angerona.fw.internal.XMLSkill;
-import angerona.fw.listener.AgentListener;
 import angerona.fw.listener.ActionProcessor;
+import angerona.fw.listener.AgentListener;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
@@ -53,7 +52,6 @@ import angerona.fw.reflection.ContextProvider;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
-import angerona.fw.serialize.SkillConfig;
 
 /**
  * Implementation of an agent in the Angerona Framework.
@@ -96,9 +94,6 @@ public class Agent extends AgentArchitecture
 	
 	/** History of actions performed by the agent */
 	private List<Action> actionsHistory = new LinkedList<Action>();
-	
-	/** mapping atomic intentions names to the intention references defining the skills of the agent. */
-	private Map<String, Skill> skills = new HashMap<String, Skill>();
 	
 	/** Reference to the used generate options operator. */
 	private OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
@@ -257,7 +252,6 @@ public class Agent extends AgentArchitecture
 		
 		// set beliefs and read skills.
 		setBeliefs(world, views);
-		addSkillsFromConfig(ai.getSkills());
 		Desires desires = getDesires();
 		if(desires == null && ai.getDesires().size() > 0) {
 			LOG.warn("No desire-component added to agent '{}' but desires, auto-add the desire component.", getName());
@@ -390,48 +384,6 @@ public class Agent extends AgentArchitecture
 		}
 	}
 	
-	/**
-	 * Adds all the skills saved in the skill configuration list
-	 * @param lst	List with all skill configurations which should be loaded
-	 * @throws AgentInstantiationException 
-	 */
-	public void addSkillsFromConfig(List<SkillConfig> lst) throws AgentInstantiationException {
-		for(SkillConfig ic : lst) {
-			addSkill(ic);
-		}
-	}
-
-	/**
-	 * Adds a skill to the Skill map of the Agent instance. A skill is an atomic action. The skill
-	 * is described by a data-structure given per parameter.
-	 * @param skillConfig	data-structure containing all informations about the skill.
-	 * @throws AgentInstantiationException
-	 */
-	public void addSkill(SkillConfig skillConfig) throws AgentInstantiationException {
-		Skill act = new XMLSkill(this, skillConfig);
-		if(skills.containsKey(skillConfig.getName())) {
-			throw new AgentInstantiationException("Skill with name: '" + skillConfig.getName() + "' already exists. Names of atomic Intentions / Skills must be unique.");
-		} else {
-			skills.put(skillConfig.getName(), act);
-		}
-	}
-	
-	/**
-	 * Gets the intention identified by the given name
-	 * @param name	the name of the intention
-	 * @return		reference to the intention.
-	 */
-	public Skill getSkill(String name) {
-		return skills.get(name);
-	}
-	
-	/**
-	 * @return the skill map of the agent.
-	 */
-	public Map<String, Skill> getSkills() {
-		return Collections.unmodifiableMap(skills);
-	}
-	
 	@Override
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
@@ -448,17 +400,17 @@ public class Agent extends AgentArchitecture
 		// Deliberation:
 		genOptionsOperators.def().process(new GenerateOptionsParameter(this, actualPerception));
 		
-		List<Skill> allSkills = new LinkedList<Skill>(skills.values());
 		// Means-end-reasoning:
+		List<Action> forbidden = new LinkedList<>();
 		MasterPlan masterPlan = getComponent(MasterPlan.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
 				atomic = intentionUpdateOperators.def().process(
-						new IntentionUpdateParameter(masterPlan, allSkills));
+						new IntentionUpdateParameter(masterPlan, forbidden));
 				
 				if(atomic == null) {
 					if(!subgoalGenerationOperators.def().process(
-							new SubgoalGenerationParameter(masterPlan, allSkills)))
+							new SubgoalGenerationParameter(masterPlan, forbidden)))
 						break;
 				} else {
 					if(!(atomic.getIntention().isAtomic())) {
@@ -594,6 +546,7 @@ public class Agent extends AgentArchitecture
 		violates = null;
 		getAgentProcess().act(act);
 		updateBeliefs(act);
+		act.onSubgoalFinished(null);
 		LOG.info("Action performed: " + act.toString());
 		Angerona.getInstance().report("Action: '"+act.toString()+"' performed.", this);
 		Angerona.getInstance().onActionPerformed(this, act);

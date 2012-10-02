@@ -36,10 +36,6 @@ public class AgentInstance {
 	/** the file suffix identifying the belief base */
 	@Element(name="default-suffix")
 	private String fileSuffix;
-	
-	/** list of file names for used intentions */
-	@ElementList(entry="skill", inline=true, empty=false, required=false)
-	private List<SkillConfig> skillConfigs = new LinkedList<SkillConfig>();
 
 	/** list of fol-formulas representing the initial desires of the agent */
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
@@ -56,11 +52,6 @@ public class AgentInstance {
 	/** @return a data structure with type information of the agents operators */
 	public AgentConfig getConfig() {
 		return config;
-	}
-	
-	/** @return list of file names for used intentions */
-	public List<SkillConfig> getSkills() {
-		return skillConfigs;
 	}
 	
 	public List<Atom> getDesires() {
@@ -80,10 +71,6 @@ public class AgentInstance {
 		return fileSuffix;
 	}
 
-	public List<SkillConfig> getSkillConfigs() {
-		return skillConfigs;
-	}
-
 	public static AgentInstance getTestObject() {
 		AgentInstance test = new AgentInstance();
 		test.name = "Employee";
@@ -92,7 +79,6 @@ public class AgentInstance {
 		test.config = AgentConfigImport.getTestObject();
 		test.beliefbaseConfig = BeliefbaseConfigImport.getTestObject();
 		test.desires.add(new Atom(new Predicate("attend_scm")));
-		test.skillConfigs.add(SkillConfigImport.getTestObject());
 		
 		return test;
 	}

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Agent;
+import angerona.fw.Angerona;
 import angerona.fw.logic.AnswerValue;
 
 /**
@@ -28,11 +30,13 @@ public class Justification extends SpeechAct {
 	private Set<FolFormula> justifications = new HashSet<>();
 	
 	public Justification(Justify source, FolFormula justification) {
-		this(source.getReceiverId(), source.getSenderId(), source.getProposition(), 
+		this(Angerona.getInstance().getActualSimulation().getAgentByName(
+				source.getReceiverId()),
+				source.getSenderId(), source.getProposition(), 
 				source.getAnswerValue(), justification);
 	}
 	
-	public Justification(String sender, String receiver, FolFormula proposition, 
+	public Justification(Agent sender, String receiver, FolFormula proposition, 
 			AnswerValue answerValue, FolFormula justification) {
 		super(sender,receiver);
 		this.proposition = proposition;
@@ -42,11 +46,12 @@ public class Justification extends SpeechAct {
 	}
 	
 	public Justification(Justify source, Set<FolFormula> justifications) {
-		this(source.getReceiverId(), source.getSenderId(), source.getProposition(), 
+		this(Angerona.getInstance().getActualSimulation().getAgentByName(
+				source.getReceiverId()), source.getSenderId(), source.getProposition(), 
 				source.getAnswerValue(), justifications);
 	}
 	
-	public Justification(String sender, String receiver, FolFormula proposition, 
+	public Justification(Agent sender, String receiver, FolFormula proposition, 
 			AnswerValue answerValue, Set<FolFormula> justifications) {
 		super(sender, receiver);
 		this.proposition = proposition;

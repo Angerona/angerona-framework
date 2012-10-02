@@ -9,7 +9,10 @@ import angerona.fw.reflection.ContextProvider;
  * Base class for different Actions used in the Angerona framework.
  * @author Tim Janus
  */
-public class Action implements Perception, ContextProvider {
+public class Action 
+	extends Intention 
+	implements Perception, ContextProvider {
+
 	/** the unique name of the sender of the action **/
 	private String sender;
 	
@@ -32,14 +35,14 @@ public class Action implements Perception, ContextProvider {
 		violates = res;
 	}
 	
-	
 	/**
 	 * Ctor: generates a new Action
 	 * @param sender	unique name of the sender of the action
 	 * @param receiver	unique name of the receiver of the action, static member ALL means everyone receives this action
 	 */
-	public Action(String sender, String receiver) {
-		this.sender = sender;
+	public Action(Agent sender, String receiver) {
+		super(sender);
+		this.sender = sender.getName();
 		this.receiver = receiver;
 	}
 	
@@ -79,4 +82,19 @@ public class Action implements Perception, ContextProvider {
 		return true;
 	}
 	//************End Daniel's changes*************//
+
+	@Override
+	public void onSubgoalFinished(Intention subgoal) {
+		super.parent.onSubgoalFinished(this);
+	}
+
+	@Override
+	public boolean isAtomic() {
+		return true;
+	}
+
+	@Override
+	public boolean isSubPlan() {
+		return false;
+	}
 }

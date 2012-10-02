@@ -15,17 +15,15 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
 import angerona.fw.Desire;
-import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.Query;
 import angerona.fw.comm.Inform;
+import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
-import angerona.fw.reflection.Context;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the
@@ -97,11 +95,6 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				
 				LOG.info("'{}' wants '"+recvName+"' to believe: '{}'",  ag.getName(), content);
 		
-				Skill rr = (Skill) ag.getSkill("RevisionRequest");
-				if(rr == null) {
-					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "RevisionRequest");
-					continue;
-				}
 				Subgoal sg = new Subgoal(ag, desire);
 				FolParserB parser = new FolParserB(new StringReader(content));
 				Atom a = null;
@@ -112,10 +105,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					e.printStackTrace();
 				}
 				
-				Context c = new Inform(ag.getName(), recvName, a).getContext();
-				sg.newStack(rr, c);
+				sg.newStack( new Inform(ag, recvName, a));
 				ag.getPlanComponent().addPlan(sg);
-				report("Add the new atomic action '"+rr.getName()+"' to the plan, choosed by desire: " + desire.toString(), ag.getPlanComponent());
+				report("Add the new atomic action '" + Inform.class.getSimpleName() + 
+						"' to the plan, choosed by desire: " + desire.toString(), 
+						ag.getPlanComponent());
 				reval = true;
 			}
 		}
@@ -131,22 +125,17 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @return		true if a new subgoal was created and added to the master-plan, false otherwise.
 	 */
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) {
-		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
-		if(qaSkill == null) {
-			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
-			return false;
-		}
-		
 		Subgoal answer = new Subgoal(ag, des);
 		Query q = (Query) des.getPerception();
-		answer.newStack(qaSkill, 
-				new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), AnswerValue.AV_TRUE));
+		answer.newStack(new Answer(ag, q.getSenderId(), 
+				q.getQuestion(), AnswerValue.AV_TRUE));
 		
-		answer.newStack(qaSkill,
-				new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), AnswerValue.AV_FALSE));
+		answer.newStack(new Answer(ag, q.getSenderId(), 
+				q.getQuestion(), AnswerValue.AV_FALSE));
 		
 		ag.getPlanComponent().addPlan(answer);
-		report("Add the new atomic action '"+qaSkill.getName()+"' to the plan", ag.getPlanComponent());
+		report("Add the new action '"+ Answer.class.getSimpleName() + 
+				"' to the plan", ag.getPlanComponent());
 		return true;
 	}
 	
@@ -176,20 +165,17 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				Atom reasonToFire = new Atom(new Predicate("attend_scm"));
 				AngeronaAnswer aa = ag.getBeliefs().getWorldKnowledge().reason(reasonToFire);
 				if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
-					Skill query = (Skill) ag.getSkill("Query");
 					Subgoal sg = new Subgoal(ag, des);
-					sg.newStack(query, new Query(ag.getName(), rr.getSenderId(), reasonToFire).getContext());
+					sg.newStack(new Query(ag, rr.getSenderId(), reasonToFire));
 					ag.getPlanComponent().addPlan(sg);
-					report("Add the new atomic action '" + query.getName() + "' to the plan.", ag.getPlanComponent());
+					report("Add the new action '" + Query.class.getSimpleName() + "' to the plan.", ag.getPlanComponent());
 				} else if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
 					return false;
 				}
 				return true;
 			}
 		}
-		
-		
+			
 		return false;
 	}
-
 }

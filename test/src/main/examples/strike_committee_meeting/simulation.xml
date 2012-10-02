@@ -18,12 +18,8 @@
         <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
             <source>config/beliefbases/dummy_beliefbase.xml</source>
         </beliefbase-config>
-        
-        <skill class="angerona.fw.serialize.SkillConfigImport">
-               <source>config/skills/QueryAnswer.xml</source>
-		</skill>
 		
-		<data key="Confidential">(Boss, attend_scm, {true})</data>
+		<data key="Confidential">(Boss, __DEFAULT__, attend_scm)</data>
 	</agent-instance>
 	
 	<agent-instance>

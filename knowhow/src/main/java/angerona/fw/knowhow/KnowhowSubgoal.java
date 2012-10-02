@@ -27,7 +27,6 @@ import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.PlanElement;
-import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;

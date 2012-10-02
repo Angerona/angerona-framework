@@ -1,6 +1,7 @@
 package angerona.fw.comm;
 
 import angerona.fw.Action;
+import angerona.fw.Agent;
 
 /**
  * Base class for every SpeechAct implemented by the Angerona framework.
@@ -10,10 +11,10 @@ public abstract class SpeechAct extends Action {
 
 	/**
 	 * Ctor: creates a speech act with the given sender and receiver.
-	 * @param sender	unique name of the sending agent.
+	 * @param sender	reference to the sending agent.
 	 * @param receiver	unique name of the receiver agent.
 	 */
-	public SpeechAct(String sender, String receiver) {
+	public SpeechAct(Agent sender, String receiver) {
 		super(sender, receiver);
 	}
 }

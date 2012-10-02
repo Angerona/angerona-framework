@@ -2,8 +2,8 @@ package angerona.fw.operators.parameter;
 
 import java.util.List;
 
+import angerona.fw.Action;
 import angerona.fw.MasterPlan;
-import angerona.fw.Skill;
 
 /**
  * These are the parameters used by a Planer.
@@ -11,7 +11,7 @@ import angerona.fw.Skill;
  */
 public class SubgoalGenerationParameter extends GenericOperatorParameter {
 	/** a list of possible atomic actions (skills) */
-	private List<Skill> skills;
+	private List<Action> forbiddenActions;
 	
 	/** the actual working goals */
 	private MasterPlan actualPlan;
@@ -21,16 +21,16 @@ public class SubgoalGenerationParameter extends GenericOperatorParameter {
 	 * @param actualPlan	the high level plan of the agent
 	 * @param options		list of possible actions (applicable skills)
 	 */
-	public SubgoalGenerationParameter(MasterPlan actualPlan, List<Skill> skills) {
+	public SubgoalGenerationParameter(MasterPlan actualPlan, List<Action> frobidden) {
 		super(actualPlan.getAgent());
-		this.skills = skills;
+		this.forbiddenActions = frobidden;
 		this.actualPlan = actualPlan;
 	}
 	
 
 	/** @return a list of possible actions which were calculated before running the planer */
-	public List<Skill> getOptions() {
-		return skills;
+	public List<Action> getForbiddenActions() {
+		return forbiddenActions;
 	}
 	
 	public MasterPlan getActualPlan() {

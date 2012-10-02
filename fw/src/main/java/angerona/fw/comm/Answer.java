@@ -3,6 +3,7 @@ package angerona.fw.comm;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import angerona.fw.Agent;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
@@ -26,22 +27,23 @@ public class Answer extends SpeechAct {
 	 * @param regarding		formula representing the question
 	 * @param answer		the value of the answer.
 	 */
-	public Answer(String senderId, String receiverId, FolFormula regarding, AngeronaAnswer answer) {
-		super(senderId, receiverId);
+	public Answer(Agent sendingAgent, String receiverId, 
+			FolFormula regarding, AngeronaAnswer answer) {
+		super(sendingAgent, receiverId);
 		this.regarding = regarding;
 		this.answer = answer;
 	}
 	
-	public Answer(String senderId, String receiverId, FolFormula regarding, AnswerValue av) {
-		this(senderId, receiverId, regarding, new AngeronaAnswer(null, regarding, av));
+	public Answer(Agent sendingAgent, String receiverId, FolFormula regarding, AnswerValue av) {
+		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, av));
 	}
 	
-	public Answer(String senderId, String receiverId, FolFormula regarding, FolFormula answer) {
-		this(senderId, receiverId, regarding, new AngeronaAnswer(null, regarding, answer));
+	public Answer(Agent sendingAgent, String receiverId, FolFormula regarding, FolFormula answer) {
+		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, answer));
 	}
 	
-	public Answer(String senderId, String receiverId, FolFormula regarding, Set<FolFormula> answers) {
-		this(senderId, receiverId, regarding, new AngeronaAnswer(null, regarding, answers));
+	public Answer(Agent sendingAgent, String receiverId, FolFormula regarding, Set<FolFormula> answers) {
+		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, answers));
 	}
 
 	/** @return the formula representing the question */
