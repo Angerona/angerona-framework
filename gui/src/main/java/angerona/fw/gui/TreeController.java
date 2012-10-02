@@ -29,89 +29,28 @@ import angerona.fw.listener.SimulationListener;
  */
 public class TreeController implements SimulationListener {
 	
-	public class BBUserObject {
-		private BaseBeliefbase beliefbase;
-		private String prefix;
+	public class TreeUserObject {
+		private String name;
 		
-		public BBUserObject(String prefix, BaseBeliefbase beliefbase) {
-			this.beliefbase = beliefbase;
-			this.prefix = prefix;
+		private Object userObject;
+		
+		public TreeUserObject(Object userObject) {
+			name = userObject.toString();
+			this.userObject = userObject;
 		}
 		
-		public BaseBeliefbase getBeliefbase() {
-			return beliefbase;
+		public TreeUserObject(String name, Object userObject) {
+			this.name = name;
+			this.userObject = userObject;
 		}
 		
-		@Override
-		public String toString() {
-			return "<" + beliefbase.getGUID() + "> " +prefix + " - Knowledge";
-		}
-	}
-	
-	public class WorldUserObject extends BBUserObject 
-	{public WorldUserObject(BaseBeliefbase bb) {super("World", bb);} }
-	
-	public class ConfUserObject extends BBUserObject 
-	{public ConfUserObject(BaseBeliefbase bb) {super("Confidential", bb);} }
-	
-	public class ViewUserObject extends BBUserObject 
-	{public ViewUserObject(String onAgent, BaseBeliefbase bb) {super("View --> " + onAgent, bb);} }
-	
-	public class SimulationUserObject {
-		private AngeronaEnvironment simulation;
-		public SimulationUserObject(AngeronaEnvironment env) {
-			simulation = env;
-		}
-		
-		public AngeronaEnvironment getSimulation() {
-			return simulation;
+		public Object getUserObject() {
+			return userObject;
 		}
 		
 		@Override
 		public String toString() {
-			return simulation.getName();
-		}
-	}
-	
-	public class AgentComponentUserObject{
-		private AgentComponent comp;
-		
-		public AgentComponentUserObject(AgentComponent comp) {
-			this.comp = comp;
-		}
-		
-		public AgentComponent getComponent() {
-			return comp;
-		}
-		
-		public String toString() {
-			return comp.getClass().getSimpleName();
-		}
-	}
-	
-	public class AgentUserObject {
-		private Agent agent;
-		private boolean init = false;
-		
-		public AgentUserObject(Agent agent) {
-			this.agent = agent;
-		}
-		
-		public Agent getAgent() {
-			return agent;
-		}
-		
-		@Override
-		public String toString() {
-			return "<" + agent.getGUID() + "> " + agent.getName();
-		}
-		
-		boolean getInit() {
-			return init;
-		}
-		
-		void setInit(boolean init) {
-			this.init = init;
+			return name;
 		}
 	}
 	
@@ -139,7 +78,8 @@ public class TreeController implements SimulationListener {
 				
 		DefaultMutableTreeNode simulation = new DefaultMutableTreeNode("Simulation Templates");
 		for(String str: configContainer.getSimulationConfigurationNames()) {
-			simulation.add(new DefaultMutableTreeNode(str));
+			simulation.add(new DefaultMutableTreeNode(new TreeUserObject(str,
+					configContainer.getSimulationConfiguration(str))));
 		}
 		
 		root.add(agent);
@@ -150,34 +90,6 @@ public class TreeController implements SimulationListener {
 		treeModel.setRoot(root);
 		expandAll(tree, true);
 		configContainer.addSimulationListener(this);
-		
-		tree.addTreeWillExpandListener(new TreeWillExpandListener() {
-			
-			@Override
-			public void treeWillExpand(TreeExpansionEvent ev)
-					throws ExpandVetoException {
-				internal(ev);
-			}
-			
-			@Override
-			public void treeWillCollapse(TreeExpansionEvent ev)
-					throws ExpandVetoException {
-				internal(ev);
-			}
-			
-			private void internal(TreeExpansionEvent ev) throws ExpandVetoException {
-				// TODO Find a way to determine if a double click or a single click was the basic for this event...
-				DefaultMutableTreeNode n = (DefaultMutableTreeNode)ev.getPath().getLastPathComponent();
-				if(n.getUserObject() instanceof AgentUserObject) {
-					AgentUserObject auo = (AgentUserObject)n.getUserObject();
-					if(auo.init) {
-						throw new ExpandVetoException(ev);
-					} else {
-						auo.init = true;
-					}
-				}
-			}
-		});
 	}
 	
 	public JTree getTree() {
@@ -187,7 +99,8 @@ public class TreeController implements SimulationListener {
 	@Override
 	public void simulationStarted(AngeronaEnvironment simulation) {
 		// Todo: Output name.
-		DefaultMutableTreeNode simNode = new DefaultMutableTreeNode(new SimulationUserObject(simulation));
+		DefaultMutableTreeNode simNode = new DefaultMutableTreeNode(
+				new TreeUserObject(simulation.getName(), simulation));
 		
 		for(String agName : simulation.getAgentNames()) {
 			agentAddedInt(simNode, simulation.getAgentByName(agName));
@@ -203,16 +116,17 @@ public class TreeController implements SimulationListener {
 	}
 	
 	private void agentAddedInt(DefaultMutableTreeNode parent, Agent added) {
-		DefaultMutableTreeNode dmt = new DefaultMutableTreeNode(new AgentUserObject(added));
-		DefaultMutableTreeNode world = new DefaultMutableTreeNode(new WorldUserObject(added.getBeliefs().getWorldKnowledge()) );
+		DefaultMutableTreeNode agNode = new DefaultMutableTreeNode(new TreeUserObject(added));
+		DefaultMutableTreeNode world = new DefaultMutableTreeNode(
+				new TreeUserObject("World", added.getBeliefs().getWorldKnowledge()));
 		DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
 		
-		dmt.add(world);
+		agNode.add(world);
 		if(added.getBeliefs().getViewKnowledge().size() > 0) {
-			dmt.add(views);
+			agNode.add(views);
 			for(String name : added.getBeliefs().getViewKnowledge().keySet()) {
 				BaseBeliefbase bb = added.getBeliefs().getViewKnowledge().get(name);
-				DefaultMutableTreeNode actView = new DefaultMutableTreeNode(new ViewUserObject(name, bb));
+				DefaultMutableTreeNode actView = new DefaultMutableTreeNode(new TreeUserObject(name, bb));
 				views.add(actView);
 			}
 		}
@@ -220,15 +134,13 @@ public class TreeController implements SimulationListener {
 		DefaultMutableTreeNode comps = new DefaultMutableTreeNode("Components");
 		for(AgentComponent ac  : added.getComponents()) {
 			DefaultMutableTreeNode actComp = new DefaultMutableTreeNode(
-				new AgentComponentUserObject(ac));
+				new TreeUserObject(ac.getClass().getSimpleName(), ac));
 			comps.add(actComp);
 		}
-		// Todo components
-		//	DefaultMutableTreeNode conf = new DefaultMutableTreeNode(new ConfUserObject(added.getBeliefs().getConfidentialKnowledge()));
-		//	dmt.add(conf);
-		dmt.add(comps);
 		
-		parent.add(dmt);
+		agNode.add(comps);
+		parent.add(agNode);
+		
 		expandAll(tree, true);
 	}
 
@@ -276,15 +188,19 @@ public class TreeController implements SimulationListener {
 		DefaultTreeModel tm = (DefaultTreeModel)tree.getModel();
 		for(int i=0; i<tm.getChildCount(root); ++i) {
 			DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)tm.getChild(root, i);
-			if(dmtn.getUserObject() instanceof SimulationUserObject) {
-				SimulationUserObject suo = (SimulationUserObject)dmtn.getUserObject();
-				if(suo.getSimulation() == simulationEnvironment) {
-					tm.removeNodeFromParent(dmtn);
-					break;
-				}
+			if(! (dmtn.getUserObject() instanceof TreeUserObject)) 
+				continue;
+			
+			TreeUserObject tuo = (TreeUserObject)dmtn.getUserObject();
+			if(! (tuo.getUserObject() instanceof AngeronaEnvironment) )
+				continue;
+			
+			AngeronaEnvironment sim = (AngeronaEnvironment)tuo.getUserObject();
+			if(sim == simulationEnvironment) {
+				tm.removeNodeFromParent(dmtn);
+				break;
 			}
 		}
-		
 	}
 
 	@Override

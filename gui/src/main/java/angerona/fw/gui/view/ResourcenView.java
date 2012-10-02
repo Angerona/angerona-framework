@@ -14,8 +14,12 @@ import javax.swing.tree.TreePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Agent;
+import angerona.fw.AgentComponent;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.TreeController;
+import angerona.fw.serialize.SimulationConfiguration;
 
 public class ResourcenView extends BaseView {
 
@@ -70,23 +74,36 @@ public class ResourcenView extends BaseView {
 
 		DefaultMutableTreeNode n = (DefaultMutableTreeNode) o;
 		o = n.getUserObject();
-		if (o instanceof TreeController.BBUserObject) {
-			handlerBeliefbase((TreeController.BBUserObject) o);
-		} else if (o instanceof TreeController.AgentUserObject) {
-			handlerAgent((TreeController.AgentUserObject) o);
-		} else if (o instanceof TreeController.AgentComponentUserObject) {
-			handlerAgentComponent((TreeController.AgentComponentUserObject) o);
+		
+		if(! (o instanceof TreeController.TreeUserObject))
+			return;
+		
+		o = ((TreeController.TreeUserObject)o).getUserObject();
+		
+		if (o instanceof BaseBeliefbase) {
+			handlerBeliefbase((BaseBeliefbase) o);
+		} else if (o instanceof Agent) {
+			handlerAgent((Agent) o);
+		} else if (o instanceof AgentComponent) {
+			handlerAgentComponent((AgentComponent) o);
+		} else if(o instanceof SimulationConfiguration) {
+			handlerSimulationConfiguration((SimulationConfiguration)o);
 		}
 	}
+	
 
+	private void handlerSimulationConfiguration(SimulationConfiguration config) {
+		AngeronaWindow.getInstance().loadSimulation(config.getFilePath());
+	}
+	
 	/**
 	 * Handles the selection of a tree-node which encapsulates an Agent-Component.
-	 * @param uo	The user-object of the tree-node containing further information.
+	 * @param component	The agent component saved in the clicked tree node.
 	 */
-	private void handlerAgentComponent(TreeController.AgentComponentUserObject uo) {
-		String agname = uo.getComponent().getAgent().getName();
+	private void handlerAgentComponent(AgentComponent component) {
+		String agname = component.getAgent().getName();
 		LOG.trace("Handle AgentComponent: '{}' of Agent '{}'.", agname);
-		BaseView view = AngeronaWindow.getInstance().createViewForAgentComponent(uo.getComponent());
+		BaseView view = AngeronaWindow.getInstance().createViewForAgentComponent(component);
 		if(view != null) {
 			AngeronaWindow.getInstance().addComponentToCenter(view);
 		}
@@ -94,24 +111,24 @@ public class ResourcenView extends BaseView {
 
 	/**
 	 * Handles the selection of a tree-node which encapsulates an Agent.
-	 * @param uo	The user-object of the tree-node containing further information.
+	 * @param agent	The agent saved in the clicked tree node.
 	 */
-	private void handlerAgent(TreeController.AgentUserObject uo) {
-		LOG.trace("Handle Agent '{}'", uo.getAgent().getName());
+	private void handlerAgent(Agent agent) {
+		LOG.trace("Handle Agent '{}'", agent.getName());
 		AgentView ac = new AgentView();
-		ac.setObservationObject(uo.getAgent());
+		ac.setObservationObject(agent);
 		ac.init();
 		AngeronaWindow.getInstance().addComponentToCenter(ac);
 	}
 
 	/**
 	 * Handles the selection of a tree-node which encapsulates a belief base.
-	 * @param uo	The user-object of the tree-node containing further information.
+	 * @param bb	The base belief base saved in selected tree node.
 	 */
-	private void handlerBeliefbase(TreeController.BBUserObject uo) {
-		LOG.trace("Handle beliefbase: '{}'", uo.getBeliefbase().getFileEnding());
+	private void handlerBeliefbase(BaseBeliefbase bb) {
+		LOG.trace("Handle beliefbase: '{}'", bb.getFileEnding());
 		BeliefbaseView bc = AngeronaWindow.getInstance().createBaseView(
-				BeliefbaseView.class, uo.getBeliefbase());
+				BeliefbaseView.class, bb);
 		AngeronaWindow.getInstance().addComponentToCenter(bc);
 	}
 	

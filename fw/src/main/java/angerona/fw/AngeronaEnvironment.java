@@ -318,6 +318,7 @@ public class AngeronaEnvironment extends APR {
 	public void cleanupSimulation() {
 		agents.clear();
 		agentMap.clear();
+		ready = false;
 		Angerona.getInstance().onSimulationDestroyed(this);
 	}
 	

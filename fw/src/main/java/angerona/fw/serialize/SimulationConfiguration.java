@@ -35,6 +35,16 @@ public class SimulationConfiguration {
 	@ElementList(name="perception", entry="perception", inline=true, empty=false, required=false)
 	private List<PerceptionDO> perceptions = new LinkedList<PerceptionDO>();
 	
+	private String filepath;
+	
+	public String getFilePath() {
+		return filepath;
+	}
+	
+	public void setFilePath(String filepath) {
+		this.filepath = filepath;
+	}
+	
 	/** @return name of the simulation */
 	public String getName() {
 		return name;
