@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.MasterPlan;
-import angerona.fw.Skill;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
@@ -165,8 +164,7 @@ public class SubgoalGenerationOperator extends
 					}
 				}
 				
-				Skill query = (Skill) ag.getSkill("Query");
-				if(query == null) {
+				if(!ag.hasSkill("Query")) {
 					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
 					continue;
 				}
@@ -176,10 +174,10 @@ public class SubgoalGenerationOperator extends
 					predName = predName.substring(1);
 					f = new Negation(new Atom(new Predicate(predName, terms.size()), terms));
 				}
-				sg.newStack(query, new Query(ag.getName(), recvName, f));
+				sg.newStack(new Query(ag, recvName, f));
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
-				report("Add the new atomic action '"+query.getName()+"' to the plan, chosen by desire: " + desire.toString(), 
+				report("Add the new atomic action '"+Query.class.getSimpleName()+"' to the plan, chosen by desire: " + desire.toString(), 
 						ag.getPlanComponent());
 			}
 		}
@@ -206,8 +204,7 @@ public class SubgoalGenerationOperator extends
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
-		Skill qaSkill = (Skill) ag.getSkill("QueryAnswer");
-		if(qaSkill == null) {
+		if(!ag.hasSkill("QueryAnswer")) {
 			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
 			return false;
 		}
@@ -239,17 +236,17 @@ public class SubgoalGenerationOperator extends
 		
 		Query q = (Query) des.getPerception();
 		Subgoal sg = new Subgoal(ag, des);
-		createSubgoals(answers, qaSkill, sg, q, new Boolean(false));
-		createSubgoals(lies, qaSkill, sg, q, new Boolean(true));
+		createSubgoals(answers, sg, q, new Boolean(false));
+		createSubgoals(lies, sg, q, new Boolean(true));
 		ag.getPlanComponent().addPlan(sg);
 		
 		return true;
 	}
 	
-	private void createSubgoals(List<FolFormula> answers, Skill usedSkill, Subgoal sg, Query q, Boolean ud) {
+	private void createSubgoals(List<FolFormula> answers, Subgoal sg, Query q, Boolean ud) {
 		for(int i=0;i<answers.size();i++) {
-			Answer a = new Answer(q.getReceiverId(), q.getSenderId(), q.getQuestion(), answers.get(i));
-			sg.newStack(usedSkill, a);
+			Answer a = new Answer(this.getOwner(), q.getSenderId(), q.getQuestion(), answers.get(i));
+			sg.newStack(a);
 			sg.peekStack(sg.getNumberOfStacks()-1).setUserData(ud);
 		}
 	}

@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Open Query Negative Predicate Test</name>
+	<name>Arity-1 closed Query Test</name>
       
 	<agent-instance>
 		<name>Mary</name>
@@ -13,9 +13,8 @@
 				<source>config/beliefbases/asp_detail_beliefbase.xml</source>
         	</beliefbase-config>
          
-			<skill class="angerona.fw.serialize.SkillConfigImport">
-				<source>config/skills/QueryAnswer.xml</source>
-        	</skill>
+       	 	<skill>QueryAnswer</skill>
+			
 
 <!--
 		<data key="Confidential">	(Coroner, __DEFAULT__, !john_argued)  
@@ -35,10 +34,8 @@
         	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
         	 </beliefbase-config>
         	
-			<skill class="angerona.fw.serialize.SkillConfigImport">
-				<source>config/skills/Query.xml</source>
-        	</skill>
-
+      		<skill>Query</skill>
+			
 	 	<desire>q_Mary(argued(john))_1</desire>
 	<!--	<desire>q_Mary(-john_argued)_1</desire>      -->
 	<!--	<desire>q_Mary(someone_argued)_2</desire>   

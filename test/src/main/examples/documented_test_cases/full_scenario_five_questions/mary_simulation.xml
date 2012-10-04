@@ -1,44 +1,40 @@
 <simulation-configuration>
 
-	<name>Full Courtroom Scenario</name>
+	<name>Courtroom Scenario - 5 Questions</name>
       
 	<agent-instance>
 		<name>Mary</name>
-        	<default-suffix>mary</default-suffix>
-         
-        	<config class="angerona.fw.serialize.AgentConfigImport">
-				<source>config/agents/mary.xml</source>
-        	</config>
-         
-       	 	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-				<source>config/beliefbases/asp_detail_beliefbase.xml</source>
-        	</beliefbase-config>
+       	<default-suffix>mary</default-suffix>
+        
+       	<config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/mary.xml</source>
+       	</config>
+        
+      	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+			<source>config/beliefbases/asp_detail_beliefbase.xml</source>
+       	</beliefbase-config>
 
-		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/QueryAnswer.xml</source>
-        	</skill>
-
+		<skill>QueryAnswer</skill>
+		
 		<data key="Confidential">(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.7}, argued(john))
 		</data>
 		
 	</agent-instance>
       
 	<agent-instance>
-      		<name>Coroner</name>
-      		<default-suffix>coroner</default-suffix>
-      	
-      		<config class="angerona.fw.serialize.AgentConfigImport">
-      			<source>config/agents/mary.xml</source>
-      		</config>
-      	
-      		<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-        	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
-        	 </beliefbase-config>
-        	
-		<skill class="angerona.fw.serialize.SkillConfigImport">
-			<source>config/skills/Query.xml</source>
-        	</skill>
-
+   		<name>Coroner</name>
+   		<default-suffix>coroner</default-suffix>
+   	
+   		<config class="angerona.fw.serialize.AgentConfigImport">
+   			<source>config/agents/mary.xml</source>
+   		</config>
+   	
+   		<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+     	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
+     	</beliefbase-config>
+        
+   		<skill>Query</skill>	
+		
 	 	<desire>q_Mary(said(X))_1</desire>   
 		<desire>q_Mary(said(X))_2</desire> 
 		<desire>q_Mary(said(X))_3</desire> 
