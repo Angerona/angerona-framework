@@ -1,5 +1,8 @@
 package angerona.fw;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.core.Commit;
+
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
@@ -14,9 +17,11 @@ public class Action
 	implements Perception, ContextProvider {
 
 	/** the unique name of the sender of the action **/
+	@Element(name="sender")
 	private String sender;
 	
 	/** the unique name of the receiver of the action, might be null or sender in later implementations */
+	@Element(name="receiver")
 	private String receiver;
 
 	/** the flag contains information about the last violates run */
@@ -33,6 +38,14 @@ public class Action
 	@Override
 	public void setViolates(ViolatesResult res) {
 		violates = res;
+	}
+	
+	/** Ctor used for deserialization */
+	public Action(	@Element(name="sender") String senderId, 
+					@Element(name="receiver") String receiverId ) {
+		super((Agent) null);
+		this.sender = senderId;
+		this.receiver = receiverId;
 	}
 	
 	/**
@@ -96,5 +109,13 @@ public class Action
 	@Override
 	public boolean isSubPlan() {
 		return false;
+	}
+	
+	@Commit
+	public void onDeserialization() {
+		AngeronaEnvironment sim = Angerona.getInstance().getActualSimulation();
+		if(sim != null) {
+			setAgent(sim.getAgentByName(sender));
+		}
 	}
 }

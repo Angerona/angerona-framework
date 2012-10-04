@@ -9,6 +9,11 @@ import angerona.fw.Agent;
  */
 public abstract class SpeechAct extends Action {
 
+	/** Ctor used by deserilization */
+	public SpeechAct(String sender, String receiver) {
+		super(sender, receiver);
+	}
+	
 	/**
 	 * Ctor: creates a speech act with the given sender and receiver.
 	 * @param sender	reference to the sending agent.

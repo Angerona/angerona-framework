@@ -16,13 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
-import angerona.fw.internal.DefaultPerceptionFactory;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.PerceptionFactory;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
-import angerona.fw.serialize.perception.PerceptionDO;
 
 /**
  * A simulation environment for Angerona. This is actually only used for some functional tests.
@@ -38,11 +35,6 @@ public class AngeronaEnvironment extends APR {
 	
 	/** the name of the simulation */
 	private String name;
-	
-	/** implementation of the factory used for perceptions */
-	//I want this to be plugin-implemented
-	//private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
-	private PerceptionFactory perceptionFactory = new DefaultPerceptionFactory();
 	
 	/** flag indicating if the environment is currently in its update process */
 	protected boolean doingTick = false;
@@ -267,11 +259,12 @@ public class AngeronaEnvironment extends APR {
 			agent.reportCreation();
 		}
 		
-		DefaultPerceptionFactory df = new DefaultPerceptionFactory();
-		for(PerceptionDO p : config.getPerceptions()) {
-			Perception percept = df.generateFromDataObject(p, null);
-			this.sendAction(percept.getReceiverId(), percept);
+		for(Perception p : config.getPerceptions()) {
+			if(p instanceof Action) {
+				this.sendAction(p.getReceiverId(), (Action)p);
+			}
 		}
+		
 		return ready = true;
 	}
 
@@ -325,10 +318,6 @@ public class AngeronaEnvironment extends APR {
 	@Override
 	public void sendAction(String agentName, Object action) {
 		behavior.sendAction(this, (Action)action);
-	}
-
-	public PerceptionFactory getPerceptionFactory() {
-		return perceptionFactory;
 	}
 
 	public int getSimulationTick() {

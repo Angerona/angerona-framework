@@ -1,5 +1,6 @@
 package angerona.fw.logic;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -27,6 +28,12 @@ public abstract class BaseTranslator extends Operator<Perception, BaseBeliefbase
 		BaseBeliefbase reval = translatePerceptionInt(p);
 		getOwner().popOperator();
 		return reval;
+	}
+	
+	protected BaseBeliefbase translateFOLInt(FolFormula formula) {
+		Set<FolFormula> set = new HashSet<>();
+		set.add(formula);
+		return translateFOLInt(set);
 	}
 	
 	protected abstract BaseBeliefbase translateFOLInt(Set<FolFormula> formulas);

@@ -12,10 +12,8 @@
         <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
             <source>config/beliefbases/asp_beliefbase.xml</source>
         </beliefbase-config>
-        <skill class="angerona.fw.serialize.SkillConfigImport">
-               <source>config/skills/QueryAnswer.xml</source>
-		</skill>
-		
+        <skill>QueryAnswer</skill>
+        
 		<desire>attend_scm</desire>
 		<data key="KnowHow">
             cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full

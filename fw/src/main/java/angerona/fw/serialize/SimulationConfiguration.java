@@ -5,12 +5,16 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
-import angerona.fw.serialize.perception.PerceptionDO;
-import angerona.fw.serialize.perception.QueryDO;
+import angerona.fw.Agent;
+import angerona.fw.Perception;
+import angerona.fw.comm.Query;
 
 /**
  * Class instance holding all the configuration options for a complete simulation.
@@ -33,7 +37,8 @@ public class SimulationConfiguration {
 	private List<AgentInstance> agents = new LinkedList<AgentInstance>();
 	
 	@ElementList(name="perception", entry="perception", inline=true, empty=false, required=false)
-	private List<PerceptionDO> perceptions = new LinkedList<PerceptionDO>();
+	private List<Perception> perceptions = new LinkedList<Perception>();
+	
 	
 	private String filepath;
 	
@@ -61,7 +66,7 @@ public class SimulationConfiguration {
 	}
 	
 	/** @return collection of perceptions which should be fired initially into the simulation */
-	public List<PerceptionDO> getPerceptions() {
+	public List<Perception> getPerceptions() {
 		return Collections.unmodifiableList(perceptions);
 	}
 	
@@ -81,7 +86,9 @@ public class SimulationConfiguration {
 		AgentInstance agent = AgentInstance.getTestObject();
 		conf.agents.add(agent);
 		
-		conf.perceptions.add(QueryDO.getTestObject());
+		Agent sender = new Agent("DaSender");
+		conf.perceptions.add(new Query(sender, "DaReceiver", new Atom(new Predicate("Test"))));
+	//	conf.perceptions.add(QueryDO.getTestObject());
 		SerializeHelper.outputXml(conf, System.out);
 	}
 }

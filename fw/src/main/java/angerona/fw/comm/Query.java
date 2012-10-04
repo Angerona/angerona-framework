@@ -1,7 +1,11 @@
 package angerona.fw.comm;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
+import org.simpleframework.xml.Element;
+
 import angerona.fw.Agent;
+import angerona.fw.reflection.FolFormulaVariable;
 
 /**
  * Implementation of the Speech-Act: Query. 
@@ -15,7 +19,16 @@ import angerona.fw.Agent;
 public class Query extends SpeechAct {
 
 	/** formula representing the question of the query */
-	private FolFormula question;
+	@Element(name="question", required=true)
+	private FolFormulaVariable question;
+	
+	/** Ctor used by deserilization */
+	public Query(	@Element(name="sender") String sender, 
+					@Element(name="receiver") String receiver, 
+					@Element(name="question") FolFormulaVariable question) {
+		super(sender, receiver);
+		this.question = question;
+	}
 	
 	/**
 	 * Ctor: generating the query speech act with the following parameters.
@@ -25,12 +38,12 @@ public class Query extends SpeechAct {
 	 */
 	public Query(Agent sender, String receiverId, FolFormula question) {
 		super(sender, receiverId);
-		this.question = question;
+		this.question = new FolFormulaVariable(question);
 	}
 	
 	/** @return formula representing the question of the query */
 	public FolFormula getQuestion() {
-		return question;
+		return question.getInstance(getAgent() == null ? null : getAgent().getContext());
 	}
 	
 	@Override 
@@ -40,6 +53,6 @@ public class Query extends SpeechAct {
 
 	/** @return true if the question is an open question, false if the question is not open.*/
 	public boolean isOpen() {
-		return !question.isGround();
+		return !question.getInstance(getAgent().getContext()).isGround();
 	}
 }

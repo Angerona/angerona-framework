@@ -39,6 +39,10 @@ public abstract class Intention implements SubgoalListener {
 		return agent;
 	}
 
+	protected void setAgent(Agent agent) {
+		this.agent = agent;
+	}
+	
 	public void setParent(Intention parent) {
 		this.parent = parent;
 	}

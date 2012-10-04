@@ -1,9 +1,3 @@
-<!--  
-<Flow>
-	<Query sender="Boss" receiver="Employee" question="attends" />
-	<Query sender="Boss" receiver="Employee" question="has_time" /> 
-</Flow>
--->
 <simulation-configuration>
 	<name>Strike Committee Meeting (Dummy Logic)</name>
 	
@@ -34,4 +28,11 @@
             <source>config/beliefbases/dummy_beliefbase.xml</source>
         </beliefbase-config>
 	</agent-instance>
+	
+	<perception class="angerona.fw.comm.Query">
+      <sender>Boss</sender>
+      <receiver>Employee</receiver>
+      <question>attend_scm</question>
+   	</perception>
+   	
 </simulation-configuration>

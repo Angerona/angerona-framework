@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -11,7 +12,10 @@ import org.simpleframework.xml.transform.RegistryMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.reflection.FolFormulaVariable;
 import angerona.fw.serialize.transform.FolAtomTransform;
+import angerona.fw.serialize.transform.FolFormulaTransform;
+import angerona.fw.serialize.transform.VariableTransform;
 
 /**
  * Helper class encapsulates the exception handling during xml serialization.
@@ -25,12 +29,21 @@ public class SerializeHelper {
 	private static Serializer serializer = null;
 	
 	/**
-	 * Initialize the SerializeHelper
+	 * Initialize the SerializeHelper: Register transforms.
 	 */
 	private static void init() {
 		if(serializer == null) {
 			RegistryMatcher matcher = new RegistryMatcher();
-			matcher.bind(Atom.class, FolAtomTransform.class);
+			matcher.bind(FolFormula.class, FolFormulaTransform.class);
+			matcher.bind(Atom.class, FolAtomTransform.class);			
+			
+			matcher.bind(FolFormulaVariable.class, 
+					new VariableTransform<FolFormulaVariable>() {
+						@Override
+						protected Class<FolFormulaVariable> getCls() {
+							return FolFormulaVariable.class;
+						}
+			});
 			serializer = new Persister(matcher);
 		}
 	}

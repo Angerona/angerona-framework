@@ -124,15 +124,19 @@ public abstract class SymbolSetAdapter implements SymbolSet {
 	
 	@Override
 	public void add(SymbolSet other) {
+		if(this.sorted != other.isSorted())
+			throw new IllegalArgumentException("Cant merge to symbol " +
+					"sets when one is sorted and the other not.");
+		
 		constants.addAll(other.getConstants());
 		symbols.addAll(other.getSymbols());
 		variables.addAll(other.getVariables());
 
-		for(String symbol : other.getSymbols()) {
-			aritys.put(symbol, other.getArity(symbol));
-		}
-		
-		if(other.isSorted() && this.isSorted()) {
+		if(!this.isSorted()) {
+			for(String symbol : other.getSymbols()) {
+				aritys.put(symbol, other.getArity(symbol));
+			}
+		} else {
 			for(String symbol : other.getSymbols()) {
 				List<String> temp = new LinkedList<String>();
 				for(int i=0; i<other.getArity(symbol); ++i) {

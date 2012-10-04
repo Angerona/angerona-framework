@@ -39,6 +39,7 @@ public class DummyBeliefbase extends BaseBeliefbase {
 	public DummyBeliefbase(DummyBeliefbase other) {
 		super(other);
 		fbs.addAll(other.fbs);
+		this.signature = new FolSignature(other.signature.getSymbolSet());
 	}
 	
 	@Override

@@ -12,6 +12,7 @@ import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.dummy.DummyBeliefbase;
 import angerona.fw.logic.dummy.DummyExpansion;
 import angerona.fw.logic.dummy.DummyReasoner;
+import angerona.fw.logic.dummy.DummyTranslator;
 
 /**
  * A dummy belief base plugin. It is used as an example and for testing purposes.
@@ -46,6 +47,7 @@ public class DummyBeliefbasePlugin implements BeliefbasePlugin{
 	@Override
 	public List<Class<? extends BaseTranslator>> getSupportedTranslators() {
 		List<Class<? extends BaseTranslator>> reval = new LinkedList<Class<? extends BaseTranslator>>();
+		reval.add(DummyTranslator.class);
 		return reval;
 	}
 }

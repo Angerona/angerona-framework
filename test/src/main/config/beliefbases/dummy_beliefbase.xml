@@ -10,7 +10,7 @@
       <operator-cls>angerona.fw.logic.dummy.DummyExpansion</operator-cls>
    </change-operators>
    <translators class="angerona.fw.serialize.OperatorSetConfigReal">
-      <default-operator-cls>empty</default-operator-cls>
+      <default-operator-cls>angerona.fw.logic.dummy.DummyTranslator</default-operator-cls>
    </translators>
    
    <beliefbase-class>angerona.fw.logic.dummy.DummyBeliefbase</beliefbase-class>
