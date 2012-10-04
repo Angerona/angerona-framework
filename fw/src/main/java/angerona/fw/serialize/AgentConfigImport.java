@@ -12,7 +12,7 @@ import org.simpleframework.xml.core.Resolve;
 @Root(name="agent-config-file")
 public class AgentConfigImport implements AgentConfig {
 	@Element
-	private File source;
+	protected File source;
 
 	@Resolve
 	public AgentConfig substitute() throws Exception {
@@ -52,12 +52,5 @@ public class AgentConfigImport implements AgentConfig {
 	@Override
 	public List<String> getComponents() {
 		throw new IllegalStateException("Method not supported.");
-	}
-	
-
-	public static AgentConfigImport getTestObject()  {
-		AgentConfigImport reval = new AgentConfigImport();
-		reval.source = new File("config/skills/QueryAnswer.xml");
-		return reval;
 	}
 }

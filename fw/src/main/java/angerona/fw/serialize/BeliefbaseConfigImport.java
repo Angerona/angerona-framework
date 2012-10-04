@@ -12,7 +12,7 @@ import org.simpleframework.xml.core.Resolve;
 public class BeliefbaseConfigImport implements BeliefbaseConfig {
 
 	@Element
-	private File source;
+	protected File source;
 
 	@Resolve
 	public BeliefbaseConfig substitute() throws Exception {
@@ -27,12 +27,6 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 	@Override
 	public String getName() {
 		throw new IllegalStateException("Method not supported.");
-	}
-	
-	public static BeliefbaseConfigImport getTestObject()  {
-		BeliefbaseConfigImport reval = new BeliefbaseConfigImport();
-		reval.source = new File("config/skills/QueryAnswer.xml");
-		return reval;
 	}
 
 	@Override

@@ -19,20 +19,20 @@ import org.xml.sax.SAXException;
 @Root(name="beliefbase-configuration")
 public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Element(name="name")
-	private String name;
+	protected String name;
 	
 	@Element(name="reasoners")
-	private OperatorSetConfig reasonerOperators;
+	protected OperatorSetConfig reasonerOperators;
 	
 	@Element(name="change-operators")
-	private OperatorSetConfig changeOperators;
+	protected OperatorSetConfig changeOperators;
 	
 	@Element(name="translators")
-	private OperatorSetConfig translators;
+	protected OperatorSetConfig translators;
 	
 	/** the class name of the beliefbase */
 	@Element(name="beliefbase-class")
-	private String beliefbaseClassName;
+	protected String beliefbaseClassName;
 	
 	
 	/**
@@ -70,15 +70,5 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Override
 	public OperatorSetConfig getTranslators() {
 		return translators;
-	}
-	
-	public static void main(String [] args) {
-		BeliefbaseConfigReal test = new BeliefbaseConfigReal();
-		test.beliefbaseClassName = "AspBeliefbase";
-		test.name = "AspBeliefbase";
-		test.changeOperators = OperatorSetConfigReal.getExample("asp-change");
-		test.reasonerOperators = OperatorSetConfigReal.getExample("asp-reasoner");
-		test.translators = OperatorSetConfigReal.getExample("asp-translator");
-		SerializeHelper.outputXml(test, System.out);
 	}
 }
