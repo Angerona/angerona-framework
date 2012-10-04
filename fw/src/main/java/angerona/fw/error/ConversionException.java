@@ -5,7 +5,7 @@ package angerona.fw.error;
  * to types.
  * @author Tim Janus
  */
-public class AngeronaConversionException extends AngeronaException {
+public class ConversionException extends AngeronaException {
 	/** kill warning */
 	private static final long serialVersionUID = 5445004593982801604L;
 
@@ -15,7 +15,7 @@ public class AngeronaConversionException extends AngeronaException {
 	 * @param source	Type of the source for the conversion.
 	 * @param target	Type of the target for the conversion.
 	 */
-	public AngeronaConversionException(Class<?> source, Class<?> target) {
+	public ConversionException(Class<?> source, Class<?> target) {
 		this(source, target, null);
 	}
 	
@@ -28,7 +28,7 @@ public class AngeronaConversionException extends AngeronaException {
 	 * @param inner		The exception which has further information about the 
 	 * 					conversion error.
 	 */
-	public AngeronaConversionException(Class<?> source, Class<?> target, Exception inner) {
+	public ConversionException(Class<?> source, Class<?> target, Exception inner) {
 		super("An error occurred during conversion between '" +  source.getName() + 
 				"' to '" + target.getName() + "'" + 
 				(inner == null ? "." : " - " + inner.getMessage()));

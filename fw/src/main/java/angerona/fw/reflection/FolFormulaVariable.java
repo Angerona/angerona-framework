@@ -7,6 +7,7 @@ import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import angerona.fw.error.AngeronaException;
+import angerona.fw.error.ConversionException;
 
 /**
  * Implementation of a Variable wrapper for the FolFormula.
@@ -29,7 +30,7 @@ public class FolFormulaVariable extends BaseVariable<FolFormula> {
 			FolFormula reval = parser.formula(new FolSignature());
 			return reval;
 		} catch (ParseException e) {
-			throw new AngeronaException("Error during string to FolFormula Conversion: " + e.getMessage());
+			throw new ConversionException(String.class, FolFormula.class, e);
 		}
 	}
 
