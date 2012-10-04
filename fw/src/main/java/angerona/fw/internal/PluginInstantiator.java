@@ -2,11 +2,12 @@ package angerona.fw.internal;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.xeoh.plugins.base.Plugin;
 import net.xeoh.plugins.base.PluginManager;
@@ -32,13 +33,20 @@ import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
- * This class collects all the implementation of the plugins and gives the user the ability to dynamically
- * instantiate them.
- * @author Tim Janus
+ * 	This class collects all the implementation of the plugins and gives 
+ * 	the user the ability to dynamically instantiate them.
+ * 
+ * 	By using listeners extensions of the angerona-core framework can define
+ * 	their own plugins to load in the extension. This feature is used by the
+ * 	gui-extension of Angerona.
+ * 
+ * 	@author Tim Janus
  */
 public class PluginInstantiator {
+	/** singleton instance */
 	private static PluginInstantiator instance;
 	
+	/** @return the only instance of the PluginInstantiator */
 	public static PluginInstantiator getInstance() {
 		if(instance == null) {
 			instance = new PluginInstantiator();
@@ -52,73 +60,51 @@ public class PluginInstantiator {
 	/** reference to the plugin manager used by jspf. */
 	private PluginManager pm;
 	
+	/** the listeners get informed if the plugin instantiator loads implementations */ 
 	private List<PluginListener> listeners = new LinkedList<PluginListener>();
 	
 	/** the plugin manager utiltiy */
 	private PluginManagerUtil util;
 	
-	/** list of all classes implementing the generate options operator */
-	private List<Class<? extends BaseGenerateOptionsOperator>> generateOptionsOperators = new LinkedList<Class<? extends BaseGenerateOptionsOperator>>();
-
-	/** list of all classes implementing the filter operator */
-	private List<Class<? extends BaseIntentionUpdateOperator>> filterOperators = new LinkedList<Class<? extends BaseIntentionUpdateOperator>>();
-
-	/** list of all classes implementing the update operator */
-	private List<Class<? extends BaseUpdateBeliefsOperator>> updateOperators = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
+	/** a map of Classes defining the basis type to a set of classes defining implementations */
+	private Map<Class<?>, Set<Class<?>>> implMap = new HashMap<Class<?>, Set<Class<?>>>();
 	
-	/** list of all classes implementing the violates operator */
-	private List<Class<? extends BaseViolatesOperator>> violatesOperators = new LinkedList<Class<? extends BaseViolatesOperator>>();
-
-	/** list of all classes implementing a planer */
-	private List<Class<? extends BaseSubgoalGenerationOperator>> planers = new LinkedList<Class<? extends BaseSubgoalGenerationOperator>>();
-	
-	/** list of all classes implementing a beliefbase */
-	private List<Class<? extends BaseBeliefbase>> beliefbases = new LinkedList<Class<? extends BaseBeliefbase>>();
-	
-	/** list of all classes implementing a reasoner for a belief base */
-	private List<Class<? extends BaseReasoner>> reasoners = new LinkedList<Class<? extends BaseReasoner>>();
-		
-	/** list of all classes implementing a revision for a belief base */
-	private List<Class<? extends BaseChangeBeliefs>> revisions = new LinkedList<Class<? extends BaseChangeBeliefs>>();
-	
-	/** list of all classes implementing a custom agent component */
-	private List<Class<? extends AgentComponent>> components = new LinkedList<Class<? extends AgentComponent>>();
-	
-	/** list of all classes implementing a action component */
-	private List<Class<? extends Action>> actions = new LinkedList<>();
-	
-	private Map<Class<?>, List<Class<?>>> map = new HashMap<Class<?>, List<Class<?>>>();
-	
+	/** @return the utility class of the plugin API to load plugins ect. */
 	public PluginManagerUtil getPluginUtil() {
 		return util;
 	}
 	
-	/**
-	 * Ctor: Initializes the simple plugin framework.
-	 */
+	/** Ctor: Initializes the simple plugin framework, private to force singleton paradigm. */
 	private PluginInstantiator() {
-		map.put(BaseGenerateOptionsOperator.class, new LinkedList<Class<?>>());
-		map.put(BaseIntentionUpdateOperator.class, new LinkedList<Class<?>>());
-		map.put(BaseUpdateBeliefsOperator.class, new LinkedList<Class<?>>());
-		map.put(BaseViolatesOperator.class, new LinkedList<Class<?>>());
-		map.put(BaseSubgoalGenerationOperator.class, new LinkedList<Class<?>>());
-		map.put(BaseBeliefbase.class, new LinkedList<Class<?>>());
-		map.put(BaseReasoner.class, new LinkedList<Class<?>>());
-		map.put(BaseChangeBeliefs.class, new LinkedList<Class<?>>());
-		map.put(BaseTranslator.class, new LinkedList<Class<?>>());
-		map.put(AgentComponent.class, new LinkedList<Class<?>>());
-		map.put(Action.class, new LinkedList<Class<?>>());
-		
+		implMap.put(BaseGenerateOptionsOperator.class, new HashSet<Class<?>>());
+		implMap.put(BaseIntentionUpdateOperator.class, new HashSet<Class<?>>());
+		implMap.put(BaseUpdateBeliefsOperator.class, new HashSet<Class<?>>());
+		implMap.put(BaseViolatesOperator.class, new HashSet<Class<?>>());
+		implMap.put(BaseSubgoalGenerationOperator.class, new HashSet<Class<?>>());
+		implMap.put(BaseBeliefbase.class, new HashSet<Class<?>>());
+		implMap.put(BaseReasoner.class, new HashSet<Class<?>>());
+		implMap.put(BaseChangeBeliefs.class, new HashSet<Class<?>>());
+		implMap.put(BaseTranslator.class, new HashSet<Class<?>>());
+		implMap.put(AgentComponent.class, new HashSet<Class<?>>());
+		implMap.put(Action.class, new HashSet<Class<?>>());
 		
 		pm = PluginManagerFactory.createPluginManager();
 		util = new PluginManagerUtil(pm);
 	}
 	
+	/**
+	 * adds the plugin file on the specified path.
+	 * @param path	Path to the jar file containing the plugin implementation
+	 */
 	public void addPlugin(String path) {
 		pm.addPluginsFrom(new File(path).toURI());
 		loadAllPlugins();
 	}
 	
+	/**
+	 * adds the plugins on the given file paths.
+	 * @param paths	A list of pathes to jar files containing plugin implementations.
+	 */
 	public void addPlugins(Collection<String> paths) {
 		for(String path : paths) {
 			pm.addPluginsFrom(new File(path).toURI());
@@ -126,18 +112,36 @@ public class PluginInstantiator {
 		loadAllPlugins();
 	}
 
+	/**
+	 * 	Registers the given PluginListener. After registration the Listener will be informed
+	 * 	if the implementation gets loaded.
+	 * 	@param pl	Reference to the listener.
+	 */
 	public void addListener(PluginListener pl) {
 		this.listeners.add(pl);
 	}
 	
+	/**
+	 * Unregisters a registered plugin listener. The listener will not be informed of any further
+	 * changes.
+	 * @param pl	Reference to the listener.
+	 * @return		
+	 */
 	public boolean removeListener(PluginListener pl) {
 		return this.listeners.remove(pl);
 	}
 	
+	/** Deregisteres all listeners */
 	public void removeAllListener() {
 		this.listeners.clear();
 	}
 	
+	/**
+	 * 	Loads the plugins for the core Angerona Framework and informs the listeners about the
+	 * 	loading. The listeners can load different plugins on their own like the gui extension:
+	 * 	It loads UI-Components to enhance the GUI with views for the data components defined
+	 * 	in different plugins.
+	 */
 	private void loadAllPlugins() {
 		List<Plugin> loadedPlugins = new LinkedList<Plugin>();
 		Collection<OperatorPlugin> opPlugins = new LinkedList<OperatorPlugin>(util.getPlugins(OperatorPlugin.class));
@@ -146,17 +150,12 @@ public class PluginInstantiator {
 			if(loadedPlugins.contains(ap))
 				continue;
 			loadedPlugins.add(ap);
-			map.get(BaseGenerateOptionsOperator.class).addAll(ap.getSupportedGenerateOptionsOperators());
-			map.get(BaseIntentionUpdateOperator.class).addAll(ap.getSupportedFilterOperators());
-			map.get(BaseChangeBeliefs.class).addAll(ap.getSupportedChangeOperators());
-			map.get(BaseViolatesOperator.class).addAll(ap.getSupportedViolatesOperators());
-			map.get(BaseSubgoalGenerationOperator.class).addAll(ap.getSupportedPlaners());
+			implMap.get(BaseGenerateOptionsOperator.class).addAll(ap.getSupportedGenerateOptionsOperators());
+			implMap.get(BaseIntentionUpdateOperator.class).addAll(ap.getSupportedFilterOperators());
+			implMap.get(BaseChangeBeliefs.class).addAll(ap.getSupportedChangeOperators());
+			implMap.get(BaseViolatesOperator.class).addAll(ap.getSupportedViolatesOperators());
+			implMap.get(BaseSubgoalGenerationOperator.class).addAll(ap.getSupportedPlaners());
 			
-			generateOptionsOperators.addAll(ap.getSupportedGenerateOptionsOperators());
-			filterOperators.addAll(ap.getSupportedFilterOperators());
-			updateOperators.addAll(ap.getSupportedChangeOperators());
-			violatesOperators.addAll(ap.getSupportedViolatesOperators());
-			planers.addAll(ap.getSupportedPlaners());
 			LOG.info("Operator-Plugin '{}' loaded", ap.getClass().getName());
 		}
 		
@@ -167,14 +166,11 @@ public class PluginInstantiator {
 			if(loadedPlugins.contains(bp))
 				continue;
 			loadedPlugins.add(bp);
-			map.get(BaseBeliefbase.class).addAll(bp.getSupportedBeliefbases());
-			map.get(BaseReasoner.class).addAll(bp.getSupportedReasoners());
-			map.get(BaseChangeBeliefs.class).addAll(bp.getSupportedChangeOperations());
-			map.get(BaseTranslator.class).addAll(bp.getSupportedTranslators());
+			implMap.get(BaseBeliefbase.class).addAll(bp.getSupportedBeliefbases());
+			implMap.get(BaseReasoner.class).addAll(bp.getSupportedReasoners());
+			implMap.get(BaseChangeBeliefs.class).addAll(bp.getSupportedChangeOperations());
+			implMap.get(BaseTranslator.class).addAll(bp.getSupportedTranslators());
 			
-			beliefbases.addAll(bp.getSupportedBeliefbases());
-			reasoners.addAll(bp.getSupportedReasoners());
-			revisions.addAll(bp.getSupportedChangeOperations());
 			LOG.info("Beliefbase-Plugin '{}' loaded", bp.getClass().getName());
 		}
 		
@@ -187,14 +183,12 @@ public class PluginInstantiator {
 				continue;
 			loadedPlugins.add(ap);
 
-			map.get(AgentComponent.class).addAll(ap.getAgentComponents());
-			components.addAll(ap.getAgentComponents());
+			implMap.get(AgentComponent.class).addAll(ap.getAgentComponents());
 			for(Class<? extends AgentComponent> ac : ap.getAgentComponents()) {
 				LOG.info("Agent-Component: '{}' loaded.", ac.getName());
 			}
 			
-			map.get(Action.class).addAll(ap.getActions());
-			actions.addAll(ap.getActions());
+			implMap.get(Action.class).addAll(ap.getActions());
 			for(Class<? extends Action> actc : ap.getActions()) {
 				LOG.info("Agent-Action: '{}' loaded.", actc.getSimpleName());
 			}
@@ -207,142 +201,65 @@ public class PluginInstantiator {
 		}
 	}
 	
-	/** @return list with all Generate-Options operators */
-	public List<Class<? extends BaseGenerateOptionsOperator>> getGenerateOptionsOperators() {
-		return Collections.unmodifiableList(generateOptionsOperators);
-	}
-
-	/** @return list with all filter operators */
-	public List<Class<? extends BaseIntentionUpdateOperator>> getFilterOperators() {
-		return Collections.unmodifiableList(filterOperators);
-	}
-
-	/** @return list with all update operators */
-	public List<Class<? extends BaseUpdateBeliefsOperator>> getUpdateOperators() {
-		return Collections.unmodifiableList(updateOperators);
-	}
-
-	/** @return list with all violates operators */
-	public List<Class<? extends BaseViolatesOperator>> getViolatesOperators() {
-		return Collections.unmodifiableList(violatesOperators);
-	}
-
-	/** @return list with all planer operators */
-	public List<Class<? extends BaseSubgoalGenerationOperator>> getPlaners() {
-		return Collections.unmodifiableList(planers);
-	}
-	
-	/** @return list with all belief base operators */
-	public List<Class<? extends BaseBeliefbase>> getBeliefbases() {
-		return Collections.unmodifiableList(beliefbases);
-	}
-	
-	/** @return list with all Reasoner operators */
-	public List<Class<? extends BaseReasoner>> getReasoners() {
-		return Collections.unmodifiableList(reasoners);
-	}
-	
-	/** @return list with all Revision operators */
-	public List<Class<? extends BaseChangeBeliefs>> getRevisions() {
-		return Collections.unmodifiableList(revisions);
-	}
-	
-	public List<Class<? extends AgentComponent>> getComponents() {
-		return Collections.unmodifiableList(components);
-	}
-	
-	public List<Class<? extends Action>> getActions() {
-		return Collections.unmodifiableList(actions);
-	}
-	
 	/**
 	 * creates a new instance of a Generate-Options Operator
-	 * @param classname	class name of the new created instance (inclusive package)
+	 * @param className	class name of the new created instance (inclusive package)
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseGenerateOptionsOperator createGenerateOptionsOperator(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseGenerateOptionsOperator> c : getGenerateOptionsOperators()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-
-		throw new InstantiationException("Can't find Generate-Options-Operator with name: " + classname );
+	public BaseGenerateOptionsOperator createGenerateOptionsOperator(String className) 
+			throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseGenerateOptionsOperator.class);
 	}
 	
 	/**
-	 * creates a new instance of a filter operator.
-	 * @param classname class name of the new created instance (inclusive package)
+	 * creates a new instance of a intention update operator.
+	 * @param className class name of the new created instance (inclusive package)
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseIntentionUpdateOperator createFilterOperator(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseIntentionUpdateOperator> c : getFilterOperators()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-
-		throw new InstantiationException("Can't find Filter-Operator with name: " + classname );
+	public BaseIntentionUpdateOperator createFilterOperator(String className) throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseIntentionUpdateOperator.class);
 	}
 	
 	/**
-	 * creates a new instance of a planer
-	 * @param classname class name of the new created instance (inclusive package)
+	 * creates a new instance of a subgoal generation operator
+	 * @param className class name of the new created instance (inclusive package)
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseSubgoalGenerationOperator createPlaner(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseSubgoalGenerationOperator> c : getPlaners()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-
-		throw new InstantiationException("Can't find Planer type with name: " + classname );
+	public BaseSubgoalGenerationOperator createPlaner(String className) throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseSubgoalGenerationOperator.class);
 	}
 	
 	/**
-	 * creates a new instance of an update operator.
-	 * @param classname class name of the new created instance (inclusive package)
+	 * creates a new instance of an update beliefs operator.
+	 * @param className class name of the new created instance (inclusive package)
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseUpdateBeliefsOperator createUpdateOperator(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseUpdateBeliefsOperator> c : getUpdateOperators()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-		
-		throw new InstantiationException("Can't find Update-Operator with name: " + classname );
+	public BaseUpdateBeliefsOperator createUpdateOperator(String className) throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseUpdateBeliefsOperator.class);
 	}
 	
 	/**
 	 * creates a new instance of a violates operator.
-	 * @param classname class name of the new created instance (inclusive package)
+	 * @param className class name of the new created instance (inclusive package)
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseViolatesOperator createViolatesOperator(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseViolatesOperator> c : getViolatesOperators()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-		
-		throw new InstantiationException("Can't find Violates-Operator with name: " + classname );
+	public BaseViolatesOperator createViolatesOperator(String className) throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseViolatesOperator.class);
 	}
 	
 	/**
 	 * creates a new instance of a belief base.
-	 * @param config data-structure with configuration parameters for the belief base.
+	 * @param config data structure with configuration parameters for the belief base.
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
@@ -359,78 +276,93 @@ public class PluginInstantiator {
 	
 	/**
 	 * creates a new instance of a belief base.
-	 * @param classname class name of the new created instance (inclusive package)
+	 * @param className class name of the new created instance (inclusive package)
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseBeliefbase createBeliefbase(String classname) throws InstantiationException, IllegalAccessException {
-		if(classname == null)
-			throw new IllegalArgumentException("The name of the class must not be null.");
-		
-		for(Class<? extends BaseBeliefbase> c : getBeliefbases()) {
-			if(c.getName().compareTo(classname) == 0) {
-				BaseBeliefbase bb = c.newInstance();;
-				return bb;
-			}
-		}
-
-		throw new InstantiationException("Can't find Beliefbase type with name: " + classname );
+	protected BaseBeliefbase createBeliefbase(String className) throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseBeliefbase.class);
 	}
 	
 	/**
 	 * creates a new instance of a reasoner.
-	 * @param classname class name of the new created instance (inclusive package)
+	 * @param className class name of the new created instance (inclusive package)
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseReasoner createReasoner(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseReasoner> c : getReasoners()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-
-		throw new InstantiationException("Can't find Reasoner with name: " + classname );
+	public BaseReasoner createReasoner(String className) throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseReasoner.class);
 	}
 	
 	/**
-	 * creates a new revision operator instance.
-	 * @param classname class name of the new created instance (inclusive package)
-	 * @return reference to the newly created revision operator instance.
+	 * creates a new change beliefs operator instance (like revision or expansion).
+	 * @param className class name of the new created instance (inclusive package)
+	 * @return reference to the newly created change beliefs operator instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public BaseChangeBeliefs createChange(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends BaseChangeBeliefs> c : getRevisions()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-
-		throw new InstantiationException("Cannot find Revision with name: " + classname );
+	public BaseChangeBeliefs createChange(String className) throws InstantiationException, IllegalAccessException {
+		return createInstance(className, BaseChangeBeliefs.class);
 	}
 	
-	public AgentComponent createComponent(String classname) throws InstantiationException, IllegalAccessException {
-		for(Class<? extends AgentComponent> c : getComponents()) {
-			if(c.getName().compareTo(classname) == 0) {
-				return c.newInstance();
-			}
-		}
-		
-		throw new InstantiationException("Cannot find Agent-Component with name: " + classname);
+	/**
+	 * Creates a new agent data component like Secrecy Knowledge or Knowhow.
+	 * @param classname class name of the new created instance (inclusive package)
+	 * @return	reference to the newly created agent component.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public AgentComponent createComponent(String classname) 
+			throws InstantiationException, IllegalAccessException {	
+		return (AgentComponent) createInstance(classname, AgentComponent.class);
 	}
 	
+	/**
+	 * Creates an instance of the given class. The classname must be fully qualified.
+	 * That means the java-package and the name of the class like: 
+	 * angerona.fw.logic.Desires
+	 * @param className	The fully qualified name of the class to instantiate.
+	 * @return	A refenrence to the newly created instance.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
 	public Object createInstance(String className) throws InstantiationException, IllegalAccessException {
-		for(Class<?> baseCls : map.keySet()) {
-			for(Class<?> realCls : map.get(baseCls)) {
+		for(Class<?> baseCls : implMap.keySet()) {
+			for(Class<?> realCls : implMap.get(baseCls)) {
 				if(realCls.getName().equals(className)) {
 					return realCls.newInstance();
 				}
 			}
 		}
 		
-		throw new InstantiationException("Cannot find Type " + className + " in plugin.");
+		throw new InstantiationException("Cannot find Type " + className + " in the plugins.");
+	}
+	
+	/**
+	 * A helper method: Creating instances of a specific base type.
+	 * @param className	Fully Qualified class name of the impementation type
+	 * @param baseType	Class structure of the base type like BaseChangeBeliefs.class
+	 * @return	An instance of the type of 'baseType' containing the implementation of 
+	 * 			the given java class.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T> T createInstance(String className, Class<T> baseType) 
+			throws InstantiationException, IllegalAccessException {
+		if(className == null)
+			throw new IllegalArgumentException("The name of the class must not be null.");
+		if(baseType == null)
+			throw new IllegalArgumentException("The base type of the instance must not be null.");
+		for(Class<?> clsIt : implMap.get(baseType)) {
+			if(clsIt.getName().equals(className)) {
+				return (T) clsIt.newInstance();
+			}
+		}
+		
+		throw new InstantiationException("Cannot find Sub-Type " + className + 
+				" of " + baseType.getName() +  " in the plugins.");
 	}
 }
