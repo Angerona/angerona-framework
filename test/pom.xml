@@ -52,7 +52,6 @@
 
   <build>
     <plugins>
-      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -91,6 +90,9 @@
                 <resource>
                   <directory>src/main/config</directory>
                   <filtering>true</filtering>
+                  <excludes>
+                  	<exclude>*_template.xml</exclude>
+                  </excludes>
                 </resource>
               </resources>
             </configuration>
@@ -186,6 +188,28 @@
         </configuration>
       </plugin>
       
+      <plugin>
+           <groupId>com.google.code.maven-replacer-plugin</groupId>
+           <artifactId>replacer</artifactId>
+           <version>1.5.1</version>
+           <executions>
+               <execution>
+                   <phase>prepare-package</phase>
+                   <goals>
+                       <goal>replace</goal>
+                   </goals>                   
+               </execution>
+           </executions>
+           <configuration>
+               <ignoreMissingFile>false</ignoreMissingFile>
+               <file>src/main/config/configuration_template.xml</file>
+               <outputFile>target/config/configuration.xml</outputFile>
+               <regex>false</regex>
+               <token>$path_to_angerona$</token>
+               <value>${basedir}/target</value>
+           </configuration>
+       </plugin>
+      
     </plugins>
     
     <pluginManagement>
@@ -214,6 +238,7 @@
 	          </lifecycleMappingMetadata>
 	        </configuration>
 	      </plugin>
+	    
 	    </plugins>
 	</pluginManagement>
   </build>

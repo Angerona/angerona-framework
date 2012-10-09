@@ -6,11 +6,11 @@
 	<plugin>plugins/mary-0.0.1-SNAPSHOT.jar</plugin>
    
 	<parameter name="path-dlv-complex" 
-		value="<path_to_angerona>/software/test/target/tools/solver/asp/dlv/dlv-complex"/>
+		value="$path_to_angerona$/tools/solver/asp/dlv/dlv-complex"/>
    
 	<parameter name="path-dlv"
-		value="<path_to_angerona>/software/test/target/tools/solver/asp/dlv/dlv"/>
+		value="$path_to_angerona$/tools/solver/asp/dlv/dlv"/>
    
 	<parameter name="path-clingo"
-		value="<path_to_angerona>/software/test/target/tools/solver/asp/clingo/clingo"/>
+		value="$path_to_angerona$/tools/solver/asp/clingo/clingo"/>
 </config>
