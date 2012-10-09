@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.EnvironmentBehavior;
+import angerona.fw.Perception;
 import angerona.fw.listener.PluginListener;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
@@ -87,6 +89,8 @@ public class PluginInstantiator {
 		implMap.put(BaseTranslator.class, new HashSet<Class<?>>());
 		implMap.put(AgentComponent.class, new HashSet<Class<?>>());
 		implMap.put(Action.class, new HashSet<Class<?>>());
+		implMap.put(Perception.class, new HashSet<Class<?>>());
+		implMap.put(EnvironmentBehavior.class, new HashSet<Class<?>>());
 		
 		pm = PluginManagerFactory.createPluginManager();
 		util = new PluginManagerUtil(pm);
@@ -194,6 +198,26 @@ public class PluginInstantiator {
 			}
 			
 			LOG.info("Agent-Pluign '{}' loading complete", ap.getClass().getName());
+		}
+		
+		LOG.info("Load Simulation-Plugins:");
+		loadedPlugins.clear();
+		util.addPluginsFrom(ClassURI.PLUGIN(DefaultSimulationPlugin.class));
+		Collection<SimulationPlugin> sPlugins = new LinkedList<>(util.getPlugins(SimulationPlugin.class));
+		for(SimulationPlugin sp : sPlugins) {
+			if(loadedPlugins.contains(sp))
+				continue;
+			loadedPlugins.add(sp);
+			
+			implMap.get(EnvironmentBehavior.class).addAll(sp.getEnvironmentBehaviors());
+			for(Class<? extends EnvironmentBehavior> eb : sp.getEnvironmentBehaviors()) {
+				LOG.info("Environment-Behavior: '{}' loaded.", eb.getSimpleName());
+			}
+			
+			implMap.get(Perception.class).addAll(sp.getPerceptions());
+			for(Class<? extends Perception> percept : sp.getPerceptions()) {
+				LOG.info("Perception-Type: '{}' loaded.", percept.getSimpleName());
+			}
 		}
 		
 		for(PluginListener pl : listeners) {
@@ -316,7 +340,20 @@ public class PluginInstantiator {
 	 */
 	public AgentComponent createComponent(String classname) 
 			throws InstantiationException, IllegalAccessException {	
-		return (AgentComponent) createInstance(classname, AgentComponent.class);
+		return  createInstance(classname, AgentComponent.class);
+	}
+	
+	/**
+	 * Creates a new enviornment behavior to define the communication between
+	 * the enviornment, external simulation software and the agents.
+	 * @param classname class name of the new created instance (inclusive package)
+	 * @return	reference to the newly created environment behavior.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public EnvironmentBehavior createEnvironmentBehavior(String classname) 
+			throws InstantiationException, IllegalAccessException {
+		return (EnvironmentBehavior) createInstance(classname, EnvironmentBehavior.class);
 	}
 	
 	/**

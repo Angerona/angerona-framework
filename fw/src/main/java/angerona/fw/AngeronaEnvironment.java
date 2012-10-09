@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.Entity;
+import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
@@ -62,16 +63,6 @@ public class AngeronaEnvironment extends APR {
 	 * Default Ctor: Generates the default-behavior.
 	 */
 	public AngeronaEnvironment() {
-		this.behavior = new DefaultBehavior();
-	}
-	
-	/**
-	 * Ctor: Give it an specific behavior to define the external and internal
-	 * communication.
-	 * @param behavior	Reference to the EnvironmentBehavior instance containing the logic.
-	 */
-	public AngeronaEnvironment(EnvironmentBehavior behavior) {
-		this.behavior = behavior;
 	}
 	
 	/**
@@ -278,16 +269,8 @@ public class AngeronaEnvironment extends APR {
 		if(config.getBehaviorCls() != null) {
 			String error = null;
 			try {
-				Class<? > cls = Class.forName(config.getBehaviorCls());
-				Object temp = cls.newInstance();
-				if(temp instanceof EnvironmentBehavior) {
-					this.behavior = (EnvironmentBehavior) temp;
-				} else {
-					error = "The class: '" + config.getBehaviorCls() + "' is not of type EnvironmentBehavior.";
-				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				error = "Cannot find class: " + e.getMessage();
+				behavior = PluginInstantiator.getInstance().createEnvironmentBehavior(
+						config.getBehaviorCls());
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 				error = e.getMessage();

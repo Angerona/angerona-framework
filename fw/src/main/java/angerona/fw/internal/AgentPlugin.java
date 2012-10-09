@@ -9,8 +9,8 @@ import angerona.fw.BaseAgentComponent;
 
 /**
  * An Agent plugin provides custom AgentComponents. An 
- * AgentComponent is an extension of the agent data-component
- * like the ConfidentialKnowledge or KnowHow.
+ * AgentComponent is an implementation of the agent data component
+ * like the ConfidentialKnowledge or Know-how.
  * 
  * @see BaseAgentComponent
  * @author Tim Janus
