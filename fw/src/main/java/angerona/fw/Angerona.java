@@ -40,31 +40,49 @@ import angerona.fw.serialize.SimulationConfiguration;
  */
 public class Angerona {
 	
+	/** reference to the logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(Angerona.class);
 	
+	/** the only instnce of angerona */
 	private static Angerona instance = null;
 	
+	/** the list of registered report listeners */
 	private List<ReportListener> reportListeners = new LinkedList<ReportListener>();
 	
+	/** the list of registered simulation listeners */
 	private List<SimulationListener> simulationListeners = new LinkedList<SimulationListener>();
 	
+	/** the list of registered error listeners */
 	private List<ErrorListener> errorListeners = new LinkedList<ErrorListener>();
 	
 	// TODO: Differentiate between environment and simulation.
+	/** A Map containing the Report instances for specific simulations */
 	private Map<AngeronaEnvironment, Report> reports = new HashMap<AngeronaEnvironment, Report>(); 
 	
+	/** reference to the report of the actual running simulation */
 	private Report actualReport;
 	
+	/** reference to the actual loaded simulation */
 	private AngeronaEnvironment actualSimulation;
 	
+	/** reference to the configuration of Angerona */
+	private GlobalConfiguration config = null;
+	
+	/**
+	 * 	Implements the singleton pattern.
+	 * 	@return the application wide unique instance of the Angerona class.
+	 */
 	public static Angerona getInstance() {
 		if(instance == null)
 			instance = new Angerona();
 		return instance;
 	}
 	
-	private GlobalConfiguration config = null;
-	
+	/**
+	 * 	Loads the global configuration if it is not loaded yet and gives the
+	 * 	global configurations contents to the caller.
+	 * 	@return	A reference to the global configuration.
+	 */
 	public GlobalConfiguration getConfig() {
 		if(config == null) {
 			String filename = "config/configuration.xml";
@@ -83,10 +101,25 @@ public class Angerona {
 		return config;
 	}
 	
+	/**
+	 * Writes a report entry with the given message of the given poster
+	 * to the Angerona Report-System. No attachment is given to the report entry.
+	 * @param msg		String representing the message.
+	 * @param sender	Reference to the poster of the report (an operator or an agent)
+	 */
 	public void report(String msg, ReportPoster sender) {
 		report(msg, sender, null);
 	}
 	
+	/**
+	 * Writes a report entry with the given message and attachment of the given poster
+	 * to the Angerona Report-System. A copy of the attachment is saved in the report
+	 * system.
+	 * @param msg			String representing the message.
+	 * @param sender		Reference to the poster of the report(an operator or an agent)
+	 * @param attachment	A reference to the attachment which has to be an entity like
+	 * 						the Secrecy-Knowledge or a Belief base. 
+	 */
 	public void report(String msg, ReportPoster sender, Entity attachment) {
 		String logOut = msg;
 		
@@ -111,6 +144,7 @@ public class Angerona {
 		return actualReport;
 	}
 	
+	/** @return the reference to the last loaded simulation */
 	public AngeronaEnvironment getActualSimulation() {
 		return actualSimulation;
 	}
@@ -169,19 +203,34 @@ public class Angerona {
 		errorListeners.clear();
 	}
 	
-	public void onCreateSimulation(AngeronaEnvironment ev) {
+	/** 
+	 * 	Called when a new simulation is initialized. 
+	 * 	It updates the reference to the actual report and the actual simulation.
+	 * 	@param ev	The reference to the new simulation simulation.
+	 */
+	protected void onCreateSimulation(AngeronaEnvironment ev) {
 		actualReport = new Report(ev);
 		actualSimulation = ev;
 		reports.put(ev, actualReport);
 	}
 	
-	public void onNewSimulation(AngeronaEnvironment ev) {
+	/**
+	 * Informs the simulation listeners about the finished initialization
+	 * of the given simulation
+	 * @param ev		reference to the initialized simulation.
+	 */
+	protected void onNewSimulation(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
 		}
 	}
 	
-	public void onSimulationDestroyed(AngeronaEnvironment ev) {
+	/**
+	 * called when a simulation is finished an the clean up method is called, informs
+	 * the simulation listeners about the cleanup of the simulation.
+	 * @param ev	A reference to the simulation.
+	 */
+	protected void onSimulationDestroyed(AngeronaEnvironment ev) {
 		actualReport = null;
 		reports.clear();
 		for(SimulationListener l : simulationListeners) {
@@ -189,12 +238,22 @@ public class Angerona {
 		}
 	}
 	
-	public void onTickDone(AngeronaEnvironment ev, boolean finished) {
+	/**
+	 * Informs the simulations listeners when a tick of the simulation is done.
+	 * @param ev		Reference to the simulation
+	 * @param finished	Flag indicating if the simulation is finished now.
+	 */
+	protected void onTickDone(AngeronaEnvironment ev, boolean finished) {
 		for(SimulationListener l : simulationListeners) {
 			l.tickDone(ev, finished);
 		}
 	}
 	
+	/**
+	 * Helper method: Called to inform all Angerona error listeners about an error.
+	 * @param title		The title for the error
+	 * @param message	The error message
+	 */
 	public void onError(String title, String message) {
 		for(ErrorListener l : errorListeners) {
 			l.onError(title, message);
