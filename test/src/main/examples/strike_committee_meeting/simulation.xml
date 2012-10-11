@@ -20,6 +20,8 @@
 		<name>Boss</name>
 		<default-suffix>boss</default-suffix>
 	
+		<desire>q_Employee(attend_scm)</desire>
+		
         <config class="angerona.fw.serialize.AgentConfigImport">
 			<source>config/agents/default_agent.xml</source>
         </config>
@@ -29,10 +31,13 @@
         </beliefbase-config>
 	</agent-instance>
 	
+	<!-- Undocument the following to generate a Peception at the beginning of the simulation: -->
+	<!-- 
 	<perception class="angerona.fw.comm.Query">
       <sender>Boss</sender>
       <receiver>Employee</receiver>
       <question>attend_scm</question>
    	</perception>
+   	-->
    	
 </simulation-configuration>

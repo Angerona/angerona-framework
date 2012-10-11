@@ -80,7 +80,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		for(Desire desire : ag.getDesires().getDesires()) {
 			Atom atom = desire.getAtom();
-			if(atom.toString().trim().startsWith("v_")) {
+			String atomStr = atom.toString().trim();
+			boolean informDesire = atomStr.startsWith("v_");
+			boolean queryDesire = atomStr.startsWith("q_");
+			
+			if(informDesire || queryDesire) {
 				int si = atom.toString().indexOf("_")+1;
 				int li = atom.toString().indexOf("(", si);
 				if(si == -1 || li == -1)
@@ -105,7 +109,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					e.printStackTrace();
 				}
 				
-				sg.newStack( new Inform(ag, recvName, a));
+				if(informDesire) {
+					sg.newStack( new Inform(ag, recvName, a));
+				} else {
+					sg.newStack( new Query(ag, recvName, a));
+				}
 				ag.getPlanComponent().addPlan(sg);
 				report("Add the new atomic action '" + Inform.class.getSimpleName() + 
 						"' to the plan, choosed by desire: " + desire.toString(), 
