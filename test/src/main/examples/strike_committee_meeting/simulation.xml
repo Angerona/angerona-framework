@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Strike Committee Meeting (Dummy Logic)</name>
+	<name>Strike Committee Meeting (Dummy)</name>
 	<behavior>angerona.fw.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Employee</name>
