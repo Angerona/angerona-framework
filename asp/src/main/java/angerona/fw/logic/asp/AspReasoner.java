@@ -21,11 +21,13 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Angerona;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
+import angerona.fw.serialize.GlobalConfiguration;
 
 /**
  * Implementation of an ASP Reasoner using dlv or clingo as solver backends.
@@ -40,7 +42,16 @@ public class AspReasoner extends BaseReasoner {
 	static private Logger LOG = LoggerFactory.getLogger(AspReasoner.class);
 	
 	/** the solver type used by this class instance */
-	private SolverWrapper solver = SolverWrapper.DLV_COMPLEX;
+	private SolverWrapper solver;
+	
+	public AspReasoner() {
+		GlobalConfiguration config = Angerona.getInstance().getConfig();
+		String solverStr = config.getParameters().get("asp-solver");
+		if(solverStr != null)
+			this.solver = SolverWrapper.valueOf(solverStr);
+		else
+			this.solver = SolverWrapper.DLV;
+	}
 	
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {

@@ -8,9 +8,11 @@ import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Angerona;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
+import angerona.fw.serialize.GlobalConfiguration;
 
 /**
  * Aps Revision using 
@@ -21,7 +23,16 @@ public class AspRevision extends BaseChangeBeliefs {
 	/** The logger used for output in the angerona Framework */
 	static private Logger LOG = LoggerFactory.getLogger(AspRevision.class);
 	
-	private SolverWrapper wrapper = SolverWrapper.DLV_COMPLEX;
+	private SolverWrapper wrapper;
+	
+	public AspRevision() {
+		GlobalConfiguration config = Angerona.getInstance().getConfig();
+		String solverStr = config.getParameters().get("asp-solver");
+		if(solverStr != null)
+			this.wrapper = SolverWrapper.valueOf(solverStr);
+		else
+			this.wrapper = SolverWrapper.DLV;
+	}
 	
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {
