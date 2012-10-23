@@ -5,7 +5,7 @@ import java.util.Map;
 import angerona.fw.internal.EntityAtomic;
 
 /**
- * An AgentComponent is an part of an Agent. Like its Plan or its Confidential-Knowledge
+ * An AgentComponent is an part of an Agent. Like its Plan or its Secrecy-Knowledge
  * it should be used as base interface for specializations of the agent. 
  * 
  * Other interesting specializations are: Motivations, ect.

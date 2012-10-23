@@ -1,7 +1,8 @@
 <simulation-configuration>
 <!-- I need to prune some of these skills off -->
 	<name>Implicity Secrecy without Contradiction</name>
-      
+    <behavior>angerona.fw.DefaultBehavior</behavior>
+     
 	<agent-instance>
 		<name>Mary</name>
        	<default-suffix>mary</default-suffix>

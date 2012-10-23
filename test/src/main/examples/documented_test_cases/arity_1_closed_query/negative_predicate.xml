@@ -1,6 +1,7 @@
 <simulation-configuration>
 	<name>Arity-1 closed Query Test</name>
-      
+    <behavior>angerona.fw.DefaultBehavior</behavior>
+    
 	<agent-instance>
 		<name>Mary</name>
         	<default-suffix>mary</default-suffix>
