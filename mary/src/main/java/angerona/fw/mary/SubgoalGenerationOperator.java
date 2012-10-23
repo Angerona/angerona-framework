@@ -25,6 +25,7 @@ import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.parameter.SubgoalGenerationParameter;
@@ -103,6 +104,12 @@ public class SubgoalGenerationOperator extends
 				String[] f1_s = f1.toString().split("_");
 				String[] f2_s = f2.toString().split("_");
 
+				if(f1_s.length == 1) {
+					return -1;
+				} else if(f2_s.length == 1) {
+					return 1;
+				}
+				
 				int f1_num = Integer.parseInt(f1_s[f1_s.length-1]); 
 				int f2_num = Integer.parseInt(f2_s[f2_s.length-1]);
 				
@@ -213,34 +220,35 @@ public class SubgoalGenerationOperator extends
 		Query query = (Query) (ag.getActualPerception()); 
 		AngeronaAnswer trueAnswer = 
 				ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
-		
-		List<FolFormula> answers = new LinkedList<>(trueAnswer.getAnswers());
-		Collections.sort(answers, new AnswerComp()); 
-		
-		List<FolFormula> lies = new LinkedList<>();
-		if(generateLies) {
-			// create lieing alternatives:
-			for(int i=0; i<answers.size(); i++) {
-				//if(isClosedQuery(answers.get(i))) {
-				if(answers.get(i).isGround()) {
-					FolFormula simpleLie = new LyingOperator().lie(answers.get(i));
-					lies.add(simpleLie);
+		if(trueAnswer.getAnswerValue() == AnswerValue.AV_COMPLEX) {
+			List<FolFormula> answers = new LinkedList<>(trueAnswer.getAnswers());
+			Collections.sort(answers, new AnswerComp()); 
+			
+			List<FolFormula> lies = new LinkedList<>();
+			if(generateLies) {
+				// create lieing alternatives:
+				for(int i=0; i<answers.size(); i++) {
+					//if(isClosedQuery(answers.get(i))) {
+					if(answers.get(i).isGround()) {
+						FolFormula simpleLie = new LyingOperator().lie(answers.get(i));
+						lies.add(simpleLie);
+					}
 				}
 			}
+		
+			// create ignorance alternative:
+			FolFormula ignorance = expressionOfIgnorance(query);
+			lies.add(ignorance);
+			
+			Query q = (Query) des.getPerception();
+			Subgoal sg = new Subgoal(ag, des);
+			createSubgoals(answers, sg, q, new Boolean(false));
+			createSubgoals(lies, sg, q, new Boolean(true));
+			ag.getPlanComponent().addPlan(sg);
+			return true;
 		}
 		
-		
-		// create ignorance alternative:
-		FolFormula ignorance = expressionOfIgnorance(query);
-		lies.add(ignorance);
-		
-		Query q = (Query) des.getPerception();
-		Subgoal sg = new Subgoal(ag, des);
-		createSubgoals(answers, sg, q, new Boolean(false));
-		createSubgoals(lies, sg, q, new Boolean(true));
-		ag.getPlanComponent().addPlan(sg);
-		
-		return true;
+		return false;
 	}
 	
 	private void createSubgoals(List<FolFormula> answers, Subgoal sg, Query q, Boolean ud) {

@@ -284,6 +284,11 @@ public class AngeronaEnvironment extends APR {
 				LOG.error(error);
 				return false;
 			}
+		} else {
+			String error = "No behavior given in simulation configuration file.";
+			Angerona.getInstance().onError("Simulation initialization", error);
+			LOG.error(error);
+			return false;
 		}
 		return true;
 	}
