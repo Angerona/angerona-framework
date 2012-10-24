@@ -16,11 +16,19 @@ import angerona.fw.operators.parameter.ReasonerParameter;
  * It is the responsibility of the Reasoner implementation to translate the given
  * query into its native language. 
  * 
+ * TODO: Add default implementation which uses default TranslateOperator to translate
+ * the fol-formula into a format readable by the reasoner.
+ * 
  * @author Tim Janus
  */
 public abstract class BaseReasoner 
 	extends Operator<ReasonerParameter, AngeronaAnswer>{
 	
+	/** 
+	 * @TODO: There are thoughts to share the operator instances between callers
+	 * but the reasoner is the only operator which has implemented something like
+	 * this so far. The task has no high priority.
+	 */
 	protected BaseBeliefbase actualBeliefbase;
 	
 	public BaseReasoner() {
@@ -32,6 +40,11 @@ public abstract class BaseReasoner
 	 */
 	protected abstract Set<FolFormula> inferInt();
 	
+	/**
+	 * Infers all the knowledge in a given belief base and returns it as a set of FOL formulas.
+	 * This helper method maintains the operator callstack and calls inferInt to get the work done.
+	 * @return	a set of FOL formulas representing Cn(belief base).
+	 */
 	public Set<FolFormula> infer() {
 		getOwner().pushOperator(this);
 		Set<FolFormula> reval = inferInt();
@@ -68,6 +81,13 @@ public abstract class BaseReasoner
 	 */
 	protected abstract Answer queryInt(FolFormula query);
 	
+	/**
+	 * Querys for the formula given as parameter. Its a helper method which 
+	 * maintains the state of the operator callstack and calls the queryInt 
+	 * method to get the work done.
+	 * @param query
+	 * @return An AngeronaAnswer which represents the answer to the query
+	 */
 	public Answer query(FolFormula query) {
 		getOwner().pushOperator(this);
 		Answer reval = queryInt(query);

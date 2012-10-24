@@ -9,17 +9,33 @@ import angerona.fw.Perception;
 import angerona.fw.operators.Operator;
 
 /**
- * Base class for all translate operations for different beliefbase type
+ * Base class for all translate operations for different belief base type
  * implementations.
+ * 
+ * It supports two important methods which has to be implemented by subclasses:
+ * 1. translatePerception to transform a perception into a belief base which
+ *    can be used for revision operations with the agents knowledge
+ * 2. translateFOL to transform a set of FOL formulas into a belief base which
+ *    which represents the knowledge encoded in FOL.
+ *    
+ * 
  * @author Tim Janus
  */
 public abstract class BaseTranslator extends Operator<Perception, BaseBeliefbase>{
 	
+	/**
+	 * Sub classes implement this method to translate a perception into the
+	 * belief base type represented by the translator.
+	 * @param p
+	 * @return
+	 */
 	protected abstract BaseBeliefbase translatePerceptionInt(Perception p);
 	
 	/**
 	 * Translates the given perception in a beliefbase only containing the knowledge 
 	 * encoded in the perception.
+	 * Work is done in the translatePerceptionInt method. This method ensures that
+	 * the operator callstack is updated.
 	 * @param p		Reference to the perception.
 	 * @return		A beliefbase containing the information encoded in the perception.
 	 */
@@ -30,12 +46,24 @@ public abstract class BaseTranslator extends Operator<Perception, BaseBeliefbase
 		return reval;
 	}
 	
+	/**
+	 * Helper method: Extends the interface to easily handle one FOL-
+	 * Formula instead a set of formulas.
+	 * @param formula		Reference to the formula
+	 * @return	A belief base containing the knowledge encoded in the FOL-Formula
+	 */
 	protected BaseBeliefbase translateFOLInt(FolFormula formula) {
 		Set<FolFormula> set = new HashSet<>();
 		set.add(formula);
 		return translateFOLInt(set);
 	}
 	
+	/**
+	 * Sub classes implement this method to translate a set of formulas into the
+	 * belief base type represented by the translator.
+	 * @param formulas
+	 * @return A belief base containing the knowledge encoded in the set of FOL-Formulas
+	 */
 	protected abstract BaseBeliefbase translateFOLInt(Set<FolFormula> formulas);
 	
 	/**
