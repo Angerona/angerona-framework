@@ -73,7 +73,7 @@ public class KnowhowStrategy {
 	
 	/**
 	 * Ctor: Creates the default Knowhow-Strategy
-	 * @param pathtodlv	String with path to the dlv-complex solver
+	 * @param solverpath	String with path to the dlv-complex solver
 	 */
 	public KnowhowStrategy(String solverpath) {
 		solver = new DLVComplex(solverpath);

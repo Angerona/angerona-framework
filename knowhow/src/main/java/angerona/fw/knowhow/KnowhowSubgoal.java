@@ -99,7 +99,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * start intention
 	 * @param des		The desire to react to the justify.
 	 * @param pp		The subgoal generation parameter data structure.
-	 * @return
+	 * @return			True if a safe action was found, false otherwise.
 	 */
 	protected Boolean onJustify(Desire des, SubgoalGenerationParameter pp) {
 		if(! (des.getPerception() instanceof Justify)) 
@@ -182,7 +182,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param intention		The intitial intention for searching the next safe action
 	 * @param param			The subgoal generation parameter data structrue
 	 * @param des			The desire which will be fulfilled by the next safe action.
-	 * @return
+	 * @return				A plan element containing a safe atomic action.
 	 */
 	public PlanElement nextSafeAction(String intention, SubgoalGenerationParameter param, Desire des) {
 		prepareKnowhow(intention, param, des);
@@ -208,7 +208,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param intention		The initial intention for searching the next action.
 	 * @param param			The subgoal generation parameter data structure
 	 * @param des			The desire which will be fulfilled by the next action.
-	 * @return
+	 * @return				A plan element containing an atomic action.
 	 */
 	public PlanElement nextAction(String intention, SubgoalGenerationParameter param, Desire des) {
 		prepareKnowhow(intention, param, des);
@@ -257,7 +257,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * entire knowhow was searched or the first atomic intention was found.
 	 * @param param	The subgoal-generation data-structure
 	 * @param des	The associated desire
-	 * @return		
+	 * @return		A plan element containing an atomic action.
 	 */
 	private PlanElement iterateKnowhow(SubgoalGenerationParameter param, Desire des) {
 		// iterate knowhow algorithm until a action is found.
@@ -292,7 +292,6 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * into the Angerona System.
 	 * @param param		Subgoal-Generation parameter data-structure
 	 * @param des		The associated desire.
-	 * @param ag		Reference to the agent
 	 * @return			A Skill context pair representing the last found atomic action or null if an error occurred.
 	 */
 	private PlanElement createAtomicAction(SubgoalGenerationParameter param, Desire des) {

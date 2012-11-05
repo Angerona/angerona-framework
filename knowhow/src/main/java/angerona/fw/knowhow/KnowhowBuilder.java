@@ -149,7 +149,7 @@ public class KnowhowBuilder {
 	
 	/**
 	 * Creates an extended logic program from the given collection of skills
-	 * @param skills	all skills which are atomic actions of the agent
+	 * @param atomic_actions	all skills which are atomic actions of the agent
 	 * @return			An extended logic program containing all is_atomic facts for the agent
 	 */
 	public static Program buildAtomicProgram(Collection<String> atomic_actions) {

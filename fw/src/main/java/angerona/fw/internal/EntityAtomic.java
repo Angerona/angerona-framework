@@ -13,7 +13,7 @@ public interface EntityAtomic extends Entity, Cloneable {
 	 * Makes a copy of atomic entity. An atomic entitys copy duplicates
 	 * every data defined in subclasses.
 	 * The id and parent id is the same.  
-	 * @return
+	 * @return	A deep copy of this object
 	 */
 	public Object clone();
 	

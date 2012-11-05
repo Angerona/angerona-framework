@@ -19,11 +19,11 @@ public class SubgoalGenerationParameter extends GenericOperatorParameter {
 	/**
 	 * Ctor: Generation the PlanerParameter data-structure with the following parameters:
 	 * @param actualPlan	the high level plan of the agent
-	 * @param options		list of possible actions (applicable skills)
+	 * @param forbidden		list of forbidden actions (forbidden skills)
 	 */
-	public SubgoalGenerationParameter(MasterPlan actualPlan, List<Action> frobidden) {
+	public SubgoalGenerationParameter(MasterPlan actualPlan, List<Action> forbidden) {
 		super(actualPlan.getAgent());
-		this.forbiddenActions = frobidden;
+		this.forbiddenActions = forbidden;
 		this.actualPlan = actualPlan;
 	}
 	

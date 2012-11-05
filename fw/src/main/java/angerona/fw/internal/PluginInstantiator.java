@@ -129,7 +129,7 @@ public class PluginInstantiator {
 	 * Unregisters a registered plugin listener. The listener will not be informed of any further
 	 * changes.
 	 * @param pl	Reference to the listener.
-	 * @return		
+	 * @return		true if the removal was successful, false otherwise.
 	 */
 	public boolean removeListener(PluginListener pl) {
 		return this.listeners.remove(pl);

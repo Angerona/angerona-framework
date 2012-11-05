@@ -179,8 +179,10 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	/**
 	 * The internal parse function for the belief base.
-	 * Sub classes must implement this method to parse a string representation into a belief base living in memory.
-	 * @param content	The string representing the belief base. (Content of a file on the filesystem as an example)
+	 * Sub classes must implement this method to parse a string representation into a 
+	 * belief base living in memory.
+	 * @param br	The content representing the belief base. It is encapsulated by
+	 * 				a BufferedReader to read from a file for example.
 	 * @throws IOException 
 	 * @throws ParserException 
 	 */
@@ -287,7 +289,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * Angerona uses a subset of FOL to communicate between different plugins.
 	 * At the moment no quantified formulas or formulas with variables are allowed.
 	 * @param query
-	 * @return
+	 * @return	true if the given formula is valid for the beliefbase false otherwise.
 	 */
 	public boolean isFormulaValid(Formula query) {
 		if(!(query instanceof FolFormula)) {

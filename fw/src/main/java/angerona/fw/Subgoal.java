@@ -49,7 +49,7 @@ public class Subgoal extends Intention implements Cloneable {
 	/**
 	 * create a new stack for the given complex intention. Is used for creating a stack with a complex intention.
 	 * @param intention	will be put ontop of the newly create stack.
-	 * @return
+	 * @return true
 	 */
 	public boolean newStack(Intention intention) {
 		return newStack(intention, null);

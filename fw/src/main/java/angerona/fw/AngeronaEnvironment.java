@@ -84,8 +84,8 @@ public class AngeronaEnvironment extends APR {
 		return name;
 	}
 	
-	/** @ return a string identifing the root directory of the actual 
-	 * 			 running simulation or null if no simulation is initialized. 
+	/** @return 	a string identifying the root directory of the actual 
+	 * 			 	running simulation or null if no simulation is initialized. 
 	 */
 	public String getDirectory() {
 		return simDirectory;

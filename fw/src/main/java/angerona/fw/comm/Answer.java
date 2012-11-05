@@ -22,7 +22,7 @@ public class Answer extends SpeechAct {
 	
 	/**
 	 * Ctor: Generates the Answer speech act by the following parameters.
-	 * @param senderId		unique name of the sender of the answer
+	 * @param sendingAgent	reference to the sender of the answer
 	 * @param receiverId	unique name of the receiver of the answer
 	 * @param regarding		formula representing the question
 	 * @param answer		the value of the answer.

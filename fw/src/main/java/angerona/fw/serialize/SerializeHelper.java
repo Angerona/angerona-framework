@@ -51,7 +51,7 @@ public class SerializeHelper {
 	/**
 	 * loads the xml in the given file assuming that the given class is anotated by simplexml library
 	 * @param cls		class information about the object to deserialize.
-	 * @param filename	the name of the file where the xml is located.
+	 * @param source	the name of the file where the xml is located.
 	 * @return			An instance of with the type T containing the xml data.
 	 */
 	public static <T> T loadXml(Class<T> cls, File source) {

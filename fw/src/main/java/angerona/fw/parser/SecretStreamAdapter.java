@@ -14,7 +14,7 @@ import angerona.fw.parser.SimpleCharStream;
  *	Also c++ template code would generate a valid generic solution.
  *	Did someone know a generic solution in java-scope?	
  *
- *	@see http://www.iandickinson.me.uk/articles/javacc-embedding.html
+ *	http://www.iandickinson.me.uk/articles/javacc-embedding.html
  * 	@author Tim Janus
  */
 public class SecretStreamAdapter extends

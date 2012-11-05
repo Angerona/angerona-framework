@@ -21,7 +21,6 @@ import angerona.fw.util.Pair;
  * his wife Alice to know that he has an affair with Claire. Also
  * he does not want Claire to know that he has children.
  * 
- * @remark
  * In Angerona Bobs data has the Beliefbases B_A and B_C
  * representing the view on Alice or Claire. The reasoning operators
  * linked to these beliefbases are used to instead one defined in

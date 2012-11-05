@@ -34,7 +34,7 @@ public interface EnvironmentBehavior {
 	/**
 	 * Performs runOneTick until it returns false.
 	 * @param env	Visitor environment which performs the run.
-	 * @return		
+	 * @return		true if no errors occurred in the simulation, false otherwise.	
 	 */
 	boolean run(AngeronaEnvironment env);
 	

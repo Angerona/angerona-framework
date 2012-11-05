@@ -92,7 +92,7 @@ public class OperatorSet<T extends BaseOperator> {
 	 * removes the given operator from the set.
 	 * Only the full-java-class-name is deciding, the given operator might be another instance
 	 * but if it is of the same type the operator in the set will be removed.
-	 * @param operator	reference to the operator
+	 * @param clsName	The fully qualified java class name of the operator.
 	 * @return	true if the operator was removed, false otherwise (if it was not in the set for example).
 	 */
 	public boolean removeOperator(String clsName) {

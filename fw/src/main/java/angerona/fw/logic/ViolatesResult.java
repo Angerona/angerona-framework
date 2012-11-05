@@ -94,7 +94,7 @@ public class ViolatesResult implements Cloneable {
 	 * Two pairs will be combined if the secrets are alike.
 	 * @see angerona.fw.logic.Secret
 	 * @param other		Reference to the other ViolatesResult to combine.
-	 * @return
+	 * @return	The combination of this ViolatesResult with one given as parameter.
 	 */
 	public ViolatesResult combine(ViolatesResult other) {
 		List<Pair<Secret, Double>> l1 = new LinkedList<>();

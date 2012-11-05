@@ -9,7 +9,6 @@ import angerona.fw.listener.SubgoalListener;
  * To support the Angerona violates structure an intention can save if it is a
  * real-run or a mental-run of the intention (the plan).
  * 
- * @see Skill
  * @see Subgoal
  * @author Tim Janus
  */

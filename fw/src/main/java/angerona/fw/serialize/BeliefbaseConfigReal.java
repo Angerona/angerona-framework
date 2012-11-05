@@ -37,7 +37,7 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	
 	/**
 	 * Reads a list of belief base configurations from a given xml file
-	 * @param filename	name of the xml file
+	 * @param source	name of the xml file
 	 * @return	list with configurations for belief bases.
 	 * @throws ParserConfigurationException
 	 * @throws SAXException

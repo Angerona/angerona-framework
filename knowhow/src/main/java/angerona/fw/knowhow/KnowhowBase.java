@@ -99,7 +99,8 @@ public class KnowhowBase extends BaseAgentComponent {
 	 * finds the Skill-parameter for a specific knowhow-statements subgoal.
 	 * @param kh_index			the index (id) of the knowhow-statement
 	 * @param subgoal_index		the index of the subgoal.
-	 * @return
+	 * @return					All Skill-Parameters for subtargets of the
+	 * 							knowhow-statement and subgoal index.
 	 */
 	public Set<SkillParameter> findParameters(int kh_index, int subgoal_index) {
 		Set<SkillParameter> reval = new HashSet<>();

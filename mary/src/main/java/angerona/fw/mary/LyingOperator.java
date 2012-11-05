@@ -13,7 +13,7 @@ public class LyingOperator {
 	/**
 	 * Returns the AnswerValue version of a lie, given the AngeronaAnswer containing the truth. Simply negates it. 
 	 * @param truth
-	 * @return
+	 * @return	the opposite answer given as parameter (lie)
 	 */
 	protected AnswerValue lie(AngeronaAnswer truth)
 	{
@@ -29,7 +29,7 @@ public class LyingOperator {
 	 * Simply negates it for now. Later there should be an option for lying by choosing an alternative possibility. 
 	 * Lying operates on parsing the string version of the FolFormula, which is admittedly crude. 
 	 * @param truth
-	 * @return
+	 * @return	The given formula is negated to create a lie from a true expression.
 	 */
 	protected FolFormula lie(FolFormula truth)
 	{

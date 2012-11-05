@@ -71,8 +71,9 @@ public class Beliefs implements Cloneable
 	
 	/**
 	 * This method generates a FOL-Signature by the union of the FolSignatures
-	 * of all belief bases in the Beliefs (worlds and views).
-	 * @return
+	 * of all belief bases in the Beliefs (world and views).
+	 * @return	A FOL-Signature containing the union of the signatures of every
+	 * 			belief base of the agent (world and views).
 	 */
 	public FolSignature getSignature() {
 		BaseBeliefbase world = getWorldKnowledge();

@@ -25,7 +25,7 @@ public abstract class BaseReasoner
 	extends Operator<ReasonerParameter, AngeronaAnswer>{
 	
 	/** 
-	 * @TODO: There are thoughts to share the operator instances between callers
+	 * TODO: There are thoughts to share the operator instances between callers
 	 * but the reasoner is the only operator which has implemented something like
 	 * this so far. The task has no high priority.
 	 */
@@ -66,7 +66,7 @@ public abstract class BaseReasoner
 	 * queries for question in the given beliefbase bb
 	 * @param bb
 	 * @param question
-	 * @return
+	 * @return	An AngeronaAnswer containing the answer to the given question.
 	 */
 	public Answer query(BaseBeliefbase bb, FolFormula question) {
 		actualBeliefbase = bb;

@@ -27,7 +27,7 @@ public abstract class BaseTranslator extends Operator<Perception, BaseBeliefbase
 	 * Sub classes implement this method to translate a perception into the
 	 * belief base type represented by the translator.
 	 * @param p
-	 * @return
+	 * @return	A BaseBeliefbase instance containing the knowledge encapsulated in p.
 	 */
 	protected abstract BaseBeliefbase translatePerceptionInt(Perception p);
 	

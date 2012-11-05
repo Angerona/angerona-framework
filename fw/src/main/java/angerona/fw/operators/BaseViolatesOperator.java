@@ -54,7 +54,7 @@ public abstract class BaseViolatesOperator extends
 	
 	/**
 	 * Is called by the processInt method when a Plan was given for violation checking..
-	 * @param action	Casted Reference to the action
+	 * @param plan		Casted Reference to the plan element
 	 * @param param		The rest parameters for the violation invoking.
 	 * @return			A ViolatesResult structure containing information about secrecy violation 
 	 */

@@ -55,7 +55,7 @@ public class GlobalConfiguration {
 	/**
 	 * loads the global-configuration from the given file-path.
 	 * @param source	reference to the source File.
-	 * @return
+	 * @return			Data structure containing the global configuration
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
