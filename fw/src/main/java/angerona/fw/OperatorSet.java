@@ -59,6 +59,18 @@ public class OperatorSet<T extends BaseOperator> {
 		return false;
 	}
 	
+	/**
+	 * Sets the default operator to the given parameter 
+	 * @param operator	The new default operator instance
+	 * @return	true
+	 */
+	public boolean setDefault(T operator) {
+		if(addOperator(operator)) {
+			defaultOperator = operator;
+			return true;
+		}
+		return false;
+	}
 	
 	/** @return reference to the current default-operator. */
 	public T def() {
@@ -81,6 +93,27 @@ public class OperatorSet<T extends BaseOperator> {
 	public boolean addOperator(String instantiationName) 
 			throws InstantiationException, IllegalAccessException {
 		Pair<String, T> p = create(instantiationName);
+		return realAdd(p);
+	}
+	
+	/**
+	 * Sets the given parameter as default operator. Should be used by
+	 * initialization code of unit tests.
+	 * @param operator	The operator instance which becomes the default operator.
+	 * @return	true
+	 */
+	public boolean addOperator(T operator) {
+		return realAdd(new Pair<String, T>(
+				operator.getClass().getName(), operator));
+	}
+
+	/**
+	 * adds the given pair to the map of operators and
+	 * sets the owner.
+	 * @param p	the pair to add (null means do nothing)
+	 * @return	p!=null
+	 */
+	private boolean realAdd(Pair<String, T> p) {
 		if(p != null) {
 			operators.put(p.first, p.second);
 			p.second.setOwner(owner);

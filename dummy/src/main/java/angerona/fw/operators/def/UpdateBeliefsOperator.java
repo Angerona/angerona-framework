@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
 import angerona.fw.comm.Justification;
