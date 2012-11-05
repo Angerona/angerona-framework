@@ -87,10 +87,18 @@ public class Angerona {
 		if(config == null) {
 			String filename = "config/configuration.xml";
 			File defConfigFile = new File(filename);
-			config = GlobalConfiguration.loadXml(defConfigFile);
-			
-			if(config == null) {
-				config = new GlobalConfiguration();
+			if(defConfigFile.exists()) {
+				config = GlobalConfiguration.loadXml(defConfigFile);
+				
+				if(config == null) {
+					config = new GlobalConfiguration();
+					onError("Configuration File not Found", 
+							"Cannot find the file: '" + filename +
+							"' close the Application and create your own\n" +
+							"by renaming '.../software/test/src/main/config/configuration_template.xml'" +
+							"to 'configuration.xml'\nand replace the placeholders.");
+				}
+			} else {
 				onError("Configuration File not Found", 
 						"Cannot find the file: '" + filename +
 						"' close the Application and create your own\n" +

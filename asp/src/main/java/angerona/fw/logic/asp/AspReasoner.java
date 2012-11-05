@@ -46,11 +46,13 @@ public class AspReasoner extends BaseReasoner {
 	
 	public AspReasoner() {
 		GlobalConfiguration config = Angerona.getInstance().getConfig();
-		String solverStr = config.getParameters().get("asp-solver");
-		if(solverStr != null)
-			this.solver = SolverWrapper.valueOf(solverStr);
-		else
-			this.solver = SolverWrapper.DLV;
+		if(config != null) {
+			String solverStr = config.getParameters().get("asp-solver");
+			if(solverStr != null)
+				this.solver = SolverWrapper.valueOf(solverStr);
+			else
+				this.solver = SolverWrapper.DLV;
+		}
 	}
 	
 	@Override
