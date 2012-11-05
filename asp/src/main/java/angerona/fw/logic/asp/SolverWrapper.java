@@ -1,12 +1,9 @@
 package angerona.fw.logic.asp;
 
-import java.io.FileNotFoundException;
-
 import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
-
 import angerona.fw.Angerona;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.serialize.GlobalConfiguration;
@@ -17,7 +14,7 @@ import angerona.fw.serialize.GlobalConfiguration;
  * instance of the Solver which is capable of processing answer-sets.
  * @author Tim Janus
  */
-public enum SolverWrapper {
+public enum SolverWrapper implements ISolverWrapper {
 	CLINGO,
 	DLV,
 	DLV_COMPLEX;
@@ -40,8 +37,10 @@ public enum SolverWrapper {
 			throw new NotImplementedException("SolverWrapper has no implementation for ordinal: " + ordinal());
 		}
 		
-		// let the angerona configuration facility handle the postfixs for executables.
-		path = config.getAsExecutable(paramName);
+		if(config != null) {
+			// let the angerona configuration facility handle the postfixs for executables.
+			path = config.getAsExecutable(paramName);
+		}
 	}
 	
 	/** @return a string representing the path to solver */
@@ -50,7 +49,7 @@ public enum SolverWrapper {
 	}
 	
 	/** @return an object which can invoke the solver */
-	public Solver getSolver() throws FileNotFoundException {
+	public Solver getSolver() {
 		Solver solver = null;
 		if(this == SolverWrapper.CLINGO)
 			solver = new Clingo(path);

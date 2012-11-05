@@ -1,6 +1,5 @@
 package angerona.fw.logic.asp;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -42,7 +41,7 @@ public class AspReasoner extends BaseReasoner {
 	static private Logger LOG = LoggerFactory.getLogger(AspReasoner.class);
 	
 	/** the solver type used by this class instance */
-	private SolverWrapper solver;
+	private ISolverWrapper solver;
 	
 	public AspReasoner() {
 		GlobalConfiguration config = Angerona.getInstance().getConfig();
@@ -53,6 +52,10 @@ public class AspReasoner extends BaseReasoner {
 			else
 				this.solver = SolverWrapper.DLV;
 		}
+	}
+	
+	public void setSolverWrapper(ISolverWrapper wrapper) {
+		solver = wrapper;
 	}
 	
 	@Override
@@ -133,12 +136,13 @@ public class AspReasoner extends BaseReasoner {
 	 * @throws SolverException
 	 */
 	private List<AnswerSet> runSolver(AspBeliefbase bb) throws SolverException {
-		try {
-			Solver s = solver.getSolver();
-			return s.computeModels(bb.getProgram(), 10);
-		} catch (FileNotFoundException fnfe) {
-			throw new SolverException(fnfe.getMessage(), SolverException.SE_CANNOT_FIND_SOLVER);
+		if(solver == null) {
+			LOG.warn("No asp solver linked to AspReasoner operator");
+			return new LinkedList<>();
 		}
+		
+		Solver s = solver.getSolver();
+		return s.computeModels(bb.getProgram(), 10);
 	}
 
 	@Override

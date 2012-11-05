@@ -1,7 +1,5 @@
 package angerona.fw.logic.asp;
 
-import java.io.FileNotFoundException;
-
 import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 
@@ -57,9 +55,7 @@ public class AspRevision extends BaseChangeBeliefs {
 					wrapper.getSolver()));
 		} catch (SolverException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException fnfe) {
-			fnfe.printStackTrace();
-		}
+		} 
 		
 		return bb;
 	}

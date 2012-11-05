@@ -67,6 +67,8 @@ public class Angerona {
 	
 	/** reference to the configuration of Angerona */
 	private GlobalConfiguration config = null;
+
+	private String configFilePath = "config/configuration.xml";
 	
 	/**
 	 * 	Implements the singleton pattern.
@@ -78,6 +80,19 @@ public class Angerona {
 		return instance;
 	}
 	
+	/** @return the path to the config file */
+	public String getConfigFilePath() {
+		return configFilePath;
+	}
+	
+	/**
+	 * Changes the path to the config file
+	 * @param configFilePath	new path to the config file as string
+	 */
+	public void setConfigFilePath(String configFilePath) {
+		this.configFilePath = configFilePath;
+	}
+	
 	/**
 	 * 	Loads the global configuration if it is not loaded yet and gives the
 	 * 	global configurations contents to the caller.
@@ -85,7 +100,7 @@ public class Angerona {
 	 */
 	public GlobalConfiguration getConfig() {
 		if(config == null) {
-			String filename = "config/configuration.xml";
+			String filename = getConfigFilePath();
 			File defConfigFile = new File(filename);
 			if(defConfigFile.exists()) {
 				config = GlobalConfiguration.loadXml(defConfigFile);

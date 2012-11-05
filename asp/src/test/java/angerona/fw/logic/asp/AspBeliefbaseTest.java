@@ -1,8 +1,11 @@
 package angerona.fw.logic.asp;
 
+import net.sf.tweety.Answer;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BeliefbaseTest;
 
 /**
@@ -29,5 +32,13 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 		p = bb.getProgram();
 		// TODO bug report by Daniel: ticket #68 
 		//assertEquals(1, p.size());
+	}
+	
+	public void testQueryForUnknown() {
+		AspBeliefbase bb = new MockBeliefbase();
+		Answer a = bb.getReasoningOperator().query(new Atom(new Predicate("test")));
+		AngeronaAnswer aa = (AngeronaAnswer)a;
+		// Tests for possible big in ticket #56 but no bug was found.
+		assertEquals(true, aa.getAnswerValue() == AnswerValue.AV_UNKNOWN);
 	}
 }
