@@ -4,6 +4,7 @@
 
 import java.util.*;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Number;
 
 @SuppressWarnings("all")
 public class ELPParser{
@@ -40,7 +41,7 @@ Atom atom() :
 {
 	Atom ret = null;
 	Token pred = null;
-	List<Term > terms = null;
+	List<Term<?> > terms = null;
 	SymbolicSet symset = null;
 }
 {
@@ -51,10 +52,6 @@ Atom atom() :
   	|
   		<CURLBRA > symset = symbolicSet() < CURRBRA >
  	)?
-|
-	pred = < VAR >
-|
-	pred = < NUMBER >
 )
 	// note: sets, multisets without denoting an aggregate predicate explicitly
 	//		 are handled in "literal()"
@@ -81,8 +78,8 @@ SymbolicSet symbolicSet() :
   }}
 
 
-List<Term> termlist() :
-{	List<Term> ret = new LinkedList<Term>();
+List<Term<?>> termlist() :
+{	List<Term<?>> ret = new LinkedList<Term<?>>();
 	Token s;
 	Term t;
 }
@@ -101,14 +98,13 @@ List<Term> termlist() :
 	}	
 }
 
-Term term() :
+Term<?> term() :
 {
   Token s;
-  Term t1 = null,t2 = null;
-  List<Term> tl1 = null, tl2 = null;}
+  List<Term<?>> tl1 = null, tl2 = null;}
 {
   	(s = < VAR >|s=< BLANK >)
-  	{		return new StdTerm(s.image);
+  	{		return new Variable(s.image);
   	}
 | 	s = < SYMBOL >
 	(
@@ -117,17 +113,31 @@ Term term() :
 	  < RBRA >
 	)?
 	{
-	  	if (tl1 == null)			return new StdTerm(s.image);
-		else
-			return Atom.instantiate(s.image,tl1);
-	}
-|
-	s = < UCHAR >
-	{		return new StdTerm(s.image);
+	  	if (tl1 == null)	  	{
+	  	  	char c = s.image.charAt(0);
+	  	  	boolean uppercase = c >= 65 && c <= 90;
+	  	  	boolean lowercase = c >= 97 && c <= 122;			if(uppercase)
+				return new Variable(s.image);
+			else if(lowercase)
+				return new Constant(s.image);
+			else
+				throw new ParseException("Cannot parse term: '" + s.image + "'");
+		}
+		//throw new ParseException("Atom are no terms anymore: '" + s.image + "(" + tl1 + ")'");
+		// TODO: Atoms are no terms anymore, handle them as functors not as Constant
+		//else
+		//	return Atom.instantiate(s.image,tl1);
+		String str = s.image + "(";
+		if(tl1.size() > 0)		{
+		  str += tl1.get(0);		}
+		for(int i=1; i<tl1.size(); i++)		{		  str += ", " + tl1.get(i);
+		}
+		str += ")";
+		return new Constant(str);
 	}
 |
 	s = < NUMBER >
-	{		return new StdTerm(s.image);
+	{		return new Number(s.image);
 	}
 |
 	< SQLBRA >
@@ -139,14 +149,18 @@ Term term() :
 		)?
 	)?
 	< SQRBRA >
-	{		return new ListTerm( tl1, tl2 );	}
+	{
+	  	if(tl1 == null)
+	  		return new ListTerm();
+		if(tl2 == null)
+			return new ListTerm(tl1);
+		return new ListTerm(tl1,tl2);
+	}
 |
 	< CURLBRA >
 	tl1 = termlist()
 	< CURRBRA >
 	{		return new SetTerm(tl1);
-	}
-	{
 	}
 }
 
@@ -195,7 +209,7 @@ List<Rule> program() :
 
 List<Literal> literalList() :
 {	List<Literal>	lits = null;
-	Literal l = null;
+	Object l = null;
 }
 {	(		l = literal()
 		(			","
@@ -205,7 +219,7 @@ List<Literal> literalList() :
 	{
 	  	LinkedList<Literal > ret = new LinkedList<Literal >();
 		if (l != null)
-	  		ret.add(l);
+	  		ret.add((Literal)l);
 	  	if (lits != null)
 	  		ret.addAll(lits);		return ret;
 	}
@@ -227,7 +241,7 @@ List<Literal > literalListBody() :
 List<Literal> literalListHead() :
 {
 	List<Literal>	lits = null;
-	Literal l = null;
+	Object l = null;
 }
 {
 	(
@@ -241,7 +255,7 @@ List<Literal> literalListHead() :
 	{
 	  	LinkedList<Literal > ret = new LinkedList<Literal >();
 		if (l != null)
-	  		ret.add(l);
+	  		ret.add((Literal)l);
 	  	if (lits != null)
 	  		ret.addAll(lits);
 		return ret;
@@ -249,7 +263,7 @@ List<Literal> literalListHead() :
 }
 
 Literal LiteralExpr() :
-{	Literal l0 = null, l1 = null, l2 = null;
+{	Object l0 = null, l1 = null, l2 = null;
 	String op01 = null, op12 = null;
 	Term t0 = null, t1 = null;
 }
@@ -282,32 +296,34 @@ Literal LiteralExpr() :
 	  	// check what to do
 	  	if ((l0 != null) && (l1 == null) && (l2 == null))	  	{
 	  	  	if (dbgOut) System.out.println("unary");
-			return l0;
+			return (Literal)l0;
 	  	}		else if ((l0 != null) && (l1 != null) && (l2 == null))
 		{
 		  	if (dbgOut) System.out.println("binary");
 		  	
 		  	// check if one of the predicates is an aggregate
-		  	if (l0.isAggregate())		  	{
+		  	if (l0 instanceof Aggregate)		  	{
 		  	  // l1 is right guard (maybe an assignment guard?)
-		  	  Aggregate ag = (Aggregate) l0.getAtom();
-		  	  ag.setRightGuard(l1.getAtom(), op01);
+		  	  Aggregate ag = (Aggregate) l0;
+		  	  //ag.setRightGuard(l1.getAtom(), op01);
 
 		  	  // was l0 default negated?
-		  	  if (l0.isDefaultNegated())
+		  	  if (l0 instanceof Not)
 		  	  	return new Not(ag);
 		  	  else
 		  	    return ag;
 		  	}
-		  	else if (l1.isAggregate())
+		  	else if (l1 instanceof Aggregate)
 		  	{
 		  	  // l0 is left guard
-		  	  Aggregate ag = (Aggregate) l1.getAtom();
-		  	  ag.setLeftGuard(l0.getAtom(), op01);
+		  	  Aggregate ag = (Aggregate) l1;
+		  	  ag.setLeftGuard((Term<?>)l0, op01);
 		  	  return ag;		  	}
 		  	else
-		  	{				// no aggregates, could be something else
-				return new Relation(op01,l0.getAtom(),l1.getAtom());
+		  	{
+		  	  	// no aggregates, could be something else
+				// TODO: Readd Relation support: 
+				return new Relation(op01,(Term<?>)l0,(Term<?>)l1);
 		  	}			
 		}
 		else if ((l0 != null) && (l1 != null) && (l2 != null))
@@ -317,22 +333,22 @@ Literal LiteralExpr() :
 		  	// otherwise, we have an arithmetic operation with
 		  	// an assignment (op12 is the arithmetic operator,
 		  	// op01 must be "=" and is the assignment
-		  	if (l1.isAggregate())		  	{
+		  	if (l1 instanceof Aggregate)		  	{
 		  	  	Aggregate ag = (Aggregate) l1;
-		  	  	ag.setLeftGuard(l0.getAtom(),op01);
-		  	  	ag.setRightGuard(l2.getAtom(),op12);				return l1;
+		  	  	ag.setLeftGuard((Term<?>)l0,op01);
+		  	  	ag.setRightGuard((Term<?>)l2,op12);				return (Aggregate)l1;
 				
 		  	}
-		  	else return new Arithmetic(op12,l1.getAtom(),l2.getAtom(),l0.getAtom());
+		  	else return new Arithmetic(op12,(Term<?>)l1,(Term<? >)l2,(Term<?>)l0);
 		}
 	}
 
 } 
 
-Literal literal() :
+Object literal() :
 {	boolean dneg = false;
 	boolean tneg = false;
-	Atom a0 = null;
+	Object reval = null;
 	Literal l = null;
 	Literal r = null;
 	String set_leftop = null;
@@ -351,16 +367,22 @@ Literal literal() :
 	 	{			tneg = true;
 		}
 	)?
-	a0 = atom()
-	{		if (dneg && tneg)
-			return new Not( new Neg(a0) );
-		else if (dneg && !tneg)
-			return new Not( a0 );
-		else if (!dneg && tneg)
-			return new Neg( a0 );
-		else
-			return a0;
-	}
+	(	 	LOOKAHEAD(3) 
+		reval = atom()
+		{
+		  	Atom a0 = (Atom)reval;			if (dneg && tneg)
+				return new Not( new Neg(a0) );
+			else if (dneg && !tneg)
+				return new Not( a0 );
+			else if (!dneg && tneg)
+				return new Neg( a0 );
+			else
+				return a0;
+		}
+	 |	  reval = term()
+	)
+	{
+	  return reval;	}
 }
 
 
@@ -377,11 +399,11 @@ List<Literal > dlv_answerset() :
 
 List<Literal > clasp_answerset() :
 {	List<Literal >  ret = new LinkedList<Literal >();
-	Literal l = null;	
+	Object l = null;	
 }
 {	(		l = literal()
 		{
-		  System.out.println(l);			ret.add(l);
+		  System.out.println(l);			ret.add((Literal)l);
 		}		
 	)*
 

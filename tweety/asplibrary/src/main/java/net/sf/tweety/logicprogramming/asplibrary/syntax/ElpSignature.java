@@ -39,20 +39,20 @@ public class ElpSignature extends Signature {
 				}
 			}
 			
-			for(String constant : sig.constants) {
-				this.constants.add(constant);
+			for(Constant constant : sig.constants) {
+				this.constants.add(constant.toString());
 			}
 		}
 		
 	}
 	
-	private Set<CommonStructure> predicates;
+	private Set<Predicate> predicates;
 	
-	private Set<String> constants;
+	private Set<Constant> constants;
 	
 	public ElpSignature() {
-		predicates = new HashSet<CommonStructure>();
-		constants = new HashSet<String>();
+		predicates = new HashSet<Predicate>();
+		constants = new HashSet<Constant>();
 	}
 	
 	public void add(Object obj) {
@@ -62,30 +62,15 @@ public class ElpSignature extends Signature {
 		}
 		
 		if(obj instanceof Atom) {
-			if(!predicates.contains(obj))
-				predicates.add((CommonStructure)obj);
-			
 			Atom a = (Atom)obj;
-			//System.out.println(a.toString() +":");
-			for(int i=0; i<a.getArity(); i++) {
-				Term t = a.getTerm(i);
-				if(t.isConstant()) {
-					if(!constants.contains(t.get())) {
-						constants.add(t.get());
-					}
-				} else {
-					/*
-					System.out.println(t.get()+":");
-					System.out.println("Is String: " + t.isString());
-					System.out.println("Is Atom: " + t.isAtom());
-					System.out.println("Is Variable: " + t.isVariable());
-					System.out.println("Is List: " + t.isList());
-					System.out.println("");
-					*/
+			predicates.add(a.getPredicate());
+			
+			for(Term<?> t : a.getTerms()) {
+				if(t instanceof Constant) {
+					constants.add((Constant)t);
 				}
 			}
 		}
-		
 	}
 	
 	@Override

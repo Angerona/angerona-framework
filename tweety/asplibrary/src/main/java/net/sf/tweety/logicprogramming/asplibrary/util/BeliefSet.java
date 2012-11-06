@@ -109,7 +109,7 @@ public class BeliefSet {
 		
 		Set<Literal> sl = new HashSet<Literal>();
 		for (Literal l : literals) {
-			if (!l.isTrueNegated())
+			if (!( l instanceof Neg) )
 				sl.add(l);
 		}
 		

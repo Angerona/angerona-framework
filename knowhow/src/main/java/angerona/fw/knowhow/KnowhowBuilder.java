@@ -5,8 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Number;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.StringTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
 
 import org.slf4j.Logger;
@@ -41,11 +44,7 @@ public class KnowhowBuilder {
 		for(KnowhowStatement ks : kb.getStatements()) {
 			boolean closed = true;
 			for(int i=0; i<ks.getTarget().getArity(); ++i) {
-				Term t = ks.getTarget().getTerm(i);
-				// This is just another border case never handled by tweety asp_library
-				// TODO: FIX ASP_LIBRARY
-				if(t.get() == null)
-					continue;
+				Constant t = (Constant)ks.getTarget().getTerm(i);
 				
 				if(t.get().startsWith("v_")) {
 					closed = false;
@@ -87,8 +86,8 @@ public class KnowhowBuilder {
 		List<SkillParameter> params = new LinkedList<>();
 		// Knowhow Statement
 		Rule r = new Rule();
-		Atom stAtom = new Atom(ks.name);
-		r.addHead(new Atom("khstatement", stAtom, ks.getTarget()));
+		r.addHead(new Atom("khstatement", new Constant(ks.name), 
+				new Constant(ks.getTarget().getName())));
 		p.add(r);
 		
 		// Subtargets
@@ -102,16 +101,14 @@ public class KnowhowBuilder {
 				// search parameters:
 				int c = 0;
 				if(a.getTerms() != null) {
-					for(Term t : a.getTerms()) {
+					for(Term<?> t : a.getTerms()) {
 						SkillParameter sp = new SkillParameter();
 						sp.skillName = a.getName().substring(2);
 						sp.numKnowhowStatement = ks.getId();
 						sp.numSubgoal = i;
 						sp.paramIndex = c++;
-						if(t instanceof Atom) {
-							sp.paramValue = ((Atom)t).toString();
-						} else {
-							sp.paramValue = t.get();
+						if(t instanceof StringTerm) {
+							sp.paramValue = ((StringTerm)t).get();
 						}
 						params.add(sp);
 					}
@@ -119,7 +116,8 @@ public class KnowhowBuilder {
 				
 				a = new Atom(a.getName());
 			}
-			r.addHead(new Atom("khsubgoal", stAtom, new Atom(new Integer(i).toString()), a));
+			r.addHead(new Atom("khsubgoal", new Constant(ks.name), new Number(i), 
+					new Constant(a.getName())));
 			p.add(r);
 			i++;
 		}
@@ -127,7 +125,8 @@ public class KnowhowBuilder {
 		// Conditions
 		for(Atom a : ks.getConditions()) {
 			r = new Rule();
-			r.addHead(new Atom("khcondition", stAtom, a));
+			r.addHead(new Atom("khcondition", new Constant(ks.name), 
+					new Constant(a.getName())));
 			p.add(r);
 		}
 		
@@ -138,9 +137,9 @@ public class KnowhowBuilder {
 		Program p = new Program();
 		for(String atom : literals) {
 			if(atom.startsWith("NEG_")) {
-				p.add(new Atom("nholds", new Atom(atom.substring(4))));
+				p.add(new Atom("nholds", new Constant(atom.substring(4))));
 			} else {
-				p.add(new Atom("holds", new Atom(atom)));
+				p.add(new Atom("holds", new Constant(atom)));
 			}
 			
 		}
@@ -156,7 +155,7 @@ public class KnowhowBuilder {
 		Program p = new Program();
 		
 		for(String action : atomic_actions) {
-			p.add(new Atom("is_atomic", new Atom("s_"+action)));
+			p.add(new Atom("is_atomic", new Constant("s_"+action)));
 		}
 		
 		return p;

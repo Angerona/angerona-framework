@@ -3,6 +3,7 @@ package net.sf.tweety.logicprogramming.asplibrary.parser;
 
 import java.util.*;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Number;
 
 @SuppressWarnings("all")
 public class ELPParser implements ELPParserConstants {
@@ -51,47 +52,33 @@ public class ELPParser implements ELPParserConstants {
   final public Atom atom() throws ParseException {
         Atom ret = null;
         Token pred = null;
-        List<Term > terms = null;
+        List<Term<?> > terms = null;
         SymbolicSet symset = null;
+    // atom with predicate
+            pred = jj_consume_token(SYMBOL);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case SYMBOL:
-      // atom with predicate
-              pred = jj_consume_token(SYMBOL);
+    case LBRA:
+    case CURLBRA:
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case LBRA:
+        jj_consume_token(LBRA);
+        terms = termlist();
+        jj_consume_token(RBRA);
+        break;
       case CURLBRA:
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case LBRA:
-          jj_consume_token(LBRA);
-          terms = termlist();
-          jj_consume_token(RBRA);
-          break;
-        case CURLBRA:
-          jj_consume_token(CURLBRA);
-          symset = symbolicSet();
-          jj_consume_token(CURRBRA);
-          break;
-        default:
-          jj_la1[0] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
+        jj_consume_token(CURLBRA);
+        symset = symbolicSet();
+        jj_consume_token(CURRBRA);
         break;
       default:
-        jj_la1[1] = jj_gen;
-        ;
+        jj_la1[0] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
       }
       break;
-    case VAR:
-      pred = jj_consume_token(VAR);
-      break;
-    case NUMBER:
-      pred = jj_consume_token(NUMBER);
-      break;
     default:
-      jj_la1[2] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+      jj_la1[1] = jj_gen;
+      ;
     }
           if (symset == null)
                 {if (true) return Atom.instantiate(pred.image, terms);}
@@ -113,7 +100,7 @@ public class ELPParser implements ELPParserConstants {
         ;
         break;
       default:
-        jj_la1[3] = jj_gen;
+        jj_la1[2] = jj_gen;
         break label_1;
       }
       jj_consume_token(26);
@@ -126,8 +113,8 @@ public class ELPParser implements ELPParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public List<Term> termlist() throws ParseException {
-        List<Term> ret = new LinkedList<Term>();
+  final public List<Term<?>> termlist() throws ParseException {
+        List<Term<?>> ret = new LinkedList<Term<?>>();
         Token s;
         Term t;
     t = term();
@@ -139,7 +126,7 @@ public class ELPParser implements ELPParserConstants {
         ;
         break;
       default:
-        jj_la1[4] = jj_gen;
+        jj_la1[3] = jj_gen;
         break label_2;
       }
       jj_consume_token(26);
@@ -150,10 +137,9 @@ public class ELPParser implements ELPParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public Term term() throws ParseException {
+  final public Term<?> term() throws ParseException {
   Token s;
-  Term t1 = null,t2 = null;
-  List<Term> tl1 = null, tl2 = null;
+  List<Term<?>> tl1 = null, tl2 = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VAR:
     case BLANK:
@@ -165,11 +151,11 @@ public class ELPParser implements ELPParserConstants {
         s = jj_consume_token(BLANK);
         break;
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[4] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-                {if (true) return new StdTerm(s.image);}
+                {if (true) return new Variable(s.image);}
       break;
     case SYMBOL:
       s = jj_consume_token(SYMBOL);
@@ -180,21 +166,40 @@ public class ELPParser implements ELPParserConstants {
         jj_consume_token(RBRA);
         break;
       default:
-        jj_la1[6] = jj_gen;
+        jj_la1[5] = jj_gen;
         ;
       }
                 if (tl1 == null)
-                        {if (true) return new StdTerm(s.image);}
-                else
-                        {if (true) return Atom.instantiate(s.image,tl1);}
-      break;
-    case UCHAR:
-      s = jj_consume_token(UCHAR);
-                {if (true) return new StdTerm(s.image);}
+                {
+                        char c = s.image.charAt(0);
+                        boolean uppercase = c >= 65 && c <= 90;
+                        boolean lowercase = c >= 97 && c <= 122;
+                        if(uppercase)
+                                {if (true) return new Variable(s.image);}
+                        else if(lowercase)
+                                {if (true) return new Constant(s.image);}
+                        else
+                                {if (true) throw new ParseException("Cannot parse term: '" + s.image + "'");}
+                }
+                //throw new ParseException("Atom are no terms anymore: '" + s.image + "(" + tl1 + ")'");
+                // TODO: Atoms are no terms anymore, handle them as functors not as Constant
+                //else
+                //	return Atom.instantiate(s.image,tl1);
+                String str = s.image + "(";
+                if(tl1.size() > 0)
+                {
+                  str += tl1.get(0);
+                }
+                for(int i=1; i<tl1.size(); i++)
+                {
+                  str += ", " + tl1.get(i);
+                }
+                str += ")";
+                {if (true) return new Constant(str);}
       break;
     case NUMBER:
       s = jj_consume_token(NUMBER);
-                {if (true) return new StdTerm(s.image);}
+                {if (true) return new Number(s.image);}
       break;
     case SQLBRA:
       jj_consume_token(SQLBRA);
@@ -204,7 +209,6 @@ public class ELPParser implements ELPParserConstants {
       case NUMBER:
       case SYMBOL:
       case VAR:
-      case UCHAR:
       case BLANK:
         tl1 = termlist();
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -213,26 +217,29 @@ public class ELPParser implements ELPParserConstants {
           tl2 = termlist();
           break;
         default:
-          jj_la1[7] = jj_gen;
+          jj_la1[6] = jj_gen;
           ;
         }
         break;
       default:
-        jj_la1[8] = jj_gen;
+        jj_la1[7] = jj_gen;
         ;
       }
       jj_consume_token(SQRBRA);
-                {if (true) return new ListTerm( tl1, tl2 );}
+                if(tl1 == null)
+                        {if (true) return new ListTerm();}
+                if(tl2 == null)
+                        {if (true) return new ListTerm(tl1);}
+                {if (true) return new ListTerm(tl1,tl2);}
       break;
     case CURLBRA:
       jj_consume_token(CURLBRA);
       tl1 = termlist();
       jj_consume_token(CURRBRA);
                 {if (true) return new SetTerm(tl1);}
-
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[8] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -258,13 +265,13 @@ public class ELPParser implements ELPParserConstants {
                   wc = true;
         break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[9] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
     default:
-      jj_la1[11] = jj_gen;
+      jj_la1[10] = jj_gen;
       ;
     }
     jj_consume_token(DOT);
@@ -274,7 +281,7 @@ public class ELPParser implements ELPParserConstants {
       jj_consume_token(SQRBRA);
       break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[11] = jj_gen;
       ;
     }
           if (wc)
@@ -292,17 +299,20 @@ public class ELPParser implements ELPParserConstants {
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case DOT:
+      case SQLBRA:
+      case CURLBRA:
       case LOGIMPL:
       case WEAKIMPL:
       case NUMBER:
       case NOT:
       case SYMBOL:
       case VAR:
+      case BLANK:
       case 35:
         ;
         break;
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[12] = jj_gen;
         break label_3;
       }
       r = rule();
@@ -314,12 +324,15 @@ public class ELPParser implements ELPParserConstants {
 
   final public List<Literal> literalList() throws ParseException {
         List<Literal>   lits = null;
-        Literal l = null;
+        Object l = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SQLBRA:
+    case CURLBRA:
     case NUMBER:
     case NOT:
     case SYMBOL:
     case VAR:
+    case BLANK:
     case 35:
       l = literal();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -328,17 +341,17 @@ public class ELPParser implements ELPParserConstants {
         lits = literalList();
         break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[13] = jj_gen;
         ;
       }
       break;
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[14] = jj_gen;
       ;
     }
                 LinkedList<Literal > ret = new LinkedList<Literal >();
                 if (l != null)
-                        ret.add(l);
+                        ret.add((Literal)l);
                 if (lits != null)
                         ret.addAll(lits);
                 {if (true) return ret;}
@@ -349,10 +362,13 @@ public class ELPParser implements ELPParserConstants {
         List<Literal >  lits = new LinkedList<Literal>();
         Literal l = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SQLBRA:
+    case CURLBRA:
     case NUMBER:
     case NOT:
     case SYMBOL:
     case VAR:
+    case BLANK:
     case 35:
       l = LiteralExpr();
                                     lits.add(l);
@@ -363,7 +379,7 @@ public class ELPParser implements ELPParserConstants {
           ;
           break;
         default:
-          jj_la1[16] = jj_gen;
+          jj_la1[15] = jj_gen;
           break label_4;
         }
         jj_consume_token(26);
@@ -372,7 +388,7 @@ public class ELPParser implements ELPParserConstants {
       }
       break;
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[16] = jj_gen;
       ;
     }
                 {if (true) return lits;}
@@ -381,12 +397,15 @@ public class ELPParser implements ELPParserConstants {
 
   final public List<Literal> literalListHead() throws ParseException {
         List<Literal>   lits = null;
-        Literal l = null;
+        Object l = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SQLBRA:
+    case CURLBRA:
     case NUMBER:
     case NOT:
     case SYMBOL:
     case VAR:
+    case BLANK:
     case 35:
       l = literal();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -400,24 +419,24 @@ public class ELPParser implements ELPParserConstants {
           jj_consume_token(TEXTOR);
           break;
         default:
-          jj_la1[18] = jj_gen;
+          jj_la1[17] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
         lits = literalListHead();
         break;
       default:
-        jj_la1[19] = jj_gen;
+        jj_la1[18] = jj_gen;
         ;
       }
       break;
     default:
-      jj_la1[20] = jj_gen;
+      jj_la1[19] = jj_gen;
       ;
     }
                 LinkedList<Literal > ret = new LinkedList<Literal >();
                 if (l != null)
-                        ret.add(l);
+                        ret.add((Literal)l);
                 if (lits != null)
                         ret.addAll(lits);
                 {if (true) return ret;}
@@ -425,7 +444,7 @@ public class ELPParser implements ELPParserConstants {
   }
 
   final public Literal LiteralExpr() throws ParseException {
-        Literal l0 = null, l1 = null, l2 = null;
+        Object l0 = null, l1 = null, l2 = null;
         String op01 = null, op12 = null;
         Term t0 = null, t1 = null;
     l0 = literal();
@@ -462,7 +481,7 @@ public class ELPParser implements ELPParserConstants {
                                 op01 = "!=";
         break;
       default:
-        jj_la1[21] = jj_gen;
+        jj_la1[20] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -500,19 +519,19 @@ public class ELPParser implements ELPParserConstants {
                                        op12 = "*";
           break;
         default:
-          jj_la1[22] = jj_gen;
+          jj_la1[21] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
         l2 = literal();
         break;
       default:
-        jj_la1[23] = jj_gen;
+        jj_la1[22] = jj_gen;
         ;
       }
       break;
     default:
-      jj_la1[24] = jj_gen;
+      jj_la1[23] = jj_gen;
       ;
     }
                 boolean dbgOut = false;
@@ -520,36 +539,37 @@ public class ELPParser implements ELPParserConstants {
                 if ((l0 != null) && (l1 == null) && (l2 == null))
                 {
                         if (dbgOut) System.out.println("unary");
-                        {if (true) return l0;}
+                        {if (true) return (Literal)l0;}
                 }
                 else if ((l0 != null) && (l1 != null) && (l2 == null))
                 {
                         if (dbgOut) System.out.println("binary");
 
                         // check if one of the predicates is an aggregate
-                        if (l0.isAggregate())
+                        if (l0 instanceof Aggregate)
                         {
                           // l1 is right guard (maybe an assignment guard?)
-                          Aggregate ag = (Aggregate) l0.getAtom();
-                          ag.setRightGuard(l1.getAtom(), op01);
+                          Aggregate ag = (Aggregate) l0;
+                          //ag.setRightGuard(l1.getAtom(), op01);
 
                           // was l0 default negated?
-                          if (l0.isDefaultNegated())
+                          if (l0 instanceof Not)
                                 {if (true) return new Not(ag);}
                           else
                             {if (true) return ag;}
                         }
-                        else if (l1.isAggregate())
+                        else if (l1 instanceof Aggregate)
                         {
                           // l0 is left guard
-                          Aggregate ag = (Aggregate) l1.getAtom();
-                          ag.setLeftGuard(l0.getAtom(), op01);
+                          Aggregate ag = (Aggregate) l1;
+                          ag.setLeftGuard((Term<?>)l0, op01);
                           {if (true) return ag;}
                         }
                         else
                         {
                                 // no aggregates, could be something else
-                                {if (true) return new Relation(op01,l0.getAtom(),l1.getAtom());}
+                                // TODO: Readd Relation support: 
+                                {if (true) return new Relation(op01,(Term<?>)l0,(Term<?>)l1);}
                         }
                 }
                 else if ((l0 != null) && (l1 != null) && (l2 != null))
@@ -559,23 +579,23 @@ public class ELPParser implements ELPParserConstants {
                         // otherwise, we have an arithmetic operation with
                         // an assignment (op12 is the arithmetic operator,
                         // op01 must be "=" and is the assignment
-                        if (l1.isAggregate())
+                        if (l1 instanceof Aggregate)
                         {
                                 Aggregate ag = (Aggregate) l1;
-                                ag.setLeftGuard(l0.getAtom(),op01);
-                                ag.setRightGuard(l2.getAtom(),op12);
-                                {if (true) return l1;}
+                                ag.setLeftGuard((Term<?>)l0,op01);
+                                ag.setRightGuard((Term<?>)l2,op12);
+                                {if (true) return (Aggregate)l1;}
 
                         }
-                        else {if (true) return new Arithmetic(op12,l1.getAtom(),l2.getAtom(),l0.getAtom());}
+                        else {if (true) return new Arithmetic(op12,(Term<?>)l1,(Term<? >)l2,(Term<?>)l0);}
                 }
     throw new Error("Missing return statement in function");
   }
 
-  final public Literal literal() throws ParseException {
+  final public Object literal() throws ParseException {
         boolean dneg = false;
         boolean tneg = false;
-        Atom a0 = null;
+        Object reval = null;
         Literal l = null;
         Literal r = null;
         String set_leftop = null;
@@ -585,7 +605,7 @@ public class ELPParser implements ELPParserConstants {
                         dneg = true;
       break;
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[24] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -594,18 +614,37 @@ public class ELPParser implements ELPParserConstants {
                         tneg = true;
       break;
     default:
-      jj_la1[26] = jj_gen;
+      jj_la1[25] = jj_gen;
       ;
     }
-    a0 = atom();
-                if (dneg && tneg)
-                        {if (true) return new Not( new Neg(a0) );}
-                else if (dneg && !tneg)
-                        {if (true) return new Not( a0 );}
-                else if (!dneg && tneg)
-                        {if (true) return new Neg( a0 );}
-                else
-                        {if (true) return a0;}
+    if (jj_2_1(3)) {
+      reval = atom();
+                        Atom a0 = (Atom)reval;
+                        if (dneg && tneg)
+                                {if (true) return new Not( new Neg(a0) );}
+                        else if (dneg && !tneg)
+                                {if (true) return new Not( a0 );}
+                        else if (!dneg && tneg)
+                                {if (true) return new Neg( a0 );}
+                        else
+                                {if (true) return a0;}
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case SQLBRA:
+      case CURLBRA:
+      case NUMBER:
+      case SYMBOL:
+      case VAR:
+      case BLANK:
+        reval = term();
+        break;
+      default:
+        jj_la1[26] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+          {if (true) return reval;}
     throw new Error("Missing return statement in function");
   }
 
@@ -620,14 +659,17 @@ public class ELPParser implements ELPParserConstants {
 
   final public List<Literal > clasp_answerset() throws ParseException {
         List<Literal >  ret = new LinkedList<Literal >();
-        Literal l = null;
+        Object l = null;
     label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case SQLBRA:
+      case CURLBRA:
       case NUMBER:
       case NOT:
       case SYMBOL:
       case VAR:
+      case BLANK:
       case 35:
         ;
         break;
@@ -637,10 +679,111 @@ public class ELPParser implements ELPParserConstants {
       }
       l = literal();
                   System.out.println(l);
-                        ret.add(l);
+                        ret.add((Literal)l);
     }
                 {if (true) return ret;}
     throw new Error("Missing return statement in function");
+  }
+
+  private boolean jj_2_1(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_1(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(0, xla); }
+  }
+
+  private boolean jj_3R_14() {
+    if (jj_scan_token(SYMBOL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_16() {
+    if (jj_scan_token(SQLBRA)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_13() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(22)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(25)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_10() {
+    if (jj_3R_12()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_12() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_13()) {
+    jj_scanpos = xsp;
+    if (jj_3R_14()) {
+    jj_scanpos = xsp;
+    if (jj_3R_15()) {
+    jj_scanpos = xsp;
+    if (jj_3R_16()) {
+    jj_scanpos = xsp;
+    if (jj_3R_17()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_11() {
+    if (jj_scan_token(VAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_17() {
+    if (jj_scan_token(CURLBRA)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_15() {
+    if (jj_scan_token(NUMBER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_6() {
+    if (jj_scan_token(SYMBOL)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_7()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_9() {
+    if (jj_scan_token(CURLBRA)) return true;
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_7() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_8()) {
+    jj_scanpos = xsp;
+    if (jj_3R_9()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_8() {
+    if (jj_scan_token(LBRA)) return true;
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_3R_6()) return true;
+    return false;
   }
 
   /** Generated Token Manager. */
@@ -651,6 +794,8 @@ public class ELPParser implements ELPParserConstants {
   /** Next token. */
   public Token jj_nt;
   private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
   private int jj_gen;
   final private int[] jj_la1 = new int[28];
   static private int[] jj_la1_0;
@@ -660,11 +805,14 @@ public class ELPParser implements ELPParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1100,0x1100,0x620000,0x4000000,0x4000000,0x2400000,0x100,0x4000,0x3621400,0x3621400,0x18000,0x18000,0x400,0x6b8040,0x4000000,0x6a0000,0x4000000,0x6a0000,0x104000,0x104000,0x6a0000,0xf8000000,0x38000000,0x38000000,0xf8000000,0x80000,0x0,0x6a0000,};
+      jj_la1_0 = new int[] {0x1100,0x1100,0x4000000,0x4000000,0x2400000,0x100,0x4000,0x2621400,0x2621400,0x18000,0x18000,0x400,0x26b9440,0x4000000,0x26a1400,0x4000000,0x26a1400,0x104000,0x104000,0x26a1400,0xf8000000,0x38000000,0x38000000,0xf8000000,0x80000,0x0,0x2621400,0x26a1400,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x8,0x0,0x8,0x0,0x0,0x8,0x1,0x7,0x7,0x1,0x0,0x8,0x8,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x8,0x0,0x8,0x0,0x0,0x8,0x1,0x7,0x7,0x1,0x0,0x8,0x0,0x8,};
    }
+  final private JJCalls[] jj_2_rtns = new JJCalls[1];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
 
   /** Constructor with InputStream. */
   public ELPParser(java.io.InputStream stream) {
@@ -678,6 +826,7 @@ public class ELPParser implements ELPParserConstants {
     jj_ntk = -1;
     jj_gen = 0;
     for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -692,6 +841,7 @@ public class ELPParser implements ELPParserConstants {
     jj_ntk = -1;
     jj_gen = 0;
     for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor. */
@@ -702,6 +852,7 @@ public class ELPParser implements ELPParserConstants {
     jj_ntk = -1;
     jj_gen = 0;
     for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -712,6 +863,7 @@ public class ELPParser implements ELPParserConstants {
     jj_ntk = -1;
     jj_gen = 0;
     for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor with generated Token Manager. */
@@ -721,6 +873,7 @@ public class ELPParser implements ELPParserConstants {
     jj_ntk = -1;
     jj_gen = 0;
     for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -730,6 +883,7 @@ public class ELPParser implements ELPParserConstants {
     jj_ntk = -1;
     jj_gen = 0;
     for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -739,11 +893,44 @@ public class ELPParser implements ELPParserConstants {
     jj_ntk = -1;
     if (token.kind == kind) {
       jj_gen++;
+      if (++jj_gc > 100) {
+        jj_gc = 0;
+        for (int i = 0; i < jj_2_rtns.length; i++) {
+          JJCalls c = jj_2_rtns[i];
+          while (c != null) {
+            if (c.gen < jj_gen) c.first = null;
+            c = c.next;
+          }
+        }
+      }
       return token;
     }
     token = oldToken;
     jj_kind = kind;
     throw generateParseException();
+  }
+
+  static private final class LookaheadSuccess extends java.lang.Error { }
+  final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  private boolean jj_scan_token(int kind) {
+    if (jj_scanpos == jj_lastpos) {
+      jj_la--;
+      if (jj_scanpos.next == null) {
+        jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
+      } else {
+        jj_lastpos = jj_scanpos = jj_scanpos.next;
+      }
+    } else {
+      jj_scanpos = jj_scanpos.next;
+    }
+    if (jj_rescan) {
+      int i = 0; Token tok = token;
+      while (tok != null && tok != jj_scanpos) { i++; tok = tok.next; }
+      if (tok != null) jj_add_error_token(kind, i);
+    }
+    if (jj_scanpos.kind != kind) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) throw jj_ls;
+    return false;
   }
 
 
@@ -776,6 +963,33 @@ public class ELPParser implements ELPParserConstants {
   private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
   private int[] jj_expentry;
   private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
+
+  private void jj_add_error_token(int kind, int pos) {
+    if (pos >= 100) return;
+    if (pos == jj_endpos + 1) {
+      jj_lasttokens[jj_endpos++] = kind;
+    } else if (jj_endpos != 0) {
+      jj_expentry = new int[jj_endpos];
+      for (int i = 0; i < jj_endpos; i++) {
+        jj_expentry[i] = jj_lasttokens[i];
+      }
+      jj_entries_loop: for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
+        int[] oldentry = (int[])(it.next());
+        if (oldentry.length == jj_expentry.length) {
+          for (int i = 0; i < jj_expentry.length; i++) {
+            if (oldentry[i] != jj_expentry[i]) {
+              continue jj_entries_loop;
+            }
+          }
+          jj_expentries.add(jj_expentry);
+          break jj_entries_loop;
+        }
+      }
+      if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+    }
+  }
 
   /** Generate ParseException. */
   public ParseException generateParseException() {
@@ -804,6 +1018,9 @@ public class ELPParser implements ELPParserConstants {
         jj_expentries.add(jj_expentry);
       }
     }
+    jj_endpos = 0;
+    jj_rescan_token();
+    jj_add_error_token(0, 0);
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
       exptokseq[i] = jj_expentries.get(i);
@@ -817,6 +1034,41 @@ public class ELPParser implements ELPParserConstants {
 
   /** Disable tracing. */
   final public void disable_tracing() {
+  }
+
+  private void jj_rescan_token() {
+    jj_rescan = true;
+    for (int i = 0; i < 1; i++) {
+    try {
+      JJCalls p = jj_2_rtns[i];
+      do {
+        if (p.gen > jj_gen) {
+          jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
+          switch (i) {
+            case 0: jj_3_1(); break;
+          }
+        }
+        p = p.next;
+      } while (p != null);
+      } catch(LookaheadSuccess ls) { }
+    }
+    jj_rescan = false;
+  }
+
+  private void jj_save(int index, int xla) {
+    JJCalls p = jj_2_rtns[index];
+    while (p.gen > jj_gen) {
+      if (p.next == null) { p = p.next = new JJCalls(); break; }
+      p = p.next;
+    }
+    p.gen = jj_gen + xla - jj_la; p.first = token; p.arg = xla;
+  }
+
+  static final class JJCalls {
+    int gen;
+    Token first;
+    int arg;
+    JJCalls next;
   }
 
 }

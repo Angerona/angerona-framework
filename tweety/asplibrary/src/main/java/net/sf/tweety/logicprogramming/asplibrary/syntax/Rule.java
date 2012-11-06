@@ -7,27 +7,26 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
 
 
 /**
- * this class models a rule for an extended
+ * This class models a rule for an extended
  * logic program. a rule is a collection
  * of literals, with separate lists for the
  * head and the body.
  * 
- * @author Thomas Vengels, Tim Janus
+ * @author Tim Janus
+ * @author Thomas Vengels
  *
  */
 public class Rule {
 
-	List<Literal>	head;
-	List<Literal>	body;
+	List<Literal>	head = new LinkedList<Literal>();
+	List<Literal>	body = new LinkedList<Literal>();
 	
 	public Rule() {
-		this.head = new LinkedList<Literal>();
-		this.body = new LinkedList<Literal>();
 	}
 	
 	public Rule(List<Literal> litsHead, List<Literal> litsBody) {
-		this.head = litsHead;
-		this.body = litsBody;
+		this.head.addAll(litsHead);
+		this.body.addAll(litsBody);
 	}
 	
 	public Rule(String ruleexpr) {
@@ -43,57 +42,39 @@ public class Rule {
 		}
 	}
 	
-	public	int		numHead() {
-		return (head==null)? 0 : head.size();
-	}
-	
-	public	int		numBody() {
-		return (body==null)? 0 : body.size();
-	}
-	
 	public List<Literal>	getHead() {
-		return (this.head==null)? Collections.<Literal>emptyList() : this.head;
+		return Collections.unmodifiableList(this.head);
 	}
 	
 	public List<Literal>	getBody() {
-		return (this.body==null)? Collections.<Literal>emptyList() : this.body; 
+		return Collections.unmodifiableList(this.body); 
 	}
 	
 	public List<Literal> getLiterals() {
 		List<Literal> reval = new LinkedList<Literal>();
-		if(head != null)	reval.addAll(head);
-		if(body != null)	reval.addAll(body);
+		reval.addAll(head);
+		reval.addAll(body);
 		return reval;
 	}
 	
 	public void		addHead(Literal l) {
-		if (this.head == null)
-			this.head = new LinkedList<Literal>();
 		this.head.add(l);
 	}
 	
 	public void		addBody(Literal l) {
-		if (this.body == null)
-			this.body = new LinkedList<Literal>();
 		this.body.add(l);
 	}
 	
 	public void		addHead(Collection<? extends Literal> l) {
-		if (this.head == null)
-			this.head = new LinkedList<Literal>();
 		this.head.addAll(l);
 	}
 	
 	public void		addBody(Collection<? extends Literal> l) {
-		if (this.body == null)
-			this.body = new LinkedList<Literal>();
 		this.body.addAll(l);
 	}
 	
 	public	boolean		isFact() {
-		return (this.numBody() == 0)
-			&& !this.isChoice()
-			&& (this.numHead() == 1);
+		return body.size() == 0 && head.size() == 1;
 	}
 	
 	public	boolean 	isChoice() {
@@ -101,7 +82,7 @@ public class Rule {
 	}
 	
 	public	boolean		isConstraint() {
-		return this.numHead() == 0;
+		return head.size() == 0;
 	}
 	
 	public boolean		isWeakConstraint() {
@@ -126,7 +107,7 @@ public class Rule {
 	 * @return true if the rule is safe considering the above conditions, false otherwise.
 	 */
 	public boolean isSafe() {
-		Set<Term> variables = new HashSet<Term>();
+		Set<Term<?>> variables = new HashSet<Term<?>>();
 		Set<Literal> allLit = new HashSet<Literal>();
 		allLit.addAll(head);
 		allLit.addAll(body);
@@ -135,16 +116,16 @@ public class Rule {
 		// TOTALLY HACKED WILL NOT WORK FOR EVERYTHING:...
 		for(Literal l : allLit) {
 			if(!l.isGround()) {
-				for(Term t : l.getAtom().getTerms()) {
+				for(Term<?> t : l.getAtom().getTerms()) {
 					if(t instanceof Variable) {
 						variables.add((Variable)t);
 					} else if(t instanceof Atom) {
 						if(!((Atom)t).isGround()) {
-							for(Term t2 : ((Atom)t).getTerms()) {
+							for(Term<?> t2 : ((Atom)t).getTerms()) {
 								if(t2 instanceof Variable) {
 									variables.add((Variable)t2);
-								} else if(t2 instanceof StdTerm) {
-									StdTerm st = (StdTerm) t2;
+								} else if(t2 instanceof Constant) {
+									Constant st = (Constant) t2;
 									if(st.get().charAt(0) >= 65 && st.get().charAt(0) <= 90) {
 										variables.add(st);
 									}
@@ -159,12 +140,11 @@ public class Rule {
 		if(variables.size() == 0)
 			return true;
 		
-		for(Term x : variables) {
+		for(Term<?> x : variables) {
 			boolean safe = false;
 			for(Literal l : allLit) {
-				if(	(!l.isAggregate() && !l.isArithmetic() && !l.isCondition() && !l.isDefaultNegated() && !l.isTrueNegated() && !l.isRelational() && !l.isWeightLiteral()) ||
-					(l.isTrueNegated()) ) {
-					for(Term t : l.getAtom().getTerms()) {
+				if(	l instanceof Neg || l instanceof Atom ) {
+					for(Term<?> t : l.getAtom().getTerms()) {
 						if(t.equals(x)) {
 							safe = true;
 						}
@@ -182,18 +162,16 @@ public class Rule {
 	@Override
 	public String	toString() {
 		String ret = "";
-		if (this.numHead() > 0) {
-			Iterator<Literal> iter = this.head.iterator();
-			ret += iter.next();
-			while (iter.hasNext())
-				ret += " | " + iter.next();			
+		if (head.size() > 0) {
+			ret += head.get(0);
+			for (int i=1; i<head.size(); ++i)
+				ret += " || " + head.get(i);			
 		}
-		if (this.numBody() > 0) {
-			ret += ":- ";
-			Iterator<Literal> iter = this.body.iterator();
-			ret += iter.next();
-			while (iter.hasNext())
-				ret += ", " + iter.next();
+		if (body.size() > 0) {
+			ret += ":- " + body.get(0);
+			for(int i=1; i<body.size(); ++i) {
+				ret += ", " + body.get(i);
+			}
 		}
 		ret += ".";
 		

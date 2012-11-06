@@ -11,12 +11,12 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
 public class Aggregate extends Atom {
 
 	public Aggregate(String functor, SymbolicSet symSet) {
-		super(functor,0);
+		super(functor);
 		this.symSet = symSet;
 	}
 	
 	protected SymbolicSet	symSet = null;
-	protected Term leftGuard = null, rightGuard = null;
+	protected Term<?> leftGuard = null, rightGuard = null;
 	protected String leftRel = null, rightRel = null;
 	
 	public boolean	hasLeftGuard() {
@@ -27,7 +27,7 @@ public class Aggregate extends Atom {
 		return	rightGuard != null;
 	}
 	
-	public Term	getLeftGuard() {
+	public Term<?>	getLeftGuard() {
 		return leftGuard;
 	}
 	
@@ -35,7 +35,7 @@ public class Aggregate extends Atom {
 		return leftRel;
 	}
 	
-	public Term getRightGuard() {
+	public Term<?> getRightGuard() {
 		return rightGuard;
 	}
 	
@@ -43,12 +43,12 @@ public class Aggregate extends Atom {
 		return rightRel;
 	}
 	
-	public void setLeftGuard(Term guard, String rel) {
+	public void setLeftGuard(Term<?> guard, String rel) {
 		this.leftGuard = guard;
 		this.leftRel = rel;
 	}
 	
-	public void setRightGuard(Term guard, String rel) {
+	public void setRightGuard(Term<?> guard, String rel) {
 		this.rightGuard = guard;
 		this.rightRel = rel;
 	}
@@ -63,15 +63,10 @@ public class Aggregate extends Atom {
 		if (this.leftGuard != null) {
 			ret += this.leftGuard + " " + this.leftRel + " ";
 		}
-		ret += this.name + this.symSet;
+		ret += getName() + this.symSet;
 		if (this.rightGuard != null) {
 			ret += " " + this.rightRel + " " + this.rightGuard;
 		}
 		return ret;
-	}
-
-	@Override
-	public boolean isAggregate() {
-		return true;
 	}
 }

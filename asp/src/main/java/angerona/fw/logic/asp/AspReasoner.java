@@ -10,6 +10,8 @@ import net.sf.tweety.Answer;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.StringTerm;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
@@ -166,9 +168,10 @@ public class AspReasoner extends BaseReasoner {
 					int arity = l.getAtom().getArity();
 					Atom a = new Atom(new Predicate(l.getAtom().getName(), arity));
 					for(int i=0; i<arity; ++i) {
-						a.addArgument(new Constant(l.getAtom().getTerm(i).get()));
+						String str = ((StringTerm)l.getAtom().getTerm(i)).get();
+						a.addArgument(new Constant(str));
 					}
-					if(!l.isTrueNegated()) {
+					if(!(l instanceof Neg)) {
 						temp.add(a);
 					} else {
 						temp.add(new Negation(a));

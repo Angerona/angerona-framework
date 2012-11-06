@@ -6,17 +6,20 @@ import java.util.*;
  * this class models a list term that can be used for
  * dlv complex programs.
  * 
+ * @author Tim Janus
  * @author Thomas Vengels
  *
  */
-public class ListTerm implements Term {
+public class ListTerm implements Term<List<Term<?>>> {
 
-	List<Term>	listHead;
-	List<Term>	listTail;
+	List<Term<?>> head = new LinkedList<Term<?>>();
+	List<Term<?>> tail = new LinkedList<Term<?>>();
 	
 	public ListTerm() {
-		this.listHead = new LinkedList<Term>();
-		this.listTail = new LinkedList<Term>();
+	}
+	
+	public ListTerm(List<Term<?>> head) {
+		this.head.addAll(head);
 	}
 	
 	/**
@@ -24,83 +27,43 @@ public class ListTerm implements Term {
 	 * @param head
 	 * @param tail
 	 */
-	public ListTerm(List<Term> head, List<Term> tail) {
-		this.listHead = head;
-		this.listTail = tail;
-	}
-	
-	@Override
-	public boolean isConstant() {
-		return false;
+	public ListTerm(List<Term<?>> head, List<Term<?>> tail) {
+		this.head.addAll(head);
+		this.tail.addAll(tail);
 	}
 
 	@Override
-	public boolean isVariable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAtom() {
-		return false;
-	}
-
-	@Override
-	public boolean isList() {
-		return true;
-	}
-
-	@Override
-	public boolean isSet() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNumber() {
-		return false;
-	}
-
-	@Override
-	public void set(String value) {
+	public void set(List<Term<?>> value) {
 		// not supported
 	}
 
 	@Override
-	public String get() {
-		// not supported
-		return null;
-	}
-
-	@Override
-	public void set(int value) {
-		// not supported
-	}
-
-	@Override
-	public int getInt() {
-		// not supported
-		return 0;
+	public List<Term<?>> get() {
+		List<Term<?>> reval = new LinkedList<Term<?>>();
+		reval.addAll(head);
+		reval.addAll(tail);
+		return reval;
 	}
 
 	@Override
 	public String toString() {
 		// return list
 		String ret = "[";
-		if ((this.listHead != null) && (this.listHead.size() > 0)) {
-			// draw list, separate head and tail!
-			ret += listPrint(this.listHead);
-			if (this.listTail != null && this.listTail.size() > 0)
-				ret += "|" + listPrint(this.listTail);
-		} else {
-			// empty list here!
+		boolean headEmpty = head.isEmpty();
+		if (!headEmpty) {
+			ret += listPrint(this.head);
+		}
+		if(!tail.isEmpty()) {
+			ret += (!headEmpty ? "|" : "");
+			ret += listPrint(this.tail);
 		}
 		ret += "]";
 		return ret;
 	}
 	
-	protected String listPrint(Collection<Term> tl) {
+	protected String listPrint(Collection<Term<?>> tl) {
 		String ret = "";
-		Iterator<Term> iter = tl.iterator();
+		Iterator<Term<?>> iter = tl.iterator();
 		if (iter.hasNext())
 			ret += iter.next().toString();
 		while (iter.hasNext())
@@ -108,23 +71,11 @@ public class ListTerm implements Term {
 		return ret;
 	}
 
-	public Term head() {
-		if(listHead.isEmpty())
-			return null;
-		return listHead.get(0);
+	public List<Term<?>> head() {
+		return Collections.unmodifiableList(head);
 	}
 	
-	@Override
-	public boolean isString() {
-		return false;
-	}
-
-	@Override
-	public TermType type() {
-		return TermType.List;
-	}
-	
-	public List<Term> getHead() {
-		return listHead;
+	public List<Term<?>> tail() {
+		return Collections.unmodifiableList(tail);
 	}
 }

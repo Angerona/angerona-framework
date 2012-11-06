@@ -12,12 +12,13 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.ListTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Number;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.StdTerm;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.StringTerm;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
@@ -123,10 +124,9 @@ public class KnowhowStrategy {
 		}
 		
 		action = null;
-		oldState = new Atom("khstate", new ListTerm(new LinkedList<Term>(), 
-				new LinkedList<Term>()));
+		oldState = new Atom("khstate", new ListTerm());
 		intentionTree.add(oldState);
-		intentionTree.add(new Atom("state", new StdTerm(stateStr)));
+		intentionTree.add(new Atom("state", new Constant(stateStr)));
 		Pair<Program, LinkedList<SkillParameter>> reval = null;
 		reval = KnowhowBuilder.buildKnowhowbaseProgram(kb);
 		knowhow = reval.first;
@@ -224,9 +224,9 @@ public class KnowhowStrategy {
 			Set<Literal> khstatements = as.getLiteralsBySymbol("khstate");
 			if(khstatements.size() == 1) {
 				ListTerm lst = (ListTerm) khstatements.iterator().next().getAtom().getTerm(0);
-				Term t = lst.head();
-				int start = t.get().lastIndexOf('_') + 1;
-				String toParse = t.get().substring(start);
+				Constant constant = (Constant)lst.head().get(0);
+				int start = constant.get().lastIndexOf('_') + 1;
+				String toParse = constant.get().substring(start);
 				kh_index = Integer.parseInt(toParse);
 			} else {
 				// TODO:
@@ -235,13 +235,13 @@ public class KnowhowStrategy {
 			// find subgoal index for parameter:
 			Set<Literal> subgoal = as.getLiteralsBySymbol("new_subgoal");
 			if(subgoal.size() == 1) {
-				subgoal_index = subgoal.iterator().next().getAtom().getTermInt(0);
+				subgoal_index = ((Number)subgoal.iterator().next().getAtom().getTerm(0)).get();
 			} else {
 				// TODO:
 			}
 			
 			Atom a = (Atom)action;
-			Pair<String, HashMap<Integer, String>> pair = new Pair<>(a.getTerm(0).get(), 
+			Pair<String, HashMap<Integer, String>> pair = new Pair<>(((StringTerm)a.getTerm(0)).get(), 
 					new HashMap<Integer, String>());
 			Set<SkillParameter> parameters = knowhowBase.findParameters(kh_index, subgoal_index);
 			for(SkillParameter param : parameters) {
@@ -276,8 +276,8 @@ public class KnowhowStrategy {
 			}
 		}
 		
-		if(	new_state.getTermStr(0).equals(oldState.getTermStr(0))) {
-			LOG.error("Old-State and new State are the same: " + new_state.getTermStr(0));
+		if(	new_state.getTerm(0).equals(oldState.getTerm(0))) {
+			LOG.error("Old-State and new State are the same: " + new_state.getTerm(0));
 			return false;
 		} 
 		Program toOutput = new Program();
@@ -293,7 +293,7 @@ public class KnowhowStrategy {
 		
 		// update state:
 		if(new_state != null)
-			stateStr = new_state.getTermStr(0);
+			stateStr = ((StringTerm)new_state.getTerm(0)).get();
 		
 		// proof if a change occurred
 		Set<Literal> act = as.getLiteralsBySymbol("new_act");

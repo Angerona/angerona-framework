@@ -1,54 +1,45 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
 /**
- * this class represents a string term, which is
- * used to declare arbitrary strings as terms. the
- * string is guarded by '"', an d comparison to other
- * term types always fails.
+ * This class represents terms which are objects identified by a
+ * string. Subclasses are Variable and Constant.
  * 
+ * @author Tim Janus
  * @author Thomas Vengels
  *
  */
-public class StringTerm extends Constant {
-
+public abstract class StringTerm implements Term<String> {
+	/** the name for the term */
+	protected String name;
+	
 	public StringTerm(String value) {
-		super(fixMarks(value));
-	}
-	
-	protected static String fixMarks(String s) {
-		return s;
+		set(value);
 	}
 	
 	@Override
-	public boolean isConstant() {
-		return false;
-	}
-	@Override
-	public boolean isString() {
-		return true;
-	}
+	public abstract void set(String value);
 
 	@Override
-	public void set(String value) {
-		this.value = value;
+	public String get() {
+		return this.name;
 	}
-
+	
 	@Override
 	public String toString() {
-		return this.value;
+		return this.name;
 	}
 	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof StringTerm) {
 			StringTerm st = (StringTerm) o;
-			return st.value.equals( this.value );
+			return st.name.equals( this.name );
 		} else
 			return false;
 	}
-
+	
 	@Override
-	public TermType type() {
-		return TermType.Stirng;
+	public int hashCode() {
+		return name.hashCode();
 	}
 }

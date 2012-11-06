@@ -20,15 +20,14 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
  * this class models a logical program, which is
  * a collection of rules.
  * 
- * @author Thomas Vengels, Tim Janus
+ * @author Tim Janus
+ * @author Thomas Vengels
  *
  */
 public class Program extends ArrayList<Rule> {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	/** kill warning */
+	private static final long serialVersionUID = -8280907458863754124L;
 
 	private ElpSignature signature;
 	
@@ -166,7 +165,7 @@ public class Program extends ArrayList<Rule> {
 				Neg neg = new Neg(head.getAtom());
 				defRule.addBody(origRule.getBody());
 				Not defaultificationLit = null;
-				if(head.isTrueNegated()) {
+				if(head instanceof Neg) {
 					defRule.addHead(neg);
 					defaultificationLit = new Not(head.getAtom());
 				} else {

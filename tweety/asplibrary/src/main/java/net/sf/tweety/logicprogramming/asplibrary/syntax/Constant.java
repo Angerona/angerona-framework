@@ -1,86 +1,27 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-public class Constant implements Term {
+/**
+ * A Constant is a specialized StringTerm which only allows
+ * name with have a lowercase character as first letter.
+ * 
+ * @author Tim Janus
+ */
+public class Constant extends StringTerm {
 
-	protected String value = null;
-	
 	public Constant(String value) {
-		this.value = value;
-	}
-	
-	@Override
-	public boolean isConstant() {
-		return true;
-	}
-
-	@Override
-	public boolean isVariable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAtom() {
-		return false;
-	}
-
-	@Override
-	public boolean isList() {
-		return false;
-	}
-
-	@Override
-	public boolean isSet() {
-		return false;
-	}
-
-	@Override
-	public boolean isNumber() {
-		return false;
-	}
-
-	@Override
-	public boolean isString() {
-		return false;
+		super(value);
 	}
 
 	@Override
 	public void set(String value) {
-		this.value = value;
+		if(value == null || value.length() == 0)
+			throw new IllegalArgumentException();
+		
+		if( !(value.charAt(0) > 96 && value.charAt(0) <= 122))
+			throw new IllegalArgumentException("Constant names start with a lower-case character. " +
+					"'" + value + "'");
+		
+		this.name = value;
 	}
-
-	@Override
-	public String get() {
-		return value;
-	}
-
-	@Override
-	public void set(int value) {
-		this.value = "" + value;
-	}
-
-	@Override
-	public int getInt() {
-		return 0;
-	}
-
-	@Override
-	public String toString() {
-		return this.value;
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Constant) {
-			Constant co = (Constant) o;
-			return co.value.equals( this.value );
-		} else
-			return false;
-	}
-
-	@Override
-	public TermType type() {
-		return TermType.Constant;
-	}
-
 }
 
