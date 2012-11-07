@@ -159,7 +159,8 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	}
 
 	/**
-	 * Generates the content of this beliefbase by parsing a file
+	 * Generates the content of this beliefbase by parsing a file. The real work is done
+	 * by a subclass implementing the parseInt method.
 	 * @param filepath	path to the file containing the representation of the belief base.
 	 * @throws FileNotFoundException
 	 * @throws IOException
@@ -173,6 +174,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		parseInt(br);
 	}
 	
+	/**
+	 * Parses the content given in the BufferedReader using the implementation of
+	 * the parseInt method.
+	 * @param br	Reference to the BufferedReader containing the content to parse.
+	 * @throws ParseException
+	 * @throws IOException
+	 */
 	public void parse(BufferedReader br) throws ParseException, IOException {
 		parseInt(br);
 	}
@@ -181,6 +189,19 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * The internal parse function for the belief base.
 	 * Sub classes must implement this method to parse a string representation into a 
 	 * belief base living in memory.
+	 * Because the belief base files of Angerona contain multiple belief bases the content
+	 * of the file is split for each belief base by a parser which is called pior parseInt.
+	 * Therefore the content in the BufferedReader is the content of one belief base in such
+	 * a belief base file which is defined between '{' '}'. 
+	 * Example Beliefbase File:
+	 * World {
+	 *   a. b.
+	 * } view->other {
+	 *   b. c.
+	 * }
+	 * Such a file would cause two calls on parseInt methods on different instances of belief
+	 * bases. The first would get the String '  a. b.' the second '  b. c.' as content of its
+	 * BufferedReader.
 	 * @param br	The content representing the belief base. It is encapsulated by
 	 * 				a BufferedReader to read from a file for example.
 	 * @throws IOException 
