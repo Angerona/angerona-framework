@@ -2,6 +2,7 @@ package net.sf.tweety.logicprogramming.asplibrary.revision;
 
 import java.io.StringReader;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -51,12 +52,17 @@ public class PreferenceHandling implements RevisionApproach {
 
 		// Assumption: Index of rules in p equals index of rules pd.
 		// TODO: Proof if this assumption is really true.
+		List<Rule> pdr1 = new LinkedList<Rule>(pd1.getRules());
+		List<Rule> pdr2 = new LinkedList<Rule>(pd2.getRules());
+		List<Rule> pr1 = new LinkedList<Rule>(p1.getRules());
+		List<Rule> pr2 = new LinkedList<Rule>(p2.getRules());
+		
 		List<Pair<Rule, Rule>> conflicts = new LinkedList<Pair<Rule,Rule>>();
 		for(Pair<Rule, Rule> defConf : conflictsDef) {
-			int index1 = pd1.indexOf(defConf.getFirst());
-			int index2 = pd2.indexOf(defConf.getSecond());
+			int index1 = pdr1.indexOf(defConf.getFirst());
+			int index2 = pdr2.indexOf(defConf.getSecond());
 			
-			conflicts.add(new Pair<Rule, Rule>(p1.get(index1), p2.get(index2)));
+			conflicts.add(new Pair<Rule, Rule>(pr1.get(index1), pr2.get(index2)));
 		}
 		
 		// get answerset of combined defaultificated programs.
@@ -89,7 +95,7 @@ public class PreferenceHandling implements RevisionApproach {
 		
 		combined.add(p1);
 		combined.add(p2);
-		combined.removeAll(toRemoveCollection);
+		combined.removeAllRules(toRemoveCollection);
 		
 		return combined;
 	}
@@ -102,12 +108,11 @@ public class PreferenceHandling implements RevisionApproach {
 	 * @return		A list of all pairs representing the conflicting rules in p1 and p2.
 	 */
 	protected static List<Pair<Rule, Rule>> getConflictingRules(Program p1, Program p2) {
-		int c1 = p1.size();
-		int c2 = p2.size();
 		List<Pair<Rule, Rule>> reval = new LinkedList<Pair<Rule,Rule>>();
 		
-		for(int i=0; i<c1; ++i) {
-			Rule r1 = p1.get(i);
+		Iterator<Rule> p1It = p1.getRules().iterator();
+		while(p1It.hasNext()) {
+			Rule r1 = p1It.next();
 			if(r1.isConstraint())
 				continue;
 			
@@ -123,8 +128,9 @@ public class PreferenceHandling implements RevisionApproach {
 			}
 			
 			// try to find the negated head in the rules of the other program.
-			for(int k=0; k<c2; ++k) {
-				Rule r2 = p2.get(k);
+			Iterator<Rule> p2it = p2.getRules().iterator();
+			while(p2it.hasNext()) {
+				Rule r2 = p2it.next();
 				if(r2.isConstraint())
 					continue;
 				if(r2.getHead().get(0).equals(negHead1)) {

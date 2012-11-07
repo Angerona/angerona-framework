@@ -94,7 +94,7 @@ public class AspTranslator extends BaseTranslator {
 				continue;
 			}
 			if(r.isSafe())
-				newInfo.add(r);
+				newInfo.addRule(r);
 			else
 				LOG.warn("Translate skips the unsafe rule: '{}', might produce strange behavior.", r.toString());
 				

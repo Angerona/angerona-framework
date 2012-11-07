@@ -88,7 +88,7 @@ public class KnowhowView extends BaseView implements ReportListener{
 		stmtListModel.addElement("and ELP");
 		stmtListModel.addElement("---");
 		
-		for(Rule r : pair.first) {
+		for(Rule r : pair.first.getRules()) {
 			stmtListModel.addElement(r.toString());
 		}
 	}

@@ -120,7 +120,7 @@ public class KnowhowStrategy {
 			e.printStackTrace();
 		}
 		if(r != null) {
-			intentionTree.add(r); 
+			intentionTree.addRule(r); 
 		}
 		
 		action = null;
@@ -283,7 +283,7 @@ public class KnowhowStrategy {
 		Program toOutput = new Program();
 		toOutput.add(intentionTree);
 		// rebuild intention-tree program:
-		intentionTree.clear();
+		intentionTree.clearRules();
 		oldState = new Atom("state", new_state.getTerms());
 		intentionTree.add(oldState);
 		intentionTree.add(new Atom("khstate", new_khstate.getTerms()));

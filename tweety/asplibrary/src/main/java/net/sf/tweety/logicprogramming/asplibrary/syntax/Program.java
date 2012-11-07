@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,17 +24,29 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
  * @author Thomas Vengels
  *
  */
-public class Program extends ArrayList<Rule> {
+public class Program {
 	
-	/** kill warning */
-	private static final long serialVersionUID = -8280907458863754124L;
-
+	/** The signature of the logic program */
 	private ElpSignature signature;
 	
+	/** a set of all atoms used in the logic program */
 	private Set<Atom> atoms = new HashSet<Atom>();
 	
-	public Preamble	preamble = new Preamble();
+	/** a set of all rules of the logic program */
+	private Set<Rule> rules = new HashSet<Rule>();
 	
+	/** Default Ctor: Does nothing */
+	public Program() {}
+	
+	/** Copy Ctor: Used by clone method */
+	public Program(Program other) {
+		// TODO: COpy signature
+		//this.signature = new ElpSignature(other.signature);
+		this.atoms.addAll(other.getAtoms());
+		this.rules.addAll(other.getRules()); 
+	}
+	
+	/** @return	the set of atoms */
 	public Set<Atom> getAtoms() {
 		return atoms;
 	}
@@ -57,20 +69,68 @@ public class Program extends ArrayList<Rule> {
 		return false;
 	}
 	
+	/**
+	 * Adds the given rule to the program
+	 * @param rule	Reference to the rule to add
+	 * @return		true if the rule was successful added (not part of the programs
+	 * 				rules yet), false otherwise
+	 */
+	public boolean addRule(Rule rule) {
+		boolean reval = rules.add(rule);
+		updateAtoms(rule);
+		return reval;
+	}
+	
+	public void addAllRules(Collection<Rule> rules) {
+		rules.addAll(rules);
+		updateAtoms();
+	}
+	
+	/** @return 	An unmodifiable set of the rules of the program */
+	public Set<Rule> getRules() {
+		return Collections.unmodifiableSet(this.rules);
+	}
+	
+	/**
+	 * removes all the given rules from the program 
+	 * @param toRemove	collection with rules which has to be remove from the program
+	 */
+	public void removeAllRules(Collection<Rule> toRemove) {
+		rules.removeAll(toRemove);
+		updateAtoms();
+	}
+	
+	/** 
+	 * empties the program.
+	 */
+	public void clearRules() {
+		rules.clear();
+		atoms.clear();
+	}
+	
+	public int size() {
+		return rules.size();
+	}
+	
+	/**
+	 * Adds another programs content to the content of this program.
+	 * @param other	Reference to the other program.
+	 */
 	public void add(Program other) {
-		this.addAll( other );
-		this.preamble.join( other.preamble );
+		rules.addAll(other.getRules());
+		atoms.addAll(other.getAtoms());
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		if (this.size() > 0) {
-			sb.append( this.get(0));
+		Iterator<Rule> it = rules.iterator();
+		
+		if (it.hasNext()) {
+			sb.append( it.next() );
 		}
-		for (int i = 1; i < this.size(); i++) {
-			sb.append("\n");
-			sb.append(this.get(i));
+		while (it.hasNext()) {
+			sb.append("\n" + it.next());
 		}
 		return sb.toString();
 	}
@@ -92,7 +152,8 @@ public class Program extends ArrayList<Rule> {
 			ELPParser ep = new ELPParser( stream );
 			List<Rule> lr = ep.program();
 			ret = new Program();
-			ret.addAll(lr);
+			for(Rule r: lr)
+				ret.addRule(r);
 			ret.calcSignature();
 		} catch (Exception e) {
 			System.err.println("Error while loading program: " + e.getMessage());
@@ -110,7 +171,7 @@ public class Program extends ArrayList<Rule> {
 	
 	private void calcSignature() {
 		signature = new ElpSignature();
-		for(Rule r : this) {
+		for(Rule r : rules) {
 			List<Literal> literals = new LinkedList<Literal>();
 			literals.addAll(r.getBody());
 			literals.addAll(r.getHead());
@@ -124,7 +185,7 @@ public class Program extends ArrayList<Rule> {
 	public void saveTo(String filename) {
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(filename));
-			for (Rule r : this) {
+			for (Rule r : rules) {
 				w.write(r.toString());
 				w.newLine();
 			}
@@ -138,7 +199,7 @@ public class Program extends ArrayList<Rule> {
 	public String toStringFlat() {
 		StringBuilder sb = new StringBuilder();
 		
-		Iterator<Rule> rIter = this.iterator();
+		Iterator<Rule> rIter = rules.iterator();
 		while (rIter.hasNext()) {
 			Rule r = rIter.next();
 			if (r.isComment())
@@ -158,7 +219,7 @@ public class Program extends ArrayList<Rule> {
 	 */
 	public static Program defaultification(Program p) {
 		Program reval = new Program();
-		for(Rule origRule : p) {
+		for(Rule origRule : p.getRules()) {
 			Rule defRule = new Rule();
 			if(!origRule.isConstraint()) {
 				Literal head = origRule.getHead().get(0);
@@ -179,7 +240,7 @@ public class Program extends ArrayList<Rule> {
 			} else {
 				defRule.addBody(origRule.getBody());
 			}
-			reval.add(defRule);
+			reval.addRule(defRule);
 		}
 		return reval;
 	}
@@ -192,77 +253,40 @@ public class Program extends ArrayList<Rule> {
 	public boolean add(Atom fact) {
 		Rule r = new Rule();
 		r.addHead(fact);
-		return add(r);
-	}
-	
-	// overload array list methods to keep track of the atoms
-	@Override
-	public boolean add(Rule r) {
-		for(Literal l : r.getLiterals()) {
-			atoms.add(l.getAtom()); 
-		}
-		return super.add(r);
+		return addRule(r);
 	}
 	
 	@Override
-	public void add(int index, Rule r) {
+	public Object clone() {
+		return new Program(this);
+	}
+	
+	private void updateAtoms(Rule r) {
 		for(Literal l : r.getLiterals()) {
 			atoms.add(l.getAtom());
 		}
-		super.add(index, r);
-	}
-	
-	@Override
-	public boolean addAll(Collection<? extends Rule> c) {
-		for(Rule r : c) {
-			for(Literal l : r.getLiterals()) {
-				atoms.add(l.getAtom());
-			}
-		}
-		return super.addAll(c);
-	}
-	
-	@Override
-	public boolean addAll(int index, Collection<? extends Rule> c) {
-		for(Rule r : c) {
-			for(Literal l : r.getLiterals()) {
-				atoms.add(l.getAtom());
-			}
-		}
-		return super.addAll(index, c);
-	}
-	
-	@Override
-	public void clear() {
-		atoms.clear();
-		super.clear();
-	}
-	
-	@Override
-	public Rule remove(int index){		
-		Rule reval =  super.remove(index);
-		if(reval != null) {
-			updateAtoms();
-		}
-		return reval;
-	}
-	
-	@Override
-	public boolean remove(Object o) {
-		Rule r = (Rule)o;
-		boolean reval = super.remove(r);
-		if(reval) {
-			updateAtoms();
-		}
-		return reval;
 	}
 	
 	private void updateAtoms() {
 		atoms.clear();
-		for(Rule r : this) {
+		for(Rule r : rules) {
 			for(Literal l : r.getLiterals()) {
 				atoms.add(l.getAtom());
 			}
 		}
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Program)) return false;
+		Program op = (Program)other;
+		boolean eq1 =  op.rules.equals(rules); 
+		boolean eq2 =  op.atoms.equals(atoms);
+		return eq1 && eq2;
+	}
+	
+	@Override
+	public int hashCode() {
+		return rules.hashCode() + atoms.hashCode();
 	}
 }

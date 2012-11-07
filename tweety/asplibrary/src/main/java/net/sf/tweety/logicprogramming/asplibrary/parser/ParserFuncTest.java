@@ -26,10 +26,10 @@ public class ParserFuncTest {
 		
 		Program p = new Program();
 		List<Rule> rules = parser.program();
-		p.addAll(rules);
+		p.addAllRules(rules);
 		
 		System.out.println("Analyse der Parser-Ausgabe: " + rule);
-		for(Rule r : p) {
+		for(Rule r : p.getRules()) {
 			Atom head = r.getHead().get(0).getAtom();
 			Output(head);
 			System.out.println();

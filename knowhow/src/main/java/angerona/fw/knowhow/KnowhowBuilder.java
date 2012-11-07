@@ -88,7 +88,7 @@ public class KnowhowBuilder {
 		Rule r = new Rule();
 		r.addHead(new Atom("khstatement", new Constant(ks.name), 
 				new Constant(ks.getTarget().toString())));
-		p.add(r);
+		p.addRule(r);
 		
 		// Subtargets
 		int i = 1;
@@ -118,7 +118,7 @@ public class KnowhowBuilder {
 			}
 			r.addHead(new Atom("khsubgoal", new Constant(ks.name), new Number(i), 
 					new Constant(a.toString())));
-			p.add(r);
+			p.addRule(r);
 			i++;
 		}
 		
@@ -127,7 +127,7 @@ public class KnowhowBuilder {
 			r = new Rule();
 			r.addHead(new Atom("khcondition", new Constant(ks.name), 
 					new Constant(a.getName())));
-			p.add(r);
+			p.addRule(r);
 		}
 		
 		return params;

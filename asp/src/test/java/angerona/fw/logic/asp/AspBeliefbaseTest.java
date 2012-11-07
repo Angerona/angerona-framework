@@ -26,12 +26,12 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 		
 		bb.addKnowledge(new Atom(new Predicate("test")));
 		Program p = bb.getProgram();
-		assertEquals(1, p.size());
+		assertEquals(1, p.getRules().size());
 		
 		bb.addKnowledge(new Atom(new Predicate("test")));
 		p = bb.getProgram();
-		// TODO bug report by Daniel: ticket #68 
-		//assertEquals(1, p.size());
+		// bug report by Daniel: ticket #68 
+		assertEquals(1, p.size());
 	}
 	
 	public void testQueryForUnknown() {

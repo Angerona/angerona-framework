@@ -1,8 +1,16 @@
 package net.sf.tweety.logicprogramming.asplibrary.util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 public class BeliefSet {
 
@@ -79,7 +87,7 @@ public class BeliefSet {
 			for (Literal l : lits) {
 				Rule r = new Rule();
 				r.addHead(l);
-				p.add(r);
+				p.addRule(r);
 			}
 		}
 		

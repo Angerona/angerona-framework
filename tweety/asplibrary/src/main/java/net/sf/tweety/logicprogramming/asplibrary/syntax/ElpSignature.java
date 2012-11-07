@@ -17,7 +17,7 @@ public class ElpSignature extends Signature {
 		Rule r = new Rule();
 		r.addHead(new Atom("attend_scm"));
 		r.addBody(new Atom("who_argued", new Constant("john")));
-		p.add(r);
+		p.addRule(r);
 
 		SymbolSet ss = p.getSignature().getSymbolSet();
 		System.out.println(ss);

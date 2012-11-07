@@ -3,7 +3,6 @@ package net.sf.logicprogramming.asplibrary.syntax;
 import java.io.StringReader;
 
 import junit.framework.TestCase;
-import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
 import net.sf.tweety.logicprogramming.asplibrary.revision.RevisionApproach;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
@@ -30,10 +29,10 @@ public class RevisionTest extends TestCase {
 			Program pr = approach.revision(p1, p2, solver);
 			
 			// has new knowledge?
-			TestCase.assertEquals(true, pr.containsAll(p2));
+			TestCase.assertEquals(true, pr.getRules().containsAll(p2.getRules()));
 			
 			// no contradiction?
-			TestCase.assertEquals(false, pr.contains(p1.get(0)));
+			TestCase.assertEquals(false, pr.getRules().contains(p1.getRules().iterator().next()));
 		}
 		
 		/** K*P is inconsistent only if: K or P is inconsistent beforehand (is this testable?) */

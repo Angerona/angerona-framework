@@ -183,6 +183,12 @@ public class Rule {
 		if(!(other instanceof Rule)) 	return false;
 		Rule or = (Rule)other;
 		
-		return this.head.equals(or.head) && this.body.equals(or.body);
+		boolean reval = this.head.equals(or.head) && this.body.equals(or.body);
+		return reval;
+	}
+	
+	@Override
+	public int hashCode() {
+		return head.hashCode() + body.hashCode();
 	}
 }

@@ -106,7 +106,7 @@ public class AspBeliefbase extends BaseBeliefbase {
 			usedReasoner = true;
 		}
 		
-		for(Rule r : program) {
+		for(Rule r : program.getRules()) {
 			if(!usedReasoner || r.getBody().size() != 0)
 				reval.add(r.toString());
 		}
