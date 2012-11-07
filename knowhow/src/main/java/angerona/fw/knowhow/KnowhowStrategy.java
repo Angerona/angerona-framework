@@ -158,7 +158,7 @@ public class KnowhowStrategy {
 		p.add(atomicActions);
 		p.add(knowhow);
 		
-		//LOG.info(p.toString());
+		LOG.info(p.toString());
 		
 		// calculate answer sets using dlv-complex:
 		AnswerSetList asl = solver.computeModels(p, 10);
