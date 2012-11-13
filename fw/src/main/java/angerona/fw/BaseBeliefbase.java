@@ -326,7 +326,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		return true;
 	}
 	
-	/** gets the atoms of the belief base in string representation usefull for viewing them in UIs and so on */
+	/** 
+	 * gets the content of the belief base in string representation: Usefull for viewing them in UIs for example.
+	 * Subclasses have to implement the method. For every entry in the belief base like a fact, a rule or a conditional
+	 * a string has to be added to the list of strings which is returned.
+	 * @return a list of strings representing the content of the belief base.
+	 * // TODO: Think about a more complex object which could map to the belief base for example.
+	 */
 	public abstract List<String> getAtoms();
 	
 	/** 

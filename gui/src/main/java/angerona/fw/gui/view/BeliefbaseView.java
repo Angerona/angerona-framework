@@ -1,7 +1,11 @@
 package angerona.fw.gui.view;
 
 import java.util.List;
+import java.util.Set;
 
+import javax.swing.DefaultListModel;
+
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.internal.Entity;
@@ -23,6 +27,11 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	public void init() {
 		super.init();
 		
+		if(! (ref instanceof BaseBeliefbase) )
+			throw new IllegalArgumentException("Cannot init Beliefbase View with an " +
+					"Entity which is not a subclass of BaseBeliefbase: " 
+					+ ref.getClass().getName());
+		
 		Agent ag = (Agent)IdGenerator.getEntityWithId(this.ref.getParent());
 		String postfix = "";
 		if(ag.getBeliefs().getWorldKnowledge() == ref) {
@@ -37,6 +46,40 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 			}
 		}
 		setTitle(ag.getName() + " - " + postfix);
+	}
+	
+	@Override
+	protected void update(DefaultListModel<ListElement> model) {
+		// prepare changeset in model and so on.
+		super.update(model);
+		
+		// add a placeholder and then show the inference result:
+		BaseBeliefbase bAct = (BaseBeliefbase)actual;
+		BaseBeliefbase bPrev = (BaseBeliefbase)previous;
+		model.addElement(new ListElement("", ListElement.ST_NOTCHANGED));
+		model.addElement(new ListElement("--- Inference Result using: " + 
+		bAct.getReasoningOperator().getNameAndParameters(), ListElement.ST_NOTCHANGED));
+		
+		// Calculate the inference of the reasoning.
+		Set<FolFormula> inferenceAct = bAct.infere();
+		Set<FolFormula> inferenceOld = bPrev == null ? null : bPrev.infere();
+		
+		// TODO: Ordering
+		for(FolFormula f : inferenceAct) {
+			if(inferenceOld != null && !inferenceOld.contains(f)) {
+				model.addElement(new ListElement(f.toString(), ListElement.ST_NEW));
+			} else {
+				model.addElement(new ListElement(f.toString(), ListElement.ST_NOTCHANGED));
+			}
+		}
+		
+		if(inferenceOld != null) {
+			for(FolFormula f : inferenceOld) {
+				if(!inferenceAct.contains(f)) {
+					model.addElement(new ListElement(f.toString(), ListElement.ST_DELETED));
+				}
+			}
+		}
 	}
 	
 	@Override

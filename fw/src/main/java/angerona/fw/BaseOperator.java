@@ -37,6 +37,11 @@ public class BaseOperator implements ReportPoster {
 		return this.getClass().getSimpleName();
 	}
 	
+	public String getNameAndParameters() {
+		return this.getClass().getSimpleName() + ":"
+				+ this.parameters.toString();
+	}
+	
 	/**
 	 * Change the user-parameters used by the operator. 
 	 * @param parameters

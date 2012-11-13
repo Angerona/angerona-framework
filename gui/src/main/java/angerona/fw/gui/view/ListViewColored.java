@@ -146,35 +146,42 @@ public abstract class ListViewColored<T extends Entity>
 	protected abstract List<String> getStringRepresentation(Entity obj);
 	
 	/**
-	 * Helper method: updates the content of the JList containing the literals.
+	 * Helper method: updates the content of the JList containing the literals:
+	 * Shows the change set of the belief base
 	 */
-	private void update() {	
+	protected void update(DefaultListModel<ListElement> model) {	
 		if(ref == null)	return;
 		
+		// prepare for changeset.
 		List<String> actual = getStringRepresentation(this.actual);
 		List<String> last = previous == null ? null : getStringRepresentation(this.previous);
 		
+		// Show the changeset in the entity:
 		model.clear();		
 		for(String atom : actual) {
 			if(last != null && !last.contains(atom)) {
-				model.add(0, new ListElement(atom, ListElement.ST_NEW));
+				model.addElement(new ListElement(atom, ListElement.ST_NEW));
 			} else {
-				model.add(0, new ListElement(atom, ListElement.ST_NOTCHANGED));
+				model.addElement(new ListElement(atom, ListElement.ST_NOTCHANGED));
 			}
 		}
 		
+		// at the end of the list show all rules which are removed by this step
 		if(last != null) {
 			for(String atom : last) {
 				if(!actual.contains(atom)) {
-					model.add(0, new ListElement(atom, ListElement.ST_DELETED));
+					model.addElement(new ListElement(atom, ListElement.ST_DELETED));
 				}
 			}
 		}
 		
+		// Callstack already shown... there is no need to show the copy depth anymore.
+		/* 
 		if(this.actual instanceof EntityAtomic) {
 			int depth = ((EntityAtomic)this.actual).getCopyDepth();
 			model.add(0, new ListElement(String.valueOf(depth), ListElement.ST_NOTCHANGED));
 		}
+		*/
 	}
 
 	@Override
@@ -208,7 +215,7 @@ public abstract class ListViewColored<T extends Entity>
 	private void updateView() {
 		actual = actEntry.getAttachment();
 		defaultUpdatePrevious();
-		update();
+		update(model);
 		fillTreeWithCallstack();
 	}
 
@@ -225,7 +232,7 @@ public abstract class ListViewColored<T extends Entity>
 			
 			// select the first predecessor which has the same or a lesser copy depth as the
 			// current one as the 'real' previous entry.
-			if(temp.getCopyDepth() <= actAtomic.getCopyDepth()) {
+			if(temp.getCopyDepth() < actAtomic.getCopyDepth()) {
 				previous = temp;
 				break;
 			}
