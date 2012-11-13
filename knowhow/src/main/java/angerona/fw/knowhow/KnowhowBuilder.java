@@ -126,7 +126,7 @@ public class KnowhowBuilder {
 		for(Atom a : ks.getConditions()) {
 			r = new Rule();
 			r.addHead(new Atom("khcondition", new Constant(ks.name), 
-					new Constant(a.getName())));
+					new Constant(a.toString())));
 			p.addRule(r);
 		}
 		
