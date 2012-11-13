@@ -16,7 +16,7 @@
         <skill>QueryAnswer</skill>
 		<skill>Inform</skill>
 		
-        <desire>not_fired</desire>
+        <desire>not_on_blacklist</desire>
         <desire>attend_scm</desire>
          
         <data key="Confidential">

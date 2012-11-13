@@ -2,8 +2,8 @@ world {
 	attend_scm(employee).
 	excused(employee) :- not -excused(employee).
 } view->boss {
-	fire(X)			:- attend_scm(X).
-	fire(X)			:- -attend_work(X), not excused(X).
+	blacklist(X)	:- attend_scm(X).
+	blacklist(X)	:- -attend_work(X), not excused(X).
 	attend_scm(X)	:- lies(X).
 	-attend_work(X)	:- excused(X).
 	lies(X)			:- -sport_club_member(X), attend_sport_event(X).

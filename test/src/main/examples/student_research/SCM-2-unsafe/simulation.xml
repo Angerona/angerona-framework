@@ -16,7 +16,7 @@
         <skill>Justification</skill>
 		<skill>Inform</skill>
 		
-        <desire>not_fired</desire>
+        <desire>not_on_blacklist</desire>
         <desire>attend_scm</desire>
          
         <data key="Confidential">
@@ -49,7 +49,7 @@
         
         <data key="KnowHow">
 			not_sure(excused(employee)), s_Justify(a_employee, excused(employee)),
-			got_justification, s_Inform(a_employee, fire(employee)), fire(employee) 
+			got_justification, s_Inform(a_employee, blacklist(employee)), blacklist(employee) 
 			got_justification, s_Inform(a_employee, excused(employee)), excused(employee)  
 		</data> 
 		
