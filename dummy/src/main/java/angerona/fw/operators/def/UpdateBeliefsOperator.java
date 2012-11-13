@@ -74,7 +74,8 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				else
 					bb = beliefs.getViewKnowledge().get(i.getReceiverId());
 				bb.addKnowledge(i);
-				out += (!receiver) ? "as sender (add ask_ literal to view)" : "as receiver (add ask_ literal to world)";
+				out += (!receiver) ? "as sender (add '" + i.getSentences().iterator().next().toString() + "' literal to view)" : 
+					"as receiver (add '" + i.getSentences().iterator().next().toString() + "' literal to world)";
 			} else if (receiver) {
 				bb = beliefs.getViewKnowledge().get(i.getSenderId());
 				bb.addKnowledge(i);
