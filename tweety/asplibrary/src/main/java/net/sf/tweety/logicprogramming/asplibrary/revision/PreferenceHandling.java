@@ -1,6 +1,7 @@
 package net.sf.tweety.logicprogramming.asplibrary.revision;
 
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -56,6 +57,10 @@ public class PreferenceHandling implements RevisionApproach {
 		List<Rule> pdr2 = new LinkedList<Rule>(pd2.getRules());
 		List<Rule> pr1 = new LinkedList<Rule>(p1.getRules());
 		List<Rule> pr2 = new LinkedList<Rule>(p2.getRules());
+		Collections.sort(pdr1);
+		Collections.sort(pdr2);
+		Collections.sort(pr1);
+		Collections.sort(pr2);
 		
 		List<Pair<Rule, Rule>> conflicts = new LinkedList<Pair<Rule,Rule>>();
 		for(Pair<Rule, Rule> defConf : conflictsDef) {
