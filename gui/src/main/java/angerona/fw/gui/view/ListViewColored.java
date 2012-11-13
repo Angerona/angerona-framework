@@ -232,7 +232,8 @@ public abstract class ListViewColored<T extends Entity>
 			
 			// select the first predecessor which has the same or a lesser copy depth as the
 			// current one as the 'real' previous entry.
-			if(temp.getCopyDepth() < actAtomic.getCopyDepth()) {
+			if(temp.getCopyDepth() < actAtomic.getCopyDepth() || 
+					(temp.getCopyDepth() == 1 && actAtomic.getCopyDepth() == 1)) {
 				previous = temp;
 				break;
 			}
