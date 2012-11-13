@@ -16,7 +16,7 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
  * @author Thomas Vengels
  *
  */
-public class Rule {
+public class Rule implements Comparable<Rule>{
 
 	List<Literal>	head = new LinkedList<Literal>();
 	List<Literal>	body = new LinkedList<Literal>();
@@ -190,5 +190,33 @@ public class Rule {
 	@Override
 	public int hashCode() {
 		return head.hashCode() + body.hashCode();
+	}
+
+	@Override
+	public int compareTo(Rule arg0) {
+		int comp = 0;
+		
+		// facts first:
+		if(getBody().size() == 0 && arg0.getBody().size() != 0) {
+			return -1;
+		} else if(getBody().size() != 0 && arg0.getBody().size() == 0) {
+			return 1;
+		}
+		
+		// then order alphabetically starting by the head.
+		for(int i=0; i<getHead().size() && i<arg0.getHead().size(); ++i) {
+			comp = getHead().get(i).toString().compareTo(arg0.getHead().get(i).toString());
+			if(comp != 0)
+				return comp;
+		}
+		
+		// if the head is the same use the body.
+		for(int i=0; i<getBody().size() && i<arg0.getBody().size(); ++i) {
+			comp = getBody().get(i).toString().compareTo(arg0.getBody().get(i).toString());
+			if(comp != 0)
+				return comp;
+		}
+		
+		return comp;
 	}
 }
