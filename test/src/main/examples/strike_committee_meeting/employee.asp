@@ -1,11 +1,12 @@
 world {
 	attend_scm.
 } view->Boss {
-	blacklist :- -excused, -attend_work.
+	blacklist :- not excused, -attend_work.
 	blacklist :- attend_scm.
 	excused :- attend_scm.
 	excused :- attend_burial.
-	attend_scm :- excused, not attend_burial.
-	attend_burial :- excused, not attend_scm.
+	attend_scm :- not attend_burial, ask_for_excuse.
+	attend_burial :- not attend_scm, ask_for_excuse.
 	-attend_work :- excused.
+	attend_work :- not -attend_work.
 }

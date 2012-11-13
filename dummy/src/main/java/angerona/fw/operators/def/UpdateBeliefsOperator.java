@@ -55,9 +55,8 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			bb.addKnowledge(naa);
 			report(out, bb);
 		} else if(param.getPerception() instanceof Query) {
-			//Query naq = (Query)param.getPerception();
 			out += "Query ";
-			out += (!receiver) ? "as sender (normally no changes)" : "as receiver (no change yet)";
+			out += (!receiver) ? "as sender (no changes)" : "as receiver (no changes)";
 			
 			report(out, param.getAgent());
 		} else if(param.getPerception() instanceof Inform) {
@@ -65,14 +64,24 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			// himself believes it... but we do not update the own belief base yet.
 			Inform i = (Inform) param.getPerception();
 			BaseBeliefbase bb = null;
-			if(receiver) {
-				bb = beliefs.getViewKnowledge().get(i.getSenderId());
-				bb.addKnowledge(i);
-			}
 			
 			out = "Inform ";
-			out += receiver ? ("as receiver (view->" + i.getSenderId() + ")") : " as sender (no changes)";
-			report(out, bb);
+			// only allow literals with prefix "ask_":
+			if(	i.getSentences().size() == 1 && 
+				i.getSentences().iterator().next().toString().startsWith("ask_")) {
+				if(receiver)
+					bb = beliefs.getWorldKnowledge();
+				else
+					bb = beliefs.getViewKnowledge().get(i.getReceiverId());
+				bb.addKnowledge(i);
+				out += (!receiver) ? "as sender (add ask_ literal to view)" : "as receiver (add ask_ literal to world)";
+			} else if (receiver) {
+				bb = beliefs.getViewKnowledge().get(i.getSenderId());
+				bb.addKnowledge(i);
+				out += receiver ? ("as receiver (view->" + i.getSenderId() + ")") : " as sender (no changes)";
+			}
+			
+			report(out, bb == null ? param.getAgent() : bb);
 		} else if (param.getPerception() instanceof Justification) {
 			Justification j = (Justification) param.getPerception();
 			BaseBeliefbase bb = null;

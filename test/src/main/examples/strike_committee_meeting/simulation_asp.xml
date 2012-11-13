@@ -13,7 +13,7 @@
 			<source>config/beliefbases/asp_beliefbase.xml</source>
         </beliefbase-config>
         
-        <desire>v_Boss(excused)</desire>
+        <desire>v_Boss(ask_for_excuse)</desire>
         <desire>attend_scm</desire>
         
         <skill>Inform</skill>
@@ -21,7 +21,7 @@
         
         <data key="Confidential">
             (Boss, __DEFAULT__, meet_with(andre))
-            (Boss, angerona.fw.logic.asp.AspReasoner{d=0.5}, attend_scm)
+            (Boss, angerona.fw.logic.asp.AspReasoner{d=0.75}, attend_scm)
         </data>
 	</agent-instance>
       
