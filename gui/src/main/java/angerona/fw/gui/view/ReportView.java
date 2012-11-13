@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
+import angerona.fw.AngeronaEnvironment;
 import angerona.fw.BaseOperator;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.TreeController;
@@ -98,7 +99,14 @@ public class ReportView extends BaseView implements ReportListener {
     	public void actionPerformed(Agent agent, Action act) {
     		AgentNodeUserObject uo = (AgentNodeUserObject)parent.actAgentNode.getUserObject();
     		uo.setAction(act);
-    		tree.repaint();
+    		tree.updateUI();
+    	}
+    	
+    	@Override
+    	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
+    		DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)model.getRoot();
+    		dmtn.removeAllChildren();
+    		tree.updateUI();
     	}
     } 
     
@@ -220,4 +228,5 @@ public class ReportView extends BaseView implements ReportListener {
 		LOG.warn("Add a report without poster. The report-system is not capable of link the report to a specific agent. Use the agent as attachment for the default case instead null.");
 		return false;
 	}
+
 }
