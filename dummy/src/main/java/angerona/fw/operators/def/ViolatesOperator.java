@@ -77,7 +77,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						
 						boolean inClone = cloneInfere.contains(secret.getInformation());
 						if(	inClone )  {
-							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'", view);
+							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'");
 							pairs.add(new Pair<>(secret, 1.0));
 						}
 					}
