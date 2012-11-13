@@ -56,7 +56,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 		// add a placeholder and then show the inference result:
 		BaseBeliefbase bAct = (BaseBeliefbase)actual;
 		BaseBeliefbase bPrev = (BaseBeliefbase)previous;
-		model.addElement(new ListElement("", ListElement.ST_NOTCHANGED));
+		model.addElement(new ListElement(" ", ListElement.ST_NOTCHANGED));
 		model.addElement(new ListElement("--- Inference Result using: " + 
 		bAct.getReasoningOperator().getNameAndParameters(), ListElement.ST_NOTCHANGED));
 		
