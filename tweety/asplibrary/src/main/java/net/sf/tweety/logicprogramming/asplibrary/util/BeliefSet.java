@@ -41,6 +41,14 @@ public class BeliefSet {
 		sl.add(l);
 	}
 	
+	/** @return all literals in the belief set */
+	public Set<Literal> getLiterals() {
+		Set<Literal> reval = new HashSet<Literal>();
+		for(String key : literals.keySet()) {
+			reval.addAll(literals.get(key));
+		}
+		return reval;
+	}
 	
 	public Set<Literal> getLiteralsBySymbol(String functor) {
 		Set<Literal> ret = literals.get(functor);

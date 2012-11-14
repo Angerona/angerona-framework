@@ -103,7 +103,7 @@ public class ResourcenView extends BaseView {
 	private void handlerAgentComponent(AgentComponent component) {
 		String agname = component.getAgent().getName();
 		LOG.trace("Handle AgentComponent: '{}' of Agent '{}'.", agname);
-		BaseView view = AngeronaWindow.getInstance().createViewForAgentComponent(component);
+		BaseView view = AngeronaWindow.getInstance().createViewForEntityComponent(component);
 		if(view != null) {
 			AngeronaWindow.getInstance().addComponentToCenter(view);
 		}
@@ -127,9 +127,18 @@ public class ResourcenView extends BaseView {
 	 */
 	private void handlerBeliefbase(BaseBeliefbase bb) {
 		LOG.trace("Handle beliefbase: '{}'", bb.getFileEnding());
-		BeliefbaseView bc = AngeronaWindow.getInstance().createBaseView(
-				BeliefbaseView.class, bb);
-		AngeronaWindow.getInstance().addComponentToCenter(bc);
+		
+		// TODO: More dynamically... using plugin architecture etc.
+		if(bb.getFileEnding().toLowerCase().equals("asp")) {
+			BaseView view = AngeronaWindow.getInstance().createViewForEntityComponent(bb);
+			if(view != null) {
+				AngeronaWindow.getInstance().addComponentToCenter(view);
+			}
+		} else {
+			BeliefbaseView bc = AngeronaWindow.getInstance().createBaseView(
+					BeliefbaseView.class, bb);
+			AngeronaWindow.getInstance().addComponentToCenter(bc);
+		}
 	}
 	
 	@Override

@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.view.BaseView;
@@ -163,7 +162,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	 * @return	reference to the created view. null if no view for the AgentComponent is
 	 * 			registered or an error occured.
 	 */
-	public BaseView createViewForAgentComponent(AgentComponent comp) {
+	public BaseView createViewForEntityComponent(Entity comp) {
 		for (Class<? extends BaseView> cls : viewMap.values()) {
 			BaseView view = null;
 			try {
@@ -185,8 +184,8 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 			}
 		}
 		
-		LOG.warn("Cannot find UI-View for Agent-Component '{}' of agent '{}'", 
-				comp, comp.getAgent().getName());
+		LOG.warn("Cannot find UI-View for '{}'", 
+				comp.getClass().getName());
 		return null;
 	}
 	

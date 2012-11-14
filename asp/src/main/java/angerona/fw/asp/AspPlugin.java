@@ -1,7 +1,9 @@
 package angerona.fw.asp;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
@@ -10,6 +12,9 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.gui.UIPlugin;
+import angerona.fw.gui.asp.AspBeliefbaseView;
+import angerona.fw.gui.view.BaseView;
 import angerona.fw.internal.BeliefbasePlugin;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
@@ -21,7 +26,7 @@ import angerona.fw.logic.asp.AspRevision;
 import angerona.fw.logic.asp.AspTranslator;
 
 @PluginImplementation
-public class AspPlugin implements BeliefbasePlugin {
+public class AspPlugin implements BeliefbasePlugin, UIPlugin {
 
 	@Override
 	public List<Class<? extends BaseBeliefbase>> getSupportedBeliefbases() {
@@ -105,5 +110,12 @@ public class AspPlugin implements BeliefbasePlugin {
 		orderedLists([X|[Y|L]]) :- orderedLists([Y|L]), number(X), X < Y.
 		*/
 		
+	}
+
+	@Override
+	public Map<String, Class<? extends BaseView>> getUIComponents() {
+		Map<String, Class<? extends BaseView>> reval = new HashMap<String, Class<? extends BaseView>>();
+		reval.put("todo", AspBeliefbaseView.class);
+		return reval;
 	}
 }

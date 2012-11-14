@@ -152,6 +152,15 @@ public abstract class ListViewColored<T extends Entity>
 	protected void update(DefaultListModel<ListElement> model) {	
 		if(ref == null)	return;
 		
+		updateBeliefbaseOutput(model);
+	}
+
+	/**
+	 * Helper method: Updates the output of the belief base and puts the output in the
+	 * given list model.
+	 * @param model
+	 */
+	protected void updateBeliefbaseOutput(DefaultListModel<ListElement> model) {
 		// prepare for changeset.
 		List<String> actual = getStringRepresentation(this.actual);
 		List<String> last = previous == null ? null : getStringRepresentation(this.previous);
@@ -174,14 +183,6 @@ public abstract class ListViewColored<T extends Entity>
 				}
 			}
 		}
-		
-		// Callstack already shown... there is no need to show the copy depth anymore.
-		/* 
-		if(this.actual instanceof EntityAtomic) {
-			int depth = ((EntityAtomic)this.actual).getCopyDepth();
-			model.add(0, new ListElement(String.valueOf(depth), ListElement.ST_NOTCHANGED));
-		}
-		*/
 	}
 
 	@Override

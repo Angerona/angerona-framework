@@ -53,6 +53,15 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 		// prepare changeset in model and so on.
 		super.update(model);
 		
+		updateInferenceOutput(model);
+	}
+
+	/**  
+	 * Helper method: Updates the inference output and adds the output to the
+	 * list model.
+	 * @param model	Reference to the list model.
+	 */
+	protected void updateInferenceOutput(DefaultListModel<ListElement> model) {
 		// add a placeholder and then show the inference result:
 		BaseBeliefbase bAct = (BaseBeliefbase)actual;
 		BaseBeliefbase bPrev = (BaseBeliefbase)previous;

@@ -77,7 +77,7 @@ public class AgentView extends BaseView implements NavigationUser, ReportListene
 		addWlComponent(dc);
 		
 		for(AgentComponent ac : agent.getComponents()) {
-			BaseView view = AngeronaWindow.getInstance().createViewForAgentComponent(ac);
+			BaseView view = AngeronaWindow.getInstance().createViewForEntityComponent(ac);
 			if(view != null) {
 				addWlComponent(view);
 			}
