@@ -1,11 +1,14 @@
 package net.sf.tweety.math.opt;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.logging.*;
+import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
 
-import net.sf.tweety.math.*;
-import net.sf.tweety.math.term.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -19,7 +22,7 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	/**
 	 * Logger.
 	 */
-	private Log log = LogFactory.getLog(OptimizationRootFinder.class);
+	static private Logger log = LoggerFactory.getLogger(OptimizationRootFinder.class);	
 	
 	/**
 	 * Creates a new root finder for the given function.
@@ -51,7 +54,7 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	 * @return an optimization problem for the task of root finding.
 	 */
 	protected OptimizationProblem buildOptimizationProblem(){
-		this.log.trace("Constructing optimization problem to find a root of the function '" + this.getFunctions() + "'.");
+		OptimizationRootFinder.log.trace("Constructing optimization problem to find a root of the function '" + this.getFunctions() + "'.");
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		Term target = null;
 		for(Term f: this.getFunctions())
@@ -59,7 +62,7 @@ public abstract class OptimizationRootFinder extends RootFinder {
 				target = f.mult(f);
 			else target = target.add(f.mult(f));
 		problem.setTargetFunction(target);
-		this.log.trace("Constructing optimization problem finished; the target function is '" + target + "'.");
+		OptimizationRootFinder.log.trace("Constructing optimization problem finished; the target function is '" + target + "'.");
 		return problem;
 	}
 	

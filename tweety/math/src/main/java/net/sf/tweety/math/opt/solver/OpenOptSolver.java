@@ -1,14 +1,31 @@
 package net.sf.tweety.math.opt.solver;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import net.sf.tweety.math.*;
-import net.sf.tweety.math.equation.*;
-import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.term.*;
+import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.equation.Equation;
+import net.sf.tweety.math.equation.Inequation;
+import net.sf.tweety.math.equation.Statement;
+import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.FloatVariable;
+import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
 
-import org.apache.commons.logging.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -21,7 +38,7 @@ public class OpenOptSolver extends Solver {
 	/**
 	 * Logger.
 	 */
-	private Log log = LogFactory.getLog(OpenOptSolver.class);
+	static private Logger log = LoggerFactory.getLogger(OpenOptSolver.class);	
 	
 	// TODO make the following private and add getter/setter
 	public double contol = 1e-8;
@@ -95,11 +112,11 @@ public class OpenOptSolver extends Solver {
 			ooFile.deleteOnExit();    
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
-			this.log.info("Building Python code for OpenOpt.");
+			OpenOptSolver.log.info("Building Python code for OpenOpt.");
 			out.write(this.getOpenOptCode());			
 			out.close();
 			//execute openopt on problem and retrieve console output
-			this.log.info("Calling OpenOpt optimization library.");
+			OpenOptSolver.log.info("Calling OpenOpt optimization library.");
 			child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
 			int c;		
 			in = child.getInputStream();
@@ -123,11 +140,11 @@ public class OpenOptSolver extends Solver {
 		}
 		// TODO check error appropriately
 		if(output.contains("NO FEASIBLE SOLUTION") && !this.ignoreNotFeasibleError){
-			this.log.info("The optimization problem seems to be unfeasible.");
+			OpenOptSolver.log.info("The optimization problem seems to be unfeasible.");
 			throw new GeneralMathException("The optimization problem seems to be unfeasible.");
 		}
 		// parser output
-		this.log.info("Parsing solution from OpenOpt.");
+		OpenOptSolver.log.info("Parsing solution from OpenOpt.");
 		try{
 			double[] values = this.parseOutput(output, this.idx2newVars.keySet().size());
 			Map<Variable,Term> result = new HashMap<Variable,Term>();
@@ -135,7 +152,7 @@ public class OpenOptSolver extends Solver {
 				result.put(this.newVars2oldVars.get(this.idx2newVars.get(i)), new FloatConstant(values[i]));
 			return result;
 		}catch(Exception e){
-			this.log.error(e.getMessage());
+			OpenOptSolver.log.error(e.getMessage());
 			throw new GeneralMathException(e.getMessage());
 		}
 	}
@@ -239,7 +256,7 @@ public class OpenOptSolver extends Solver {
 		code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
 		code += "r = p.solve('" + this.solver + "')\n";
 		code += "print r.xf";
-		this.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");
+		OpenOptSolver.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");
 		return code;
 	}
 	
@@ -266,7 +283,7 @@ public class OpenOptSolver extends Solver {
 			}
 			return result;
 		}catch(Exception e){
-			this.log.error(e.getMessage());
+			OpenOptSolver.log.error(e.getMessage());
 			throw new RuntimeException(e.getMessage());
 		}
 	}

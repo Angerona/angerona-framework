@@ -1,14 +1,22 @@
 package net.sf.tweety.logics.conditionallogic;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.logging.*;
+import net.sf.tweety.Answer;
+import net.sf.tweety.BeliefBase;
+import net.sf.tweety.Formula;
+import net.sf.tweety.Reasoner;
+import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
+import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
+import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.conditionallogic.semantics.*;
-import net.sf.tweety.logics.conditionallogic.syntax.*;
-import net.sf.tweety.logics.propositionallogic.semantics.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class models a brute force c-reasoner for conditional logic. Reasoning is performed
@@ -30,7 +38,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
 public class BruteForceCReasoner extends Reasoner {
 
 	/** Logger. */
-	private Log log = LogFactory.getLog(BruteForceCReasoner.class);
+	static private Logger log = LoggerFactory.getLogger(BruteForceCReasoner.class);	
 	
 	/**
 	 * The c-representation for the given knowledge base. Once this
@@ -138,7 +146,7 @@ public class BruteForceCReasoner extends Reasoner {
 			for(int j=1; j< kappa.length;j++)
 				debugMessage += "," + kappa[j];
 			debugMessage += "]";
-			this.log.debug(debugMessage);
+			BruteForceCReasoner.log.debug(debugMessage);
 		}		
 		candidate.normalize();
 		return candidate;

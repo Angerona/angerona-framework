@@ -2,7 +2,8 @@ package net.sf.tweety.math.opt.solver;
 
 import java.util.*;
 
-import org.apache.commons.logging.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.*;
@@ -21,7 +22,7 @@ public class HessianGradientDescent extends Solver {
 	/**
 	 * Logger.
 	 */
-	private Log log = LogFactory.getLog(HessianGradientDescent.class);
+	static private Logger log = LoggerFactory.getLogger(HessianGradientDescent.class);	
 	
 	private static final double PRECISION = 0.00001;
 	
@@ -42,7 +43,7 @@ public class HessianGradientDescent extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
-		this.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
+		HessianGradientDescent.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
 		Term func = ((OptimizationProblem)this.getProblem()).getTargetFunction();
 		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
@@ -68,11 +69,11 @@ public class HessianGradientDescent extends Solver {
 		double[] dir = new double[variables.size()];
 		double[] evaluatedGradient = new double[variables.size()];
 		double distance;
-		this.log.trace("Starting optimization.");
+		HessianGradientDescent.log.trace("Starting optimization.");
 		while(true){
 			evaluatedGradient = Term.evaluateVector(gradient, currentGuess, variables);
 			distance = VectorTools.manhattanDistanceToZero(evaluatedGradient);
-			this.log.trace("Current manhattan distance of gradient to zero: " + distance);
+			HessianGradientDescent.log.trace("Current manhattan distance of gradient to zero: " + distance);
 			if(distance < HessianGradientDescent.PRECISION)
 				break;
 			evaluatedHessian = Term.evaluateMatrix(hessian, currentGuess, variables);
@@ -83,7 +84,7 @@ public class HessianGradientDescent extends Solver {
 		idx = 0;
 		for(Variable v: variables)
 			result.put(v, new FloatConstant(currentGuess[idx++]));
-		this.log.trace("Optimum found: " + result);
+		HessianGradientDescent.log.trace("Optimum found: " + result);
 		return result;
 	}
 

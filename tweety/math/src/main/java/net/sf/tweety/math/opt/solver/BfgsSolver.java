@@ -1,13 +1,20 @@
 package net.sf.tweety.math.opt.solver;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.logging.*;
+import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.matrix.Matrix;
+import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
 
-import net.sf.tweety.math.*;
-import net.sf.tweety.math.matrix.*;
-import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.term.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -20,7 +27,8 @@ public class BfgsSolver extends Solver {
 	/**
 	 * Logger.
 	 */
-	private Log log = LogFactory.getLog(BfgsSolver.class);
+	static private Logger log = LoggerFactory.getLogger(BfgsSolver.class);	
+
 	
 	private static final double PRECISION = 0.000000000000000001;
 	
@@ -61,7 +69,7 @@ public class BfgsSolver extends Solver {
 		while(true){
 			evaluatedGradient = this.evaluate(gradient, currentGuess, variables);
 			distanceToZero = evaluatedGradient.distanceToZero();
-			this.log.trace("Current manhattan distance of gradient to zero: " + distanceToZero);
+			BfgsSolver.log.trace("Current manhattan distance of gradient to zero: " + distanceToZero);
 			if(distanceToZero < actualPrecision)
 				break;
 			searchDirection = approxInverseHessian.mult(evaluatedGradient.mult(new IntegerConstant(-1))).simplify();			

@@ -1,14 +1,33 @@
 package net.sf.tweety.math.opt.solver;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import net.sf.tweety.math.equation.*;
-import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.term.*;
+import net.sf.tweety.math.equation.Inequation;
+import net.sf.tweety.math.equation.Statement;
+import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.ProblemInconsistentException;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.term.Constant;
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Product;
+import net.sf.tweety.math.term.Sum;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
 
-import org.apache.commons.logging.*;
-import org.apache.commons.math.optimization.*;
-import org.apache.commons.math.optimization.linear.*;
+import org.apache.commons.math.optimization.GoalType;
+import org.apache.commons.math.optimization.OptimizationException;
+import org.apache.commons.math.optimization.RealPointValuePair;
+import org.apache.commons.math.optimization.linear.LinearConstraint;
+import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
+import org.apache.commons.math.optimization.linear.Relationship;
+import org.apache.commons.math.optimization.linear.SimplexSolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is a wrapper for the Apache Commons Math Simplex implementation.
@@ -20,7 +39,7 @@ public class ApacheCommonsSimplex extends Solver {
 	/**
 	 * Logger.
 	 */
-	private Log log = LogFactory.getLog(ApacheCommonsSimplex.class);
+	static private Logger log = LoggerFactory.getLogger(ApacheCommonsSimplex.class);	
 	
 	/**
 	 * The maximum number of iterations of the simplex algorithm.
@@ -42,7 +61,7 @@ public class ApacheCommonsSimplex extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() {	
-		this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
+		ApacheCommonsSimplex.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
 		for(Statement s: this.getProblem())
@@ -116,7 +135,7 @@ public class ApacheCommonsSimplex extends Solver {
 		}
 		// 6.) Optimize.
 		try{
-			this.log.info("Calling the Apache Commons Simplex algorithm.");
+			ApacheCommonsSimplex.log.info("Calling the Apache Commons Simplex algorithm.");
 			SimplexSolver solver = new SimplexSolver(0.01);
 			solver.setMaxIterations(ApacheCommonsSimplex.MAXITERATIONS);
 			RealPointValuePair r = null;
@@ -126,7 +145,7 @@ public class ApacheCommonsSimplex extends Solver {
 				int type = ((OptimizationProblem)this.getProblem()).getType();
 				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), justPositive);
 			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, justPositive);
-			this.log.info("Parsing output from the Apache Commons Simplex algorithm.");
+			ApacheCommonsSimplex.log.info("Parsing output from the Apache Commons Simplex algorithm.");
 			Map<Variable, Term> result = new HashMap<Variable, Term>();
 			for(Variable v: origVars2Idx.keySet())
 				result.put(v, new FloatConstant(r.getPoint()[origVars2Idx.get(v)]));

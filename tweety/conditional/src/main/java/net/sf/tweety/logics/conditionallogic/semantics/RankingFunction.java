@@ -15,7 +15,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.*;
  * 
  * <br><br>See W. Spohn. Ordinal conditional functions: a dynamic theory of epistemic states.
  * In W.L. Harper and B. Skyrms, editors, Causation in Decision, Belief Change, and Statistics, II,
- * pages 105Ð134. Kluwer Academic Publishers, 1988.
+ * pages 105-134. Kluwer Academic Publishers, 1988.
  * 
  * @author Matthias Thimm
  *

@@ -21,7 +21,7 @@ public class LbfgsSolver extends Solver {
 	/**
 	 * Logger.
 	 */
-	static private Logger LOG = LoggerFactory.getLogger(ConsoleTest.class);	
+	static private Logger log = LoggerFactory.getLogger(LbfgsSolver.class);	
 	/**
 	 * The starting point for the solver.
 	 */
@@ -39,7 +39,7 @@ public class LbfgsSolver extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
-		this.log.trace("Solving the following optimization problem using L-BFGS:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
+		LbfgsSolver.log.trace("Solving the following optimization problem using L-BFGS:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
 		Term func = ((OptimizationProblem)this.getProblem()).getTargetFunction();
 		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
@@ -68,11 +68,11 @@ public class LbfgsSolver extends Solver {
 		double xtol = 10e-16;
 		int[] iflag = new int[1];
 		iflag[0] = 0;
-		this.log.trace("Starting optimization.");
+		LbfgsSolver.log.trace("Starting optimization.");
 		while(iflag[0] >= 0){
 			try{
 				Lbfgs.lbfgs(n, m, x, f, g, diagco, diag, iprint, eps, xtol, iflag);
-				this.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(g));
+				LbfgsSolver.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(g));
 			}catch(Exception e){
 				throw new GeneralMathException("Call to L-BFGS failed.");
 			}
@@ -98,7 +98,7 @@ public class LbfgsSolver extends Solver {
 					g[i] = gradient.get(i).replaceAllTerms(currentGuess).doubleValue();					
 			}
 		}
-		this.log.trace("Optimum found: " + currentGuess);
+		LbfgsSolver.log.trace("Optimum found: " + currentGuess);
 		return currentGuess;
 	}	
 }
