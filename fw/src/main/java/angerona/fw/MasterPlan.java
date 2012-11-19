@@ -22,6 +22,20 @@ public class MasterPlan extends BaseAgentComponent implements SubgoalListener{
 		super(plan);
 	}
 	
+	/**
+	 * Counts how many plans exists to fullfil the given desire.
+	 * @param d		References to desires d.
+	 * @return		The number representing the count of plans which fulfill the desire d.
+	 */
+	public int countPlansFor(Desire d) {
+		int reval = 0;
+		for(Subgoal sg : plans) {
+			if(sg.getFulfillsDesire().equals(d))
+				reval += 1;
+		}
+		return reval;
+	}
+	
 	public boolean addPlan(Subgoal plan) {
 		if(plan == null || plans.contains(plan))
 			return false;

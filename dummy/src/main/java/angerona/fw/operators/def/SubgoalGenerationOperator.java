@@ -79,6 +79,10 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			return false;
 		
 		for(Desire desire : ag.getDesires().getDesires()) {
+			// only add a plan if no plan for the desire exists.
+			if(ag.getPlanComponent().countPlansFor(desire) > 0)
+				continue;
+			
 			Atom atom = desire.getAtom();
 			String atomStr = atom.toString().trim();
 			boolean informDesire = atomStr.startsWith("v_");
