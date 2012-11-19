@@ -1,4 +1,6 @@
 package angerona.fw;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +28,6 @@ import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.ActionProcessor;
 import angerona.fw.listener.AgentListener;
-import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Beliefs;
@@ -66,7 +67,7 @@ public class Agent extends AgentArchitecture
 	, OperatorVisitor
 	, ReportPoster
 	, ActionProcessor
-	, BeliefbaseChangeListener {
+	, PropertyChangeListener {
 
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Agent.class);
@@ -160,22 +161,22 @@ public class Agent extends AgentArchitecture
 	public void setBeliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> views) {
 		if(beliefs != null) {
 			childrenIds.remove(beliefs.getWorldKnowledge().getGUID());
-			beliefs.getWorldKnowledge().removeListener(this);
+			beliefs.getWorldKnowledge().removePropertyChangeListener(this);
 			for(String name : beliefs.getViewKnowledge().keySet()) {
 				BaseBeliefbase act = beliefs.getViewKnowledge().get(name);
-				act.removeListener(this);
+				act.removePropertyChangeListener(this);
 				childrenIds.remove(act.getGUID());
 			}
 		}
 		beliefs = new Beliefs(world, views);
 		childrenIds.add(world.getGUID());
 		world.setParent(id);
-		world.addListener(this);
+		world.addPropertyChangeListener(this);
 		for(String name : views.keySet()) {
 			BaseBeliefbase bb = views.get(name);
 			childrenIds.add(bb.getGUID());
 			bb.setParent(id);
-			bb.addListener(this);
+			bb.addPropertyChangeListener(this);
 		}
 		regenContext();
 	}
@@ -683,7 +684,17 @@ public class Agent extends AgentArchitecture
 	}
 
 	@Override
-	public void changed(BaseBeliefbase bb) {
+	public void propertyChange(PropertyChangeEvent ev) {
+		// inform the other components about belief base changes:
+		if(ev.getSource() instanceof BaseBeliefbase) {
+			BaseBeliefbase bb = (BaseBeliefbase)ev.getSource();
+			if(ev.getPropertyName().equals(BaseBeliefbase.BELIEFBASE_CHANGE_PROPERTY_NAME)) {
+				onBeliefBaseChange(bb);	
+			}
+		} 
+	}
+	
+	private void onBeliefBaseChange(BaseBeliefbase bb) {
 		// TODO: Document the flow of the messaging system for update-beliefs more technically.
 		if(bb == beliefs.getWorldKnowledge()) {
 			onBBChanged(bb, lastUpdateBeliefsPercept, AgentListener.WORLD);

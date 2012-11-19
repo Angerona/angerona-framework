@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +21,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
@@ -38,6 +36,13 @@ import angerona.fw.serialize.BeliefbaseConfig;
  * 
  * A belief base contains several operators which define the functionality of the belief base.
  * The BaseBeliefbase provides an interface to use the operators in a homogeneous way.
+ * 
+ * The belief base uses the PropertyChangeListener to inform the system about its changes. In this
+ * base class is no information about the properties needed in sub classes to express the knowledge.
+ * Therefore a reserved property name BELIEFBASE_CHANGE_PROPERTY_NAME is used to inform the listeners
+ * about changes of the belief base. This event is fired after a change operator has altered the 
+ * belief base.
+ * 
  * @author Tim Janus
  */
 public abstract class BaseBeliefbase extends BaseAgentComponent implements BeliefBase {
@@ -54,8 +59,7 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	/** default error string if a formula uses variables but the beliefbase does not support them */
 	protected static String RES_HAS_VARIABLES = "formula has variables, they are not supported.";
 	
-	/** a list of listener which are interested in beliefbase changes */
-	private List<BeliefbaseChangeListener> listeners = new LinkedList<BeliefbaseChangeListener>();
+	public static final String BELIEFBASE_CHANGE_PROPERTY_NAME = "_beliefBaseContent_";
 	
 	/** flag indicating if this type of beliefbase supports quantified formulas */
 	private boolean supportsQuantifiers;
@@ -194,10 +198,20 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	 */
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
+	/**
+	 * Adds the given set of FOL formulas to the knowledge of the belief base.
+	 * It uses the default change operator and the default translator.
+	 * @param formulas	A set of FOL formulas which are added as knowledge to the belief base
+	 */
 	public void addKnowledge(Set<FolFormula> formulas) {
 		addKnowledge(formulas, null, null);
 	}
 	
+	/**
+	 * Adds the given FOL formula to the knowledge of the belief base.
+	 * It uses the default change operator and the default translator.
+	 * @param formula	Reference to the FOL formula which is added to the belief base
+	 */
 	public void addKnowledge(FolFormula formula)
 	{
 		Set<FolFormula> formulas = new HashSet<FolFormula>();
@@ -205,10 +219,23 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 		addKnowledge(formulas);
 	}
 	
+	/**
+	 * Adds the given perception to the knowledge of the belief base.
+	 * The default change operator and the default translator is used.
+	 * @param perception	Reference to the perception which is added to the belief base.
+	 */
 	public void addKnowledge(Perception perception) {
 		addKnowledge(perception, null, null);
 	}
 	
+	/**
+	 * Adds the given perception to the knowledge of the belief base.
+	 * Uses the given translator for the translation process and the
+	 * given change operator to perform the change operation
+	 * @param perception		Reference to the perceptin which is added to the belief base
+	 * @param translator		Reference to the translator to use, if null the default translator is used.
+	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
+	 */
 	public void addKnowledge(Perception perception, BaseTranslator translator, 
 			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
@@ -218,6 +245,14 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 		addKnowledge(newK, changeOperator);
 	}
 	
+	/**
+	 * Adds the given set of FOL formulas to the knowledge of the belief base.
+	 * Uses the given translator for the translation process and the
+	 * given change operator to perform the change operation
+	 * @param formulas			Set containing FOL formulas with new knowledge.
+	 * @param translator		Reference to the translator to use, if null the default translator is used.
+	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
+	 */
 	public void addKnowledge(Set<FolFormula> formulas, BaseTranslator translator, 
 			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
@@ -227,6 +262,12 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 		addKnowledge(newK, changeOperator);
 	}
 	
+	/**
+	 * Adds the knowledge of the given belief base to this belief base. Uses
+	 * the given change operator.
+	 * @param newKnowledge		A belief base having more information
+	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
+	 */
 	public void addKnowledge(BaseBeliefbase newKnowledge, BaseChangeBeliefs changeOperator) {
 		if(changeOperator == null)
 			changeOperator = changeOperators.def();
@@ -234,30 +275,7 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 		Agent agent = getAgent();
 		BeliefUpdateParameter param = new BeliefUpdateParameter(this, newKnowledge, agent);
 		changeOperator.process(param);
-		onChange();
-	}
-	
-	public void addListener(BeliefbaseChangeListener listener) {
-		this.listeners.add(listener);
-	}
-	
-	public boolean removeListener(BeliefbaseChangeListener listener) {
-		return this.listeners.remove(listener);
-	}
-	
-	public void removeAllListeners() {
-		this.listeners.clear();
-	}
-	
-	/**
-	 * Helper method: is called when the content of the beliefbase is changed
-	 * the basic implementation informs the listeners. Subclasses could implement
-	 * their own reactions.
-	 */
-	protected void onChange() {
-		for(BeliefbaseChangeListener l : listeners) {
-			l.changed(this);
-		}
+		firePropertyChangeListener(BELIEFBASE_CHANGE_PROPERTY_NAME, null, null);
 	}
 	
 	/**
@@ -354,6 +372,9 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 		updateOwner();
 	}
 
+	/**
+	 * Helper method: informs all operators about owner switches.
+	 */
 	private void updateOwner() {
 		Agent agent = getAgent();
 		if(agent != null) {
