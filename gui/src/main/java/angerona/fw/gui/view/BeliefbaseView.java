@@ -12,7 +12,7 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
 
 /**
- * Generic ui view to show a Beliefbase. It shows its content in a list
+ * Generic ui view to show a belief base. It shows its content in a list
  * and uses the generic base class ListViewColored
  * 
  * @author Tim Janus

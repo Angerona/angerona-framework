@@ -10,6 +10,14 @@ import angerona.fw.gui.view.BeliefbaseView;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
 
+/**
+ * This class extends the default Beliefbase View to an ASP specific belief base
+ * view. It outputs the answer sets for a specific reasoner using the ASPReasoner
+ * interface specific processAnswerSets method.
+ * It outputs the answer sets in the middle between the ELP (belief base) and
+ * the set of inferred formulas.
+ * @author Tim Janus
+ */
 public class AspBeliefbaseView extends BeliefbaseView {
 
 	/** kill warning */
@@ -24,9 +32,10 @@ public class AspBeliefbaseView extends BeliefbaseView {
 	protected void update(DefaultListModel<ListElement> model) {
 		if(ref == null)	return;
 		
-		
+		// First output the belief base content (using super class behavior)
 		updateBeliefbaseOutput(model);
 		
+		// Second: Process Answer sets 
 		AspBeliefbase bAct = (AspBeliefbase)actual;
 		if(! (bAct.getReasoningOperator() instanceof AspReasoner)) {
 			return;
@@ -39,6 +48,7 @@ public class AspBeliefbaseView extends BeliefbaseView {
 		
 		List<AnswerSet> answerSets = reasoner.processAnswerSets(bAct);
 		
+		// Output the answer sets to the JList.
 		int counter = 1;
 		for(AnswerSet as : answerSets) {
 			model.addElement(new ListElement("Answer Set " + counter + "/" + answerSets.size(), 
@@ -63,7 +73,7 @@ public class AspBeliefbaseView extends BeliefbaseView {
 			}
 		}
 		
-		
+		// Third: Output the inferred knowledge (using the super class method).
 		updateInferenceOutput(model);
 	}
 }
