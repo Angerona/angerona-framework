@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>Open Query Negative Predicate Test</name>
-    <behavior>angerona.fw.DefaultBehavior</behavior>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
     
 	<agent-instance>
 		<name>Mary</name>

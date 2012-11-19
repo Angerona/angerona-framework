@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import angerona.fw.internal.Entity;
-import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.SecrecyKnowledge;
 import angerona.fw.logic.Secret;
 
 /**
@@ -13,7 +13,7 @@ import angerona.fw.logic.Secret;
  * 
  * @author Tim Janus
  */
-public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
+public class ConfidentialView extends ListViewColored<SecrecyKnowledge> {
 
 	/** kill warning */
 	private static final long serialVersionUID = 5545434636562463488L;
@@ -26,7 +26,7 @@ public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
 	
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
-		ConfidentialKnowledge ck = (ConfidentialKnowledge)obj;
+		SecrecyKnowledge ck = (SecrecyKnowledge)obj;
 		
 		List<String> reval = new LinkedList<String>();
 		for(Secret ct : ck.getTargets()) {
@@ -38,16 +38,16 @@ public class ConfidentialView extends ListViewColored<ConfidentialKnowledge> {
 
 	@Override
 	public void setObservationObject(Object obj) {
-		if(! (obj instanceof ConfidentialKnowledge)) {
-			throw new IllegalArgumentException("Observation Object must be of type '" +  ConfidentialKnowledge.class.getSimpleName() + "'");
+		if(! (obj instanceof SecrecyKnowledge)) {
+			throw new IllegalArgumentException("Observation Object must be of type '" +  SecrecyKnowledge.class.getSimpleName() + "'");
 		}
-		this.ref = (ConfidentialKnowledge)obj;
+		this.ref = (SecrecyKnowledge)obj;
 		this.actual = this.ref;
 	}
 
 	@Override
 	public Class<?> getObservationObjectType() {
-		return ConfidentialKnowledge.class;
+		return SecrecyKnowledge.class;
 	}
 	
 }

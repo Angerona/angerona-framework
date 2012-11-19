@@ -8,17 +8,17 @@ import java.util.Map;
 import angerona.fw.listener.SubgoalListener;
 
 /**
- * 
+ * The PlanComponent is data storage for plans.
  * @author Tim Janus
  */
-public class MasterPlan extends BaseAgentComponent implements SubgoalListener{
+public class PlanComponent extends BaseAgentComponent implements SubgoalListener{
 
 	/** parallel plans of the Plan Component */
 	private List<Subgoal> plans = new LinkedList<Subgoal>();
 	
-	public MasterPlan() {}
+	public PlanComponent() {}
 	
-	public MasterPlan(MasterPlan plan) {
+	public PlanComponent(PlanComponent plan) {
 		super(plan);
 	}
 	
@@ -61,7 +61,7 @@ public class MasterPlan extends BaseAgentComponent implements SubgoalListener{
 
 	@Override
 	public Object clone() {
-		return new MasterPlan(this);
+		return new PlanComponent(this);
 	}
 
 	@Override

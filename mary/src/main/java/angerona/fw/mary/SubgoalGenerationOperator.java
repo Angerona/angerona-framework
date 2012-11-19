@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
 import angerona.fw.Desire;
-import angerona.fw.MasterPlan;
+import angerona.fw.PlanComponent;
 import angerona.fw.Subgoal;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
@@ -58,7 +58,7 @@ public class SubgoalGenerationOperator extends
 			Set<Desire> actual;
 			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
 			for(Desire d : actual) {
-				MasterPlan p = ag.getComponent(MasterPlan.class);
+				PlanComponent p = ag.getComponent(PlanComponent.class);
 				boolean exists = false;
 				for(Subgoal sg : p.getPlans())
 					if(sg.getFulfillsDesire().equals(d))
@@ -70,7 +70,7 @@ public class SubgoalGenerationOperator extends
 			
 			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareRevisionRequestProcessing);
 			for(Desire d : actual) {
-				MasterPlan p = ag.getComponent(MasterPlan.class);
+				PlanComponent p = ag.getComponent(PlanComponent.class);
 				boolean exists = false;
 				for(Subgoal sg : p.getPlans())
 					if(sg.getFulfillsDesire().equals(d))

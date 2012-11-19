@@ -17,7 +17,7 @@ import angerona.fw.Perception;
 import angerona.fw.PlanElement;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.SecrecyKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.BaseViolatesOperator;
@@ -45,7 +45,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		LOG.info("Run Default-ViolatesOperator");
 		
 		// only apply violates if confidential knowledge is saved in agent.
-		ConfidentialKnowledge conf = param.getAgent().getComponent(ConfidentialKnowledge.class);
+		SecrecyKnowledge conf = param.getAgent().getComponent(SecrecyKnowledge.class);
 		if(conf == null)
 			return new ViolatesResult();
 		

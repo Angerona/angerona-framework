@@ -414,7 +414,7 @@ public class Agent extends AgentArchitecture
 		
 		// Means-end-reasoning:
 		List<Action> forbidden = new LinkedList<>();
-		MasterPlan masterPlan = getComponent(MasterPlan.class);
+		PlanComponent masterPlan = getComponent(PlanComponent.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
 				atomic = intentionUpdateOperators.def().process(
@@ -505,8 +505,8 @@ public class Agent extends AgentArchitecture
 		return desires;
 	}
 	
-	public MasterPlan getPlanComponent() {
-		MasterPlan plan = getComponent(MasterPlan.class);
+	public PlanComponent getPlanComponent() {
+		PlanComponent plan = getComponent(PlanComponent.class);
 		if(plan == null) {
 			LOG.warn("Tried to access the plan-component of agent '{}' which has no plan-component.", getName());
 			return null;
