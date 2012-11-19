@@ -13,7 +13,7 @@ import angerona.fw.logic.Secret;
  * 
  * @author Tim Janus
  */
-public class ConfidentialView extends ListViewColored<SecrecyKnowledge> {
+public class SecrecyView extends ListViewColored<SecrecyKnowledge> {
 
 	/** kill warning */
 	private static final long serialVersionUID = 5545434636562463488L;

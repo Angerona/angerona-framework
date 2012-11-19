@@ -23,19 +23,19 @@ import angerona.fw.parser.SecretParser;
 import angerona.fw.util.Pair;
 
 /**
- * Data-Component of an agent containing a set of personal confidential targets.
+ * Data component of an agent containing a set of personal secrets.
  * 
  * @author Tim Janus
  */
-public class ConfidentialKnowledge extends BaseAgentComponent implements
+public class SecrecyKnowledge extends BaseAgentComponent implements
 		AgentListener, PropertyChangeListener {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory
-			.getLogger(ConfidentialKnowledge.class);
+			.getLogger(SecrecyKnowledge.class);
 
-	/** set of confidential targets defining this beliefbase */
-	private Set<Secret> confidentialTargets = new HashSet<Secret>();
+	/** set of secrets */
+	private Set<Secret> secrets = new HashSet<Secret>();
 
 	/**
 	 * This map is used for optimization purposes. It contains Sets of secrets
@@ -47,7 +47,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 	private Map<Pair<String, Map<String, String>>, Set<Secret>> optimizationMap = new HashMap<Pair<String, Map<String, String>>, Set<Secret>>();
 
 	/** Default Ctor */
-	public ConfidentialKnowledge() {
+	public SecrecyKnowledge() {
 		super();
 	}
 
@@ -55,29 +55,29 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 	 * Copy Ctor: The property listeners will be registered for each target and
 	 * are not copied by secrets clone method
 	 */
-	public ConfidentialKnowledge(ConfidentialKnowledge other) {
+	public SecrecyKnowledge(SecrecyKnowledge other) {
 		super(other);
-		for (Secret ct : other.confidentialTargets) {
+		for (Secret ct : other.secrets) {
 			Secret clone = (Secret) ct.clone();
-			addConfidentialTarget(clone);
+			addSecret(clone);
 		}
 	}
 
 	@Override
 	public Object clone() {
-		return new ConfidentialKnowledge(this);
+		return new SecrecyKnowledge(this);
 	}
 
 	@Override
 	public String toString() {
 		String reval = "";
-		for (Secret ct : confidentialTargets)
+		for (Secret ct : secrets)
 			reval += ct.toString() + "\n";
 		return reval;
 	}
 
 	/**
-	 * adds confidential target to the beliefbase.
+	 * adds secrets to the data storage.
 	 * 
 	 * @param cf
 	 *            the new confidential target which will be added to the
@@ -85,8 +85,8 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 	 * @return true if the beliefbase didn't contain the confidential target,
 	 *         false otherwise.
 	 */
-	public boolean addConfidentialTarget(Secret cf) {
-		boolean reval = confidentialTargets.add(cf);
+	public boolean addSecret(Secret cf) {
+		boolean reval = secrets.add(cf);
 		if (reval) {
 			addToMap(cf, cf.getPair());
 			cf.addPropertyListener(this);
@@ -96,8 +96,8 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 		return reval;
 	}
 
-	public boolean removeConfidentialTarget(Secret cf) {
-		boolean reval = confidentialTargets.remove(cf);
+	public boolean removeSecret(Secret cf) {
+		boolean reval = secrets.remove(cf);
 		if (reval) {
 			removeFromMap(cf, cf.getPair());
 			cf.removePropertyListener(this);
@@ -106,7 +106,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 	}
 
 	/**
-	 * Gets the confidential target defined by the subject and the information
+	 * Gets the secret defined by the subject and the information
 	 * which is confidential.
 	 * 
 	 * @param subjectName
@@ -116,8 +116,8 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 	 *            the confidential information itself.
 	 * @return A confidential target if it exists, null otherwise.
 	 */
-	public Secret getTarget(String subjectName, Formula information) {
-		for (Secret ct : confidentialTargets)
+	public Secret getSecret(String subjectName, Formula information) {
+		for (Secret ct : secrets)
 			if (ct.getSubjectName().compareTo(subjectName) == 0
 					&& ct.getInformation().equals(information))
 				return ct;
@@ -126,7 +126,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 
 	/** @return an unmodifiable set of secrets of the confidential knowledge */
 	public Set<Secret> getTargets() {
-		return Collections.unmodifiableSet(confidentialTargets);
+		return Collections.unmodifiableSet(secrets);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 
 		if (!additionalData.containsKey("Confidential")) {
 			LOG.warn(
-					"Confidential Knowledge of agent '{}' has no initial data.",
+					"Secrecy Knowledge of agent '{}' has no initial data.",
 					getAgent().getName());
 			return;
 		} else {
@@ -166,7 +166,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 							"Secret '{}' is not representable by the agents '{}' beliefs signature yet.",
 							s, getAgent().getName());
 				}
-				addConfidentialTarget(s);
+				addSecret(s);
 			}
 
 			/* TODO: Find a solution for startup consistency check which does not alter the secrets...
@@ -191,7 +191,7 @@ public class ConfidentialKnowledge extends BaseAgentComponent implements
 			
 			for(Pair<Secret, Double> p : res.getPairs()) {
 				if(p.second != 0) {
-					for(Secret s : this.confidentialTargets) {
+					for(Secret s : this.secrets) {
 						if(s.alike(p.first)) {
 							Map<String, String> map = s.getReasonerParameters();
 							double oldD = Double.parseDouble(map.get("d"));

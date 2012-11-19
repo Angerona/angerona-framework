@@ -44,7 +44,7 @@ public class AspBeliefbaseView extends BeliefbaseView {
 
 		model.addElement(new ListElement(" ", ListElement.ST_NOTCHANGED));
 		model.addElement(new ListElement("--- Answerset Result using: " + 
-		reasoner.getNameAndParameters(), ListElement.ST_NOTCHANGED));
+		reasoner.getNameAndParameters(), ListElement.ST_RESERVED));
 		
 		List<AnswerSet> answerSets = reasoner.processAnswerSets(bAct);
 		

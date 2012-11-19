@@ -3,6 +3,9 @@ package angerona.fw.gui.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -74,6 +77,8 @@ public abstract class ListViewColored<T extends Entity>
 		
 		public static final int ST_DELETED = 3;
 		
+		public static final int ST_RESERVED = 4;
+		
 		public ListElement(String name, int status) {
 			this.name = name;
 			this.status = status;
@@ -135,6 +140,16 @@ public abstract class ListViewColored<T extends Entity>
 		model = new DefaultListModel<ListElement>();
 		actualLiterals.setModel(model);
 		
+		actualLiterals.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				if(evt.getClickCount() >= 2) {
+					int index = actualLiterals.locationToIndex(evt.getPoint());
+					onElementClicked(index, actualLiterals.getModel().getElementAt(index).status);
+				}
+			}
+		});
 		
 		callstackTree = new JTree();
 		this.add(callstackTree, BorderLayout.SOUTH);
@@ -142,6 +157,8 @@ public abstract class ListViewColored<T extends Entity>
 		updateView();
 		Angerona.getInstance().addReportListener(this);
 	}
+	
+	protected void onElementClicked(int index, int status) {	}
 	
 	protected abstract List<String> getStringRepresentation(Entity obj);
 	

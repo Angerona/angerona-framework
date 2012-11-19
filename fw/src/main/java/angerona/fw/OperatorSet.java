@@ -1,6 +1,8 @@
 package angerona.fw;
 
 import java.io.StringReader;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -254,5 +256,9 @@ public class OperatorSet<T extends BaseOperator> {
 		for(BaseOperator op : operators.values()) {
 			op.setOwner(owner);
 		}
+	}
+	
+	public Collection<T> getOperators() {
+		return Collections.unmodifiableCollection( operators.values() );
 	}
 }

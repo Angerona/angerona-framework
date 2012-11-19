@@ -1,15 +1,21 @@
 package angerona.fw.gui.view;
 
+import java.awt.BorderLayout;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.gui.component.OperatorConfig;
+import angerona.fw.gui.component.OperatorConfigController;
+import angerona.fw.gui.component.OperatorConfigPanel;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
+import angerona.fw.logic.BaseReasoner;
 
 /**
  * Generic ui view to show a belief base. It shows its content in a list
@@ -22,6 +28,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	/** kill warning */
 	private static final long serialVersionUID = -3706152280500718930L;
 	
+	private OperatorConfig<BaseReasoner> opConfig;
 	
 	@Override
 	public void init() {
@@ -46,12 +53,18 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 			}
 		}
 		setTitle(ag.getName() + " - " + postfix);
+		
+		
 	}
 	
 	@Override
 	protected void update(DefaultListModel<ListElement> model) {
+		BaseBeliefbase bb = (BaseBeliefbase)actual;
+		opConfig = new OperatorConfig<BaseReasoner> (bb.getReasoningOperators());
+		
 		// prepare changeset in model and so on.
 		super.update(model);
+		
 		
 		updateInferenceOutput(model);
 	}
@@ -67,7 +80,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 		BaseBeliefbase bPrev = (BaseBeliefbase)previous;
 		model.addElement(new ListElement(" ", ListElement.ST_NOTCHANGED));
 		model.addElement(new ListElement("--- Inference Result using: " + 
-		bAct.getReasoningOperator().getNameAndParameters(), ListElement.ST_NOTCHANGED));
+		bAct.getReasoningOperator().getNameAndParameters(), ListElement.ST_RESERVED));
 		
 		// Calculate the inference of the reasoning.
 		Set<FolFormula> inferenceAct = bAct.infere();
@@ -78,7 +91,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 			if(inferenceOld != null && !inferenceOld.contains(f)) {
 				model.addElement(new ListElement(f.toString(), ListElement.ST_NEW));
 			} else {
-				model.addElement(new ListElement(f.toString(), ListElement.ST_NOTCHANGED));
+				model.addElement(new ListElement(f.toString(), ListElement.ST_RESERVED));
 			}
 		}
 		
@@ -88,6 +101,21 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 					model.addElement(new ListElement(f.toString(), ListElement.ST_DELETED));
 				}
 			}
+		}
+	}
+	
+	@Override
+	protected void onElementClicked(int index, int status) {
+		if(status == 4) {
+			OperatorConfigController<BaseReasoner> controller = new OperatorConfigController<BaseReasoner>(opConfig);
+			OperatorConfigPanel<BaseReasoner> opPanel = new OperatorConfigPanel<>(controller);
+			opPanel.init();
+			
+			JFrame frame = new JFrame();
+			frame.setLayout(new BorderLayout());
+			frame.getContentPane().add(opPanel, BorderLayout.CENTER);
+			frame.pack();
+			frame.setVisible(true);
 		}
 	}
 	
