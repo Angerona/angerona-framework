@@ -13,11 +13,11 @@ import javax.swing.ListCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.gui.NavigationPanel;
 import angerona.fw.gui.NavigationUser;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.EntityAtomic;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
@@ -226,10 +226,10 @@ public abstract class ListViewColored<T extends Entity>
 		List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(ref);
 		int index = entries.indexOf(actEntry) - 1;
 
-		EntityAtomic actAtomic = (EntityAtomic)actEntry.getAttachment();
+		AgentComponent actAtomic = (AgentComponent)actEntry.getAttachment();
 		while(index >= 0) {
 			ReportEntry prevEntry = entries.get(index);
-			EntityAtomic temp = ((EntityAtomic)prevEntry.getAttachment());
+			AgentComponent temp = ((AgentComponent)prevEntry.getAttachment());
 			
 			// select the first predecessor which has the same or a lesser copy depth as the
 			// current one as the 'real' previous entry.

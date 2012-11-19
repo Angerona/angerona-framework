@@ -32,7 +32,12 @@ import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
- * Base class for every belief base used in Angerona.
+ * An BaseBeliefbase implements the agent data component functionality but it is no special
+ * extension to the agent model but a base class for different implementations of belief base
+ * representations like logic programs or ordinal conditional functions for example.
+ * 
+ * A belief base contains several operators which define the functionality of the belief base.
+ * The BaseBeliefbase provides an interface to use the operators in a homogeneous way.
  * @author Tim Janus
  */
 public abstract class BaseBeliefbase extends BaseAgentComponent implements BeliefBase {

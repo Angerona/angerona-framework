@@ -8,9 +8,11 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
 
 /**
- * Base class for extensions of the Agent-Model, like know-how.
- * This base class provides the general id functionality of the Angerona
- * Entity-Report System.
+ * Base class for special extensions of the agent model. Every subclass
+ * of BaseAgentComponent implements a special data component like 
+ * Secrecy Knowledge or Know-How.
+ * This base class provides the unique id concept for entities which is
+ * used by the Angerona report system for example.
  * @author Tim Janus
  *
  */

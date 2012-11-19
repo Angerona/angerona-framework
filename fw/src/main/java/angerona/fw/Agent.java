@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.ActionProcessor;
@@ -337,7 +336,7 @@ public class Agent extends AgentArchitecture
 			throw new IllegalArgumentException();
 		
 		boolean reval = true;
-		for(EntityAtomic loopEa : customComponents) {
+		for(AgentComponent loopEa : customComponents) {
 			if(component.getClass().equals(loopEa)) {
 				reval = false;
 				break;
@@ -353,7 +352,7 @@ public class Agent extends AgentArchitecture
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AgentComponent> T getComponent(Class<? extends T> cls) {
-		for(EntityAtomic ea : customComponents) {
+		for(AgentComponent ea : customComponents) {
 			if(ea.getClass().equals(cls))
 				return (T)ea;
 		}

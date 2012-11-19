@@ -3,10 +3,10 @@ package angerona.fw.report;
 import java.util.Date;
 import java.util.Stack;
 
+import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.BaseOperator;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.operators.OperatorVisitor;
 
@@ -124,9 +124,9 @@ public class ReportEntry implements Cloneable {
 		reval.operatorCallstack = new Stack<String>();
 		reval.operatorCallstack.addAll(operatorCallstack);
 		if(this.attachment != null) {
-			if(this.attachment instanceof EntityAtomic) {
-				EntityAtomic atomic = (EntityAtomic) this.attachment;
-				reval.attachment = (EntityAtomic) atomic.clone();
+			if(this.attachment instanceof AgentComponent) {
+				AgentComponent atomic = (AgentComponent) this.attachment;
+				reval.attachment = (AgentComponent) atomic.clone();
 			} else {
 				reval.attachment = this.attachment;
 			}
