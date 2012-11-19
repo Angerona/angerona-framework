@@ -88,5 +88,8 @@
   	<module>knowhow</module>
   	
   	<module>mary</module>
+  	<module>tweety/conditional</module>
+  	<module>tweety/math</module>
+  	<module>tweety/propositional</module>
   </modules>
 </project>
