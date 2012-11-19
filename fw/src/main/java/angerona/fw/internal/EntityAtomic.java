@@ -10,9 +10,9 @@ package angerona.fw.internal;
  */
 public interface EntityAtomic extends Entity, Cloneable {
 	/**
-	 * Makes a copy of atomic entity. An atomic entitys copy duplicates
+	 * Makes a copy of atomic entity. An atomic entities clone duplicates
 	 * every data defined in subclasses.
-	 * The id and parent id is the same.  
+	 * The id and parent id are the same for every clone.  
 	 * @return	A deep copy of this object
 	 */
 	public Object clone();

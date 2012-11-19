@@ -22,9 +22,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.internal.Entity;
-import angerona.fw.internal.EntityAtomic;
-import angerona.fw.internal.IdGenerator;
 import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
@@ -38,7 +35,7 @@ import angerona.fw.serialize.BeliefbaseConfig;
  * Base class for every belief base used in Angerona.
  * @author Tim Janus
  */
-public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic {
+public abstract class BaseBeliefbase extends BaseAgentComponent implements BeliefBase {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(BaseBeliefbase.class);
@@ -51,15 +48,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	
 	/** default error string if a formula uses variables but the beliefbase does not support them */
 	protected static String RES_HAS_VARIABLES = "formula has variables, they are not supported.";
-	
-	/** the unique id of the beliefbase */
-	protected Long id;
-	
-	/** the unique id of the parent of the beliefbase (atm this is an agent in every case (2012-08-02) */
-	protected Long parentId;
-	
-	/** counter responsible to save the depth of the copy */
-	private int copyDepth;
 	
 	/** a list of listener which are interested in beliefbase changes */
 	private List<BeliefbaseChangeListener> listeners = new LinkedList<BeliefbaseChangeListener>();
@@ -86,8 +74,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
-		id = IdGenerator.generate(this);
-		this.copyDepth = 0;
 	}
 
 	/**
@@ -98,8 +84,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public BaseBeliefbase(boolean supportsQuantifiers, boolean supportVariables) {
 		this.supportsQuantifiers = supportsQuantifiers;;
 		this.supportsVariables = supportVariables;
-		id = IdGenerator.generate(this);
-		this.copyDepth = 0;
 	}
 	
 	/**
@@ -108,15 +92,11 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @param other another Beliefbase which should be copied.
 	 */
 	public BaseBeliefbase(BaseBeliefbase other) {
-		this.id = new Long(other.getGUID());
-		if(other.getParent() != null) {
-			this.parentId = new Long(other.getParent());
-		}
+		super(other);
 		
 		changeOperators = new OperatorSet<BaseChangeBeliefs>(other.changeOperators);
 		reasoningOperators = new OperatorSet<BaseReasoner>(other.reasoningOperators);
 		translators = new OperatorSet<BaseTranslator>(other.translators);
-		this.copyDepth = other.copyDepth + 1;
 	}
 	
 	/**
@@ -246,8 +226,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		if(changeOperator == null)
 			changeOperator = changeOperators.def();
 		
-		Entity ent = IdGenerator.getEntityWithId(parentId);
-		Agent agent = (Agent)ent;
+		Agent agent = getAgent();
 		BeliefUpdateParameter param = new BeliefUpdateParameter(this, newKnowledge, agent);
 		changeOperator.process(param);
 		onChange();
@@ -365,17 +344,13 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public abstract Signature getSignature();
 	
 	@Override
-	public Long getGUID() {
-		return id;
-	}
-	
 	public void setParent(Long id) {
-		parentId = id;
+		super.setParent(id);
 		updateOwner();
 	}
 
 	private void updateOwner() {
-		Agent agent = (Agent) IdGenerator.getEntityWithId(parentId);
+		Agent agent = getAgent();
 		if(agent != null) {
 			changeOperators.setOwner(agent);
 			reasoningOperators.setOwner(agent);
@@ -384,21 +359,5 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		} else {
 			LOG.warn("Cannot set the owners for operators.");
 		}
-	}
-	
-	@Override
-	public Long getParent() {
-		return parentId;
-	}
-	
-	@Override
-	public List<Long> getChilds() {
-		// base beliefs bases are at the bottom of the hierarchy.
-		return new LinkedList<Long>();
-	}
-	
-	@Override
-	public int getCopyDepth() {
-		return copyDepth;
 	}
 }

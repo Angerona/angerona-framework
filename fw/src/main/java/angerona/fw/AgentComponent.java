@@ -26,5 +26,9 @@ public interface AgentComponent extends EntityAtomic{
 	 */
 	Agent getAgent();
 	
+	/**
+	 * Changes the id for the parent.
+	 * @param id
+	 */
 	void setParent(Long id);
 }
