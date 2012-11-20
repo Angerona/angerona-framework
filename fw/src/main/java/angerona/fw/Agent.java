@@ -306,6 +306,7 @@ public class Agent extends AgentArchitecture
 			
 			for(String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
+				comp.setParent(id);
 				addComponent(comp);
 				LOG.info("Add custom Component '{}' to agent '{}'", compName, getName());
 			}

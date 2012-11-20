@@ -49,7 +49,7 @@ public abstract class BaseAgentComponent implements AgentComponent {
 	/** Copy Ctor: Creates the component by copying the component from the given other component */
 	public BaseAgentComponent(BaseAgentComponent other) {
 		this.id = new Long(other.id);
-		this.parentId = new Long(other.parentId);
+		this.parentId = other.parentId != null ? new Long(other.parentId) : null;
 		copyDepth = other.copyDepth + 1;
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
