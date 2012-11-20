@@ -4,6 +4,7 @@
 	<plugin>plugins/asp-0.0.1-SNAPSHOT.jar</plugin>
 	<plugin>plugins/knowhow-0.0.1-SNAPSHOT.jar</plugin>
 	<plugin>plugins/mary-0.0.1-SNAPSHOT.jar</plugin>
+	<plugin>plugins/conditional-0.0.1-SNAPSHOT.jar</plugin>
    
 	<!-- possible values are: CLINGO, DLV and DLV_COMPLEX -->
 	<parameter name="asp-solver" value="DLV"/>
