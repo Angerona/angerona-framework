@@ -38,6 +38,8 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 			throw new IllegalArgumentException("Cannot init Beliefbase View with an " +
 					"Entity which is not a subclass of BaseBeliefbase: " 
 					+ ref.getClass().getName());
+		BaseBeliefbase refBeliefBase = (BaseBeliefbase)ref;
+		opConfig = new OperatorConfig<>(refBeliefBase.getReasoningOperators());
 		
 		Agent ag = (Agent)IdGenerator.getEntityWithId(this.ref.getParent());
 		String postfix = "";
@@ -106,10 +108,10 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	
 	@Override
 	protected void onElementClicked(int index, int status) {
-		if(status == 4) {
+		if(status == ListElement.ST_RESERVED) {
 			OperatorConfigController<BaseReasoner> controller = new OperatorConfigController<BaseReasoner>(opConfig);
 			OperatorConfigPanel<BaseReasoner> opPanel = new OperatorConfigPanel<>(controller);
-			opPanel.init();
+			opPanel.init(opConfig);
 			
 			JFrame frame = new JFrame();
 			frame.setLayout(new BorderLayout());

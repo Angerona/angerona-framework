@@ -1,6 +1,7 @@
 package angerona.fw.gui.component;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import angerona.fw.BaseOperator;
@@ -14,10 +15,10 @@ import angerona.fw.OperatorSet;
  */
 public class OperatorConfig<T extends BaseOperator> extends AbstractModel {
 	/** the original parameters of the operator */
-	private Map<String, String> originalParameters;
+	private Map<String, String> originalParameters = new HashMap<>();
 	
 	/** the parameters typed in by the user */
-	private Map<String, String> parameters;
+	private Map<String, String> parameters = new HashMap<String, String>();
 	
 	/** the set of selectable operators */
 	private OperatorSet<T> operatorSet;
@@ -32,6 +33,7 @@ public class OperatorConfig<T extends BaseOperator> extends AbstractModel {
 		this.operatorSet = set;
 		selectedOperator = set.def();
 		originalParameters = selectedOperator.getParameters();
+		parameters = new HashMap<>(selectedOperator.getParameters());
 	}
 	
 	T getSelectedOperator() {
