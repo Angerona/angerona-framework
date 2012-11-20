@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map;
@@ -50,11 +52,18 @@ public class OperatorConfigPanel<T extends BaseOperator> extends JPanel implemen
 		resetOperator.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller.toString();
+				controller.resetOperator();
 			}
 		});
 		
 		JButton resetParameters = new JButton("Reset Parameters");
+		resetParameters.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.resetParameters();
+			}
+		});
 		
 		// Top line containing reset buttons
 		JPanel defaultPanel = new JPanel();
@@ -74,11 +83,21 @@ public class OperatorConfigPanel<T extends BaseOperator> extends JPanel implemen
 		cbmOperators = new DefaultComboBoxModel<>();
 		cbOperators = new JComboBox<T>(cbmOperators);
 		cbOperators.setPreferredSize(new Dimension(300, 30));
+		cbOperators.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					controller.selectOperator( ((T)e.getItem()).toString());
+				}
+			}
+		});
+		
 		operatorBoxPanel.add(cbOperators);
 		parameterPanel.add(operatorBoxPanel, BorderLayout.NORTH);
 		
 		paramModel = new DefaultListModel<>();
-		JList<Pair<String, String>> lstParamters = new JList<>(paramModel);
+		final JList<Pair<String, String>> lstParamters = new JList<>(paramModel);
 		lstParamters.setMinimumSize(new Dimension(100, 100));
 		parameterPanel.add(lstParamters, BorderLayout.CENTER);
 		
@@ -88,7 +107,26 @@ public class OperatorConfigPanel<T extends BaseOperator> extends JPanel implemen
 		JLabel lblParameterValue = new JLabel("Value:");
 		txtParameterValue = new JTextField("", 20);
 		JButton change = new JButton("Add/Change");
+		change.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.changeParameter(txtParameterName.getText(),
+						txtParameterValue.getText());
+			}
+		});
+		
 		JButton remove = new JButton("Remove");
+		remove.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(lstParamters.getSelectedValue() != null) {
+					controller.removeParameter(lstParamters.getSelectedValue().first);
+				} else {
+					controller.removeParameter(txtParameterName.getText());
+				}
+			}
+		});
 		
 		bottomPanel.add(lblParameterName);
 		bottomPanel.add(txtParameterName);
@@ -110,6 +148,7 @@ public class OperatorConfigPanel<T extends BaseOperator> extends JPanel implemen
 		cbmOperators.setSelectedItem(model.getDefaultOperator());
 		
 		refillParameterList(model.getParameters());
+		model.addPropertyChangeListener(this);
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package angerona.fw.gui.component;
 
+import java.util.Map;
+
 import angerona.fw.BaseOperator;
 
 public class OperatorConfigController<T extends BaseOperator> {
@@ -17,8 +19,28 @@ public class OperatorConfigController<T extends BaseOperator> {
 	}
 	
 	void selectOperator(String clsName) {
-		
+		for(T op : model.getSelectableOperators()) {
+			if(op.getClass().getSimpleName().equals(clsName)) {
+				model.setSelectedOperator(op);
+				break;
+			}
+		}
 	}
+	
+	
+	public void changeParameter(String name, String value) {
+		Map<String, String> params = model.getParameters();
+		params.put(name,  value);
+		model.setParameters(params);
+	}
+	
+	public void removeParameter(String name) {
+		Map<String, String> params = model.getParameters();
+		if(params.remove(name) != null) {
+			model.setParameters(params);
+		}
+	}
+	
 	
 	void resetOperator() {
 		model.setSelectedOperator((model.getDefaultOperator()));
@@ -26,6 +48,6 @@ public class OperatorConfigController<T extends BaseOperator> {
 	}
 	
 	void resetParameters() {
-		model.setParameters(model.getParameters());
+		model.setParameters(model.getOriginalParameters());
 	}
 }

@@ -1,6 +1,7 @@
 package angerona.fw.gui.component;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,11 +48,11 @@ public class OperatorConfig<T extends BaseOperator> extends AbstractModel {
 	}
 	
 	Map<String, String> getOriginalParameters() {
-		return originalParameters;
+		return Collections.unmodifiableMap(originalParameters);
 	}
 	
 	Map<String, String> getParameters() {
-		return parameters;
+		return new HashMap<>(parameters);
 	}
 	
 	void setParameters(Map<String, String> parameters) {
