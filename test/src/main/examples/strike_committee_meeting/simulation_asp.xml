@@ -20,8 +20,7 @@
         <skill>Answer</skill>
         
         <data key="Confidential">
-            (Boss, __DEFAULT__, meet_with(andre))
-            (Boss, angerona.fw.logic.asp.AspReasoner{d=0.75}, attend_scm)
+            (Boss, angerona.fw.logic.asp.AspReasoner{d=1}, attend_scm)
         </data>
 	</agent-instance>
       
