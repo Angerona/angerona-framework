@@ -38,7 +38,7 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 		AspBeliefbase bb = new MockBeliefbase();
 		Answer a = bb.getReasoningOperator().query(new Atom(new Predicate("test")));
 		AngeronaAnswer aa = (AngeronaAnswer)a;
-		// Tests for possible big in ticket #56 but no bug was found.
+		// Tests for possible bug in ticket #56 but no bug was found.
 		assertEquals(true, aa.getAnswerValue() == AnswerValue.AV_UNKNOWN);
 	}
 }

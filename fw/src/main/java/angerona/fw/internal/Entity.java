@@ -11,7 +11,7 @@ import java.util.List;
  * hold the id of the parent entity (the agent owning a belief base is
  * the parent of the belief base), if the parent id is null there is no
  * parent (agents have no parent).
- * And it holds a list of ids to all children entities. Agents for example
+ * And it holds a list of ids of all its children entities. Agents for example
  * have a lot of children (the world and view belief bases and every data 
  * component).
  * 

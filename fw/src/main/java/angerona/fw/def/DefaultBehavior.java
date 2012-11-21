@@ -13,7 +13,7 @@ import angerona.fw.Perception;
 import net.sf.beenuts.ap.AgentProcess;
 
 /**
- * Behavior implementing the default Angerona-Environment behavior.
+ * Behavior implementing the default Angerona Environment behavior.
  * runOneTick will wait till isSimulationReady returns true.
  * @author Tim Janus
  */

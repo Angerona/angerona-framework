@@ -13,7 +13,7 @@ import angerona.fw.operators.parameter.BeliefUpdateParameter;
 import angerona.fw.serialize.GlobalConfiguration;
 
 /**
- * Aps Revision using 
+ * ASP Revision using the preference handling concept
  * @author Tim Janus
  */
 public class AspRevision extends BaseChangeBeliefs {
@@ -21,6 +21,7 @@ public class AspRevision extends BaseChangeBeliefs {
 	/** The logger used for output in the angerona Framework */
 	static private Logger LOG = LoggerFactory.getLogger(AspRevision.class);
 	
+	/** wrapper for the used ASP solver */
 	private SolverWrapper wrapper;
 	
 	public AspRevision() {

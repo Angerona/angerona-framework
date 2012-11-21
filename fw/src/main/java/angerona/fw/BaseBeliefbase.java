@@ -123,26 +123,32 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 		updateOwner();
 	}
 
-	public BaseChangeBeliefs getRevisionOperator() {
+	/** @return the default change operator */
+	public BaseChangeBeliefs getChangeOperator() {
 		return changeOperators.def();
 	}
 
+	/** @return the default reasoning operator */
 	public BaseReasoner getReasoningOperator() {
 		return reasoningOperators.def();
 	}
 
+	/** @return the default translator */
 	public BaseTranslator getTranslator() {
 		return translators.def();
 	}
 	
+	/** @return the set of all change operators */
 	public OperatorSet<BaseChangeBeliefs> getChangeOperators() {
 		return changeOperators;
 	}
 
+	/** @return the set of all reasoning operators */
 	public OperatorSet<BaseReasoner> getReasoningOperators() {
 		return reasoningOperators;
 	}
 
+	/** @return the set of all translators */
 	public OperatorSet<BaseTranslator> getTranslators() {
 		return translators;
 	}
@@ -273,7 +279,7 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 			changeOperator = changeOperators.def();
 		
 		Agent agent = getAgent();
-		BeliefUpdateParameter param = new BeliefUpdateParameter(this, newKnowledge, agent);
+		BeliefUpdateParameter param = new BeliefUpdateParameter(agent, this, newKnowledge);
 		changeOperator.process(param);
 		firePropertyChangeListener(BELIEFBASE_CHANGE_PROPERTY_NAME, null, null);
 	}

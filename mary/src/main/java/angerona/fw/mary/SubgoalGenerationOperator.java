@@ -171,7 +171,7 @@ public class SubgoalGenerationOperator extends
 					}
 				}
 				
-				if(!ag.hasSkill("Query")) {
+				if(!ag.hasCapability("Query")) {
 					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
 					continue;
 				}
@@ -211,7 +211,7 @@ public class SubgoalGenerationOperator extends
 	@Override
 	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
 	{
-		if(!ag.hasSkill("QueryAnswer")) {
+		if(!ag.hasCapability("QueryAnswer")) {
 			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
 			return false;
 		}

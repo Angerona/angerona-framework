@@ -25,6 +25,15 @@ import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspRevision;
 import angerona.fw.logic.asp.AspTranslator;
 
+/**
+ * The ASP plugin implements a belief base plugin which provides an ASP
+ * belief base and operators for changing the belief base (like preference
+ * handling or expansion). It also provides a reasoning operator and a Translator.
+ * The ASP plugin also implements a ui plugin for providing a specialized belief
+ * base view for ASP.
+ * 
+ * @author Tim Janus
+ */
 @PluginImplementation
 public class AspPlugin implements BeliefbasePlugin, UIPlugin {
 

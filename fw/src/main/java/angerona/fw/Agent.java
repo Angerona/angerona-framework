@@ -55,11 +55,12 @@ import angerona.fw.serialize.AgentInstance;
 
 /**
  * Implementation of an agent in the Angerona Framework.
- * An agent defines it functionality by the operator instances. The
+ * An agent defines it functionality by the used operator instances. The
  * data structure AgentConfiguration is used to dynamically instantiate
  * an agent.
  * The agent defines helper methods to use the operators of the agent.
- * @author Tim Janus, Daniel Dilger
+ * @author Tim Janus
+ * @author Daniel Dilger
  */
 public class Agent extends AgentArchitecture 
 	implements ContextProvider
@@ -96,7 +97,7 @@ public class Agent extends AgentArchitecture
 	private List<Action> actionsHistory = new LinkedList<Action>();
 	
 	/** a list of skills which are known by the agent */
-	private List<String> skills = new LinkedList<>();
+	private List<String> capabilities = new LinkedList<>();
 	
 	/** Reference to the used generate options operator. */
 	private OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
@@ -141,12 +142,12 @@ public class Agent extends AgentArchitecture
 		return actionsHistory;
 	}	
 	
-	public List<String> getSkills() {
-		return Collections.unmodifiableList(skills);
+	public List<String> getCapabilities() {
+		return Collections.unmodifiableList(capabilities);
 	}
 	
-	public boolean hasSkill(String skillName) {
-		return skills.contains(skillName);
+	public boolean hasCapability(String capabilityName) {
+		return capabilities.contains(capabilityName);
 	}
 	
 	public OperatorSet<BaseViolatesOperator> getViolatesOperators() {
@@ -192,7 +193,7 @@ public class Agent extends AgentArchitecture
 		// local variable used to save the output of exceptions...
 		String errorOutput = null;
 		
-		skills.addAll(ai.getSkills());
+		capabilities.addAll(ai.getSkills());
 		
 		createAgentComponents(ai);
 		
@@ -283,7 +284,7 @@ public class Agent extends AgentArchitecture
 	/**
 	 * Helper method: Creates operators and components for the agent using the definitions
 	 * in the given parameter.
-	 * @param ai	AgentInstance data-structure containing information about the operators /
+	 * @param ai	AgentInstance data structure containing information about the operators /
 	 * 				components used by the agent.
 	 * @throws AgentInstantiationException
 	 */

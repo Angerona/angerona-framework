@@ -28,8 +28,4 @@ public class GenerateOptionsParameter extends GenericOperatorParameter {
 	public Perception getPerception() {
 		return perception;
 	}
-	
-	public Agent getAgent() {
-		return agent;
-	}
 }

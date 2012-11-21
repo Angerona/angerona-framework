@@ -20,7 +20,8 @@ import angerona.fw.util.Pair;
  *	The ViolatesResult data-structure can be combined with each other to support saving the ViolatesResult
  *	for performing multiple actions.
  *
- *	@author Tim Janus, Daniel Dilger
+ *	@author Tim Janus, 
+ *  @author Daniel Dilger
  */
 public class ViolatesResult implements Cloneable {
 	/** a list of pairs of secrets mapped to their degree of weaking */

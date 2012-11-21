@@ -56,7 +56,6 @@ public interface EnvironmentBehavior {
 	
 	/**
 	 * @return the actual Angerona simulation tick.
-	 * @return
 	 */
 	int getTick();
 }

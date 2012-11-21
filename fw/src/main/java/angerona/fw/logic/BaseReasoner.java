@@ -11,13 +11,9 @@ import angerona.fw.operators.parameter.ReasonerParameter;
 /**
  * Base class for all reasoner used by the Angerona project.
  * 
- *
  * To query the reasoner a subset of the FOL Language defined in tweety is used.
  * It is the responsibility of the Reasoner implementation to translate the given
  * query into its native language. 
- * 
- * TODO: Add default implementation which uses default TranslateOperator to translate
- * the fol-formula into a format readable by the reasoner.
  * 
  * @author Tim Janus
  */
@@ -31,8 +27,8 @@ public abstract class BaseReasoner
 	 */
 	protected BaseBeliefbase actualBeliefbase;
 	
-	public BaseReasoner() {
-	}
+	/** Default Ctor */
+	public BaseReasoner() {}
 	
 	/** 
 	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
