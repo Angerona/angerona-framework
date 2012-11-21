@@ -1,4 +1,6 @@
 package angerona.fw;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,12 +24,10 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.EntityAtomic;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.ActionProcessor;
 import angerona.fw.listener.AgentListener;
-import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Beliefs;
@@ -55,11 +55,12 @@ import angerona.fw.serialize.AgentInstance;
 
 /**
  * Implementation of an agent in the Angerona Framework.
- * An agent defines it functionality by the operator instances. The
+ * An agent defines it functionality by the used operator instances. The
  * data structure AgentConfiguration is used to dynamically instantiate
  * an agent.
  * The agent defines helper methods to use the operators of the agent.
- * @author Tim Janus, Daniel Dilger
+ * @author Tim Janus
+ * @author Daniel Dilger
  */
 public class Agent extends AgentArchitecture 
 	implements ContextProvider
@@ -67,7 +68,7 @@ public class Agent extends AgentArchitecture
 	, OperatorVisitor
 	, ReportPoster
 	, ActionProcessor
-	, BeliefbaseChangeListener {
+	, PropertyChangeListener {
 
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Agent.class);
@@ -96,7 +97,7 @@ public class Agent extends AgentArchitecture
 	private List<Action> actionsHistory = new LinkedList<Action>();
 	
 	/** a list of skills which are known by the agent */
-	private List<String> skills = new LinkedList<>();
+	private List<String> capabilities = new LinkedList<>();
 	
 	/** Reference to the used generate options operator. */
 	private OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
@@ -141,12 +142,12 @@ public class Agent extends AgentArchitecture
 		return actionsHistory;
 	}	
 	
-	public List<String> getSkills() {
-		return Collections.unmodifiableList(skills);
+	public List<String> getCapabilities() {
+		return Collections.unmodifiableList(capabilities);
 	}
 	
-	public boolean hasSkill(String skillName) {
-		return skills.contains(skillName);
+	public boolean hasCapability(String capabilityName) {
+		return capabilities.contains(capabilityName);
 	}
 	
 	public OperatorSet<BaseViolatesOperator> getViolatesOperators() {
@@ -161,22 +162,22 @@ public class Agent extends AgentArchitecture
 	public void setBeliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> views) {
 		if(beliefs != null) {
 			childrenIds.remove(beliefs.getWorldKnowledge().getGUID());
-			beliefs.getWorldKnowledge().removeListener(this);
+			beliefs.getWorldKnowledge().removePropertyChangeListener(this);
 			for(String name : beliefs.getViewKnowledge().keySet()) {
 				BaseBeliefbase act = beliefs.getViewKnowledge().get(name);
-				act.removeListener(this);
+				act.removePropertyChangeListener(this);
 				childrenIds.remove(act.getGUID());
 			}
 		}
 		beliefs = new Beliefs(world, views);
 		childrenIds.add(world.getGUID());
 		world.setParent(id);
-		world.addListener(this);
+		world.addPropertyChangeListener(this);
 		for(String name : views.keySet()) {
 			BaseBeliefbase bb = views.get(name);
 			childrenIds.add(bb.getGUID());
 			bb.setParent(id);
-			bb.addListener(this);
+			bb.addPropertyChangeListener(this);
 		}
 		regenContext();
 	}
@@ -192,7 +193,7 @@ public class Agent extends AgentArchitecture
 		// local variable used to save the output of exceptions...
 		String errorOutput = null;
 		
-		skills.addAll(ai.getSkills());
+		capabilities.addAll(ai.getSkills());
 		
 		createAgentComponents(ai);
 		
@@ -283,7 +284,7 @@ public class Agent extends AgentArchitecture
 	/**
 	 * Helper method: Creates operators and components for the agent using the definitions
 	 * in the given parameter.
-	 * @param ai	AgentInstance data-structure containing information about the operators /
+	 * @param ai	AgentInstance data structure containing information about the operators /
 	 * 				components used by the agent.
 	 * @throws AgentInstantiationException
 	 */
@@ -306,6 +307,7 @@ public class Agent extends AgentArchitecture
 			
 			for(String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
+				comp.setParent(id);
 				addComponent(comp);
 				LOG.info("Add custom Component '{}' to agent '{}'", compName, getName());
 			}
@@ -337,7 +339,7 @@ public class Agent extends AgentArchitecture
 			throw new IllegalArgumentException();
 		
 		boolean reval = true;
-		for(EntityAtomic loopEa : customComponents) {
+		for(AgentComponent loopEa : customComponents) {
 			if(component.getClass().equals(loopEa)) {
 				reval = false;
 				break;
@@ -353,7 +355,7 @@ public class Agent extends AgentArchitecture
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AgentComponent> T getComponent(Class<? extends T> cls) {
-		for(EntityAtomic ea : customComponents) {
+		for(AgentComponent ea : customComponents) {
 			if(ea.getClass().equals(cls))
 				return (T)ea;
 		}
@@ -414,7 +416,7 @@ public class Agent extends AgentArchitecture
 		
 		// Means-end-reasoning:
 		List<Action> forbidden = new LinkedList<>();
-		MasterPlan masterPlan = getComponent(MasterPlan.class);
+		PlanComponent masterPlan = getComponent(PlanComponent.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
 				atomic = intentionUpdateOperators.def().process(
@@ -505,8 +507,8 @@ public class Agent extends AgentArchitecture
 		return desires;
 	}
 	
-	public MasterPlan getPlanComponent() {
-		MasterPlan plan = getComponent(MasterPlan.class);
+	public PlanComponent getPlanComponent() {
+		PlanComponent plan = getComponent(PlanComponent.class);
 		if(plan == null) {
 			LOG.warn("Tried to access the plan-component of agent '{}' which has no plan-component.", getName());
 			return null;
@@ -684,7 +686,17 @@ public class Agent extends AgentArchitecture
 	}
 
 	@Override
-	public void changed(BaseBeliefbase bb) {
+	public void propertyChange(PropertyChangeEvent ev) {
+		// inform the other components about belief base changes:
+		if(ev.getSource() instanceof BaseBeliefbase) {
+			BaseBeliefbase bb = (BaseBeliefbase)ev.getSource();
+			if(ev.getPropertyName().equals(BaseBeliefbase.BELIEFBASE_CHANGE_PROPERTY_NAME)) {
+				onBeliefBaseChange(bb);	
+			}
+		} 
+	}
+	
+	private void onBeliefBaseChange(BaseBeliefbase bb) {
 		// TODO: Document the flow of the messaging system for update-beliefs more technically.
 		if(bb == beliefs.getWorldKnowledge()) {
 			onBBChanged(bb, lastUpdateBeliefsPercept, AgentListener.WORLD);

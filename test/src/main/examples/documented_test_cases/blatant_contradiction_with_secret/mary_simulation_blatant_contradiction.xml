@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>Blatant_Contradiction_With_Secrecy</name>
-    <behavior>angerona.fw.DefaultBehavior</behavior>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
     
 	<agent-instance>
 		<name>Mary</name>

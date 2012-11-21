@@ -1,19 +1,19 @@
 package angerona.fw.operators.parameter;
 
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.Agent;
 
 /**
- * Base class for all operator parameters.
+ * Base class for all parameter classes.
  * @author Tim Janus
  */
 public class GenericOperatorParameter {
-	public GenericOperatorParameter(OperatorVisitor visitor) {
-		this.visitor = visitor;
+	public GenericOperatorParameter(Agent agentContext) {
+		this.agentContext = agentContext;
 	}
 	
-	protected OperatorVisitor getSimulation() {
-		return visitor;
+	public Agent getAgent() {
+		return agentContext;
 	}
 	
-	private OperatorVisitor visitor;
+	private Agent agentContext;
 }

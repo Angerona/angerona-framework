@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>SCM-1 - Knowhow</name>
-    <behavior>angerona.fw.DefaultBehavior</behavior>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>employee</name>
         <default-suffix>employee</default-suffix>

@@ -5,17 +5,16 @@ import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ViolatesResult;
 
 /**
- * A PlanElement is the data-structure saved as step in a plan. It decouples the behavior of the plan
+ * A PlanElement is the data structure storing a step in a plan. It decouples the behavior of the plan
  * from its data. The intention member contains the behavior either as atomic Skill or complex Subgoal.
  * 
- * For a Skill the PlanElement encapsulates the execution. It provides the prepare method which sets the correct
- * data dependencies before running the Skill. It sets the used beliefs and registers the ActionProcessor which is
+ * For an atomic action the PlanElement encapsulates the execution. It provides the prepare method which sets the correct
+ * data dependencies before running the action. It sets the used beliefs and registers the ActionProcessor which is
  * responsible to perform the actions (might be mental or physical). It also saves a executionData object which
- * contains the input-data for the Skill. In the simplest case this object is an Action and the skill does nothing
- * else then send the action to the ActionProcessor.
+ * contains the input-data for the action. 
  * 
  * The PlanElement also contains a userData object which saves simulation specific data for later use. For example
- * could one save a boolean indicating if the PlanElement represents a lie and give it a higher cost if it is a lie.
+ * a boolean is stored indicating if the PlanElement represents a lie and give it a higher cost if it is a lie.
  * 
  * @see angerona.fw.listener.ActionProcessor
  * @author Tim Janus
@@ -170,6 +169,7 @@ public class PlanElement implements AngeronaAtom, Runnable {
 		return this.intention.isAtomic();
 	}
 	
+	@Override
 	public boolean equals(Object other) {
 		if(! (other instanceof PlanElement)) return false;
 		

@@ -23,6 +23,8 @@ import angerona.fw.AgentComponent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.EnvironmentBehavior;
 import angerona.fw.Perception;
+import angerona.fw.def.DefaultAgentPlugin;
+import angerona.fw.def.DefaultSimulationPlugin;
 import angerona.fw.listener.PluginListener;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;

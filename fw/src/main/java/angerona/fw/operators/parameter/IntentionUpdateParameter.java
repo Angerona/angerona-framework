@@ -3,14 +3,14 @@ package angerona.fw.operators.parameter;
 import java.util.List;
 
 import angerona.fw.Action;
-import angerona.fw.MasterPlan;
+import angerona.fw.PlanComponent;
 
 public class IntentionUpdateParameter extends GenericOperatorParameter {
 	protected List<Action> forbiddenActions;
 	
-	protected MasterPlan plan;
+	protected PlanComponent plan;
 	
-	public IntentionUpdateParameter(MasterPlan plan, List<Action> forbidden) {
+	public IntentionUpdateParameter(PlanComponent plan, List<Action> forbidden) {
 		super(plan.getAgent());
 		this.plan= plan;
 	}
@@ -19,7 +19,7 @@ public class IntentionUpdateParameter extends GenericOperatorParameter {
 		return forbiddenActions;
 	}
 	
-	public MasterPlan getPlan() {
+	public PlanComponent getPlan() {
 		return plan;
 	}
 	

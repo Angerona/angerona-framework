@@ -1,11 +1,10 @@
 package angerona.fw.operators.parameter;
 
+import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.operators.OperatorVisitor;
 
 /**
- * Parameter class for Expansion and Revision Operations
- * on belief bases.
+ * Parameter class for change operations on belief bases.
  * @author Tim Janus
  *
  */
@@ -21,8 +20,8 @@ public class BeliefUpdateParameter extends GenericOperatorParameter {
 	 * @param bb			belief base
 	 * @param newKnowledge	set of formula with new knowledge.
 	 */
-	public BeliefUpdateParameter(BaseBeliefbase bb, BaseBeliefbase newKnowledge, OperatorVisitor ov) {
-		super(ov);
+	public BeliefUpdateParameter(Agent agContext, BaseBeliefbase bb, BaseBeliefbase newKnowledge) {
+		super(agContext);
 		this.beliefBase = bb;
 		this.newKnowledge = newKnowledge;
 	}

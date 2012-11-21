@@ -1,6 +1,8 @@
 package angerona.fw;
 
 import java.io.StringReader;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +16,8 @@ import angerona.fw.serialize.OperatorSetConfig;
 import angerona.fw.util.Pair;
 
 /**
- * A set of Operators of Type T. Also defining a default operator.
+ * A set of Operators of Type T plus a default operator which
+ * is in this set.
  * @author Tim Janus
  *
  * @param <T>	Real type of the operators.
@@ -80,7 +83,7 @@ public class OperatorSet<T extends BaseOperator> {
 	/**
 	 * Adds the given operator to the operator-set if no operator of this type
 	 * is already in the set.
-	 * Only the full-java-class-name is deciding, the operator might be another instance
+	 * Only the full-java class name is deciding, the operator might be another instance
 	 * with another set of parameters but it will not be added to the set cause the types
 	 * are equal.
 	 * @param instantiationName		A string starting with the full java-class name of the type
@@ -254,5 +257,9 @@ public class OperatorSet<T extends BaseOperator> {
 		for(BaseOperator op : operators.values()) {
 			op.setOwner(owner);
 		}
+	}
+	
+	public Collection<T> getOperators() {
+		return Collections.unmodifiableCollection( operators.values() );
 	}
 }

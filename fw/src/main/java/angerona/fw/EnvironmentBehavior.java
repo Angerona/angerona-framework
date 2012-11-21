@@ -39,7 +39,7 @@ public interface EnvironmentBehavior {
 	boolean run(AngeronaEnvironment env);
 	
 	/**
-	 * @return	true if angerona has performs it agent cycles,
+	 * @return	true if Angerona has performed it agent cycles,
 	 * 			false otherwise. 
 	 */
 	boolean isAngeronaReady();
@@ -48,4 +48,14 @@ public interface EnvironmentBehavior {
 	 * @return	true if the external simulation is ready, false otherwise.
 	 */
 	boolean isSimulationReady();
+	
+	/**
+	 * @return 	true if the Angerona simulation is in its tick processing, false otherwise.
+	 */
+	boolean isDoingTick();
+	
+	/**
+	 * @return the actual Angerona simulation tick.
+	 */
+	int getTick();
 }

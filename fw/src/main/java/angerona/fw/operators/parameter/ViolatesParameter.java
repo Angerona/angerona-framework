@@ -5,8 +5,6 @@ import angerona.fw.AngeronaAtom;
 import angerona.fw.logic.Beliefs;
 
 public class ViolatesParameter extends GenericOperatorParameter {
-	/** reference to the agent which will apply the action */
-	private Agent agent;
 	
 	/** the action applied before proofing for violation */
 	private AngeronaAtom action;
@@ -33,13 +31,8 @@ public class ViolatesParameter extends GenericOperatorParameter {
 	 */
 	public ViolatesParameter(Agent agent, Beliefs beliefs, AngeronaAtom intent) {
 		super(agent);
-		this.agent = agent;
 		this.action = intent;
 		this.beliefs = (Beliefs)beliefs.clone();
-	}
-	
-	public Agent getAgent() {
-		return agent;
 	}
 	
 	/** @return the beliefs of the agent */

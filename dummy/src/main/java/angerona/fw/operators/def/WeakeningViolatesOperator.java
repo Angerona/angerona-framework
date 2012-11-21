@@ -19,7 +19,7 @@ import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseChangeBeliefs;
-import angerona.fw.logic.ConfidentialKnowledge;
+import angerona.fw.logic.SecrecyKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.AspBeliefbase;
@@ -59,7 +59,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 	 * 
 	 */
 	private List<Pair<Secret, Double>> representTotalExposure(
-			ConfidentialKnowledge conf) {
+			SecrecyKnowledge conf) {
 		List<Pair<Secret, Double>> reval = new LinkedList<>();
 		for (Secret secret : conf.getTargets()) {
 			reval.add(new Pair<>(secret, INFINITY));
@@ -91,8 +91,8 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		
 		// Check if any confidential knowledge present. If none then no secrecy
 		//weakening possible
-		ConfidentialKnowledge conf = param.getAgent().getComponent(
-				ConfidentialKnowledge.class);
+		SecrecyKnowledge conf = param.getAgent().getComponent(
+				SecrecyKnowledge.class);
 		if (conf == null)
 			return new ViolatesResult();
 

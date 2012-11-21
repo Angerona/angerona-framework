@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,10 +21,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.internal.Entity;
-import angerona.fw.internal.EntityAtomic;
-import angerona.fw.internal.IdGenerator;
-import angerona.fw.listener.BeliefbaseChangeListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
@@ -35,10 +30,22 @@ import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
- * Base class for every belief base used in Angerona.
+ * An BaseBeliefbase implements the agent data component functionality but it is no special
+ * extension to the agent model but a base class for different implementations of belief base
+ * representations like logic programs or ordinal conditional functions for example.
+ * 
+ * A belief base contains several operators which define the functionality of the belief base.
+ * The BaseBeliefbase provides an interface to use the operators in a homogeneous way.
+ * 
+ * The belief base uses the PropertyChangeListener to inform the system about its changes. In this
+ * base class is no information about the properties needed in sub classes to express the knowledge.
+ * Therefore a reserved property name BELIEFBASE_CHANGE_PROPERTY_NAME is used to inform the listeners
+ * about changes of the belief base. This event is fired after a change operator has altered the 
+ * belief base.
+ * 
  * @author Tim Janus
  */
-public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic {
+public abstract class BaseBeliefbase extends BaseAgentComponent implements BeliefBase {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(BaseBeliefbase.class);
@@ -52,17 +59,7 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	/** default error string if a formula uses variables but the beliefbase does not support them */
 	protected static String RES_HAS_VARIABLES = "formula has variables, they are not supported.";
 	
-	/** the unique id of the beliefbase */
-	protected Long id;
-	
-	/** the unique id of the parent of the beliefbase (atm this is an agent in every case (2012-08-02) */
-	protected Long parentId;
-	
-	/** counter responsible to save the depth of the copy */
-	private int copyDepth;
-	
-	/** a list of listener which are interested in beliefbase changes */
-	private List<BeliefbaseChangeListener> listeners = new LinkedList<BeliefbaseChangeListener>();
+	public static final String BELIEFBASE_CHANGE_PROPERTY_NAME = "_beliefBaseContent_";
 	
 	/** flag indicating if this type of beliefbase supports quantified formulas */
 	private boolean supportsQuantifiers;
@@ -86,8 +83,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public BaseBeliefbase() {
 		this.supportsQuantifiers = false;
 		this.supportsVariables = false;
-		id = IdGenerator.generate(this);
-		this.copyDepth = 0;
 	}
 
 	/**
@@ -98,8 +93,6 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public BaseBeliefbase(boolean supportsQuantifiers, boolean supportVariables) {
 		this.supportsQuantifiers = supportsQuantifiers;;
 		this.supportsVariables = supportVariables;
-		id = IdGenerator.generate(this);
-		this.copyDepth = 0;
 	}
 	
 	/**
@@ -108,15 +101,11 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 * @param other another Beliefbase which should be copied.
 	 */
 	public BaseBeliefbase(BaseBeliefbase other) {
-		this.id = new Long(other.getGUID());
-		if(other.getParent() != null) {
-			this.parentId = new Long(other.getParent());
-		}
+		super(other);
 		
 		changeOperators = new OperatorSet<BaseChangeBeliefs>(other.changeOperators);
 		reasoningOperators = new OperatorSet<BaseReasoner>(other.reasoningOperators);
 		translators = new OperatorSet<BaseTranslator>(other.translators);
-		this.copyDepth = other.copyDepth + 1;
 	}
 	
 	/**
@@ -134,26 +123,32 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		updateOwner();
 	}
 
-	public BaseChangeBeliefs getRevisionOperator() {
+	/** @return the default change operator */
+	public BaseChangeBeliefs getChangeOperator() {
 		return changeOperators.def();
 	}
 
+	/** @return the default reasoning operator */
 	public BaseReasoner getReasoningOperator() {
 		return reasoningOperators.def();
 	}
 
+	/** @return the default translator */
 	public BaseTranslator getTranslator() {
 		return translators.def();
 	}
 	
+	/** @return the set of all change operators */
 	public OperatorSet<BaseChangeBeliefs> getChangeOperators() {
 		return changeOperators;
 	}
 
+	/** @return the set of all reasoning operators */
 	public OperatorSet<BaseReasoner> getReasoningOperators() {
 		return reasoningOperators;
 	}
 
+	/** @return the set of all translators */
 	public OperatorSet<BaseTranslator> getTranslators() {
 		return translators;
 	}
@@ -209,10 +204,20 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	 */
 	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
 	
+	/**
+	 * Adds the given set of FOL formulas to the knowledge of the belief base.
+	 * It uses the default change operator and the default translator.
+	 * @param formulas	A set of FOL formulas which are added as knowledge to the belief base
+	 */
 	public void addKnowledge(Set<FolFormula> formulas) {
 		addKnowledge(formulas, null, null);
 	}
 	
+	/**
+	 * Adds the given FOL formula to the knowledge of the belief base.
+	 * It uses the default change operator and the default translator.
+	 * @param formula	Reference to the FOL formula which is added to the belief base
+	 */
 	public void addKnowledge(FolFormula formula)
 	{
 		Set<FolFormula> formulas = new HashSet<FolFormula>();
@@ -220,10 +225,23 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		addKnowledge(formulas);
 	}
 	
+	/**
+	 * Adds the given perception to the knowledge of the belief base.
+	 * The default change operator and the default translator is used.
+	 * @param perception	Reference to the perception which is added to the belief base.
+	 */
 	public void addKnowledge(Perception perception) {
 		addKnowledge(perception, null, null);
 	}
 	
+	/**
+	 * Adds the given perception to the knowledge of the belief base.
+	 * Uses the given translator for the translation process and the
+	 * given change operator to perform the change operation
+	 * @param perception		Reference to the perceptin which is added to the belief base
+	 * @param translator		Reference to the translator to use, if null the default translator is used.
+	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
+	 */
 	public void addKnowledge(Perception perception, BaseTranslator translator, 
 			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
@@ -233,6 +251,14 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		addKnowledge(newK, changeOperator);
 	}
 	
+	/**
+	 * Adds the given set of FOL formulas to the knowledge of the belief base.
+	 * Uses the given translator for the translation process and the
+	 * given change operator to perform the change operation
+	 * @param formulas			Set containing FOL formulas with new knowledge.
+	 * @param translator		Reference to the translator to use, if null the default translator is used.
+	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
+	 */
 	public void addKnowledge(Set<FolFormula> formulas, BaseTranslator translator, 
 			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
@@ -242,38 +268,20 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		addKnowledge(newK, changeOperator);
 	}
 	
+	/**
+	 * Adds the knowledge of the given belief base to this belief base. Uses
+	 * the given change operator.
+	 * @param newKnowledge		A belief base having more information
+	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
+	 */
 	public void addKnowledge(BaseBeliefbase newKnowledge, BaseChangeBeliefs changeOperator) {
 		if(changeOperator == null)
 			changeOperator = changeOperators.def();
 		
-		Entity ent = IdGenerator.getEntityWithId(parentId);
-		Agent agent = (Agent)ent;
-		BeliefUpdateParameter param = new BeliefUpdateParameter(this, newKnowledge, agent);
+		Agent agent = getAgent();
+		BeliefUpdateParameter param = new BeliefUpdateParameter(agent, this, newKnowledge);
 		changeOperator.process(param);
-		onChange();
-	}
-	
-	public void addListener(BeliefbaseChangeListener listener) {
-		this.listeners.add(listener);
-	}
-	
-	public boolean removeListener(BeliefbaseChangeListener listener) {
-		return this.listeners.remove(listener);
-	}
-	
-	public void removeAllListeners() {
-		this.listeners.clear();
-	}
-	
-	/**
-	 * Helper method: is called when the content of the beliefbase is changed
-	 * the basic implementation informs the listeners. Subclasses could implement
-	 * their own reactions.
-	 */
-	protected void onChange() {
-		for(BeliefbaseChangeListener l : listeners) {
-			l.changed(this);
-		}
+		firePropertyChangeListener(BELIEFBASE_CHANGE_PROPERTY_NAME, null, null);
 	}
 	
 	/**
@@ -365,17 +373,16 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 	public abstract Signature getSignature();
 	
 	@Override
-	public Long getGUID() {
-		return id;
-	}
-	
 	public void setParent(Long id) {
-		parentId = id;
+		super.setParent(id);
 		updateOwner();
 	}
 
+	/**
+	 * Helper method: informs all operators about owner switches.
+	 */
 	private void updateOwner() {
-		Agent agent = (Agent) IdGenerator.getEntityWithId(parentId);
+		Agent agent = getAgent();
 		if(agent != null) {
 			changeOperators.setOwner(agent);
 			reasoningOperators.setOwner(agent);
@@ -384,21 +391,5 @@ public abstract class BaseBeliefbase extends BeliefBase implements EntityAtomic 
 		} else {
 			LOG.warn("Cannot set the owners for operators.");
 		}
-	}
-	
-	@Override
-	public Long getParent() {
-		return parentId;
-	}
-	
-	@Override
-	public List<Long> getChilds() {
-		// base beliefs bases are at the bottom of the hierarchy.
-		return new LinkedList<Long>();
-	}
-	
-	@Override
-	public int getCopyDepth() {
-		return copyDepth;
 	}
 }

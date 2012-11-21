@@ -2,10 +2,10 @@ package angerona.fw.gui.view;
 
 import java.util.List;
 
-import angerona.fw.MasterPlan;
+import angerona.fw.PlanComponent;
 import angerona.fw.internal.Entity;
 
-public class PlanView extends ListViewColored<MasterPlan> {
+public class PlanView extends ListViewColored<PlanComponent> {
 
 	/** kill warning */
 	private static final long serialVersionUID = -8417236877682507065L;
@@ -18,7 +18,7 @@ public class PlanView extends ListViewColored<MasterPlan> {
 	
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
-		if(obj instanceof MasterPlan) {
+		if(obj instanceof PlanComponent) {
 			//MasterPlan p = (MasterPlan)obj;
 			// TODO, as tree view
 			return null;
@@ -51,15 +51,15 @@ public class PlanView extends ListViewColored<MasterPlan> {
 
 	@Override
 	public void setObservationObject(Object obj) {
-		if( !(obj instanceof MasterPlan))
+		if( !(obj instanceof PlanComponent))
 			throw new IllegalArgumentException();
 		
-		ref = (MasterPlan)obj;
+		ref = (PlanComponent)obj;
 		actual = ref;
 	}
 
 	@Override
 	public Class<?> getObservationObjectType() {
-		return MasterPlan.class;
+		return PlanComponent.class;
 	}
 }
