@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
@@ -21,12 +24,15 @@ import angerona.fw.logic.AnswerValue;
 public class Justification extends SpeechAct {
 
 	/** the formula which has to be justified. */
+	@Element(name="proposition", required=true)
 	private FolFormula proposition;
 	
 	/** the answer to the formula: only {true, false, unknown} are allowed. */
+	@Element(name="answerValue", required=true)
 	private AnswerValue answerValue;
 	
 	/** a set of fol formulas explaining the deduction */
+	@ElementList(name="justifications", required=true, entry="justification")
 	private Set<FolFormula> justifications = new HashSet<>();
 	
 	public Justification(Justify source, FolFormula justification) {
@@ -34,6 +40,19 @@ public class Justification extends SpeechAct {
 				source.getReceiverId()),
 				source.getSenderId(), source.getProposition(), 
 				source.getAnswerValue(), justification);
+	}
+	
+	/** Ctor used by deserilization */
+	public Justification(
+			@Element(name="sender") String sender,
+			@Element(name="receiver") String receiver,
+			@Element(name="proposition") FolFormula proposition,
+			@Element(name="answerValue") AnswerValue answerValue,
+			@Element(name="justification") FolFormula justification) {
+		super(sender,receiver);
+		this.proposition = proposition;
+		this.answerValue = answerValue;
+		this.justifications.add(justification);		
 	}
 	
 	public Justification(Agent sender, String receiver, FolFormula proposition, 

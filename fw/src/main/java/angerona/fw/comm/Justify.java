@@ -1,5 +1,7 @@
 package angerona.fw.comm;
 
+import org.simpleframework.xml.Element;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 import angerona.fw.logic.AnswerValue;
@@ -15,10 +17,23 @@ import angerona.fw.logic.AnswerValue;
 public class Justify extends SpeechAct {
 
 	/** The FOL formula representing the sentence the receiver has to justify. */
+	@Element(name="proposition", required=true)
 	private FolFormula propositon;
 	
 	/** the answer which is given to the sentence */
+	@Element(name="answerValue", required=true)
 	private AnswerValue answerValue;
+	
+	/** Ctor used by deserilization */
+	public Justify(
+			@Element(name="sender") String sender, 
+			@Element(name="receiver") String receiver, 
+			@Element(name="proposition") FolFormula sentence, 
+			@Element(name="answerValue") AnswerValue answerValue) {
+		super(sender,receiver);
+		this.propositon = sentence;
+		this.answerValue = answerValue;
+	}
 	
 	/**
 	 * Ctor: Creates a justify speech act using true as default answer-value.

@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 
@@ -19,7 +22,17 @@ import angerona.fw.Agent;
 public class Inform extends SpeechAct
 {
 	/** the formula for revision */
+	@ElementList(name="sentences", entry="sentence", required=true)
 	private Set<FolFormula> sentences = new HashSet<FolFormula>();
+	
+	/** Ctor used by deserilization */
+	public Inform(
+			@Element(name="sender") String sender, 
+			@Element(name="receiver") String receiver, 
+			@Element(name="sentences") Set<FolFormula> sentences) {
+		super(sender, receiver);
+		this.sentences = sentences; 
+	}
 	
 	/**
 	 * Ctor: Creates an Inform speech act with one piece of information.
