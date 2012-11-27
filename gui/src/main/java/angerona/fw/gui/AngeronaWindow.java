@@ -59,6 +59,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	/** map containing registered views some of them are default other might be provided by plugins */
 	private Map<String, Class<? extends BaseView>> viewMap = new HashMap<String, Class<? extends BaseView>>();
 	
+	/** map containing an Entity as key mapping to all the views showing the entity */
 	private Map<Entity, List<BaseView>> registeredViewsByEntity = new HashMap<Entity, List<BaseView>>();
 	
 	/** logging facility */
@@ -75,6 +76,9 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		return instance;
 	}
 	
+	/** 
+	 * Private Ctor: Singleton pattern.
+	 */
 	private AngeronaWindow() {
 		DefaultResourceManager resourceManager = null;
 		try {
@@ -317,6 +321,9 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		}
 	}
 
+	/**
+	 * Shows an error message box if its receives error messages from the Angerona Framework.
+	 */
 	@Override
 	public void onError(String errorTitle, String errorMessage) {
 		JOptionPane.showMessageDialog(this.getWindow(), errorMessage, 

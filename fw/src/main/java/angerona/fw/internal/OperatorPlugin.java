@@ -22,15 +22,15 @@ public interface OperatorPlugin extends Plugin {
 	/** @return all the supported Update Operators defined in this plugin */
 	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators();
 	
-	/** @return all the supported filter Operators defined in this plugin */
+	/** @return all the supported intention update Operators defined in this plugin */
 	public List<Class<? extends BaseIntentionUpdateOperator>> getSupportedFilterOperators();
 	
-	/** @return all the supported Generate-Options Operators defined in this plugin */
+	/** @return all the supported gGenerate options Operators defined in this plugin */
 	public List<Class<? extends BaseGenerateOptionsOperator>> getSupportedGenerateOptionsOperators();
 	
-	/** @return all the supported Update Operators defined in this plugin */
+	/** @return all the supported Violates Operators defined in this plugin */
 	public List<Class<? extends BaseViolatesOperator>> getSupportedViolatesOperators();
 	
-	/** @return all the supported Planer Operators defined in this plugin */
+	/** @return all the supported subgoal generation Operators defined in this plugin */
 	public List<Class<? extends BaseSubgoalGenerationOperator>> getSupportedPlaners();
 }

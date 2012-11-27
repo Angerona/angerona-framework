@@ -13,10 +13,17 @@ import junit.framework.TestCase;
  * @param <T> The concrete of the beliefbase like ASP beliefbase
  */
 public abstract class BeliefbaseTest<T extends BaseBeliefbase> extends TestCase {
+	
+	/** 
+	 * Creates an instance of a subclass of BaseBeliefbase the type of this
+	 * instance is T. The base class needs this method to perform general
+	 * tests on every belief base type.
+	 * @return	The newly created instance of a belief base of Type T.
+	 */
 	protected abstract T createBeliefbase();
 
 	/**
-	 * Tests the copy behaviour. If a beliefbase is copied the data is
+	 * Tests the copy behavior. If a belief base is copied the data is
 	 * copied but the ids are not allowed to change.
 	 */
 	public void testCopy() {

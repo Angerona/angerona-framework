@@ -22,6 +22,6 @@
 	</violates-operators>
 	
 	<component>angerona.fw.logic.Desires</component>
-	<component>angerona.fw.logic.ConfidentialKnowledge</component>
-    <component>angerona.fw.MasterPlan</component>	
+	<component>angerona.fw.logic.SecrecyKnowledge</component>
+    <component>angerona.fw.PlanComponent</component>	
 </agent-configuration>

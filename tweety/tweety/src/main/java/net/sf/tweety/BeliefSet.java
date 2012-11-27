@@ -7,10 +7,11 @@ import java.util.*;
  * of some formalism.
  * 
  * @author Matthias Thimm
+ * @author Tim Janus
  * 
  * @param <T> The type of the beliefs in this belief set.
  */
-public abstract class BeliefSet<T extends Formula> extends BeliefBase implements Collection<T> {
+public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collection<T> {
 
 	/**
 	 * The set of formulas of this belief base.

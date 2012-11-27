@@ -240,7 +240,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				worldKB.add(f.toString());
 			}
 		}
-		Collection<String> actions = ag.getSkills();
+		Collection<String> actions = ag.getCapabilities();
 
 		KnowhowBase kb = (KnowhowBase)ag.getComponent(KnowhowBase.class);
 		if(kb == null) {
@@ -301,7 +301,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		// test if the skill exists
 		Agent ag = getOwner();
 		String skillName = action.first.substring(2);
-		if(!ag.hasSkill(skillName)) {
+		if(!ag.hasCapability(skillName)) {
 			LOG.warn("Knowhow found Skill '{}' but the Agent '{}' does not support the Skill.", skillName, ag.getName());
 			return null;
 		}

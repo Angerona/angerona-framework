@@ -1,7 +1,7 @@
 <simulation-configuration>
 
 	<name>Courtroom Scenario - 5 Questions</name>
-    <behavior>angerona.fw.DefaultBehavior</behavior>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
      
 	<agent-instance>
 		<name>Mary</name>

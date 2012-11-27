@@ -3,7 +3,7 @@ package angerona.fw.operators.parameter;
 import java.util.List;
 
 import angerona.fw.Action;
-import angerona.fw.MasterPlan;
+import angerona.fw.PlanComponent;
 
 /**
  * These are the parameters used by a Planer.
@@ -14,14 +14,14 @@ public class SubgoalGenerationParameter extends GenericOperatorParameter {
 	private List<Action> forbiddenActions;
 	
 	/** the actual working goals */
-	private MasterPlan actualPlan;
+	private PlanComponent actualPlan;
 
 	/**
 	 * Ctor: Generation the PlanerParameter data-structure with the following parameters:
 	 * @param actualPlan	the high level plan of the agent
 	 * @param forbidden		list of forbidden actions (forbidden skills)
 	 */
-	public SubgoalGenerationParameter(MasterPlan actualPlan, List<Action> forbidden) {
+	public SubgoalGenerationParameter(PlanComponent actualPlan, List<Action> forbidden) {
 		super(actualPlan.getAgent());
 		this.forbiddenActions = forbidden;
 		this.actualPlan = actualPlan;
@@ -33,7 +33,7 @@ public class SubgoalGenerationParameter extends GenericOperatorParameter {
 		return forbiddenActions;
 	}
 	
-	public MasterPlan getActualPlan() {
+	public PlanComponent getActualPlan() {
 		return actualPlan;
 	}
 	

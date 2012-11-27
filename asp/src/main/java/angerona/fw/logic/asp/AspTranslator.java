@@ -24,7 +24,7 @@ import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseTranslator;
 
 /**
- * Default translator which generates elp programs
+ * Default translator which generates ELPs 
  * encapsulated in AspBeliefbase.
  * 
  * @author Tim Janus

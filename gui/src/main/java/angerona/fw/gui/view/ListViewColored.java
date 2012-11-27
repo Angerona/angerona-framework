@@ -3,6 +3,9 @@ package angerona.fw.gui.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -13,11 +16,11 @@ import javax.swing.ListCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.gui.NavigationPanel;
 import angerona.fw.gui.NavigationUser;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.EntityAtomic;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 
@@ -73,6 +76,8 @@ public abstract class ListViewColored<T extends Entity>
 		public static final int ST_NEW = 2;
 		
 		public static final int ST_DELETED = 3;
+		
+		public static final int ST_RESERVED = 4;
 		
 		public ListElement(String name, int status) {
 			this.name = name;
@@ -135,6 +140,16 @@ public abstract class ListViewColored<T extends Entity>
 		model = new DefaultListModel<ListElement>();
 		actualLiterals.setModel(model);
 		
+		actualLiterals.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				if(evt.getClickCount() >= 2) {
+					int index = actualLiterals.locationToIndex(evt.getPoint());
+					onElementClicked(index, actualLiterals.getModel().getElementAt(index).status);
+				}
+			}
+		});
 		
 		callstackTree = new JTree();
 		this.add(callstackTree, BorderLayout.SOUTH);
@@ -142,6 +157,8 @@ public abstract class ListViewColored<T extends Entity>
 		updateView();
 		Angerona.getInstance().addReportListener(this);
 	}
+	
+	protected void onElementClicked(int index, int status) {	}
 	
 	protected abstract List<String> getStringRepresentation(Entity obj);
 	
@@ -226,10 +243,10 @@ public abstract class ListViewColored<T extends Entity>
 		List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(ref);
 		int index = entries.indexOf(actEntry) - 1;
 
-		EntityAtomic actAtomic = (EntityAtomic)actEntry.getAttachment();
+		AgentComponent actAtomic = (AgentComponent)actEntry.getAttachment();
 		while(index >= 0) {
 			ReportEntry prevEntry = entries.get(index);
-			EntityAtomic temp = ((EntityAtomic)prevEntry.getAttachment());
+			AgentComponent temp = ((AgentComponent)prevEntry.getAttachment());
 			
 			// select the first predecessor which has the same or a lesser copy depth as the
 			// current one as the 'real' previous entry.

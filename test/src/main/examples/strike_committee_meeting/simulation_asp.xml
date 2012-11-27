@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>Strike Committee Meeting (ASP)</name>
-    <behavior>angerona.fw.DefaultBehavior</behavior>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Employee</name>
         <default-suffix>employee</default-suffix>
@@ -20,8 +20,7 @@
         <skill>Answer</skill>
         
         <data key="Confidential">
-            (Boss, __DEFAULT__, meet_with(andre))
-            (Boss, angerona.fw.logic.asp.AspReasoner{d=0.75}, attend_scm)
+            (Boss, angerona.fw.logic.asp.AspReasoner{d=1}, attend_scm)
         </data>
 	</agent-instance>
       

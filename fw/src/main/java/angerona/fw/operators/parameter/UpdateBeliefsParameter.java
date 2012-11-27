@@ -11,9 +11,6 @@ import angerona.fw.logic.Beliefs;
  */
 public class UpdateBeliefsParameter extends GenericOperatorParameter {
 	
-	/**	reference to the agent which should perform the update */
-	private Agent agent;
-	
 	private Beliefs beliefs;
 	
 	/** object representing the perception */
@@ -30,14 +27,8 @@ public class UpdateBeliefsParameter extends GenericOperatorParameter {
 	
 	public UpdateBeliefsParameter(Agent agent, Beliefs beliefs, AngeronaAtom perception) {
 		super(agent);
-		this.agent = agent;
 		this.beliefs = beliefs;
 		this.perception = perception;
-	}
-	
-	/**	@return reference to the agent which should perform the update */
-	public Agent getAgent() {
-		return agent;
 	}
 	
 	public Beliefs getBeliefs() {

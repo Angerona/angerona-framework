@@ -10,9 +10,15 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 /**
  * An answer in the Angerona framework. Extends the GenericAnswer by an extended 
- * answer enumeration with four possibles values: {true, false, unknown, reject}
+ * answer enumeration with five possibles values: {true, false, unknown, reject, complex}
+ * Closed queries for a literal receive an answer containing one of the first four answer
+ * values (true, false, unknown, reject). If the answer value is complex then the answer
+ * contains a set of literals which define the answer. Complex is used to answer open queries
+ * like "isDeveloper(X)"
+ * 
  * @see angerona.fw.logic.AnswerValue
- * @author Tim Janus, Daniel Dilger
+ * @author Tim Janus
+ * @author Daniel Dilger
  */
 public class AngeronaAnswer extends Answer {
 

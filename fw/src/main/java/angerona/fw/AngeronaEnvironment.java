@@ -31,15 +31,9 @@ public class AngeronaEnvironment extends APR {
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
-	/** the actual simulation tick */
-	protected int tick = 0;
-	
 	/** the name of the simulation */
 	private String name;
-	
-	/** flag indicating if the environment is currently in its update process */
-	protected boolean doingTick = false;
-	
+		
 	/** flag indicating if the environment is correctly initialized */
 	private boolean ready = false;
 	
@@ -140,7 +134,7 @@ public class AngeronaEnvironment extends APR {
 	
 	/** @return	true if the environment is actually performing a tick, false otherwise. */
 	public boolean isDoeingTick() {
-		return doingTick;
+		return behavior.isDoingTick();
 	}
 	
 	/** @return true if the simulation is initialized (after the call of initSimulation), false otherwise. */
@@ -195,7 +189,6 @@ public class AngeronaEnvironment extends APR {
 			return false;
 		
 		Angerona.getInstance().onCreateSimulation(this);
-		tick = 0;
 		String errorOutput = "";
 		try {
 			for(AgentInstance ai : config.getAgents()) {
@@ -309,6 +302,6 @@ public class AngeronaEnvironment extends APR {
 	}
 
 	public int getSimulationTick() {
-		return tick;
+		return behavior.getTick();
 	}
 }

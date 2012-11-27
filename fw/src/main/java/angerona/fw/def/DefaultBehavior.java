@@ -1,12 +1,19 @@
-package angerona.fw;
+package angerona.fw.def;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.Action;
+import angerona.fw.Agent;
+import angerona.fw.AngeronaAgentProcess;
+import angerona.fw.AngeronaEnvironment;
+import angerona.fw.EnvironmentBehavior;
+import angerona.fw.Perception;
+
 import net.sf.beenuts.ap.AgentProcess;
 
 /**
- * Behavior implementing the default Angerona-Environment behavior.
+ * Behavior implementing the default Angerona Environment behavior.
  * runOneTick will wait till isSimulationReady returns true.
  * @author Tim Janus
  */
@@ -14,8 +21,13 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 
 	private static Logger LOG = LoggerFactory.getLogger(DefaultBehavior.class);
 	
+	protected boolean doingTick = false;
 	
 	protected boolean angeronaReady = true;
+	
+	/** the actual simulation tick */
+	protected int tick = 0;
+	
 	
 	@Override
 	public void sendAction(AngeronaEnvironment env, Action act) {
@@ -51,7 +63,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 
 	@Override
 	public boolean runOneTick(AngeronaEnvironment env) {
-		env.doingTick = true;
+		doingTick = true;
 		
 		while(!isSimulationReady()) {
 			try {
@@ -69,11 +81,11 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 			}
 		}
 		
-		if(!somethingHappens && env.tick != 0)
+		if(!somethingHappens && tick != 0)
 			return false;
 		
 		angeronaReady = false;
-		++env.tick;
+		++tick;
 		for(AgentProcess ap : env.agents) {
 			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
 			aap.execCycle();
@@ -83,7 +95,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		}
 		angeronaReady = true;
 		
-		env.doingTick = false;
+		doingTick = false;
 		return true;
 	}
 
@@ -102,6 +114,16 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	@Override
 	public boolean isSimulationReady() {
 		return true;
+	}
+
+	@Override
+	public boolean isDoingTick() {
+		return doingTick;
+	}
+
+	@Override
+	public int getTick() {
+		return tick;
 	}
 
 }
