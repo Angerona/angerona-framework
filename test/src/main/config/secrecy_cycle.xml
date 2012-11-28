@@ -1,0 +1,31 @@
+<Operation-Defintion name="Secrecy Cycle">
+    <operation type="UpdateBeliefs">
+        <param name="information">$in.perception</param>
+        <param name="beliefs">$beliefs</param>
+        <output>#EMPTY</output>
+    <operation>
+    
+	<operation type="GenerateOptions">
+	    <output>newDesireCount</output>
+	</operation>
+	
+	<assign name="searching" value="TRUE" />
+	<assign name="action" value="null" />
+	<while condition="$searching==TRUE">
+		<operation type="IntentionSelection">
+	    	<output>action</output>
+		</operation>
+		
+		<assign name="changed" value="FALSE"/>
+		<conditional>
+			<if condition="$action==null">
+			 	<operation type="SubgoalGeneration">
+			 	    <output>changed</output>
+			 	</operation>
+			</if>
+		</conditional>
+		<assign name="searching" value="$changed" />
+	</while>
+	
+	<execute action="$action" />
+</Operation-Definition>
