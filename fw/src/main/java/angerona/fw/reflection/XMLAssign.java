@@ -5,10 +5,11 @@ import org.simpleframework.xml.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.error.InvokeException;
 import angerona.fw.serialize.SerializeHelper;
 
 @Root(name="assign")
-public class XMLAssign implements Commando {
+public class XMLAssign extends XMLCommando {
 
 	/** reference to the logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(XMLAssign.class);
@@ -55,23 +56,23 @@ public class XMLAssign implements Commando {
 	}
 	
 	@Override
-	public void execute(Context context) {
+	protected void executeInternal() throws InvokeException {
 		if(typeString.equals("REF")) {
-			Object value = context.get(this.value.substring(1));
-			context.set(name, value);
+			Object value = getParameter(this.value.substring(1));
+			setParameter(name, value);
 		} else if(type == String.class) {
-			context.set(name, value);
+			setParameter(name, value);
 		} else if(type == Integer.class) {
-			context.set(name, Integer.parseInt(value));
+			setParameter(name, Integer.parseInt(value));
 		} else if(type == Boolean.class) {
-			context.set(name, Boolean.parseBoolean(value));
+			setParameter(name, Boolean.parseBoolean(value));
 		} else if(type == Float.class) {
-			context.set(name, Float.parseFloat(value));
+			setParameter(name, Float.parseFloat(value));
 		} else if(type == Double.class) {
-			context.set(name, Double.parseDouble(value));
+			setParameter(name, Double.parseDouble(value));
 		} else {
 			Object obj = SerializeHelper.loadXml(type, value);
-			context.set(name, obj);
+			setParameter(name, obj);
 		}
 	}
 

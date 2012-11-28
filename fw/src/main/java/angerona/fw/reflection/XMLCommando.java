@@ -3,14 +3,25 @@ package angerona.fw.reflection;
 import angerona.fw.Agent;
 import angerona.fw.error.InvokeException;
 
-public class XMLCommando implements Commando {
+public abstract class XMLCommando implements Commando {
 
 	private Context context;
 	
 	@Override
 	public void execute(Context context) {
 		this.context = context;
+		try {
+			executeInternal();
+		} catch(InvokeException ex) {
+			
+		}
 	}
+	
+	protected void setContext(Context context) {
+		this.context = context;
+	}
+	
+	protected abstract void executeInternal() throws InvokeException;
 	
 	/**
 	 * Helper method: Returns the parameter value given by name
@@ -34,6 +45,10 @@ public class XMLCommando implements Commando {
 		} catch(ClassCastException exec) {
 			throw new InvokeException("Cant cast Parameter " + name + " to correct type. Actual: " + obj.getClass().getName(), context);
 		}
+	}
+	
+	protected <T> void setParameter(String name, T value) {
+		context.set(name, value);
 	}
 	
 	/**
