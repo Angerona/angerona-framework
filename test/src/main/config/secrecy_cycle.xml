@@ -9,14 +9,14 @@
 	    <output>newDesireCount</output>
 	</operation>
 	
-	<assign name="searching" value="TRUE" />
-	<assign name="action" value="null" />
+	<assign name="searching" value="TRUE" type="BOOL" />
+	<assign name="action" value="null" type="Object" />
 	<while condition="$searching==TRUE">
 		<operation type="IntentionSelection">
 	    	<output>action</output>
 		</operation>
 		
-		<assign name="changed" value="FALSE"/>
+		<assign name="changed" value="FALSE" type="BOOL" />
 		<conditional>
 			<if condition="$action==null">
 			 	<operation type="SubgoalGeneration">
@@ -24,7 +24,7 @@
 			 	</operation>
 			</if>
 		</conditional>
-		<assign name="searching" value="$changed" />
+		<assign name="searching" value="$changed" type="BOOL" />
 	</while>
 	
 	<execute action="$action" />

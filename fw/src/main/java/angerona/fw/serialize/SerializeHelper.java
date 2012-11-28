@@ -2,6 +2,7 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.io.StringReader;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -56,6 +57,31 @@ public class SerializeHelper {
 	 */
 	public static <T> T loadXml(Class<T> cls, File source) {
 		init();
+		T obj = createObject(cls);
+		try {
+			obj = serializer.read(cls, source);
+		} catch (Exception e) {
+			LOG.error("Something went wrong during loading of '{}': {}", source.getPath(), e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		return obj;
+	}
+
+	public static <T> T loadXml(Class<T> cls, String xml) {
+		init();
+		T obj = null;
+		try {
+			obj = serializer.read(cls, new StringReader(xml));
+		} catch (Exception e) {
+			LOG.error("Something went wrong during loading of '{}': {}", xml, e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		return obj;
+	}
+	
+	private static <T> T createObject(Class<T> cls) {
 		T obj = null;
 		try {
 			obj = cls.newInstance();
@@ -65,13 +91,6 @@ public class SerializeHelper {
 		} catch (IllegalAccessException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-		try {
-			obj = serializer.read(cls, source);
-		} catch (Exception e) {
-			LOG.error("Something went wrong during loading of '{}': {}", source.getPath(), e.getMessage());
-			e.printStackTrace();
-			return null;
 		}
 		return obj;
 	}

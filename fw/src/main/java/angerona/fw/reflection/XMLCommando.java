@@ -2,40 +2,15 @@ package angerona.fw.reflection;
 
 import angerona.fw.Agent;
 import angerona.fw.error.InvokeException;
-import angerona.fw.serialize.Statement;
 
-/**
- * A ContextVisitor represents a method/operation which can be defined as
- * xml element. This is the base class for such visitors.
- * The visitor must be invoked by a context which defines the parameters used 
- * by the method/operation.
- * This base class defines some helpful methods for subclasses.
- * @author Tim Janus
- */
-public abstract class ContextVisitor {
+public class XMLCommando implements Commando {
 
-	/** the actual used context */
-	protected Context context;
+	private Context context;
 	
-	/**
-	 * Runs the ContextVisitor operations using the statements data structure received from a xml file
-	 * and the given context.
-	 * @param statement	data structure with parameter names and return value names.
-	 * @param c reference to the context used for performing this method/operation.
-	 * @throws InvokeException
-	 */
-	public void run(Statement statement, Context c) throws InvokeException {
-		context = c;
-		runImpl(statement);
+	@Override
+	public void execute(Context context) {
+		this.context = context;
 	}
-
-	/**
-	 * method defining the implementation of the operation/method of this ContextVisitor.
-	 * Subclasses must implement this
-	 * @param statement	data strucutre with parameter names etc.
-	 * @throws InvokeException
-	 */
-	protected abstract void runImpl(Statement statement) throws InvokeException;
 	
 	/**
 	 * Helper method: Returns the parameter value given by name
