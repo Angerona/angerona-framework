@@ -5,10 +5,14 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
 
 /**
- * Simple expansion operator for conditional belief bases without consistency-checks
+ * Revision operator for conditional belief bases. Defined as
+ * <k,R> ° {A} = <k, R + {A}>, if k(con(R) ^ A) != INFINITY
+ *                = <k, R> else
+ *                
  * @author Sebastian Homann, Pia Wierzoch
  */
-public class ConditionalExpansion extends BaseChangeBeliefs {
+
+public class ConditionalRevision extends BaseChangeBeliefs {
 
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {

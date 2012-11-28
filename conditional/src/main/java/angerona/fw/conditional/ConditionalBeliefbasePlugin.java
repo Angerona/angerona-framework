@@ -13,6 +13,7 @@ import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.conditional.ConditionalBeliefbase;
 import angerona.fw.logic.conditional.ConditionalExpansion;
 import angerona.fw.logic.conditional.ConditionalReasoner;
+import angerona.fw.logic.conditional.ConditionalRevision;
 import angerona.fw.logic.conditional.ConditionalTranslator;
 
 @PluginImplementation
@@ -36,6 +37,7 @@ public class ConditionalBeliefbasePlugin implements BeliefbasePlugin {
 	public List<Class<? extends BaseChangeBeliefs>> getSupportedChangeOperations() {
 		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
 		reval.add(ConditionalExpansion.class);
+		reval.add(ConditionalRevision.class);
 		return reval;
 	}
 
