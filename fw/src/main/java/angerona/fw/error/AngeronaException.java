@@ -13,4 +13,8 @@ public class AngeronaException extends Exception {
 	public AngeronaException(String message) {
 		super(message);
 	}
+	
+	public AngeronaException(String message, Exception inner) {
+		super(message, inner);
+	}
 }

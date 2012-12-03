@@ -1,0 +1,107 @@
+options {
+STATIC = false ;
+}
+
+PARSER_BEGIN(DAMLParser)
+package angerona.fw.parser;
+import angerona.fw.reflection.Value;
+import angerona.fw.reflection.BooleanExpression;
+import angerona.fw.reflection.BooleanExpression.Operator;
+import java.util.*;
+@SuppressWarnings("all")
+
+public class DAMLParser {
+
+
+}
+
+PARSER_END(DAMLParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+   <CHARACTER: ["A"-"Z", "a"-"z"] >
+|  <DIGIT: ["0"-"9"] >
+|  <VAR: "$" >
+|  <DOT: "." >
+|  <COMPARE_OPERATOR: "=="|"!="|"<"|"<="|">"|">=" >
+}
+
+Value value() :
+{
+  boolean isString = false;
+  boolean isVariable = false;
+  int dotCount = 0;
+  String readed = "";
+  Token token;}
+{
+  (
+    token = < CHARACTER >
+    {
+      isString = true;    }
+  |
+  	token = < DIGIT >
+  |
+  	token = < VAR >
+  	{  	  isVariable=true;
+  	}  )
+  {
+    readed += token.image;  }
+
+  (
+    (
+	    token = < CHARACTER >
+	    {	      isString=true;
+	    }	  
+	  |
+	  	token = < DIGIT >
+	  |
+	  	token = < DOT >
+	  	{
+	  	  dotCount += 1;
+	  	  if(dotCount > 1)	  	  {
+	  	    isString = true;	  	  }	  	}
+	)
+	{
+	  readed += token.image;	}  )*
+
+  {
+    try    {      
+	    if(isString)	    {
+	      if(readed.equalsIgnoreCase("TRUE") || readed.equalsIgnoreCase("FALSE"))	      {
+	        return new Value(readed, Boolean.class.getName());	      }
+	      return new Value(readed, String.class.getName());	    }
+	    else if(isVariable)	    {
+	      return new Value(readed, Value.CONTEXT_REFERENCE_TYPE);	    }
+	    else	    {
+	      if(dotCount == 1)
+	      {
+	        return new Value(readed, Double.class.getName());	      }
+	      return new Value(readed, Integer.class.getName());	    }
+	} catch(ClassNotFoundException ex)	{	  throw new ParseException(ex.getMessage());
+	}  }}
+
+BooleanExpression booleanExpression() :
+{
+  Token token = null;
+  Value left = null;
+  Value right = null;
+  BooleanExpression.Operator op = null;}
+{
+  left = value()
+  (
+    token = < COMPARE_OPERATOR >
+    {
+      op = BooleanExpression.Operator.fromString(token.image);    }
+    right = value()  )?
+  {
+    if(right == null)    {
+      return new BooleanExpression(left);    }
+    return new BooleanExpression(left, op, right);  }}

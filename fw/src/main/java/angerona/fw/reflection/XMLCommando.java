@@ -3,7 +3,7 @@ package angerona.fw.reflection;
 import angerona.fw.Agent;
 import angerona.fw.error.InvokeException;
 
-public abstract class XMLCommando implements Commando {
+public abstract class XMLCommando implements Commando, ContextProvider {
 
 	private Context context;
 	
@@ -15,6 +15,11 @@ public abstract class XMLCommando implements Commando {
 		} catch(InvokeException ex) {
 			
 		}
+	}
+	
+	@Override
+	public Context getContext() {
+		return this.context;
 	}
 	
 	protected void setContext(Context context) {

@@ -15,12 +15,12 @@ import angerona.fw.serialize.SerializeHelper;
 public class AssignTest extends TestCase {
 	
 	public void testAssignOnEmptyContext() throws ClassNotFoundException {
-		XMLAssign assign = new XMLAssign("name", "Angerona", null);
+		XMLAssign assign = new XMLAssign("name", new Value("Angerona", null));
 		doStringTest(assign, new Context());
 	}
 
 	public void testDeserialize() {
-		String xml = "<assign name=\"name\" value=\"Angerona\" type=\"string\" />";
+		String xml = "<assign name=\"name\"><value value=\"Angerona\" type=\"string\" /></assign>";
 		XMLAssign assign = SerializeHelper.loadXml(XMLAssign.class, xml);
 		doStringTest(assign, new Context());
 	}
@@ -57,7 +57,7 @@ public class AssignTest extends TestCase {
 		// perform the test:
 		Context context = new Context();
 		for(Triple t : lst) {
-			XMLAssign assign = new XMLAssign("Test", t.strValue, t.type.getName());
+			XMLAssign assign = new XMLAssign("Test", new Value(t.strValue, t.type.getName()));
 			assign.execute(context);
 			Assert.assertEquals(t.realValue, context.get("Test"));
 		}
@@ -69,7 +69,7 @@ public class AssignTest extends TestCase {
 		AngeronaAnswer aa = new AngeronaAnswer(null, new Atom(new Predicate("attend_scm")), AnswerValue.AV_FALSE);
 		context.set("answer", aa);
 		
-		XMLAssign assign = new XMLAssign("reference", "$answer", null);
+		XMLAssign assign = new XMLAssign("reference", new Value("$answer", null));
 		assign.execute(context);
 		
 		Assert.assertEquals(true, context.get("answer") == context.get("reference"));
