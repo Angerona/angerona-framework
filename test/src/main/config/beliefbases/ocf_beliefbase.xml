@@ -1,0 +1,14 @@
+<beliefbase-configuration>
+   <name>Conditional Belief Base</name>
+   <reasoners class="angerona.fw.serialize.OperatorSetConfigReal">
+      <default-operator-cls>angerona.fw.conditional.ConditionalReasoner</default-operator-cls>
+   </reasoners>
+   <change-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+      <default-operator-cls>angerona.fw.conditional.ConditionalExpansion</default-operator-cls>
+   </change-operators>
+   <translators class="angerona.fw.serialize.OperatorSetConfigReal">
+      <default-operator-cls>angerona.fw.conditional.ConditionalTranslator</default-operator-cls>
+   </translators>
+   
+   <beliefbase-class>angerona.fw.conditional.ConditionalBeliefbase</beliefbase-class>
+</beliefbase-configuration>
