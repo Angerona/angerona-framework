@@ -52,7 +52,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	 * @param other
 	 */
 	public ConditionalBeliefbase(ConditionalBeliefbase other) {
-		super();
+		super(other);
 		// TODO: check, if deep cloning is required ...
 		this.propositions = new HashSet<PropositionalFormula>(other.propositions);
 		this.conditionals = new ClBeliefSet(other.conditionals);
@@ -70,7 +70,10 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 			line = line.trim();
 			if(line.contains("|")) {
 				// conditional of the form ( B | A )
-				String[] conditional = line.split("|");
+				log.info("parsing conditional: {}", line);
+				line = line.substring(1, line.length()-1); // remove braces
+				log.info("parsing conditional: {}", line);
+				String[] conditional = line.split("\\|");
 				PropositionalFormula conclusion = (PropositionalFormula) parser.parseFormula(conditional[0]);
 				PropositionalFormula premise = (PropositionalFormula) parser.parseFormula(conditional[1]);
 				Conditional newCond = new Conditional(premise, conclusion);
@@ -80,7 +83,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 				PropositionalFormula proposition = (PropositionalFormula) parser.parseBeliefBase(line);
 				propositions.add(proposition);
 			}
-		}	
+		}
 	}
 	public Set<PropositionalFormula> getPropositions() {
 		return propositions;
@@ -124,7 +127,8 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	@Override
 	public Signature getSignature() {
 		PropositionalSignature signature = new PropositionalSignature();
-		signature.fromSignature(conditionals.getSignature());
+		
+		signature.addSignature(conditionals.getSignature());
 		for(PropositionalFormula proposition : propositions) {
 			signature.addSignature(proposition.getSignature());
 		}
@@ -134,16 +138,25 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	@Override
 	public String toString() {
 		String retval = "< {";
+		boolean more = false;
 		for(Conditional conditional : conditionals) {
+			if(more)
+				retval += ", ";
+			else
+				more = true;
+			
 			retval += conditional.toString();
-			retval += ", ";
 		}
 		retval += "}, {";
+		more = false;
 		for(PropositionalFormula proposition : propositions) {
+			if(more)
+				retval += ", ";
+			else
+				more = true;
 			retval += proposition.toString();
-			retval += ", ";
 		}
-		retval += "}";
+		retval += "} >";
 		return retval;
 	}
 

@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>OCF-Students</name>
-    <behavior>angerona.fw.DefaultBehavior</behavior>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Student</name>
         <default-suffix>student</default-suffix>

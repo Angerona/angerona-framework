@@ -1,5 +1,12 @@
 package angerona.fw.logic.conditional;
 
+import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
+import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
+import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.operators.parameter.BeliefUpdateParameter;
@@ -13,6 +20,8 @@ import angerona.fw.operators.parameter.BeliefUpdateParameter;
  */
 
 public class ConditionalRevision extends BaseChangeBeliefs {
+	/** reference to the logging facility */
+	private static Logger log = LoggerFactory.getLogger(ConditionalRevision.class);
 
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {
@@ -21,8 +30,21 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 
 	@Override
 	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("Revision with '{}'", param.getNewKnowledge());
+		ConditionalBeliefbase beliefbase = (ConditionalBeliefbase) param.getBeliefBase();
+		ConditionalBeliefbase newKnowledge = (ConditionalBeliefbase) param.getNewKnowledge();
+		
+		BruteForceCReasoner creasoner = new BruteForceCReasoner(beliefbase.getConditionalBeliefs(), true);
+		RankingFunction ranking = creasoner.getCRepresentation();
+		
+		Conjunction con = new Conjunction(beliefbase.getPropositions());
+		con.addAll(newKnowledge.getPropositions());
+		
+		if(ranking.rank(con) < RankingFunction.INFINITY) {
+			beliefbase.getPropositions().addAll(newKnowledge.getPropositions());
+		}
+		
+		return beliefbase;
 	}
 
 }

@@ -4,18 +4,25 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.Answer;
+import net.sf.tweety.ClassicalFormula;
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
 
@@ -24,6 +31,8 @@ import angerona.fw.operators.parameter.ReasonerParameter;
  * @author Sebastian Homann, Pia Wierzoch
  */
 public class ConditionalReasoner extends BaseReasoner {
+	/** reference to the logging facility */
+	private static Logger log = LoggerFactory.getLogger(ConditionalReasoner.class);
 
 	/**
 	 * Calculates the conditional belief set from a conditional belief base.
@@ -55,7 +64,7 @@ public class ConditionalReasoner extends BaseReasoner {
 		}
 		
 		// A |~ B, i.e. B follows defeasibly from A iff k(A)=INF or B holds in all smallest
-		// worlds (according to k), in which A holds. This is equivalent to k(AB) < k(A -B)
+		// worlds according to k, in which A holds. This is equivalent to k(AB) < k(A -B)
 		for(Proposition prop : sig) {
 			Formula AandB = conjunction.combineWithAnd(prop);
 			Formula AandNotB = conjunction.combineWithAnd(prop.complement());
@@ -65,13 +74,32 @@ public class ConditionalReasoner extends BaseReasoner {
 				retval.add(new Atom(new Predicate(prop.getName())));
 			}
 		}
+		// the same for negations
+		for(Proposition prop : sig) {
+			ClassicalFormula nprop = prop.complement();
+			Formula AandB = conjunction.combineWithAnd(nprop);
+			Formula AandNotB = conjunction.combineWithAnd(nprop.complement());
+			Integer rankAandB = ocf.rank(AandB);
+			Integer rankAandNotB = ocf.rank(AandNotB);
+			if(rankAandB < rankAandNotB) {
+				retval.add(new Negation(new Atom(new Predicate(prop.getName()))));
+			}
+		}
 		return retval;
 	}
 
 	@Override
 	protected Answer queryInt(FolFormula query) {
-		// TODO Auto-generated method stub
-		return null;
+		Set<FolFormula> answers = inferInt();
+		AnswerValue av = AnswerValue.AV_UNKNOWN;
+				
+		ConditionalBeliefbase bb = (ConditionalBeliefbase)this.actualBeliefbase;
+		if(answers.contains(query)) {
+			av = AnswerValue.AV_TRUE;
+		} else if( answers.contains(new Negation(query)) ) {
+			av = AnswerValue.AV_FALSE;
+		}
+		return new AngeronaAnswer(bb, query, av);
 	}
 
 	@Override
@@ -81,8 +109,7 @@ public class ConditionalReasoner extends BaseReasoner {
 
 	@Override
 	protected AngeronaAnswer processInt(ReasonerParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
 	}
 
 }
