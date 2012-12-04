@@ -35,8 +35,8 @@ public class DummyReasoner extends BaseReasoner {
 	}
 
 	@Override
-	protected AngeronaAnswer processInt(ReasonerParameter param) {
-		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
+	protected AngeronaAnswer processInternal(ReasonerParameter param) {
+		return (AngeronaAnswer) query(param.getBeliefBase(), param.getQuery());
 	}
 
 	@Override

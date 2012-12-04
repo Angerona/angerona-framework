@@ -7,11 +7,12 @@ import angerona.fw.Perception;
  * Class encoding the input parameter for the GenerateOptionsOperator.
  * @author Tim Janus
  */
-public class GenerateOptionsParameter extends GenericOperatorParameter {
-	protected Agent agent;
-	
+public class GenerateOptionsParameter extends OperatorPluginParameter {
+
 	/** the last received perception */
 	protected Perception perception;
+	
+	public GenerateOptionsParameter() {}
 	
 	/**
 	 * Ctor: Generates a GenerateOptionsParameter data-structure with the following parameters:
@@ -20,7 +21,6 @@ public class GenerateOptionsParameter extends GenericOperatorParameter {
 	 */
 	public GenerateOptionsParameter(Agent agent, Perception perception) {
 		super(agent);
-		this.agent = agent;
 		this.perception = perception;
 	}
 	

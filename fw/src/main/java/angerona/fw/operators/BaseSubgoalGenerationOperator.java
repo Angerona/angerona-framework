@@ -1,6 +1,7 @@
 package angerona.fw.operators;
 
-import angerona.fw.operators.parameter.SubgoalGenerationParameter;
+import angerona.fw.operators.parameter.PlanParameter;
+
 
 /**
  * Base class for all subgoal-generation implementations.
@@ -8,5 +9,16 @@ import angerona.fw.operators.parameter.SubgoalGenerationParameter;
  * @author Tim Janus
  */
 public abstract class BaseSubgoalGenerationOperator 
-	extends Operator<SubgoalGenerationParameter, Boolean> {
+	extends Operator<PlanParameter, Boolean> {
+
+	@Override
+	protected PlanParameter getEmptyParameter() {
+		return new PlanParameter();
+	}
+
+	@Override
+	protected Boolean defaultReturnValue() {
+		return false;
+	}
+	
 }

@@ -12,7 +12,7 @@ import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
 import angerona.fw.logic.Secret;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.parameter.IntentionUpdateParameter;
+import angerona.fw.operators.parameter.PlanParameter;
 import angerona.fw.util.Pair;
 
 /**
@@ -76,13 +76,13 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	}
 
 	@Override
-	protected PlanElement processInt(IntentionUpdateParameter param) {
+	protected PlanElement processInternal(PlanParameter param) {
 		LOG.info("Run Mary-Intention-Update");
-		Agent ag = param.getPlan().getAgent();
+		Agent ag = param.getActualPlan().getAgent();
 		List<PlanElement> atomicIntentions = new LinkedList<PlanElement>();
 		// Loop needs to be changed so that only options from the same plan are
 		// considered
-		for (Subgoal plan : param.getPlan().getPlans()) {
+		for (Subgoal plan : param.getActualPlan().getPlans()) {
 			for (int i = 0; i < plan.getNumberOfStacks(); ++i) {
 				PlanElement pe = plan.peekStack(i);
 				if (pe.isAtomic()) {

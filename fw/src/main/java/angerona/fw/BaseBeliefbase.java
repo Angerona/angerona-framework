@@ -25,7 +25,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
-import angerona.fw.operators.parameter.BeliefUpdateParameter;
+import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
 
@@ -278,9 +278,10 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 		if(changeOperator == null)
 			changeOperator = changeOperators.def();
 		
-		Agent agent = getAgent();
-		BeliefUpdateParameter param = new BeliefUpdateParameter(agent, this, newKnowledge);
-		changeOperator.process(param);
+		GenericOperatorParameter opParam = new GenericOperatorParameter(this);
+		opParam.setParameter("sourceBelief", this);
+		opParam.setParameter("newBelief", newKnowledge);
+		changeOperator.process(opParam);
 		firePropertyChangeListener(BELIEFBASE_CHANGE_PROPERTY_NAME, null, null);
 	}
 	

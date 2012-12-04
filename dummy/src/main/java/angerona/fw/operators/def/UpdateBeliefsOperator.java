@@ -11,7 +11,7 @@ import angerona.fw.comm.Justification;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
-import angerona.fw.operators.parameter.UpdateBeliefsParameter;
+import angerona.fw.operators.parameter.EvaluateParameter;
 
 /**
  * Default Update Beliefs reacts on Answer and Query speech acts.
@@ -25,23 +25,23 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	private static Logger LOG = LoggerFactory.getLogger(UpdateBeliefsOperator.class);
 	
 	@Override
-	protected Beliefs processInt(UpdateBeliefsParameter param) {
+	protected Beliefs processInternal(EvaluateParameter param) {
 		LOG.info("Run Default-Update-Beliefs-Operator");
 		Beliefs beliefs = param.getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		String out = "Update-Beliefs: ";
 		
 		boolean receiver = false;
-		if(param.getPerception() instanceof Action) {
-			Action act = (Action)param.getPerception();
+		if(param.getAtom() instanceof Action) {
+			Action act = (Action)param.getAtom();
 			receiver = !id.equals(act.getSenderId());
 		} else {
 			receiver = true;
 		}
 		
 		
-		if(param.getPerception() instanceof Answer) {
-			Answer naa = (Answer)param.getPerception();
+		if(param.getAtom() instanceof Answer) {
+			Answer naa = (Answer)param.getAtom();
 			out += "Answer ";
 			out += receiver ? "as receiver (world)" : "as sender (view)";
 			
@@ -54,15 +54,15 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			
 			bb.addKnowledge(naa);
 			report(out, bb);
-		} else if(param.getPerception() instanceof Query) {
+		} else if(param.getAtom() instanceof Query) {
 			out += "Query ";
 			out += (!receiver) ? "as sender (no changes)" : "as receiver (no changes)";
 			
 			report(out, param.getAgent());
-		} else if(param.getPerception() instanceof Inform) {
+		} else if(param.getAtom() instanceof Inform) {
 			// When we get informed about something we believe the sender of the Inform
 			// himself believes it... but we do not update the own belief base yet.
-			Inform i = (Inform) param.getPerception();
+			Inform i = (Inform) param.getAtom();
 			BaseBeliefbase bb = null;
 			
 			out = "Inform ";
@@ -83,8 +83,8 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			}
 			
 			report(out, bb == null ? param.getAgent() : bb);
-		} else if (param.getPerception() instanceof Justification) {
-			Justification j = (Justification) param.getPerception();
+		} else if (param.getAtom() instanceof Justification) {
+			Justification j = (Justification) param.getAtom();
 			BaseBeliefbase bb = null;
 			if(receiver) {
 				bb = beliefs.getViewKnowledge().get(j.getSenderId());
@@ -99,7 +99,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				report("Justification as sender (update view->" + j.getReceiverId() + ")", bb);
 			}
 		} else {
-			report("Update-Operator: Cant handle perception of type: " + param.getPerception().getClass().getName());
+			report("Update-Operator: Cant handle perception of type: " + param.getAtom().getClass().getName());
 		}
 		
 		return beliefs;

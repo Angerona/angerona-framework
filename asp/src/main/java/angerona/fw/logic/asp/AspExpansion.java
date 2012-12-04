@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
-import angerona.fw.operators.parameter.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
 
 /**
  * Simply adds the new rule to the belief base, can make it inconsistent and
@@ -25,14 +25,14 @@ public class AspExpansion extends BaseChangeBeliefs {
 	}
 
 	@Override
-	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
+	protected BaseBeliefbase processInt(ChangeBeliefbaseParameter param) {
 		LOG.info("Perform ASPExpansion as change.");
-		AspBeliefbase abb = (AspBeliefbase)param.getBeliefBase();
+		AspBeliefbase abb = (AspBeliefbase)param.getSourceBeliefBase();
 		Program p = abb.getProgram();
 		AspBeliefbase newK = (AspBeliefbase)param.getNewKnowledge();
 		p.add(newK.getProgram());
 			
-		return param.getBeliefBase();
+		return param.getSourceBeliefBase();
 	}
 
 }

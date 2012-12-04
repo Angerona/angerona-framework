@@ -38,7 +38,7 @@ import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.SolverWrapper;
 import angerona.fw.operators.def.SubgoalGenerationOperator;
-import angerona.fw.operators.parameter.SubgoalGenerationParameter;
+import angerona.fw.operators.parameter.PlanParameter;
 import angerona.fw.util.Pair;
 
 /**
@@ -54,7 +54,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	private KnowhowStrategy lastUsedStrategy;
 	
 	@Override
-	protected Boolean processInt(SubgoalGenerationParameter param) {
+	protected Boolean processInt(PlanParameter param) {
 		report("Using Knowhow for Subgoal Generation.");
 		
 		boolean gen  = false;
@@ -80,7 +80,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		return gen;
 	}
 	
-	protected Boolean onJustification(Desire des, SubgoalGenerationParameter pp) {
+	protected Boolean onJustification(Desire des, PlanParameter pp) {
 		if(! (des.getPerception() instanceof Justification)) return false;
 		
 		// scenario dependent:
@@ -101,7 +101,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param pp		The subgoal generation parameter data structure.
 	 * @return			True if a safe action was found, false otherwise.
 	 */
-	protected Boolean onJustify(Desire des, SubgoalGenerationParameter pp) {
+	protected Boolean onJustify(Desire des, PlanParameter pp) {
 		if(! (des.getPerception() instanceof Justify)) 
 			return false;
 		
@@ -122,7 +122,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 *  method.
 	 */
 	@Override
-	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
+	protected Boolean revisionRequest(Desire des, PlanParameter pp, Agent ag) {
 		if(! (des.getPerception() instanceof Inform))
 			return false;
 		
@@ -160,7 +160,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * TODO: Answer with Unknown if no valid answer is found.
 	 */
 	@Override 
-	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter param, Agent ag) {
+	protected Boolean answerQuery(Desire des, PlanParameter param, Agent ag) {
 		if(!(des.getPerception() instanceof Query))
 			return false;
 		
@@ -184,7 +184,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param des			The desire which will be fulfilled by the next safe action.
 	 * @return				A plan element containing a safe atomic action.
 	 */
-	public PlanElement nextSafeAction(String intention, SubgoalGenerationParameter param, Desire des) {
+	public PlanElement nextSafeAction(String intention, PlanParameter param, Desire des) {
 		prepareKnowhow(intention, param, des);
 		
 		PlanElement candidate = null;
@@ -210,7 +210,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param des			The desire which will be fulfilled by the next action.
 	 * @return				A plan element containing an atomic action.
 	 */
-	public PlanElement nextAction(String intention, SubgoalGenerationParameter param, Desire des) {
+	public PlanElement nextAction(String intention, PlanParameter param, Desire des) {
 		prepareKnowhow(intention, param, des);
 		return iterateKnowhow(param, des);
 	}
@@ -223,7 +223,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param param			the subgoal-generation parameter data-structure
 	 * @param des			The associated desire.
 	 */
-	private void prepareKnowhow(String intention, SubgoalGenerationParameter param, Desire des) {
+	private void prepareKnowhow(String intention, PlanParameter param, Desire des) {
 		Agent ag = getOwner();
 		
 		LOG.info("Running Knowhow with intention: '{}' for desire: '{}'.", 
@@ -259,7 +259,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param des	The associated desire
 	 * @return		A plan element containing an atomic action.
 	 */
-	private PlanElement iterateKnowhow(SubgoalGenerationParameter param, Desire des) {
+	private PlanElement iterateKnowhow(PlanParameter param, Desire des) {
 		// iterate knowhow algorithm until a action is found.
 		int reval = 0;
 		boolean calcKH = true;
@@ -294,7 +294,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param des		The associated desire.
 	 * @return			A Skill context pair representing the last found atomic action or null if an error occurred.
 	 */
-	private PlanElement createAtomicAction(SubgoalGenerationParameter param, Desire des) {
+	private PlanElement createAtomicAction(PlanParameter param, Desire des) {
 		// iterate over all actions found by the Knowhow (at the moment this is only one)
 		Pair<String, HashMap<Integer, String>> action = lastUsedStrategy.getAction();
 		

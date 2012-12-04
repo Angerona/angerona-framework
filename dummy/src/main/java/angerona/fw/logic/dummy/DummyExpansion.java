@@ -2,7 +2,7 @@ package angerona.fw.logic.dummy;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
-import angerona.fw.operators.parameter.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
 
 public class DummyExpansion extends BaseChangeBeliefs {
 
@@ -12,8 +12,8 @@ public class DummyExpansion extends BaseChangeBeliefs {
 	}
 
 	@Override
-	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
-		DummyBeliefbase bb = (DummyBeliefbase) param.getBeliefBase();
+	protected BaseBeliefbase processInternal(ChangeBeliefbaseParameter param) {
+		DummyBeliefbase bb = (DummyBeliefbase) param.getSourceBeliefBase();
 		DummyBeliefbase nbb = (DummyBeliefbase) param.getNewKnowledge();
 		bb.fbs.addAll(nbb.fbs);
 		

@@ -30,6 +30,16 @@ public abstract class BaseReasoner
 	/** Default Ctor */
 	public BaseReasoner() {}
 	
+	@Override
+	protected ReasonerParameter getEmptyParameter() {
+		return new ReasonerParameter();
+	}
+
+	@Override
+	protected AngeronaAnswer defaultReturnValue() {
+		return null;
+	}
+	
 	/** 
 	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
 	 * @return	A set of FolFormulas representing Cn(Bel).

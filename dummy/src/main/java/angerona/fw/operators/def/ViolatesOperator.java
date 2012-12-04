@@ -21,7 +21,7 @@ import angerona.fw.logic.SecrecyKnowledge;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.BaseViolatesOperator;
-import angerona.fw.operators.parameter.ViolatesParameter;
+import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
 /**
@@ -41,7 +41,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	private ViolatesResult violates;
 	
 	@Override
-	protected ViolatesResult onPerception(Perception percept, ViolatesParameter param) {
+	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
 		
 		// only apply violates if confidential knowledge is saved in agent.
@@ -94,7 +94,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	}
 	
 	@Override
-	protected ViolatesResult onPlan(PlanElement pe, ViolatesParameter param) {
+	protected ViolatesResult onPlan(PlanElement pe, EvaluateParameter param) {
 		if(pe.isAtomic()) {
 			// clear ViolatesResult state:
 			violates = new ViolatesResult();
@@ -112,7 +112,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	@Override
 	public void performAction(Action action, Agent agent, Beliefs beliefs) {
-		ViolatesParameter param = new ViolatesParameter(agent, beliefs, action);
+		EvaluateParameter param = new EvaluateParameter(agent, beliefs, action);
 		violates = violates.combine(onPerception(action, param));
 	}
 }

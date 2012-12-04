@@ -38,12 +38,8 @@ import angerona.fw.operators.BaseIntentionUpdateOperator;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
+import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
-import angerona.fw.operators.parameter.GenerateOptionsParameter;
-import angerona.fw.operators.parameter.IntentionUpdateParameter;
-import angerona.fw.operators.parameter.SubgoalGenerationParameter;
-import angerona.fw.operators.parameter.UpdateBeliefsParameter;
-import angerona.fw.operators.parameter.ViolatesParameter;
 import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
@@ -409,22 +405,23 @@ public class Agent extends AgentArchitecture
 		} else {
 			actualPerception = (Perception)perception;
 		}
-			
+		
+		GenericOperatorParameter opParam = new GenericOperatorParameter(this);
+		
 		updateBeliefs(actualPerception);	
 		// Deliberation:
-		genOptionsOperators.def().process(new GenerateOptionsParameter(this, actualPerception));
+		genOptionsOperators.def().process(opParam);
 		
 		// Means-end-reasoning:
-		List<Action> forbidden = new LinkedList<>();
 		PlanComponent masterPlan = getComponent(PlanComponent.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
-				atomic = intentionUpdateOperators.def().process(
-						new IntentionUpdateParameter(masterPlan, forbidden));
+				atomic = intentionUpdateOperators.def().process(opParam);
+				//	new IntentionUpdateParameter(masterPlan, forbidden));
 				
 				if(atomic == null) {
-					if(!subgoalGenerationOperators.def().process(
-							new SubgoalGenerationParameter(masterPlan, forbidden)))
+					if(!subgoalGenerationOperators.def().process(opParam))
+							//new SubgoalGenerationParameter(masterPlan, forbidden)))
 						break;
 				} else {
 					if(!(atomic.getIntention().isAtomic())) {
@@ -467,7 +464,10 @@ public class Agent extends AgentArchitecture
 		if(perception != null) {
 			// save the perception for later use in messaging system.
 			lastUpdateBeliefsPercept = perception;
-			return changeOperators.def().process(new UpdateBeliefsParameter(this, beliefs, perception));
+			GenericOperatorParameter param = new GenericOperatorParameter();
+			param.setParameter("beliefs", beliefs);
+			param.setParameter("perception", perception);
+			return changeOperators.def().process(param);
 		}
 		return beliefs;
 	}
@@ -480,7 +480,10 @@ public class Agent extends AgentArchitecture
 	 * @return			true if applying the action violates confidential, false otherwise.
 	 */
 	public ViolatesResult performThought(Beliefs beliefs, AngeronaAtom intent) {
-		return violatesOperators.def().process(new ViolatesParameter(this, beliefs, intent));
+		GenericOperatorParameter param = new GenericOperatorParameter(this);
+		param.setParameter("intention", intent);
+		param.setParameter("beliefs", beliefs);
+		return violatesOperators.def().process(param);
 	}
 	
 	/**

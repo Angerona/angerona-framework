@@ -24,7 +24,7 @@ import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
-import angerona.fw.operators.parameter.ViolatesParameter;
+import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
 /**
@@ -84,7 +84,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 	}
 
 	@Override
-	protected ViolatesResult onPerception(Perception percept, ViolatesParameter param) {
+	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		Logger LOG = LoggerFactory.getLogger(WeakeningViolatesOperator.class);
 		List<Pair<Secret, Double>> secretList = new LinkedList<>();
 

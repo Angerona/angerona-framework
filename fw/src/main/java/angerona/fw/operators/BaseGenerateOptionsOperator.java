@@ -2,6 +2,7 @@ package angerona.fw.operators;
 
 import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
+
 /**
  * Base class for option generation operators.
  * It creates a set of formulas which represent the new agent desires.
@@ -9,4 +10,15 @@ import angerona.fw.operators.parameter.GenerateOptionsParameter;
  */
 public abstract class BaseGenerateOptionsOperator extends 
 	Operator<GenerateOptionsParameter, Integer> {
+
+	@Override
+	protected GenerateOptionsParameter getEmptyParameter() {
+		return new GenerateOptionsParameter();
+	}
+
+
+	@Override
+	protected Integer defaultReturnValue() {
+		return 0;
+	}
 }

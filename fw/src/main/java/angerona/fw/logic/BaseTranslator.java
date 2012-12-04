@@ -7,6 +7,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.operators.Operator;
+import angerona.fw.operators.parameter.TranslatorParameter;
 
 /**
  * Base class for all translate operations for different belief base type
@@ -17,11 +18,32 @@ import angerona.fw.operators.Operator;
  *    can be used for revision operations with the agents knowledge
  * 2. translateFOL to transform a set of FOL formulas into a belief base which
  *    which represents the knowledge encoded in FOL.
- *    
+ * 
+ *    // TODO: Remove the duplicate methods
  * 
  * @author Tim Janus
  */
-public abstract class BaseTranslator extends Operator<Perception, BaseBeliefbase>{
+public abstract class BaseTranslator extends Operator<TranslatorParameter, BaseBeliefbase>{
+	
+	protected BaseBeliefbase processInternal(TranslatorParameter preprocessedParameters) {
+		if(preprocessedParameters.getPerception() != null) {
+			return translatePerceptionInt(preprocessedParameters.getPerception());
+		} else if(preprocessedParameters.getInformation() != null) {
+			return translateFOLInt(preprocessedParameters.getInformation());
+		}
+		return null;
+	}
+	
+	@Override
+	protected TranslatorParameter getEmptyParameter() {
+		return new TranslatorParameter();
+	}
+
+	@Override
+	protected BaseBeliefbase defaultReturnValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	/**
 	 * Sub classes implement this method to translate a perception into the
@@ -77,10 +99,5 @@ public abstract class BaseTranslator extends Operator<Perception, BaseBeliefbase
 		BaseBeliefbase reval = translateFOLInt(formulas);
 		getOwner().popOperator();
 		return reval;
-	}
-	
-	@Override
-	protected BaseBeliefbase processInt(Perception param) {
-		return translatePerception(param);
 	}
 }

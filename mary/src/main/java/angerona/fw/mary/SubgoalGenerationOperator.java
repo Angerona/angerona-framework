@@ -28,7 +28,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.def.GenerateOptionsOperator;
-import angerona.fw.operators.parameter.SubgoalGenerationParameter;
+import angerona.fw.operators.parameter.PlanParameter;
 
 /**
 * This implementation of a subgoal generation operator allows for the asking of multiple, detail query-type questions. 
@@ -46,7 +46,7 @@ public class SubgoalGenerationOperator extends
 	private boolean generateLies = false;
 	
 	@Override
-	protected Boolean processInt(SubgoalGenerationParameter pp) {
+	protected Boolean processInt(PlanParameter pp) {
 		LOG.info("Run Mary-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
 		
@@ -88,7 +88,7 @@ public class SubgoalGenerationOperator extends
 		return reval;
 	}
 	
-	public boolean interrogateOtherAgent(SubgoalGenerationParameter pp, Agent ag) {
+	public boolean interrogateOtherAgent(PlanParameter pp, Agent ag) {
 
 		boolean reval = false;
 		if(ag.getDesires() == null)
@@ -209,7 +209,7 @@ public class SubgoalGenerationOperator extends
 	}
 	
 	@Override
-	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) 
+	protected Boolean answerQuery(Desire des, PlanParameter pp, Agent ag) 
 	{
 		if(!ag.hasCapability("QueryAnswer")) {
 			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());

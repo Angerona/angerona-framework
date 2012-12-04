@@ -11,7 +11,7 @@ import angerona.fw.Intention;
 import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
 import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.parameter.IntentionUpdateParameter;
+import angerona.fw.operators.parameter.PlanParameter;
 
 /**
  * 	
@@ -23,10 +23,10 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
 	
 	@Override
-	protected PlanElement processInt(IntentionUpdateParameter param) {
+	protected PlanElement processInternal(PlanParameter param) {
 		LOG.info("Run Default-Intention-Update");
-		Agent ag = param.getPlan().getAgent();
-		for(Subgoal plan : param.getPlan().getPlans()) {
+		Agent ag = param.getActualPlan().getAgent();
+		for(Subgoal plan : param.getActualPlan().getPlans()) {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
 				PlanElement pe = plan.peekStack(i);
 				if(pe.getIntention().isAtomic()) {

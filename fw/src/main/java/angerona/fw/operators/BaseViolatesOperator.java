@@ -2,13 +2,14 @@ package angerona.fw.operators;
 
 import angerona.fw.Action;
 import angerona.fw.Agent;
+import angerona.fw.AngeronaAtom;
 import angerona.fw.Perception;
 import angerona.fw.PlanElement;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.listener.ActionProcessor;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ViolatesResult;
-import angerona.fw.operators.parameter.ViolatesParameter;
+import angerona.fw.operators.parameter.EvaluateParameter;
 
 /**
  * Base class for violates tests. The base class implementation assumes that there only
@@ -23,25 +24,35 @@ import angerona.fw.operators.parameter.ViolatesParameter;
  * 
  * @author Tim Janus
  */
-public abstract class BaseViolatesOperator extends 
-	Operator<ViolatesParameter, ViolatesResult> 
+public abstract class BaseViolatesOperator 
+	extends Operator<EvaluateParameter, ViolatesResult> 
 	implements ActionProcessor
 	{
 
+	@Override 
+	protected EvaluateParameter getEmptyParameter() {
+		return new EvaluateParameter();
+	}
+	
 	@Override
-	protected ViolatesResult processInt(ViolatesParameter param) {
+	protected ViolatesResult defaultReturnValue() {
+		return new ViolatesResult(true);
+	}
+	
+	protected ViolatesResult processInternal(EvaluateParameter param) {
 		ViolatesResult reval = null;
-		if(param.getAtom() instanceof Perception) {
-			Perception p = (Perception)param.getAtom();
+		AngeronaAtom atom = param.getAtom();
+		if(atom instanceof Perception) {
+			Perception p = (Perception)atom;
 			reval = onPerception(p, param);
 			p.setViolates(reval);
-		} else if(param.getAtom() instanceof PlanElement) {
-			reval = onPlan((PlanElement)param.getAtom(), param);
+		} else if(atom instanceof PlanElement) {
+			reval = onPlan((PlanElement)atom, param);
 		}
 		
 		if(reval != null)
 			return reval;
-		throw new NotImplementedException("Violates is not implemnet for Action of type: " + param.getAtom().getClass().getSimpleName());
+		throw new NotImplementedException("Violates is not implemnet for Action of type: " + atom.getClass().getSimpleName());
 	}
 	
 	/**
@@ -50,7 +61,7 @@ public abstract class BaseViolatesOperator extends
 	 * @param param		The rest parameters for the violation invoking.
 	 * @return			A ViolatesResult structure containing information about secrecy violation 
 	 */
-	protected abstract ViolatesResult onPerception(Perception percept, ViolatesParameter param);
+	protected abstract ViolatesResult onPerception(Perception percept, EvaluateParameter param);
 	
 	/**
 	 * Is called by the processInt method when a Plan was given for violation checking..
@@ -58,7 +69,7 @@ public abstract class BaseViolatesOperator extends
 	 * @param param		The rest parameters for the violation invoking.
 	 * @return			A ViolatesResult structure containing information about secrecy violation 
 	 */
-	protected abstract ViolatesResult onPlan(PlanElement plan, ViolatesParameter param);
+	protected abstract ViolatesResult onPlan(PlanElement plan, EvaluateParameter param);
 	
 	/**
 	 * Is called if the given agent wants to peform the given action in its mental state.

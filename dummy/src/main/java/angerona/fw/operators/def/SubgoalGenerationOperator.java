@@ -23,7 +23,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseSubgoalGenerationOperator;
-import angerona.fw.operators.parameter.SubgoalGenerationParameter;
+import angerona.fw.operators.parameter.PlanParameter;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the
@@ -38,7 +38,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	private static Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
 	
 	@Override
-	protected Boolean processInt(SubgoalGenerationParameter pp) {
+	protected Boolean processInternal(PlanParameter pp) {
 		LOG.info("Run Default-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
 
@@ -73,7 +73,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @return			true if a new subgoal was created and added to the master-plan, false otherwise.
 	 */
 	protected boolean processPersuadeOtherAgentsDesires(
-			SubgoalGenerationParameter pp, Agent ag) {
+			PlanParameter pp, Agent ag) {
 		boolean reval = false;
 		if(ag.getDesires() == null)
 			return false;
@@ -136,7 +136,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag	The agent
 	 * @return		true if a new subgoal was created and added to the master-plan, false otherwise.
 	 */
-	protected Boolean answerQuery(Desire des, SubgoalGenerationParameter pp, Agent ag) {
+	protected Boolean answerQuery(Desire des, PlanParameter pp, Agent ag) {
 		Subgoal answer = new Subgoal(ag, des);
 		Query q = (Query) des.getPerception();
 		answer.newStack(new Answer(ag, q.getSenderId(), 
@@ -161,7 +161,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag	The agent.
 	 * @return		true if a new subgoal was created and added to the master-plan, false otherwise.
 	 */
-	protected Boolean revisionRequest(Desire des, SubgoalGenerationParameter pp, Agent ag) {
+	protected Boolean revisionRequest(Desire des, PlanParameter pp, Agent ag) {
 		// three cases: accept, query (to ensure about something) or deny.
 		// in general we will accept all Revision queries but for the scm example
 		// it is proofed if the given atom is 'excused' and if this is the case

@@ -11,7 +11,7 @@ public class KnowhowGenerateOptions extends GenerateOptionsOperator {
 
 	@Override
 	protected Integer processInt(GenerateOptionsParameter param) {
-		return super.processInt(param);
+		return super.fetchVariables(param);
 	}
 
 }

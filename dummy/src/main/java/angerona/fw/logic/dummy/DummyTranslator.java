@@ -10,6 +10,7 @@ import angerona.fw.comm.Answer;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseTranslator;
+import angerona.fw.operators.parameter.TranslatorParameter;
 
 /**
  * A simple default translator which translate from FOL to FOL... it also
@@ -44,5 +45,4 @@ public class DummyTranslator extends BaseTranslator {
 		reval.fbs.addAll(formulas);
 		return reval;
 	}
-
 }

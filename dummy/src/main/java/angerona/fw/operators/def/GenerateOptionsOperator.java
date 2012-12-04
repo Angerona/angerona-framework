@@ -41,7 +41,7 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	public static final IdGenerator desireIds = new IdGenerator();
 	
 	@Override
-	protected Integer processInt(GenerateOptionsParameter param) {
+	protected Integer processInternal(GenerateOptionsParameter param) {
 		LOG.info("Run Default-Generate-Options-operator");
 		
 		Atom ad = null;
