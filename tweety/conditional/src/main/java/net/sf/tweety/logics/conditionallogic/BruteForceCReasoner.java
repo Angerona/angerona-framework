@@ -142,11 +142,11 @@ public class BruteForceCReasoner extends Reasoner {
 		while(!candidate.satisfies(this.getKnowledgBase())){
 			kappa = this.increment(kappa);			
 			candidate = this.constructRankingFunction(kappa);
-			String debugMessage = "["+kappa[0];
-			for(int j=1; j< kappa.length;j++)
-				debugMessage += "," + kappa[j];
-			debugMessage += "]";
-			BruteForceCReasoner.log.debug(debugMessage);
+//			String debugMessage = "["+kappa[0];
+//			for(int j=1; j< kappa.length;j++)
+//				debugMessage += "," + kappa[j];
+//			debugMessage += "]";
+//			BruteForceCReasoner.log.debug(debugMessage);
 		}		
 		candidate.normalize();
 		return candidate;

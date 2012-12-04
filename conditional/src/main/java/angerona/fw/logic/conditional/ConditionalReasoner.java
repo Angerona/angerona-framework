@@ -1,7 +1,11 @@
 package angerona.fw.logic.conditional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 import net.sf.tweety.Answer;
 import net.sf.tweety.ClassicalFormula;
@@ -48,7 +52,12 @@ public class ConditionalReasoner extends BaseReasoner {
 		
 		// Calculate c-representation
 		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
+		
+		log.info("compute c-representation (bruteforce)");
+		long startTime = System.currentTimeMillis();
 		RankingFunction ocf = creasoner.getCRepresentation();
+		long duration = System.currentTimeMillis() - startTime;
+		log.info("done. duration: {}ms", duration);
 		
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
 		Conjunction conjunction = new Conjunction(propositions);

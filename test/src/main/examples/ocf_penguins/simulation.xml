@@ -1,0 +1,40 @@
+<simulation-configuration>
+	<name>OCF-PenguinStudent</name>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+	<agent-instance>
+		<name>Student</name>
+        <default-suffix>student</default-suffix>
+         
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/default_agent.xml</source>
+        </config>
+         
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+			<source>config/beliefbases/ocf_beliefbase.xml</source>
+        </beliefbase-config>
+        
+        <skill>Answer</skill>
+        
+        <data key="Confidential">
+            (Biologist, __DEFAULT__, wings)
+        </data>
+	</agent-instance>
+      
+	<agent-instance>
+      	<name>Biologist</name>
+      	<default-suffix>biologist</default-suffix>
+      	
+      	<config class="angerona.fw.serialize.AgentConfigImport">
+      		<source>config/agents/default_agent.xml</source>
+      	</config>
+      	
+      	<desire>q_Student(penguin)</desire>
+      	      	
+      	<skill>Query</skill>
+      	
+      	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/ocf_beliefbase.xml</source>
+         </beliefbase-config>
+         
+	</agent-instance>
+</simulation-configuration>

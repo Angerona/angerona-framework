@@ -1,0 +1,42 @@
+<simulation-configuration>
+	<name>Strike Committee Meeting (OCF)</name>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+	<agent-instance>
+		<name>Employee</name>
+        <default-suffix>employee</default-suffix>
+         
+        <config class="angerona.fw.serialize.AgentConfigImport">
+			<source>config/agents/default_agent.xml</source>
+        </config>
+         
+        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+			<source>config/beliefbases/ocf_beliefbase.xml</source>
+        </beliefbase-config>
+        
+        <desire>v_Boss(ask_for_excuse)</desire>
+        <desire>attend_scm</desire>
+        
+        <skill>Inform</skill>
+        <skill>Answer</skill>
+        
+        <data key="Confidential">
+            (Boss, __DEFAULT__, attend_scm)
+        </data>
+	</agent-instance>
+      
+	<agent-instance>
+      	<name>Boss</name>
+      	<default-suffix>boss</default-suffix>
+      	
+      	<config class="angerona.fw.serialize.AgentConfigImport">
+      		<source>config/agents/default_agent.xml</source>
+      	</config>
+      	
+      	<skill>Query</skill>
+      	
+      	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+            <source>config/beliefbases/ocf_beliefbase.xml</source>
+         </beliefbase-config>
+         
+	</agent-instance>
+</simulation-configuration>

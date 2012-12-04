@@ -72,15 +72,18 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 				// conditional of the form ( B | A )
 				log.info("parsing conditional: {}", line);
 				line = line.substring(1, line.length()-1); // remove braces
-				log.info("parsing conditional: {}", line);
-				String[] conditional = line.split("\\|");
+				
+				// caution: PlParser matches '||' as a disjunction, so 
+				// we use negative lookahead to parse single '|'.
+				// ex: to parse a not followed by b: a(?!b)
+				String[] conditional = line.split("\\|(?!\\|)"); 
 				PropositionalFormula conclusion = (PropositionalFormula) parser.parseFormula(conditional[0]);
 				PropositionalFormula premise = (PropositionalFormula) parser.parseFormula(conditional[1]);
 				Conditional newCond = new Conditional(premise, conclusion);
 				conditionals.add(newCond);
 			} else {
 				// proposition
-				PropositionalFormula proposition = (PropositionalFormula) parser.parseBeliefBase(line);
+				PropositionalFormula proposition = (PropositionalFormula) parser.parseFormula(line);
 				propositions.add(proposition);
 			}
 		}

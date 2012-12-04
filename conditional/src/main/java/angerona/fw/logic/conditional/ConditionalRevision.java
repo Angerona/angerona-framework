@@ -35,8 +35,13 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 		ConditionalBeliefbase newKnowledge = (ConditionalBeliefbase) param.getNewKnowledge();
 		
 		BruteForceCReasoner creasoner = new BruteForceCReasoner(beliefbase.getConditionalBeliefs(), true);
-		RankingFunction ranking = creasoner.getCRepresentation();
 		
+		log.info("compute c-representation (bruteforce)");
+		long startTime = System.currentTimeMillis();
+		RankingFunction ranking = creasoner.getCRepresentation();
+		long duration = System.currentTimeMillis() - startTime;
+		log.info("done. duration: {}ms", duration);
+				
 		Conjunction con = new Conjunction(beliefbase.getPropositions());
 		con.addAll(newKnowledge.getPropositions());
 		
