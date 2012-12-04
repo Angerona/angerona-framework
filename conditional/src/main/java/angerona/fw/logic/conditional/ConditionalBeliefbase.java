@@ -43,6 +43,9 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	//  a plausibility ordering of all possible worlds
 	private ClBeliefSet conditionals = new ClBeliefSet();
 	
+	/**
+	 * Construct an empty belief base where every possible world is equally (im-)plausible
+	 */
 	public ConditionalBeliefbase() {
 		super();
 	}
@@ -58,6 +61,15 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 		this.conditionals = new ClBeliefSet(other.conditionals);
 	}
 
+	/**
+	 * Parse conditional belief bases consisting of conditionals of the form (B|A) and propositions.
+	 * Each line is interpreted as a separate element.
+	 * 
+	 * BNF:
+	 * BBASE       ::= CONDITIONAL '\n' BBASE | FACT '\n' BBASE
+	 * CONDITIONAL ::= '(' PLFORMULA '|' PLFORMULA ')'
+	 * FACT        ::= PLLITERAL
+	 */
 	@Override
 	protected void parseInt(BufferedReader br) throws ParseException,
 			IOException {
@@ -76,7 +88,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 				// caution: PlParser matches '||' as a disjunction, so 
 				// we use negative lookahead to parse single '|'.
 				// ex: to parse a not followed by b: a(?!b)
-				String[] conditional = line.split("\\|(?!\\|)"); 
+				String[] conditional = line.split("(\\|(?!\\|))((?<!\\|)\\|)"); 
 				PropositionalFormula conclusion = (PropositionalFormula) parser.parseFormula(conditional[0]);
 				PropositionalFormula premise = (PropositionalFormula) parser.parseFormula(conditional[1]);
 				Conditional newCond = new Conditional(premise, conclusion);
@@ -88,6 +100,11 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 			}
 		}
 	}
+	
+	/**
+	 * Returns the set of propositions of this belief base
+	 * @return the set of propositions of this belief base
+	 */
 	public Set<PropositionalFormula> getPropositions() {
 		return propositions;
 	}
@@ -104,6 +121,10 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 		this.conditionals = conditionals;
 	}
 
+	/**
+	 * Return a list of all conditionals and all propositions from this beliefbase
+	 * for debugging purposes.
+	 */
 	@Override
 	public List<String> getAtoms() {
 		List<String> retval = new LinkedList<String>();
@@ -116,7 +137,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 		
 		return retval;
 	}
-
+	
 	@Override
 	public String getFileEnding() {
 		return "ocf";

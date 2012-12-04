@@ -1,11 +1,7 @@
 package angerona.fw.logic.conditional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
-import java.util.TimeZone;
 
 import net.sf.tweety.Answer;
 import net.sf.tweety.ClassicalFormula;

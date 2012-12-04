@@ -30,7 +30,7 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 
 	@Override
 	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
-		log.info("Revision with '{}'", param.getNewKnowledge());
+		log.info("Revision by '{}'", param.getNewKnowledge());
 		ConditionalBeliefbase beliefbase = (ConditionalBeliefbase) param.getBeliefBase();
 		ConditionalBeliefbase newKnowledge = (ConditionalBeliefbase) param.getNewKnowledge();
 		

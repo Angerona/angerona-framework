@@ -28,6 +28,11 @@ public class ConditionalTranslator extends BaseTranslator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ConditionalTranslator.class);
 
+	/**
+	 * Translates a perception into a beliefbase. A perception may contain
+	 * formulas in first order logic, which have to be translated to a conditional
+	 * belief base.
+	 */
 	@Override
 	protected BaseBeliefbase translatePerceptionInt(Perception p) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
@@ -58,6 +63,10 @@ public class ConditionalTranslator extends BaseTranslator {
 		return translateFOLInt(formulas);
 	}
 
+	/**
+	 * Translates a set of first order formulas to a conditional belief base.
+	 * Each formula is interpreted as one propositional literal.
+	 */
 	@Override
 	protected BaseBeliefbase translateFOLInt(Set<FolFormula> formulas) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
