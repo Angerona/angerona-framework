@@ -1,5 +1,7 @@
 package angerona.fw.reflection;
 
+import java.util.Map;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
@@ -16,7 +18,9 @@ public class XMLOperation extends XMLCommando {
 
 	@Override
 	protected void executeInternal() throws InvokeException {
-		// TODO find operator, execute operator, save result
-		
+		Object params = getParameter("operators");
+		if(! (params instanceof Map<?, ?>)) {
+			
+		}
 	}
 }

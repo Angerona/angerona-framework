@@ -1,10 +1,14 @@
 package angerona.fw.reflection;
 
+import java.io.StringReader;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.parser.DAMLParser;
+import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.SerializeHelper;
 
 @Root(name="value")
@@ -20,7 +24,7 @@ public class Value  {
 	private String value;
 	
 	/** A string containing the type of the assignment value. */
-	@Attribute(name="type")
+	@Attribute(name="type", required=false)
 	private String typeString;
 	
 	/** the type of the value as java cls */
@@ -28,8 +32,24 @@ public class Value  {
 	
 	private Object valueObject;
 	
+	/**
+	 * Ctor: Using DAML parser to parse a string containing the value.
+	 * @param value
+	 * @throws ClassNotFoundException
+	 */
 	public Value(String value) throws ClassNotFoundException {
-		this(value, String.class.getName());
+		DAMLParser parser = new DAMLParser(new StringReader(value));
+		Value v = null;
+		try {
+			v = parser.value();
+		} catch (ParseException e) {
+			LOG.warn("Cannot parse: '{}' - Using String as default type.", value);
+			v = new Value(value, String.class.getName());
+		}
+		this.value = v.value;
+		this.typeString = v.typeString;
+		this.type = v.type;
+		this.valueObject = v.valueObject;
 	}
 	
 	public Value(@Attribute(name="value") String value, 
