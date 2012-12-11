@@ -86,9 +86,12 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 				line = line.substring(1, line.length()-1); // remove braces
 				
 				// caution: PlParser matches '||' as a disjunction, so 
-				// we use negative lookahead to parse single '|'.
-				// ex: to parse a not followed by b: a(?!b)
-				String[] conditional = line.split("(\\|(?!\\|))((?<!\\|)\\|)"); 
+				// negative lookahead and lookbehind are used to parse single '|'.
+				String[] conditional = line.split("(?<!\\|)\\|(?!\\|)");
+				if(conditional.length != 2) {
+					log.warn("could not parse belief item '({})'",line);
+					continue;
+				}
 				PropositionalFormula conclusion = (PropositionalFormula) parser.parseFormula(conditional[0]);
 				PropositionalFormula premise = (PropositionalFormula) parser.parseFormula(conditional[1]);
 				Conditional newCond = new Conditional(premise, conclusion);
