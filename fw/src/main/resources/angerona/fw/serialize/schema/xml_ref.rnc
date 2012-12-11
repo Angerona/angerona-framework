@@ -1,0 +1,4 @@
+start = (
+    attribute class {text},
+    element source {text}
+)

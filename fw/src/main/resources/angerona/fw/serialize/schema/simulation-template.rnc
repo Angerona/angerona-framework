@@ -1,0 +1,19 @@
+grammar {
+	start = sc
+	sc = element simulation-configuration {
+		element name {text} &
+		element behavior {text} &
+		ai+
+	}
+	
+	ai = element agent-instance {
+		element name {text} &
+		element default-suffix {text} &
+		element config {
+			external "xml_ref.rnc"
+		} &
+		element beliefbase-config {
+			external "xml_ref.rnc"
+		}
+	}
+}

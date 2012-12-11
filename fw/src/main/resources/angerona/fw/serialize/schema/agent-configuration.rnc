@@ -1,0 +1,11 @@
+element agent-configuration {
+	element name {text} &
+	element cycle {
+	   external "xml_ref.rnc"
+	} &
+	element operators { 
+	   attribute operation-type {text},
+	   external "op-set.rnc" 
+	}* &
+	element component {text}*
+}

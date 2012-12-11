@@ -1,0 +1,7 @@
+element config {
+	element plugin {text}* &
+	element parameter {
+		attribute name {text},
+		attribute value {text}
+	}*
+}
