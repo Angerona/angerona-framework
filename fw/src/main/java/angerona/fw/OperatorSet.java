@@ -12,28 +12,23 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
-import angerona.fw.serialize.OperatorSetConfig;
+import angerona.fw.serialize.OperationSetConfig;
 import angerona.fw.util.Pair;
 
 /**
- * A set of Operators of Type T plus a default operator which
- * is in this set.
- * @author Tim Janus
+ * A set of operators for an entity which calls operators like the agent or the
+ * belief base. 
  *
- * @param <T>	Real type of the operators.
+ * @author Tim Janus
  */
-public class OperatorSet<T extends BaseOperator> {
+public class OperatorSet {
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(OperatorSet.class);
 	
-	/** reference to the owner of the OperatorSet */
-	private Agent owner;
-	
 	/** map from full java-class names to the right operator instances */
-	private Map<String, T> operators = new HashMap<String, T>();
+	protected Map<String, BaseOperator> operators = new HashMap<String, BaseOperator>();
 	
-	/** reference to the current default operator */
-	T defaultOperator;
+	protected Map<String, OperationSet> operatorsByOperationType = new HashMap<>();
 	
 	/** default ctor: Constructs an empty operator-set */
 	public OperatorSet() {}
@@ -42,43 +37,11 @@ public class OperatorSet<T extends BaseOperator> {
 	 * Copy Ctor: Constructs an copy of the given operator set
 	 * @param other		reference to the OperatorSet which will be copied.
 	 */
-	public OperatorSet(OperatorSet<T> other) {
+	public OperatorSet(OperatorSet other) {
 		operators.putAll(other.operators);
-		defaultOperator = other.defaultOperator;
+		operatorsByOperationType.putAll(other.operatorsByOperationType);
 	}
 	
-	/**
-	 * Changes the used default operator to the given operator.
-	 * @param clsName	The full-java class name of the next operator used as 
-	 * 					default operator.
-	 * @return			true if the operator with the given class name was found
-	 * 					and is the new default-operator, false otherwise.
-	 */
-	public boolean setDefault(String clsName) {
-		if(operators.containsKey(clsName)) {
-			defaultOperator = operators.get(clsName);
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Sets the default operator to the given parameter 
-	 * @param operator	The new default operator instance
-	 * @return	true
-	 */
-	public boolean setDefault(T operator) {
-		if(addOperator(operator)) {
-			defaultOperator = operator;
-			return true;
-		}
-		return false;
-	}
-	
-	/** @return reference to the current default-operator. */
-	public T def() {
-		return defaultOperator;
-	}
 	
 	/**
 	 * Adds the given operator to the operator-set if no operator of this type
@@ -86,40 +49,34 @@ public class OperatorSet<T extends BaseOperator> {
 	 * Only the full-java class name is deciding, the operator might be another instance
 	 * with another set of parameters but it will not be added to the set cause the types
 	 * are equal.
-	 * @param instantiationName		A string starting with the full java-class name of the type
+	 * @param clsNameAndParams		A string starting with the full java-class name of the type
 	 * 								of the operator and having an optional map as parameter in 
 	 * 								the form {d=1.0} as postfix.
 	 * @return 	true if the operator was added and false if the operator was already in the set.
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public boolean addOperator(String instantiationName) 
+	public boolean addOperator(String clsNameAndParams) 
 			throws InstantiationException, IllegalAccessException {
-		Pair<String, T> p = create(instantiationName);
+		Pair<String, BaseOperator> p = fetch(clsNameAndParams);
 		return realAdd(p);
 	}
 	
-	/**
-	 * Sets the given parameter as default operator. Should be used by
-	 * initialization code of unit tests.
-	 * @param operator	The operator instance which becomes the default operator.
-	 * @return	true
-	 */
-	public boolean addOperator(T operator) {
-		return realAdd(new Pair<String, T>(
-				operator.getClass().getName(), operator));
-	}
-
 	/**
 	 * adds the given pair to the map of operators and
 	 * sets the owner.
 	 * @param p	the pair to add (null means do nothing)
 	 * @return	p!=null
 	 */
-	private boolean realAdd(Pair<String, T> p) {
+	private boolean realAdd(Pair<String, BaseOperator> p) {
 		if(p != null) {
 			operators.put(p.first, p.second);
-			p.second.setOwner(owner);
+			String opName = p.second.getOperationType().first;
+			if(!operatorsByOperationType.containsKey(opName)) {
+				operatorsByOperationType.put(opName, new OperationSet(opName));
+			}
+			operatorsByOperationType.get(opName).addOperator(p.second);
+
 		}
 		return p != null;
 	}
@@ -132,22 +89,31 @@ public class OperatorSet<T extends BaseOperator> {
 	 * @return	true if the operator was removed, false otherwise (if it was not in the set for example).
 	 */
 	public boolean removeOperator(String clsName) {
-		return operators.remove(clsName) != null;
+		boolean reval = operators.remove(clsName) != null;
+		if(reval) {
+			for(OperationSet set : this.operatorsByOperationType.values()) {
+				set.removeOperator(clsName);
+			}
+		}
+		return reval;
 	}
 	
 	/**
 	 * reads the class used for serialization of the operator-set and creates the
 	 * corrospodending runtime object.
+	 * @param operationType	The unique name of the operation type for identifing the operation.
 	 * @param config	reference to the serialization object containg the raw-data 
 	 * 					which are strings of java-class-names.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public void set(OperatorSetConfig config) throws InstantiationException, IllegalAccessException {
-		Pair<String, T> p = null;
+	public void addOperationSet(String operationType, OperationSetConfig config) 
+			throws InstantiationException, IllegalAccessException {
+		
+		/* TODO For parsing
 		
 		if(!config.getDefaultClassName().equalsIgnoreCase("empty")) {
-			p = create(config.getDefaultClassName());
+			p = fetch(config.getDefaultClassName());
 			operators.put(p.first, p.second);
 			defaultOperator = p.second;
 			if(defaultOperator == null) {
@@ -159,7 +125,7 @@ public class OperatorSet<T extends BaseOperator> {
 		for(String instantiationName : config.getOperatorClassNames()) {
 			if(!instantiationName.equalsIgnoreCase("empty"))
 				continue;
-			p = create(instantiationName);
+			p = fetch(instantiationName);
 			
 			if(p == null) {
 				LOG.warn("The type '{}' was attempt to add twice to the operator-set and will be skiped this time. " +
@@ -169,97 +135,56 @@ public class OperatorSet<T extends BaseOperator> {
 				operators.put(p.first, p.second);
 			}
 		}
+		*/
 	}
 
 	/** 
-	 * Helper method: Creates a class with the given classname.
+	 * Helper method: Fetches a class with the given classname.
 	 * The method proofs if the class is a subclass of BaseOperator.
-	 * It assumes that the Type of the class is T but there is no
-	 * possibility in java to proof that.
 	 * The method also creates the initial parameter map for the operator.
-	 * @param instantiatonName	The full java-name of the class with the parameter 
+	 * @param clsNameAndParams	The full java-name of the class with the parameter 
 	 * 							map appended in string representation.
 	 * @return	A pair of the real java-class name and the reference to the newly created
 	 * 			operator or null if the operator type is already registered.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	private Pair<String, T> create(String instantiatonName)
+	private Pair<String, BaseOperator> fetch(String clsNameAndParams)
 			throws InstantiationException, IllegalAccessException {
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		
 		// TODO: Use a basic parser for stuff like that...
-		SecretParser parser = new SecretParser(new StringReader(instantiatonName));
+		SecretParser parser = new SecretParser(new StringReader(clsNameAndParams));
 		Map<String, String> parameters = new HashMap<String, String>();
 		try {
-			instantiatonName = parser.java_cls(parameters);
+			clsNameAndParams = parser.java_cls(parameters);
 		} catch (ParseException e) {
 			throw new InstantiationException("Cannot parse clsName-Parameter: " + e.getMessage());
 		}
 		
 		// return null if the operator of the type already exists in the set.
-		if(operators.containsKey(instantiatonName)) {
+		if(operators.containsKey(clsNameAndParams)) {
 			return null;
 		}
 		
-		Object obj = pi.createInstance(instantiatonName);
-		if(obj instanceof BaseOperator) {
-			@SuppressWarnings("unchecked")
-			T op = (T)obj;
-			op.setParameters(parameters);
-			return new Pair<String, T>(instantiatonName, op);
-		} else {
-			throw new InstantiationException(instantiatonName + " has not the correct type." );
+		BaseOperator op = pi.getOperator(clsNameAndParams);
+		op.setParameters(parameters);
+		return new Pair<String, BaseOperator>(clsNameAndParams, op);
+	}
+	
+	public OperationSet getOperationSetByType(String operationType) {
+		if(operatorsByOperationType.containsKey(operationType)) {
+			return operatorsByOperationType.get(operationType);
 		}
+		return null;
 	}
 	
-	/**
-	 * gets the operator with the given full-java-class name
-	 * @param clsName		the full java-class name
-	 * @return				reference to the operator or null if the operator of the given
-	 * 						java-class name does not exists in the operator set.
-	 */
-	public T get(String clsName) {
-		if(clsName.equals("__DEFAULT__")) {
-			return defaultOperator;
-		} else if(operators.containsKey(clsName)) {
-			return operators.get(clsName);
-		} else {
-			return null;
-		}
+	public BaseOperator getPreferedByType(String operationType) {
+		OperationSet set = getOperationSetByType(operationType);
+		return set != null ? set.getPrefered() : null;
 	}
 	
-	/**
-	 * gets the operator with the given full-java-class name uses the default
-	 * operator as alternative if the given class-name was not found.
-	 * @param clsName		the full java-class name
-	 * @return				A Pair containg the reference to the operator or the default operator 
-	 * 						if the operator of the given java-class name does 
-	 * 						not exists in the operator set. The second Element contains a
-	 * 						boolean which is true if the given class-name was found and
-	 * 						false otherwise.
-	 */
-	public Pair<T, Boolean> getFallback(String clsName) {
-		Pair<T, Boolean> reval = new Pair<>();
-		reval.first = get(clsName);
-		reval.second = reval.first != null;
-		if(!reval.second)
-			reval.first = def();
-		return reval;
-	}
-	
-	/**
-	 * Changes the owner of all operators in the set to the given agent.
-	 * @param owner		reference to the new owner.
-	 */
-	public void setOwner(Agent owner) {
-		this.owner = owner;
-		for(BaseOperator op : operators.values()) {
-			op.setOwner(owner);
-		}
-	}
-	
-	public Collection<T> getOperators() {
+	public Collection<BaseOperator> getOperators() {
 		return Collections.unmodifiableCollection( operators.values() );
 	}
 }

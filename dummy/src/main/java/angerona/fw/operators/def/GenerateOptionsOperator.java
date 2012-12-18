@@ -11,10 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Desire;
-import angerona.fw.comm.Justification;
-import angerona.fw.comm.Query;
 import angerona.fw.comm.Inform;
+import angerona.fw.comm.Justification;
 import angerona.fw.comm.Justify;
+import angerona.fw.comm.Query;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.operators.BaseGenerateOptionsOperator;
 import angerona.fw.operators.parameter.GenerateOptionsParameter;

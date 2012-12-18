@@ -34,7 +34,7 @@ public class AspTranslator extends BaseTranslator {
 	private static Logger LOG = LoggerFactory.getLogger(AspTranslator.class);
 	
 	@Override
-	protected BaseBeliefbase translatePerceptionInt(Perception p) {
+	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
 		
@@ -42,7 +42,7 @@ public class AspTranslator extends BaseTranslator {
 			Answer answer = (Answer)p;
 			AngeronaAnswer aa = answer.getAnswer();
 			if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
-				return translateFOL(aa.getAnswers());
+				return translateFOLInt(caller, aa.getAnswers());
 			} else {
 				FolFormula knowledge = answer.getRegarding();
 				if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
@@ -60,11 +60,11 @@ public class AspTranslator extends BaseTranslator {
 			formulas.add(q.getQuestion());
 		}
 
-		return translateFOLInt(formulas);
+		return translateFOLInt(caller, formulas);
 	}
 
 	@Override
-	protected BaseBeliefbase translateFOLInt(Set<FolFormula> formulas) {
+	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas) {
 		AspBeliefbase reval = new AspBeliefbase();
 		reval.setProgram(translate(formulas));
 		return reval;

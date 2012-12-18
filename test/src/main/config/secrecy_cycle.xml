@@ -10,7 +10,6 @@
 	</operation>
 	
 	<assign name="searching" value="TRUE" />
-	<assign name="action" value="null" type="Object" />
 	<while condition="$searching==TRUE">
 		<operation type="IntentionSelection">
 	    	<output>action</output>

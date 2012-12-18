@@ -6,7 +6,7 @@ import java.util.Set;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
-public class OperatorSetConfigReal implements OperatorSetConfig {
+public class OperationSetConfigReal implements OperationSetConfig {
 
 	@Element(name="default-operator-cls")
 	protected String defaultClassName;

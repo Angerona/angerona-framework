@@ -128,13 +128,18 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				}
 				
 				LOG.info("Make Revision for QueryAnswer: '{}'", answers);
-				Pair<BaseChangeBeliefs, Boolean> pair = view.getChangeOperators().getFallback(EXPANSION);
-				if(!pair.second)
+				// TODO:
+				BaseChangeBeliefs bcb = (BaseChangeBeliefs)view.getOperators().getOperationSetByType(
+						BaseChangeBeliefs.OPERATION_TYPE).getOperator(EXPANSION);
+				if(bcb == null) {
+					bcb = (BaseChangeBeliefs)view.getOperators().getPreferedByType(BaseChangeBeliefs.OPERATION_TYPE);
 					LOG.warn("The Weakening Operator wants to use '{}' " +
 							"for revision. But it was not found and '{}' " +
 							"will be used as default alternative.", EXPANSION, 
-							pair.first.getClass().getName());
-				view.addKnowledge(answers, null, pair.first);
+							bcb.getClass().getName());
+				}
+					
+				view.addKnowledge(answers, null, bcb);
 
 				// Check for contradictions. If one is found consider all
 				// secrets totally revealed

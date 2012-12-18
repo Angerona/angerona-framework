@@ -1,6 +1,7 @@
 package angerona.fw.serialize;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -8,20 +9,7 @@ import java.util.List;
  */
 public interface AgentConfig {
 	/** @return String identifying the GenerateOptions Operator class name */
-	public OperatorSetConfig getGenerateOptionsOperators();
-	
-	/** @return String identifying the Filter Operator class name */
-	public OperatorSetConfig getIntentionUpdateOperators();
-	
-	/** @return String identifying the Violates Operator class name */
-	public OperatorSetConfig getViolatesOperators();
-	
-
-	/** @return String identifying the Update Operator class name */
-	public OperatorSetConfig getUpdateOperators();
-	
-	/** @return String identifying the Planer Operator class name */
-	public OperatorSetConfig getSubgoalGenerators();
+	public Set<OperationSetConfig> getOperations();
 	
 	/** @return String with name of the agent configuration */
 	public String getName();

@@ -2,8 +2,8 @@ package angerona.fw.logic;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.operators.Operator;
-import angerona.fw.operators.parameter.BeliefbasePluginParameter;
 import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
+import angerona.fw.util.Pair;
 
 /**
  * Base class for all change operations on belief bases.
@@ -19,7 +19,10 @@ import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
  * 
  * @author Tim Janus
  */
-public abstract class BaseChangeBeliefs extends Operator<ChangeBeliefbaseParameter, BaseBeliefbase> {
+public abstract class BaseChangeBeliefs 
+	extends Operator<BaseBeliefbase, ChangeBeliefbaseParameter, BaseBeliefbase> {
+	
+	public static final String OPERATION_TYPE = "ChangeBeliefs";
 	
 	@Override
 	protected ChangeBeliefbaseParameter getEmptyParameter() {
@@ -29,6 +32,14 @@ public abstract class BaseChangeBeliefs extends Operator<ChangeBeliefbaseParamet
 	@Override
 	protected BaseBeliefbase defaultReturnValue() {
 		return null;
+	}
+	
+	@Override
+	public Pair<String, Class<?>> getOperationType() {
+		Pair<String, Class<?>> reval = new Pair<>();
+		reval.first = OPERATION_TYPE;
+		reval.second = BaseChangeBeliefs.class;
+		return reval;
 	}
 	
 	/**

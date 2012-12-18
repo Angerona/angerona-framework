@@ -54,17 +54,17 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	private KnowhowStrategy lastUsedStrategy;
 	
 	@Override
-	protected Boolean processInt(PlanParameter param) {
+	protected Boolean processInternal(PlanParameter param) {
 		report("Using Knowhow for Subgoal Generation.");
 		
 		boolean gen  = false;
-		for (Desire des : getOwner().getDesires().getDesires()) {
+		for (Desire des : param.getAgent().getDesires().getDesires()) {
 			// scenario specific tests:
 			boolean revReq = des.getAtom().getPredicate().getName().equals("attend_scm");
 			if(revReq) {
 				PlanElement next = nextSafeAction("attend_scm", param, des);
 				if(next != null) {
-					Subgoal sg = new Subgoal(getOwner(), des);
+					Subgoal sg = new Subgoal(param.getAgent(), des);
 					sg.newStack(next);
 					gen = gen || param.getActualPlan().addPlan(sg);
 				}
@@ -88,7 +88,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		if(next == null)
 			return false;
 		
-		Subgoal sg = new Subgoal(getOwner(), des);
+		Subgoal sg = new Subgoal(pp.getAgent(), des);
 		sg.newStack(next);
 		
 		return pp.getActualPlan().addPlan(sg);
@@ -109,7 +109,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		PlanElement next = nextSafeAction("justification("+ j.getProposition().toString() + ")", pp, des);
 		if(next == null)
 			return false;
-		Subgoal sg = new Subgoal(getOwner(), des);
+		Subgoal sg = new Subgoal(pp.getAgent(), des);
 		sg.newStack(next);
 		boolean reval = pp.getActualPlan().addPlan(sg);
 		return reval;
@@ -144,7 +144,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				if(next == null) {
 					continue;
 				}
-				Subgoal sg = new Subgoal(getOwner(), des);
+				Subgoal sg = new Subgoal(ag, des);
 				sg.newStack(next);
 				reval = reval || pp.getActualPlan().addPlan(sg);
 			}
@@ -171,7 +171,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			return false;
 		}
 		
-		Subgoal sg = new Subgoal(getOwner(), des);
+		Subgoal sg = new Subgoal(ag, des);
 		sg.newStack(next);
 		return param.getActualPlan().addPlan(sg);
 	}
@@ -195,8 +195,8 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				return null;
 			if(Boolean.parseBoolean(getParameter("allowUnsafe", String.valueOf(false))))
 				return candidate;
-			res = getOwner().performThought(
-					getOwner().getBeliefs(), candidate);
+			res = param.getAgent().performThought(
+					param.getAgent().getBeliefs(), candidate);
 			if(!res.isAlright())
 				lastUsedStrategy.fallback();
 		}
@@ -224,7 +224,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param des			The associated desire.
 	 */
 	private void prepareKnowhow(String intention, PlanParameter param, Desire des) {
-		Agent ag = getOwner();
+		Agent ag = param.getAgent();
 		
 		LOG.info("Running Knowhow with intention: '{}' for desire: '{}'.", 
 				intention, des.toString());
@@ -299,7 +299,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		Pair<String, HashMap<Integer, String>> action = lastUsedStrategy.getAction();
 		
 		// test if the skill exists
-		Agent ag = getOwner();
+		Agent ag = param.getAgent();
 		String skillName = action.first.substring(2);
 		if(!ag.hasCapability(skillName)) {
 			LOG.warn("Knowhow found Skill '{}' but the Agent '{}' does not support the Skill.", skillName, ag.getName());
@@ -310,15 +310,15 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		Action act = null;
 		// TODO: String tests are not perfect here.
 		if(skillName.equals("Inform")) {
-			act = createInform(action.second);
+			act = createInform(action.second, param);
 		} else if(skillName.equals("Query")) {
-			act = createQuery(action.second);
+			act = createQuery(action.second, param);
 		} else if(skillName.equals("QueryAnswer")) {
-			act = createQueryAnswer(action.second, (Query)des.getPerception());
+			act = createQueryAnswer(action.second, (Query)des.getPerception(), param);
 		} else if (skillName.equals("Justify")) { 
-			act = createJustify(action.second, (Inform)des.getPerception());
+			act = createJustify(action.second, (Inform)des.getPerception(), param);
 		} else if(skillName.equals("Justification")) {
-			act = createJustification(action.second, (Justify)des.getPerception());
+			act = createJustification(action.second, (Justify)des.getPerception(), param);
 		} else {
 			LOG.error("The parameter mapping for Skill '{}' is not implemented yet.", skillName);
 			return null;
@@ -341,7 +341,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Justification which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Justification createJustification(Map<Integer, String> paramMap, Justify reason) {
+	protected Justification createJustification(Map<Integer, String> paramMap, Justify reason, PlanParameter pp) {
 		if(paramMap.size() != 1) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
 					"Justification", paramMap.size());
@@ -349,7 +349,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		String var = getVarWithPrefix(0, paramMap);
-		FolFormula atom = processVariable(var);
+		FolFormula atom = processVariable(var, pp);
 		
 		
 		return new Justification(reason, atom);
@@ -362,7 +362,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Justify which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Justify createJustify(Map<Integer, String> paramMap, Inform reason) {
+	protected Justify createJustify(Map<Integer, String> paramMap, Inform reason, PlanParameter pp) {
 		if(paramMap.size() != 2) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
 					"Justify", paramMap.size());
@@ -370,12 +370,12 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		String var = getVarWithPrefix(0, paramMap);
-		Agent receiver = processVariable(var);
+		Agent receiver = processVariable(var, pp);
 		
 		var = getVarWithPrefix(1, paramMap);
-		FolFormula atom = processVariable(var);
+		FolFormula atom = processVariable(var, pp);
 		
-		return new Justify(getOwner(), receiver.getName(), atom);
+		return new Justify(pp.getAgent(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -385,19 +385,19 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Inform which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Inform createInform(Map<Integer, String> paramMap) {
+	protected Inform createInform(Map<Integer, String> paramMap, PlanParameter pp) {
 		if(paramMap.size() != 2) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", "Inform", paramMap.size());
 			return null;
 		}
 		
 		String var = getVarWithPrefix(0, paramMap);
-		Agent receiver = processVariable(var);
+		Agent receiver = processVariable(var, pp);
 		
 		var = getVarWithPrefix(1, paramMap);
-		FolFormula atom = processVariable(var);
+		FolFormula atom = processVariable(var, pp);
 		
-		return new Inform(getOwner(), receiver.getName(), atom);
+		return new Inform(pp.getAgent(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -407,14 +407,14 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Query which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Query createQuery(Map<Integer, String> paramMap) {
+	protected Query createQuery(Map<Integer, String> paramMap, PlanParameter pp) {
 		String var = getVarWithPrefix(0, paramMap);
-		Agent receiver = processVariable(var);
+		Agent receiver = processVariable(var, pp);
 		
 		var = getVarWithPrefix(1, paramMap);
-		FolFormula atom = processVariable(var);
+		FolFormula atom = processVariable(var, pp);
 		
-		return new Query(getOwner(), receiver.getName(), atom);
+		return new Query(pp.getAgent(), receiver.getName(), atom);
 	}
 	
 	/**
@@ -424,7 +424,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type QueryAnswer which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Answer createQueryAnswer(Map<Integer, String> paramMap, Query reason) {
+	protected Answer createQueryAnswer(Map<Integer, String> paramMap, Query reason, PlanParameter pp) {
 		String var = getVarWithPrefix(0, paramMap);
 		boolean honest = false;
 		if(var.equals("p_honest")) {
@@ -436,7 +436,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 						"'p_honest' or 'p_lie' but '{}' was given.", var);
 			return null;
 		}
-		AngeronaAnswer aa = getOwner().reason(reason.getQuestion());
+		AngeronaAnswer aa = pp.getAgent().reason(reason.getQuestion());
 		if(!honest) {
 			// TODO: Move into lying operator... 
 			if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
@@ -456,7 +456,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		report((honest ? "Honest answer " : "Lie ") + "for: '"+reason.getQuestion().toString()+"' = " + aa.getAnswerValue().toString());
 
-		return new Answer(getOwner(), reason.getSenderId(), reason.getQuestion(), aa);
+		return new Answer(pp.getAgent(), reason.getSenderId(), reason.getQuestion(), aa);
 	}
 	
 	/**
@@ -480,15 +480,15 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return	An object of generic Type. Might be an agent or an FOL-Atom or a string.
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T> T processVariable(String variableWithPrefix) {
+	protected <T> T processVariable(String variableWithPrefix, PlanParameter pp) {
 		if(variableWithPrefix.startsWith("a_")) {
-			return (T) this.getAgent(variableWithPrefix.substring(2));
+			return (T) this.getAgent(variableWithPrefix.substring(2), pp);
 		} else {
 			Atom temp =  createAtom(variableWithPrefix);
 			List<Term> terms = new LinkedList<>();
 			for(Term t : temp.getArguments()) {
 				if(t.getName().charAt(1) == '_') {
-					Agent newName = processVariable(t.getName());
+					Agent newName = processVariable(t.getName(), pp);
 					terms.add(new Constant(newName.getName()));
 				} else {
 					terms.add(t);
@@ -520,11 +520,11 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return			Reference to the Agent with the given name or null if
 	 * 					no such Agent exists.
 	 */
-	private Agent getAgent(String name) {
+	private Agent getAgent(String name, PlanParameter pp) {
 		if(name.equals("SELF"))
-			return getOwner();
+			return pp.getAgent();
 		
-		Agent reval = this.getOwner().getEnvironment().getAgentByName(name);
+		Agent reval = pp.getAgent().getEnvironment().getAgentByName(name);
 		if(reval == null) {
 			LOG.warn("Knowhow tries to find Agent with name '{}' but its not part of the Enviornment", name);
 		}

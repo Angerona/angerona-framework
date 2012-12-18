@@ -48,6 +48,7 @@ import angerona.fw.reflection.ContextProvider;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
+import angerona.fw.serialize.OperationSetConfig;
 
 /**
  * Implementation of an agent in the Angerona Framework.
@@ -95,20 +96,7 @@ public class Agent extends AgentArchitecture
 	/** a list of skills which are known by the agent */
 	private List<String> capabilities = new LinkedList<>();
 	
-	/** Reference to the used generate options operator. */
-	private OperatorSet<BaseGenerateOptionsOperator> genOptionsOperators = new OperatorSet<BaseGenerateOptionsOperator>();
-	
-	/** Reference to the used filter operator. */
-	private OperatorSet<BaseIntentionUpdateOperator> intentionUpdateOperators = new OperatorSet<BaseIntentionUpdateOperator>();
-	
-	/** The operator used to change the knowledge base when receiving perceptions */
-	private OperatorSet<BaseUpdateBeliefsOperator> changeOperators = new OperatorSet<BaseUpdateBeliefsOperator>();
-	
-	/** The operator used for violates proofs */
-	private OperatorSet<BaseViolatesOperator> violatesOperators = new OperatorSet<BaseViolatesOperator>();
-	
-	/** Reference to the used planer-set */
-	private OperatorSet<BaseSubgoalGenerationOperator> subgoalGenerationOperators = new OperatorSet<BaseSubgoalGenerationOperator>();
+	private OperatorSet operators = new OperatorSet();
 	
 	/** reference to the current used operator in the cycle process. */
 	private Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
@@ -133,8 +121,7 @@ public class Agent extends AgentArchitecture
 	}
 	
 	/** @return a list containing all actions peformed by the agent. */
-	public List<Action> getActionHistory()
-	{
+	public List<Action> getActionHistory() {
 		return actionsHistory;
 	}	
 	
@@ -144,10 +131,6 @@ public class Agent extends AgentArchitecture
 	
 	public boolean hasCapability(String capabilityName) {
 		return capabilities.contains(capabilityName);
-	}
-	
-	public OperatorSet<BaseViolatesOperator> getViolatesOperators() {
-		return this.violatesOperators;
 	}
 	
 	/**
@@ -289,18 +272,10 @@ public class Agent extends AgentArchitecture
 		AgentConfig ac = ai.getConfig();
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		try {
-			genOptionsOperators.set(ac.getGenerateOptionsOperators());
-			intentionUpdateOperators.set(ac.getIntentionUpdateOperators());
-			subgoalGenerationOperators.set(ac.getSubgoalGenerators());
-			changeOperators.set(ac.getUpdateOperators());
-			violatesOperators.set(ac.getViolatesOperators());
-
-			genOptionsOperators.setOwner(this);
-			intentionUpdateOperators.setOwner(this);
-			subgoalGenerationOperators.setOwner(this);
-			changeOperators.setOwner(this);
-			violatesOperators.setOwner(this);
-			
+			for(OperationSetConfig osc : ac.getOperations()) {
+				operators.addOperationSet("TODO", osc);
+			}
+		
 			for(String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
 				comp.setParent(id);
@@ -409,23 +384,29 @@ public class Agent extends AgentArchitecture
 		GenericOperatorParameter opParam = new GenericOperatorParameter(this);
 		
 		updateBeliefs(actualPerception);	
+		
 		// Deliberation:
-		genOptionsOperators.def().process(opParam);
+		//genOptionsOperators.def().process(opParam);
+		operators.getPreferedByType(BaseGenerateOptionsOperator.OPERATION_TYPE)
+			.process(opParam);
 		
 		// Means-end-reasoning:
 		PlanComponent masterPlan = getComponent(PlanComponent.class);
 		if(masterPlan != null) {
 			while(atomic == null) {
-				atomic = intentionUpdateOperators.def().process(opParam);
+				BaseIntentionUpdateOperator intUpd = (BaseIntentionUpdateOperator)operators.getPreferedByType(BaseIntentionUpdateOperator.OPERATION_NAME);
+				atomic = (PlanElement)intUpd.process(opParam);
 				//	new IntentionUpdateParameter(masterPlan, forbidden));
 				
 				if(atomic == null) {
-					if(!subgoalGenerationOperators.def().process(opParam))
+					Boolean reval = (Boolean)operators.getPreferedByType(BaseSubgoalGenerationOperator.OPERATION_NAME)
+							.process(opParam);
+					if(!reval)
 							//new SubgoalGenerationParameter(masterPlan, forbidden)))
 						break;
 				} else {
 					if(!(atomic.getIntention().isAtomic())) {
-						LOG.error("intentionUpdateOperator '" + intentionUpdateOperators.def().getPosterName() + "' returns not atomic intentions, this is a failure.");
+						LOG.error("intentionUpdateOperator '" + intUpd.getPosterName() + "' returns not atomic intentions, this is a failure.");
 						atomic = null;
 					}
 				}
@@ -467,7 +448,9 @@ public class Agent extends AgentArchitecture
 			GenericOperatorParameter param = new GenericOperatorParameter();
 			param.setParameter("beliefs", beliefs);
 			param.setParameter("perception", perception);
-			return changeOperators.def().process(param);
+			BaseUpdateBeliefsOperator bubo = (BaseUpdateBeliefsOperator)operators.getPreferedByType(
+					BaseUpdateBeliefsOperator.OPERATION_NAME);
+			return bubo.process(param);
 		}
 		return beliefs;
 	}
@@ -483,7 +466,8 @@ public class Agent extends AgentArchitecture
 		GenericOperatorParameter param = new GenericOperatorParameter(this);
 		param.setParameter("intention", intent);
 		param.setParameter("beliefs", beliefs);
-		return violatesOperators.def().process(param);
+		BaseViolatesOperator bvo = (BaseViolatesOperator)operators.getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
+		return bvo.process(param);
 	}
 	
 	/**

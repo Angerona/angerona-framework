@@ -19,5 +19,4 @@ public class DummyExpansion extends BaseChangeBeliefs {
 		
 		return bb;
 	}
-
 }

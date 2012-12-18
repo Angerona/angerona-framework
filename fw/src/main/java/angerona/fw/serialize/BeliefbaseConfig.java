@@ -2,11 +2,11 @@ package angerona.fw.serialize;
 
 
 public interface BeliefbaseConfig {
-	public OperatorSetConfig getReasoners();
+	public OperationSetConfig getReasoners();
 	
-	public OperatorSetConfig getChangeOperators();
+	public OperationSetConfig getChangeOperators();
 	
-	public OperatorSetConfig getTranslators();
+	public OperationSetConfig getTranslators();
 	
 	/** @return the class name of the beliefbase */
 	public String getBeliefbaseClassName();

@@ -10,6 +10,7 @@ import angerona.fw.listener.ActionProcessor;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.parameter.EvaluateParameter;
+import angerona.fw.util.Pair;
 
 /**
  * Base class for violates tests. The base class implementation assumes that there only
@@ -25,10 +26,18 @@ import angerona.fw.operators.parameter.EvaluateParameter;
  * @author Tim Janus
  */
 public abstract class BaseViolatesOperator 
-	extends Operator<EvaluateParameter, ViolatesResult> 
+	extends Operator<Agent, EvaluateParameter, ViolatesResult> 
 	implements ActionProcessor
 	{
 
+	public static final String OPERATION_NAME = "Violates";
+	
+	@Override
+	public Pair<String, Class<?>> getOperationType() {
+		return new Pair<String, Class<?>>(OPERATION_NAME,
+				BaseViolatesOperator.class);
+	}
+	
 	@Override 
 	protected EvaluateParameter getEmptyParameter() {
 		return new EvaluateParameter();

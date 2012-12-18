@@ -204,7 +204,15 @@ public class ReportView extends BaseView implements ReportListener {
 		if(poster != null) {
 			Agent ag = null;
 			if(poster instanceof BaseOperator) {
-				ag = ((BaseOperator)poster).getOwner();
+				BaseOperator op = (BaseOperator)poster;
+				/* TODO: CHECK COSEQUENCES
+				if(op.getOwner() instanceof Agent) {
+					ag = (Agent)op.getOwner();
+				} else if(op.getOwner() instanceof BaseBeliefbase) {
+					BaseBeliefbase bb = (BaseBeliefbase)op.getOwner();
+					ag = bb.getAgent();
+				}
+				*/
 			} else if(poster instanceof Agent) {
 				ag = (Agent)poster;
 			} else {

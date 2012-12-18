@@ -22,13 +22,13 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	protected String name;
 	
 	@Element(name="reasoners")
-	protected OperatorSetConfig reasonerOperators;
+	protected OperationSetConfig reasonerOperators;
 	
 	@Element(name="change-operators")
-	protected OperatorSetConfig changeOperators;
+	protected OperationSetConfig changeOperators;
 	
 	@Element(name="translators")
-	protected OperatorSetConfig translators;
+	protected OperationSetConfig translators;
 	
 	/** the class name of the beliefbase */
 	@Element(name="beliefbase-class")
@@ -58,17 +58,17 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	}
 
 	@Override
-	public OperatorSetConfig getReasoners() {
+	public OperationSetConfig getReasoners() {
 		return reasonerOperators;
 	}
 
 	@Override
-	public OperatorSetConfig getChangeOperators() {
+	public OperationSetConfig getChangeOperators() {
 		return changeOperators;
 	}
 
 	@Override
-	public OperatorSetConfig getTranslators() {
+	public OperationSetConfig getTranslators() {
 		return translators;
 	}
 }

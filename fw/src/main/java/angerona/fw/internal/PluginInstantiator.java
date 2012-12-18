@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.BaseOperator;
 import angerona.fw.EnvironmentBehavior;
 import angerona.fw.Perception;
 import angerona.fw.def.DefaultAgentPlugin;
@@ -72,6 +73,9 @@ public class PluginInstantiator {
 	
 	/** a map of Classes defining the basis type to a set of classes defining implementations */
 	private Map<Class<?>, Set<Class<?>>> implMap = new HashMap<Class<?>, Set<Class<?>>>();
+	
+	private Map<String, BaseOperator> operatorInstanceMap = new HashMap<>();
+	
 	
 	/** @return the utility class of the plugin API to load plugins ect. */
 	public PluginManagerUtil getPluginUtil() {
@@ -222,9 +226,37 @@ public class PluginInstantiator {
 			}
 		}
 		
+		// Instantiate one operator for every loaded class definition.
+		for(Class<?> cls : implMap.keySet()) {
+			for(Class<?> i : cls.getInterfaces()) {
+				if(i.equals(BaseOperator.class)) {
+					BaseOperator op = null;
+					try {
+						op = (BaseOperator)createInstance(cls.getName());
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if(op != null) {
+						this.operatorInstanceMap.put(cls.getName(), op);
+					}
+				}
+			}
+		}
+		
 		for(PluginListener pl : listeners) {
 			pl.loadingImplementations(this);
 		}
+	}
+	
+	public BaseOperator getOperator(String fullJavaClsName) {
+		if(operatorInstanceMap.containsKey(fullJavaClsName)) {
+			return operatorInstanceMap.get(fullJavaClsName);
+		}
+		return null;
 	}
 	
 	/**

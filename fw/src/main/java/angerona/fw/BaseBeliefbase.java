@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
@@ -26,6 +27,7 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
 
@@ -45,7 +47,10 @@ import angerona.fw.serialize.BeliefbaseConfig;
  * 
  * @author Tim Janus
  */
-public abstract class BaseBeliefbase extends BaseAgentComponent implements BeliefBase {
+public abstract class BaseBeliefbase 
+	extends BaseAgentComponent 
+	implements BeliefBase 
+				, OperatorVisitor {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(BaseBeliefbase.class);
@@ -73,11 +78,11 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	 */
 	protected String reason = "";
 	
-	private OperatorSet<BaseChangeBeliefs> changeOperators = new OperatorSet<BaseChangeBeliefs>();
+	protected OperatorSet operators = new OperatorSet();
 	
-	private OperatorSet<BaseReasoner> reasoningOperators = new OperatorSet<BaseReasoner>();
-	
-	private OperatorSet<BaseTranslator> translators = new OperatorSet<BaseTranslator>();
+	public OperatorSet getOperators() {
+		return operators;
+	}
 	
 	/** Default Ctor: Generates an empty belief base which does not supports quantifiers or variables in its formulas */
 	public BaseBeliefbase() {
@@ -103,9 +108,7 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	public BaseBeliefbase(BaseBeliefbase other) {
 		super(other);
 		
-		changeOperators = new OperatorSet<BaseChangeBeliefs>(other.changeOperators);
-		reasoningOperators = new OperatorSet<BaseReasoner>(other.reasoningOperators);
-		translators = new OperatorSet<BaseTranslator>(other.translators);
+		operators = new OperatorSet(other.operators);
 	}
 	
 	/**
@@ -117,40 +120,24 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	 * @throws IllegalAccessException
 	 */
 	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
-		changeOperators.set(bbc.getChangeOperators());
-		reasoningOperators.set(bbc.getReasoners());
-		translators.set(bbc.getTranslators());
-		updateOwner();
+		operators.addOperationSet(BaseChangeBeliefs.OPERATION_TYPE, bbc.getChangeOperators());
+		operators.addOperationSet(BaseReasoner.OPERATION_TYPE, bbc.getReasoners());
+		operators.addOperationSet(BaseTranslator.OPERATION_TYPE, bbc.getTranslators());
 	}
 
 	/** @return the default change operator */
 	public BaseChangeBeliefs getChangeOperator() {
-		return changeOperators.def();
+		return (BaseChangeBeliefs)operators.getPreferedByType(BaseChangeBeliefs.OPERATION_TYPE);
 	}
 
 	/** @return the default reasoning operator */
 	public BaseReasoner getReasoningOperator() {
-		return reasoningOperators.def();
+		return (BaseReasoner)operators.getPreferedByType(BaseReasoner.OPERATION_TYPE);
 	}
 
 	/** @return the default translator */
 	public BaseTranslator getTranslator() {
-		return translators.def();
-	}
-	
-	/** @return the set of all change operators */
-	public OperatorSet<BaseChangeBeliefs> getChangeOperators() {
-		return changeOperators;
-	}
-
-	/** @return the set of all reasoning operators */
-	public OperatorSet<BaseReasoner> getReasoningOperators() {
-		return reasoningOperators;
-	}
-
-	/** @return the set of all translators */
-	public OperatorSet<BaseTranslator> getTranslators() {
-		return translators;
+		return (BaseTranslator)operators.getPreferedByType(BaseTranslator.OPERATION_TYPE);
 	}
 
 	/**
@@ -245,9 +232,9 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	public void addKnowledge(Perception perception, BaseTranslator translator, 
 			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
-			translator = translators.def();
+			translator = getTranslator();
 		
-		BaseBeliefbase newK = translator.translatePerception(perception);
+		BaseBeliefbase newK = translator.translatePerception(this, perception);
 		addKnowledge(newK, changeOperator);
 	}
 	
@@ -262,9 +249,9 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	public void addKnowledge(Set<FolFormula> formulas, BaseTranslator translator, 
 			BaseChangeBeliefs changeOperator) {
 		if(translator == null)
-			translator = translators.def();
+			translator = getTranslator();
 		
-		BaseBeliefbase newK = translator.translateFOL(formulas);
+		BaseBeliefbase newK = translator.translateFOL(this, formulas);
 		addKnowledge(newK, changeOperator);
 	}
 	
@@ -276,7 +263,7 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	 */
 	public void addKnowledge(BaseBeliefbase newKnowledge, BaseChangeBeliefs changeOperator) {
 		if(changeOperator == null)
-			changeOperator = changeOperators.def();
+			changeOperator = getChangeOperator();
 		
 		GenericOperatorParameter opParam = new GenericOperatorParameter(this);
 		opParam.setParameter("sourceBelief", this);
@@ -293,18 +280,18 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	public AngeronaAnswer reason(FolFormula query) {
 		if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaAnswer answer = (AngeronaAnswer)reasoningOperators.def().query(this, query);
+		AngeronaAnswer answer = getReasoningOperator().query(this, query).second;
 		return answer;
 	}
 	
 
 	public Set<FolFormula> infere() {
-		return reasoningOperators.def().infer(this);
+		return getReasoningOperator().infer(this);
 	}
 	
 	public Set<FolFormula> infere(String reasonerCls, Map<String, String> parameters) {
 		Map<String, String> oldParams = null;
-		BaseReasoner reasoner = this.reasoningOperators.get(reasonerCls);
+		BaseReasoner reasoner = (BaseReasoner)operators.getOperationSetByType(BaseReasoner.OPERATION_TYPE).getOperator(reasonerCls);
 		if(parameters == null)
 			parameters = reasoner.getParameters();
 		oldParams = reasoner.getParameters();
@@ -376,21 +363,20 @@ public abstract class BaseBeliefbase extends BaseAgentComponent implements Belie
 	@Override
 	public void setParent(Long id) {
 		super.setParent(id);
-		updateOwner();
+	}
+	
+	@Override
+	public void pushOperator(BaseOperator op) {
+		getAgent().pushOperator(op);
 	}
 
-	/**
-	 * Helper method: informs all operators about owner switches.
-	 */
-	private void updateOwner() {
-		Agent agent = getAgent();
-		if(agent != null) {
-			changeOperators.setOwner(agent);
-			reasoningOperators.setOwner(agent);
-			translators.setOwner(agent);
-			LOG.info("Set owner '{}' for operators of beliefbase.", agent.getName());
-		} else {
-			LOG.warn("Cannot set the owners for operators.");
-		}
+	@Override
+	public void popOperator() {
+		getAgent().popOperator();
+	}
+
+	@Override
+	public Stack<BaseOperator> getStack() {
+		return getAgent().getStack();
 	}
 }

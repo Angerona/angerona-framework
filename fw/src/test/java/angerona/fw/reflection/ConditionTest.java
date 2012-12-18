@@ -21,7 +21,7 @@ public class ConditionTest extends TestCase {
 		assertEquals(false, be.evaluate());
 	}
 	
-	public void testEqualsCondition() throws ClassNotFoundException {
+	public void testBinaryCondition() throws ClassNotFoundException {
 		Value boss = new Value("Boss");
 		Value employee = new Value("Employee");
 		BooleanExpression be = new BooleanExpression(boss, Operator.EQUAL, employee);

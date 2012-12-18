@@ -30,17 +30,17 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 	}
 
 	@Override
-	public OperatorSetConfig getReasoners() {
+	public OperationSetConfig getReasoners() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
 	@Override
-	public OperatorSetConfig getChangeOperators() {
+	public OperationSetConfig getChangeOperators() {
 		throw new IllegalStateException("Method not supported.");
 	}
 
 	@Override
-	public OperatorSetConfig getTranslators() {
+	public OperationSetConfig getTranslators() {
 		throw new IllegalStateException("Method not supported.");
 	}
 }

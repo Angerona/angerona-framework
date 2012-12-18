@@ -53,5 +53,4 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		report("No atomic step candidate found.", ag);
 		return null;
 	}
-
 }

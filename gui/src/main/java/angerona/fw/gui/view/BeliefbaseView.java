@@ -28,7 +28,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	/** kill warning */
 	private static final long serialVersionUID = -3706152280500718930L;
 	
-	private OperatorConfig<BaseReasoner> opConfig;
+	private OperatorConfig opConfig;
 	
 	@Override
 	public void init() {
@@ -39,7 +39,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 					"Entity which is not a subclass of BaseBeliefbase: " 
 					+ ref.getClass().getName());
 		BaseBeliefbase refBeliefBase = (BaseBeliefbase)ref;
-		opConfig = new OperatorConfig<>(refBeliefBase.getReasoningOperators());
+		opConfig = new OperatorConfig(refBeliefBase.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE));
 		
 		Agent ag = (Agent)IdGenerator.getEntityWithId(this.ref.getParent());
 		String postfix = "";
@@ -62,7 +62,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	@Override
 	protected void update(DefaultListModel<ListElement> model) {
 		BaseBeliefbase bb = (BaseBeliefbase)actual;
-		opConfig = new OperatorConfig<BaseReasoner> (bb.getReasoningOperators());
+		opConfig = new OperatorConfig (bb.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE));
 		
 		// prepare changeset in model and so on.
 		super.update(model);
@@ -109,8 +109,8 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	@Override
 	protected void onElementClicked(int index, int status) {
 		if(status == ListElement.ST_RESERVED) {
-			OperatorConfigController<BaseReasoner> controller = new OperatorConfigController<BaseReasoner>(opConfig);
-			OperatorConfigPanel<BaseReasoner> opPanel = new OperatorConfigPanel<>(controller);
+			OperatorConfigController controller = new OperatorConfigController(opConfig);
+			OperatorConfigPanel opPanel = new OperatorConfigPanel(controller);
 			opPanel.init(opConfig);
 			
 			JFrame frame = new JFrame();

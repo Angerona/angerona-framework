@@ -2,6 +2,7 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -18,31 +19,6 @@ public class AgentConfigImport implements AgentConfig {
 	public AgentConfig substitute() throws Exception {
 		return new Persister().read(AgentConfigReal.class, source);
 	}
-	
-	@Override
-	public OperatorSetConfig getGenerateOptionsOperators() {
-		throw new IllegalStateException("Method not supported.");
-	}
-
-	@Override
-	public OperatorSetConfig getIntentionUpdateOperators() {
-		throw new IllegalStateException("Method not supported.");
-	}
-
-	@Override
-	public OperatorSetConfig getViolatesOperators() {
-		throw new IllegalStateException("Method not supported.");
-	}
-
-	@Override
-	public OperatorSetConfig getUpdateOperators() {
-		throw new IllegalStateException("Method not supported.");
-	}
-
-	@Override
-	public OperatorSetConfig getSubgoalGenerators() {
-		throw new IllegalStateException("Method not supported.");
-	}
 
 	@Override
 	public String getName() {
@@ -51,6 +27,11 @@ public class AgentConfigImport implements AgentConfig {
 	
 	@Override
 	public List<String> getComponents() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public Set<OperationSetConfig> getOperations() {
 		throw new IllegalStateException("Method not supported.");
 	}
 }

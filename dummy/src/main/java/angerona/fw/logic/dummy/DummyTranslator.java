@@ -10,7 +10,6 @@ import angerona.fw.comm.Answer;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseTranslator;
-import angerona.fw.operators.parameter.TranslatorParameter;
 
 /**
  * A simple default translator which translate from FOL to FOL... it also
@@ -20,7 +19,7 @@ import angerona.fw.operators.parameter.TranslatorParameter;
 public class DummyTranslator extends BaseTranslator {
 
 	@Override
-	protected BaseBeliefbase translatePerceptionInt(Perception p) {
+	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
 		// Translate the knowledge encoded in the answer into a dummy belief base.
 		if(p instanceof Answer) {
 			FolFormula formula = null;
@@ -32,7 +31,7 @@ public class DummyTranslator extends BaseTranslator {
 			} else {
 				return new DummyBeliefbase();
 			}
-			return translateFOLInt(formula);
+			return translateFOLInt(caller, formula);
 		}
 		
 		// nothing but answer implemented yet.
@@ -40,7 +39,7 @@ public class DummyTranslator extends BaseTranslator {
 	}
 
 	@Override
-	protected BaseBeliefbase translateFOLInt(Set<FolFormula> formulas) {
+	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas) {
 		DummyBeliefbase reval = new DummyBeliefbase();
 		reval.fbs.addAll(formulas);
 		return reval;

@@ -1,12 +1,13 @@
 package angerona.fw.logic;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Answer;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.operators.Operator;
 import angerona.fw.operators.parameter.ReasonerParameter;
+import angerona.fw.util.Pair;
 
 /**
  * Base class for all reasoner used by the Angerona project.
@@ -18,14 +19,9 @@ import angerona.fw.operators.parameter.ReasonerParameter;
  * @author Tim Janus
  */
 public abstract class BaseReasoner 
-	extends Operator<ReasonerParameter, AngeronaAnswer>{
+	extends Operator<BaseBeliefbase, ReasonerParameter, Pair<Set<FolFormula>, AngeronaAnswer>>{
 	
-	/** 
-	 * TODO: There are thoughts to share the operator instances between callers
-	 * but the reasoner is the only operator which has implemented something like
-	 * this so far. The task has no high priority.
-	 */
-	protected BaseBeliefbase actualBeliefbase;
+	public static final String OPERATION_TYPE = "BeliefOperator";
 	
 	/** Default Ctor */
 	public BaseReasoner() {}
@@ -36,47 +32,36 @@ public abstract class BaseReasoner
 	}
 
 	@Override
-	protected AngeronaAnswer defaultReturnValue() {
-		return null;
+	protected Pair<Set<FolFormula>, AngeronaAnswer> defaultReturnValue() {
+		return new Pair<Set<FolFormula>, AngeronaAnswer>(new HashSet<FolFormula>(), null);
+	}
+	
+	@Override 
+	protected Pair<Set<FolFormula>, AngeronaAnswer> processInternal(ReasonerParameter params) {
+		if(params.getQuery() == null) {
+			return new Pair<>(inferInt(params), null);
+		} else {
+			return queryInt(params);
+		}
 	}
 	
 	/** 
 	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
 	 * @return	A set of FolFormulas representing Cn(Bel).
 	 */
-	protected abstract Set<FolFormula> inferInt();
+	protected abstract Set<FolFormula> inferInt(ReasonerParameter params);
 	
 	/**
 	 * Infers all the knowledge in a given belief base and returns it as a set of FOL formulas.
 	 * This helper method maintains the operator callstack and calls inferInt to get the work done.
 	 * @return	a set of FOL formulas representing Cn(belief base).
 	 */
-	public Set<FolFormula> infer() {
-		getOwner().pushOperator(this);
-		Set<FolFormula> reval = inferInt();
-		getOwner().popOperator();
+	public Set<FolFormula> infer(BaseBeliefbase caller) {
+		ReasonerParameter params = new ReasonerParameter(caller, null);
+		caller.pushOperator(this);
+		Set<FolFormula> reval = processInternal(params).first;
+		caller.popOperator();
 		return reval;
-	}
-	
-	/**
-	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
-	 * @param bb
-	 * @return A set of FolFormulas representing Cn(Bel).
-	 */
-	public Set<FolFormula> infer(BaseBeliefbase bb) {
-		actualBeliefbase = bb;
-		return infer();
-	}
-	
-	/**
-	 * queries for question in the given beliefbase bb
-	 * @param bb
-	 * @param question
-	 * @return	An AngeronaAnswer containing the answer to the given question.
-	 */
-	public Answer query(BaseBeliefbase bb, FolFormula question) {
-		actualBeliefbase = bb;
-		return query(question);
 	}
 	
 	/**
@@ -85,7 +70,7 @@ public abstract class BaseReasoner
 	 * @param query a query.
 	 * @return the answer to the query.
 	 */
-	protected abstract Answer queryInt(FolFormula query);
+	protected abstract  Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params);
 	
 	/**
 	 * Querys for the formula given as parameter. Its a helper method which 
@@ -94,10 +79,19 @@ public abstract class BaseReasoner
 	 * @param query
 	 * @return An AngeronaAnswer which represents the answer to the query
 	 */
-	public Answer query(FolFormula query) {
-		getOwner().pushOperator(this);
-		Answer reval = queryInt(query);
-		getOwner().popOperator();
+	public Pair<Set<FolFormula>, AngeronaAnswer> query(BaseBeliefbase caller, FolFormula query) {
+		ReasonerParameter params = new ReasonerParameter(caller, query);
+		caller.pushOperator(this);
+		Pair<Set<FolFormula>, AngeronaAnswer> reval = processInternal(params);
+		caller.popOperator();
+		return reval;
+	}
+	
+	@Override
+	public Pair<String, Class<?>> getOperationType() {
+		Pair<String, Class<?>> reval = new Pair<>();
+		reval.first = OPERATION_TYPE;
+		reval.second = BaseReasoner.class;
 		return reval;
 	}
 	

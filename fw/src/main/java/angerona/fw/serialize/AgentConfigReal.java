@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -24,51 +25,15 @@ public class AgentConfigReal implements AgentConfig{
 	protected String name;
 	
 	/** String identifying the GenerateOptions Operator-Set for dynamic instantiation */
-	@Element(name="generate-options-operators")
-	protected OperatorSetConfig generateOptionsOperators;
-	
-	/** String identifying the Filter Operator-Set for dynamic instantiation */
-	@Element(name="intention-update-operators")
-	protected OperatorSetConfig intentionUpdateOperators;
-	
-	/** String identifying the Violates Operator-Set for dynamic instantiation */
-	@Element(name="violates-operators")
-	protected OperatorSetConfig violatesOperators;
-
-	/** String identifying the Update Operator-Set for dynamic instantiation */
-	@Element(name="update-beliefs-operators")
-	protected OperatorSetConfig updateBeliefsOperators;
-
-	/** String identifying the Planer-Set for dynamic instantiation */
-	@Element(name="subgoal-generation-operators")
-	protected OperatorSetConfig subgoalGenerationOperators;
+	@ElementList(name="operators")
+	protected Set<OperationSetConfig> operators;
 	
 	@ElementList(name="components", entry="component", inline=true)
 	protected List<String> componentClasses = new LinkedList<String>();
-
+	
 	@Override
-	public OperatorSetConfig getGenerateOptionsOperators() {
-		return generateOptionsOperators;
-	}
-
-	@Override
-	public OperatorSetConfig getIntentionUpdateOperators() {
-		return intentionUpdateOperators;
-	}
-
-	@Override
-	public OperatorSetConfig getViolatesOperators() {
-		return violatesOperators;
-	}
-
-	@Override
-	public OperatorSetConfig getUpdateOperators() {
-		return updateBeliefsOperators;
-	}
-
-	@Override
-	public OperatorSetConfig getSubgoalGenerators() {
-		return subgoalGenerationOperators;
+	public Set<OperationSetConfig> getOperations() {
+		return operators;
 	}
 
 	@Override

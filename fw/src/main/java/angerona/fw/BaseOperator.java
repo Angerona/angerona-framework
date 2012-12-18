@@ -1,92 +1,56 @@
 package angerona.fw;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import angerona.fw.internal.Entity;
+import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.report.ReportPoster;
+import angerona.fw.util.Pair;
 
 /**
- * Base class for all operators for agents
- * implements basic functionality for easier use of the report mechanism.
+ * Interface for all operators implementing operation types. All operators
+ * need the ability to save and change parameter in a generic way and to
+ * get and change the owner of the base operator.
+ * TODO: Move the owner into the parameters to make it instance independent
+ * A operator also provides its operation type allowing the owner to select
+ * the operators.
+ * 
  * @author Tim Janus
  */
-public class BaseOperator implements ReportPoster {
-	
-	/** reference to the agent owning the operator */
-	private Agent owner;
-	
-	/** a map containg parameters for the operator */
-	protected Map<String, String> parameters = new HashMap<String, String>();
-	
-	/** @return reference to the agent owning the operator */
-	public Agent getOwner() {
-		return owner;
-	}
-	
-	/**
-	 * changes the owner of this operator
-	 * @param ag	reference to the new owner.
-	 */
-	protected void setOwner(Agent ag) {
-		this.owner = ag;
-	}
-	
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
-	
-	public String getNameAndParameters() {
-		return this.getClass().getSimpleName() + ":"
-				+ this.parameters.toString();
-	}
+public interface BaseOperator 
+	extends ReportPoster {
 	
 	/**
 	 * Change the user-parameters used by the operator. 
 	 * @param parameters
 	 */
-	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
-	}
-	
-	public Map<String, String> getParameters() {
-		return this.parameters;
-	}
-	
-	public String getParameter(String name, String def) {
-		if(!this.parameters.containsKey(name)) {
-			this.parameters.put(name, def);
-			return def;
-		} else {
-			return this.parameters.get(name);
-		}
-	}
+	void setParameters(Map<String, String> parameters);
 	
 	/**
-	 * Helper method: Allows sub classes to easily use the report mechanisms of Angerona.
-	 * @param msg	The message which will be reported.
+	 * @return 	a map from parameter names to values in a generic string
+	 * 			representation.
 	 */
-	protected void report(String msg) {
-		Angerona.getInstance().report(msg, this);
-	}
+	Map<String, String> getParameters();
 	
 	/**
-	 * Helper method: Allows sub classes to easily use the report mechanisms of Angerona.
-	 * @param msg			The message which will be reporated
-	 * @param attachment	The entity used as attachment for the report.
+	 * Gets the parameter with the given name. If the parameter does not
+	 * exists the given def parameter is returned.
+	 * @param name	The name of the parameter to return
+	 * @param def	The default value of the parameter if the parameter does
+	 * 				not exists yet.
+	 * @return		A string representing the value of the parameter
 	 */
-	protected void report(String msg, Entity attachment) {
-		Angerona.getInstance().report(msg, this, attachment);
-	}
-
-	@Override
-	public AngeronaEnvironment getSimulation() {
-		return owner.getSimulation();
-	}
-
-	@Override
-	public String getPosterName() {
-		return this.getClass().getSimpleName();
-	}
+	String getParameter(String name, String def);
+	
+	/**
+	 * 
+	 * @return	The operation type implemented by the operator.
+	 * 			as a pair containing the unique name of the
+	 * 			operation type and the Class information of the
+	 * 			base class for operators implementing this 
+	 * 			operation type.
+	 */
+	Pair<String, Class<?>> getOperationType();
+	
+	
+	Object process(GenericOperatorParameter gop);
 }

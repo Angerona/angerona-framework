@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import angerona.fw.BaseOperator;
-import angerona.fw.OperatorSet;
+import angerona.fw.OperationSet;
 
 /**
  * 
@@ -14,7 +14,7 @@ import angerona.fw.OperatorSet;
  *
  * @param <T>
  */
-public class OperatorConfig<T extends BaseOperator> extends AbstractModel {
+public class OperatorConfig extends AbstractModel {
 	/** the original parameters of the operator */
 	private Map<String, String> originalParameters = new HashMap<>();
 	
@@ -22,26 +22,26 @@ public class OperatorConfig<T extends BaseOperator> extends AbstractModel {
 	private Map<String, String> parameters = new HashMap<String, String>();
 	
 	/** the set of selectable operators */
-	private OperatorSet<T> operatorSet;
+	private OperationSet operationSet;
 	
 	/** the currently selected operator */
-	private T selectedOperator;
+	private BaseOperator selectedOperator;
 	
-	public OperatorConfig(OperatorSet<T> set) {
+	public OperatorConfig(OperationSet set) {
 		if(set == null)
 			throw new IllegalArgumentException();
 		
-		this.operatorSet = set;
-		selectedOperator = set.def();
+		this.operationSet = set;
+		selectedOperator = set.getPrefered();
 		originalParameters = selectedOperator.getParameters();
 		parameters = new HashMap<>(selectedOperator.getParameters());
 	}
 	
-	T getSelectedOperator() {
+	BaseOperator getSelectedOperator() {
 		return selectedOperator;
 	}
 	
-	void setSelectedOperator(T operator) {
+	void setSelectedOperator(BaseOperator operator) {
 		firePropertyChange("selectedOperator", this.selectedOperator, 
 				operator);
 		this.selectedOperator = operator;
@@ -60,11 +60,11 @@ public class OperatorConfig<T extends BaseOperator> extends AbstractModel {
 		this.parameters = parameters;
 	}
 	
-	Collection<T> getSelectableOperators() {
-		return operatorSet.getOperators();
+	Collection<BaseOperator> getSelectableOperators() {
+		return operationSet.getOperators();
 	}
 	
-	public T getDefaultOperator() {
-		return operatorSet.def();
+	public BaseOperator getDefaultOperator() {
+		return operationSet.getPrefered();
 	}
 }

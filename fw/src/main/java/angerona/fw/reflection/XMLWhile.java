@@ -6,7 +6,7 @@ import org.simpleframework.xml.Root;
 import angerona.fw.error.InvokeException;
 
 /**
- * Implements a while construct for DAML.
+ * Implements a while construct for ASML.
  * @author Tim Janus
  *
  */
@@ -16,7 +16,8 @@ public class XMLWhile extends XMLCommandoSequence {
 	@Attribute(name="condition")
 	private Condition condition;
 	
-	private int iterations;
+	/** the number of iterations the while loop has performed so far */
+	private int iterations = 0;
 	
 	public XMLWhile(@Attribute(name="condition") Condition condition) {
 		this.condition = condition;

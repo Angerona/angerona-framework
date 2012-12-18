@@ -1,6 +1,7 @@
 package angerona.fw.serialize;
 
 import java.io.File;
+import java.util.HashSet;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
@@ -32,7 +33,7 @@ public class FileFormatExample {
 		
 		// Create example belief base configuration file:
 		// But first prepare a typical operator set shared for all operators:
-		OperatorSetConfigReal opc = new OperatorSetConfigReal();
+		OperationSetConfigReal opc = new OperationSetConfigReal();
 		opc.defaultClassName = "classNameOfDefaultOperator";
 		opc.operatorClassNames.add("0-to-many");
 		opc.operatorClassNames.add("alternative-classes");
@@ -52,9 +53,8 @@ public class FileFormatExample {
 		// Create example agent configuration file:
 		AgentConfigReal acr = new AgentConfigReal();
 		acr.name = "example-agent-config";
-		acr.generateOptionsOperators = acr.intentionUpdateOperators = 
-				acr.subgoalGenerationOperators = acr.updateBeliefsOperators = 
-				acr.violatesOperators = opc;
+		acr.operators = new HashSet<>();
+		acr.operators.add(opc);
 		acr.componentClasses.add("fully.class.name");
 		acr.componentClasses.add("would.look.like");
 		acr.componentClasses.add("angerona.fw.knowhow.KnowhowBase");

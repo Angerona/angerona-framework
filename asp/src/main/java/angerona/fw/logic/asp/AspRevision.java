@@ -39,7 +39,8 @@ public class AspRevision extends BaseChangeBeliefs {
 	}
 
 	@Override
-	protected BaseBeliefbase processInt(ChangeBeliefbaseParameter param) {
+	protected BaseBeliefbase processInternal(
+			ChangeBeliefbaseParameter param) {
 		LOG.info("Perform ASPRevison as change.");
 		PreferenceHandling pf = new PreferenceHandling();
 		if(! (param.getSourceBeliefBase() instanceof AspBeliefbase))

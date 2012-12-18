@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.Answer;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
@@ -29,6 +28,7 @@ import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
 import angerona.fw.serialize.GlobalConfiguration;
+import angerona.fw.util.Pair;
 
 /**
  * Implementation of an ASP Reasoner using dlv or clingo as solver backends.
@@ -83,11 +83,12 @@ public class AspReasoner extends BaseReasoner {
 	}
 	
 	@Override
-	protected Answer queryInt(FolFormula query) {		
-		Set<FolFormula> answers = inferInt();
+	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {		
+		Set<FolFormula> answers = inferInt(params);
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 				
-		AspBeliefbase bb = (AspBeliefbase)this.actualBeliefbase;
+		AspBeliefbase bb = (AspBeliefbase)params.getBeliefBase();
+		FolFormula query = params.getQuery();
 		if(query.isGround()) {
 			// Check if the inferred answer-set contains the query or its
 			// negation and adapt the AnswerValue:
@@ -96,7 +97,7 @@ public class AspReasoner extends BaseReasoner {
 			} else if (answers.contains(new Negation(query))) {
 				av = AnswerValue.AV_FALSE;
 			}
-			return new AngeronaAnswer(bb, query, av);
+			return new Pair<>(answers, new AngeronaAnswer(bb, query, av));
 		} else {
 			// Find all answers with the same predicate like the query.
 			Predicate queryPred = null;
@@ -127,7 +128,7 @@ public class AspReasoner extends BaseReasoner {
 					realAnswers.add(answer);
 				}
 			}
-			return new AngeronaAnswer(bb, query, realAnswers);
+			return new Pair<>(answers, new AngeronaAnswer(bb, query, realAnswers));
 		}
 	}
 	
@@ -148,13 +149,8 @@ public class AspReasoner extends BaseReasoner {
 	}
 
 	@Override
-	protected AngeronaAnswer processInt(ReasonerParameter param) {
-		return (AngeronaAnswer) query(param.getBeliefbase(), param.getQuery());
-	}
-
-	@Override
-	protected Set<FolFormula> inferInt() {
-		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)actualBeliefbase);
+	protected Set<FolFormula> inferInt(ReasonerParameter params) {
+		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)params.getBeliefBase());
 		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
 		
 		// Translate the elp to fol:

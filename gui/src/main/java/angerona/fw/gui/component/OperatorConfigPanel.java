@@ -22,30 +22,30 @@ import javax.swing.JTextField;
 import angerona.fw.BaseOperator;
 import angerona.fw.util.Pair;
 
-public class OperatorConfigPanel<T extends BaseOperator> extends JPanel implements PropertyChangeListener {
+public class OperatorConfigPanel extends JPanel implements PropertyChangeListener {
 
 	/** kill warning */
 	private static final long serialVersionUID = 782532085136023725L;
 	
 	private DefaultListModel<Pair<String, String>> paramModel;
 	
-	private JComboBox<T> cbOperators;
+	private JComboBox<BaseOperator> cbOperators;
 	
-	private DefaultComboBoxModel<T> cbmOperators;
+	private DefaultComboBoxModel<BaseOperator> cbmOperators;
 	
 	private JTextField txtParameterName;
 	
 	private JTextField txtParameterValue;
 	
-	private OperatorConfigController<T> controller;
+	private OperatorConfigController controller;
 	
-	public OperatorConfigPanel(OperatorConfigController<T> controller) {
+	public OperatorConfigPanel(OperatorConfigController controller) {
 		if(controller == null)
 			throw new IllegalArgumentException();
 		this.controller = controller;
 	}
 	
-	public void init(OperatorConfig<T> model) {
+	public void init(OperatorConfig model) {
 		this.setLayout(new BorderLayout());
 		
 		JButton resetOperator = new JButton("Reset Operator");
@@ -81,14 +81,14 @@ public class OperatorConfigPanel<T extends BaseOperator> extends JPanel implemen
 		operatorBoxPanel.add(lblOp);
 		
 		cbmOperators = new DefaultComboBoxModel<>();
-		cbOperators = new JComboBox<T>(cbmOperators);
+		cbOperators = new JComboBox<BaseOperator>(cbmOperators);
 		cbOperators.setPreferredSize(new Dimension(300, 30));
 		cbOperators.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					controller.selectOperator( ((T)e.getItem()).toString());
+					controller.selectOperator( ((BaseOperator)e.getItem()).toString());
 				}
 			}
 		});
@@ -141,8 +141,8 @@ public class OperatorConfigPanel<T extends BaseOperator> extends JPanel implemen
 		linkModel(model);
 	}
 
-	private void linkModel(OperatorConfig<T> model) {
-		for(T op : model.getSelectableOperators()) {
+	private void linkModel(OperatorConfig model) {
+		for(BaseOperator op : model.getSelectableOperators()) {
 			cbmOperators.addElement(op);
 		}
 		cbmOperators.setSelectedItem(model.getDefaultOperator());

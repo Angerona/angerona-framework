@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.error.InvokeException;
 
 /**
- * Implements an assignment comamndo for DAML.
+ * Implements an assignment command for ASML.
  * 
  * @author Tim Janus
  */

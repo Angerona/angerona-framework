@@ -4,22 +4,22 @@ import java.util.Map;
 
 import angerona.fw.BaseOperator;
 
-public class OperatorConfigController<T extends BaseOperator> {
-	private OperatorConfig<T> model;
+public class OperatorConfigController {
+	private OperatorConfig model;
 	
 	public OperatorConfigController() {
 	}
 	
-	public OperatorConfigController(OperatorConfig<T> model) {
+	public OperatorConfigController(OperatorConfig model) {
 		setModel(model);
 	}
 	
-	public void setModel(OperatorConfig<T> model) {
+	public void setModel(OperatorConfig model) {
 		this.model = model;
 	}
 	
 	void selectOperator(String clsName) {
-		for(T op : model.getSelectableOperators()) {
+		for(BaseOperator op : model.getSelectableOperators()) {
 			if(op.getClass().getSimpleName().equals(clsName)) {
 				model.setSelectedOperator(op);
 				break;

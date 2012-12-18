@@ -46,7 +46,7 @@ public class SubgoalGenerationOperator extends
 	private boolean generateLies = false;
 	
 	@Override
-	protected Boolean processInt(PlanParameter pp) {
+	protected Boolean processInternal(PlanParameter pp) {
 		LOG.info("Run Mary-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
 		
@@ -242,8 +242,8 @@ public class SubgoalGenerationOperator extends
 			
 			Query q = (Query) des.getPerception();
 			Subgoal sg = new Subgoal(ag, des);
-			createSubgoals(answers, sg, q, new Boolean(false));
-			createSubgoals(lies, sg, q, new Boolean(true));
+			createSubgoals(answers, sg, q, new Boolean(false), ag);
+			createSubgoals(lies, sg, q, new Boolean(true), ag);
 			ag.getPlanComponent().addPlan(sg);
 			return true;
 		}
@@ -251,9 +251,9 @@ public class SubgoalGenerationOperator extends
 		return false;
 	}
 	
-	private void createSubgoals(List<FolFormula> answers, Subgoal sg, Query q, Boolean ud) {
+	private void createSubgoals(List<FolFormula> answers, Subgoal sg, Query q, Boolean ud, Agent ag) {
 		for(int i=0;i<answers.size();i++) {
-			Answer a = new Answer(this.getOwner(), q.getSenderId(), q.getQuestion(), answers.get(i));
+			Answer a = new Answer(ag, q.getSenderId(), q.getQuestion(), answers.get(i));
 			sg.newStack(a);
 			sg.peekStack(sg.getNumberOfStacks()-1).setUserData(ud);
 		}

@@ -14,26 +14,26 @@ import angerona.fw.operators.GenericOperatorParameter;
 public abstract class OperatorPluginParameter implements OperatorParameter {
 
 	/** the agent who calls the operator */
-	private Agent owner;
+	private Agent caller;
 	
 	public OperatorPluginParameter() {}
 	
 	public OperatorPluginParameter(Agent owner) {
-		this.owner = owner;
+		this.caller = owner;
 	}
 	
 	/** @return the agent who class the operator */
 	public Agent getAgent() {
-		return owner;
+		return caller;
 	}
 
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter param) throws ConversionException {
-		if(! (param.getOwner() instanceof Agent) ) {
+		if(! (param.getCaller() instanceof Agent) ) {
 			throw new ConversionException(GenericOperatorParameter.class, this.getClass(),
 					new ClassCastException("Cannot cast owner to agent."));
 		}
-		this.owner = (Agent)param.getOwner();
+		this.caller = (Agent)param.getCaller();
 	}
 	
 

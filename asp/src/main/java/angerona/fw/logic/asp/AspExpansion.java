@@ -25,14 +25,14 @@ public class AspExpansion extends BaseChangeBeliefs {
 	}
 
 	@Override
-	protected BaseBeliefbase processInt(ChangeBeliefbaseParameter param) {
+	protected BaseBeliefbase processInternal(
+			ChangeBeliefbaseParameter preprocessedParameters) {
 		LOG.info("Perform ASPExpansion as change.");
-		AspBeliefbase abb = (AspBeliefbase)param.getSourceBeliefBase();
+		AspBeliefbase abb = (AspBeliefbase)preprocessedParameters.getSourceBeliefBase();
 		Program p = abb.getProgram();
-		AspBeliefbase newK = (AspBeliefbase)param.getNewKnowledge();
+		AspBeliefbase newK = (AspBeliefbase)preprocessedParameters.getNewKnowledge();
 		p.add(newK.getProgram());
-			
-		return param.getSourceBeliefBase();
+		return abb;
 	}
 
 }

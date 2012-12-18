@@ -6,19 +6,19 @@ import java.util.Map;
 import javax.management.AttributeNotFoundException;
 
 public class GenericOperatorParameter {
-	private Object owner;
+	private OperatorVisitor caller;
 	
 	private Map<String, Object> parameters = new HashMap<String, Object>();
 	
 	public GenericOperatorParameter() {
 	}
 	
-	public GenericOperatorParameter(Object owner) {
-		this.owner = owner;
+	public GenericOperatorParameter(OperatorVisitor caller) {
+		this.caller = caller;
 	}
 	
-	public Object getOwner() {
-		return owner;
+	public OperatorVisitor getCaller() {
+		return caller;
 	}
 	
 	public void setParameter(String name, Object value) {

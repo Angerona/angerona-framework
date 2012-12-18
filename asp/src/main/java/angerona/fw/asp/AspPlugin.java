@@ -110,7 +110,7 @@ public class AspPlugin implements BeliefbasePlugin, UIPlugin {
 		r.addHead(new Atom("attend_burial"));
 		p.addRule(r);
 		
-		reasoner.query(a);
+		//reasoner.query(a);
 		
 		// Tutorial:
 		/*

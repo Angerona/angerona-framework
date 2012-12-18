@@ -10,8 +10,8 @@ import angerona.fw.operators.parameter.GenerateOptionsParameter;
 public class KnowhowGenerateOptions extends GenerateOptionsOperator {
 
 	@Override
-	protected Integer processInt(GenerateOptionsParameter param) {
-		return super.fetchVariables(param);
+	protected Integer processInternal(GenerateOptionsParameter param) {
+		return super.processInternal(param);
 	}
 
 }
