@@ -1,0 +1,4 @@
+start = (
+    element default-operator {text}&
+    element operator-cls {text}*
+)

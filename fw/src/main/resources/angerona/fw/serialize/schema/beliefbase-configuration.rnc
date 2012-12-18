@@ -1,0 +1,7 @@
+element beliefbase-configuration {
+	element name {text} &
+	element reasoners {external "op-set.rnc"} &
+	element change-operators {external "op-set.rnc"} &
+	element translators {external "op-set.rnc"} &
+	element beliefbase-class {text}
+}

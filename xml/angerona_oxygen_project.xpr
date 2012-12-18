@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="14.1">
+    <meta>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options/>
+    </meta>
+    <projectTree name="angerona_oxygen_project.xpr">
+        <folder name="schema">
+            <file name="../fw/src/main/resources/angerona/fw/serialize/schema/agent-configuration.rnc"/>
+            <file name="../fw/src/main/resources/angerona/fw/serialize/schema/beliefbase-configuration.rnc"/>
+            <file name="../fw/src/main/resources/angerona/fw/serialize/schema/core-configuration.rnc"/>
+            <file name="../fw/src/main/resources/angerona/fw/serialize/schema/op-set.rnc"/>
+            <file name="../fw/src/main/resources/angerona/fw/serialize/schema/simulation-template.rnc"/>
+            <file name="../fw/src/main/resources/angerona/fw/serialize/schema/xml_ref.rnc"/>
+        </folder>
+        <folder path="../test/src/main/config/"/>
+        <folder path="../test/src/main/examples/"/>
+    </projectTree>
+</project>
