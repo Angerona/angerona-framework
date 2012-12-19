@@ -2,7 +2,6 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -31,7 +30,7 @@ public class AgentConfigImport implements AgentConfig {
 	}
 
 	@Override
-	public Set<OperationSetConfig> getOperations() {
+	public List<OperationSetConfig> getOperations() {
 		throw new IllegalStateException("Method not supported.");
 	}
 }

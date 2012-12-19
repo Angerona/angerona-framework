@@ -3,6 +3,7 @@ package angerona.fw.operators.parameter;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.report.ReportPoster;
 
 public class BeliefbasePluginParameter implements OperatorParameter {
 	private BaseBeliefbase caller;
@@ -25,5 +26,10 @@ public class BeliefbasePluginParameter implements OperatorParameter {
 					new ClassCastException("Cannot cast owner to base beliefbase."));
 		}
 		this.caller = (BaseBeliefbase)input.getCaller();
+	}
+
+	@Override
+	public void visit(ReportPoster op) {
+		// does nothing yet...
 	}
 }

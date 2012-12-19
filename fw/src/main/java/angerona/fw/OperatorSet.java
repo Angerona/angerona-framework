@@ -17,7 +17,9 @@ import angerona.fw.util.Pair;
 
 /**
  * A set of operators for an entity which calls operators like the agent or the
- * belief base. 
+ * belief base. It is structured into multiple operation-sets. An operation-set contains
+ * operators which perform the same operation. Thus means the operators have the same type
+ * of input and output parameters.
  *
  * @author Tim Janus
  */
@@ -44,31 +46,33 @@ public class OperatorSet {
 	
 	
 	/**
-	 * Adds the given operator to the operator-set if no operator of this type
-	 * is already in the set.
-	 * Only the full-java class name is deciding, the operator might be another instance
-	 * with another set of parameters but it will not be added to the set cause the types
-	 * are equal.
+	 * Adds the given operator to the operator-set.
 	 * @param clsNameAndParams		A string starting with the full java-class name of the type
 	 * 								of the operator and having an optional map as parameter in 
 	 * 								the form {d=1.0} as postfix.
-	 * @return 	true if the operator was added and false if the operator was already in the set.
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @return 	true if the operator was added and false if an error occurred.
 	 */
-	public boolean addOperator(String clsNameAndParams) 
-			throws InstantiationException, IllegalAccessException {
-		Pair<String, BaseOperator> p = fetch(clsNameAndParams);
-		return realAdd(p);
+	public BaseOperator addOperator(String clsNameAndParams) {
+		Pair<String, BaseOperator> p = null;
+		try {
+			p = fetch(clsNameAndParams);
+		} catch (ClassNotFoundException e) {
+			LOG.error("Cannot add operator '{}' because it cannot be found: '{}'", clsNameAndParams, e.getMessage());
+			return null;
+		} catch (ParseException e) {
+			LOG.error("Cannot add operator '{}' because of Parser error: '{}'", clsNameAndParams, e.getMessage());
+			return null;
+		}
+		realAdd(p);
+		return p.second;
 	}
 	
 	/**
 	 * adds the given pair to the map of operators and
 	 * sets the owner.
 	 * @param p	the pair to add (null means do nothing)
-	 * @return	p!=null
 	 */
-	private boolean realAdd(Pair<String, BaseOperator> p) {
+	private void realAdd(Pair<String, BaseOperator> p) {
 		if(p != null) {
 			operators.put(p.first, p.second);
 			String opName = p.second.getOperationType().first;
@@ -76,9 +80,7 @@ public class OperatorSet {
 				operatorsByOperationType.put(opName, new OperationSet(opName));
 			}
 			operatorsByOperationType.get(opName).addOperator(p.second);
-
 		}
-		return p != null;
 	}
 	
 	/**
@@ -99,43 +101,36 @@ public class OperatorSet {
 	}
 	
 	/**
-	 * reads the class used for serialization of the operator-set and creates the
-	 * corrospodending runtime object.
-	 * @param operationType	The unique name of the operation type for identifing the operation.
-	 * @param config	reference to the serialization object containg the raw-data 
+	 * Uses the XML serialization class OperationSetConfig to add a new operation set to the
+	 * set of operators.
+	 * @param config	reference to the serialization object containing the raw-data 
 	 * 					which are strings of java-class-names.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
 	 */
-	public void addOperationSet(String operationType, OperationSetConfig config) 
-			throws InstantiationException, IllegalAccessException {
-		
-		/* TODO For parsing
-		
-		if(!config.getDefaultClassName().equalsIgnoreCase("empty")) {
-			p = fetch(config.getDefaultClassName());
-			operators.put(p.first, p.second);
-			defaultOperator = p.second;
-			if(defaultOperator == null) {
-				LOG.error("The default operator with name: '{}' was not found, critical error.", 
-						config.getDefaultClassName());
-			}
+	public boolean addOperationSet(OperationSetConfig config) {
+		OperationSet os = getOperationSetByType(config.getOperationType());
+		if(os != null) {
+			LOG.warn("The operation-set of type '{}' already exists.", os.getOperationName());
 		}
 		
-		for(String instantiationName : config.getOperatorClassNames()) {
-			if(!instantiationName.equalsIgnoreCase("empty"))
-				continue;
-			p = fetch(instantiationName);
-			
-			if(p == null) {
-				LOG.warn("The type '{}' was attempt to add twice to the operator-set and will be skiped this time. " +
-						"Did you use the old syntax of the configuration files with mentions " +
-						"the default-operator twice?", instantiationName);
-			} else {
-				operators.put(p.first, p.second);
-			}
+		BaseOperator def = addOperator(config.getDefaultClassName());
+		if(def == null) {
+			LOG.error("Default operator for '{}' cannot be added.", config.getOperationType());
+			return false;
 		}
-		*/
+		if(!def.getOperationType().first.equals(config.getOperationType())) {
+			LOG.error("The operation type in the configuration file: '{}' " +
+					"does not match the operation type of the default operator: '{}'", 
+					config.getOperationType(), def.getOperationType().first);
+			return false;
+		}
+		os = getOperationSetByType(config.getOperationType());
+		os.setPrefered(config.getDefaultClassName());
+		
+		// add alternative operators:
+		for(String clsNameAndParams : config.getOperatorClassNames()) {
+			addOperator(clsNameAndParams);
+		}
+		return true;
 	}
 
 	/** 
@@ -146,21 +141,17 @@ public class OperatorSet {
 	 * 							map appended in string representation.
 	 * @return	A pair of the real java-class name and the reference to the newly created
 	 * 			operator or null if the operator type is already registered.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
+	 * @throws ParseException
+	 * @throws ClassNotFoundException
 	 */
 	private Pair<String, BaseOperator> fetch(String clsNameAndParams)
-			throws InstantiationException, IllegalAccessException {
+		throws ParseException, ClassNotFoundException {
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		
 		// TODO: Use a basic parser for stuff like that...
 		SecretParser parser = new SecretParser(new StringReader(clsNameAndParams));
 		Map<String, String> parameters = new HashMap<String, String>();
-		try {
-			clsNameAndParams = parser.java_cls(parameters);
-		} catch (ParseException e) {
-			throw new InstantiationException("Cannot parse clsName-Parameter: " + e.getMessage());
-		}
+		clsNameAndParams = parser.java_cls(parameters);
 		
 		// return null if the operator of the type already exists in the set.
 		if(operators.containsKey(clsNameAndParams)) {
@@ -168,6 +159,8 @@ public class OperatorSet {
 		}
 		
 		BaseOperator op = pi.getOperator(clsNameAndParams);
+		if(op == null)
+			throw new ClassNotFoundException(clsNameAndParams);
 		op.setParameters(parameters);
 		return new Pair<String, BaseOperator>(clsNameAndParams, op);
 	}

@@ -25,11 +25,11 @@ public class AgentInstance {
 	protected String name;
 	
 	/** a data structure with type information of the agents operators */
-	@Element(name="config")
+	@Element(name="config", type=AgentConfigImport.class)
 	protected AgentConfig config;
 	
 	/** data structure containing information about the belief base type and operators */
-	@Element(name="beliefbase-config")
+	@Element(name="beliefbase-config", type=BeliefbaseConfigImport.class)
 	protected BeliefbaseConfig beliefbaseConfig;
 
 	/** the file suffix identifying the belief base */

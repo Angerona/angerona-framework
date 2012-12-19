@@ -53,12 +53,12 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			}
 			
 			bb.addKnowledge(naa);
-			report(out, bb);
+			param.report(out, bb);
 		} else if(param.getAtom() instanceof Query) {
 			out += "Query ";
 			out += (!receiver) ? "as sender (no changes)" : "as receiver (no changes)";
 			
-			report(out, param.getAgent());
+			param.report(out);
 		} else if(param.getAtom() instanceof Inform) {
 			// When we get informed about something we believe the sender of the Inform
 			// himself believes it... but we do not update the own belief base yet.
@@ -82,24 +82,24 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				out += receiver ? ("as receiver (view->" + i.getSenderId() + ")") : " as sender (no changes)";
 			}
 			
-			report(out, bb == null ? param.getAgent() : bb);
+			param.report(out, bb == null ? null : bb);
 		} else if (param.getAtom() instanceof Justification) {
 			Justification j = (Justification) param.getAtom();
 			BaseBeliefbase bb = null;
 			if(receiver) {
 				bb = beliefs.getViewKnowledge().get(j.getSenderId());
 				bb.addKnowledge(j.getJustifications());
-				report("Justification as receiver (1. update view->" + j.getSenderId() + ")", bb);
+				param.report("Justification as receiver (1. update view->" + j.getSenderId() + ")", bb);
 				bb = beliefs.getWorldKnowledge();
 				bb.addKnowledge(j.getJustifications());
-				report("Justification as receiver (2. update world-knowledge.)", bb);
+				param.report("Justification as receiver (2. update world-knowledge.)", bb);
 			} else {
 				bb = beliefs.getViewKnowledge().get(j.getReceiverId());
 				bb.addKnowledge(j.getJustifications());
-				report("Justification as sender (update view->" + j.getReceiverId() + ")", bb);
+				param.report("Justification as sender (update view->" + j.getReceiverId() + ")", bb);
 			}
 		} else {
-			report("Update-Operator: Cant handle perception of type: " + param.getAtom().getClass().getName());
+			param.report("Update-Operator: Cant handle perception of type: " + param.getAtom().getClass().getName());
 		}
 		
 		return beliefs;

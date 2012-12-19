@@ -146,6 +146,17 @@ public class PluginInstantiator {
 		this.listeners.clear();
 	}
 	
+	private Set<Class<?>> getAllInterfaces(Class<?> cls) {
+		Set<Class<?>> reval = new HashSet<>();
+		while(cls != null) {
+			for(Class<?> i : cls.getInterfaces()) {
+				reval.add(i);
+			}
+			cls = cls.getSuperclass();
+		}
+		return reval;
+	}
+	
 	/**
 	 * 	Loads the plugins for the core Angerona Framework and informs the listeners about the
 	 * 	loading. The listeners can load different plugins on their own like the gui extension:
@@ -227,9 +238,9 @@ public class PluginInstantiator {
 		}
 		
 		// Instantiate one operator for every loaded class definition.
-		for(Class<?> cls : implMap.keySet()) {
-			for(Class<?> i : cls.getInterfaces()) {
-				if(i.equals(BaseOperator.class)) {
+		for(Set<Class<?>> classes : implMap.values()) {
+			for(Class<?> cls : classes) {
+				if(getAllInterfaces(cls).contains(BaseOperator.class)) {		
 					BaseOperator op = null;
 					try {
 						op = (BaseOperator)createInstance(cls.getName());

@@ -1,25 +1,25 @@
 <agent-configuration>
 	<name>Full Agent Implementation</name>
 	
-	<generate-options-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>
-	</generate-options-operators>
-    
-    <intention-update-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-        <default-operator-cls>angerona.fw.operators.def.IntentionUpdateOperator</default-operator-cls>
-    </intention-update-operators>
-    
-    <subgoal-generation-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.operators.def.SubgoalGenerationOperator</default-operator-cls>
-	</subgoal-generation-operators>
-
-    <update-beliefs-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-    	<default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
-	</update-beliefs-operators>	
-    
-    <violates-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.operators.def.ViolatesOperator</default-operator-cls>
-	</violates-operators>
+	<operation-set operation-type="GenerateOptions">
+      <default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>
+   	</operation-set>
+	
+	<operation-set operation-type="IntentionUpdate">
+      <default-operator-cls>angerona.fw.operators.def.IntentionUpdateOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="SubgoalGeneration">
+      <default-operator-cls>angerona.fw.operators.def.SubgoalGenerationOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="UpdateBeliefs">
+      <default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="Violates">
+      <default-operator-cls>angerona.fw.operators.def.ViolatesOperator</default-operator-cls>
+   	</operation-set>
 	
 	<component>angerona.fw.logic.Desires</component>
 	<component>angerona.fw.logic.SecrecyKnowledge</component>

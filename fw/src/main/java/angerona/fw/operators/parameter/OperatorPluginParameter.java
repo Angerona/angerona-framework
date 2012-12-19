@@ -4,22 +4,34 @@ import javax.management.AttributeNotFoundException;
 
 import angerona.fw.Agent;
 import angerona.fw.error.ConversionException;
+import angerona.fw.internal.Entity;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.report.ReportPoster;
+import angerona.fw.report.Reporter;
 
 /**
  * Base class for all parameter for operators defined in the Operator-Plugin.
  * 
  * @author Tim Janus
  */
-public abstract class OperatorPluginParameter implements OperatorParameter {
+public abstract class OperatorPluginParameter 
+	implements 
+	OperatorParameter, 
+	Reporter {
 
 	/** the agent who calls the operator */
 	private Agent caller;
 	
+	private ReportPoster operator;
+	
 	public OperatorPluginParameter() {}
 	
-	public OperatorPluginParameter(Agent owner) {
-		this.caller = owner;
+	public OperatorPluginParameter(Agent caller, ReportPoster operator) {
+		if(caller == null || operator == null) {
+			throw new IllegalArgumentException("Both arguments most not be null.");
+		}
+		this.caller = caller;
+		this.operator = operator;
 	}
 	
 	/** @return the agent who class the operator */
@@ -49,5 +61,30 @@ public abstract class OperatorPluginParameter implements OperatorParameter {
 		}
 		throw new ConversionException(GenericOperatorParameter.class, 
 				this.getClass(), inner);
+	}
+	
+	@Override
+	public void visit(ReportPoster op) {
+		operator = op;
+	}
+	
+	@Override
+	public void report(String message) {
+		caller.report(message, operator);
+	}
+	
+	@Override
+	public void report(String message, Entity attachment) {
+		caller.report(message, attachment, operator);
+	}
+
+	@Override
+	public void report(String message, ReportPoster poster) {
+		caller.report(message, poster);
+	}
+	
+	@Override
+	public void report(String message, Entity attachment, ReportPoster poster) {
+		caller.report(message, attachment, poster);
 	}
 }

@@ -6,12 +6,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Angerona;
-import angerona.fw.AngeronaEnvironment;
 import angerona.fw.BaseOperator;
 import angerona.fw.error.ConversionException;
-import angerona.fw.internal.Entity;
 import angerona.fw.operators.parameter.OperatorParameter;
+import angerona.fw.report.ReportPoster;
 
 /**
  * An abstract generic base class for operators implementing an operation type.
@@ -27,7 +25,9 @@ import angerona.fw.operators.parameter.OperatorParameter;
  * @author Tim Janus
  */
 public abstract class Operator<TCaller extends OperatorVisitor, IN extends OperatorParameter, OUT extends Object> 
-	implements BaseOperator {
+	implements 
+	BaseOperator,
+	ReportPoster {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Operator.class);
@@ -72,11 +72,13 @@ public abstract class Operator<TCaller extends OperatorVisitor, IN extends Opera
 		OUT reval = null;
 		try {
 			preparedParams.fromGenericParameter(genericParams);
+			preparedParams.visit(this);
 			reval = processInternal(preparedParams);
 		} catch(ConversionException ex) {
 			reval = defaultReturnValue();
 			LOG.error("Operator '{}' is not able to fetch the parameters: '{}'",
 					this.getClass().getName(), ex.getMessage());
+			throw new RuntimeException();
 		} finally { 
 			genericParams.getCaller().popOperator();
 		}
@@ -103,30 +105,6 @@ public abstract class Operator<TCaller extends OperatorVisitor, IN extends Opera
 		}
 	}
 	
-	/**
-	 * Helper method: Allows sub classes to easily use the report mechanisms of Angerona.
-	 * @param msg	The message which will be reported.
-	 */
-	protected void report(String msg) {
-		Angerona.getInstance().report(msg, this);
-	}
-	
-	/**
-	 * Helper method: Allows sub classes to easily use the report mechanisms of Angerona.
-	 * @param msg			The message which will be reporated
-	 * @param attachment	The entity used as attachment for the report.
-	 */
-	protected void report(String msg, Entity attachment) {
-		Angerona.getInstance().report(msg, this, attachment);
-	}
-
-	@Override
-	public AngeronaEnvironment getSimulation() {
-		// TODO:
-		return null;
-		//return owner.getSimulation();
-	}
-
 	@Override
 	public String getPosterName() {
 		return this.getClass().getSimpleName();

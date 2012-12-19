@@ -55,7 +55,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	
 	@Override
 	protected Boolean processInternal(PlanParameter param) {
-		report("Using Knowhow for Subgoal Generation.");
+		param.report("Using Knowhow for Subgoal Generation.");
 		
 		boolean gen  = false;
 		for (Desire des : param.getAgent().getDesires().getDesires()) {
@@ -279,7 +279,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		// if no action was found return false
 		if(reval == -1 || lastUsedStrategy.getAction() == null) {
-			report("Knowhow was not able to generate atomic action for: '"+lastUsedStrategy.getInitialIntention()+"'");
+			param.report("Knowhow was not able to generate atomic action for: '"+lastUsedStrategy.getInitialIntention()+"'");
 			return null;
 		}
 		
@@ -330,7 +330,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		// create the Subgoal which will be returned and report this step to Angerona.
-		report("Knowhow finds new atomic action '" + act.getClass().getSimpleName() + "'");
+		param.report("Knowhow finds new atomic action '" + act.getClass().getSimpleName() + "'");
 		return new PlanElement(act);
 	}
 	
@@ -454,7 +454,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			}
 		}
 		
-		report((honest ? "Honest answer " : "Lie ") + "for: '"+reason.getQuestion().toString()+"' = " + aa.getAnswerValue().toString());
+		pp.report((honest ? "Honest answer " : "Lie ") + "for: '"+reason.getQuestion().toString()+"' = " + aa.getAnswerValue().toString());
 
 		return new Answer(pp.getAgent(), reason.getSenderId(), reason.getQuestion(), aa);
 	}

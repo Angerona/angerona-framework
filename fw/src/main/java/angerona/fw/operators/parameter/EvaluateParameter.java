@@ -5,6 +5,7 @@ import angerona.fw.AngeronaAtom;
 import angerona.fw.error.ConversionException;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.report.ReportPoster;
 
 public class EvaluateParameter extends OperatorPluginParameter {
 	
@@ -23,8 +24,8 @@ public class EvaluateParameter extends OperatorPluginParameter {
 	 * @param intent	The intention of the agent which needs a check. This might be
 	 * 					a skill, an action or a complete plan.
 	 */
-	public EvaluateParameter(Agent agent, AngeronaAtom intent) {
-		this(agent, (Beliefs)agent.getBeliefs(), intent);
+	public EvaluateParameter(Agent agent, ReportPoster operator, AngeronaAtom intent) {
+		this(agent, operator, (Beliefs)agent.getBeliefs(), intent);
 	}
 	
 	/**
@@ -33,8 +34,8 @@ public class EvaluateParameter extends OperatorPluginParameter {
 	 * @param beliefs
 	 * @param intent
 	 */
-	public EvaluateParameter(Agent agent, Beliefs beliefs, AngeronaAtom intent) {
-		super(agent);
+	public EvaluateParameter(Agent agent, ReportPoster operator, Beliefs beliefs, AngeronaAtom intent) {
+		super(agent, operator);
 		this.information = intent;
 		this.beliefs = (Beliefs)beliefs;
 	}

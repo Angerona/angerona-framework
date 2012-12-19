@@ -20,13 +20,12 @@ import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.BaseOperator;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.TreeController;
 import angerona.fw.listener.SimulationAdapter;
+import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
-import angerona.fw.report.ReportPoster;
 
 /**
  * shows the reports of the actual simulation in a list-view.
@@ -180,7 +179,7 @@ public class ReportView extends BaseView implements ReportListener {
 	public void reportReceived(ReportEntry entry) {
 		Integer tick = new Integer(entry.getSimulationTick());
 		updateTickNode(tick);
-		boolean useAgentNode = updateAgentNode(entry.getPoster());
+		boolean useAgentNode = updateAgentNode(entry.getScope());
 		
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(new Leaf(entry));
 		if(useAgentNode)
@@ -200,24 +199,10 @@ public class ReportView extends BaseView implements ReportListener {
 		}
 	}
 
-	private boolean updateAgentNode(ReportPoster poster) {
-		if(poster != null) {
-			Agent ag = null;
-			if(poster instanceof BaseOperator) {
-				BaseOperator op = (BaseOperator)poster;
-				/* TODO: CHECK COSEQUENCES
-				if(op.getOwner() instanceof Agent) {
-					ag = (Agent)op.getOwner();
-				} else if(op.getOwner() instanceof BaseBeliefbase) {
-					BaseBeliefbase bb = (BaseBeliefbase)op.getOwner();
-					ag = bb.getAgent();
-				}
-				*/
-			} else if(poster instanceof Agent) {
-				ag = (Agent)poster;
-			} else {
-				throw new IllegalArgumentException("At the moment only the types: Agent and BaseOperator are supported as ReportPoster by the ReportView.");
-			}
+	private boolean updateAgentNode(OperatorVisitor scope) {
+		if(scope instanceof Agent) {
+			Agent ag = (Agent)scope;
+			
 			for(int i=0; i<actTickNode.getChildCount(); ++i) {
 				DefaultMutableTreeNode child = (DefaultMutableTreeNode)actTickNode.getChildAt(i);
 				if(! (child.getUserObject() instanceof AgentNodeUserObject))
@@ -233,7 +218,7 @@ public class ReportView extends BaseView implements ReportListener {
 			return true;
 		}
 		
-		LOG.warn("Add a report without poster. The report-system is not capable of link the report to a specific agent. Use the agent as attachment for the default case instead null.");
+		LOG.warn("Add a report without scope. The report-system is not capable of link the report to a specific agent.");
 		return false;
 	}
 

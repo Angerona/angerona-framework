@@ -19,6 +19,7 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.ErrorListener;
 import angerona.fw.listener.SimulationListener;
+import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.report.Report;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
@@ -128,10 +129,10 @@ public class Angerona {
 	 * Writes a report entry with the given message of the given poster
 	 * to the Angerona Report-System. No attachment is given to the report entry.
 	 * @param msg		String representing the message.
-	 * @param sender	Reference to the poster of the report (an operator or an agent)
+	 * @param poster	Reference to the poster of the report (an operator or an agent)
 	 */
-	public void report(String msg, ReportPoster sender) {
-		report(msg, sender, null);
+	public void report(String msg, OperatorVisitor scope, ReportPoster poster) {
+		report(msg, null, scope, poster);
 	}
 	
 	/**
@@ -139,23 +140,26 @@ public class Angerona {
 	 * to the Angerona Report-System. A copy of the attachment is saved in the report
 	 * system.
 	 * @param msg			String representing the message.
-	 * @param sender		Reference to the poster of the report(an operator or an agent)
 	 * @param attachment	A reference to the attachment which has to be an entity like
 	 * 						the Secrecy-Knowledge or a Belief base. 
+	 * @param poster		Reference to the poster of the report(an operator or an agent)
 	 */
-	public void report(String msg, ReportPoster sender, Entity attachment) {
+	public void report(String msg, Entity attachment, OperatorVisitor scope, ReportPoster poster) {
 		String logOut = msg;
 		
-		if (sender == null){
-			throw new IllegalArgumentException("sender must not be null");
+		if (poster == null){
+			throw new IllegalArgumentException("poster must not be null");
+		}
+		if(scope == null) {
+			throw new IllegalArgumentException("scope must not be null");
 		}
 
-		logOut += " by " + sender.getPosterName() + " in " + sender.getSimulation()+":"+sender.getSimulation();
+		logOut += " by " + poster.getPosterName();
 		
 		// Every report will also be logged by our logging facility.
 		LOG.info("REPORT: " + logOut);
 		
-		ReportEntry entry = new ReportEntry(msg, sender, attachment);
+		ReportEntry entry = new ReportEntry(msg, attachment, scope, poster, this.actualSimulation);
 		Angerona.getInstance().getReport(entry.getSimulation()).saveEntry(entry);
 		for(ReportListener listener : reportListeners) {
 			listener.reportReceived(entry);

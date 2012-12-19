@@ -12,7 +12,7 @@ import angerona.fw.util.Pair;
 public abstract class BaseIntentionUpdateOperator extends 
 	Operator<Agent, PlanParameter, PlanElement> {
 
-	public static final String OPERATION_NAME = "";
+	public static final String OPERATION_NAME = "IntentionUpdate";
 	
 	@Override
 	public Pair<String, Class<?>> getOperationType() {

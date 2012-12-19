@@ -39,9 +39,9 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		return false;
 	}
 
-	private double lyingCost(Intention intention) {
+	private double lyingCost(Intention intention, PlanParameter pp) {
 		double estimate = 0.5;
-		report(intention
+		pp.report(intention
 				+ " <b> 'dontKnow' is a lie </b>. Estimated cost equal to weakening secret by "
 				+ estimate);
 		return estimate;
@@ -89,7 +89,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					
 					if (isLie(pe)) {
 						// add return value of lyingCost(intention) to intention
-						double cost = lyingCost(pe.getIntention());
+						double cost = lyingCost(pe.getIntention(), param);
 						pe.setCosts(cost + pe.getCosts());
 						atomicIntentions.add(pe);
 					} else {
@@ -107,7 +107,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 			}
 		}
 		if (atomicIntentions.size() == 0) {
-			report("No atomic step candidate found.");
+			param.report("No atomic step candidate found.");
 			return null;
 		} else {
 			PlanElement min = minimalCosting(atomicIntentions);

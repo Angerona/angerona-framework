@@ -61,7 +61,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		if(!reval)
-			report("No new subgoal generated.", ag);
+			pp.report("No new subgoal generated.");
 		return reval;
 	}
 
@@ -119,7 +119,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					sg.newStack( new Query(ag, recvName, a));
 				}
 				ag.getPlanComponent().addPlan(sg);
-				report("Add the new atomic action '" + Inform.class.getSimpleName() + 
+				pp.report("Add the new atomic action '" + Inform.class.getSimpleName() + 
 						"' to the plan, choosed by desire: " + desire.toString(), 
 						ag.getPlanComponent());
 				reval = true;
@@ -146,7 +146,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				q.getQuestion(), AnswerValue.AV_FALSE));
 		
 		ag.getPlanComponent().addPlan(answer);
-		report("Add the new action '"+ Answer.class.getSimpleName() + 
+		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
 		return true;
 	}
@@ -180,7 +180,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					Subgoal sg = new Subgoal(ag, des);
 					sg.newStack(new Query(ag, rr.getSenderId(), reasonToFire));
 					ag.getPlanComponent().addPlan(sg);
-					report("Add the new action '" + Query.class.getSimpleName() + "' to the plan.", ag.getPlanComponent());
+					pp.report("Add the new action '" + Query.class.getSimpleName() + "' to the plan.", ag.getPlanComponent());
 				} else if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
 					return false;
 				}

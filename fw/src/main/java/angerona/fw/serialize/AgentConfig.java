@@ -1,7 +1,6 @@
 package angerona.fw.serialize;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 
@@ -9,7 +8,7 @@ import java.util.Set;
  */
 public interface AgentConfig {
 	/** @return String identifying the GenerateOptions Operator class name */
-	public Set<OperationSetConfig> getOperations();
+	public List<OperationSetConfig> getOperations();
 	
 	/** @return String with name of the agent configuration */
 	public String getName();

@@ -5,13 +5,14 @@
 		<name>Employee</name>
 		<default-suffix>cleaner</default-suffix>
 	
-        <config class="angerona.fw.serialize.AgentConfigImport">
+        <config>
 			<source>config/agents/knowhow_agent.xml</source>
         </config>
     
-        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+        <beliefbase-config>
             <source>config/beliefbases/asp_beliefbase.xml</source>
         </beliefbase-config>
+        
         <skill>QueryAnswer</skill>
         
 		<desire>attend_scm</desire>

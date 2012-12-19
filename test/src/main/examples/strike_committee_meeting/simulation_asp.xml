@@ -5,11 +5,11 @@
 		<name>Employee</name>
         <default-suffix>employee</default-suffix>
          
-        <config class="angerona.fw.serialize.AgentConfigImport">
+        <config>
 			<source>config/agents/default_agent.xml</source>
         </config>
          
-        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+        <beliefbase-config>
 			<source>config/beliefbases/asp_beliefbase.xml</source>
         </beliefbase-config>
         
@@ -28,13 +28,13 @@
       	<name>Boss</name>
       	<default-suffix>boss</default-suffix>
       	
-      	<config class="angerona.fw.serialize.AgentConfigImport">
+      	<config>
       		<source>config/agents/default_agent.xml</source>
       	</config>
       	
       	<skill>Query</skill>
       	
-      	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
+      	<beliefbase-config>
             <source>config/beliefbases/asp_beliefbase.xml</source>
          </beliefbase-config>
          

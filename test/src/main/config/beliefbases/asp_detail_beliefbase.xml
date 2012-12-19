@@ -1,13 +1,13 @@
 <beliefbase-configuration>
-   <name>Answer-Set Belief base</name>
-   <reasoners class="angerona.fw.serialize.OperatorSetConfigReal">
+   <name>Answer-Set Belief Base (detail)</name>
+   <reasoners>
       <default-operator-cls>angerona.fw.logic.asp.AspReasoner{d=1.0}</default-operator-cls>
    </reasoners>
-   <change-operators class="angerona.fw.serialize.OperatorSetConfigReal">
+   <change-operators>
       <default-operator-cls>angerona.fw.logic.asp.AspRevision</default-operator-cls>
       <operator-cls>angerona.fw.logic.asp.AspExpansion</operator-cls>
    </change-operators>
-   <translators class="angerona.fw.serialize.OperatorSetConfigReal">
+   <translators>
       <default-operator-cls>angerona.fw.logic.asp.AspTranslator</default-operator-cls>
    </translators>
    

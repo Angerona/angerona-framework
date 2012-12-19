@@ -7,7 +7,6 @@ import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.BaseOperator;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.IdGenerator;
 import angerona.fw.operators.OperatorVisitor;
 
 /**
@@ -31,11 +30,14 @@ public class ReportEntry implements Cloneable {
 	/** the attachment of the report entry, might be null if no attachment is attached. */
 	private Entity attachment;
 
-	/** reference to the poster of the report. We assume that the name and the simulation is
-	 * 	never changed during runtime. But the tick changes of course and is therefore saved in
-	 * 	a separate attribute.
-	 */
+	/** the scope in which the entry is generated (agent or belief base). */
+	private OperatorVisitor scope;
+	
+	/** reference to the poster of the report (an operator, a belief base or an agent) */
 	private ReportPoster poster;
+	
+	/** reference to the entire simulation */
+	private AngeronaEnvironment simulation;
 	
 	/** a stack of strings representing the operators callstack which create this entry */
 	private Stack<String> operatorCallstack = new Stack<String>();
@@ -43,42 +45,36 @@ public class ReportEntry implements Cloneable {
 	/**
 	 * Ctor: Creates a new report entry with the given message, poster and attachment.
 	 * @param message		A string representing the message saved in the report entry
-	 * @param poster		A reference to the poster of the entry, in most cases an operator.
 	 * @param attachment	An optional attachment like a belief base or a data component like 
 	 * 						Secrecy Knowledge.
+	 * @param poster		A reference to the poster of the entry, in most cases an operator.
 	 */
-	public ReportEntry(String message, ReportPoster poster, Entity attachment) {
+	public ReportEntry(String message, Entity attachment, 
+			OperatorVisitor scope, ReportPoster poster, AngeronaEnvironment simulation) {
 		// check for valid parameters
 		if(poster == null)
 			throw new IllegalArgumentException("poster must not be null");
-		if(poster.getSimulation() == null)
+		if(simulation == null)
 			throw new IllegalArgumentException("poster must have a refernce to a simulation.");
 		
 		// set the parameters
 		this.message = message;
 		this.attachment = attachment;
 		this.poster = poster;
-		this.simulationTick = poster.getSimulation().getSimulationTick();
+		this.scope = scope;
+		this.simulation = simulation;
+		this.simulationTick = simulation.getSimulationTick();
 		this.realTime = new Date();
 		
-		// search for the parent in attachment hierarchy (an agent in most cases)
-		Entity temp = attachment;
-		if(temp != null) {
-			while(temp.getParent() != null) {
-				temp = IdGenerator.getEntityWithId(temp.getParent());
-			}
-		}
-		
-		// if the parent implements OperatorVisitor interface, then copy the
-		// callstack
-		if(temp instanceof OperatorVisitor) {
-			OperatorVisitor ov = (OperatorVisitor)temp;
-			for(BaseOperator op : ov.getStack()) {
-				operatorCallstack.add(op.getClass().getName());
-			}
+		for(BaseOperator op : scope.getStack()) {
+			operatorCallstack.add(op.getClass().getName());
 		}
 	}
 
+	public OperatorVisitor getScope() {
+		return scope;
+	}
+	
 	public int getSimulationTick() {
 		return simulationTick;
 	}
@@ -96,7 +92,7 @@ public class ReportEntry implements Cloneable {
 	}
 	
 	public AngeronaEnvironment getSimulation() {
-		return poster.getSimulation();
+		return simulation;
 	}
 	
 	public String getPosterName() {

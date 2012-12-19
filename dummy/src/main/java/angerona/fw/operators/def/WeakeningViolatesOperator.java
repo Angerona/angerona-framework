@@ -105,7 +105,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 			List<Action> actionsHistory = param.getAgent().getActionHistory();
 			for (Action act : actionsHistory) {
 				if (a.equals(act)) {
-					report(param.getAgent().getName()
+					param.report(param.getAgent().getName()
 							+ "' <b> self-repeats </b> with: '"
 							+ param.getAtom() + "'");
 					secretList = representTotalExposure(conf);
@@ -149,7 +149,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 
 				if (newAnsSets == null) {
 					String actString = param.getAtom().toString();
-					report(param.getAgent().getName() + "' <b> creates contradiction </b> by: '"
+					param.report(param.getAgent().getName() + "' <b> creates contradiction </b> by: '"
 							+ actString.substring(0, actString.length() - 1) + "'", view);
 					secretList = representTotalExposure(conf);
 					return new ViolatesResult(secretList);
@@ -190,7 +190,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 						secretList.add(sPair);
 						String actString = param.getAtom().toString();
 						if (degreeOfWeakening > 0) {
-							report(param.getAgent().getName()
+							param.report(param.getAgent().getName()
 									+ "' <b> weakens secret: </b> '"
 									+ secretInfo.toString()
 									+ "' by: '"
@@ -199,14 +199,14 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 									+ actString.substring(0,
 											actString.length() - 1) + "'", view);
 						} else {
-							report(param.getAgent().getName()
+							param.report(param.getAgent().getName()
 									+ "' <b> weakens no secrets </b> ' with: '"
 									+ actString.substring(0,
 											actString.length() - 1) + "'", view);
 						}
 					} else {
 						String actString = param.getAtom().toString();
-						report(param.getAgent().getName()
+						param.report(param.getAgent().getName()
 								+ "' <b> weakens no secrets: </b> ' with: '"
 								+ actString.substring(0, actString.length() - 1)
 								+ "'", view);

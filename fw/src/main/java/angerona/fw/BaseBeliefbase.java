@@ -120,9 +120,9 @@ public abstract class BaseBeliefbase
 	 * @throws IllegalAccessException
 	 */
 	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
-		operators.addOperationSet(BaseChangeBeliefs.OPERATION_TYPE, bbc.getChangeOperators());
-		operators.addOperationSet(BaseReasoner.OPERATION_TYPE, bbc.getReasoners());
-		operators.addOperationSet(BaseTranslator.OPERATION_TYPE, bbc.getTranslators());
+		operators.addOperationSet(bbc.getChangeOperators());
+		operators.addOperationSet(bbc.getReasoners());
+		operators.addOperationSet(bbc.getTranslators());
 	}
 
 	/** @return the default change operator */
@@ -149,6 +149,7 @@ public abstract class BaseBeliefbase
 	 */
 	public void parse(String filepath) 
 			throws FileNotFoundException, IOException, ParseException {
+		LOG.info("Parsing file: '{}'", filepath);
 		File f = new File(filepath);
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);

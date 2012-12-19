@@ -10,9 +10,6 @@ public class GenericOperatorParameter {
 	
 	private Map<String, Object> parameters = new HashMap<String, Object>();
 	
-	public GenericOperatorParameter() {
-	}
-	
 	public GenericOperatorParameter(OperatorVisitor caller) {
 		this.caller = caller;
 	}

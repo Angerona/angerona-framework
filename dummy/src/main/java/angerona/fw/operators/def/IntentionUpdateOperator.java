@@ -39,7 +39,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 						if(!select) {
 							select = ag.performThought(ag.getBeliefs(), pe).isAlright();
 							if(select) {
-								report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.", ag);
+								param.report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.");
 							}
 						}
 						
@@ -50,7 +50,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 				}
 			}
 		}
-		report("No atomic step candidate found.", ag);
+		param.report("No atomic step candidate found.");
 		return null;
 	}
 }

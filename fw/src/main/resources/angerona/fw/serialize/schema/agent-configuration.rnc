@@ -3,7 +3,7 @@ element agent-configuration {
 	element cycle {
 	   external "xml_ref.rnc"
 	} &
-	element operators { 
+	element operation-set { 
 	   attribute operation-type {text},
 	   external "op-set.rnc" 
 	}* &

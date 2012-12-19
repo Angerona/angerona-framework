@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -25,14 +24,14 @@ public class AgentConfigReal implements AgentConfig{
 	protected String name;
 	
 	/** String identifying the GenerateOptions Operator-Set for dynamic instantiation */
-	@ElementList(name="operators")
-	protected Set<OperationSetConfig> operators;
+	@ElementList(inline=true, entry="operation-set", type=OperationSetConfigReal.class)
+	protected List<OperationSetConfig> operators;
 	
 	@ElementList(name="components", entry="component", inline=true)
 	protected List<String> componentClasses = new LinkedList<String>();
 	
 	@Override
-	public Set<OperationSetConfig> getOperations() {
+	public List<OperationSetConfig> getOperations() {
 		return operators;
 	}
 

@@ -77,7 +77,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						
 						boolean inClone = cloneInfere.contains(secret.getInformation());
 						if(	inClone )  {
-							report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'");
+							param.report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'");
 							pairs.add(new Pair<>(secret, 1.0));
 						}
 					}
@@ -87,9 +87,9 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		ViolatesResult reval = new ViolatesResult(pairs);
 	
 		if(reval.isAlright())
-			report("No violation applying the perception/action: '" + percept + "'");
+			param.report("No violation applying the perception/action: '" + percept + "'");
 		else
-			report("Violation by appling the perception/action: '" + percept + "'");
+			param.report("Violation by appling the perception/action: '" + percept + "'");
 		return reval;
 	}
 	
@@ -112,7 +112,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	@Override
 	public void performAction(Action action, Agent agent, Beliefs beliefs) {
-		EvaluateParameter param = new EvaluateParameter(agent, beliefs, action);
+		EvaluateParameter param = new EvaluateParameter(agent, this, beliefs, action);
 		violates = violates.combine(onPerception(action, param));
 	}
 }

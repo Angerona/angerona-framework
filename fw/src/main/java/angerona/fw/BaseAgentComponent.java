@@ -100,7 +100,7 @@ public abstract class BaseAgentComponent implements AgentComponent {
 	public void report(String msg) {
 		/** unit tests will run without an agent on the component so test for the agent before reporting to angerona */
 		if(getAgent() != null)
-			Angerona.getInstance().report(msg, getAgent(), this);
+			getAgent().report(msg, this);
 	}
 		
 	@Override

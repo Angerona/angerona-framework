@@ -3,6 +3,7 @@ package angerona.fw.operators.parameter;
 import angerona.fw.PlanComponent;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.report.ReportPoster;
 
 /**
  * These are the parameters used by a Planer.
@@ -20,8 +21,8 @@ public class PlanParameter extends OperatorPluginParameter {
 	 * @param actualPlan	the high level plan of the agent
 	 * @param forbidden		list of forbidden actions (forbidden skills)
 	 */
-	public PlanParameter(PlanComponent actualPlan) {
-		super(actualPlan.getAgent());
+	public PlanParameter(ReportPoster operator, PlanComponent actualPlan) {
+		super(actualPlan.getAgent(), operator);
 		this.actualPlan = actualPlan;
 	}
 	

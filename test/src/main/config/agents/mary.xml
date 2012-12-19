@@ -3,26 +3,26 @@
 	<name>Mary Agent Implementation</name>
 	<!-- I've never actually looked at the Generate Options Operator. I should sometime. -->
 	
-	<generate-options-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>
-    </generate-options-operators>
-    
-    <intention-update-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-        <default-operator-cls>angerona.fw.operators.def.MaryIntentionUpdateOperator</default-operator-cls>
-    </intention-update-operators>
-    
-    <subgoal-generation-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.mary.SubgoalGenerationOperator</default-operator-cls>
-		<operator-cls>angerona.fw.operators.def.SubgoalGenerationOperator</operator-cls>
-    </subgoal-generation-operators>
-
-    <update-beliefs-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-    	<default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
-	</update-beliefs-operators>	
-    
-    <violates-operators class="angerona.fw.serialize.OperatorSetConfigReal">
-		<default-operator-cls>angerona.fw.operators.def.WeakeningViolatesOperator</default-operator-cls>
-	</violates-operators>
+	<operation-set operation-type="GenerateOptions">
+      <default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>
+   	</operation-set>
+	
+	<operation-set operation-type="IntentionUpdate">
+      <default-operator-cls>angerona.fw.operators.def.MaryIntentionUpdateOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="SubgoalGeneration">
+      <default-operator-cls>angerona.fw.mary.SubgoalGenerationOperator</default-operator-cls>
+	  <operator-cls>angerona.fw.operators.def.SubgoalGenerationOperator</operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="UpdateBeliefs">
+      <default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="Violates">
+      <default-operator-cls>angerona.fw.operators.def.WeakeningViolatesOperator</default-operator-cls>
+   	</operation-set>
 	
 	<component>angerona.fw.logic.Desires</component>
 	<component>angerona.fw.logic.SecrecyKnowledge</component>

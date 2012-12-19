@@ -84,7 +84,7 @@ public class SubgoalGenerationOperator extends
 		}
 		
 		if(!reval)
-			report("No new subgoal generated.", ag);
+			pp.report("No new subgoal generated.");
 		return reval;
 	}
 	
@@ -184,7 +184,7 @@ public class SubgoalGenerationOperator extends
 				sg.newStack(new Query(ag, recvName, f));
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
-				report("Add the new atomic action '"+Query.class.getSimpleName()+"' to the plan, chosen by desire: " + desire.toString(), 
+				pp.report("Add the new atomic action '"+Query.class.getSimpleName()+"' to the plan, chosen by desire: " + desire.toString(), 
 						ag.getPlanComponent());
 			}
 		}

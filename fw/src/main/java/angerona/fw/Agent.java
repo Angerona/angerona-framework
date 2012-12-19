@@ -46,6 +46,7 @@ import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
 import angerona.fw.report.ReportPoster;
+import angerona.fw.report.Reporter;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.OperationSetConfig;
@@ -64,6 +65,7 @@ public class Agent extends AgentArchitecture
 	, Entity
 	, OperatorVisitor
 	, ReportPoster
+	, Reporter
 	, ActionProcessor
 	, PropertyChangeListener {
 
@@ -174,6 +176,13 @@ public class Agent extends AgentArchitecture
 		
 		capabilities.addAll(ai.getSkills());
 		
+		// link supported operators...
+		for(OperationSetConfig osc : ai.getConfig().getOperations()) {
+			if(!operators.addOperationSet(osc)) {
+				errorOutput = "Cannot create operation-set: '" + osc.getOperationType() + "'";
+			}
+		}
+		
 		createAgentComponents(ai);
 		
 		PluginInstantiator pi = PluginInstantiator.getInstance();
@@ -185,7 +194,7 @@ public class Agent extends AgentArchitecture
 			// TODO: 	it does not only depend on the world belief base, 
 			// 			find a better solution to get the file-suffix. Then move these bunch of 
 			//			code before the creation of the belief bases (lesser code needed then).
-			String fn = getSimulation().getDirectory() + "/" + 
+			String fn = getEnvironment().getDirectory() + "/" + 
 					ai.getFileSuffix() + "." + world.getFileEnding();
 			
 			FileInputStream fis = new FileInputStream(new File(fn));
@@ -272,10 +281,6 @@ public class Agent extends AgentArchitecture
 		AgentConfig ac = ai.getConfig();
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		try {
-			for(OperationSetConfig osc : ac.getOperations()) {
-				operators.addOperationSet("TODO", osc);
-			}
-		
 			for(String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
 				comp.setParent(id);
@@ -393,6 +398,7 @@ public class Agent extends AgentArchitecture
 		// Means-end-reasoning:
 		PlanComponent masterPlan = getComponent(PlanComponent.class);
 		if(masterPlan != null) {
+			opParam.setParameter("plan", masterPlan);
 			while(atomic == null) {
 				BaseIntentionUpdateOperator intUpd = (BaseIntentionUpdateOperator)operators.getPreferedByType(BaseIntentionUpdateOperator.OPERATION_NAME);
 				atomic = (PlanElement)intUpd.process(opParam);
@@ -445,9 +451,9 @@ public class Agent extends AgentArchitecture
 		if(perception != null) {
 			// save the perception for later use in messaging system.
 			lastUpdateBeliefsPercept = perception;
-			GenericOperatorParameter param = new GenericOperatorParameter();
+			GenericOperatorParameter param = new GenericOperatorParameter(this);
 			param.setParameter("beliefs", beliefs);
-			param.setParameter("perception", perception);
+			param.setParameter("information", perception);
 			BaseUpdateBeliefsOperator bubo = (BaseUpdateBeliefsOperator)operators.getPreferedByType(
 					BaseUpdateBeliefsOperator.OPERATION_NAME);
 			return bubo.process(param);
@@ -464,7 +470,7 @@ public class Agent extends AgentArchitecture
 	 */
 	public ViolatesResult performThought(Beliefs beliefs, AngeronaAtom intent) {
 		GenericOperatorParameter param = new GenericOperatorParameter(this);
-		param.setParameter("intention", intent);
+		param.setParameter("information", intent);
 		param.setParameter("beliefs", beliefs);
 		BaseViolatesOperator bvo = (BaseViolatesOperator)operators.getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
 		return bvo.process(param);
@@ -549,7 +555,7 @@ public class Agent extends AgentArchitecture
 		updateBeliefs(act);
 		act.onSubgoalFinished(null);
 		LOG.info("Action performed: " + act.toString());
-		Angerona.getInstance().report("Action: '"+act.toString()+"' performed.", this);
+		report("Action: '"+act.toString()+"' performed.");
 		Angerona.getInstance().onActionPerformed(this, act);
 		//Record this action
 		//this.lastAction = act;
@@ -645,11 +651,6 @@ public class Agent extends AgentArchitecture
 	}
 
 	@Override
-	public AngeronaEnvironment getSimulation() {
-		return getEnvironment();
-	}
-
-	@Override
 	public String getPosterName() {
 		if(operatorStack.empty())
 			return getName();
@@ -708,25 +709,41 @@ public class Agent extends AgentArchitecture
 	 * the report-system.
 	 */
 	protected void reportCreation() {
-		Angerona ang = Angerona.getInstance();
-		ang.report("Agent: '" + getName()+"' created.", this);
+		report("Agent: '" + getName()+"' created.");
 		
-		ang.report("Desires Set of '" + getName() + "' created.", 
-				this, this.getDesires());
+		report("Desires Set of '" + getName() + "' created.", this.getDesires());
 		
 		Beliefs b = getBeliefs();
-		ang.report("World Beliefbase of '" + this.getName()+"' created.", 
-				this, b.getWorldKnowledge() );
+		report("World Beliefbase of '" + this.getName()+"' created.", b.getWorldKnowledge() );
 		
 		Map<String, BaseBeliefbase> views = b.getViewKnowledge();
 		for(String name : views.keySet()) {
 			BaseBeliefbase actView = views.get(name);
-			ang.report("View->'" + name +"' Beliefbase of '" + getName() + "' created.", this, actView);
+			report("View->'" + name +"' Beliefbase of '" + getName() + "' created.", actView);
 		}
 		
 		for(AgentComponent ac : getComponents()) {
-			ang.report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", this, ac);
+			report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", ac);
 		}
 	}
+	
+	@Override
+	public void report(String message) {
+		Angerona.getInstance().report(message, this, this);
+	}
+	
+	@Override
+	public void report(String message, Entity attachment) {
+		Angerona.getInstance().report(message, attachment, this, this);
+	}
 
+	@Override
+	public void report(String message, ReportPoster poster) {
+		Angerona.getInstance().report(message, this, poster);
+	}
+	
+	@Override
+	public void report(String message, Entity attachment, ReportPoster poster) {
+		Angerona.getInstance().report(message, attachment, this, poster);
+	}
 }
