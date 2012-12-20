@@ -98,6 +98,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 				conditionals.add(newCond);
 			} else {
 				// proposition
+				log.info("parsing proposition: {}", line);
 				PropositionalFormula proposition = (PropositionalFormula) parser.parseFormula(line);
 				propositions.add(proposition);
 			}

@@ -33,12 +33,31 @@ import angerona.fw.operators.parameter.ReasonerParameter;
 public class ConditionalReasoner extends BaseReasoner {
 	/** reference to the logging facility */
 	private static Logger log = LoggerFactory.getLogger(ConditionalReasoner.class);
+	
+	public RankingFunction ocf;
+	
+	public ConditionalReasoner(ConditionalBeliefbase bbase) {
+		this.actualBeliefbase = bbase;
+	}
+	
+	public void calculateCRepresentation() {
+		ConditionalBeliefbase bbase = (ConditionalBeliefbase) this.actualBeliefbase;
+		// Calculate c-representation
+				BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
+				
+				log.info("compute c-representation (bruteforce)");
+				long startTime = System.currentTimeMillis();
+				ocf = creasoner.getCRepresentation();
+				long duration = System.currentTimeMillis() - startTime;
+				log.info("done. duration: {}ms", duration);
+	}
 
 	/**
 	 * Calculates the conditional belief set from a conditional belief base.
 	 * A ordinal conditional ranking function (ocf) kappa is calculated from
 	 * the belief base using c representations. Then, the belief set is defined
-	 * as the set of propositions, that can be defeasibly concluded from the belief base
+	 * as the set of propositional literals, that can be defeasibly concluded 
+	 * from the belief base.
 	 * 
 	 */
 	@Override
@@ -46,14 +65,9 @@ public class ConditionalReasoner extends BaseReasoner {
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) this.actualBeliefbase;
 		Set<FolFormula> retval = new HashSet<FolFormula>();
 		
-		// Calculate c-representation
-		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
-		
-		log.info("compute c-representation (bruteforce)");
-		long startTime = System.currentTimeMillis();
-		RankingFunction ocf = creasoner.getCRepresentation();
-		long duration = System.currentTimeMillis() - startTime;
-		log.info("done. duration: {}ms", duration);
+		if(this.ocf == null) {
+			calculateCRepresentation();
+		}
 		
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
 		Conjunction conjunction = new Conjunction(propositions);
