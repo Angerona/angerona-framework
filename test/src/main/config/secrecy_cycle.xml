@@ -1,8 +1,7 @@
 <Operation-Defintion name="Secrecy Cycle">
     <operation type="UpdateBeliefs">
-        <param name="information">$in.perception</param>
-        <param name="beliefs">$beliefs</param>
-        <output>#EMPTY</output>
+        <param name="information" value="$in.perception" />
+        <param name="beliefs" value="$beliefs" />
     <operation>
     
 	<operation type="GenerateOptions">
