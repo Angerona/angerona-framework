@@ -11,7 +11,8 @@ import org.simpleframework.xml.Root;
 
 
 /**
- * Contains the dynamic configurations of an agent.
+ * Contains the dynamic configurations of an agent saved in the agent
+ * configuration files.
  * It holds the type names of the classes use for different operators.
  * 
  * @author Tim Janus

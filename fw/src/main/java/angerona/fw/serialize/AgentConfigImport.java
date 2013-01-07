@@ -8,7 +8,12 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.core.Resolve;
 
-
+/**
+ * An implementation of the agent configuration file as a reference of the form:
+ * <source>filename.xml</source>. It is used by simple xml internally to load the
+ * agent configuration file.
+ * @author Tim Janus
+ */
 @Root(name="agent-config-file")
 public class AgentConfigImport implements AgentConfig {
 	@Element

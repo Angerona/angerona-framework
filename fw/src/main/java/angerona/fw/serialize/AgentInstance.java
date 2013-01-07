@@ -15,7 +15,13 @@ import org.simpleframework.xml.Root;
 
 
 /**
- * An instance of this class represents one agent in the simulation
+ * This class is responsible for the simple xml serialization of the agent
+ * instances in a simulation. An agent instance contains the name of the
+ * agent, a reference to the agent's configuration file, a reference to the
+ * belief base configuration file of the belief base instantiated by the
+ * agent, a default file name suffix for this belief base, a list of desires
+ * a list of skills and a list key data pairs representing the initial configuration
+ * of the agent's components.
  * @author Tim Janus
  */
 @Root(name="agent-instance")

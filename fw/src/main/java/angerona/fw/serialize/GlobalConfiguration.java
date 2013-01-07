@@ -17,7 +17,13 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.xml.sax.SAXException;
 
-
+/**
+ * This class is responsible for the serialization of the global configuration
+ * file of Angerona. This file contains a list of plugins to load and a list of
+ * parameters which are key value pairs.
+ * @author Tim Janus
+ *
+ */
 @Root(name="config")
 public class GlobalConfiguration {
 	

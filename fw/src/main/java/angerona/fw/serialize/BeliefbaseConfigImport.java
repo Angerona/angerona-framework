@@ -7,7 +7,12 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.core.Resolve;
 
-
+/**
+ * An implementation of the belief base configuration file as a reference of the form:
+ * <source>filename.xml</source>. It is used by simple xml internally to load the
+ * belief base configuration file.
+ * @author Tim Janus
+ */
 @Root(name="beliefbase-config-import")
 public class BeliefbaseConfigImport implements BeliefbaseConfig {
 

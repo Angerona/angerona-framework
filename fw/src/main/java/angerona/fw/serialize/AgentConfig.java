@@ -3,7 +3,11 @@ package angerona.fw.serialize;
 import java.util.List;
 
 /**
- * 
+ * Interface for serializable simple xml classes of the agent configuration file.
+ * It contains all information saved in an agent configuration file. This are the
+ * name of the configuration. The List of operation sets the agent can use and the list
+ * of components (identified by full java class name) the agent instantiates at run-
+ * time.
  * @author Tim Janus
  */
 public interface AgentConfig {
