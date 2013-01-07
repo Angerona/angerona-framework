@@ -52,7 +52,7 @@ public class OperatorSet {
 	 * 								the form {d=1.0} as postfix.
 	 * @return 	true if the operator was added and false if an error occurred.
 	 */
-	public BaseOperator addOperator(String clsNameAndParams) {
+	public Pair<String, BaseOperator> addOperator(String clsNameAndParams) {
 		Pair<String, BaseOperator> p = null;
 		try {
 			p = fetch(clsNameAndParams);
@@ -64,7 +64,7 @@ public class OperatorSet {
 			return null;
 		}
 		realAdd(p);
-		return p.second;
+		return p;
 	}
 	
 	/**
@@ -112,7 +112,8 @@ public class OperatorSet {
 			LOG.warn("The operation-set of type '{}' already exists.", os.getOperationName());
 		}
 		
-		BaseOperator def = addOperator(config.getDefaultClassName());
+		Pair<String, BaseOperator> defPair = addOperator(config.getDefaultClassName());
+		BaseOperator def = defPair.second;
 		if(def == null) {
 			LOG.error("Default operator for '{}' cannot be added.", config.getOperationType());
 			return false;
@@ -124,7 +125,7 @@ public class OperatorSet {
 			return false;
 		}
 		os = getOperationSetByType(config.getOperationType());
-		os.setPrefered(config.getDefaultClassName());
+		os.setPrefered(defPair.first);
 		
 		// add alternative operators:
 		for(String clsNameAndParams : config.getOperatorClassNames()) {
