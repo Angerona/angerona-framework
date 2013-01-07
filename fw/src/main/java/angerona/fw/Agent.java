@@ -104,7 +104,7 @@ public class Agent extends AgentArchitecture
 	private Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
 	
 	/** the perception received by the last or running cylce call */
-	private Perception actualPerception;
+	private Perception currentPerception;
 	
 	/** the last perception used in the updateBeliefs Method */
 	private Perception lastUpdateBeliefsPercept;
@@ -381,14 +381,15 @@ public class Agent extends AgentArchitecture
 		PlanElement atomic = null;
 		if(!(perception instanceof Perception)) {
 			LOG.error("object must be of type Perception");
-			actualPerception = null;
+			currentPerception = null;
 		} else {
-			actualPerception = (Perception)perception;
+			currentPerception = (Perception)perception;
 		}
 		
 		GenericOperatorParameter opParam = new GenericOperatorParameter(this);
+		opParam.setParameter("perception", currentPerception);
 		
-		updateBeliefs(actualPerception);	
+		updateBeliefs(currentPerception);	
 		
 		// Deliberation:
 		//genOptionsOperators.def().process(opParam);
@@ -511,7 +512,7 @@ public class Agent extends AgentArchitecture
 	
 	/** @return the perception the agent is working on. */
 	public Perception getActualPerception() {
-		return actualPerception;
+		return currentPerception;
 	}
 
 	/** @return Reference to the AgentProcess used for communicating with the environment. */

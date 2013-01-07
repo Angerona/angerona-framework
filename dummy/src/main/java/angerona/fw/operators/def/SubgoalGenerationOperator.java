@@ -46,14 +46,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 		Desires des = ag.getDesires();
 		if(des != null) {
-			Set<Desire> actual;
-			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
-			for(Desire d : actual) {
+			Set<Desire> currentDesires;
+			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
+			for(Desire d : currentDesires) {
 				reval = reval || answerQuery(d, pp, ag);
 			}
 			
-			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareRevisionRequestProcessing);
-			for(Desire d : actual) {
+			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareRevisionRequestProcessing);
+			for(Desire d : currentDesires) {
 				reval = reval || revisionRequest(d, pp, ag);
 			}
 			
