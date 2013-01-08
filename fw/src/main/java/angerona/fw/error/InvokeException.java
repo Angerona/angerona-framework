@@ -3,7 +3,7 @@ package angerona.fw.error;
 import angerona.fw.reflection.Context;
 
 /**
- * This exception is thrown if something went wrong during the invoking of function defined in xml 
+ * This exception is thrown if something went wrong during the invoking of function defined in ASML 
  * format. 
  * 
  * @author Tim Janus
@@ -14,17 +14,44 @@ public class InvokeException extends AngeronaException {
 
 	private Context context;
 	
-	public InvokeException(String message, Context context) {
+	private Type type;
+	
+	public enum Type {
+		INTERNAL,
+		PARAMETER,
+		TYPE_MISMATCH
+	}
+	
+	public InvokeException(String message, Type type, Context context) {
 		super(message);
+		this.type = type;
 		this.context = context;
 	}
 
+	public Type getErrorType() {
+		return type;
+	}
+	
 	@Override
 	public String getMessage() {
-		return super.getMessage() + "\n" + context.toString();
+		return "[" + type.toString() + "] " + super.getMessage();
 	}
 
-	public static InvokeException createParameterException(String paramname, Context context) {
-		return new InvokeException("Can't find Parameter with name: "+paramname, context);
+	public String temp() {
+		return getMessage() + "\n" + context.toString() + "\n---";
+	}
+	
+	public static InvokeException internalError(String message, Context context) {
+		return new InvokeException(message, Type.INTERNAL, context);
+	}
+	
+	public static InvokeException typeMismatch(String paramname, Class<?> type, Context context) {
+		return new InvokeException("Cannot cast '" + paramname + "' to type '" + type + "'.", 
+				Type.TYPE_MISMATCH, context);
+	}
+	
+	public static InvokeException parameterFailure(String paramname, Context context) {
+		return new InvokeException("Cannot find Parameter with name: "+paramname, 
+				Type.PARAMETER, context);
 	}
 }

@@ -1,20 +1,38 @@
 package angerona.fw.reflection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.Agent;
 import angerona.fw.error.InvokeException;
 
 public abstract class XMLCommando implements Commando, ContextProvider {
 
+	/** reference to the logback logger instance */
+	private static Logger LOG = LoggerFactory.getLogger(XMLCommando.class);
+	
 	private Context context;
 	
+	private InvokeException lastError;
+	
 	@Override
-	public void execute(Context context) {
+	public boolean execute(Context context) {
+		lastError = null;
 		this.context = context;
 		try {
 			executeInternal();
-		} catch(InvokeException ex) {
-			
+		} catch (InvokeException e) {
+			lastError = e;
+			LOG.warn("An error occurred during ASML execution: {}", e.getMessage());
+			//e.printStackTrace();
+			return false;
 		}
+		return true;
+	}
+	
+	@Override
+	public InvokeException getLastError() {
+		return lastError;
 	}
 	
 	@Override
@@ -39,7 +57,7 @@ public abstract class XMLCommando implements Commando, ContextProvider {
 			name = name.substring(1);
 		Object obj = context.get(name);
 		if(obj == null) {
-			throw InvokeException.createParameterException(name, context);
+			throw InvokeException.parameterFailure(name, context);
 		}
 		
 		// This throws a class cast exception if something went wrong
@@ -48,7 +66,7 @@ public abstract class XMLCommando implements Commando, ContextProvider {
 			T reval = (T)obj;
 			return reval;
 		} catch(ClassCastException exec) {
-			throw new InvokeException("Cant cast Parameter " + name + " to correct type. Actual: " + obj.getClass().getName(), context);
+			throw InvokeException.typeMismatch(name, obj.getClass(), context);
 		}
 	}
 	

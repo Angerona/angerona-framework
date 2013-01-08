@@ -73,18 +73,13 @@ public abstract class BaseVariable<T> implements Variable<T> {
 	protected T createInstance(Context c) throws InvokeException {
 		Object obj = c.get(content.substring(1));
 		if(obj == null) {
-			throw new InvokeException("Cannot find variable '" + content + "'.", c);
+			throw InvokeException.parameterFailure(content, c);
 		}
 		T reval = null;
 		try {
 			reval = (T) obj;
 		} catch(ClassCastException cce) {
-			// TODO: Get type name of T... JAVA sucks here because nearly twenty years
-			//		 backward compatibility.
-			//Class<T> cls = new Class<T>();
-			throw new InvokeException("Did find variable '" + content + 
-					"' but the type is '" + obj.getClass().getName() + 
-					"' not '"+"TODO"+"'.", c);
+			throw InvokeException.typeMismatch(content, obj.getClass(), c);
 		}
 		return reval;
 	}

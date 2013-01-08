@@ -33,11 +33,11 @@ public class XMLCommandoSequence extends XMLCommando {
 	}
 	
 	@Override 
-	public void execute(Context context) {
+	public boolean execute(Context context) {
 		for(XMLCommando cmd : commandos) {
 			cmd.setContext(context);
 		}
-		super.execute(context);
+		return super.execute(context);
 	}
 	
 	@Override

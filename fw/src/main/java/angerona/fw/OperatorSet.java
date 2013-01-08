@@ -133,6 +133,14 @@ public class OperatorSet {
 		}
 		return true;
 	}
+	
+	public boolean addOperationSet(OperationSet opSet) {
+		if(!operatorsByOperationType.containsKey(opSet.getOperationName())) {
+			operatorsByOperationType.put(opSet.getOperationName(), opSet);
+			return true;
+		}
+		return false;
+	}
 
 	/** 
 	 * Helper method: Fetches a class with the given classname.

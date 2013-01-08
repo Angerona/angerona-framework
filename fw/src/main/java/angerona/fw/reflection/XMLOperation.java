@@ -9,7 +9,7 @@ import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
 import angerona.fw.BaseOperator;
-import angerona.fw.OperationSet;
+import angerona.fw.OperatorSet;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
@@ -41,43 +41,36 @@ public class XMLOperation extends XMLCommando {
 
 	@Override
 	protected void executeInternal() throws InvokeException {
-		Object operators = getParameter("operators");
-		if(! (operators instanceof OperationSet)) {
-			OperationSet operations = (OperationSet)operators;
+		OperatorSet operations = getParameter("operators");
 			
-			// Find operator:
-			BaseOperator op = operations.getOperator(type);
-			if(op == null) {
-				throw new InvokeException("Operator of type '" + type + "' not found.", this.getContext());
+		// Find operator:
+		BaseOperator op = operations.getPreferedByType(type);
+		if(op == null) {
+			throw InvokeException.internalError("Operation type '" + type + "' not found.", 
+					this.getContext());
+		}
+		
+		// Find caller:
+		OperatorVisitor self = getParameter("self");
+		GenericOperatorParameter gop = new GenericOperatorParameter(self);
+		
+		// prepare parameters:
+		for(String key : parameters.keySet()) {
+			String value = parameters.get(key);
+			Value v = null;
+			try {
+				v = new Value(value);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-			// Find caller:
-			if(! (getContext().get("self") instanceof OperatorVisitor)) {
-				throw new InvokeException("Cannot determine the caller of the operation", getContext());
-			}
-			GenericOperatorParameter gop = new GenericOperatorParameter((OperatorVisitor)getContext().get("self"));
-			
-			// prepare parameters:
-			for(String key : parameters.keySet()) {
-				String value = parameters.get(key);
-				Value v = null;
-				try {
-					v = new Value(value);
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				gop.setParameter(key, v.getValue());
-			}
-			
-			// call operation and save result:
-			Object out = op.process(gop);
-			if(out != null && output != null) {
-				getContext().set(output, out);
-			}
-			
-		} else {
-			throw new InvokeException("XMLOperation invoked but 'operators' parameter is not set.", this.getContext());
+			gop.setParameter(key, v.getValue());
+		}
+		
+		// call operation and save result:
+		Object out = op.process(gop);
+		if(out != null && output != null) {
+			getContext().set(output, out);
 		}
 	}
 	

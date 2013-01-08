@@ -1,5 +1,9 @@
 package angerona.fw.reflection;
 
+import angerona.fw.error.InvokeException;
+
 public interface Commando {
-	void execute(Context context);
+	boolean execute(Context context);
+	
+	InvokeException getLastError();
 }

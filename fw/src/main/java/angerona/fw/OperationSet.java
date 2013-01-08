@@ -8,9 +8,11 @@ import java.util.Map;
 public class OperationSet {
 	private String operationName;
 	
+	/** maps the full java class name to the operator instance */
 	private Map<String, BaseOperator> operators = new HashMap<>();
 	
-	private BaseOperator preferedOperator;
+	/** the preferred operator */
+	private BaseOperator preferredOperator;
 	
 	public OperationSet(String name) {
 		this.operationName = name;
@@ -29,7 +31,7 @@ public class OperationSet {
 	 */
 	public boolean setPrefered(String fullJavaClsName) {
 		if(operators.containsKey(fullJavaClsName)) {
-			preferedOperator = operators.get(fullJavaClsName);
+			preferredOperator = operators.get(fullJavaClsName);
 			return true;
 		}
 		return false;
@@ -43,7 +45,7 @@ public class OperationSet {
 	}
 	
 	public BaseOperator getPrefered() {
-		return preferedOperator;
+		return preferredOperator;
 	}
 	
 	public Collection<BaseOperator> getOperators() {
