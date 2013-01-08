@@ -3,8 +3,8 @@ package angerona.fw.logic.asp;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import angerona.fw.BaseOperator;
-import angerona.fw.OperationSet;
 import angerona.fw.OperatorSet;
+import angerona.fw.OperatorProvider;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
@@ -15,31 +15,31 @@ import angerona.fw.util.OSValidator;
  * @author Tim Janus
  */
 public class MockBeliefbase extends AspBeliefbase {
-	private class SpecialOperatorSet extends OperatorSet {
+	private class SpecialOperatorSet extends OperatorProvider {
 		public SpecialOperatorSet() {
-			OperationSet rSet = new OperationSet(BaseReasoner.OPERATION_TYPE);
+			OperatorSet rSet = new OperatorSet(BaseReasoner.OPERATION_TYPE);
 			AspReasoner arOp = new AspReasoner();
 			rSet.addOperator(arOp);
 			rSet.setPrefered(AspReasoner.class.getName());
 			
 			operators.put(AspReasoner.class.getName(), arOp);
-			operatorsByOperationType.put(BaseReasoner.OPERATION_TYPE, rSet);
+			operationSetsByType.put(BaseReasoner.OPERATION_TYPE, rSet);
 			
-			OperationSet tSet = new OperationSet(BaseTranslator.OPERATION_TYPE);
+			OperatorSet tSet = new OperatorSet(BaseTranslator.OPERATION_TYPE);
 			AspTranslator tOp = new AspTranslator();
 			tSet.addOperator(tOp);
 			tSet.setPrefered(tOp.getClass().getName());
 			
 			operators.put(tOp.getClass().getName(), tOp);
-			operatorsByOperationType.put(BaseTranslator.OPERATION_TYPE, tSet);
+			operationSetsByType.put(BaseTranslator.OPERATION_TYPE, tSet);
 			
-			OperationSet cSet = new OperationSet(BaseChangeBeliefs.OPERATION_TYPE);
+			OperatorSet cSet = new OperatorSet(BaseChangeBeliefs.OPERATION_TYPE);
 			AspExpansion expan = new AspExpansion();
 			cSet.addOperator(expan);
 			cSet.setPrefered(expan.getClass().getName());
 			
 			operators.put(expan.getClass().getName(), expan);
-			operatorsByOperationType.put(BaseChangeBeliefs.OPERATION_TYPE, cSet);
+			operationSetsByType.put(BaseChangeBeliefs.OPERATION_TYPE, cSet);
 		}
 	}
 	

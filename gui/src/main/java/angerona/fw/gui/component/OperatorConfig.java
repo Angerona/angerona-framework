@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import angerona.fw.BaseOperator;
-import angerona.fw.OperationSet;
+import angerona.fw.OperatorSet;
 
 /**
  * 
@@ -22,17 +22,17 @@ public class OperatorConfig extends AbstractModel {
 	private Map<String, String> parameters = new HashMap<String, String>();
 	
 	/** the set of selectable operators */
-	private OperationSet operationSet;
+	private OperatorSet operationSet;
 	
 	/** the currently selected operator */
 	private BaseOperator selectedOperator;
 	
-	public OperatorConfig(OperationSet set) {
+	public OperatorConfig(OperatorSet set) {
 		if(set == null)
 			throw new IllegalArgumentException();
 		
 		this.operationSet = set;
-		selectedOperator = set.getPrefered();
+		selectedOperator = set.getPreferred();
 		originalParameters = selectedOperator.getParameters();
 		parameters = new HashMap<>(selectedOperator.getParameters());
 	}
@@ -65,6 +65,6 @@ public class OperatorConfig extends AbstractModel {
 	}
 	
 	public BaseOperator getDefaultOperator() {
-		return operationSet.getPrefered();
+		return operationSet.getPreferred();
 	}
 }

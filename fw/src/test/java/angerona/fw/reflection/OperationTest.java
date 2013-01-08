@@ -7,8 +7,8 @@ import java.util.Stack;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import angerona.fw.BaseOperator;
-import angerona.fw.OperationSet;
 import angerona.fw.OperatorSet;
+import angerona.fw.OperatorProvider;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
@@ -83,8 +83,8 @@ public class OperationTest extends TestCase {
 		XMLOperation op = new XMLOperation("WRONGNAME", params, "result");
 		
 		context.set("self", mockVisitor);
-		OperatorSet s = new OperatorSet();
-		OperationSet opSet = new OperationSet("MockOperation");
+		OperatorProvider s = new OperatorProvider();
+		OperatorSet opSet = new OperatorSet("MockOperation");
 		opSet.addOperator(new MockOperation());
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
@@ -99,8 +99,8 @@ public class OperationTest extends TestCase {
 		Context context = new Context();
 		XMLOperation op = new XMLOperation("MockOperation", params, "result");
 		
-		OperatorSet s = new OperatorSet();
-		OperationSet opSet = new OperationSet("MockOperation");
+		OperatorProvider s = new OperatorProvider();
+		OperatorSet opSet = new OperatorSet("MockOperation");
 		opSet.addOperator(new MockOperation());
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
@@ -117,8 +117,8 @@ public class OperationTest extends TestCase {
 		XMLOperation op = new XMLOperation("MockOperation", params, "result");
 		
 		context.set("self", mockVisitor);
-		OperatorSet s = new OperatorSet();
-		OperationSet opSet = new OperationSet("MockOperation");
+		OperatorProvider s = new OperatorProvider();
+		OperatorSet opSet = new OperatorSet("MockOperation");
 		opSet.addOperator(new MockOperation());
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);

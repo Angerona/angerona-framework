@@ -98,7 +98,7 @@ public class Agent extends AgentArchitecture
 	/** a list of skills which are known by the agent */
 	private List<String> capabilities = new LinkedList<>();
 	
-	private OperatorSet operators = new OperatorSet();
+	private OperatorProvider operators = new OperatorProvider();
 	
 	/** reference to the current used operator in the cycle process. */
 	private Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();

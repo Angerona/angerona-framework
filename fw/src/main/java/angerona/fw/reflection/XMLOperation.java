@@ -9,7 +9,7 @@ import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
 import angerona.fw.BaseOperator;
-import angerona.fw.OperatorSet;
+import angerona.fw.OperatorProvider;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
@@ -41,7 +41,7 @@ public class XMLOperation extends XMLCommando {
 
 	@Override
 	protected void executeInternal() throws InvokeException {
-		OperatorSet operations = getParameter("operators");
+		OperatorProvider operations = getParameter("operators");
 			
 		// Find operator:
 		BaseOperator op = operations.getPreferedByType(type);

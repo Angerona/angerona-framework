@@ -78,9 +78,9 @@ public abstract class BaseBeliefbase
 	 */
 	protected String reason = "";
 	
-	protected OperatorSet operators = new OperatorSet();
+	protected OperatorProvider operators = new OperatorProvider();
 	
-	public OperatorSet getOperators() {
+	public OperatorProvider getOperators() {
 		return operators;
 	}
 	
@@ -108,7 +108,7 @@ public abstract class BaseBeliefbase
 	public BaseBeliefbase(BaseBeliefbase other) {
 		super(other);
 		
-		operators = new OperatorSet(other.operators);
+		operators = new OperatorProvider(other.operators);
 	}
 	
 	/**
