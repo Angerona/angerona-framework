@@ -2,6 +2,7 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.StringReader;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
@@ -13,7 +14,10 @@ import org.simpleframework.xml.transform.RegistryMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.reflection.BooleanExpression;
+import angerona.fw.reflection.Condition;
 import angerona.fw.reflection.FolFormulaVariable;
+import angerona.fw.serialize.transform.ConditionTransform;
 import angerona.fw.serialize.transform.FolAtomTransform;
 import angerona.fw.serialize.transform.FolFormulaTransform;
 import angerona.fw.serialize.transform.VariableTransform;
@@ -45,6 +49,10 @@ public class SerializeHelper {
 							return FolFormulaVariable.class;
 						}
 			});
+			
+			matcher.bind(BooleanExpression.class, ConditionTransform.class);
+			matcher.bind(Condition.class, ConditionTransform.class);
+			
 			serializer = new Persister(matcher);
 		}
 	}
@@ -67,18 +75,22 @@ public class SerializeHelper {
 		}
 		return obj;
 	}
-
-	public static <T> T loadXml(Class<T> cls, String xml) {
+	
+	public static <T>T loadXml(Class<T> cls, Reader source) {
 		init();
-		T obj = null;
+		T obj = createObject(cls);
 		try {
-			obj = serializer.read(cls, new StringReader(xml));
+			obj = serializer.read(cls, source);
 		} catch (Exception e) {
-			LOG.error("Something went wrong during loading of '{}': {}", xml, e.getMessage());
+			LOG.error("Something went wrong during XML loading: '{}'", e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
 		return obj;
+	}
+
+	public static <T> T loadXml(Class<T> cls, String xml) {
+		return loadXml(cls, new StringReader(xml));
 	}
 	
 	private static <T> T createObject(Class<T> cls) {

@@ -18,7 +18,7 @@ public abstract class XMLCommando implements Commando, ContextProvider {
 	@Override
 	public boolean execute(Context context) {
 		lastError = null;
-		this.context = context;
+		setContext(context);
 		try {
 			executeInternal();
 		} catch (InvokeException e) {

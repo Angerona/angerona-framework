@@ -13,7 +13,8 @@ public class XMLCommandoSequence extends XMLCommando {
 	/** the orderer list of commandos in this collection */
 	@ElementListUnion({
 		@ElementList(entry="assign", inline=true, type=XMLAssign.class),
-		@ElementList(entry="while", inline=true, type=XMLWhile.class)
+		@ElementList(entry="while", inline=true, type=XMLWhile.class),
+		@ElementList(entry="operation", inline=true, type=XMLOperation.class)
 	})
 	private List<XMLCommando> commandos = new LinkedList<>();
 	
@@ -22,7 +23,8 @@ public class XMLCommandoSequence extends XMLCommando {
 	public XMLCommandoSequence(
 			@ElementListUnion({
 				@ElementList(entry="assign", inline=true, type=XMLAssign.class),
-				@ElementList(entry="while", inline=true, type=XMLWhile.class)
+				@ElementList(entry="while", inline=true, type=XMLWhile.class),
+				@ElementList(entry="operation", inline=true, type=XMLOperation.class)
 			})
 			List<XMLCommando> sequence) {
 		this.commandos = sequence;

@@ -95,7 +95,7 @@ public class BooleanExpression implements Condition {
 	@Override
 	public boolean evaluate() {
 		if(op == Operator.UNARY) {
-			Object l = left.getValue(context);
+			Object l = left.getValue();
 			if(l instanceof Boolean) {
 				return (Boolean)l;
 			} else if (left.getType().equals(Value.CONTEXT_REFERENCE_TYPE)) {
@@ -105,7 +105,7 @@ public class BooleanExpression implements Condition {
 				return false;
 			}
 		} else if(op == Operator.EQUAL || op == Operator.NOTEQUAL) {
-			boolean reval = left.equals(right);
+			boolean reval = left.getValue().equals(right.getValue());
 			return op == Operator.EQUAL ? reval : !reval;
 		} else {
 			Double doubleLeft = valueToDouble(left);
@@ -146,6 +146,15 @@ public class BooleanExpression implements Condition {
 	@Override
 	public void setContext(Context context) {
 		this.context = context;
+		if(left!=null)
+			left.setContext(context);
+		if(right!=null)
+			right.setContext(context);
+	}
+	
+	@Override
+	public String toString() {
+		return left.toString() + (op != Operator.UNARY ? op.toString() + right.toString() : "");
 	}
 	
 	public Value getLeft() {

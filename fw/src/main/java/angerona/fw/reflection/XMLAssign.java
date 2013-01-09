@@ -38,8 +38,15 @@ public class XMLAssign extends XMLCommando {
 	}
 	
 	@Override
+	protected void setContext(Context context) {
+		super.setContext(context);
+		if(value != null)
+			value.setContext(context);
+	}
+	
+	@Override
 	protected void executeInternal() throws InvokeException {
-		setParameter(name, value.getValue(getContext()));
+		setParameter(name, value.getValue());
 		LOG.trace("XMLAssign: Set '{}' to '{}'", name, value);
 	}
 

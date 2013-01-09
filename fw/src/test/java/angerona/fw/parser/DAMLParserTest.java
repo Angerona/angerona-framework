@@ -37,8 +37,9 @@ public class DAMLParserTest extends TestCase {
 		toRead = "$receiver";
 		parser.ReInit(new StringReader(toRead));
 		val = parser.value();
+		val.setContext(context);
 		assertEquals(Value.CONTEXT_REFERENCE_TYPE, val.getType());
-		assertEquals("Employee", val.getValue(context));
+		assertEquals("Employee", val.getValue());
 	}
 	
 	public void testParserBooleanExpression() throws ParseException {

@@ -1,0 +1,17 @@
+<conditional>
+   <if condition="$left &lt; $right">
+      <assign name="result">
+         <value value="1" type="java.lang.Integer"/>
+      </assign>
+   </if>
+   <elseif condition="$left == $right">
+       <assign name="result">
+         <value value="2" type="java.lang.Integer"/>
+      </assign>
+   </elseif>
+   <else>
+       <assign name="result">
+         <value value="3" type="java.lang.Integer"/>
+      </assign>
+   </else>
+</conditional>

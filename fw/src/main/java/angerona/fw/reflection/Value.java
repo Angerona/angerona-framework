@@ -32,6 +32,8 @@ public class Value  {
 	
 	private Object valueObject;
 	
+	private Context context;
+	
 	/**
 	 * Ctor: Using DAML parser to parse a string containing the value.
 	 * @param value
@@ -81,15 +83,11 @@ public class Value  {
 		}
 	}
 	
-	public Object getValue() {
-		return getValue(null);
-	}
-	
 	public String getType() {
 		return typeString;
 	}
 	
-	public Object getValue(Context context) {
+	public Object getValue() {
 		// Check for cached value.
 		if(valueObject != null)
 			return valueObject;
@@ -116,5 +114,14 @@ public class Value  {
 			valueObject = SerializeHelper.loadXml(type, value);
 		}
 		return valueObject;
+	}
+	
+	public void setContext(Context context) {
+		this.context = context;
+	}
+	
+	@Override
+	public String toString() {
+		return value;
 	}
 }
