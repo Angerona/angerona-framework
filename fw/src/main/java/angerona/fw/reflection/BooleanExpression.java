@@ -102,7 +102,12 @@ public class BooleanExpression implements Condition {
 				return false;
 			}
 		} else if(op == Operator.EQUAL || op == Operator.NOTEQUAL) {
-			boolean reval = left.getValue().equals(right.getValue());
+			boolean reval = false;
+			if(left.getValue() == null || right.getValue() == null) {
+				reval = left.getValue() == right.getValue();
+			} else {
+				reval = left.getValue().equals(right.getValue());
+			}
 			return op == Operator.EQUAL ? reval : !reval;
 		} else {
 			Double doubleLeft = valueToDouble(left);

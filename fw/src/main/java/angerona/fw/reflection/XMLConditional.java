@@ -42,11 +42,12 @@ public class XMLConditional extends XMLCommando {
 	
 	@Override
 	protected void executeInternal() throws InvokeException {
+		boolean done = false;
 		ifPart.setContext(getContext());
 		if(ifPart.condition.evaluate()) {
 			ifPart.execute(getContext());
-		} else {
-			boolean done = false;
+			done = true;
+		} else if(elseIfPart != null) {
 			for(ConditionalSequence cs : elseIfPart) {
 				cs.setContext(getContext());
 				if(cs.condition.evaluate()) {
@@ -55,10 +56,10 @@ public class XMLConditional extends XMLCommando {
 					break;
 				}
 			}
-			
-			if(!done) {
-				elseCommandos.execute(getContext());
-			}
+		}
+		
+		if(!done && elseCommandos != null) {
+			elseCommandos.execute(getContext());
 		}
 	}
 	

@@ -22,16 +22,27 @@ public class XMLOperation extends XMLCommando {
 	private String type;
 	
 	/** a map containing name value pairs representing the parameters for the operation invocation */
-	@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value")
+	@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false)
 	private Map<String, String> parameters;
 
 	/** the name for the output using context.get(output) returns the variable calculated by the operation */
 	@Element(name="output", required=false)
 	private String output;
 	
+	public XMLOperation(@Attribute(name="type") String type) {
+		this(type, new HashMap<String, String>(), null);
+	}
+	
 	public XMLOperation(
 			@Attribute(name="type") String type,
-			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value") 
+			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
+			Map<String, String> params) {
+		this(type, params, null);
+	}
+	
+	public XMLOperation(
+			@Attribute(name="type") String type,
+			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
 			Map<String, String> params,
 			@Element(name="output") String output) {
 		this.type = type;
@@ -60,6 +71,7 @@ public class XMLOperation extends XMLCommando {
 			Value v = null;
 			try {
 				v = new Value(value);
+				v.setContext(getContext());
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

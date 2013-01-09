@@ -19,7 +19,8 @@ public class InvokeException extends AngeronaException {
 	public enum Type {
 		INTERNAL,
 		PARAMETER,
-		TYPE_MISMATCH
+		TYPE_MISMATCH,
+		SCOPE_ERROR
 	}
 	
 	public InvokeException(String message, Type type, Context context) {
@@ -53,5 +54,9 @@ public class InvokeException extends AngeronaException {
 	public static InvokeException parameterFailure(String paramname, Context context) {
 		return new InvokeException("Cannot find Parameter with name: "+paramname, 
 				Type.PARAMETER, context);
+	}
+	
+	public static InvokeException scopeError(String message, Context context) {
+		return new InvokeException(message, Type.SCOPE_ERROR, context);
 	}
 }

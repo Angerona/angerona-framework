@@ -39,7 +39,7 @@ public class Value  {
 	 * @param value
 	 * @throws ClassNotFoundException
 	 */
-	public Value(String value) throws ClassNotFoundException {
+	public Value(@Attribute(name="value") String value) throws ClassNotFoundException {
 		DAMLParser parser = new DAMLParser(new StringReader(value));
 		Value v = null;
 		try {
@@ -100,7 +100,11 @@ public class Value  {
 			Object value = context.get(this.value.substring(1));
 			return value;
 		} else if(type == String.class) {
-			valueObject = value;
+			if(value.equalsIgnoreCase("null")) {
+				valueObject = null;
+			} else {
+				valueObject = value;
+			}
 			return valueObject;
 		} else if(type == Integer.class) {
 			valueObject = Integer.parseInt(value);

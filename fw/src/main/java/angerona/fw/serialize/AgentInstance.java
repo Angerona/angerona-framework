@@ -13,6 +13,8 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
+import angerona.fw.reflection.XMLCommandoSequence;
+
 
 /**
  * This class is responsible for the simple xml serialization of the agent
@@ -42,6 +44,8 @@ public class AgentInstance {
 	@Element(name="default-suffix")
 	protected String fileSuffix;
 
+	protected XMLCommandoSequence cylceScript;
+	
 	/** list of fol-formulas representing the initial desires of the agent */
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
 	protected List<Atom> desires = new LinkedList<Atom>();
@@ -51,7 +55,7 @@ public class AgentInstance {
 	
 	@ElementMap(key="key", entry="data", attribute=true, inline=true, empty=false, required=false)
 	protected Map<String, String> additionalData = new HashMap<String, String>();
-
+	
 	/** @return the unique name of the agent */
 	public String getName() {
 		return name;

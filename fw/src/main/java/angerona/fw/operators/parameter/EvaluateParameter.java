@@ -61,7 +61,7 @@ public class EvaluateParameter extends OperatorPluginParameter {
 		this.beliefs = (Beliefs)obj;
 		
 		obj = gop.getParameter("information");
-		if(! (obj instanceof AngeronaAtom)) {
+		if(obj != null && !(obj instanceof AngeronaAtom)) {
 			throwException("information", obj, AngeronaAtom.class);
 		}
 		this.information = (AngeronaAtom)obj;

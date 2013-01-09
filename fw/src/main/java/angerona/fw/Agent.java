@@ -33,9 +33,6 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
 import angerona.fw.logic.ViolatesResult;
-import angerona.fw.operators.BaseGenerateOptionsOperator;
-import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.BaseViolatesOperator;
 import angerona.fw.operators.GenericOperatorParameter;
@@ -45,11 +42,13 @@ import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
+import angerona.fw.reflection.XMLCommandoSequence;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.OperationSetConfig;
+import angerona.fw.serialize.SerializeHelper;
 
 /**
  * Implementation of an agent in the Angerona Framework.
@@ -112,8 +111,13 @@ public class Agent extends AgentArchitecture
 	/** object represents the last action performed by the agent. */
 	private Action lastAction;
 	
-	/** internal data structure containing the violates information for the action which is in processing */
+	/** HACK: internal data structure containing the violates information for the action which is in processing */
 	private ViolatesResult violates;
+	
+	// HACK:
+	public void setViolatesResult(ViolatesResult res) {
+		this.violates = res;
+	}
 	
 	public Agent(String name) {
 		// init beenuts stuff
@@ -374,10 +378,24 @@ public class Agent extends AgentArchitecture
 		}
 	}
 	
+	// Hacked test version of asml cyle:
+	XMLCommandoSequence asmlCylce;
 	@Override
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
 		
+		if(asmlCylce == null) {
+			asmlCylce = SerializeHelper.loadXml(XMLCommandoSequence.class, new File("./config/secrecy_cycle.xml"));
+		}
+		
+		regenContext();
+		Context c = getContext();
+		c.set("perception", perception);
+		currentPerception = perception == null ? null : (Perception)perception;
+		
+		return asmlCylce.execute(c);
+		
+		/*
 		PlanElement atomic = null;
 		if(!(perception instanceof Perception)) {
 			LOG.error("object must be of type Perception");
@@ -433,6 +451,8 @@ public class Agent extends AgentArchitecture
 		
 		LOG.info("[" + this.getName() + "] Cycle ends");
 		return false;
+		*/
+		
 	}
 
 	@Override
@@ -532,6 +552,8 @@ public class Agent extends AgentArchitecture
 	 */
 	private void regenContext() {
 		context = ContextFactory.createContext(this);
+		context.set("operators", this.operators);
+		context.set("plan", this.getComponent(PlanComponent.class));
 		if(beliefs != null) {
 			context.set("world", beliefs.getWorldKnowledge());
 			

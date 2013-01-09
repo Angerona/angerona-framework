@@ -98,7 +98,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				bb.addKnowledge(j.getJustifications());
 				param.report("Justification as sender (update view->" + j.getReceiverId() + ")", bb);
 			}
-		} else {
+		} else if(param.getAtom() != null){
 			param.report("Update-Operator: Cant handle perception of type: " + param.getAtom().getClass().getName());
 		}
 		

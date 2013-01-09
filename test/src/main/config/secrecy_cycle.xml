@@ -1,29 +1,36 @@
-<Operation-Defintion name="Secrecy Cycle">
+<asml-script name="secrecyCycle">
     <operation type="UpdateBeliefs">
-        <param name="information" value="$in.perception" />
+        <param name="information" value="$perception" />
         <param name="beliefs" value="$beliefs" />
-    <operation>
-    
+    </operation>
+     
 	<operation type="GenerateOptions">
+	    <param name="perception" value="$perception" />
 	    <output>newDesireCount</output>
 	</operation>
 	
-	<assign name="searching" value="TRUE" />
-	<while condition="$searching==TRUE">
-		<operation type="IntentionSelection">
+	<assign name="running"><value value="TRUE" /></assign>
+	<while condition="$running==TRUE">
+		
+		<operation type="IntentionUpdate">
+		    <param name="plan" value="$plan" />
 	    	<output>action</output>
 		</operation>
-		
-		<assign name="changed" value="FALSE" />
+		  
 		<conditional>
 			<if condition="$action==null">
 			 	<operation type="SubgoalGeneration">
-			 	    <output>changed</output>
+			 	    <param name="plan" value="$plan" />
+			 	    <output>running</output>
 			 	</operation>
 			</if>
+			<else>
+			    <assign name="running"><value value="FALSE"/></assign>
+			</else>
 		</conditional>
-		<assign name="searching" value="$changed" type="REF" />
+		
+		<assign name="searching"><value value="$changed" /></assign>
 	</while>
 	
-	<execute action="$action" />
-</Operation-Definition>
+	<execute><action value="$action" /></execute>
+</asml-script>
