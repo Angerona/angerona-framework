@@ -1,9 +1,13 @@
 package angerona.fw.logic.asp;
 
-import net.sf.tweety.Answer;
+import static org.junit.Assert.assertEquals;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BeliefbaseTest;
@@ -17,10 +21,12 @@ import angerona.fw.logic.BeliefbaseTest;
 public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 	
 	@Override
-	protected AspBeliefbase createBeliefbase() {
-		return new AspBeliefbase();
+	@Before
+	public void createBeliefbase() {
+		beliefbase = new AspBeliefbase();
 	}
 	
+	@Test
 	public void testDoubleInject() {
 		AspBeliefbase bb = new MockBeliefbase();
 		
@@ -34,6 +40,7 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 		assertEquals(1, p.size());
 	}
 	
+	@Test
 	public void testQueryForUnknown() {
 		AspBeliefbase bb = new MockBeliefbase();
 		AngeronaAnswer aa = bb.getReasoningOperator().query(bb, new Atom(new Predicate("test"))).second;

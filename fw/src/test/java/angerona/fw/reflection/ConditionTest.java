@@ -1,9 +1,13 @@
 package angerona.fw.reflection;
 
-import angerona.fw.reflection.BooleanExpression.Operator;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class ConditionTest extends TestCase {
+import org.junit.Test;
+
+import angerona.fw.reflection.BooleanExpression.Operator;
+
+public class ConditionTest {
+	@Test
 	public void testUnaryCondition() throws ClassNotFoundException {
 		BooleanExpression be = new BooleanExpression(new Value("TRUE", Boolean.class.getName()));
 		assertEquals(true, be.evaluate());
@@ -21,6 +25,7 @@ public class ConditionTest extends TestCase {
 		assertEquals(false, be.evaluate());
 	}
 	
+	@Test
 	public void testBinaryCondition() throws ClassNotFoundException {
 		Value boss = new Value("Boss");
 		Value employee = new Value("Employee");

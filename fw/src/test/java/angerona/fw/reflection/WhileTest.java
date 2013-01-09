@@ -1,10 +1,11 @@
 package angerona.fw.reflection;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class WhileTest extends TestCase {
-	
+import org.junit.Test;
+
+public class WhileTest {
+	@Test
 	public void testWhile() throws ClassNotFoundException {
 		Context context = new Context();
 		context.set("run", true);
@@ -16,7 +17,7 @@ public class WhileTest extends TestCase {
 		w.addCommando(assign);
 		w.execute(context);
 		
-		Assert.assertEquals(1, w.getIterations());
-		Assert.assertEquals("Boss", context.get("sender"));
+		assertEquals(1, w.getIterations());
+		assertEquals("Boss", context.get("sender"));
 	}
 }

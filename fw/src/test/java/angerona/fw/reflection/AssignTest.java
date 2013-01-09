@@ -1,30 +1,36 @@
 package angerona.fw.reflection;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+
+import org.junit.Test;
+
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.serialize.SerializeHelper;
 
-public class AssignTest extends TestCase {
+public class AssignTest {
 	
+	@Test
 	public void testAssignOnEmptyContext() throws ClassNotFoundException {
 		XMLAssign assign = new XMLAssign("name", new Value("Angerona", null));
 		doStringTest(assign, new Context());
 	}
 
+	@Test
 	public void testDeserialize() {
 		String xml = "<assign name=\"name\"><value value=\"Angerona\" type=\"string\" /></assign>";
 		XMLAssign assign = SerializeHelper.loadXml(XMLAssign.class, xml);
 		doStringTest(assign, new Context());
 	}
 	
+	@Test
 	public void testTypeSupport() throws ClassNotFoundException {
 		
 		// The Helper class triple contains a triple with all information to
@@ -59,10 +65,11 @@ public class AssignTest extends TestCase {
 		for(Triple t : lst) {
 			XMLAssign assign = new XMLAssign("Test", new Value(t.strValue, t.type.getName()));
 			assign.execute(context);
-			Assert.assertEquals(t.realValue, context.get("Test"));
+			assertEquals(t.realValue, context.get("Test"));
 		}
 	}
 	
+	@Test
 	public void testContextInternalAssign() throws ClassNotFoundException {
 		Context context = new Context();
 		
@@ -72,14 +79,14 @@ public class AssignTest extends TestCase {
 		XMLAssign assign = new XMLAssign("reference", new Value("$answer", null));
 		assign.execute(context);
 		
-		Assert.assertEquals(true, context.get("answer") == context.get("reference"));
+		assertEquals(true, context.get("answer") == context.get("reference"));
 	}
 	
 	private void doStringTest(XMLAssign assign, Context c) {
-		Assert.assertEquals(true, c.get("name") == null);
+		assertEquals(true, c.get("name") == null);
 		assign.execute(c);
 		
-		Assert.assertEquals(false, c.get("name") == null);
-		Assert.assertEquals(true, c.get("name").equals("Angerona"));
+		assertEquals(false, c.get("name") == null);
+		assertEquals(true, c.get("name").equals("Angerona"));
 	}
 }

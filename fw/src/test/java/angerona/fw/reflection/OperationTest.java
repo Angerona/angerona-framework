@@ -1,20 +1,22 @@
 package angerona.fw.reflection;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Test;
+
 import angerona.fw.BaseOperator;
-import angerona.fw.OperatorSet;
 import angerona.fw.OperatorProvider;
+import angerona.fw.OperatorSet;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.util.Pair;
 
-public class OperationTest extends TestCase {
+public class OperationTest {
 	private class MockVisitor implements OperatorVisitor {
 
 		private Stack<BaseOperator> stack = new Stack<>();
@@ -64,6 +66,7 @@ public class OperationTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testMockOperationExceptionNoOperators() {
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -71,10 +74,11 @@ public class OperationTest extends TestCase {
 		XMLOperation op = new XMLOperation("MockOperation", params, "result");
 		
 		boolean reval = op.execute(context);
-		Assert.assertEquals(false, reval);
-		Assert.assertEquals(InvokeException.Type.PARAMETER, op.getLastError().getErrorType());
+		assertEquals(false, reval);
+		assertEquals(InvokeException.Type.PARAMETER, op.getLastError().getErrorType());
 	}
 	
+	@Test
 	public void testMockOperationExceptionInternalCauseOperationTypeWrong() {
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -89,10 +93,11 @@ public class OperationTest extends TestCase {
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
 		context.set("operators", s);
-		Assert.assertEquals(false, op.execute(context));
-		Assert.assertEquals(InvokeException.Type.INTERNAL, op.getLastError().getErrorType());
+		assertEquals(false, op.execute(context));
+		assertEquals(InvokeException.Type.INTERNAL, op.getLastError().getErrorType());
 	}
 	
+	@Test
 	public void testMockOperationExceptionNoSelf() {
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -105,10 +110,11 @@ public class OperationTest extends TestCase {
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
 		context.set("operators", s);
-		Assert.assertEquals(false, op.execute(context));
-		Assert.assertEquals(InvokeException.Type.PARAMETER, op.getLastError().getErrorType());
+		assertEquals(false, op.execute(context));
+		assertEquals(InvokeException.Type.PARAMETER, op.getLastError().getErrorType());
 	}
 	
+	@Test
 	public void testMockOperationSuccessful() {
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -123,7 +129,7 @@ public class OperationTest extends TestCase {
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
 		context.set("operators", s);
-		Assert.assertEquals(true, op.execute(context));
-		Assert.assertEquals("", context.get("result"));
+		assertEquals(true, op.execute(context));
+		assertEquals("", context.get("result"));
 	}
 }

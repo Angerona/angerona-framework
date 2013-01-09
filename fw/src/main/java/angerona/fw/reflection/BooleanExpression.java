@@ -59,9 +59,6 @@ public class BooleanExpression implements Condition {
 		}
 	}
 	
-	/** the context used to evaluate the boolean expression */
-	private Context context;
-	
 	/** the operator used to compare the values left and right */
 	private Operator op;
 	
@@ -145,7 +142,6 @@ public class BooleanExpression implements Condition {
 
 	@Override
 	public void setContext(Context context) {
-		this.context = context;
 		if(left!=null)
 			left.setContext(context);
 		if(right!=null)

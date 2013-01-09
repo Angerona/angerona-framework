@@ -70,7 +70,7 @@ public class Agent extends AgentArchitecture
 	, PropertyChangeListener {
 
 	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(Agent.class);
+	private static Logger LOG = LoggerFactory.getLogger(Agent.class);
 	
 	/** the beenuts agent process used for low level communication in the framework */
 	private AngeronaAgentProcess agentProcess;

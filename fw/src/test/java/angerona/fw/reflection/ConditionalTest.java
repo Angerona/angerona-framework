@@ -1,12 +1,15 @@
 package angerona.fw.reflection;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import angerona.fw.serialize.SerializeHelper;
 
@@ -17,6 +20,8 @@ import angerona.fw.serialize.SerializeHelper;
 public class ConditionalTest {
 	private XMLConditional conditional;
 	
+	private static Logger LOG = LoggerFactory.getLogger(ConditionalTest.class);
+	
 	@Before
 	public void setUp() {
 		// load file containing the following code:
@@ -24,8 +29,10 @@ public class ConditionalTest {
 		// else if: left == right: result=2
 		// else: result=3
 		
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		InputStream stream = loader.getResourceAsStream("angerona/fw/reflection/ConditionalTest.xml");
+		String jarPath = "/angerona/fw/reflection/ConditionalTest.xml";
+		InputStream stream = getClass().getResourceAsStream(jarPath);
+		if(stream == null)
+			LOG.warn("Cannot find: '{}'", jarPath);
 		conditional = SerializeHelper.loadXml(XMLConditional.class, new InputStreamReader(stream));
 	}
 	

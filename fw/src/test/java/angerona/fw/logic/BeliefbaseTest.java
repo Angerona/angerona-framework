@@ -1,7 +1,11 @@
 package angerona.fw.logic;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import angerona.fw.BaseBeliefbase;
-import junit.framework.TestCase;
 
 /**
  * A generic test class testing the generic interface of different
@@ -12,7 +16,9 @@ import junit.framework.TestCase;
  *
  * @param <T> The concrete of the beliefbase like ASP beliefbase
  */
-public abstract class BeliefbaseTest<T extends BaseBeliefbase> extends TestCase {
+public abstract class BeliefbaseTest<T extends BaseBeliefbase> {
+	
+	protected T beliefbase;
 	
 	/** 
 	 * Creates an instance of a subclass of BaseBeliefbase the type of this
@@ -20,19 +26,20 @@ public abstract class BeliefbaseTest<T extends BaseBeliefbase> extends TestCase 
 	 * tests on every belief base type.
 	 * @return	The newly created instance of a belief base of Type T.
 	 */
-	protected abstract T createBeliefbase();
+	@Before
+	public abstract void createBeliefbase();
 
 	/**
 	 * Tests the copy behavior. If a belief base is copied the data is
 	 * copied but the ids are not allowed to change.
 	 */
+	@Test
 	public void testCopy() {
-		T bb = createBeliefbase();
 		@SuppressWarnings("unchecked")
-		T copy = (T)bb.clone();
-		assertEquals(bb.getGUID(), copy.getGUID());
-		assertEquals(bb.getParent(), copy.getParent());
-		assertEquals(bb.getChilds(), copy.getChilds());
+		T copy = (T)beliefbase.clone();
+		assertEquals(beliefbase.getGUID(), copy.getGUID());
+		assertEquals(beliefbase.getParent(), copy.getParent());
+		assertEquals(beliefbase.getChilds(), copy.getChilds());
 	}
 	
 }

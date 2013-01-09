@@ -1,20 +1,23 @@
 package angerona.fw.parser;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringReader;
+
+import org.junit.Test;
 
 import angerona.fw.reflection.BooleanExpression;
 import angerona.fw.reflection.BooleanExpression.Operator;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.Value;
 
-import junit.framework.TestCase;
-
 /**
  * Unit tests for the DAML Parser.
  * 
  * @author Tim Janus
  */
-public class DAMLParserTest extends TestCase {
+public class DAMLParserTest {
+	@Test
 	public void testParseValue() throws ParseException {
 		String toRead = "1.25";
 		DAMLParser parser = new DAMLParser(new StringReader(toRead));
@@ -42,6 +45,7 @@ public class DAMLParserTest extends TestCase {
 		assertEquals("Employee", val.getValue());
 	}
 	
+	@Test
 	public void testParserBooleanExpression() throws ParseException {
 		String toRead = "TRUE";
 		DAMLParser parser = new DAMLParser(new StringReader(toRead));

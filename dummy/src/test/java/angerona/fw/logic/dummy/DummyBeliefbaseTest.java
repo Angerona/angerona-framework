@@ -1,5 +1,7 @@
 package angerona.fw.logic.dummy;
 
+import org.junit.Before;
+
 import angerona.fw.logic.BeliefbaseTest;
 
 /**
@@ -12,8 +14,9 @@ import angerona.fw.logic.BeliefbaseTest;
 public class DummyBeliefbaseTest extends BeliefbaseTest<DummyBeliefbase> {
 
 	@Override
-	protected DummyBeliefbase createBeliefbase() {
-		return new DummyBeliefbase();
+	@Before
+	public void createBeliefbase() {
+		beliefbase = new DummyBeliefbase();
 	}
 	
 }
