@@ -43,8 +43,8 @@ public class AgentInstance {
 	protected BeliefbaseConfig beliefbaseConfig;
 
 	/** the file suffix identifying the belief base */
-	@Element(name="default-suffix")
-	protected String fileSuffix;
+	@Element(name="beliefbase-name")
+	protected String filePrefix;
 
 	/** the link to the ASML script used to execute the agent's cycle. */
 	@Element(name="cycle-script", type=CommandSequenceSerializeImport.class)
@@ -92,7 +92,7 @@ public class AgentInstance {
 	}
 
 	public String getFileSuffix() {
-		return fileSuffix;
+		return filePrefix;
 	}
 	
 	/**

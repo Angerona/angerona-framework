@@ -4,7 +4,7 @@
     
 	<agent-instance>
 		<name>Mary</name>
-       	<default-suffix>mary</default-suffix>
+       	<beliefbase-name>mary</beliefbase-name>
         
        	<cycle-script source="config/secrecy_cycle.xml" />
         <agent-config source="config/agents/mary.xml" />         
@@ -18,7 +18,7 @@
       
 	<agent-instance>
    		<name>Coroner</name>
-   		<default-suffix>coroner</default-suffix>
+   		<beliefbase-name>coroner</beliefbase-name>
    		
    		<cycle-script source="config/secrecy_cycle.xml" />
         <agent-config source="config/agents/mary.xml" />         

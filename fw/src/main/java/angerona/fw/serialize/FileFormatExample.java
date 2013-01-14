@@ -69,7 +69,7 @@ public class FileFormatExample {
 		AgentInstance test = new AgentInstance();
 		test.name = "Employee";
 		test.additionalData.put("Confidential", "(Boss, a.b.reasoner{param=1}, attend_scm)");
-		test.fileSuffix = "asp";
+		test.filePrefix = "asp";
 		test.config = getAgentConfig();
 		test.beliefbaseConfig = getBeliefbaseConfig();
 		test.desires.add(new Atom(new Predicate("attend_scm")));

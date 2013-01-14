@@ -3,7 +3,7 @@
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Employee</name>
-        <default-suffix>employee</default-suffix>
+        <beliefbase-name>employee</beliefbase-name>
         
         <cycle-script source="config/secrecy_cycle.xml" />
         <agent-config source="config/agents/default_agent.xml" />         
@@ -22,7 +22,7 @@
       
 	<agent-instance>
       	<name>Boss</name>
-      	<default-suffix>boss</default-suffix>
+      	<beliefbase-name>boss</beliefbase-name>
       	
 		<cycle-script source="config/secrecy_cycle.xml" />
         <agent-config source="config/agents/default_agent.xml" />         

@@ -3,7 +3,7 @@
 	
 	<agent-instance>
 		<name>Employee</name>
-		<default-suffix>cleaner</default-suffix>
+		<beliefbase-name>cleaner</beliefbase-name>
 	
 		<cycle-script source="config/secrecy_cycle.xml" />
         <agent-config source="config/agents/knowhow_agent.xml" />         

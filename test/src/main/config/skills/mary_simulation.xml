@@ -4,7 +4,7 @@
       
 	<agent-instance>
 		<name>Mary</name>
-        	<default-suffix>mary</default-suffix>
+        	<beliefbase-name>mary</beliefbase-name>
          
         	<config class="angerona.fw.serialize.AgentConfigImport">
 				<source>config/agents/mary.xml</source>
@@ -28,7 +28,7 @@
       
 	<agent-instance>
       		<name>Coroner</name>
-      		<default-suffix>coroner</default-suffix>
+      		<beliefbase-name>coroner</beliefbase-name>
       	
       		<config class="angerona.fw.serialize.AgentConfigImport">
       			<source>config/agents/mary.xml</source>
