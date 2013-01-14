@@ -1,17 +1,14 @@
 <simulation-configuration>
 	<name>Strike Committee Meeting (Dummy)</name>
 	<behavior>angerona.fw.def.DefaultBehavior</behavior>
+	
 	<agent-instance>
 		<name>Employee</name>
 		<default-suffix>employee</default-suffix>
 	
-        <config>
-			<source>config/agents/default_agent.xml</source>
-        </config>
-    
-        <beliefbase-config>
-            <source>config/beliefbases/dummy_beliefbase.xml</source>
-        </beliefbase-config>
+		<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
 		
 		<data key="Confidential">(Boss, __DEFAULT__, attend_scm)</data>
 	</agent-instance>
@@ -20,15 +17,11 @@
 		<name>Boss</name>
 		<default-suffix>boss</default-suffix>
 	
-		<desire>q_Employee(attend_scm)</desire>
-		
-        <config>
-			<source>config/agents/default_agent.xml</source>
-        </config>
-    
-        <beliefbase-config>
-            <source>config/beliefbases/dummy_beliefbase.xml</source>
-        </beliefbase-config>
+		<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
+        
+        <desire>q_Employee(attend_scm)</desire>
 	</agent-instance>
 	
 	<!-- Undocument the following to generate a Peception at the beginning of the simulation: -->

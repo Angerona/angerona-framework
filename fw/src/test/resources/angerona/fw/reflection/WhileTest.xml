@@ -1,0 +1,3 @@
+<while condition="$counter==null">
+    <assign name="counter"><value value="Blub"/></assign>
+</while>

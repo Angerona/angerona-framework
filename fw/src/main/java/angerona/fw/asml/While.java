@@ -16,13 +16,13 @@ import angerona.fw.reflection.Condition;
 public class While extends CommandSequence {
 	
 	/** the condition which is proofed before every execution of the while loop body */
-	@Attribute(name="condition")
-	private Condition condition;
+	@Attribute(name="condition", required=true)
+	protected Condition condition;
 	
 	/** the number of iterations the while loop has performed so far */
-	private int iterations = 0;
+	protected int iterations = 0;
 	
-	public While(@Attribute(name="condition") Condition condition) {
+	public While(@Attribute(name="condition", required=true) Condition condition) {
 		this.condition = condition;
 	}
 	

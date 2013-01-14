@@ -5,13 +5,9 @@
 		<name>employee</name>
         <default-suffix>employee</default-suffix>
          
-        <config>
-			<source>config/agents/knowhow_agent.xml</source>
-        </config>
-         
-        <beliefbase-config>
-			<source>config/beliefbases/asp_beliefbase.xml</source>
-        </beliefbase-config>
+        <cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
         <skill>Justification</skill>
         <skill>Inform</skill>
@@ -36,13 +32,9 @@
       	<name>boss</name>
       	<default-suffix>boss</default-suffix>
       	
-      	<config>
-      		<source>config/agents/knowhow_agent.xml</source>
-      	</config>
-      	
-      	<beliefbase-config>
-            <source>config/beliefbases/asp_beliefbase.xml</source>
-        </beliefbase-config>
+      	<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
       	<skill>Inform</skill>
       	<skill>Justify</skill>

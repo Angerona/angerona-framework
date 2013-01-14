@@ -2,9 +2,8 @@ package angerona.fw.serialize;
 
 import java.io.File;
 
-import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.core.Resolve;
 
 /**
@@ -16,12 +15,12 @@ import org.simpleframework.xml.core.Resolve;
 @Root(name="beliefbase-config-import")
 public class BeliefbaseConfigImport implements BeliefbaseConfig {
 
-	@Element
+	@Attribute(name="source")
 	protected File source;
 
 	@Resolve
 	public BeliefbaseConfig substitute() throws Exception {
-		return new Persister().read(BeliefbaseConfigReal.class, source);
+		return SerializeHelper.loadXml(BeliefbaseConfigReal.class, source);
 	}
 	
 	@Override

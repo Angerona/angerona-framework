@@ -1,5 +1,6 @@
 package angerona.fw.asml;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.simpleframework.xml.Root;
 
 import angerona.fw.error.InvokeException;
 import angerona.fw.reflection.Context;
+import angerona.fw.serialize.CommandSequenceSerialize;
 
 /**
  * A command sequence acts as base for several sub concepts like conditionals
@@ -19,7 +21,7 @@ import angerona.fw.reflection.Context;
  * @author Tim Janus
  */
 @Root(name="asml-script")
-public class CommandSequence extends ASMLCommand {
+public class CommandSequence extends ASMLCommand implements CommandSequenceSerialize{
 
 	/** the orderer list of commands in this sequence */
 	@ElementListUnion({
@@ -29,7 +31,7 @@ public class CommandSequence extends ASMLCommand {
 		@ElementList(entry="conditional", inline=true, type=Conditional.class),
 		@ElementList(entry="execute", inline=true, type=Execute.class)
 	})
-	private List<ASMLCommand> commandos = new LinkedList<>();
+	private List<ASMLCommand> commands = new LinkedList<>();
 	
 	/** the optional name for the command sequence */
 	@Attribute(name="name", required=false)
@@ -48,13 +50,19 @@ public class CommandSequence extends ASMLCommand {
 			List<ASMLCommand> sequence,
 			@Attribute(name="name", required=false) String name) {
 		this.name = name;
-		this.commandos = sequence;
+		this.commands = sequence;
+	}
+	
+	@Override
+	public List<ASMLCommand> getCommandSequence() {
+		return Collections.unmodifiableList(commands);
 	}
 	
 	/**
 	 * @return 	The name of the command sequence. Especially script files provide a name but this
 	 * 			also might be null.
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -64,7 +72,7 @@ public class CommandSequence extends ASMLCommand {
 	 * @param commando	Reference to the command which is added.
 	 */
 	public void addCommando(ASMLCommand commando) {
-		this.commandos.add(commando);
+		this.commands.add(commando);
 	}
 	
 	/**
@@ -74,7 +82,7 @@ public class CommandSequence extends ASMLCommand {
 	@Override
 	public void setContext(Context context) {
 		super.setContext(context);
-		for(ASMLCommand cmd : commandos) {
+		for(ASMLCommand cmd : commands) {
 			cmd.setContext(context);
 		}
 	}
@@ -84,7 +92,7 @@ public class CommandSequence extends ASMLCommand {
 	 */
 	@Override
 	protected void executeInternal() throws InvokeException {
-		for(ASMLCommand cmd : commandos) {
+		for(ASMLCommand cmd : commands) {
 			cmd.executeInternal();
 		}
 	}

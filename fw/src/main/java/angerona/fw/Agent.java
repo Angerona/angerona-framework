@@ -48,7 +48,6 @@ import angerona.fw.report.Reporter;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.OperationSetConfig;
-import angerona.fw.serialize.SerializeHelper;
 
 /**
  * Implementation of an agent in the Angerona Framework.
@@ -186,6 +185,8 @@ public class Agent extends AgentArchitecture
 				errorOutput = "Cannot create operation-set: '" + osc.getOperationType() + "'";
 			}
 		}
+		
+		asmlCylce = ai.getCycleScript();
 		
 		createAgentComponents(ai);
 		
@@ -383,10 +384,6 @@ public class Agent extends AgentArchitecture
 	@Override
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
-		
-		if(asmlCylce == null) {
-			asmlCylce = SerializeHelper.loadXml(CommandSequence.class, new File("./config/secrecy_cycle.xml"));
-		}
 		
 		regenContext();
 		Context c = getContext();

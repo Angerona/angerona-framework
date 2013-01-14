@@ -4,14 +4,10 @@
 	<agent-instance>
 		<name>Employee</name>
         <default-suffix>employee</default-suffix>
-         
-        <config>
-			<source>config/agents/default_agent.xml</source>
-        </config>
-         
-        <beliefbase-config>
-			<source>config/beliefbases/asp_beliefbase.xml</source>
-        </beliefbase-config>
+        
+        <cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
         
         <desire>v_Boss(ask_for_excuse)</desire>
         <desire>attend_scm</desire>
@@ -28,15 +24,11 @@
       	<name>Boss</name>
       	<default-suffix>boss</default-suffix>
       	
-      	<config>
-      		<source>config/agents/default_agent.xml</source>
-      	</config>
+		<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
       	
       	<skill>Query</skill>
       	
-      	<beliefbase-config>
-            <source>config/beliefbases/asp_beliefbase.xml</source>
-         </beliefbase-config>
-         
 	</agent-instance>
 </simulation-configuration>

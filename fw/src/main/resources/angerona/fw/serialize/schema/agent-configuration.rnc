@@ -1,6 +1,6 @@
 element agent-configuration {
 	element name {text} &
-	element cycle {
+	element cycle-script {
 	   external "xml_ref.rnc"
 	} &
 	element operation-set { 

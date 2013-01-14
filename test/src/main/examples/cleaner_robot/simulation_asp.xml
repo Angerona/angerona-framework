@@ -5,17 +5,14 @@
 		<name>Employee</name>
 		<default-suffix>cleaner</default-suffix>
 	
-        <config>
-			<source>config/agents/knowhow_agent.xml</source>
-        </config>
-    
-        <beliefbase-config>
-            <source>config/beliefbases/asp_beliefbase.xml</source>
-        </beliefbase-config>
-        
+		<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+        	
         <skill>QueryAnswer</skill>
         
 		<desire>attend_scm</desire>
+		
 		<data key="KnowHow">
             cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full
 			cleaned_hallway, (at_hallway, vacuumed_hallway), bag_empty

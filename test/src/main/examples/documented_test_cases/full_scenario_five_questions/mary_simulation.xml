@@ -7,33 +7,24 @@
 		<name>Mary</name>
        	<default-suffix>mary</default-suffix>
         
-       	<config>
-			<source>config/agents/mary.xml</source>
-       	</config>
-        
-      	<beliefbase-config>
-			<source>config/beliefbases/asp_detail_beliefbase.xml</source>
-       	</beliefbase-config>
+       	<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/mary.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
 
 		<skill>QueryAnswer</skill>
 		
 		<data key="Confidential">(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.7}, argued(john))
 		</data>
-		
 	</agent-instance>
       
 	<agent-instance>
    		<name>Coroner</name>
    		<default-suffix>coroner</default-suffix>
    	
-   		<config>
-   			<source>config/agents/mary.xml</source>
-   		</config>
+   		<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/mary.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
    	
-   		<beliefbase-config>
-     	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
-     	</beliefbase-config>
-        
    		<skill>Query</skill>	
 		
 	 	<desire>q_Mary(said(X))_1</desire>   
@@ -41,10 +32,11 @@
 		<desire>q_Mary(said(X))_3</desire> 
 		<desire>q_Mary(said(X))_4</desire> 
 		<desire>q_Mary(said(X))_5</desire> 
-	<!--	<desire>q_Mary(john_argued)_1</desire>      -->
-	<!--	<desire>q_Mary(someone_argued)_2</desire>   
+		<!--
+		<desire>q_Mary(john_argued)_1</desire>
+		<desire>q_Mary(someone_argued)_2</desire>   
 		<desire>q_Mary(you_listened)_3</desire>   
-	-->
+		-->
 	</agent-instance>
 
 </simulation-configuration>

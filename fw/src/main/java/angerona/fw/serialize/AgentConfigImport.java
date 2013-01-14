@@ -3,9 +3,8 @@ package angerona.fw.serialize;
 import java.io.File;
 import java.util.List;
 
-import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.core.Resolve;
 
 /**
@@ -16,12 +15,12 @@ import org.simpleframework.xml.core.Resolve;
  */
 @Root(name="agent-config-file")
 public class AgentConfigImport implements AgentConfig {
-	@Element
+	@Attribute(name="source")
 	protected File source;
 
 	@Resolve
 	public AgentConfig substitute() throws Exception {
-		return new Persister().read(AgentConfigReal.class, source);
+		return SerializeHelper.loadXml(AgentConfigReal.class, source);
 	}
 
 	@Override

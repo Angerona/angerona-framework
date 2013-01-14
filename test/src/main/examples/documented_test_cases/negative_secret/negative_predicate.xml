@@ -6,13 +6,9 @@
 		<name>Mary</name>
       	<default-suffix>mary</default-suffix>
        
-      	<config>
-			<source>config/agents/mary.xml</source>
-      	</config>
-       
-     	<beliefbase-config>
-			<source>config/beliefbases/asp_detail_beliefbase.xml</source>
-      	</beliefbase-config>
+      	<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/mary.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
 
      	<skill>QueryAnswer</skill>
      	
@@ -24,21 +20,18 @@
    		<name>Coroner</name>
    		<default-suffix>coroner</default-suffix>
    	
-   		<config>
-   			<source>config/agents/mary.xml</source>
-   		</config>
-   	
-   		<beliefbase-config>
-     	    <source>config/beliefbases/asp_detail_beliefbase.xml</source>
-     	</beliefbase-config>
+   		<cycle-script source="config/secrecy_cycle.xml" />
+        <agent-config source="config/agents/mary.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
         	
    		<skill>Query</skill>
 		
 	 	<desire>q_Mary(-alfred_argued)_1</desire>
-	<!--	<desire>q_Mary(-john_argued)_1</desire>      -->
-	<!--	<desire>q_Mary(someone_argued)_2</desire>   
+		<!--
+		<desire>q_Mary(-john_argued)_1</desire>
+		<desire>q_Mary(someone_argued)_2</desire>   
 		<desire>q_Mary(you_listened)_3</desire>   
-	-->
+		-->
 	</agent-instance>
 
 </simulation-configuration>
