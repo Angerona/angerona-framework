@@ -1,22 +1,35 @@
-package angerona.fw.reflection;
+package angerona.fw.asml;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Agent;
 import angerona.fw.error.InvokeException;
+import angerona.fw.reflection.Context;
+import angerona.fw.reflection.ContextProvider;
 
-public abstract class XMLCommando implements Commando, ContextProvider {
+/**
+ * Abstract base class for an ASML command. It provides some helper methods
+ * to access variables in the current context, it implements the error handling and
+ * the public execute method and it provides an executeInternal method which
+ * has to be overridden by sub classes to define the execution behavior of the
+ * ASML command.
+ * 
+ * @author Tim Janus
+ */
+public abstract class ASMLCommand implements ScriptCommand, ContextProvider {
 
 	/** reference to the logback logger instance */
-	private static Logger LOG = LoggerFactory.getLogger(XMLCommando.class);
+	private static Logger LOG = LoggerFactory.getLogger(ASMLCommand.class);
 	
+	/** the actual context used to execute the ASML command */
 	private Context context;
 	
+	/** An exception showing the last error which occurred during ASML execution */
 	private InvokeException lastError;
 	
 	@Override
 	public boolean execute(Context context) {
+		LOG.trace("start execution of: '{}'", this.getClass().getSimpleName());
 		lastError = null;
 		setContext(context);
 		try {
@@ -40,10 +53,20 @@ public abstract class XMLCommando implements Commando, ContextProvider {
 		return this.context;
 	}
 	
+	/**
+	 * Sets the context used for ASML execution. Sub classes might override this method
+	 * if they have attributes which also need a context.
+	 * @param context	The new context used for ASML execution.
+	 */
 	protected void setContext(Context context) {
 		this.context = context;
 	}
 	
+	/**
+	 * The executeInternal method contains the execution behavior of the ASML command and
+	 * has to be overridden by sub classes.
+	 * @throws InvokeException
+	 */
 	protected abstract void executeInternal() throws InvokeException;
 	
 	/**
@@ -82,20 +105,12 @@ public abstract class XMLCommando implements Commando, ContextProvider {
 	 */
 	protected void setReturnValueIdentifier(String outName, Object out) throws InvokeException{
 		if(outName == null)
-			return;
+			throw new IllegalArgumentException("'outName' must not be null.");
 		
 		if(outName.startsWith("$"))
 			outName = outName.substring(1);
 		
 		Context in = getParameter("in");
 		in.set(outName, out);
-	}
-	
-	/**
-	 * @return reference to the agent represent by the parameter self.
-	 * @throws InvokeException
-	 */
-	protected Agent getSelf() throws InvokeException {
-		return this.getParameter("self");
 	}
 }

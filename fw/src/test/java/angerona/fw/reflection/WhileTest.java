@@ -4,16 +4,19 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import angerona.fw.asml.Assign;
+import angerona.fw.asml.While;
+
 public class WhileTest {
 	@Test
 	public void testWhile() throws ClassNotFoundException {
 		Context context = new Context();
 		context.set("run", true);
 		
-		XMLWhile w = new XMLWhile(new BooleanExpression(new Value("$run", Value.CONTEXT_REFERENCE_TYPE)));
-		XMLAssign assign = new XMLAssign("run", new Value("FALSE", Boolean.class.getName()));
+		While w = new While(new BooleanExpression(new Value("$run", Value.CONTEXT_REFERENCE_TYPE)));
+		Assign assign = new Assign("run", new Value("FALSE", Boolean.class.getName()));
 		w.addCommando(assign);
-		assign = new XMLAssign("sender", "Boss", String.class.getName());
+		assign = new Assign("sender", new Value("Boss"));
 		w.addCommando(assign);
 		w.execute(context);
 		

@@ -13,7 +13,7 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
-import angerona.fw.reflection.XMLCommandoSequence;
+import angerona.fw.asml.CommandSequence;
 
 
 /**
@@ -44,7 +44,7 @@ public class AgentInstance {
 	@Element(name="default-suffix")
 	protected String fileSuffix;
 
-	protected XMLCommandoSequence cylceScript;
+	protected CommandSequence cylceScript;
 	
 	/** list of fol-formulas representing the initial desires of the agent */
 	@ElementList(entry="desire", inline=true, required=false, empty=false)

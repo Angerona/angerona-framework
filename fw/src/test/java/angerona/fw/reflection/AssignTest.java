@@ -10,6 +10,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.junit.Test;
 
+import angerona.fw.asml.Assign;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -19,14 +20,14 @@ public class AssignTest {
 	
 	@Test
 	public void testAssignOnEmptyContext() throws ClassNotFoundException {
-		XMLAssign assign = new XMLAssign("name", new Value("Angerona", null));
+		Assign assign = new Assign("name", new Value("Angerona", null));
 		doStringTest(assign, new Context());
 	}
 
 	@Test
 	public void testDeserialize() {
 		String xml = "<assign name=\"name\"><value value=\"Angerona\" type=\"string\" /></assign>";
-		XMLAssign assign = SerializeHelper.loadXml(XMLAssign.class, xml);
+		Assign assign = SerializeHelper.loadXml(Assign.class, xml);
 		doStringTest(assign, new Context());
 	}
 	
@@ -63,7 +64,7 @@ public class AssignTest {
 		// perform the test:
 		Context context = new Context();
 		for(Triple t : lst) {
-			XMLAssign assign = new XMLAssign("Test", new Value(t.strValue, t.type.getName()));
+			Assign assign = new Assign("Test", new Value(t.strValue, t.type.getName()));
 			assign.execute(context);
 			assertEquals(t.realValue, context.get("Test"));
 		}
@@ -76,13 +77,13 @@ public class AssignTest {
 		AngeronaAnswer aa = new AngeronaAnswer(null, new Atom(new Predicate("attend_scm")), AnswerValue.AV_FALSE);
 		context.set("answer", aa);
 		
-		XMLAssign assign = new XMLAssign("reference", new Value("$answer", null));
+		Assign assign = new Assign("reference", new Value("$answer", null));
 		assign.execute(context);
 		
 		assertEquals(true, context.get("answer") == context.get("reference"));
 	}
 	
-	private void doStringTest(XMLAssign assign, Context c) {
+	private void doStringTest(Assign assign, Context c) {
 		assertEquals(true, c.get("name") == null);
 		assign.execute(c);
 		

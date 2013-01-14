@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.asml.Conditional;
 import angerona.fw.serialize.SerializeHelper;
 
 /**
@@ -18,7 +19,7 @@ import angerona.fw.serialize.SerializeHelper;
  * @author Tim Janus
  */
 public class ConditionalTest {
-	private XMLConditional conditional;
+	private Conditional conditional;
 	
 	private static Logger LOG = LoggerFactory.getLogger(ConditionalTest.class);
 	
@@ -33,7 +34,7 @@ public class ConditionalTest {
 		InputStream stream = getClass().getResourceAsStream(jarPath);
 		if(stream == null)
 			LOG.warn("Cannot find: '{}'", jarPath);
-		conditional = SerializeHelper.loadXml(XMLConditional.class, new InputStreamReader(stream));
+		conditional = SerializeHelper.loadXml(Conditional.class, new InputStreamReader(stream));
 	}
 	
 	@After 

@@ -1,4 +1,4 @@
-package angerona.fw.reflection;
+package angerona.fw.asml;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +13,25 @@ import angerona.fw.OperatorProvider;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.reflection.Value;
 import angerona.fw.serialize.SerializeHelper;
 
+/**
+ * The InvokeOperation ASML command calls an operator which implements an operation
+ * which is identified by a unique name. The parameters for the operator invocation
+ * are given as a string map. An identifier to save the output of the operator can
+ * also be given using the output element. 
+ * 
+ * The current implementation uses the preferred operator of the OperatorSet.
+ * TODO: Give the script writer the ability to choose the operator.
+ * 
+ * @author Tim Janus
+ *
+ */
 @Root(name="operation")
-public class XMLOperation extends XMLCommando {
-	/** the operation type name */
+public class InvokeOperation extends ASMLCommand {
+	
+	/** the unique name of the operation type */
 	@Attribute(name="type")
 	private String type;
 	
@@ -29,18 +43,18 @@ public class XMLOperation extends XMLCommando {
 	@Element(name="output", required=false)
 	private String output;
 	
-	public XMLOperation(@Attribute(name="type") String type) {
+	public InvokeOperation(@Attribute(name="type") String type) {
 		this(type, new HashMap<String, String>(), null);
 	}
 	
-	public XMLOperation(
+	public InvokeOperation(
 			@Attribute(name="type") String type,
 			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
 			Map<String, String> params) {
 		this(type, params, null);
 	}
 	
-	public XMLOperation(
+	public InvokeOperation(
 			@Attribute(name="type") String type,
 			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
 			Map<String, String> params,
@@ -87,7 +101,7 @@ public class XMLOperation extends XMLCommando {
 	}
 	
 	public static void main(String [] args) {
-		XMLOperation op = new XMLOperation("TestType", new HashMap<String, String>(), "out");
+		InvokeOperation op = new InvokeOperation("TestType", new HashMap<String, String>(), "out");
 		op.parameters.put("beliefs", "$beliefs");
 		op.parameters.put("perception", "$in.perception");
 		

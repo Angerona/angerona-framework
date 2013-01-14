@@ -1,25 +1,28 @@
-package angerona.fw.reflection;
+package angerona.fw.asml;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
 import angerona.fw.error.InvokeException;
+import angerona.fw.reflection.Condition;
 
 /**
- * Implements a while construct for ASML.
+ * Implements a while construct for ASML by extending the CommandSequence
+ * and using a condition.
+ * 
  * @author Tim Janus
- *
  */
 @Root(name="while")
-public class XMLWhile extends XMLCommandoSequence {
+public class While extends CommandSequence {
 	
+	/** the condition which is proofed before every execution of the while loop body */
 	@Attribute(name="condition")
 	private Condition condition;
 	
 	/** the number of iterations the while loop has performed so far */
 	private int iterations = 0;
 	
-	public XMLWhile(@Attribute(name="condition") Condition condition) {
+	public While(@Attribute(name="condition") Condition condition) {
 		this.condition = condition;
 	}
 	
@@ -32,6 +35,7 @@ public class XMLWhile extends XMLCommandoSequence {
 		}
 	}
 	
+	/** @return the number of loop iterations performed so far. */
 	public int getIterations() {
 		return iterations;
 	}

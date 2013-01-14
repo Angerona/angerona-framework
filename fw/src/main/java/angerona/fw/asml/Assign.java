@@ -1,4 +1,4 @@
-package angerona.fw.reflection;
+package angerona.fw.asml;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -7,43 +7,46 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.error.InvokeException;
+import angerona.fw.reflection.Context;
+import angerona.fw.reflection.Value;
 
 /**
- * Implements an assignment command for ASML.
+ * Implements an assignment command for ASML. It assigns the given value to the
+ * given name which acts as identifier in the context.
  * 
  * @author Tim Janus
  */
-@Root(name="assign")
-public class XMLAssign extends XMLCommando {
+@Root(name = "assign")
+public class Assign extends ASMLCommand {
 
 	/** reference to the logging facility */
-	private static Logger LOG = LoggerFactory.getLogger(XMLAssign.class);
-	
+	private static Logger LOG = LoggerFactory.getLogger(Assign.class);
+
 	/** The name of the context variable which saves the value of the assignment */
-	@Attribute(name="name")
+	@Attribute(name = "name")
 	private String name;
-	
-	@Element(name="value")
+
+	/** The value which has to be saved by the assignment */
+	@Element(name = "value")
 	private Value value;
-	
-	public XMLAssign(String name, String value, String type) throws ClassNotFoundException {
-		this.name = name;
-		this.value = new Value(value, type);
-	}
-	
-	public XMLAssign(@Attribute(name="name") String name,
-			@Element(name="value") Value value) {
+
+	public Assign(@Attribute(name = "name") String name,
+			@Element(name = "value") Value value) {
 		this.name = name;
 		this.value = value;
 	}
-	
+
+	/**
+	 * Sets the context of the assign command and the context of the
+	 * value which is assigned by the command.
+	 */
 	@Override
 	protected void setContext(Context context) {
 		super.setContext(context);
-		if(value != null)
+		if (value != null)
 			value.setContext(context);
 	}
-	
+
 	@Override
 	protected void executeInternal() throws InvokeException {
 		setParameter(name, value.getValue());

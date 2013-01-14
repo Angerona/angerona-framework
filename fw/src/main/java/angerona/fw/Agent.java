@@ -22,6 +22,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.asml.CommandSequence;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
@@ -42,7 +43,6 @@ import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
-import angerona.fw.reflection.XMLCommandoSequence;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
 import angerona.fw.serialize.AgentConfig;
@@ -379,13 +379,13 @@ public class Agent extends AgentArchitecture
 	}
 	
 	// Hacked test version of asml cyle:
-	XMLCommandoSequence asmlCylce;
+	CommandSequence asmlCylce;
 	@Override
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
 		
 		if(asmlCylce == null) {
-			asmlCylce = SerializeHelper.loadXml(XMLCommandoSequence.class, new File("./config/secrecy_cycle.xml"));
+			asmlCylce = SerializeHelper.loadXml(CommandSequence.class, new File("./config/secrecy_cycle.xml"));
 		}
 		
 		regenContext();

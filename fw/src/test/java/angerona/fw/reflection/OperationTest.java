@@ -11,6 +11,7 @@ import org.junit.Test;
 import angerona.fw.BaseOperator;
 import angerona.fw.OperatorProvider;
 import angerona.fw.OperatorSet;
+import angerona.fw.asml.InvokeOperation;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
@@ -71,7 +72,7 @@ public class OperationTest {
 		Map<String, String> params = new HashMap<String, String>();
 		
 		Context context = new Context();
-		XMLOperation op = new XMLOperation("MockOperation", params, "result");
+		InvokeOperation op = new InvokeOperation("MockOperation", params, "result");
 		
 		boolean reval = op.execute(context);
 		assertEquals(false, reval);
@@ -84,7 +85,7 @@ public class OperationTest {
 		
 		MockVisitor mockVisitor = new MockVisitor();
 		Context context = new Context();
-		XMLOperation op = new XMLOperation("WRONGNAME", params, "result");
+		InvokeOperation op = new InvokeOperation("WRONGNAME", params, "result");
 		
 		context.set("self", mockVisitor);
 		OperatorProvider s = new OperatorProvider();
@@ -102,7 +103,7 @@ public class OperationTest {
 		Map<String, String> params = new HashMap<String, String>();
 		
 		Context context = new Context();
-		XMLOperation op = new XMLOperation("MockOperation", params, "result");
+		InvokeOperation op = new InvokeOperation("MockOperation", params, "result");
 		
 		OperatorProvider s = new OperatorProvider();
 		OperatorSet opSet = new OperatorSet("MockOperation");
@@ -120,7 +121,7 @@ public class OperationTest {
 		
 		MockVisitor mockVisitor = new MockVisitor();
 		Context context = new Context();
-		XMLOperation op = new XMLOperation("MockOperation", params, "result");
+		InvokeOperation op = new InvokeOperation("MockOperation", params, "result");
 		
 		context.set("self", mockVisitor);
 		OperatorProvider s = new OperatorProvider();
