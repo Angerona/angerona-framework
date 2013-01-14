@@ -185,6 +185,9 @@ public class SecrecyKnowledge extends BaseAgentComponent implements
 	@Override
 	public void beliefbaseChanged(BaseBeliefbase bb, Perception percept, String space) {
 		if (!space.equals(AgentListener.WORLD)) {
+			if(percept == null)
+				return;
+			// TODO: Find a better concept for the information flow.
 			ViolatesResult res = percept.violates();
 			if(res == null)
 				return;
