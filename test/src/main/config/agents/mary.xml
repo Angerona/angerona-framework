@@ -1,6 +1,7 @@
 <agent-configuration>
 <!-- This file should be added to the git register so I don't have to change it when switching branches -->
 	<name>Mary Agent Implementation</name>
+	<cycle-script source="config/secrecy_cycle.xml" />
 	<!-- I've never actually looked at the Generate Options Operator. I should sometime. -->
 	
 	<operation-set operation-type="GenerateOptions">

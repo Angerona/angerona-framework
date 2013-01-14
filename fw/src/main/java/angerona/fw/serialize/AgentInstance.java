@@ -12,10 +12,6 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.core.PersistenceException;
-import org.simpleframework.xml.core.Validate;
-
-import angerona.fw.asml.CommandSequence;
 
 
 /**
@@ -45,11 +41,6 @@ public class AgentInstance {
 	/** the file suffix identifying the belief base */
 	@Element(name="beliefbase-name")
 	protected String filePrefix;
-
-	/** the link to the ASML script used to execute the agent's cycle. */
-	@Element(name="cycle-script", type=CommandSequenceSerializeImport.class)
-	protected CommandSequenceSerialize cylceScript;
-	// TODO NEXT: Getter for cycleScript and validate method for testing if the type is correct.
 	
 	/** list of fol-formulas representing the initial desires of the agent */
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
@@ -71,10 +62,6 @@ public class AgentInstance {
 		return config;
 	}
 	
-	public CommandSequence getCycleScript() {
-		return (CommandSequence)this.cylceScript;
-	}
-	
 	public List<Atom> getDesires() {
 		return Collections.unmodifiableList(desires);
 	}
@@ -93,18 +80,5 @@ public class AgentInstance {
 
 	public String getFileSuffix() {
 		return filePrefix;
-	}
-	
-	/**
-	 * Checks if the loaded agent instance is valid.
-	 * @throws PersistenceException
-	 */
-	@Validate
-	public void validation() throws PersistenceException {
-		/*if(!(this.cylceScript instanceof CommandSequence)) {
-			throw new PersistenceException("cycle-script is not of type '%s' but of type '%s", 
-					CommandSequence.class.getName(), 
-					this.cylceScript == null ? "null" : this.cylceScript.getClass().getName());
-		}*/
 	}
 }

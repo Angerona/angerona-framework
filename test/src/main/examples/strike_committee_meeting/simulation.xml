@@ -6,7 +6,7 @@
 		<name>Employee</name>
 		<beliefbase-name>employee</beliefbase-name>
 	
-		<cycle-script source="config/secrecy_cycle.xml" />
+		
         <agent-config source="config/agents/default_agent.xml" />         
         <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
 		
@@ -17,7 +17,7 @@
 		<name>Boss</name>
 		<beliefbase-name>boss</beliefbase-name>
 	
-		<cycle-script source="config/secrecy_cycle.xml" />
+		
         <agent-config source="config/agents/default_agent.xml" />         
         <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
         

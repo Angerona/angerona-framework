@@ -7,6 +7,8 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Resolve;
 
+import angerona.fw.asml.CommandSequence;
+
 /**
  * An implementation of the agent configuration file as a reference of the form:
  * <source>filename.xml</source>. It is used by simple xml internally to load the
@@ -35,6 +37,11 @@ public class AgentConfigImport implements AgentConfig {
 
 	@Override
 	public List<OperationSetConfig> getOperations() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public CommandSequence getCycleScript() {
 		throw new IllegalStateException("Method not supported.");
 	}
 }

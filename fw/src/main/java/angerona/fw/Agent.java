@@ -179,14 +179,13 @@ public class Agent extends AgentArchitecture
 		
 		capabilities.addAll(ai.getSkills());
 		
-		// link supported operators...
+		// load cylce script and link supported operators 
+		asmlCylce = ai.getConfig().getCycleScript();
 		for(OperationSetConfig osc : ai.getConfig().getOperations()) {
 			if(!operators.addOperationSet(osc)) {
 				errorOutput = "Cannot create operation-set: '" + osc.getOperationType() + "'";
 			}
 		}
-		
-		asmlCylce = ai.getCycleScript();
 		
 		createAgentComponents(ai);
 		

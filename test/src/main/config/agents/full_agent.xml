@@ -1,5 +1,6 @@
 <agent-configuration>
 	<name>Full Agent Implementation</name>
+	<cycle-script source="config/secrecy_cycle.xml" />
 	
 	<operation-set operation-type="GenerateOptions">
       <default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>

@@ -5,8 +5,8 @@
 		<name>employee</name>
         <beliefbase-name>employee</beliefbase-name>
          
-        <cycle-script source="config/secrecy_cycle.xml" />
-        <agent-config source="config/agents/knowhow_agent.xml" />         
+        
+        <agent-config source="config/agents/knowhow_agent_unsafe.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
         <skill>Justification</skill>
@@ -32,7 +32,7 @@
       	<name>boss</name>
       	<beliefbase-name>boss</beliefbase-name>
       	
-      	<cycle-script source="config/secrecy_cycle.xml" />
+      	
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          

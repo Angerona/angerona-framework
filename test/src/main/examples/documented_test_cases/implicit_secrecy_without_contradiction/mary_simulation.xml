@@ -7,7 +7,7 @@
 		<name>Mary</name>
        	<beliefbase-name>mary</beliefbase-name>
         
-       	<cycle-script source="config/secrecy_cycle.xml" />
+       	
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
         
@@ -21,7 +21,7 @@
    		<name>Coroner</name>
    		<beliefbase-name>coroner</beliefbase-name>
    	
-   		<cycle-script source="config/secrecy_cycle.xml" />
+   		
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
      	
