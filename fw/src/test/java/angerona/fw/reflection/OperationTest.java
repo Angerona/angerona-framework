@@ -69,7 +69,7 @@ public class OperationTest {
 	
 	@Test
 	public void testMockOperationExceptionNoOperators() {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Value> params = new HashMap<String, Value>();
 		
 		Context context = new Context();
 		InvokeOperation op = new InvokeOperation("MockOperation", params, "result");
@@ -81,7 +81,7 @@ public class OperationTest {
 	
 	@Test
 	public void testMockOperationExceptionInternalCauseOperationTypeWrong() {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Value> params = new HashMap<String, Value>();
 		
 		MockVisitor mockVisitor = new MockVisitor();
 		Context context = new Context();
@@ -100,7 +100,7 @@ public class OperationTest {
 	
 	@Test
 	public void testMockOperationExceptionNoSelf() {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Value> params = new HashMap<String, Value>();
 		
 		Context context = new Context();
 		InvokeOperation op = new InvokeOperation("MockOperation", params, "result");
@@ -117,7 +117,7 @@ public class OperationTest {
 	
 	@Test
 	public void testMockOperationSuccessful() {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Value> params = new HashMap<String, Value>();
 		
 		MockVisitor mockVisitor = new MockVisitor();
 		Context context = new Context();

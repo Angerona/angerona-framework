@@ -17,9 +17,11 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.reflection.BooleanExpression;
 import angerona.fw.reflection.Condition;
 import angerona.fw.reflection.FolFormulaVariable;
+import angerona.fw.reflection.Value;
 import angerona.fw.serialize.transform.ConditionTransform;
 import angerona.fw.serialize.transform.FolAtomTransform;
 import angerona.fw.serialize.transform.FolFormulaTransform;
+import angerona.fw.serialize.transform.ValueTransform;
 import angerona.fw.serialize.transform.VariableTransform;
 
 /**
@@ -50,6 +52,7 @@ public class SerializeHelper {
 						}
 			});
 			
+			matcher.bind(Value.class, ValueTransform.class);
 			matcher.bind(BooleanExpression.class, ConditionTransform.class);
 			matcher.bind(Condition.class, ConditionTransform.class);
 			

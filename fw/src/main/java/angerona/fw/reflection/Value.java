@@ -2,8 +2,6 @@ package angerona.fw.reflection;
 
 import java.io.StringReader;
 
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +9,6 @@ import angerona.fw.parser.DAMLParser;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.SerializeHelper;
 
-@Root(name="value")
 public class Value  {
 
 	/** reference to the logging facility */
@@ -20,11 +17,9 @@ public class Value  {
 	public static final String CONTEXT_REFERENCE_TYPE = "_REF_";
 	
 	/** A string containing the value for the assignment, it might be a variable starting with '$' */
-	@Attribute(name="value")
 	private String value;
 	
 	/** A string containing the type of the assignment value. */
-	@Attribute(name="type", required=false)
 	private String typeString;
 	
 	/** the type of the value as java cls */
@@ -39,7 +34,7 @@ public class Value  {
 	 * @param value
 	 * @throws ClassNotFoundException
 	 */
-	public Value(@Attribute(name="value") String value) throws ClassNotFoundException {
+	public Value(String value) throws ClassNotFoundException {
 		DAMLParser parser = new DAMLParser(new StringReader(value));
 		Value v = null;
 		try {
@@ -54,9 +49,7 @@ public class Value  {
 		this.valueObject = v.valueObject;
 	}
 	
-	public Value(@Attribute(name="value") String value, 
-			@Attribute(name="type") String type) 
-					throws ClassNotFoundException {
+	public Value(String value, String type) throws ClassNotFoundException {
 		this.typeString = type == null ? "string" : type;
 		this.value = value;
 		

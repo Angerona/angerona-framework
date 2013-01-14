@@ -37,27 +37,27 @@ public class InvokeOperation extends ASMLCommand {
 	
 	/** a map containing name value pairs representing the parameters for the operation invocation */
 	@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false)
-	private Map<String, String> parameters;
+	private Map<String, Value> parameters;
 
 	/** the name for the output using context.get(output) returns the variable calculated by the operation */
 	@Element(name="output", required=false)
 	private String output;
 	
 	public InvokeOperation(@Attribute(name="type") String type) {
-		this(type, new HashMap<String, String>(), null);
+		this(type, new HashMap<String, Value>(), null);
 	}
 	
 	public InvokeOperation(
 			@Attribute(name="type") String type,
 			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
-			Map<String, String> params) {
+			Map<String, Value> params) {
 		this(type, params, null);
 	}
 	
 	public InvokeOperation(
 			@Attribute(name="type") String type,
 			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
-			Map<String, String> params,
+			Map<String, Value> params,
 			@Element(name="output") String output) {
 		this.type = type;
 		this.parameters = params;
@@ -81,16 +81,9 @@ public class InvokeOperation extends ASMLCommand {
 		
 		// prepare parameters:
 		for(String key : parameters.keySet()) {
-			String value = parameters.get(key);
-			Value v = null;
-			try {
-				v = new Value(value);
-				v.setContext(getContext());
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			gop.setParameter(key, v.getValue());
+			Value value = parameters.get(key);
+			value.setContext(getContext());
+			gop.setParameter(key, value.getValue());
 		}
 		
 		// call operation and save result:
@@ -100,10 +93,10 @@ public class InvokeOperation extends ASMLCommand {
 		}
 	}
 	
-	public static void main(String [] args) {
-		InvokeOperation op = new InvokeOperation("TestType", new HashMap<String, String>(), "out");
-		op.parameters.put("beliefs", "$beliefs");
-		op.parameters.put("perception", "$in.perception");
+	public static void main(String [] args) throws ClassNotFoundException {
+		InvokeOperation op = new InvokeOperation("TestType", new HashMap<String, Value>(), "out");
+		op.parameters.put("beliefs", new Value("$beliefs"));
+		op.parameters.put("perception", new Value("$in.perception"));
 		
 		SerializeHelper.outputXml(op, System.out);
 	}

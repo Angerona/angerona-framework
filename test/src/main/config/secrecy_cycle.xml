@@ -9,7 +9,7 @@
 	    <output>newDesireCount</output>
 	</operation>
 	
-	<assign name="running"><value value="TRUE" /></assign>
+	<assign name="running" value="TRUE" />
 	<while condition="$running==TRUE">
 		
 		<operation type="IntentionUpdate">
@@ -25,12 +25,12 @@
 			 	</operation>
 			</if>
 			<else>
-			    <assign name="running"><value value="FALSE"/></assign>
+			    <assign name="running" value="FALSE" />
 			</else>
 		</conditional>
 		
-		<assign name="searching"><value value="$changed" /></assign>
+		<assign name="searching" value="$changed" />
 	</while>
 	
-	<execute><action value="$action" /></execute>
+	<execute action="$action" />
 </asml-script>

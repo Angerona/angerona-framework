@@ -1,7 +1,6 @@
 package angerona.fw.asml;
 
 import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +26,11 @@ public class Assign extends ASMLCommand {
 	private String name;
 
 	/** The value which has to be saved by the assignment */
-	@Element(name = "value")
+	@Attribute(name = "value")
 	private Value value;
 
 	public Assign(@Attribute(name = "name") String name,
-			@Element(name = "value") Value value) {
+			@Attribute(name = "value") Value value) {
 		this.name = name;
 		this.value = value;
 	}

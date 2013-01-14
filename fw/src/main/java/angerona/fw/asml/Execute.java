@@ -1,6 +1,6 @@
 package angerona.fw.asml;
 
-import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
 import angerona.fw.Agent;
@@ -19,7 +19,7 @@ import angerona.fw.reflection.Value;
 public class Execute extends ASMLCommand {
 
 	/** the script value representing the action as a plan element which the agent shall perform */
-	@Element(name="action", required=true)
+	@Attribute(name="action", required=true)
 	Value action;
 	
 	/**
