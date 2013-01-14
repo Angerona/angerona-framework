@@ -8,7 +8,7 @@ grammar {
 	
 	ai = element agent-instance {
 		element name {text} &
-		element default-suffix {text} &
+		element beliefbase-name {text} &
 		element config {
 			external "xml_ref.rnc"
 		} &
