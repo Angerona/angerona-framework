@@ -2,7 +2,7 @@ options {
 STATIC = false ;
 }
 
-PARSER_BEGIN(DAMLParser)
+PARSER_BEGIN(ASMLParser)
 package angerona.fw.parser;
 import angerona.fw.reflection.Value;
 import angerona.fw.reflection.BooleanExpression;
@@ -10,12 +10,12 @@ import angerona.fw.reflection.BooleanExpression.Operator;
 import java.util.*;
 @SuppressWarnings("all")
 
-public class DAMLParser {
+public class ASMLParser {
 
 
 }
 
-PARSER_END(DAMLParser)
+PARSER_END(ASMLParser)
 
 SKIP :
 {

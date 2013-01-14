@@ -2,6 +2,8 @@ package angerona.fw.reflection;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +11,8 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import angerona.fw.asml.Assign;
 import angerona.fw.comm.Query;
@@ -18,16 +22,22 @@ import angerona.fw.serialize.SerializeHelper;
 
 public class AssignTest {
 	
+	private static Logger LOG = LoggerFactory.getLogger(AssignTest.class);
+	
 	@Test
 	public void testAssignOnEmptyContext() throws ClassNotFoundException {
-		Assign assign = new Assign("name", new Value("Angerona", null));
+		Assign assign = new Assign("name", new Value("Angerona"));
 		doStringTest(assign, new Context());
 	}
 
 	@Test
 	public void testDeserialize() {
-		String xml = "<assign name=\"name\"><value value=\"Angerona\" type=\"string\" /></assign>";
-		Assign assign = SerializeHelper.loadXml(Assign.class, xml);
+		String jarPath = "/angerona/fw/reflection/AssignTest.xml";
+		InputStream stream = getClass().getResourceAsStream(jarPath);
+		if(stream == null)
+			LOG.warn("Cannot find: '{}'", jarPath);
+		Assign assign = SerializeHelper.loadXml(Assign.class, new InputStreamReader(stream));
+		
 		doStringTest(assign, new Context());
 	}
 	

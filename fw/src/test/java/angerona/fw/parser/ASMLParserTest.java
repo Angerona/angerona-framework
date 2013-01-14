@@ -16,11 +16,11 @@ import angerona.fw.reflection.Value;
  * 
  * @author Tim Janus
  */
-public class DAMLParserTest {
+public class ASMLParserTest {
 	@Test
 	public void testParseValue() throws ParseException {
 		String toRead = "1.25";
-		DAMLParser parser = new DAMLParser(new StringReader(toRead));
+		ASMLParser parser = new ASMLParser(new StringReader(toRead));
 		Value val = parser.value();
 		
 		assertEquals(1.25, val.getValue());
@@ -48,7 +48,7 @@ public class DAMLParserTest {
 	@Test
 	public void testParserBooleanExpression() throws ParseException {
 		String toRead = "TRUE";
-		DAMLParser parser = new DAMLParser(new StringReader(toRead));
+		ASMLParser parser = new ASMLParser(new StringReader(toRead));
 		BooleanExpression be = parser.booleanExpression();
 		assertEquals(true, be.evaluate());
 		

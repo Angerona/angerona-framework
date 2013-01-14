@@ -4,14 +4,14 @@ import java.io.StringReader;
 
 import org.simpleframework.xml.transform.Transform;
 
-import angerona.fw.parser.DAMLParser;
+import angerona.fw.parser.ASMLParser;
 import angerona.fw.reflection.Condition;
 
 public class ConditionTransform implements Transform<Condition> {
 
 	@Override
 	public Condition read(String toParse) throws Exception {
-		DAMLParser parser = new DAMLParser(new StringReader(toParse));
+		ASMLParser parser = new ASMLParser(new StringReader(toParse));
 		return parser.booleanExpression();
 	}
 

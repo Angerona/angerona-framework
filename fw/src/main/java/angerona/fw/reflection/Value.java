@@ -5,7 +5,7 @@ import java.io.StringReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.parser.DAMLParser;
+import angerona.fw.parser.ASMLParser;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.SerializeHelper;
 
@@ -35,7 +35,7 @@ public class Value  {
 	 * @throws ClassNotFoundException
 	 */
 	public Value(String value) throws ClassNotFoundException {
-		DAMLParser parser = new DAMLParser(new StringReader(value));
+		ASMLParser parser = new ASMLParser(new StringReader(value));
 		Value v = null;
 		try {
 			v = parser.value();
