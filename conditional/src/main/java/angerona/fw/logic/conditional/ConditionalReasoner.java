@@ -40,6 +40,9 @@ public class ConditionalReasoner extends BaseReasoner {
 		this.actualBeliefbase = bbase;
 	}
 	
+	public ConditionalReasoner() {
+	}
+	
 	public void calculateCRepresentation() {
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) this.actualBeliefbase;
 		// Calculate c-representation
