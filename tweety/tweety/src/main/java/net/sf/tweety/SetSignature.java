@@ -204,12 +204,6 @@ public class SetSignature<T extends Formula> extends Signature implements Collec
 	}
 
 	@Override
-	public SymbolSet getSymbolSet() {
-		// TODO does not supports the symbol translation, cant see an easy way here.
-		return null;
-	}
-
-	@Override
 	public Set<CommonStructure> getCommonStructureElements() {
 		// TODO does not supports the symbol translation, cant see an easy way here.
 		return null;

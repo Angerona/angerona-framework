@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.sf.tweety.logics</groupId>
-  <artifactId>conditional</artifactId>
-  <version>0.1.141-SNAPSHOT</version>
+  <artifactId>conditionallogic</artifactId>
+  <version>0.1.82-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Tweety (Conditional)</name>
@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
-    	<artifactId>propositional</artifactId>
+    	<artifactId>propositionallogic</artifactId>
     	<version>0.1.82-SNAPSHOT</version>
     </dependency>
     <dependency>
