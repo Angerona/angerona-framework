@@ -91,6 +91,8 @@
   	<module>tweety/conditional</module>
   	<module>tweety/math</module>
   	<module>tweety/propositional</module>
-  	<module>../secrecy</module>
+  	
+  	
+  	<module>secrecy</module>
   </modules>
 </project>
