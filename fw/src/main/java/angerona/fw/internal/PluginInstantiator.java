@@ -167,7 +167,7 @@ public class PluginInstantiator {
 			LOG.info("Operator-Plugin '{}' loaded", ap.getClass().getName());
 		}
 		
-		LOG.info("Load Beliefbase-Plugins:");
+ 		LOG.info("Load Beliefbase-Plugins:");
 		loadedPlugins.clear();
 		Collection<BeliefbasePlugin> bbPlugins = new LinkedList<BeliefbasePlugin>(util.getPlugins(BeliefbasePlugin.class));
 		for(BeliefbasePlugin bp : bbPlugins) {

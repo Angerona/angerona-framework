@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
-import angerona.fw.operators.parameter.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
 
 /**
  * Revision operator for conditional belief bases. Defined as
@@ -29,7 +29,7 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 	}
 
 	@Override
-	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
+	protected BaseBeliefbase processInternal(ChangeBeliefbaseParameter param) {
 		log.info("Revision by '{}'", param.getNewKnowledge());
 		ConditionalBeliefbase beliefbase = (ConditionalBeliefbase) param.getBeliefBase();
 		ConditionalBeliefbase newKnowledge = (ConditionalBeliefbase) param.getNewKnowledge();

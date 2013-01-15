@@ -4,9 +4,8 @@
 	<agent-instance>
 		<name>Employee</name>
 		<beliefbase-name>cleaner</beliefbase-name>
-	
 		
-        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <agent-config source="config/agents/knowhow_agent.xml" />
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
         	
         <skill>QueryAnswer</skill>

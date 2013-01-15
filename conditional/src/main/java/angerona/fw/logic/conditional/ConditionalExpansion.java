@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.BaseChangeBeliefs;
-import angerona.fw.operators.parameter.BeliefUpdateParameter;
+import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
 
 /**
  * Simple expansion operator for conditional belief bases without consistency-checks
@@ -28,7 +28,7 @@ public class ConditionalExpansion extends BaseChangeBeliefs {
 	 * Add all propositions from the new knowledge to the existing belief base
 	 */
 	@Override
-	protected BaseBeliefbase processInt(BeliefUpdateParameter param) {
+	protected BaseBeliefbase processInternal(ChangeBeliefbaseParameter param) {
 		log.info("Expansion with '{}'", param.getNewKnowledge());
 		ConditionalBeliefbase beliefbase = (ConditionalBeliefbase) param.getBeliefBase();
 		ConditionalBeliefbase newKnowledge = (ConditionalBeliefbase) param.getNewKnowledge();

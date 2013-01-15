@@ -3,15 +3,10 @@
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Employee</name>
-        <default-suffix>employee</default-suffix>
-         
-        <config class="angerona.fw.serialize.AgentConfigImport">
-			<source>config/agents/default_agent.xml</source>
-        </config>
-         
-        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-			<source>config/beliefbases/ocf_beliefbase.xml</source>
-        </beliefbase-config>
+        <beliefbase-name>employee</beliefbase-name>
+        
+        <agent-config source="config/agents/default_agent.xml" />
+        <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
         
         <desire>v_Boss(ask_for_excuse)</desire>
         <desire>attend_scm</desire>
@@ -26,17 +21,11 @@
       
 	<agent-instance>
       	<name>Boss</name>
-      	<default-suffix>boss</default-suffix>
+      	<beliefbase-name>boss</beliefbase-name>
       	
-      	<config class="angerona.fw.serialize.AgentConfigImport">
-      		<source>config/agents/default_agent.xml</source>
-      	</config>
+      	<agent-config source="config/agents/default_agent.xml" />
+        <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
       	
       	<skill>Query</skill>
-      	
-      	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-            <source>config/beliefbases/ocf_beliefbase.xml</source>
-         </beliefbase-config>
-         
 	</agent-instance>
 </simulation-configuration>

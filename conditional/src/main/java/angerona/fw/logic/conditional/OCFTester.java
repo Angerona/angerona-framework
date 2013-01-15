@@ -3,11 +3,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
-import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
-import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
-import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+import angerona.fw.operators.parameter.ReasonerParameter;
 import angerona.fw.parser.ParseException;
 
 
@@ -22,30 +19,30 @@ public class OCFTester {
 	public static void main(String[] args) throws ParseException, IOException {
 		ConditionalBeliefbase bbase = new ConditionalBeliefbase();
 		bbase.parse(new BufferedReader(new StringReader(rawbbase)));
-		ConditionalReasoner bbasereasoner = new ConditionalReasoner(bbase);
+		ConditionalReasoner bbasereasoner = new ConditionalReasoner();
 		
 		ConditionalBeliefbase rev1 = new ConditionalBeliefbase();
 		rev1.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1)));
-		ConditionalReasoner rev1reasoner = new ConditionalReasoner(rev1);
+		ConditionalReasoner rev1reasoner = new ConditionalReasoner();
 		
 		ConditionalBeliefbase rev2 = new ConditionalBeliefbase();
 		rev2.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1 + "\n" + rawrev2)));
-		ConditionalReasoner rev2reasoner = new ConditionalReasoner(rev2);
+		ConditionalReasoner rev2reasoner = new ConditionalReasoner();
 		
 		ConditionalBeliefbase rev3 = new ConditionalBeliefbase();
 		rev3.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1 + "\n" + rawrev2 + "\n" + rawrev3)));
-		ConditionalReasoner rev3reasoner = new ConditionalReasoner(rev3);
+		ConditionalReasoner rev3reasoner = new ConditionalReasoner();
 		
 		ConditionalBeliefbase rev4 = new ConditionalBeliefbase();
 		rev4.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1 + "\n" + rawrev2 + "\n" + rawrev3 + "\n" + rawrev4)));
-		ConditionalReasoner rev4reasoner = new ConditionalReasoner(rev4);
+		ConditionalReasoner rev4reasoner = new ConditionalReasoner();
 		
 		
 		System.out.println("Initial beliefbase:");
 		System.out.println(bbase.toString());
 		
 		System.out.println("c-representation:");
-		bbasereasoner.calculateCRepresentation();
+		bbasereasoner.calculateCRepresentation(bbase);
 		RankingFunction ocf = bbasereasoner.ocf;
 		System.out.println(ocf);
 		
@@ -54,20 +51,19 @@ public class OCFTester {
 		rev3reasoner.ocf = ocf;
 		rev4reasoner.ocf = ocf;
 		
-		
 		System.out.println("\n propositions:");
 		System.out.println(rev1.getPropositions());
 		System.out.println("propositional beliefs:");
-		System.out.println(rev1reasoner.inferInt());
+		System.out.println(rev1reasoner.inferInt(new ReasonerParameter(rev1, null)));
 		
 		System.out.println("\n results of revision by " + rawrev2);
-		System.out.println(rev2reasoner.inferInt());
+		System.out.println(rev2reasoner.inferInt(new ReasonerParameter(rev2, null)));
 		
 		System.out.println("\n results of revision by " + rawrev3);
-		System.out.println(rev3reasoner.inferInt());
+		System.out.println(rev3reasoner.inferInt(new ReasonerParameter(rev3, null)));
 		
 		System.out.println("\n results of revision by " + rawrev4);
-		System.out.println(rev4reasoner.inferInt());
+		System.out.println(rev4reasoner.inferInt(new ReasonerParameter(rev4, null)));
 		
 	}
 	

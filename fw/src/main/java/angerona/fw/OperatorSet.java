@@ -15,6 +15,8 @@ import angerona.fw.operators.BaseOperator;
  * @author Tim Janus
  */
 public class OperatorSet {
+	public static final String PREFERRED_ID = "__DEFAULT__";
+	
 	/** the unique name of the operation type which is implemented by operators saved in this set */
 	private String operationName;
 	
@@ -50,6 +52,8 @@ public class OperatorSet {
 	public BaseOperator getOperator(String fullJavaClsName) {
 		if(operators.containsKey(fullJavaClsName)) {
 			return operators.get(fullJavaClsName);
+		} else if(PREFERRED_ID.equals(fullJavaClsName)) {
+			return this.getPreferred();
 		}
 		return null;
 	}

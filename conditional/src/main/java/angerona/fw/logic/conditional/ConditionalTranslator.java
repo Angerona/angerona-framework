@@ -34,7 +34,7 @@ public class ConditionalTranslator extends BaseTranslator {
 	 * belief base.
 	 */
 	@Override
-	protected BaseBeliefbase translatePerceptionInt(Perception p) {
+	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
 		
@@ -42,7 +42,7 @@ public class ConditionalTranslator extends BaseTranslator {
 			Answer answer = (Answer)p;
 			AngeronaAnswer aa = answer.getAnswer();
 			if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
-				return translateFOL(aa.getAnswers());
+				return translateFOL(caller, aa.getAnswers());
 			} else {
 				FolFormula knowledge = answer.getRegarding();
 				if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
@@ -60,7 +60,7 @@ public class ConditionalTranslator extends BaseTranslator {
 			formulas.add(q.getQuestion());
 		}
 
-		return translateFOLInt(formulas);
+		return translateFOLInt(caller, formulas);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class ConditionalTranslator extends BaseTranslator {
 	 * Each formula is interpreted as one propositional literal.
 	 */
 	@Override
-	protected BaseBeliefbase translateFOLInt(Set<FolFormula> formulas) {
+	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
 		
 		for(FolFormula formula : formulas) {

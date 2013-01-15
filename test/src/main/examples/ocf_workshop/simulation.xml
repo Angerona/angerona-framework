@@ -3,15 +3,10 @@
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Student</name>
-        <default-suffix>student</default-suffix>
+        <beliefbase-name>student</beliefbase-name>
          
-        <config class="angerona.fw.serialize.AgentConfigImport">
-			<source>config/agents/default_agent.xml</source>
-        </config>
-         
-        <beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-			<source>config/beliefbases/ocf_beliefbase.xml</source>
-        </beliefbase-config>
+        <agent-config source="config/agents/default_agent.xml" />
+        <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
         
         <skill>Answer</skill>
         
@@ -22,19 +17,14 @@
       
 	<agent-instance>
       	<name>Girlfriend</name>
-      	<default-suffix>girlfriend</default-suffix>
+      	<beliefbase-name>girlfriend</beliefbase-name>
       	
-      	<config class="angerona.fw.serialize.AgentConfigImport">
-      		<source>config/agents/default_agent.xml</source>
-      	</config>
+      	<agent-config source="config/agents/default_agent.xml" />
+        <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
       	
       	<desire>q_Student(lan)</desire>
       	
       	<skill>Query</skill>
-      	
-      	<beliefbase-config class="angerona.fw.serialize.BeliefbaseConfigImport">
-            <source>config/beliefbases/ocf_beliefbase.xml</source>
-         </beliefbase-config>
          
 	</agent-instance>
 </simulation-configuration>
