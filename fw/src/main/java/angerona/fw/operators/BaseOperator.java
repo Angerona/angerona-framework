@@ -1,8 +1,7 @@
-package angerona.fw;
+package angerona.fw.operators;
 
 import java.util.Map;
 
-import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.util.Pair;
 
 /**

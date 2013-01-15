@@ -2,6 +2,7 @@ package angerona.fw.operators.parameter;
 
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.report.ReportPoster;
 
 /**
@@ -9,6 +10,8 @@ import angerona.fw.report.ReportPoster;
  * @author Tim Janus
  */
 public interface OperatorParameter {
+	
+	OperatorVisitor getCaller();
 	
 	/**
 	 * This method is called before the operator parameter is used by the operator op.

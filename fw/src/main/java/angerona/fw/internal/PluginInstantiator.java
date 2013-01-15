@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.BaseOperator;
 import angerona.fw.EnvironmentBehavior;
 import angerona.fw.Perception;
 import angerona.fw.def.DefaultAgentPlugin;
@@ -30,11 +29,7 @@ import angerona.fw.listener.PluginListener;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
-import angerona.fw.operators.BaseGenerateOptionsOperator;
-import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
-import angerona.fw.operators.BaseUpdateBeliefsOperator;
-import angerona.fw.operators.BaseViolatesOperator;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
@@ -84,11 +79,7 @@ public class PluginInstantiator {
 	
 	/** Ctor: Initializes the simple plugin framework, private to force singleton paradigm. */
 	private PluginInstantiator() {
-		implMap.put(BaseGenerateOptionsOperator.class, new HashSet<Class<?>>());
-		implMap.put(BaseIntentionUpdateOperator.class, new HashSet<Class<?>>());
-		implMap.put(BaseUpdateBeliefsOperator.class, new HashSet<Class<?>>());
-		implMap.put(BaseViolatesOperator.class, new HashSet<Class<?>>());
-		implMap.put(BaseSubgoalGenerationOperator.class, new HashSet<Class<?>>());
+		implMap.put(BaseOperator.class, new HashSet<Class<?>>());
 		implMap.put(BaseBeliefbase.class, new HashSet<Class<?>>());
 		implMap.put(BaseReasoner.class, new HashSet<Class<?>>());
 		implMap.put(BaseChangeBeliefs.class, new HashSet<Class<?>>());
@@ -171,11 +162,7 @@ public class PluginInstantiator {
 			if(loadedPlugins.contains(ap))
 				continue;
 			loadedPlugins.add(ap);
-			implMap.get(BaseGenerateOptionsOperator.class).addAll(ap.getSupportedGenerateOptionsOperators());
-			implMap.get(BaseIntentionUpdateOperator.class).addAll(ap.getSupportedFilterOperators());
-			implMap.get(BaseChangeBeliefs.class).addAll(ap.getSupportedChangeOperators());
-			implMap.get(BaseViolatesOperator.class).addAll(ap.getSupportedViolatesOperators());
-			implMap.get(BaseSubgoalGenerationOperator.class).addAll(ap.getSupportedPlaners());
+			implMap.get(BaseOperator.class).addAll(ap.getOperators());
 			
 			LOG.info("Operator-Plugin '{}' loaded", ap.getClass().getName());
 		}
@@ -270,62 +257,7 @@ public class PluginInstantiator {
 		return null;
 	}
 	
-	/**
-	 * creates a new instance of a Generate-Options Operator
-	 * @param className	class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseGenerateOptionsOperator createGenerateOptionsOperator(String className) 
-			throws InstantiationException, IllegalAccessException {
-		return createInstance(className, BaseGenerateOptionsOperator.class);
-	}
-	
-	/**
-	 * creates a new instance of a intention update operator.
-	 * @param className class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseIntentionUpdateOperator createFilterOperator(String className) throws InstantiationException, IllegalAccessException {
-		return createInstance(className, BaseIntentionUpdateOperator.class);
-	}
-	
-	/**
-	 * creates a new instance of a subgoal generation operator
-	 * @param className class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseSubgoalGenerationOperator createPlaner(String className) throws InstantiationException, IllegalAccessException {
-		return createInstance(className, BaseSubgoalGenerationOperator.class);
-	}
-	
-	/**
-	 * creates a new instance of an update beliefs operator.
-	 * @param className class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseUpdateBeliefsOperator createUpdateOperator(String className) throws InstantiationException, IllegalAccessException {
-		return createInstance(className, BaseUpdateBeliefsOperator.class);
-	}
-	
-	/**
-	 * creates a new instance of a violates operator.
-	 * @param className class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseViolatesOperator createViolatesOperator(String className) throws InstantiationException, IllegalAccessException {
-		return createInstance(className, BaseViolatesOperator.class);
-	}
-	
+
 	/**
 	 * creates a new instance of a belief base.
 	 * @param config data structure with configuration parameters for the belief base.
@@ -352,28 +284,6 @@ public class PluginInstantiator {
 	 */
 	protected BaseBeliefbase createBeliefbase(String className) throws InstantiationException, IllegalAccessException {
 		return createInstance(className, BaseBeliefbase.class);
-	}
-	
-	/**
-	 * creates a new instance of a reasoner.
-	 * @param className class name of the new created instance (inclusive package)
-	 * @return reference to the newly created instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseReasoner createReasoner(String className) throws InstantiationException, IllegalAccessException {
-		return createInstance(className, BaseReasoner.class);
-	}
-	
-	/**
-	 * creates a new change beliefs operator instance (like revision or expansion).
-	 * @param className class name of the new created instance (inclusive package)
-	 * @return reference to the newly created change beliefs operator instance.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public BaseChangeBeliefs createChange(String className) throws InstantiationException, IllegalAccessException {
-		return createInstance(className, BaseChangeBeliefs.class);
 	}
 	
 	/**
@@ -406,7 +316,7 @@ public class PluginInstantiator {
 	 * That means the java-package and the name of the class like: 
 	 * angerona.fw.logic.Desires
 	 * @param className	The fully qualified name of the class to instantiate.
-	 * @return	A refenrence to the newly created instance.
+	 * @return	A reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */

@@ -11,13 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Desire;
+import angerona.fw.am.secrecy.operators.BaseGenerateOptionsOperator;
+import angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.comm.Inform;
 import angerona.fw.comm.Justification;
 import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
 import angerona.fw.internal.IdGenerator;
-import angerona.fw.operators.BaseGenerateOptionsOperator;
-import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
 /**
  * The default generate options operator. It generates desires to answer to

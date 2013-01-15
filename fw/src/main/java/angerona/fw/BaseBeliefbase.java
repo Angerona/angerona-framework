@@ -26,6 +26,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.parser.ParseException;

@@ -10,8 +10,10 @@ import angerona.fw.Agent;
 import angerona.fw.Intention;
 import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
-import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.parameter.PlanParameter;
+import angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
+import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
+import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
+import angerona.fw.operators.parameter.EvaluateParameter;
 
 /**
  * 	
@@ -37,7 +39,9 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 								getParameter("allowUnsafe", String.valueOf(false)));
 						
 						if(!select) {
-							select = ag.performThought(ag.getBeliefs(), pe).isAlright();
+							BaseViolatesOperator op = (BaseViolatesOperator) ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
+							EvaluateParameter eparam = new EvaluateParameter(ag, op, ag.getBeliefs(), pe);
+							select = op.process(eparam).isAlright();
 							if(select) {
 								param.report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.");
 							}

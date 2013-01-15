@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.Subgoal;
+import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
+import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
-import angerona.fw.operators.parameter.PlanParameter;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the

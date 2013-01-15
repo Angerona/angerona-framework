@@ -36,6 +36,11 @@
     	<artifactId>asp</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>angerona.fw.am</groupId>
+    	<artifactId>secrecy</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>angerona.fw</groupId>

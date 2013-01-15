@@ -1,7 +1,7 @@
 package angerona.fw.knowhow;
 
+import angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.operators.def.GenerateOptionsOperator;
-import angerona.fw.operators.parameter.GenerateOptionsParameter;
 
 /**
  * 

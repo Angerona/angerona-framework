@@ -8,11 +8,11 @@ import java.util.Stack;
 
 import org.junit.Test;
 
-import angerona.fw.BaseOperator;
 import angerona.fw.OperatorProvider;
 import angerona.fw.OperatorSet;
 import angerona.fw.asml.InvokeOperation;
 import angerona.fw.error.InvokeException;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.util.Pair;

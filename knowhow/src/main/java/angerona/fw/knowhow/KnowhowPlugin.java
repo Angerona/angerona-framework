@@ -11,19 +11,13 @@ import angerona.fw.AgentComponent;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.view.BaseView;
 import angerona.fw.internal.AgentPlugin;
-import angerona.fw.internal.OperatorPlugin;
+import angerona.fw.internal.OperatorPluginAdapter;
 import angerona.fw.knowhow.gui.KnowhowView;
-import angerona.fw.operators.BaseGenerateOptionsOperator;
-import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
-import angerona.fw.operators.BaseUpdateBeliefsOperator;
-import angerona.fw.operators.BaseViolatesOperator;
 
 @PluginImplementation
-public class KnowhowPlugin implements 
+public class KnowhowPlugin extends OperatorPluginAdapter implements 
 	  AgentPlugin
-	, UIPlugin
-	, OperatorPlugin {
+	, UIPlugin {
 
 	public Map<String, Class<? extends BaseView>> getUIComponents() {
 		Map<String, Class<? extends BaseView>> reval = new HashMap<String, Class<? extends BaseView>>();
@@ -38,35 +32,13 @@ public class KnowhowPlugin implements
 	}
 
 	@Override
-	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators() {
-		return new LinkedList<>();
-	}
-
-	@Override
-	public List<Class<? extends BaseIntentionUpdateOperator>> getSupportedFilterOperators() {
-		return new LinkedList<>();
-	}
-
-	@Override
-	public List<Class<? extends BaseGenerateOptionsOperator>> getSupportedGenerateOptionsOperators() {
-		return new LinkedList<>();
-	}
-
-	@Override
-	public List<Class<? extends BaseViolatesOperator>> getSupportedViolatesOperators() {
-		return new LinkedList<>();
-	}
-
-	@Override
-	public List<Class<? extends BaseSubgoalGenerationOperator>> getSupportedPlaners() {
-		List<Class<? extends BaseSubgoalGenerationOperator>> reval = new LinkedList<>();
-		reval.add(KnowhowSubgoal.class);
-		return reval;
-	}
-
-	@Override
 	public List<Class<? extends Action>> getActions() {
 		return new LinkedList<>();
+	}
+
+	@Override
+	protected void registerOperators() {
+		registerOperator(KnowhowSubgoal.class);
 	}
 
 }

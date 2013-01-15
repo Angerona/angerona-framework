@@ -6,10 +6,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.BaseOperator;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.report.ReportPoster;
+import angerona.fw.util.Pair;
 
 /**
  * An abstract generic base class for operators implementing an operation type.
@@ -34,6 +34,13 @@ public abstract class Operator<TCaller extends OperatorVisitor, IN extends Opera
 	
 	/** a map containing parameters for the operator in a generic representation */
 	protected Map<String, String> parameters = new HashMap<String, String>();
+	
+	/**
+	 * Define as abstract method to fix errors in different jars which does not realize
+	 * that this method is defined in the BaseOperator interface.
+	 */
+	@Override
+	public abstract Pair<String, Class<?>> getOperationType();
 	
 	/** 
 	 * sub classes have to implement this method to provide a default input parameter.
@@ -82,6 +89,21 @@ public abstract class Operator<TCaller extends OperatorVisitor, IN extends Opera
 		} finally { 
 			genericParams.getCaller().popOperator();
 		}
+		return reval;
+	}
+	
+	/**
+	 * process version which used the specialized input parameters as argument.
+	 * This allows easier invocation from the java side. The other method defined
+	 * in the interface is useful for ASML invocation.
+	 * @param params	The parameters for the operator invocation in specialized version.
+	 * @return	
+	 */
+	public OUT process(IN params) {
+		params.getCaller().pushOperator(this);
+		params.visit(this);
+		OUT reval = processInternal(params);
+		params.getCaller().popOperator();
 		return reval;
 	}
 	

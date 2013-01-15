@@ -19,7 +19,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import angerona.fw.BaseOperator;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.util.Pair;
 
 public class OperatorConfigPanel extends JPanel implements PropertyChangeListener {

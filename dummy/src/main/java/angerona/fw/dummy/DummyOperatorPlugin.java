@@ -1,15 +1,7 @@
 package angerona.fw.dummy;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import angerona.fw.internal.OperatorPlugin;
-import angerona.fw.operators.BaseGenerateOptionsOperator;
-import angerona.fw.operators.BaseIntentionUpdateOperator;
-import angerona.fw.operators.BaseSubgoalGenerationOperator;
-import angerona.fw.operators.BaseUpdateBeliefsOperator;
-import angerona.fw.operators.BaseViolatesOperator;
+import angerona.fw.internal.OperatorPluginAdapter;
 import angerona.fw.operators.def.GenerateOptionsOperator;
 import angerona.fw.operators.def.IntentionUpdateOperator;
 import angerona.fw.operators.def.SubgoalGenerationOperator;
@@ -23,41 +15,17 @@ import angerona.fw.operators.def.ViolatesOperator;
  * @author Tim Janus
  */
 @PluginImplementation
-public class DummyOperatorPlugin implements OperatorPlugin {
-
+public class DummyOperatorPlugin extends OperatorPluginAdapter {
+	
 	@Override
-	public List<Class<? extends BaseUpdateBeliefsOperator>> getSupportedChangeOperators() {
-		List<Class<? extends BaseUpdateBeliefsOperator>> reval = new LinkedList<Class<? extends BaseUpdateBeliefsOperator>>();
-		reval.add(UpdateBeliefsOperator.class);
-		return reval;
-	}
-
-	@Override
-	public List<Class<? extends BaseIntentionUpdateOperator>> getSupportedFilterOperators() {
-		List<Class<? extends BaseIntentionUpdateOperator>> reval = new LinkedList<Class<? extends BaseIntentionUpdateOperator>>();
-		reval.add(IntentionUpdateOperator.class);
-		return reval;
-	}
-
-	@Override
-	public List<Class<? extends BaseGenerateOptionsOperator>> getSupportedGenerateOptionsOperators() {
-		List<Class<? extends BaseGenerateOptionsOperator>> reval = new LinkedList<Class<? extends BaseGenerateOptionsOperator>>();
-		reval.add(GenerateOptionsOperator.class);
-		return reval;
-	}
-
-	@Override
-	public List<Class<? extends BaseViolatesOperator>> getSupportedViolatesOperators() {
-		List<Class<? extends BaseViolatesOperator>> reval = new LinkedList<Class<? extends BaseViolatesOperator>>();
-		reval.add(ViolatesOperator.class);
-		return reval;
-	}
-
-	@Override
-	public List<Class<? extends BaseSubgoalGenerationOperator>> getSupportedPlaners() {
-		List<Class<? extends BaseSubgoalGenerationOperator>> reval = new LinkedList<Class<? extends BaseSubgoalGenerationOperator>>();
-		reval.add(SubgoalGenerationOperator.class);
-		return reval;
+	protected void registerOperators() {
+		registerOperator(SubgoalGenerationOperator.class);
+		registerOperator(ViolatesOperator.class);
+		registerOperator(GenerateOptionsOperator.class);
+		registerOperator(IntentionUpdateOperator.class);
+		
+		// TODO: Move the following to fw
+		registerOperator(UpdateBeliefsOperator.class);
 	}
 
 }

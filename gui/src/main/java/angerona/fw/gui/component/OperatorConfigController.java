@@ -2,7 +2,7 @@ package angerona.fw.gui.component;
 
 import java.util.Map;
 
-import angerona.fw.BaseOperator;
+import angerona.fw.operators.BaseOperator;
 
 public class OperatorConfigController {
 	private OperatorConfig model;

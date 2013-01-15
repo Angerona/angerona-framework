@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
 import angerona.fw.serialize.OperationSetConfig;

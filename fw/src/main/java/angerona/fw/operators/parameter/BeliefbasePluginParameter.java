@@ -3,6 +3,7 @@ package angerona.fw.operators.parameter;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.report.ReportPoster;
 
 public class BeliefbasePluginParameter implements OperatorParameter {
@@ -31,5 +32,10 @@ public class BeliefbasePluginParameter implements OperatorParameter {
 	@Override
 	public void visit(ReportPoster op) {
 		// does nothing yet...
+	}
+
+	@Override
+	public OperatorVisitor getCaller() {
+		return caller;
 	}
 }

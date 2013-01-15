@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import angerona.fw.operators.BaseOperator;
+
 /**
  * A operator set is a set of operators which implement the same operation type.
  * This means the input and output parameter so the operators are the same.

@@ -2,7 +2,6 @@ package angerona.fw.operators;
 
 import java.util.Stack;
 
-import angerona.fw.BaseOperator;
 
 
 /**

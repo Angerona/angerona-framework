@@ -28,6 +28,8 @@ import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
+import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
+import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
 import angerona.fw.comm.Justification;
@@ -38,7 +40,8 @@ import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.SolverWrapper;
 import angerona.fw.operators.def.SubgoalGenerationOperator;
-import angerona.fw.operators.parameter.PlanParameter;
+import angerona.fw.operators.def.ViolatesOperator;
+import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
 /**
@@ -195,8 +198,11 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				return null;
 			if(Boolean.parseBoolean(getParameter("allowUnsafe", String.valueOf(false))))
 				return candidate;
-			res = param.getAgent().performThought(
+			
+			BaseViolatesOperator vop = (BaseViolatesOperator) param.getAgent().getOperators().getPreferedByType(ViolatesOperator.OPERATION_NAME);
+			EvaluateParameter eparam = new EvaluateParameter(param.getAgent(), vop, 
 					param.getAgent().getBeliefs(), candidate);
+			res = vop.process(eparam);
 			if(!res.isAlright())
 				lastUsedStrategy.fallback();
 		}

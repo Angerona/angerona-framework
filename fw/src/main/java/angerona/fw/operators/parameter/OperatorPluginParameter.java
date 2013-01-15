@@ -6,6 +6,7 @@ import angerona.fw.Agent;
 import angerona.fw.error.ConversionException;
 import angerona.fw.internal.Entity;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
 
@@ -61,6 +62,11 @@ public abstract class OperatorPluginParameter
 		}
 		throw new ConversionException(GenericOperatorParameter.class, 
 				this.getClass(), inner);
+	}
+	
+	@Override
+	public OperatorVisitor getCaller() {
+		return caller;
 	}
 	
 	@Override

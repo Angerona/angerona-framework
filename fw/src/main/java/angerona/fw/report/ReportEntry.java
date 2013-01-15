@@ -5,8 +5,8 @@ import java.util.Stack;
 
 import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.BaseOperator;
 import angerona.fw.internal.Entity;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.OperatorVisitor;
 
 /**

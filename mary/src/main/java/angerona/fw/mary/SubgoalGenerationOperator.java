@@ -22,13 +22,13 @@ import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.PlanComponent;
 import angerona.fw.Subgoal;
+import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.operators.def.GenerateOptionsOperator;
-import angerona.fw.operators.parameter.PlanParameter;
 
 /**
 * This implementation of a subgoal generation operator allows for the asking of multiple, detail query-type questions. 

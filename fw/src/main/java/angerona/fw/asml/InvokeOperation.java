@@ -8,9 +8,9 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
-import angerona.fw.BaseOperator;
 import angerona.fw.OperatorProvider;
 import angerona.fw.error.InvokeException;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.reflection.Value;
