@@ -1,0 +1,8 @@
+world {
+(fly | bird)
+(bird | penguin)
+(-fly | penguin)
+(wings | bird)
+} view->Student {
+
+}

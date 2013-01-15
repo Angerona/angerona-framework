@@ -88,11 +88,11 @@
   	<module>knowhow</module>
   	
   	<module>mary</module>
-  	<module>tweety/conditional</module>
+  	
   	<module>tweety/math</module>
   	<module>tweety/propositional</module>
-  	
-  	
+  	<module>conditional</module>
+  	<module>tweety/conditional</module>
   	<module>secrecy</module>
   </modules>
 </project>
