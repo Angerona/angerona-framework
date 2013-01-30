@@ -33,9 +33,6 @@ import angerona.fw.report.ReportListener;
  */
 public class ReportView extends BaseView implements ReportListener {
 
-	/** kill warning */
-	private static final long serialVersionUID = 697392233654570429L;
-    
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(ReportView.class);
 	
@@ -113,7 +110,6 @@ public class ReportView extends BaseView implements ReportListener {
     
     @Override
 	public void init() {
-		setTitle("Report");		
 		setLayout(new BorderLayout());
 		
 		JLabel lbl = new JLabel("Reports");
@@ -124,7 +120,7 @@ public class ReportView extends BaseView implements ReportListener {
 		tree.setModel(model);
 		JScrollPane pane = new JScrollPane(tree);
         add(pane, BorderLayout.CENTER);
-        setVisible(true);
+        //setVisible(true);
         
         Angerona.getInstance().addReportListener(this);
         MouseListener ml = new MouseAdapter() {
@@ -136,6 +132,9 @@ public class ReportView extends BaseView implements ReportListener {
         nodeActionUpdater = new NodeActionUpdater(this);
         Angerona.getInstance().addSimulationListener(nodeActionUpdater);
 	}
+    
+    @Override
+    public void cleanup() {}
 
     /**
 	 * Helper method: called when user clicks on the tree 
@@ -162,12 +161,12 @@ public class ReportView extends BaseView implements ReportListener {
 					return;
 				
 				AngeronaWindow wnd = AngeronaWindow.getInstance();
-				BaseView view = wnd.getBaseViewObservingEntity(entry.getAttachment());
+				View view = wnd.getBaseViewObservingEntity(entry.getAttachment());
 				if(view != null) {
 					if(view instanceof ReportListener) {
 						((ReportListener)view).reportReceived(entry);
 					}
-					wnd.addComponentToCenter(view);
+					//wnd.addComponentToCenter(view);
 				} else {
 					
 				}
@@ -220,6 +219,11 @@ public class ReportView extends BaseView implements ReportListener {
 		
 		LOG.warn("Add a report without scope. The report-system is not capable of link the report to a specific agent.");
 		return false;
+	}
+
+	@Override
+	public Class<?> getObservedType() {
+		return null;
 	}
 
 }

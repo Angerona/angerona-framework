@@ -1,6 +1,5 @@
 package angerona.fw.gui.dummy;
 import angerona.fw.gui.view.BeliefbaseView;
-import angerona.fw.logic.dummy.DummyBeliefbase;
 
 /**
  * Small "Enhancement" to the beliefbase component view, setting the title "DUMMY" ;-)
@@ -9,27 +8,6 @@ import angerona.fw.logic.dummy.DummyBeliefbase;
  * @author Tim Janus
  */
 public class DummyBeliefbaseComponent extends BeliefbaseView {
-	/** kill warning */
-	private static final long serialVersionUID = 8044649633781759407L;
 
-	@Override
-	public void init() {
-		super.init();
-		setTitle("Dummy");
-	}
-	
-	@Override
-	public Class<?> getObservationObjectType() {
-		return DummyBeliefbase.class;
-	}
-	
-	@Override
-	public void setObservationObject(Object obj) {
-		if(! (obj instanceof DummyBeliefbase)) {
-			throw new IllegalArgumentException("Observation Object must be of type '" +  DummyBeliefbase.class.getSimpleName() + "'");
-		}
-		this.ref = (DummyBeliefbase)obj;
-		this.actual = this.ref;
-		setTitle("DUMMY");
-	}
+
 }

@@ -8,7 +8,7 @@ import javax.swing.JList;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import angerona.fw.gui.view.BaseView;
+import angerona.fw.gui.view.EntityView;
 import angerona.fw.knowhow.KnowhowBase;
 import angerona.fw.knowhow.KnowhowBuilder;
 import angerona.fw.knowhow.KnowhowStatement;
@@ -22,48 +22,27 @@ import angerona.fw.util.Pair;
  * @author Tim Janus
  *
  */
-public class KnowhowView extends BaseView implements ReportListener{
-
-	/** */
-	private static final long serialVersionUID = -4168568552100892570L;
+public class KnowhowView extends EntityView<KnowhowBase> 
+	implements ReportListener {
 
 	private DefaultListModel<String> stmtListModel = new DefaultListModel<String>();
-	
-	private KnowhowBase source;
-	
+
 	private KnowhowBase actual;
 	
 	@Override
 	public void init() {
-		super.init();
-		
-		setTitle("Knowhow");
 		this.setLayout(new BorderLayout());
 		JList<String> statementList = new JList<String>();
 		statementList.setModel(stmtListModel);
 		this.add(statementList, BorderLayout.CENTER);
 		
-		actual = source;
+		actual = ref;
 		updateView();
 	}
 	
-	@Override
-	public void setObservationObject(Object obj) {
-		if(!(obj instanceof KnowhowBase)) {
-			throw new IllegalArgumentException();
-		}
-		
-		source = (KnowhowBase)obj;
-	}
-	
-	@Override 
-	public Class<?> getObservationObjectType() {
-		return KnowhowBase.class;
-	}
-
 	public void reportReceived(ReportEntry entry) {
 		if(entry.getAttachment() != null && 
-			entry.getAttachment().getGUID().equals(source.getGUID())) {
+			entry.getAttachment().getGUID().equals(ref.getGUID())) {
 			actual = (KnowhowBase)entry.getAttachment();
 			updateView();
 		}
@@ -91,5 +70,14 @@ public class KnowhowView extends BaseView implements ReportListener{
 		for(Rule r : pair.first.getRules()) {
 			stmtListModel.addElement(r.toString());
 		}
+	}
+
+	@Override
+	public void cleanup() {
+	}
+
+	@Override
+	public Class<? extends KnowhowBase> getObservedType() {
+		return KnowhowBase.class;
 	}
 }

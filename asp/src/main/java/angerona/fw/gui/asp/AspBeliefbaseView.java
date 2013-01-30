@@ -6,6 +6,7 @@ import javax.swing.DefaultListModel;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.view.BeliefbaseView;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
@@ -24,7 +25,7 @@ public class AspBeliefbaseView extends BeliefbaseView {
 	private static final long serialVersionUID = -9197437532805094834L;
 
 	@Override
-	public Class<?> getObservationObjectType() {
+	public Class<? extends BaseBeliefbase> getObservedType() {
 		return AspBeliefbase.class;
 	}
 	

@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -32,20 +31,19 @@ import angerona.fw.report.ReportListener;
  * @param <T> the type of the observed object
  */
 public abstract class ListViewColored<T extends Entity> 
-	extends BaseView 
-	implements ReportListener, NavigationUser {
-
-	/** kill warning*/
-	private static final long serialVersionUID = 347925312291828783L;
+	extends EntityView<T>
+	implements 
+	ReportListener, 
+	NavigationUser {
 
 	/** reference to the original data (which is in the agent) */
-	protected Entity ref;
+	protected T ref;
 	
 	/** reference to the data instance which is actually shown. */
-	protected Entity actual;
+	protected T actual;
 	
 	/** reference to the predecessor data instance of the actual data instance, this will be null if actual is the first */
-	protected Entity previous;
+	protected T previous;
 	
 	/** JList containing the literals of the actual belief base and the literals which were removed in the last step (removed and new literals are highlighted) */
 	private JList<ListElement> actualLiterals;
@@ -116,7 +114,6 @@ public abstract class ListViewColored<T extends Entity>
 	
 	@Override 
 	public void init() {
-		super.init();
 		if(ref != null) {
 			List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(ref);
 			if(entries != null && entries.size() > 0) {
@@ -156,6 +153,11 @@ public abstract class ListViewColored<T extends Entity>
 		
 		updateView();
 		Angerona.getInstance().addReportListener(this);
+	}
+	
+	@Override
+	public void cleanup() {
+		
 	}
 	
 	protected void onElementClicked(int index, int status) {	}
@@ -231,7 +233,7 @@ public abstract class ListViewColored<T extends Entity>
 	}
 
 	private void updateView() {
-		actual = actEntry.getAttachment();
+		actual = (T)actEntry.getAttachment();
 		defaultUpdatePrevious();
 		update(model);
 		fillTreeWithCallstack();
@@ -252,7 +254,7 @@ public abstract class ListViewColored<T extends Entity>
 			// current one as the 'real' previous entry.
 			if(temp.getCopyDepth() < actAtomic.getCopyDepth() || 
 					(temp.getCopyDepth() == 1 && actAtomic.getCopyDepth() == 1)) {
-				previous = temp;
+				previous = (T) temp;
 				break;
 			}
 			
@@ -267,7 +269,21 @@ public abstract class ListViewColored<T extends Entity>
 	 * is correct.
 	 */
 	@Override
-	public abstract void setObservationObject(Object obj);
+	public void setObservedEntity(T ent) {
+		this.ref = ent;
+		this.actual = ent;
+		this.previous = null;
+	}
+	
+	@Override
+	public void setObservedEntity(Object entity) {
+		setObservedEntity((T) entity);
+	}	
+	
+	@Override
+	public T getObservedEntity() {
+		return (T)ref;
+	}
 	
 	@Override
 	public Entity getAttachment() {

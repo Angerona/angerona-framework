@@ -9,7 +9,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.gui.UIPlugin;
-import angerona.fw.gui.view.BaseView;
+import angerona.fw.gui.view.View;
 import angerona.fw.internal.AgentPlugin;
 import angerona.fw.internal.OperatorPluginAdapter;
 import angerona.fw.knowhow.gui.KnowhowView;
@@ -19,8 +19,8 @@ public class KnowhowPlugin extends OperatorPluginAdapter implements
 	  AgentPlugin
 	, UIPlugin {
 
-	public Map<String, Class<? extends BaseView>> getUIComponents() {
-		Map<String, Class<? extends BaseView>> reval = new HashMap<String, Class<? extends BaseView>>();
+	public Map<String, Class<? extends View>> getUIComponents() {
+		Map<String, Class<? extends View>> reval = new HashMap<String, Class<? extends View>>();
 		reval.put("Knowhow", KnowhowView.class);
 		return reval;
 	}

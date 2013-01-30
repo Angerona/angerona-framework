@@ -68,6 +68,9 @@ public class SimulationControlBar extends BaseView {
 		add(buttonPanel, BorderLayout.EAST);
 	}
 	
+	@Override
+	public void cleanup() {}
+	
 	/**
 	 *	Helper method: When run button is clicked the simulation is either initialized,
 	 *	restarted with a confirm dialog or the next tick of the simulation runs.
@@ -144,4 +147,10 @@ public class SimulationControlBar extends BaseView {
 	public AngeronaEnvironment getEnvironment() {
 		return environment;
 	}
+
+	@Override
+	public Class<?> getObservedType() {
+		return null;
+	}
+
 }

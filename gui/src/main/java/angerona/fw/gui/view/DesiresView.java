@@ -14,29 +14,6 @@ import angerona.fw.logic.Desires;
  */
 public class DesiresView extends ListViewColored<Desires> {
 
-	/** kill warning */
-	private static final long serialVersionUID = 8925750149764894623L;
-	
-	@Override
-	public void init() {
-		super.init();
-		setTitle("Desires");
-	}
-	
-	@Override
-	public Class<?> getObservationObjectType() {
-		return Desires.class;
-	}
-
-	@Override
-	public void setObservationObject(Object obj) {
-		if(! (obj instanceof Desires))
-			throw new IllegalArgumentException("The observation Object must be of type '" + Desires.class.getSimpleName() + "'");
-		
-		ref = (Desires) obj;
-		actual = ref;
-	}
-
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
 		if(obj instanceof Desires) {
@@ -49,6 +26,11 @@ public class DesiresView extends ListViewColored<Desires> {
 			return reval;
 		}
 		return null;
+	}
+
+	@Override
+	public Class<? extends Desires> getObservedType() {
+		return Desires.class;
 	}
 
 }

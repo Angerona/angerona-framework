@@ -6,15 +6,6 @@ import angerona.fw.PlanComponent;
 import angerona.fw.internal.Entity;
 
 public class PlanView extends ListViewColored<PlanComponent> {
-
-	/** kill warning */
-	private static final long serialVersionUID = -8417236877682507065L;
-
-	@Override
-	public void init() {
-		super.init();
-		setTitle("Plan");
-	}
 	
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
@@ -24,6 +15,11 @@ public class PlanView extends ListViewColored<PlanComponent> {
 			return null;
 		}
 		return null;
+	}
+
+	@Override
+	public Class<? extends PlanComponent> getObservedType() {
+		return PlanComponent.class;
 	}
 	
 	/*
@@ -48,18 +44,4 @@ public class PlanView extends ListViewColored<PlanComponent> {
 		return reval;
 	}
 	*/
-
-	@Override
-	public void setObservationObject(Object obj) {
-		if( !(obj instanceof PlanComponent))
-			throw new IllegalArgumentException();
-		
-		ref = (PlanComponent)obj;
-		actual = ref;
-	}
-
-	@Override
-	public Class<?> getObservationObjectType() {
-		return PlanComponent.class;
-	}
 }

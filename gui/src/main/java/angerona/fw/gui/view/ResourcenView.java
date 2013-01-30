@@ -1,11 +1,11 @@
 package angerona.fw.gui.view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -23,9 +23,9 @@ import angerona.fw.serialize.SimulationConfiguration;
 
 public class ResourcenView extends BaseView {
 
-	/** kill warning */
-	private static final long serialVersionUID = 5711286288337915366L;
-	
+	/** kick warning */
+	private static final long serialVersionUID = -8021405489946274962L;
+
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(ResourcenView.class);
 	
@@ -34,7 +34,6 @@ public class ResourcenView extends BaseView {
 	
 	@Override
 	public void init() {
-		setTitle("Resources");
 		this.setLayout(new BorderLayout());
 		DefaultMutableTreeNode ar = new DefaultMutableTreeNode("Angerona Resourcen");
 		new TreeController(tree, ar);
@@ -47,6 +46,9 @@ public class ResourcenView extends BaseView {
 		 };
 		 tree.addMouseListener(ml);
 	}
+	
+	@Override 
+	public void cleanup() {}
 	
 	/**
 	 * Helper method: called when user clicks on the tree 
@@ -103,9 +105,9 @@ public class ResourcenView extends BaseView {
 	private void handlerAgentComponent(AgentComponent component) {
 		String agname = component.getAgent().getName();
 		LOG.trace("Handle AgentComponent: '{}' of Agent '{}'.", agname);
-		BaseView view = AngeronaWindow.getInstance().createViewForEntityComponent(component);
+		View view = AngeronaWindow.getInstance().createViewForEntityComponent(component);
 		if(view != null) {
-			AngeronaWindow.getInstance().addComponentToCenter(view);
+			AngeronaWindow.getInstance().openView(view, agname);
 		}
 	}
 
@@ -115,10 +117,10 @@ public class ResourcenView extends BaseView {
 	 */
 	private void handlerAgent(Agent agent) {
 		LOG.trace("Handle Agent '{}'", agent.getName());
-		AgentView ac = new AgentView();
+		/*AgentView ac = new AgentView();
 		ac.setObservationObject(agent);
-		ac.init();
-		AngeronaWindow.getInstance().addComponentToCenter(ac);
+		ac.init(); 
+		AngeronaWindow.getInstance().addComponentToCenter(ac); */
 	}
 
 	/**
@@ -130,19 +132,19 @@ public class ResourcenView extends BaseView {
 		
 		// TODO: More dynamically... using plugin architecture etc.
 		if(bb.getFileEnding().toLowerCase().equals("asp")) {
-			BaseView view = AngeronaWindow.getInstance().createViewForEntityComponent(bb);
+			View view = AngeronaWindow.getInstance().createViewForEntityComponent(bb);
 			if(view != null) {
-				AngeronaWindow.getInstance().addComponentToCenter(view);
+				AngeronaWindow.getInstance().openView(view, bb.getFileEnding());
 			}
 		} else {
-			BeliefbaseView bc = AngeronaWindow.getInstance().createBaseView(
+			BeliefbaseView bc = AngeronaWindow.getInstance().createEntityView(
 					BeliefbaseView.class, bb);
-			AngeronaWindow.getInstance().addComponentToCenter(bc);
+			AngeronaWindow.getInstance().openView(bc, "TODO");
 		}
 	}
-	
+
 	@Override
-	public Dimension getMinimumSize() {
-		return tree.getPreferredSize();
+	public Class<?> getObservedType() {
+		return null;
 	}
 }

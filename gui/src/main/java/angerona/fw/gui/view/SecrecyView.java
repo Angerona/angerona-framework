@@ -14,15 +14,6 @@ import angerona.fw.logic.Secret;
  * @author Tim Janus
  */
 public class SecrecyView extends ListViewColored<SecrecyKnowledge> {
-
-	/** kill warning */
-	private static final long serialVersionUID = 5545434636562463488L;
-
-	@Override
-	public void init() {
-		super.init();
-		setTitle("Confidential");
-	}
 	
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
@@ -37,16 +28,7 @@ public class SecrecyView extends ListViewColored<SecrecyKnowledge> {
 	}
 
 	@Override
-	public void setObservationObject(Object obj) {
-		if(! (obj instanceof SecrecyKnowledge)) {
-			throw new IllegalArgumentException("Observation Object must be of type '" +  SecrecyKnowledge.class.getSimpleName() + "'");
-		}
-		this.ref = (SecrecyKnowledge)obj;
-		this.actual = this.ref;
-	}
-
-	@Override
-	public Class<?> getObservationObjectType() {
+	public Class<? extends SecrecyKnowledge> getObservedType() {
 		return SecrecyKnowledge.class;
 	}
 	

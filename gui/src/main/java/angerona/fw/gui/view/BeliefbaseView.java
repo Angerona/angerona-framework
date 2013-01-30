@@ -8,13 +8,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.component.OperatorConfig;
 import angerona.fw.gui.component.OperatorConfigController;
 import angerona.fw.gui.component.OperatorConfigPanel;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.IdGenerator;
 import angerona.fw.logic.BaseReasoner;
 
 /**
@@ -24,9 +22,6 @@ import angerona.fw.logic.BaseReasoner;
  * @author Tim Janus
  */
 public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
-	
-	/** kill warning */
-	private static final long serialVersionUID = -3706152280500718930L;
 	
 	private OperatorConfig opConfig;
 	
@@ -40,8 +35,10 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 					+ ref.getClass().getName());
 		BaseBeliefbase refBeliefBase = (BaseBeliefbase)ref;
 		opConfig = new OperatorConfig(refBeliefBase.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE));
-		
+
+		/*
 		Agent ag = (Agent)IdGenerator.getEntityWithId(this.ref.getParent());
+		
 		String postfix = "";
 		if(ag.getBeliefs().getWorldKnowledge() == ref) {
 			postfix = "World";
@@ -54,9 +51,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 				}
 			}
 		}
-		setTitle(ag.getName() + " - " + postfix);
-		
-		
+		*/
 	}
 	
 	@Override
@@ -66,7 +61,6 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 		
 		// prepare changeset in model and so on.
 		super.update(model);
-		
 		
 		updateInferenceOutput(model);
 	}
@@ -120,11 +114,6 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 			frame.setVisible(true);
 		}
 	}
-	
-	@Override
-	public Class<?> getObservationObjectType() {
-		return BaseBeliefbase.class;
-	}
 
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
@@ -137,12 +126,15 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	}
 
 	@Override
-	public void setObservationObject(Object obj) {
-		if(! (obj instanceof BaseBeliefbase)) {
-			throw new IllegalArgumentException("Observation Object must be of type '" +  BaseBeliefbase.class.getSimpleName() + "'");
-		}
-		this.ref = (BaseBeliefbase)obj;
-		this.actual = this.ref;
+	public void setObservedEntity(BaseBeliefbase bb) {
+		this.ref = bb;
+		this.actual = bb;
+		this.previous = null;
 	}
-	
+
+	@Override
+	public Class<? extends BaseBeliefbase> getObservedType() {
+		return BaseBeliefbase.class;
+	}
+
 }

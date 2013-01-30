@@ -12,7 +12,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -21,19 +21,14 @@
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>com.whiplash</groupId>
-    	<artifactId>WlWindows</artifactId>
-    	<version>0.1.24-SNAPSHOT</version>
+    	<groupId>org.dockingframes</groupId>
+    	<artifactId>docking-frames-common</artifactId>
+    	<version>1.1.1</version>
     </dependency>
     <dependency>
-    	<groupId>com.whiplash</groupId>
-    	<artifactId>WlResourceManager</artifactId>
-    	<version>0.1.24-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-    	<groupId>com.whiplash</groupId>
-    	<artifactId>WlMacWidgets</artifactId>
-    	<version>0.1.24-SNAPSHOT</version>
+    	<groupId>org.dockingframes</groupId>
+    	<artifactId>docking-frames-core</artifactId>
+    	<version>1.1.1</version>
     </dependency>
   </dependencies>
   <parent>

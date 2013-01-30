@@ -1,23 +1,23 @@
 package angerona.fw.gui;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.OperationNotSupportedException;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.xeoh.plugins.base.util.PluginManagerUtil;
@@ -28,39 +28,47 @@ import org.xml.sax.SAXException;
 
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.gui.view.BaseView;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
+import angerona.fw.gui.view.View;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.ErrorListener;
 import angerona.fw.listener.PluginListener;
-
-import com.whiplash.gui.WlComponent;
-import com.whiplash.gui.WlWindow;
-import com.whiplash.gui.WlWindowSet;
-import com.whiplash.res.DefaultResourceManager;
-import com.whiplash.res.WlResourceManager;
+import bibliothek.gui.DockController;
+import bibliothek.gui.Dockable;
+import bibliothek.gui.dock.DefaultDockable;
+import bibliothek.gui.dock.SplitDockStation;
+import bibliothek.gui.dock.StackDockStation;
+import bibliothek.gui.dock.station.split.SplitDockProperty;
 
 /**
  * The main window of the Angerona UI - Extension. It is a Singleton. 
  * @author Tim Janus
  */
-public class AngeronaWindow implements PluginListener, ErrorListener {
-	/** the main window of the angerona gui-extension */
-	private WlWindow window;
-	
-	/** the window set containing the window */
-	private WlWindowSet windowSet;
+public class AngeronaWindow extends WindowAdapter
+	implements 
+	PluginListener, 
+	ErrorListener
+	{
 
+	/** the root window of the application */
+	private JFrame mainWindow;
+	
+	private DockController control;
+	
+	private StackDockStation mainStack;
+	
+	private SplitDockStation parentStation;
+	
 	/** a bar allowing the loading, running and initalization of simulations */
 	private SimulationControlBar simLoadBar;
 	
 	/** map containing registered views some of them are default other might be provided by plugins */
-	private Map<String, Class<? extends BaseView>> viewMap = new HashMap<String, Class<? extends BaseView>>();
+	private Map<String, Class<? extends View>> viewMap = new HashMap<String, Class<? extends View>>();
 	
 	/** map containing an Entity as key mapping to all the views showing the entity */
-	private Map<Entity, List<BaseView>> registeredViewsByEntity = new HashMap<Entity, List<BaseView>>();
+	private Map<Entity, List<View>> registeredViewsByEntity = new HashMap<Entity, List<View>>();
 	
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaWindow.class);
@@ -79,22 +87,37 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	/** 
 	 * Private Ctor: Singleton pattern.
 	 */
-	private AngeronaWindow() {
-		DefaultResourceManager resourceManager = null;
-		try {
-			resourceManager = new DefaultResourceManager(new File("./resources").toURI().toURL());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		WlResourceManager.setDefaultResourceManager(resourceManager);
+	private AngeronaWindow() {}
+
+	public void init() throws ParserConfigurationException, SAXException,
+			IOException {
+		LOG.trace("init() AngeronaWindow");
 		
+		// setup main window:
+		mainWindow = new JFrame();
+		mainWindow.addWindowListener(this);
+		mainWindow.setTitle("Angerona");
+		mainWindow.setBounds(100, 100, 400, 300);
+		mainWindow.setVisible(true);
+		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindow.setExtendedState(mainWindow.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		
+		// create the menu.
+		createMenu();
+	}
+
+	private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
-		windowSet = new WlWindowSet(menuBar);
-		window = windowSet.createWindow("Angerona - Simulation Monitor");
-		
 		JMenu menuFile = new JMenu("File");
-		menuFile.add(new JMenuItem("Exit"));
+		
+		JMenuItem exit = new JMenuItem("Exit");
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				mainWindow.dispose();
+			}
+		});
+		menuFile.add(exit);
 		menuBar.add(menuFile);
 		
 		JMenu menuWindow = new JMenu("Windows");
@@ -108,20 +131,12 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		
 		menuWindow.add(miCreate);
 		menuBar.add(menuWindow);
-		
-		window.pack();
+		mainWindow.setJMenuBar(menuBar);
 	}
 
-	public void init() throws ParserConfigurationException, SAXException,
-			IOException {
-		LOG.trace("init() AngeronaWindow");
-		window.setTitle("Angerona - Simulation Monitor");
-		window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setVisible(true);
-		
+	private void initAngeronaFramework() throws ParserConfigurationException,
+			SAXException, IOException {
 		PluginInstantiator.getInstance().addListener(this);
-		
 		Angerona angerona = Angerona.getInstance();
 		angerona.addErrorListener(this);
 		
@@ -129,18 +144,39 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		angerona.addBeliefbaseConfigFolder("config/beliefbases");
 		angerona.addSimulationFolders("examples");
 		angerona.bootstrap();
-		
-		window.addWlComponent(createBaseView(ReportView.class, null), BorderLayout.CENTER);
-		window.addWlComponent(createBaseView(ResourcenView.class, null), BorderLayout.WEST);
-		window.addWlComponent(simLoadBar = createBaseView(SimulationControlBar.class, null), BorderLayout.SOUTH);
 	}
 	
-	/**
-	 * Adds the given component as tab to the center area of the window
-	 * @param component an wlwindow component (BaseView)
-	 */
-	public void addComponentToCenter(WlComponent component) {
-		window.addWlComponent(component, BorderLayout.CENTER);
+	public void openView(View view, String title) {
+		DefaultDockable dd = new DefaultDockable((JPanel)view);
+		dd.setTitleText(title);
+		view.init();
+		// easy if the center is a stack already, only adding the Dockable to the stack.
+		if(mainStack.getController() != null) {
+			mainStack.drop(dd);
+		} else {
+			// otherwise find the control with the most are and make it as new main stack.
+			double maxArea = -1;
+			SplitDockProperty curProp = null;
+			Dockable centerDock = null;
+			
+			for(int i=0; i<parentStation.getDockableCount(); ++i) {
+				Dockable cur = parentStation.getDockable(i);
+				SplitDockProperty sdp = parentStation.getDockableLocationProperty(cur);
+				double area = sdp.getWidth() * sdp.getHeight();
+				if(area > maxArea) {
+					maxArea = area;
+					curProp = sdp;
+					centerDock = cur;
+				}
+			}
+			
+			// remove the old dockable, drop it to the stack, drop the new dockable to the stack
+			// and then put the stack on the old location of the main dockable.
+			parentStation.removeDockable(centerDock);
+			mainStack.drop(centerDock);
+			mainStack.drop(dd);
+			parentStation.drop(mainStack, curProp);
+		}
 	}
 	
 	/**
@@ -155,20 +191,15 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		}
 	}
 	
-	/** @return the main WlFramework Window */
-	public WlWindow getWindow() {
-		return window;
-	}
-	
 	/**
 	 * Creates (but not add) a view for the given AgentComponent. 
 	 * @param comp	Reference to the component which should be showed in the new view.
 	 * @return	reference to the created view. null if no view for the AgentComponent is
 	 * 			registered or an error occured.
 	 */
-	public BaseView createViewForEntityComponent(Entity comp) {
-		for (Class<? extends BaseView> cls : viewMap.values()) {
-			BaseView view = null;
+	public View createViewForEntityComponent(Entity comp) {
+		for (Class<? extends View> cls : viewMap.values()) {
+			View view = null;
 			try {
 				view = cls.newInstance();
 			} catch (InstantiationException e1) {
@@ -182,8 +213,8 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 			if(view == null)
 				return null;
 			
-			if (comp.getClass().equals(view.getObservationObjectType())) {
-				BaseView newly = createBaseView(cls, comp);
+			if (comp.getClass().equals(view.getObservedType())) {
+				View newly = createEntityView(cls, comp);
 				return newly;
 			}
 		}
@@ -199,14 +230,14 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	 * @param toObserve	reference to the object the UI component should observe (might be null if no direct mapping between observed object and UI component can be given)
 	 * @return a new instance of UIComponent which is ready to use.
 	 */
-	public <T extends BaseView> T createBaseView(Class<? extends T> cls, Entity toObserve) {
+	public <E extends Entity, T extends View> T createEntityView(Class<? extends T> cls, E toObserve) {
 		T reval;
 		try {
 			reval = cls.newInstance();
 			if(toObserve != null) {
-				reval.setObservationObject(toObserve);
+				reval.setObservedEntity(toObserve);
 				if(!registeredViewsByEntity.containsKey(toObserve)) {
-					registeredViewsByEntity.put(toObserve, new LinkedList<BaseView>());
+					registeredViewsByEntity.put(toObserve, new LinkedList<View>());
 				}
 				registeredViewsByEntity.get(toObserve).add(reval);
 			}
@@ -218,15 +249,12 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (OperationNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends BaseView> T getBaseViewObservingEntity(Entity ent) {
+	public <T extends View> T getBaseViewObservingEntity(Entity ent) {
 		if(registeredViewsByEntity.containsKey(ent)) {
 			return (T) registeredViewsByEntity.get(ent).get(0);
 		}
@@ -235,7 +263,7 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	
 	/** helper method: called if the 'Create Window...' menu item is clicked */
 	private void onCreateWindowClicked() {
-		String str = (String) JOptionPane.showInputDialog(window, 
+		String str = (String) JOptionPane.showInputDialog(null, 
 				"Select a Window to create...",
 				"Create Window",
 				JOptionPane.PLAIN_MESSAGE,
@@ -244,17 +272,17 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 				null);
 		if(viewMap.containsKey(str)) {
 			try {
-				BaseView bc = viewMap.get(str).newInstance();
-				Class<?> type = bc.getObservationObjectType();
+				View bc = viewMap.get(str).newInstance();
+				Class<?> type = bc.getObservedType();
 				if(type == null) {
 					bc.init();
-					window.addWlComponent(bc, BorderLayout.CENTER);
+					//window.addWlComponent(bc, BorderLayout.CENTER);
 				} else {
 					AngeronaEnvironment env = simLoadBar.getEnvironment();
 					List<Entity> tempList = new LinkedList<Entity>();
 					for(Long id : env.getEntityMap().keySet()) {
 						Entity possible = env.getEntityMap().get(id);
-						if(possible.getClass().equals(bc.getObservationObjectType())) {
+						if(possible.getClass().equals(bc.getObservedType())) {
 							tempList.add(possible);
 						}
 					}
@@ -266,11 +294,11 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 					
 					Entity selection = null;
 					if(tempList.size() == 0) {
-						JOptionPane.showMessageDialog(window, "No object for observation found.");
+						JOptionPane.showMessageDialog(null, "No object for observation found.");
 					} else if(tempList.size() == 1) {
 						selection = tempList.get(0);
 					} else {
-						String str2 = (String) JOptionPane.showInputDialog(window, 
+						String str2 = (String) JOptionPane.showInputDialog(null, 
 								"Select a Object for observation...",
 								"Create Window 2",
 								JOptionPane.PLAIN_MESSAGE,
@@ -285,8 +313,8 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 					}
 					
 					if(selection != null) {
-						BaseView comp = createBaseView(viewMap.get(str), selection);
-						AngeronaWindow.getInstance().addComponentToCenter(comp);
+						View comp = createEntityView(viewMap.get(str), selection);
+						//AngeronaWindow.getInstance().addComponentToCenter(comp);
 					}
 				}
 				
@@ -326,7 +354,49 @@ public class AngeronaWindow implements PluginListener, ErrorListener {
 	 */
 	@Override
 	public void onError(String errorTitle, String errorMessage) {
-		JOptionPane.showMessageDialog(this.getWindow(), errorMessage, 
+		JOptionPane.showMessageDialog(null, errorMessage, 
 				errorTitle, JOptionPane.ERROR_MESSAGE);
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		control = new DockController();
+		control.setRootWindow(mainWindow);
+		
+		parentStation = new SplitDockStation();
+		mainStack = new StackDockStation();
+		
+		control.add(parentStation);
+		mainWindow.add(parentStation);
+		parentStation.setVisible(true);
+		
+		try {
+			initAngeronaFramework();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ResourcenView resView = new ResourcenView();
+		resView.init();
+		DefaultDockable dd = new DefaultDockable(resView);
+		parentStation.drop(dd, new SplitDockProperty(0, 0, 0.25, 0.9));
+		
+		ReportView rv = new ReportView();
+		rv.init();
+		dd = new DefaultDockable(rv);
+		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
+		
+		simLoadBar = new SimulationControlBar();
+		simLoadBar.init();
+		dd = new DefaultDockable(simLoadBar);
+		dd.setTitleText("Simulation Control Bar");
+		parentStation.drop(dd, new SplitDockProperty(0, 0.9, 1, 0.1));
 	}
 }

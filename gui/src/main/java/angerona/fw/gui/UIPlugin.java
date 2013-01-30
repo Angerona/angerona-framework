@@ -2,7 +2,7 @@ package angerona.fw.gui;
 
 import java.util.Map;
 
-import angerona.fw.gui.view.BaseView;
+import angerona.fw.gui.view.View;
 
 import net.xeoh.plugins.base.Plugin;
 
@@ -16,5 +16,5 @@ public interface UIPlugin extends Plugin {
 	 * @return 	a map containing the names of the views as key and the class object of
 	 * 			the actual view implementation as value.
 	 */
-	Map<String, Class<? extends BaseView>> getUIComponents();
+	Map<String, Class<? extends View>> getUIComponents();
 }

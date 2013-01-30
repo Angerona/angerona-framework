@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import angerona.fw.gui.view.BaseView;
+import angerona.fw.gui.view.View;
 import angerona.fw.gui.view.SecrecyView;
 import angerona.fw.gui.view.DesiresView;
 import angerona.fw.gui.view.PlanView;
@@ -15,8 +15,8 @@ import angerona.fw.gui.view.ResourcenView;
 public class DefaultUIPlugin implements UIPlugin {
 
 	@Override
-	public Map<String, Class<? extends BaseView>> getUIComponents() {
-		Map<String, Class<? extends BaseView>> reval = new HashMap<String, Class<? extends BaseView>>();
+	public Map<String, Class<? extends View>> getUIComponents() {
+		Map<String, Class<? extends View>> reval = new HashMap<String, Class<? extends View>>();
 		reval.put("Report-View", ReportView.class);
 		reval.put("Resourcen", ResourcenView.class);
 		reval.put("Confidential-Knowledge", SecrecyView.class);

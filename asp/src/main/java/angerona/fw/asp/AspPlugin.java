@@ -14,7 +14,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.asp.AspBeliefbaseView;
-import angerona.fw.gui.view.BaseView;
+import angerona.fw.gui.view.View;
 import angerona.fw.internal.BeliefbasePlugin;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
@@ -122,8 +122,8 @@ public class AspPlugin implements BeliefbasePlugin, UIPlugin {
 	}
 
 	@Override
-	public Map<String, Class<? extends BaseView>> getUIComponents() {
-		Map<String, Class<? extends BaseView>> reval = new HashMap<String, Class<? extends BaseView>>();
+	public Map<String, Class<? extends View>> getUIComponents() {
+		Map<String, Class<? extends View>> reval = new HashMap<String, Class<? extends View>>();
 		reval.put("todo", AspBeliefbaseView.class);
 		return reval;
 	}
