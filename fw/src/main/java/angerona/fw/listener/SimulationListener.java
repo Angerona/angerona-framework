@@ -10,7 +10,7 @@ import angerona.fw.AngeronaEnvironment;
  * 
  * @author Tim Janus
  */
-public interface SimulationListener {
+public interface SimulationListener {	
 	/** is called when a new simulation starts */
 	void simulationStarted(AngeronaEnvironment simulationEnvironment);
 	

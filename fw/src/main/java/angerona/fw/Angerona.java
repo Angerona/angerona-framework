@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
-import angerona.fw.listener.ErrorListener;
+import angerona.fw.listener.FrameworkListener;
 import angerona.fw.listener.SimulationListener;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.report.Report;
@@ -54,7 +54,7 @@ public class Angerona {
 	private List<SimulationListener> simulationListeners = new LinkedList<SimulationListener>();
 	
 	/** the list of registered error listeners */
-	private List<ErrorListener> errorListeners = new LinkedList<ErrorListener>();
+	private List<FrameworkListener> frameworkListeners = new LinkedList<FrameworkListener>();
 	
 	// TODO: Differentiate between environment and simulation.
 	/** A Map containing the Report instances for specific simulations */
@@ -210,7 +210,7 @@ public class Angerona {
 		simulationListeners.add(listener);
 	}
 	
-	public void removeReportListener(SimulationListener listener) {
+	public void removeSimulationListener(SimulationListener listener) {
 		simulationListeners.remove(listener);
 	}
 	
@@ -218,16 +218,17 @@ public class Angerona {
 		simulationListeners.clear();
 	}
 	
-	public void addErrorListener(ErrorListener listener) {
-		errorListeners.add(listener);
+	
+	public void addFrameworkListener(FrameworkListener listener) {
+		frameworkListeners.add(listener);
 	}
 	
-	public boolean removeErrorListener(ErrorListener listener) {
-		return errorListeners.remove(listener);
+	public boolean removeFrameworkListener(FrameworkListener listener) {
+		return frameworkListeners.remove(listener);
 	}
 	
-	public void removeAllErrorListeners() {
-		errorListeners.clear();
+	public void removeAllFrameworkListeners() {
+		frameworkListeners.clear();
 	}
 	
 	/** 
@@ -282,7 +283,7 @@ public class Angerona {
 	 * @param message	The error message
 	 */
 	public void onError(String title, String message) {
-		for(ErrorListener l : errorListeners) {
+		for(FrameworkListener l : frameworkListeners) {
 			l.onError(title, message);
 		}
 	}
@@ -410,7 +411,9 @@ public class Angerona {
 	 * @throws SAXException
 	 */
 	public void bootstrap() throws IOException, ParserConfigurationException, SAXException {
+		
 		if(!bootstrapDone) {
+			
 			AgentConfigLoader acl = new AgentConfigLoader();
 			for(String folder : agentConfigFolders) {
 				forAllFilesIn(folder, acl);
@@ -425,9 +428,14 @@ public class Angerona {
 			for(String folder : simulationFolders) {
 				forAllFilesIn(folder, scl);
 			}
+			
+			PluginInstantiator.getInstance().addPlugins(getConfig().getPluginPaths());
+			bootstrapDone = true;
+			
+			for(FrameworkListener fl : frameworkListeners) {
+				fl.onBootstrapDone();
+			}
 		}
-		PluginInstantiator.getInstance().addPlugins(getConfig().getPluginPaths());
-		bootstrapDone = true;
 	}
 	
 	public AgentConfigReal getAgentConfiguration(String name) {

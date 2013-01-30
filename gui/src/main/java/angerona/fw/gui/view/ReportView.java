@@ -21,7 +21,7 @@ import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.AngeronaWindow;
-import angerona.fw.gui.TreeController;
+import angerona.fw.gui.controller.ResourceTreeController;
 import angerona.fw.listener.SimulationAdapter;
 import angerona.fw.operators.OperatorVisitor;
 import angerona.fw.report.ReportEntry;
@@ -187,7 +187,7 @@ public class ReportView extends BaseView implements ReportListener {
 		else
 			actTickNode.add(newNode);
 
-		TreeController.expandAll(tree, true);
+		ResourceTreeController.expandAll(tree, true);
 		tree.updateUI();
 	}
 	
