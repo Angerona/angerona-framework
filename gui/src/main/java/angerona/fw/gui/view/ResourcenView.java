@@ -38,6 +38,7 @@ public class ResourcenView extends BaseView {
 		DefaultMutableTreeNode ar = new DefaultMutableTreeNode("Angerona Resourcen");
 		new TreeController(tree, ar);
 		this.add(new JScrollPane(tree), BorderLayout.CENTER);
+		tree.setRootVisible(false);
 		
 		MouseListener ml = new MouseAdapter() {
 		     public void mousePressed(MouseEvent e) {
@@ -107,7 +108,7 @@ public class ResourcenView extends BaseView {
 		LOG.trace("Handle AgentComponent: '{}' of Agent '{}'.", agname);
 		View view = AngeronaWindow.getInstance().createViewForEntityComponent(component);
 		if(view != null) {
-			AngeronaWindow.getInstance().openView(view, agname);
+			AngeronaWindow.getInstance().openView(view, component.getClass().getSimpleName() + " - " + agname);
 		}
 	}
 
@@ -130,16 +131,30 @@ public class ResourcenView extends BaseView {
 	private void handlerBeliefbase(BaseBeliefbase bb) {
 		LOG.trace("Handle beliefbase: '{}'", bb.getFileEnding());
 		
+		Agent ag = bb.getAgent();
+		String title = ag.getName() + ": ";
+		if(bb.equals(ag.getBeliefs().getWorldKnowledge())) {
+			title += "World";
+		} else {
+			for(String view : ag.getBeliefs().getViewKnowledge().keySet()) {
+				BaseBeliefbase other = ag.getBeliefs().getViewKnowledge().get(view);
+				if(other.equals(bb)) {
+					title += "View -> " + view;
+					break;
+				}
+			}
+		}
+		
 		// TODO: More dynamically... using plugin architecture etc.
 		if(bb.getFileEnding().toLowerCase().equals("asp")) {
 			View view = AngeronaWindow.getInstance().createViewForEntityComponent(bb);
 			if(view != null) {
-				AngeronaWindow.getInstance().openView(view, bb.getFileEnding());
+				AngeronaWindow.getInstance().openView(view, title);
 			}
 		} else {
 			BeliefbaseView bc = AngeronaWindow.getInstance().createEntityView(
 					BeliefbaseView.class, bb);
-			AngeronaWindow.getInstance().openView(bc, "TODO");
+			AngeronaWindow.getInstance().openView(bc, title);
 		}
 	}
 

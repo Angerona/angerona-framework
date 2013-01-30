@@ -54,7 +54,7 @@ public class Value  {
 		this.value = value;
 		
 		if(!value.startsWith("$")) {
-			LOG.debug("Value created with type: '{}'", typeString);
+			LOG.trace("Value created with type: '{}'", typeString);
 			if(typeString.equalsIgnoreCase("bool") || 
 					typeString.equalsIgnoreCase("boolean")) {
 				this.type = Boolean.class;
@@ -72,7 +72,7 @@ public class Value  {
 			}
 		} else {
 			typeString = CONTEXT_REFERENCE_TYPE;
-			LOG.debug("Value class provides a reference in the Context");
+			LOG.trace("Value class provides a reference in the Context");
 		}
 	}
 	

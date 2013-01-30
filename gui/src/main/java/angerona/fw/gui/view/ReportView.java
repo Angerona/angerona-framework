@@ -33,6 +33,9 @@ import angerona.fw.report.ReportListener;
  */
 public class ReportView extends BaseView implements ReportListener {
 
+	/** kick warning */
+	private static final long serialVersionUID = 1L;
+
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(ReportView.class);
 	
@@ -112,12 +115,10 @@ public class ReportView extends BaseView implements ReportListener {
 	public void init() {
 		setLayout(new BorderLayout());
 		
-		JLabel lbl = new JLabel("Reports");
-		add(lbl, BorderLayout.NORTH);
-		
 		rootNode = new DefaultMutableTreeNode("Report");
 		model = new DefaultTreeModel(rootNode);
 		tree.setModel(model);
+		tree.setRootVisible(false);
 		JScrollPane pane = new JScrollPane(tree);
         add(pane, BorderLayout.CENTER);
         //setVisible(true);

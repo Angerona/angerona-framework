@@ -4,14 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -35,12 +40,21 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.ErrorListener;
 import angerona.fw.listener.PluginListener;
+import bibliothek.extension.gui.dock.theme.SmoothTheme;
 import bibliothek.gui.DockController;
 import bibliothek.gui.Dockable;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.SplitDockStation;
 import bibliothek.gui.dock.StackDockStation;
+import bibliothek.gui.dock.action.DefaultDockActionSource;
+import bibliothek.gui.dock.action.DockAction;
+import bibliothek.gui.dock.action.HierarchyDockActionSource;
+import bibliothek.gui.dock.action.LocationHint;
+import bibliothek.gui.dock.action.actions.SimpleButtonAction;
 import bibliothek.gui.dock.station.split.SplitDockProperty;
+import bibliothek.gui.dock.station.split.SplitFullScreenAction;
+import bibliothek.gui.dock.themes.NoStackTheme;
+import bibliothek.gui.dock.util.Priority;
 
 /**
  * The main window of the Angerona UI - Extension. It is a Singleton. 
@@ -150,6 +164,7 @@ public class AngeronaWindow extends WindowAdapter
 		DefaultDockable dd = new DefaultDockable((JPanel)view);
 		dd.setTitleText(title);
 		view.init();
+		createCloseButton(dd);
 		// easy if the center is a stack already, only adding the Dockable to the stack.
 		if(mainStack.getController() != null) {
 			mainStack.drop(dd);
@@ -358,45 +373,110 @@ public class AngeronaWindow extends WindowAdapter
 				errorTitle, JOptionPane.ERROR_MESSAGE);
 	}
 
+	/**
+	 * The content for the docking frame framework is generated in the
+	 * windowOpened method, this is called if the Angerona main window
+	 * was initialized and setVisible the first time. It is important that
+	 * every change made in the docking frames framework occurs in the event
+	 * handling thread of swing.
+	 */
 	@Override
 	public void windowOpened(WindowEvent arg0) {
+		// init docking frames
 		control = new DockController();
 		control.setRootWindow(mainWindow);
+		control.setTheme(new NoStackTheme(new SmoothTheme()));
 		
 		parentStation = new SplitDockStation();
+		parentStation.setExpandOnDoubleclick(false);
 		mainStack = new StackDockStation();
 		
 		control.add(parentStation);
 		mainWindow.add(parentStation);
 		parentStation.setVisible(true);
 		
+		registerIcon("close", "/angerona/fw/gui/icons/cross.png");
+		registerIcon("report", "/angerona/fw/gui/icons/table.png");
+		registerIcon("resources", "/angerona/fw/gui/icons/drive_link.png");
+		registerIcon("monitor", "/angerona/fw/gui/icons/monitor.png");
+		
+		// init Angerona
 		try {
 			initAngeronaFramework();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			onError("Angerona Initialization Failure", e.getMessage());
 			e.printStackTrace();
 		}
 		
+		createDefaultPerspective();
+	}
+
+	private boolean registerIcon(String id, String resUrl) {
+		InputStream is = AngeronaWindow.class.getResourceAsStream(resUrl);
+		if(is == null) {
+			LOG.warn("Cannot found resource '{}' in JAR", resUrl);
+			return false;
+		}
+		
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(is);
+		} catch (IOException e) {
+			LOG.error("Cannot load '{}' from JAR: '{}'", resUrl, e.getMessage());
+			e.printStackTrace();
+		}
+		if(image != null) {
+			ImageIcon icon = new ImageIcon(image);
+			control.getIcons().setIcon(id, Priority.CLIENT, icon);
+			return true;
+		}
+		return false;
+	}
+
+	private void createCloseButton(final DefaultDockable dd) {
+		DefaultDockActionSource actionSource = new DefaultDockActionSource(
+				new LocationHint(LocationHint.DOCKABLE, LocationHint.RIGHT_OF_ALL));
+		SimpleButtonAction sba = new SimpleButtonAction();
+		sba.setText("Close");
+		sba.setIcon(control.getIcons().get("close"));
+		sba.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dd.getDockParent().drag(dd);
+			}
+		});
+		actionSource.add(sba);
+		
+		SplitFullScreenAction sfsa = new SplitFullScreenAction(parentStation);
+		actionSource.add(sfsa);
+		dd.setActionOffers(actionSource);
+		
+	}
+	
+	private void createDefaultPerspective() {
 		ResourcenView resView = new ResourcenView();
 		resView.init();
 		DefaultDockable dd = new DefaultDockable(resView);
+		dd.setTitleIcon(control.getIcons().get("resources"));
+		dd.setTitleText("Resources");
 		parentStation.drop(dd, new SplitDockProperty(0, 0, 0.25, 0.9));
 		
 		ReportView rv = new ReportView();
 		rv.init();
 		dd = new DefaultDockable(rv);
+		dd.setTitleIcon(control.getIcons().get("report"));
+		dd.setTitleText("Report");
 		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
 		
 		simLoadBar = new SimulationControlBar();
 		simLoadBar.init();
 		dd = new DefaultDockable(simLoadBar);
 		dd.setTitleText("Simulation Control Bar");
+		dd.setTitleIcon(control.getIcons().get("monitor"));
+		dd.setActionOffers(null);
+		HierarchyDockActionSource hdas = (HierarchyDockActionSource)dd.getGlobalActionOffers();
+		hdas.unbind();
 		parentStation.drop(dd, new SplitDockProperty(0, 0.9, 1, 0.1));
+		
 	}
 }
