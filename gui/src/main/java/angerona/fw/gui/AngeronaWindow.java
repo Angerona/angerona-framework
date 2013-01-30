@@ -446,9 +446,6 @@ public class AngeronaWindow extends WindowAdapter
 			}
 		});
 		actionSource.add(sba);
-		
-		SplitFullScreenAction sfsa = new SplitFullScreenAction(parentStation);
-		actionSource.add(sfsa);
 		dd.setActionOffers(actionSource);
 		
 	}
