@@ -19,6 +19,7 @@ import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.AngeronaWindow;
+import angerona.fw.gui.SortedTreeNode;
 import angerona.fw.gui.view.BeliefbaseView;
 import angerona.fw.gui.view.View;
 import angerona.fw.listener.SimulationListener;

@@ -1,10 +1,11 @@
 <simulation-configuration>
-	<name>SCM-2-unsafe - Knowhow</name>
+	<name>SCM extended - unsafe</name>
+	<category>scm/knowhow</category>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
-	<agent-instance>
+
+    <agent-instance>
 		<name>employee</name>
         <beliefbase-name>employee</beliefbase-name>
-         
         
         <agent-config source="config/agents/knowhow_agent_unsafe.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />

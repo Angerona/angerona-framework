@@ -53,7 +53,7 @@ public abstract class TreeControllerAdapter implements TreeController {
 	    if (expand) {
 	    	tree.expandPath(parent);
 	    } else {
-		        tree.collapsePath(parent);
+	    	tree.collapsePath(parent);
 		}
 	}
 

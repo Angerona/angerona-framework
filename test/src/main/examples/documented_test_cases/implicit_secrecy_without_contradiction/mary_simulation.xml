@@ -2,7 +2,8 @@
 <!-- I need to prune some of these skills off -->
 	<name>Implicity Secrecy without Contradiction</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
-     
+    <category>feature-test</category>
+	
 	<agent-instance>
 		<name>Mary</name>
        	<beliefbase-name>mary</beliefbase-name>

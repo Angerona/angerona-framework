@@ -1,11 +1,11 @@
 <simulation-configuration>
-	<name>Strike Committee Meeting (Dummy)</name>
+	<name>Strike Committee Meeting (Default)</name>
+	<category>scm</category>
 	<behavior>angerona.fw.def.DefaultBehavior</behavior>
 	
 	<agent-instance>
 		<name>Employee</name>
-		<beliefbase-name>employee</beliefbase-name>
-	
+		<beliefbase-name>employee</beliefbase-name>	
 		
         <agent-config source="config/agents/default_agent.xml" />         
         <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />

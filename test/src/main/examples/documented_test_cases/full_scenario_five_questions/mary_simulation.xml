@@ -2,6 +2,7 @@
 
 	<name>Courtroom Scenario - 5 Questions</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
+    <category>mary</category>
      
 	<agent-instance>
 		<name>Mary</name>

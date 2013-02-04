@@ -1,8 +1,9 @@
 <simulation-configuration>
 
-	<name>Courtroom Scenario - No Real Secrets</name>
+	<name>Courtroom Scenario</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
-	
+	<category>mary</category>
+    
 	<agent-instance>
 		<name>Mary</name>
        	<beliefbase-name>mary</beliefbase-name>

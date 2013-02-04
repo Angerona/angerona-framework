@@ -1,5 +1,6 @@
 <simulation-configuration>
 	<name>OCF-PenguinStudent</name>
+	<category>ocf</category>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<agent-instance>
 		<name>Student</name>

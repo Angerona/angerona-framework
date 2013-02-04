@@ -1,6 +1,8 @@
 <simulation-configuration>
 	<name>Strike Committee Meeting (OCF)</name>
+	<category>scm/ocf</category>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
+	
 	<agent-instance>
 		<name>Employee</name>
         <beliefbase-name>employee</beliefbase-name>

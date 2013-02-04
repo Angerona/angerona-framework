@@ -23,6 +23,13 @@ public class SimulationConfiguration {
 	@Element(name="name")
 	protected String name;
 	
+	/** A multi level category name where '/' indicates that a new category level begins 
+	 *	scm/asp is a category with two levels which is represented by two nodes in a tree
+	 *	view for example. An empty string indicates no category. 
+	 */
+	@Element(name="category", required=false)
+	protected String category = "";
+	
 	/** used behavior implementation */
 	@Element(name="behavior", required=false)
 	protected String behaviorCls;
@@ -50,6 +57,15 @@ public class SimulationConfiguration {
 		return name;
 	}
 
+	/**
+	 * @return 	A multi level category name where '/' indicates that a new category level begins 
+	 *			scm/asp is a category with two levels which is represented by two nodes in a tree
+	 *			view for example. An empty string indicates no category.
+	 */
+	public String getCategory() {
+		return category;
+	}
+	
 	/** @return the name of the class of the used behavior implementation */
 	public String getBehaviorCls() {
 		return behaviorCls;
