@@ -24,19 +24,6 @@
     </profile>
     
     <profile>
-      <id>mac</id>
-      <activation>
-        <os>
-          <family>mac</family>
-        </os>
-      </activation>
-      <properties>
-        <tools.home>${basedir}/src/main/tools/mac</tools.home>
-        <permission.script>${basedir}/src/main/permission.sh</permission.script>
-      </properties>
-    </profile>
-    
-    <profile>
       <id>unix</id>
       <activation>
         <os>
@@ -45,6 +32,24 @@
       </activation>
       <properties>
         <tools.home>${basedir}/src/main/tools/unix</tools.home>
+        <permission.script>${basedir}/src/main/permission.sh</permission.script>
+      </properties>
+    </profile>
+    
+    <!-- 
+    	MAC profile has to be the last one because on MAC OS the
+     	families mac and unix are set. The values of the latest 
+    	loaded profile are the one used in the rest of the pom.
+     -->
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <properties>
+        <tools.home>${basedir}/src/main/tools/mac</tools.home>
         <permission.script>${basedir}/src/main/permission.sh</permission.script>
       </properties>
     </profile>
