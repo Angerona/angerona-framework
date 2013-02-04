@@ -94,5 +94,6 @@
   	<module>conditional</module>
   	<module>tweety/conditional</module>
   	<module>secrecy</module>
+  	<module>DefendingAgent</module>
   </modules>
 </project>

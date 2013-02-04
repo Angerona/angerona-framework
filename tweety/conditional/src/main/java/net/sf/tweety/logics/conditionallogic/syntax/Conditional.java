@@ -44,6 +44,15 @@ public class Conditional implements ClassicalFormula, Rule {
 		this.conclusion = conclusion;
 	}
 	
+	/**
+	 * CopyCTor
+	 * @param other
+	 */
+	public Conditional(Conditional other) {
+		this.premise = other.premise;
+		this.conclusion = other.conclusion;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.util.rules.Rule#getPremise()
 	 */
