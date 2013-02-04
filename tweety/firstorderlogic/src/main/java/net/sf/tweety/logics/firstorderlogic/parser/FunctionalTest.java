@@ -11,6 +11,7 @@ import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
  */
 public class FunctionalTest {
 	public static void main(String [] args) {
+		/*
 		String 	bb	= "married(john, mary)\n";
 				bb += "-argued(john)";
 		
@@ -22,9 +23,11 @@ public class FunctionalTest {
 				bb += "married(john, mary)\n";
 				bb += "-argued(john)\n";
 				bb += "test(wife(john))";
+		*/
+		String bb = "q_Mary(said(X), 1)";
 				
 		FolParserB bp = new FolParserB(new StringReader(bb));
-		bp.setForce(true);
+		//bp.setForce(true);
 		
 		try {
 			FolBeliefSet fbs = bp.KB();

@@ -18,4 +18,7 @@ public interface CommonTerm {
 	
 	/** @return true if the term is a constant otherwise false. */
 	boolean isConstant();
+	
+	/** @return true if the term is a number otherwise false. */
+	boolean isNumber();
 }

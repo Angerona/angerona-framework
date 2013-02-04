@@ -118,4 +118,9 @@ public class Variable extends Term{
 	public boolean isConstant() {
 		return false;
 	}
+	
+	@Override 
+	public boolean isNumber() {
+		return false;
+	}
 }

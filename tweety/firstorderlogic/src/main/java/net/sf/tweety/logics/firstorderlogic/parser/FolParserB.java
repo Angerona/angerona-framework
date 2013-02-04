@@ -332,48 +332,62 @@ public class FolParserB implements FolParserBConstants {
   Sort subtype;
   Functor f;
   List<Term > terms = new LinkedList<Term >();
-    fname = identifier();
+  Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case LBRA:
-      jj_consume_token(LBRA);
-      f = getFunctor(fname, signature);
-      if(f == null && this.forceDefinitions)
-      {
-        {if (true) throw new ParseException("Functor with name '" + fname + "' was not definied. Define it beforehand or did not use the force-delaration flag.");}
-      }
-      subtype = getArgumentType(f, count++);
-      temp = term(signature, subtype);
-          terms.add(temp);
-          subtype = getArgumentType(f, count++);
-      label_4:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case COMMA:
-          ;
-          break;
-        default:
-          jj_la1[7] = jj_gen;
-          break label_4;
-        }
-        jj_consume_token(COMMA);
+    case CONSTANT:
+    case VARIABLE:
+      fname = identifier();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case LBRA:
+        jj_consume_token(LBRA);
+            f = getFunctor(fname, signature);
+            if(f == null && this.forceDefinitions)
+            {
+              {if (true) throw new ParseException("Functor with name '" + fname + "' was not definied. Define it beforehand or did not use the force-delaration flag.");}
+            }
+            subtype = getArgumentType(f, count++);
         temp = term(signature, subtype);
-        terms.add(temp);
-        subtype = getArgumentType(f, count++);
+                terms.add(temp);
+                subtype = getArgumentType(f, count++);
+        label_4:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case COMMA:
+            ;
+            break;
+          default:
+            jj_la1[7] = jj_gen;
+            break label_4;
+          }
+          jj_consume_token(COMMA);
+          temp = term(signature, subtype);
+              terms.add(temp);
+              subtype = getArgumentType(f, count++);
+        }
+        jj_consume_token(RBRA);
+            {if (true) return new FunctionalTerm(getOrCreateFunctor(fname, terms, type, signature), terms);}
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        ;
       }
-      jj_consume_token(RBRA);
-      {if (true) return new FunctionalTerm(getOrCreateFunctor(fname, terms, type, signature), terms);}
+          if(fname.charAt(0) >= 65 && fname.charAt(0) <= 90)
+          {
+            {if (true) return new Variable(fname);}
+          }
+          else
+          {
+            {if (true) return getOrCreateConstant(fname, type, signature);}
+          }
+      break;
+    case NUMBER:
+      t = jj_consume_token(NUMBER);
+      {if (true) return new NumberTerm(Integer.parseInt(t.image));}
       break;
     default:
-      jj_la1[8] = jj_gen;
-      ;
-    }
-    if(fname.charAt(0) < 97)
-    {
-      {if (true) return new Variable(fname);}
-    }
-    else
-    {
-      {if (true) return getOrCreateConstant(fname, type, signature);}
+      jj_la1[9] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
     throw new Error("Missing return statement in function");
   }
@@ -389,7 +403,7 @@ public class FolParserB implements FolParserBConstants {
       t = jj_consume_token(VARIABLE);
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[10] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -441,7 +455,7 @@ public class FolParserB implements FolParserBConstants {
         ;
         break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[11] = jj_gen;
         break label_6;
       }
       jj_consume_token(COMMA);
@@ -468,7 +482,7 @@ public class FolParserB implements FolParserBConstants {
       fbs = endFunctorDeclar(signature, name);
       break;
     default:
-      jj_la1[11] = jj_gen;
+      jj_la1[12] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -506,7 +520,7 @@ public class FolParserB implements FolParserBConstants {
           ;
           break;
         default:
-          jj_la1[12] = jj_gen;
+          jj_la1[13] = jj_gen;
           break label_7;
         }
         jj_consume_token(COMMA);
@@ -516,7 +530,7 @@ public class FolParserB implements FolParserBConstants {
       jj_consume_token(RBRA);
       break;
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[14] = jj_gen;
       ;
     }
     jj_consume_token(RBRA);
@@ -549,7 +563,7 @@ public class FolParserB implements FolParserBConstants {
         ;
         break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[15] = jj_gen;
         break label_8;
       }
       jj_consume_token(COMMA);
@@ -584,9 +598,9 @@ public class FolParserB implements FolParserBConstants {
   private boolean jj_3R_10() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(27)) {
+    if (jj_scan_token(23)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(28)) return true;
+    if (jj_scan_token(24)) return true;
     }
     return false;
   }
@@ -623,13 +637,13 @@ public class FolParserB implements FolParserBConstants {
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[15];
+  final private int[] jj_la1 = new int[16];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x100,0x1800e0c0,0x1800e0c0,0x1800,0x1800,0x40000000,0x10000,0x40000000,0x10000,0x18000000,0x40000000,0x30400,0x40000000,0x10000,0x40000000,};
+      jj_la1_0 = new int[] {0x100,0x180e0c0,0x180e0c0,0x1800,0x1800,0x20000000,0x10000,0x20000000,0x10000,0x1c00000,0x1800000,0x20000000,0x30400,0x20000000,0x10000,0x20000000,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[2];
   private boolean jj_rescan = false;
@@ -646,7 +660,7 @@ public class FolParserB implements FolParserBConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -661,7 +675,7 @@ public class FolParserB implements FolParserBConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -672,7 +686,7 @@ public class FolParserB implements FolParserBConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -683,7 +697,7 @@ public class FolParserB implements FolParserBConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -693,7 +707,7 @@ public class FolParserB implements FolParserBConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -703,7 +717,7 @@ public class FolParserB implements FolParserBConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -820,7 +834,7 @@ public class FolParserB implements FolParserBConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 16; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

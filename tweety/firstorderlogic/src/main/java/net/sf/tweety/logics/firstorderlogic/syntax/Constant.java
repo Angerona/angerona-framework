@@ -118,5 +118,10 @@ public class Constant extends Term {
 	public boolean isConstant() {
 		return true;
 	}
+
+	@Override
+	public boolean isNumber() {
+		return false;
+	}
 	
 }

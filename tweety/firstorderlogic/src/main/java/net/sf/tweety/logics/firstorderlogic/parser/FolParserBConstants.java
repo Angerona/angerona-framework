@@ -43,23 +43,23 @@ public interface FolParserBConstants {
   /** RegularExpression Id. */
   int CURRBRA = 21;
   /** RegularExpression Id. */
-  int DIGIT = 22;
+  int NUMBER = 22;
   /** RegularExpression Id. */
-  int NUMBER = 23;
+  int CONSTANT = 23;
   /** RegularExpression Id. */
-  int LCHAR = 24;
+  int VARIABLE = 24;
   /** RegularExpression Id. */
-  int UCHAR = 25;
+  int SYMBOL = 25;
   /** RegularExpression Id. */
-  int SYMBOL = 26;
+  int LCHAR = 26;
   /** RegularExpression Id. */
-  int CONSTANT = 27;
+  int UCHAR = 27;
   /** RegularExpression Id. */
-  int VARIABLE = 28;
+  int BLANK = 28;
   /** RegularExpression Id. */
-  int BLANK = 29;
+  int COMMA = 29;
   /** RegularExpression Id. */
-  int COMMA = 30;
+  int DIGIT = 30;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -88,15 +88,15 @@ public interface FolParserBConstants {
     "\"]\"",
     "\"{\"",
     "\"}\"",
-    "<DIGIT>",
     "<NUMBER>",
-    "<LCHAR>",
-    "<UCHAR>",
-    "<SYMBOL>",
     "<CONSTANT>",
     "<VARIABLE>",
+    "<SYMBOL>",
+    "<LCHAR>",
+    "<UCHAR>",
     "\"_\"",
     "\",\"",
+    "<DIGIT>",
   };
 
 }

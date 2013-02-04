@@ -205,4 +205,9 @@ public class FunctionalTerm extends Term {
 	public boolean isConstant() {
 		return false;
 	}
+
+	@Override
+	public boolean isNumber() {
+		return false;
+	}
 }

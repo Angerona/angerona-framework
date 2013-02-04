@@ -165,15 +165,15 @@ TOKEN : /* OPERATORS */
 
 TOKEN :
 {
-  < DIGIT : [ "0"-"9" ] >
-| < NUMBER : (< DIGIT >)+ >
-| < LCHAR : ["a"-"z"]>
-| < UCHAR : ["A"-"Z"] >
-| < SYMBOL: (< LCHAR >|< UCHAR >|< DIGIT >|"_") >
+  < NUMBER : (< DIGIT >)+ >
 | < CONSTANT: < LCHAR >(< SYMBOL >)* >
 | < VARIABLE: < UCHAR >(< SYMBOL >)* >
+| < SYMBOL: (< LCHAR >|< UCHAR >|< DIGIT >|"_") >
+| < LCHAR : ["a"-"z"]>
+| < UCHAR : ["A"-"Z"]>
 | < BLANK : "_" >
 | < COMMA : "," >
+| < DIGIT : [ "0"-"9" ] >
 }
 
 FolBeliefSet KB() :{
@@ -316,41 +316,48 @@ Term term(FolSignature signature, Sort type) :
   int count = 0;
   Sort subtype;
   Functor f;
-  List<Term > terms = new LinkedList<Term >();}
+  List<Term > terms = new LinkedList<Term >();
+  Token t;}
 {
-  fname = identifier()
-  ( 
-    < LBRA >
-    {
-      f = getFunctor(fname, signature);
-      if(f == null && this.forceDefinitions)
-      {
-        throw new ParseException("Functor with name '" + fname + "' was not definied. Define it beforehand or did not use the force-delaration flag.");      }
-      subtype = getArgumentType(f, count++);
-    }
-    temp = term(signature, subtype)
+  (    
+  	fname = identifier()
+	( 
+	  < LBRA >
+	  {
+	    f = getFunctor(fname, signature);
+	    if(f == null && this.forceDefinitions)
+	    {
+	      throw new ParseException("Functor with name '" + fname + "' was not definied. Define it beforehand or did not use the force-delaration flag.");	    }
+	    subtype = getArgumentType(f, count++);
+	  }
+	  temp = term(signature, subtype)
+	  {
+		terms.add(temp);
+		subtype = getArgumentType(f, count++);
+	  }
+	  (
+	    < COMMA >
+	    temp = term(signature, subtype)
+	    {
+	      terms.add(temp);
+	      subtype = getArgumentType(f, count++);	    }	  )*  
+	  < RBRA >
+	  {
+	    return new FunctionalTerm(getOrCreateFunctor(fname, terms, type, signature), terms);	  }	)?  
 	{
-	  terms.add(temp);
-	  subtype = getArgumentType(f, count++);
-	}
-    (
-      < COMMA >
-      temp = term(signature, subtype)
-      {
-        terms.add(temp);
-        subtype = getArgumentType(f, count++);      }    )*  
-    < RBRA >
+	  if(fname.charAt(0) >= 65 && fname.charAt(0) <= 90)
+	  {
+	    return new Variable(fname);	  }
+	  else
+	  {
+	    return getOrCreateConstant(fname, type, signature);	  }	}
+  )
+|
+  (
+    t = < NUMBER >
     {
-      return new FunctionalTerm(getOrCreateFunctor(fname, terms, type, signature), terms);    }  )?
-  
-  // TODO Functor 
-  {
-    if(fname.charAt(0) < 97)
-    {
-      return new Variable(fname);    }
-    else
-    {
-      return getOrCreateConstant(fname, type, signature);    }  }}
+      return new NumberTerm(Integer.parseInt(t.image));    }
+  )}
 String identifier() :
 {
   System.out.print("identifier: ");
