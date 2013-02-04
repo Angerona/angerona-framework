@@ -27,11 +27,6 @@
      	
    		<skill>Query</skill>
 		
-		<desire>q_Mary(deep_voice)_1</desire>     
-   		<!--		
-	 	<desire>q_Mary(who_argued(X))_1</desire>  
-		<desire>q_Mary(someone_argued)_2</desire>   
-		<desire>q_Mary(you_listened)_3</desire>   
-		-->
+		<desire>q_Mary(deep_voice,1)</desire>     
 	</agent-instance>
 </simulation-configuration>

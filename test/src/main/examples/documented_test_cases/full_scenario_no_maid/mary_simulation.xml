@@ -26,14 +26,9 @@
         
       	<skill>Query</skill>	
 		
-	 	<desire>q_Mary(said(X))_1</desire>   
-		<desire>q_Mary(said(X))_2</desire> 
-		<desire>q_Mary(said(X))_3</desire> 
-		<!--
-		<desire>q_Mary(john_argued)_1</desire>
-		<desire>q_Mary(someone_argued)_2</desire>   
-		<desire>q_Mary(you_listened)_3</desire>   
-		-->
+	 	<desire>q_Mary(said(X), 1)</desire>   
+		<desire>q_Mary(said(X), 2)</desire> 
+		<desire>q_Mary(said(X), 3)</desire> 
 	</agent-instance>
 
 </simulation-configuration>

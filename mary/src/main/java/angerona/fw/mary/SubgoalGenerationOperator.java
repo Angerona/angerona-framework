@@ -1,5 +1,6 @@
 package angerona.fw.mary;
 
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,13 +8,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.firstorderlogic.syntax.NumberTerm;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
-import net.sf.tweety.logics.firstorderlogic.syntax.Variable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,90 +105,74 @@ public class SubgoalGenerationOperator extends
 			
 			public int compare(Desire f1, Desire f2)
 			{
-				String[] f1_s = f1.toString().split("_");
-				String[] f2_s = f2.toString().split("_");
-
-				if(f1_s.length == 1) {
+				if(	f1.getAtom().getArguments().size() < 2) {
 					return -1;
-				} else if(f2_s.length == 1) {
+				} else if( f2.getAtom().getArguments().size() < 2 ) {
+					return 1;
+				}
+					
+				Term t1 = f1.getAtom().getArguments().get(1);
+				Term t2 = f2.getAtom().getArguments().get(1);
+				
+				if(!t1.isNumber()) {
+					return -1;
+				} else if(!t2.isNumber()) {
 					return 1;
 				}
 				
-				int f1_num = Integer.parseInt(f1_s[f1_s.length-1]); 
-				int f2_num = Integer.parseInt(f2_s[f2_s.length-1]);
+				int i1 = ((NumberTerm)t1).getNumber();
+				int i2 = ((NumberTerm)t2).getNumber();
 				
-				if (f1_num < f2_num)
-				{
-					return -1;
-				}
-				else if (f1_num > f2_num)
-				{
-					return 1;
-				}
-				return 0;
+				return i1-i2;
 			}
 		}
 		
-		Desire[] desires = (Desire[]) ag.getDesires().getDesires().toArray(new Desire[0]);
+		Desire[] desires = new Desire[ag.getDesires().getDesires().size()];
+		ag.getDesires().getDesires().toArray(desires);
 		Arrays.sort(desires, new DesireComp());
 
 		int numDesires = desires.length;
 		for(int i=numDesires-1;i>=0;i--)
 		{
-			Desire desire = desires[i];
-			if(desire.toString().trim().startsWith("q_"))
+			Desire des = desires[i];
+			Atom atom = desires[i].getAtom();
+			if(atom.getPredicate().getName().startsWith("q_"))
 			{
-
-				int si = desire.toString().indexOf("_")+1;
-				int li = desire.toString().indexOf("(", si);
-				if(si == -1 || li == -1)
-					continue;
-				String recvName = desire.toString().substring(si, li);
-				
-				si = desire.toString().indexOf("(")+1;
-				li = desire.toString().lastIndexOf(")");
-				if(si == -1 || li == -1)
-					continue;
-				String content = desire.toString().substring(si,li);
-				String predName = content;
-				String[] termNames = null;
-				if(content.contains("("))
-				{
-					predName = content.substring(0, content.indexOf("("));
-					String termsString = content.substring(content.indexOf("(")+1, content.lastIndexOf(")"));
-					termNames = termsString.split(", ");
-				}
-				
-				LinkedList<Term> terms = new LinkedList<Term>();
-				if(termNames != null)
-				{
-					for(String name : termNames)
-					{
-						if(name.equals(name.toUpperCase()))
-						{
-							terms.add(new Variable(name)); //Variables not supported right now
-						}
-						else
-						{
-							terms.add(new Constant(name));
-						}
-					}
-				}
-				
 				if(!ag.hasCapability("Query")) {
 					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
 					continue;
 				}
-				Subgoal sg = new Subgoal(ag, desire);
-				FolFormula f = new Atom(new Predicate(predName, terms.size()), terms);
-				if(predName.startsWith("-")) {
-					predName = predName.substring(1);
-					f = new Negation(new Atom(new Predicate(predName, terms.size()), terms));
+			
+				if(atom.getArguments().size()==0) {
+					continue;
 				}
-				sg.newStack(new Query(ag, recvName, f));
+				
+				FolParserB parser = new FolParserB(new StringReader(atom.getArguments().get(0).toString()));
+				FolFormula realLiteral;
+				try {
+					realLiteral = parser.atom(new FolSignature());
+				} catch (ParseException e) {
+					LOG.warn("The argument in paranthesses can not be parsed: '{}' by FolParser", atom.getArguments().get(0).toString());
+					e.printStackTrace();
+					continue;
+				}
+				if(atom.getArguments().size()>=3) {
+					Term t = atom.getArguments().get(2);
+					if(t instanceof Constant) {
+						Constant c = (Constant)t;
+						if(c.getName().compareToIgnoreCase("neg") == 0) {
+							realLiteral = new Negation(realLiteral);
+						}
+					}
+				}
+				
+				String recvName = atom.getPredicate().getName().substring(2);
+				
+				Subgoal sg = new Subgoal(ag, des);
+				sg.newStack(new Query(ag, recvName, realLiteral));
 				ag.getPlanComponent().addPlan(sg);
 				reval = true;
-				pp.report("Add the new atomic action '"+Query.class.getSimpleName()+"' to the plan, chosen by desire: " + desire.toString(), 
+				pp.report("Add the new atomic action '"+Query.class.getSimpleName()+"' to the plan, chosen by desire: " + atom.toString(), 
 						ag.getPlanComponent());
 			}
 		}

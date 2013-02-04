@@ -17,6 +17,10 @@ public class NumberTerm extends Term {
 		this.number = number;
 	}
 	
+	public int getNumber() {
+		return number;
+	}
+	
 	@Override
 	public String getName() {
 		return String.valueOf(number);
