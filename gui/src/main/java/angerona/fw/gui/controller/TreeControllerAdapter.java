@@ -5,10 +5,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Enumeration;
 
+import javax.swing.Icon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import angerona.fw.gui.AngeronaWindow;
 
 /** 
  * Base class for controllers of a JTree. It provides custom user object
@@ -82,6 +85,8 @@ public class TreeControllerAdapter implements TreeController {
 		@Override
 		public abstract String toString();
 		
+		public abstract Icon getIcon();
+		
 		public abstract void onActivated();
 	}
 	
@@ -114,6 +119,11 @@ public class TreeControllerAdapter implements TreeController {
 		
 		public String getName() {
 			return name;
+		}
+		
+		@Override 
+		public Icon getIcon() {
+			return AngeronaWindow.getInstance().getIcons().get("page_white");
 		}
 		
 		@Override

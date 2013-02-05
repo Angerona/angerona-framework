@@ -60,6 +60,7 @@ import bibliothek.gui.dock.action.actions.SimpleButtonAction;
 import bibliothek.gui.dock.station.split.SplitDockProperty;
 import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import bibliothek.gui.dock.themes.NoStackTheme;
+import bibliothek.gui.dock.util.IconManager;
 import bibliothek.gui.dock.util.Priority;
 
 /**
@@ -129,13 +130,6 @@ public class AngeronaWindow extends WindowAdapter
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setExtendedState(mainWindow.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		mainWindow.setIconImage(readImage("/angerona/fw/gui/icons/font.png"));
-		
-		resourceView = new ResourcenView();
-		resourceView.setController(new ResourceTreeController(new JTree()));
-		resourceView.init();
-		
-		reportView = new ReportView();
-		reportView.init();
 		
 		// create the menu.
 		createMenu();
@@ -432,13 +426,17 @@ public class AngeronaWindow extends WindowAdapter
 		mainWindow.add(parentStation);
 		parentStation.setVisible(true);
 		
-		registerIcon("ico_main", "angerona/fw/gui/icons/font.png");
-		registerIcon("close", "/angerona/fw/gui/icons/cross.png");
-		registerIcon("report", "/angerona/fw/gui/icons/table.png");
-		registerIcon("resources", "/angerona/fw/gui/icons/drive_link.png");
-		registerIcon("monitor", "/angerona/fw/gui/icons/monitor.png");
-		registerIcon("simulation", "/angerona/fw/gui/icons/world.png");
-		
+		String iconFolder = "/angerona/fw/gui/icons/";
+		registerIcon("ico_main", iconFolder + "font.png");
+		registerIcon("close", iconFolder + "cross.png");
+		registerIcon("report", iconFolder + "table.png");
+		registerIcon("resources", iconFolder + "drive_link.png");
+		registerIcon("monitor", iconFolder + "monitor.png");
+		registerIcon("simulation", iconFolder + "world.png");
+		registerIcon("report", iconFolder + "report.png");
+		registerIcon("report_attachment", iconFolder + "report_disk.png");
+		registerIcon("page_white", iconFolder + "page_white.png");
+		registerIcon("agent", iconFolder + "user.png");
 		
 		// init Angerona
 		try {
@@ -447,6 +445,13 @@ public class AngeronaWindow extends WindowAdapter
 			onError("Angerona Initialization Failure", e.getMessage());
 			e.printStackTrace();
 		}
+		
+		resourceView = new ResourcenView();
+		resourceView.setController(new ResourceTreeController(new JTree()));
+		resourceView.init();
+		
+		reportView = new ReportView();
+		reportView.init();
 		
 		createDefaultPerspective();
 	}
@@ -461,6 +466,10 @@ public class AngeronaWindow extends WindowAdapter
 		return false;
 	}
 
+	public IconManager getIcons() {
+		return control.getIcons();
+	}
+	
 	private BufferedImage readImage(String resUrl) {
 		InputStream is = AngeronaWindow.class.getResourceAsStream(resUrl);
 		if(is == null) {
