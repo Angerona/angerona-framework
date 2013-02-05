@@ -1,14 +1,10 @@
 package angerona.fw.gui.controller;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.Set;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +15,6 @@ import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.AngeronaWindow;
-import angerona.fw.gui.SortedTreeNode;
 import angerona.fw.gui.view.BeliefbaseView;
 import angerona.fw.gui.view.View;
 import angerona.fw.listener.SimulationListener;
@@ -28,57 +23,17 @@ import bibliothek.gui.Dockable;
 public class SimulationTreeController extends TreeControllerAdapter implements SimulationListener {
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(SimulationTreeController.class);
-	
-	private JTree tree;
-	
+
 	private DefaultTreeModel treeModel;
 	
 	private DefaultMutableTreeNode root;
-	
-	@Override
-	public JTree getTree() {
-		return tree;
-	}
+
 	
 	public SimulationTreeController(JTree tree) {
-		this.tree = tree;
+		super(tree);
 		root = new DefaultMutableTreeNode("Root");
 		treeModel = new DefaultTreeModel(root);
 		tree.setModel(treeModel);
-		
-		MouseListener ml = new MouseAdapter() {
-		     public void mousePressed(MouseEvent e) {
-		         onMouseClick(e);
-		     }
-		};
-		tree.addMouseListener(ml);
-	}
-
-	/**
-	 * Helper method: calls correct tree-node handler
-	 * @param selPath path to the selected tree-node.
-	 */
-	@Override
-	protected void selectHandler(TreePath selPath) {
-		Object o = selPath.getLastPathComponent();
-		if(!(o instanceof DefaultMutableTreeNode))
-			return;
-
-		DefaultMutableTreeNode n = (DefaultMutableTreeNode) o;
-		o = n.getUserObject();
-		
-		if(! (o instanceof ResourceTreeController.TreeUserObject))
-			return;
-		
-		o = ((ResourceTreeController.TreeUserObject)o).getUserObject();
-		
-		if (o instanceof BaseBeliefbase) {
-			handlerBeliefbase((BaseBeliefbase) o);
-		} else if (o instanceof Agent) {
-			handlerAgent((Agent) o);
-		} else if (o instanceof AgentComponent) {
-			handlerAgentComponent((AgentComponent) o);
-		}
 	}
 	
 	/**
@@ -166,26 +121,57 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	}
 	
 	private void agentAddedInt(DefaultMutableTreeNode parent, Agent added) {
-		DefaultMutableTreeNode agNode = new DefaultMutableTreeNode(new TreeUserObject(added));
-		DefaultMutableTreeNode world = new DefaultMutableTreeNode(
-				new TreeUserObject("World", added.getBeliefs().getWorldKnowledge()));
-		DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
 		
-		agNode.add(world);
-		if(added.getBeliefs().getViewKnowledge().size() > 0) {
-			agNode.add(views);
-			for(String name : added.getBeliefs().getViewKnowledge().keySet()) {
-				BaseBeliefbase bb = added.getBeliefs().getViewKnowledge().get(name);
-				DefaultMutableTreeNode actView = new DefaultMutableTreeNode(new TreeUserObject(name, bb));
-				views.add(actView);
+		// create user object wrapper for agent node:
+		UserObjectWrapper agent = new DefaultUserObjectWrapper(added) {
+			@Override
+			public void onActivated() {
+				handlerAgent((Agent)this.getUserObject());
 			}
+		};
+		DefaultMutableTreeNode agNode = new DefaultMutableTreeNode(agent);
+		
+		// create user object wrapper for world belief base node
+		BaseBeliefbase worldBB = added.getBeliefs().getWorldKnowledge();
+		UserObjectWrapper worldWrapper = new DefaultUserObjectWrapper(worldBB, "World") {
+			@Override
+			public void onActivated() {
+				handlerBeliefbase((BaseBeliefbase)getUserObject());
+			}
+		};
+		agNode.add(new DefaultMutableTreeNode(worldWrapper));
+		
+		// create views container node if a view exists.
+		DefaultMutableTreeNode views = null;
+		if(added.getBeliefs().getViewKnowledge().size() > 0) {
+			views = new DefaultMutableTreeNode("Views");
+			agNode.add(views);
+			
 		}
 		
+		// create nodes for the views and their user wrapper objects
+		Set<String> names = added.getBeliefs().getViewKnowledge().keySet();
+		for(String name : names) {
+			BaseBeliefbase bb = added.getBeliefs().getViewKnowledge().get(name);
+			UserObjectWrapper w = new DefaultUserObjectWrapper(bb, name) {
+				@Override
+				public void onActivated() {
+					handlerBeliefbase((BaseBeliefbase)getUserObject());
+				}
+			};
+			views.add(new DefaultMutableTreeNode(w));
+		}
+		
+		// Create tree nodes for the agent components and their user object wrappers.
 		DefaultMutableTreeNode comps = new DefaultMutableTreeNode("Components");
 		for(AgentComponent ac  : added.getComponents()) {
-			DefaultMutableTreeNode actComp = new DefaultMutableTreeNode(
-				new TreeUserObject(ac.getClass().getSimpleName(), ac));
-			comps.add(actComp);
+			UserObjectWrapper w = new DefaultUserObjectWrapper(ac, ac.getClass().getSimpleName()) {
+				@Override
+				public void onActivated() {
+					handlerAgentComponent((AgentComponent)getUserObject());
+				}
+			};
+			comps.add(new DefaultMutableTreeNode(w));
 		}
 		
 		agNode.add(comps);
@@ -210,10 +196,10 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 		DefaultTreeModel tm = (DefaultTreeModel)tree.getModel();
 		for(int i=0; i<tm.getChildCount(root); ++i) {
 			DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)tm.getChild(root, i);
-			if(! (dmtn.getUserObject() instanceof TreeUserObject)) 
+			if(! (dmtn.getUserObject() instanceof UserObjectWrapper)) 
 				continue;
 			
-			TreeUserObject tuo = (TreeUserObject)dmtn.getUserObject();
+			UserObjectWrapper tuo = (UserObjectWrapper)dmtn.getUserObject();
 			if(! (tuo.getUserObject() instanceof AngeronaEnvironment) )
 				continue;
 			

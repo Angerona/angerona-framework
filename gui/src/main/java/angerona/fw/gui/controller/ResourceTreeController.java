@@ -1,14 +1,10 @@
 package angerona.fw.gui.controller;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Comparator;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 
 import angerona.fw.Angerona;
 import angerona.fw.gui.AngeronaWindow;
@@ -27,21 +23,12 @@ public class ResourceTreeController extends TreeControllerAdapter implements Fra
 	
 	private DefaultTreeModel treeModel;
 	
-	private JTree tree;
-	
 	public ResourceTreeController(JTree tree) {
-		this.tree = tree;
+		super(tree);
 		this.root = new SortedTreeNode("Root", comp);
 		
 		treeModel = new DefaultTreeModel(root);
 		this.tree.setModel(treeModel);
-		
-		MouseListener ml = new MouseAdapter() {
-		     public void mousePressed(MouseEvent e) {
-		         onMouseClick(e);
-		     }
-		};
-		tree.addMouseListener(ml);
 		
 		readConfig();
 		
@@ -89,8 +76,13 @@ public class ResourceTreeController extends TreeControllerAdapter implements Fra
 					actNode = newNode;
 				}
 			}
-			actNode.add(new DefaultMutableTreeNode(
-					new TreeUserObject(str, sc)));
+			actNode.add(new DefaultMutableTreeNode(new DefaultUserObjectWrapper(sc, str) {
+					@Override
+					public void onActivated() {
+						String path = ((SimulationConfiguration)this.getUserObject()).getFilePath();
+						AngeronaWindow.getInstance().loadSimulation(path);
+					}
+				}));
 			
 		}
 		
@@ -100,34 +92,6 @@ public class ResourceTreeController extends TreeControllerAdapter implements Fra
 		
 		expandAll(tree, true);
 		tree.updateUI();
-	}
-	
-	/**
-	 * Helper method: calls correct tree-node handler
-	 * @param selPath path to the selected tree-node.
-	 */
-	@Override
-	protected void selectHandler(TreePath selPath) {
-		Object o = selPath.getLastPathComponent();
-		if(!(o instanceof DefaultMutableTreeNode))
-			return;
-
-		DefaultMutableTreeNode n = (DefaultMutableTreeNode) o;
-		o = n.getUserObject();
-		
-		if(! (o instanceof ResourceTreeController.TreeUserObject))
-			return;
-		
-		o = ((ResourceTreeController.TreeUserObject)o).getUserObject();
-		
-		if(o instanceof SimulationConfiguration) {
-			String path = ((SimulationConfiguration)o).getFilePath();
-			AngeronaWindow.getInstance().loadSimulation(path);
-		}
-	}
-	
-	public JTree getTree() {
-		return tree;
 	}
 
 	@Override
@@ -154,9 +118,9 @@ public class ResourceTreeController extends TreeControllerAdapter implements Fra
 				return 1;
 			}
 			
-			if(o1.getUserObject() instanceof TreeUserObject && o2.getUserObject() instanceof TreeUserObject) {
-				TreeUserObject t1 = (TreeUserObject)o1.getUserObject();
-				TreeUserObject t2 = (TreeUserObject)o2.getUserObject();
+			if(o1.getUserObject() instanceof UserObjectWrapper && o2.getUserObject() instanceof UserObjectWrapper) {
+				UserObjectWrapper t1 = (UserObjectWrapper)o1.getUserObject();
+				UserObjectWrapper t2 = (UserObjectWrapper)o2.getUserObject();
 				return t1.toString().compareTo(t2.toString());
 			}
 			return 0;
