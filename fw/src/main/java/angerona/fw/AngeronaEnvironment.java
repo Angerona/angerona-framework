@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.sf.beenuts.ap.AgentProcess;
 import net.sf.beenuts.apr.APR;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -238,9 +239,14 @@ public class AngeronaEnvironment extends APR {
 		Angerona.getInstance().onNewSimulation(this);
 		
 		// report the initialized data of the agent to the report system.
-		for(String agName : agentMap.keySet()) {
-			Agent agent = getAgentByName(agName);
+		for(AgentInstance ai : config.getAgents()) {
+			Agent agent = getAgentByName(ai.getName());
 			agent.reportCreation();
+			
+			// and init the desires:
+			for(Atom a : ai.getDesires()) {
+				agent.getDesires().add(new Desire(a));
+			}
 		}
 		
 		for(Perception p : config.getPerceptions()) {

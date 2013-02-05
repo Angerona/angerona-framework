@@ -108,7 +108,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 	public void reportReceived(final ReportEntry entry) {
 		Integer tick = new Integer(entry.getSimulationTick());
 		updateTickNode(tick);
-		boolean useAgentNode = updateAgentNode(entry.getScope());
+		boolean useAgentNode = updateAgentNode(entry.getScope().getAgent());
 		
 		// create the user object wrapper for normal report entry tree nodes:
 		UserObjectWrapper wrapper = new DefaultUserObjectWrapper(entry) {
@@ -177,27 +177,20 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		}
 	}
 
-	private boolean updateAgentNode(OperatorVisitor scope) {
-		if(scope instanceof Agent) {
-			Agent ag = (Agent)scope;
-			
-			for(int i=0; i<actTickNode.getChildCount(); ++i) {
-				DefaultMutableTreeNode child = (DefaultMutableTreeNode)actTickNode.getChildAt(i);
-				UserObjectWrapper wrapper = (UserObjectWrapper)child.getUserObject();
-				if(!(wrapper.getUserObject() instanceof Agent))
-					continue;
-				if(wrapper.getUserObject().equals(ag)) {
-					actAgentNode = child;
-					return true;
-				}
+	private boolean updateAgentNode(Agent ag) {
+		for(int i=0; i<actTickNode.getChildCount(); ++i) {
+			DefaultMutableTreeNode child = (DefaultMutableTreeNode)actTickNode.getChildAt(i);
+			UserObjectWrapper wrapper = (UserObjectWrapper)child.getUserObject();
+			if(!(wrapper.getUserObject() instanceof Agent))
+				continue;
+			if(wrapper.getUserObject().equals(ag)) {
+				actAgentNode = child;
+				return true;
 			}
-			actAgentNode = new DefaultMutableTreeNode(new AgentUserObjectWrapper(ag));
-			actTickNode.add(actAgentNode);
-			return true;
 		}
-		
-		LOG.warn("Add a report without scope. The report-system is not capable of link the report to a specific agent.");
-		return false;
+		actAgentNode = new DefaultMutableTreeNode(new AgentUserObjectWrapper(ag));
+		actTickNode.add(actAgentNode);
+		return true;
 	}
 	
 	/**

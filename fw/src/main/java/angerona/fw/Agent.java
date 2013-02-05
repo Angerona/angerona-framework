@@ -270,11 +270,6 @@ public class Agent extends AgentArchitecture
 
 		// init components and default handle desires when no desire component is registered.
 		initComponents(ai.getAdditionalData());
-		if(desires != null) {
-			for(Atom a : ai.getDesires()) {
-				getDesires().add(new Desire(a));
-			}
-		}
 	}
 
 	/**

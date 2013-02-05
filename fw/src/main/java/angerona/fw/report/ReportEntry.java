@@ -3,6 +3,7 @@ package angerona.fw.report;
 import java.util.Date;
 import java.util.Stack;
 
+import angerona.fw.Agent;
 import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.internal.Entity;
@@ -31,7 +32,7 @@ public class ReportEntry implements Cloneable {
 	private Entity attachment;
 
 	/** the scope in which the entry is generated (agent or belief base). */
-	private OperatorVisitor scope;
+	private Scope scope;
 	
 	/** reference to the poster of the report (an operator, a belief base or an agent) */
 	private ReportPoster poster;
@@ -61,7 +62,7 @@ public class ReportEntry implements Cloneable {
 		this.message = message;
 		this.attachment = attachment;
 		this.poster = poster;
-		this.scope = scope;
+		this.scope = new Scope(scope);
 		this.simulation = simulation;
 		this.simulationTick = simulation.getSimulationTick();
 		this.realTime = new Date();
@@ -71,7 +72,7 @@ public class ReportEntry implements Cloneable {
 		}
 	}
 
-	public OperatorVisitor getScope() {
+	public Scope getScope() {
 		return scope;
 	}
 	
@@ -147,5 +148,28 @@ public class ReportEntry implements Cloneable {
 			}
 		}
 		return false;
+	}
+	
+	public class Scope {
+		private OperatorVisitor visitor;
+		
+		private Agent agent;
+		
+		public Scope(OperatorVisitor visitor) {
+			this.visitor = visitor;
+			if(visitor instanceof Agent) {
+				agent = (Agent)visitor;
+			} else if(visitor instanceof AgentComponent) {
+				agent = ((AgentComponent)visitor).getAgent();
+			}
+		}
+		
+		public OperatorVisitor getScope() {
+			return visitor;
+		}
+		
+		public Agent getAgent() {
+			return agent;
+		}
 	}
 }
