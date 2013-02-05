@@ -1,20 +1,24 @@
 package angerona.fw.gui.view;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import angerona.fw.PlanComponent;
+import angerona.fw.Subgoal;
 import angerona.fw.internal.Entity;
 
 public class PlanView extends ListViewColored<PlanComponent> {
 	
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
+		List<String> reval = new LinkedList<>();
 		if(obj instanceof PlanComponent) {
-			//MasterPlan p = (MasterPlan)obj;
-			// TODO, as tree view
-			return null;
+			PlanComponent p = (PlanComponent)obj;
+			for(Subgoal sg : p.getPlans()) {
+				reval.add(sg.toString());
+			}
 		}
-		return null;
+		return reval;
 	}
 
 	@Override

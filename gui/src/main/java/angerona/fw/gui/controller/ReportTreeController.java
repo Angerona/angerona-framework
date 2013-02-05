@@ -143,9 +143,10 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 					View view = wnd.getBaseViewObservingEntity(at);
 					if(view == null) {
 						view = wnd.createViewForEntityComponent(at);
-						wnd.openView(view, "from Report(TODO)");
 					}
-					if(view instanceof NavigationUser){
+					wnd.openView(view, "from Report(TODO)");
+					
+					if(view != null && view instanceof NavigationUser){
 						NavigationUser lvc = (NavigationUser)view;
 						lvc.setCurrentEntry(entry);
 					}
