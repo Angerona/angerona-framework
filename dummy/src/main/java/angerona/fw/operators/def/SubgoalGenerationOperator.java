@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Agent;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.Desire;
 import angerona.fw.Subgoal;
 import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
@@ -139,11 +140,41 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	protected Boolean answerQuery(Desire des, PlanParameter pp, Agent ag) {
 		Subgoal answer = new Subgoal(ag, des);
 		Query q = (Query) des.getPerception();
-		answer.newStack(new Answer(ag, q.getSenderId(), 
-				q.getQuestion(), AnswerValue.AV_TRUE));
 		
-		answer.newStack(new Answer(ag, q.getSenderId(), 
-				q.getQuestion(), AnswerValue.AV_FALSE));
+		BaseBeliefbase bb = ag.getBeliefs().getWorldKnowledge();
+		AngeronaAnswer aa = bb.reason(q.getQuestion());
+		
+		if(aa.getAnswerValue() == AnswerValue.AV_TRUE ||
+				aa.getAnswerValue() == AnswerValue.AV_FALSE) {
+			// the default behavior on an query is to answer the query
+			// truthful. But also an alternative plan is generated which gives
+			// the opposite answer (a lie) which can be used if a secret is
+			// not safe by using the truthful answer.
+			AnswerValue real = aa.getAnswerValue();
+			AnswerValue invert = AnswerValue.AV_TRUE;
+			if(real == AnswerValue.AV_TRUE) {
+				invert = AnswerValue.AV_FALSE;
+			}
+			
+			answer.newStack(new Answer(ag, q.getSenderId(), 
+					q.getQuestion(), real));
+			
+			answer.newStack(new Answer(ag, q.getSenderId(), 
+					q.getQuestion(), invert));
+			
+		} else {
+			// use the answer value returned by reasoner (unknown or rejected).
+			answer.newStack(new Answer(ag, q.getSenderId(), 
+					q.getQuestion(), aa.getAnswerValue()));
+			
+			// generate alternative plans if a secret is not safe with the
+			// real answer (lie by answering the query with true or false).
+			answer.newStack(new Answer(ag, q.getSenderId(), 
+					q.getQuestion(), AnswerValue.AV_TRUE));
+			
+			answer.newStack(new Answer(ag, q.getSenderId(), 
+					q.getQuestion(), AnswerValue.AV_FALSE));
+		}
 		
 		ag.getPlanComponent().addPlan(answer);
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
