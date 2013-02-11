@@ -1,5 +1,1 @@
-world {
-	argued(john).
-} view->Coroner {
-	
-}
+argued(john).

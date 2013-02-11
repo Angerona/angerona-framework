@@ -1,4 +1,1 @@
-world {
-	attend_scm || has_time
-} view->Employee {
-}
+attend_scm || has_time

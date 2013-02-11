@@ -1,8 +1,1 @@
-world {
 penguin
-} view->Biologist {
-(fly | bird)
-(bird | penguin)
-(-fly | penguin)
-(wings | bird)
-}

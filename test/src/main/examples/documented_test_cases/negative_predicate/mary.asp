@@ -1,8 +1,3 @@
-world {
-	-said(youOwe).
-	said(youLied).
-	said(husbandWifeScandal).
-} 
-view->Coroner {
-	
-}
+-said(youOwe).
+said(youLied).
+said(husbandWifeScandal).

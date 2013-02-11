@@ -1,4 +1,1 @@
-world {
-	attend_scm
-} view->Boss {
-}
+attend_scm

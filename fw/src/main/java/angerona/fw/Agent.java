@@ -3,10 +3,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -38,7 +37,6 @@ import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorVisitor;
-import angerona.fw.parser.BeliefbaseSetParser;
 import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
@@ -47,7 +45,9 @@ import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
+import angerona.fw.serialize.BeliefbaseConfig;
 import angerona.fw.serialize.OperationSetConfig;
+import angerona.fw.serialize.SimulationConfiguration;
 
 /**
  * Implementation of an agent in the Angerona Framework.
@@ -175,11 +175,10 @@ public class Agent extends AgentArchitecture
 	 * @param ai	The configuration of the agent
 	 * @throws AgentInstantiationException
 	 */
-	public void create(AgentInstance ai) throws AgentInstantiationException {
+	public void create(AgentInstance ai, SimulationConfiguration config) 
+			throws AgentInstantiationException {
 		this.id = new Long(IdGenerator.generate(this));
 		context = new Context();
-		// local variable used to save the output of exceptions...
-		String errorOutput = null;
 		
 		capabilities.addAll(ai.getCapabilities());
 		
@@ -187,80 +186,16 @@ public class Agent extends AgentArchitecture
 		asmlCylce = ai.getConfig().getCycleScript();
 		for(OperationSetConfig osc : ai.getConfig().getOperations()) {
 			if(!operators.addOperationSet(osc)) {
-				errorOutput = "Cannot create operation-set: '" + osc.getOperationType() + "'";
+				throw new AgentInstantiationException("Cannot create operation-set: '" + 
+						osc.getOperationType() + "'");
 			}
 		}
 		
 		createAgentComponents(ai);
+		createBeliefbases(ai, config);
+		parseBeliefbases(ai);
 		
-		PluginInstantiator pi = PluginInstantiator.getInstance();
-		BaseBeliefbase world = null;
-		Map<String, BaseBeliefbase> views = null;
-		BeliefbaseSetParser bbsp = null;
-		try {
-			world = pi.createBeliefbase(ai.getBeliefbaseConfig());
-			// TODO: 	it does not only depend on the world belief base, 
-			// 			find a better solution to get the file-suffix. Then move these bunch of 
-			//			code before the creation of the belief bases (lesser code needed then).
-			String fn = getEnvironment().getDirectory() + "/" + 
-					ai.getFileSuffix() + "." + world.getFileEnding();
-			
-			FileInputStream fis = new FileInputStream(new File(fn));
-			bbsp = new BeliefbaseSetParser(fis);
-			bbsp.Input();
-			fis.close();
-			
-			
-			views = new HashMap<String, BaseBeliefbase>();
-			for(String key : bbsp.viewContent.keySet()) {
-				BaseBeliefbase actView = pi.createBeliefbase(ai.getBeliefbaseConfig());
-				views.put(key, actView);	
-			}
-		} catch (InstantiationException e) {
-			errorOutput = "Cannot create agent '" + getName() + "' something went wrong during dynamic instantiation: " + e.getMessage();
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			errorOutput = "Cannot create agent '" + getName() + "' something went wrong during dynamic instantiation: " + e.getMessage();
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			errorOutput = "Cannot create agent '" + getName() + "' referenced file not found: " + e.getMessage();
-			e.printStackTrace();
-		} catch (ParseException e) {
-			errorOutput = "Cannot create agent '" + getName() + "' parsing error occured: " + e.getMessage();
-			e.printStackTrace();
-		} catch (IOException e) {
-			errorOutput = "Cannot create agent '" + getName() + "' IO-error occured: " + e.getMessage();
-			e.printStackTrace();
-		} finally {
-			if(errorOutput != null) {
-				throw new AgentInstantiationException(errorOutput);
-			}
-		}
-		
-		// parse the content of the belief-base file.
-		try {
-			StringReader sr = new StringReader(bbsp.worldContent);
-			world.parse(new BufferedReader(sr));
-			for(String key : views.keySet()) {
-				BaseBeliefbase actView = views.get(key);
-				sr = new StringReader(bbsp.viewContent.get(key));
-				actView.parse(new BufferedReader(sr));
-			}
-		} catch (IOException e) {
-			errorOutput = "Cannot create agent '" + getName() + "' IO-error occured: " + e.getMessage();
-			e.printStackTrace();
-		} catch (ParseException e) {
-			errorOutput = "Cannot create agent '" + getName() + "' parsing error occured: " + e.getMessage();
-			e.printStackTrace();
-		} finally {
-			if(errorOutput != null) {
-				throw new AgentInstantiationException(errorOutput);
-			}
-		}
-	
-		
-		// set beliefs and auto add desire component if neccessary.
-		setBeliefs(world, views);
+		// add desire component if necessary.
 		Desires desires = getDesires();
 		if(desires == null && ai.getDesires().size() > 0) {
 			LOG.warn("No desire-component added to agent '{}' but desires, auto-add the desire component.", getName());
@@ -268,8 +203,106 @@ public class Agent extends AgentArchitecture
 			addComponent(desires);
 		}
 
-		// init components and default handle desires when no desire component is registered.
+		// init the custom components
 		initComponents(ai.getAdditionalData());
+	}
+
+	/**
+	 * Helper method: parses the belief base content for all the belief bases of the agent. That
+	 * means one world belief base and one view belief base for every other agent is parsed.
+	 * @param ai
+	 * @throws AgentInstantiationException
+	 */
+	private void parseBeliefbases(AgentInstance ai)
+			throws AgentInstantiationException {
+		String errorOutput = null;
+		String dir = getEnvironment().getDirectory() + "/";
+		
+		try {
+			// parse the content of the world belief base:
+			BaseBeliefbase world = getBeliefs().getWorldKnowledge();
+			File worldBBFile = new File(dir + ai.getName() + "." + world.getFileEnding());
+			if(worldBBFile.exists()) {
+				world.parse(new BufferedReader(new FileReader(worldBBFile)));
+			} else {
+				LOG.warn("No world belief base file for '{}'.", ai.getName());
+			}
+			// parse the content of every view belief base:
+			Map<String, BaseBeliefbase> views = getBeliefs().getViewKnowledge();
+			for(String key : views.keySet()) {
+				BaseBeliefbase actView = views.get(key);
+				File viewFile = new File(dir + ai.getName() + "_" + key + "." + actView.getFileEnding());
+				if(viewFile.exists()) {
+					actView.parse(new BufferedReader(new FileReader(viewFile)));
+				} else {
+					LOG.warn("No belief base file for view of '{}'->'{}'.",ai.getName(), key);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' file not found occured: " + e.getMessage();
+			e.printStackTrace();
+		} catch (IOException ex) {
+			errorOutput = "Cannot create agent '" + getName() + "' IO-Error: " + ex.getMessage();
+			ex.printStackTrace();
+		} catch (ParseException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' parsing error occured: " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if(errorOutput != null) {
+				throw new AgentInstantiationException(errorOutput);
+			}
+		}
+	}
+	
+	/**
+	 * Helper method: Creates (instantiates) the belief bases of the agent. The belief base config
+	 * of the world belief base is given in the agents configuration. The agents configuration might
+	 * also contain special belief base configs for the views of the agent onto other agents. If such
+	 * a config is not given for one agent, then the view on this agent uses the same belief base config
+	 * which is used for the world belief base of the viewed agent.
+	 * @param ai
+	 * @param config
+	 * @throws AgentInstantiationException
+	 */
+	private void createBeliefbases(AgentInstance ai, SimulationConfiguration config) 
+			throws AgentInstantiationException {
+		// local variable used to save the output of exceptions...
+		String errorOutput = null;		
+		PluginInstantiator pi = PluginInstantiator.getInstance();
+		BaseBeliefbase world = null;
+		Map<String, BaseBeliefbase> views = null;
+		try {
+			world = pi.createBeliefbase(ai.getBeliefbaseConfig());
+			views = new HashMap<String, BaseBeliefbase>();
+			
+			for(AgentInstance otherInstance : config.getAgents()) {
+				// For all agents but myself:
+				if(otherInstance == ai)
+					continue;
+				
+				// create a view belief base, first try to get the type of the belief base from
+				// the agent-instance part of the agent's configuration who is owner of the view.
+				BeliefbaseConfig bbc = ai.getBeliefBaseConfig(otherInstance.getName());
+				if(bbc == null) {
+					// if this is not available use the same type as the world belief base of the
+					// viewed agent.
+					bbc = otherInstance.getBeliefbaseConfig();
+				}
+				BaseBeliefbase actView = pi.createBeliefbase(bbc);
+				views.put(otherInstance.getName(), actView);	
+			}
+			setBeliefs(world, views);
+		} catch (InstantiationException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' something went wrong during dynamic instantiation: " + e.getMessage();
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			errorOutput = "Cannot create agent '" + getName() + "' something went wrong during dynamic instantiation: " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if(errorOutput != null) {
+				throw new AgentInstantiationException(errorOutput);
+			}
+		}
 	}
 
 	/**
@@ -501,8 +534,6 @@ public class Agent extends AgentArchitecture
 		LOG.info("Action performed: " + act.toString());
 		report("Action: '"+act.toString()+"' performed.");
 		Angerona.getInstance().onActionPerformed(this, act);
-		//Record this action
-		//this.lastAction = act;
 		actionsHistory.add(act);
 	}
 	

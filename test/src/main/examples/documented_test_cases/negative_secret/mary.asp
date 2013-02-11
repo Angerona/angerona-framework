@@ -1,5 +1,2 @@
-world {
-	-alfred_argued.
-} view->Coroner {
-	
-}
+-alfred_argued.
+

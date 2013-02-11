@@ -186,56 +186,18 @@ public class AngeronaEnvironment extends APR {
 	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
 		LOG.info("Starting simulation: " + config.getName());
 		this.simDirectory = simulationDirectory;
+		// inform listener of start of simulation creation:
+		Angerona.getInstance().onCreateSimulation(this);
+		
 		if(!createBehavior(config))
 			return false;
 		
-		Angerona.getInstance().onCreateSimulation(this);
-		String errorOutput = "";
-		try {
-			for(AgentInstance ai : config.getAgents()) {
-				Agent highLevelAg = new Agent(ai.getName());
-				addAgent(highLevelAg.getAgentProcess());		
-				LOG.info("Start the creation of Agent '{}'.", ai.getName());
-				highLevelAg.create(ai);
-				
-				Beliefs b = highLevelAg.getBeliefs();
-				BaseBeliefbase world = b.getWorldKnowledge();
-				entities.put(highLevelAg.getGUID(), highLevelAg);
-				entities.put(world.getGUID(), world);
-				for(BaseBeliefbase actView : b.getViewKnowledge().values()) {
-					entities.put(actView.getGUID(), actView);
-				}
-				
-				for(AgentComponent comp : highLevelAg.getComponents()) {
-					entities.put(comp.getGUID(), comp);
-				}
-				LOG.info("Agent '{}' fully registered.", highLevelAg.getName());
-			}
-		} catch (AgentIdException e) {
-			errorOutput = "Cannot init simulation, something went wrong during agent registration: " + e.getMessage();
-			e.printStackTrace();
-		} catch (AgentInstantiationException e) {
-			errorOutput = "Cannot init simulation, something went wrong during agent instatiation: " + e.getMessage();
-			e.printStackTrace();
-		}
-
-		for(String agentName : getAgentNames()) {
-			Agent ag = getAgentByName(agentName);
-			for(String viewName : ag.getBeliefs().getViewKnowledge().keySet()) {
-				if(!getAgentNames().contains(viewName)) {
-					errorOutput = "Cannot init simulation: The agent '"+agentName+"' has a view on agent '"+viewName+"' but this agent does not exists.";
-					break;
-				}
-			}
-		}
-		
-		if(!errorOutput.isEmpty()) {
-			LOG.error(errorOutput);
-			this.cleanupSimulation();
-			Angerona.getInstance().onError("Simulation Initialization", errorOutput);
+		if(!registerAgents(config))
 			return false;
-		}
 		
+		if(!createAgents(config))
+			return false;
+				
 		Angerona.getInstance().onNewSimulation(this);
 		
 		// report the initialized data of the agent to the report system.
@@ -243,12 +205,14 @@ public class AngeronaEnvironment extends APR {
 			Agent agent = getAgentByName(ai.getName());
 			agent.reportCreation();
 			
-			// and init the desires:
+			// and initialize the desires:
 			for(Atom a : ai.getDesires()) {
 				agent.getDesires().add(new Desire(a));
 			}
 		}
 		
+		// post the initial perceptions defined in the simulation configuration
+		// file to the environment.
 		for(Perception p : config.getPerceptions()) {
 			if(p instanceof Action) {
 				this.sendAction(p.getReceiverId(), (Action)p);
@@ -256,6 +220,82 @@ public class AngeronaEnvironment extends APR {
 		}
 		
 		return ready = true;
+	}
+
+	/**
+	 * Create the agents defined in the simulation configuration. That means it
+	 * instantiates the different agent components and registers those as entitys
+	 * to the entity-system. 
+	 * @remark 	The method assumes that all the agent instances in the config are
+	 * 			already registered. That means the java objects exists in the
+	 * 			environment, although they are not fully initalized yet.
+	 * @param config
+	 * @return 	True if the creation (instatiation) of the agents is successful or false
+	 * 			if an error occurred during the creation.
+	 */
+	private boolean createAgents(SimulationConfiguration config) {
+		for(AgentInstance ai : config.getAgents()) {
+			try {
+				// First instantiate the agent components:
+				Agent agent = getAgentByName(ai.getName());		
+				LOG.info("Start the creation of Agent '{}'.", ai.getName());
+				agent.create(ai, config);
+				
+				// Second: Register the different agent components to the entity system:
+				Beliefs b = agent.getBeliefs();
+				BaseBeliefbase world = b.getWorldKnowledge();
+				entities.put(agent.getGUID(), agent);
+				entities.put(world.getGUID(), world);
+				for(BaseBeliefbase actView : b.getViewKnowledge().values()) {
+					entities.put(actView.getGUID(), actView);
+				}
+				
+				for(AgentComponent comp : agent.getComponents()) {
+					entities.put(comp.getGUID(), comp);
+				}
+				
+				LOG.info("Agent '{}' successfully created and registered.", agent.getName());
+			} catch (AgentInstantiationException e) {
+				errorDelegation("Cannot init simulation, something went wrong during agent instatiation: " + 
+						e.getMessage());
+				e.printStackTrace();
+				return false;
+			}
+		} 
+		return true;
+	}
+
+	/***
+	 * Helper method: Registers all the agents in the simulation configuration as java
+	 * objects to the environment. The agents are not fully initalized after the method
+	 * returned successfully.
+	 * @param config
+	 * @return	true if the registration process is successful or false if an error occurred 
+	 * 			during initialization.
+	 */
+	private boolean registerAgents(SimulationConfiguration config) {
+		try {
+			for(AgentInstance ai : config.getAgents()) {
+				Agent agent = new Agent(ai.getName());
+				addAgent(agent.getAgentProcess());
+			}
+		} catch (AgentIdException e) {
+			e.printStackTrace();
+			errorDelegation("Cannot init simulation, something went wrong during agent registration: " + e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	/** 
+	 * Helper method: cleans the simulation up and delegates the error message to Delegates an error message to 
+	 * two sources: The logging output and all interested Angerona Error Listeners.
+	 * @param errorOutput	String containing the error message.
+	 */
+	protected void errorDelegation(String errorOutput) {
+		this.cleanupSimulation();
+		LOG.error(errorOutput);
+		Angerona.getInstance().onError("Simulation Initialization", errorOutput);
 	}
 
 	/**
