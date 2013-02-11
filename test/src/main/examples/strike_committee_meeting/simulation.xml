@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Strike Committee Meeting (Default)</name>
+	<name>Strike Committee Meeting (Simple)</name>
 	<category>scm</category>
 	<behavior>angerona.fw.def.DefaultBehavior</behavior>
 	

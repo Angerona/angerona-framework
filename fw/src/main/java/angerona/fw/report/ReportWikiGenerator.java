@@ -38,7 +38,7 @@ public class ReportWikiGenerator extends BaseReportOutputGenerator<String> {
 	@Override
 	protected void handleEntry(ReportEntry entry) {
 		if(simulationForwared) {
-			output += "\n\n== Tick: " + String.valueOf(tick) + " - " + actAgent.getName() + "==";
+			output += "\n\n=== Tick: " + String.valueOf(tick) + " - " + actAgent.getName() + " ===";
 			output += "\n"+tableHead;
 			simulationForwared = false;
 		}
