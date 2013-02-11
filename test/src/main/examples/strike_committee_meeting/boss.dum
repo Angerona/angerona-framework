@@ -1,7 +1,4 @@
 world {
-	type(attends())
-	type(has_time())
-	attends() || has_time()
+	attend_scm || has_time
 } view->Employee {
 }
-	

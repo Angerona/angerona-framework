@@ -6,12 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.Formula;
-import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
-import net.sf.tweety.logics.firstorderlogic.parser.FolParser;
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.parser.ParseException;
 
@@ -25,9 +23,6 @@ public class DummyBeliefbase extends BaseBeliefbase {
 	/** the beliefset of the beliefbase */
 	FolBeliefSet fbs = new FolBeliefSet();
 	
-	/** the signature of the beliefbase */
-	private FolSignature signature;
-	
 	/** Default Ctor: Needed for dynamic instantiation */
 	public DummyBeliefbase() {	
 	}
@@ -39,13 +34,15 @@ public class DummyBeliefbase extends BaseBeliefbase {
 	public DummyBeliefbase(DummyBeliefbase other) {
 		super(other);
 		fbs.addAll(other.fbs);
-		if(other.signature != null)
-			this.signature = new FolSignature(other.signature.getSymbolSet());
 	}
 	
 	@Override
 	public Signature getSignature() {
-		return signature;
+		return fbs.getSignature();
+	}
+	
+	public FolBeliefSet getBeliefSet() {
+		return fbs;
 	}
 
 	@Override
@@ -66,11 +63,11 @@ public class DummyBeliefbase extends BaseBeliefbase {
 	// Belief base is a simple FOL Beliefbase.
 	@Override
 	protected void parseInt(BufferedReader br) throws ParseException, IOException {
-		FolParser fp = new FolParser();
-		try{
-			fbs = (FolBeliefSet)fp.parseBeliefBase(br);
-			signature = fp.getSignature();
-		} catch (ParserException ex) {
+		FolParserB parser = new FolParserB(br);
+		try {
+			fbs = parser.KB();
+		} catch (net.sf.tweety.logics.firstorderlogic.parser.ParseException ex) {
+			ex.printStackTrace();
 			throw new ParseException(ex.getMessage());
 		}
 	}

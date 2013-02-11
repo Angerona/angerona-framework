@@ -3,6 +3,7 @@ package angerona.fw.logic.dummy;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.AngeronaAnswer;
@@ -34,6 +35,9 @@ public class DummyReasoner extends BaseReasoner {
 
 	@Override
 	protected Set<FolFormula> inferInt(ReasonerParameter params) {
-		return new HashSet<FolFormula>();
+		FolBeliefSet fbs = ((DummyBeliefbase)params.getBeliefBase()).getBeliefSet();
+		Set<FolFormula> reval = new HashSet<>();
+		reval.addAll(fbs);
+		return reval;
 	}
 }

@@ -162,7 +162,7 @@ public class SecrecyKnowledge extends BaseAgentComponent implements
 			FolSignature sig = getAgent().getBeliefs().getSignature();
 			for (Secret s : secrets) {
 				if (!sig.isRepresentable(s.getInformation())) {
-					LOG.info(
+					LOG.warn(
 							"Secret '{}' is not representable by the agents '{}' beliefs signature yet.",
 							s, getAgent().getName());
 				}
