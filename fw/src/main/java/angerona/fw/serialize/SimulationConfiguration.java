@@ -2,12 +2,16 @@ package angerona.fw.serialize;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.core.PersistenceException;
+import org.simpleframework.xml.core.Validate;
 
 import angerona.fw.Perception;
 
@@ -88,5 +92,29 @@ public class SimulationConfiguration {
 	 */
 	public static SimulationConfiguration loadXml(File source) {
 		return SerializeHelper.loadXml(SimulationConfiguration.class, source);
+	}
+	
+	@Validate
+	public void validate() throws PersistenceException {
+		
+		// test for duplicate agent names:
+		Set<String> agentNames = new HashSet<>();
+		for(AgentInstance ai: agents) {
+			if(agentNames.contains(ai.getName())) {
+				throw new PersistenceException("Duplicate unique agent name: '%s'", ai.getName());
+			}
+			agentNames.add(ai.getName());
+		}
+
+		// test if agent mapping view-bliefbase-config are functional
+		for(AgentInstance ai : agents) {
+			for(AgentInstance.ViewBeliefbaseConfig vbbc : ai.viewBeliefbaseConfigs) {
+				if(!agentNames.contains(vbbc.agentName)) {
+					throw new PersistenceException("The view-beliefbase-config of agent '%s'" + 
+							" cannot be mapped cause an agent with name '%s' does not exists",
+							ai.getName(), vbbc.agentName);
+				}
+			}
+		}
 	}
 }

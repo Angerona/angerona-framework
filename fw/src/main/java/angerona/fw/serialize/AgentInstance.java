@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
@@ -25,7 +26,14 @@ import org.simpleframework.xml.Root;
  * @author Tim Janus
  */
 @Root(name="agent-instance")
-public class AgentInstance {		
+public class AgentInstance {	
+	
+	@Root(name="view-beliefbase-config")
+	protected static class ViewBeliefbaseConfig extends BeliefbaseConfigImport{
+		@Attribute 
+		public String agentName;
+	}
+	
 	/** the unique name of the agent */
 	@Element(name="name")
 	protected String name;
@@ -37,6 +45,9 @@ public class AgentInstance {
 	/** data structure containing information about the belief base type and operators */
 	@Element(name="beliefbase-config", type=BeliefbaseConfigImport.class)
 	protected BeliefbaseConfig beliefbaseConfig;
+	
+	@ElementList(entry="view-beliefbase-config", type=ViewBeliefbaseConfig.class, inline=true, required=false)
+	protected List<ViewBeliefbaseConfig> viewBeliefbaseConfigs = new LinkedList<>();
 
 	/** the file suffix identifying the belief base */
 	@Element(name="beliefbase-name")
@@ -62,6 +73,19 @@ public class AgentInstance {
 		return config;
 	}
 	
+	public BeliefbaseConfig getBeliefbaseConfig() {
+		return beliefbaseConfig;
+	}
+	
+	public BeliefbaseConfig getBeliefBaseConfig(String agName) {
+		for(ViewBeliefbaseConfig vbbc : viewBeliefbaseConfigs) {
+			if(vbbc.agentName.equals(agName)) {
+				return vbbc;
+			}
+		}
+		return null;
+	}
+	
 	public List<Atom> getDesires() {
 		return Collections.unmodifiableList(desires);
 	}
@@ -72,10 +96,6 @@ public class AgentInstance {
 	
 	public Map<String, String> getAdditionalData() {
 		return Collections.unmodifiableMap(additionalData);
-	}
-
-	public BeliefbaseConfig getBeliefbaseConfig() {
-		return beliefbaseConfig;
 	}
 
 	public String getFileSuffix() {

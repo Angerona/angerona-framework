@@ -5,6 +5,9 @@ import java.util.LinkedList;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+
+import org.simpleframework.xml.core.PersistenceException;
+
 import angerona.fw.Agent;
 import angerona.fw.comm.Query;
 
@@ -25,6 +28,11 @@ public class FileFormatExample {
 		Agent sender = new Agent("Boss");
 		conf.perceptions.add(new Query(sender, "Employee", new Atom(new Predicate("attend_scm"))));
 		
+		try {
+			conf.validate();
+		} catch (PersistenceException e) {
+			System.out.println("Validation Error: " + e.getMessage());
+		}
 		// Output example simulation configuration file:
 		System.out.println("Simulation - Configuration - An example XML:");
 		SerializeHelper.outputXml(conf, System.out);
@@ -72,6 +80,10 @@ public class FileFormatExample {
 		test.filePrefix = "asp";
 		test.config = getAgentConfig();
 		test.beliefbaseConfig = getBeliefbaseConfig();
+		AgentInstance.ViewBeliefbaseConfig vbbc = new AgentInstance.ViewBeliefbaseConfig();
+		vbbc.source = new File("config/beliefbases/asp_beliefbase.xml");
+		vbbc.agentName = "Bob";
+		test.viewBeliefbaseConfigs.add(vbbc);
 		test.desires.add(new Atom(new Predicate("attend_scm")));
 		test.capabilities.add("fully.qualified.class.name");
 		
