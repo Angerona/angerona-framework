@@ -73,7 +73,7 @@ public class FileFormatExample {
 		test.config = getAgentConfig();
 		test.beliefbaseConfig = getBeliefbaseConfig();
 		test.desires.add(new Atom(new Predicate("attend_scm")));
-		test.skills.add("fully.qualified.class.name");
+		test.capabilities.add("fully.qualified.class.name");
 		
 		return test;
 	}

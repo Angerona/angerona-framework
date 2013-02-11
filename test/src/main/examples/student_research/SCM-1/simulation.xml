@@ -10,8 +10,8 @@
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
-        <skill>QueryAnswer</skill>
-		<skill>Inform</skill>
+        <capability>QueryAnswer</capability>
+		<capability>Inform</capability>
 		
         <desire>not_on_blacklist</desire>
         <desire>attend_scm</desire>
@@ -37,7 +37,7 @@
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
-      	<skill>Query</skill>
+      	<capability>Query</capability>
         
         <data key="KnowHow">
 			not_sure(excused(employee)), s_Query(a_employee, attend_scm(employee)), 

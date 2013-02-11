@@ -6,7 +6,7 @@ import angerona.fw.logic.ViolatesResult;
 
 /**
  * A PlanElement is the data structure storing a step in a plan. It decouples the behavior of the plan
- * from its data. The intention member contains the behavior either as atomic Skill or complex Subgoal.
+ * from its data. The intention member contains the behavior either as an action or a complex subgoal (plan).
  * 
  * For an atomic action the PlanElement encapsulates the execution. It provides the prepare method which sets the correct
  * data dependencies before running the action. It sets the used beliefs and registers the ActionProcessor which is
@@ -90,8 +90,7 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	}
 	
 	/**
-	 * Copy-Ctor: Copies all data of the plan element, if the intention is a Skill its saved by reference otherwise
-	 * it will be copied.
+	 * Copy-Ctor: Copies all data of the plan element.
 	 * @param other	Reference to the PlanElement which is source of the copy.
 	 */
 	public PlanElement(PlanElement other) {
@@ -117,9 +116,9 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	
 	/**
 	 * Prepares the intention for execution. Therefore the intention has to be an Action.
-	 * The parameters and the executionData object will be given to the skill to prepare it.
+	 * The parameters and the executionData object will be given to the action to prepare it.
 	 * @param actionProcessor	The processor used to process the Action
-	 * @param usedBeliefs		The Beliefs used to perform the Skill.
+	 * @param usedBeliefs		The Beliefs used during performing of the action.
 	 * @return	true if the preparation was successful, false if the intention is no Action.
 	 */
 	public boolean prepare(ActionProcessor actionProcessor, Beliefs usedBeliefs) {
@@ -164,7 +163,7 @@ public class PlanElement implements AngeronaAtom, Runnable {
 		this.violates = violates;
 	}
 	
-	/** @return true if the intention of this PlanElement is a Skill otherwise false */
+	/** @return true if the intention of this PlanElement is an action otherwise false */
 	public boolean isAtomic() {
 		return this.intention.isAtomic();
 	}

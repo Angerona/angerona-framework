@@ -3,8 +3,8 @@ package angerona.fw;
 import angerona.fw.listener.SubgoalListener;
 
 /**
- * An intention is either atomic, then it is called Skill or it is complex then
- * it is called Plan.
+ * An intention is either atomic, then it is called action or it is complex then
+ * it is called plan.
  * 
  * To support the Angerona violates structure an intention can save if it is a
  * real-run or a mental-run of the intention (the plan).
@@ -51,7 +51,7 @@ public abstract class Intention implements SubgoalListener {
 	}
 
 	/**
-	 * Is called when an sub goal is finished by an agent. For example a Skill
+	 * Is called when an sub goal is finished by an agent. For example n action
 	 * was performed or a complex plan was finished. The given subgoal must be
 	 * removed from the subgoals by the implementation and is a child of the
 	 * called object.

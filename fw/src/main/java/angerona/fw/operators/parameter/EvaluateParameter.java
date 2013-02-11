@@ -22,7 +22,7 @@ public class EvaluateParameter extends OperatorPluginParameter {
 	 * For planning in the future use the other ctor.
 	 * @param agent		Reference to the agent who wants to check for violation.
 	 * @param intent	The intention of the agent which needs a check. This might be
-	 * 					a skill, an action or a complete plan.
+	 * 					an action or a complete plan.
 	 */
 	public EvaluateParameter(Agent agent, ReportPoster operator, AngeronaAtom intent) {
 		this(agent, operator, (Beliefs)agent.getBeliefs(), intent);

@@ -11,7 +11,7 @@
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
          
-       	<skill>QueryAnswer</skill>
+       	<capability>QueryAnswer</capability>
 		<!--
 		<data key="Confidential">	(Coroner, __DEFAULT__, !john_argued)  
 		</data>
@@ -26,7 +26,7 @@
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
       	
-   		<skill>Query</skill>
+   		<capability>Query</capability>
 			
 	 	<desire>q_Mary(argued(john),1)</desire>
 	</agent-instance>

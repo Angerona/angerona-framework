@@ -13,8 +13,8 @@
         <desire>v_Boss(ask_for_excuse)</desire>
         <desire>attend_scm</desire>
         
-        <skill>Inform</skill>
-        <skill>Answer</skill>
+        <capability>Inform</capability>
+        <capability>Answer</capability>
         
         <data key="Confidential">
             (Boss, angerona.fw.logic.asp.AspReasoner{d=1}, attend_scm)
@@ -29,7 +29,7 @@
         <agent-config source="config/agents/default_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
       	
-      	<skill>Query</skill>
+      	<capability>Query</capability>
       	
 	</agent-instance>
 </simulation-configuration>

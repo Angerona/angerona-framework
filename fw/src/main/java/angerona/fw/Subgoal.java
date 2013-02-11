@@ -56,10 +56,10 @@ public class Subgoal extends Intention implements Cloneable {
 	}
 	
 	/**
-	 * creates a new stack for the given intention. If the intention is a Skill the context of running the skill
+	 * creates a new stack for the given intention. If the intention is an action the context for performing the action
 	 * must be given as second parameter. If the intention is complex (a plan) the second parameter must be null.
 	 * @param intention	reference to the intention which will be on top of the newly create stack
-	 * @param context	the context used when running the given intention (for running the skill), this might
+	 * @param context	the context used when running the given intention (for performing the action), this might
 	 * 					be a class which is not of type context. The object has to give the intention a context, 
 	 * 					like the query which the intention wants to answer and so on.
 	 * @return			true

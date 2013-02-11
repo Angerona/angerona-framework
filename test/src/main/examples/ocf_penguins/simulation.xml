@@ -9,7 +9,7 @@
         <agent-config source="config/agents/default_agent.xml" />
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
         
-        <skill>Answer</skill>
+        <capability>Answer</capability>
         
         <data key="Confidential">
             (Biologist, __DEFAULT__, wings)
@@ -25,7 +25,7 @@
       	
       	<desire>q_Student(penguin)</desire>
       	      	
-      	<skill>Query</skill>
+      	<capability>Query</capability>
          
 	</agent-instance>
 </simulation-configuration>

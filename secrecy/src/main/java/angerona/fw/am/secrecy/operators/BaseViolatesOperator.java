@@ -16,12 +16,11 @@ import angerona.fw.util.Pair;
 /**
  * Base class for violates tests. The base class implementation assumes that there only
  * violates operations for: perceptions/actions (Query, Answer), 
- * Skills (which are atomic intentions) and Plans (Subgoals) which are in fact a 
- * collection of Skills and other Subgoals.
+ * actions (which are atomic intentions) and Plans (Subgoals) which are in fact a 
+ * collection of actions and other Subgoals.
  * Nevertheless by overriding processInt the subclass can suport more types for violation test.
  * But normally subclasses only implement their version of:
- * - onAction
- * - onSkill
+ * - onPerception
  * - onPlan
  * 
  * @author Tim Janus
@@ -84,7 +83,7 @@ public abstract class BaseViolatesOperator
 	/**
 	 * Is called if the given agent wants to peform the given action in its mental state.
 	 * Subclasses must implement this method to allow the Violates-Operator to be an
-	 * Action-Processor for working through a plan for example.y
+	 * Action-Processor for working through a plan for example.
 	 */
 	public abstract void performAction(Action action, Agent agent, Beliefs beliefs);
 }

@@ -11,8 +11,8 @@
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
-        <skill>Justification</skill>
-        <skill>Inform</skill>
+        <capability>Justification</capability>
+        <capability>Inform</capability>
 		
         <desire>not_on_blacklist</desire>
         <desire>attend_scm</desire>
@@ -38,8 +38,8 @@
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
-      	<skill>Inform</skill>
-      	<skill>Justify</skill>
+      	<capability>Inform</capability>
+      	<capability>Justify</capability>
         
         <data key="KnowHow">
 			not_sure(excused(employee)), s_Justify(a_employee, excused(employee)),

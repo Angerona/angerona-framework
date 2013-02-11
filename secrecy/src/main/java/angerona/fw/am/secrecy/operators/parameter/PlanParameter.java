@@ -20,7 +20,7 @@ public class PlanParameter extends OperatorPluginParameter {
 	/**
 	 * Ctor: Generation the PlanerParameter data-structure with the following parameters:
 	 * @param actualPlan	the high level plan of the agent
-	 * @param forbidden		list of forbidden actions (forbidden skills)
+	 * @param forbidden		list of forbidden actions.
 	 */
 	public PlanParameter(ReportPoster operator, PlanComponent actualPlan) {
 		super(actualPlan.getAgent(), operator);

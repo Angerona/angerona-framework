@@ -8,7 +8,7 @@
         <agent-config source="config/agents/knowhow_agent.xml" />
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
         	
-        <skill>QueryAnswer</skill>
+        <capability>QueryAnswer</capability>
         
 		<desire>attend_scm</desire>
 		

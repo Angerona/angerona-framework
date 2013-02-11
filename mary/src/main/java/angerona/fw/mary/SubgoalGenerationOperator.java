@@ -139,7 +139,7 @@ public class SubgoalGenerationOperator extends
 			if(atom.getPredicate().getName().startsWith("q_"))
 			{
 				if(!ag.hasCapability("Query")) {
-					LOG.warn("'{}' has no Skill: '{}'.", ag.getName(), "Query");
+					LOG.warn("'{}' has not the capability to perform: '{}'.", ag.getName(), "Query");
 					continue;
 				}
 			
@@ -200,7 +200,7 @@ public class SubgoalGenerationOperator extends
 	protected Boolean answerQuery(Desire des, PlanParameter pp, Agent ag) 
 	{
 		if(!ag.hasCapability("QueryAnswer")) {
-			LOG.warn("Agent '{}' does not have Skill: 'QueryAnswer'", ag.getName());
+			LOG.warn("Agent '{}' does not have the capability to perform: 'QueryAnswer'", ag.getName());
 			return false;
 		}
 		

@@ -93,7 +93,7 @@ public class Agent extends AgentArchitecture
 	/** History of actions performed by the agent */
 	private List<Action> actionsHistory = new LinkedList<Action>();
 	
-	/** a list of skills which are known by the agent */
+	/** a list of capabilities which describe actions the agent can perform*/
 	private List<String> capabilities = new LinkedList<>();
 	
 	private OperatorProvider operators = new OperatorProvider();
@@ -181,7 +181,7 @@ public class Agent extends AgentArchitecture
 		// local variable used to save the output of exceptions...
 		String errorOutput = null;
 		
-		capabilities.addAll(ai.getSkills());
+		capabilities.addAll(ai.getCapabilities());
 		
 		// load cylce script and link supported operators 
 		asmlCylce = ai.getConfig().getCycleScript();
@@ -259,7 +259,7 @@ public class Agent extends AgentArchitecture
 		}
 	
 		
-		// set beliefs and read skills.
+		// set beliefs and auto add desire component if neccessary.
 		setBeliefs(world, views);
 		Desires desires = getDesires();
 		if(desires == null && ai.getDesires().size() > 0) {
@@ -389,65 +389,6 @@ public class Agent extends AgentArchitecture
 		currentPerception = perception == null ? null : (Perception)perception;
 		
 		return asmlCylce.execute(c);
-		
-		/*
-		PlanElement atomic = null;
-		if(!(perception instanceof Perception)) {
-			LOG.error("object must be of type Perception");
-			currentPerception = null;
-		} else {
-			currentPerception = (Perception)perception;
-		}
-		
-		GenericOperatorParameter opParam = new GenericOperatorParameter(this);
-		opParam.setParameter("perception", currentPerception);
-		
-		updateBeliefs(currentPerception);	
-		
-		// Deliberation:
-		//genOptionsOperators.def().process(opParam);
-		operators.getPreferedByType(BaseGenerateOptionsOperator.OPERATION_TYPE)
-			.process(opParam);
-		
-		// Means-end-reasoning:
-		PlanComponent masterPlan = getComponent(PlanComponent.class);
-		if(masterPlan != null) {
-			opParam.setParameter("plan", masterPlan);
-			while(atomic == null) {
-				BaseIntentionUpdateOperator intUpd = (BaseIntentionUpdateOperator)operators.getPreferedByType(BaseIntentionUpdateOperator.OPERATION_NAME);
-				atomic = (PlanElement)intUpd.process(opParam);
-				//	new IntentionUpdateParameter(masterPlan, forbidden));
-				
-				if(atomic == null) {
-					Boolean reval = (Boolean)operators.getPreferedByType(BaseSubgoalGenerationOperator.OPERATION_NAME)
-							.process(opParam);
-					if(!reval)
-							//new SubgoalGenerationParameter(masterPlan, forbidden)))
-						break;
-				} else {
-					if(!(atomic.getIntention().isAtomic())) {
-						LOG.error("intentionUpdateOperator '" + intUpd.getPosterName() + "' returns not atomic intentions, this is a failure.");
-						atomic = null;
-					}
-				}
-			}
-		} else {
-			LOG.error("Cannot perform Agent-cylce: agent missing Plan-Component");
-		}
-	
-		if(atomic != null) {
-			// TODO: What happens when two Speech-Acts are send by this skill:
-			// 		 It would send both speech-acts with the combined violates information, therefore the secrets would be updated in the
-			//		 first run. No Problem yet, but conceptual not really clean.
-			violates = atomic.violates();
-			atomic.prepare(this, getBeliefs());
-			atomic.run();
-		}
-		
-		LOG.info("[" + this.getName() + "] Cycle ends");
-		return false;
-		*/
-		
 	}
 
 	@Override

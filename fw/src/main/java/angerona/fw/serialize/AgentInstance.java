@@ -20,7 +20,7 @@ import org.simpleframework.xml.Root;
  * agent, a reference to the agent's configuration file, a reference to the
  * belief base configuration file of the belief base instantiated by the
  * agent, a default file name suffix for this belief base, a list of desires
- * a list of skills and a list key data pairs representing the initial configuration
+ * a list of capabilities and a list key data pairs representing the initial configuration
  * of the agent's components.
  * @author Tim Janus
  */
@@ -46,8 +46,8 @@ public class AgentInstance {
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
 	protected List<Atom> desires = new LinkedList<Atom>();
 	
-	@ElementList(entry="skill", inline=true, required=false, empty=false)
-	protected List<String> skills = new LinkedList<>();
+	@ElementList(entry="capability", inline=true, required=false, empty=false)
+	protected List<String> capabilities = new LinkedList<>();
 	
 	@ElementMap(key="key", entry="data", attribute=true, inline=true, empty=false, required=false)
 	protected Map<String, String> additionalData = new HashMap<String, String>();
@@ -66,8 +66,8 @@ public class AgentInstance {
 		return Collections.unmodifiableList(desires);
 	}
 	
-	public List<String> getSkills() {
-		return Collections.unmodifiableList(skills);
+	public List<String> getCapabilities() {
+		return Collections.unmodifiableList(capabilities);
 	}
 	
 	public Map<String, String> getAdditionalData() {

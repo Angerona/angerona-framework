@@ -25,6 +25,9 @@ import angerona.fw.util.Pair;
 public class KnowhowView extends EntityView<KnowhowBase> 
 	implements ReportListener {
 
+	/** kick warning */
+	private static final long serialVersionUID = -6905217402039226493L;
+
 	private DefaultListModel<String> stmtListModel = new DefaultListModel<String>();
 
 	private KnowhowBase actual;

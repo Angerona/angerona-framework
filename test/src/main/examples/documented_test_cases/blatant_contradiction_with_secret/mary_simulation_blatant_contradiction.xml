@@ -14,7 +14,7 @@
         <data key="Confidential">(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.5}, argued(john))
 		</data>       	 	
 			
-		<skill>QueryAnswer</skill>
+		<capability>QueryAnswer</capability>
 	</agent-instance>
       
 	<agent-instance>
@@ -25,7 +25,7 @@
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
      	 
-     	<skill>Query</skill>
+     	<capability>Query</capability>
 		
      	<desire>q_Mary(john_argued,1)</desire>
 	</agent-instance>
