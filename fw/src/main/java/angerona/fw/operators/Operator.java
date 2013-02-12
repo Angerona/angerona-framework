@@ -3,6 +3,8 @@ package angerona.fw.operators;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.management.AttributeNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,18 +15,21 @@ import angerona.fw.util.Pair;
 
 /**
  * An abstract generic base class for operators implementing an operation type.
- * Direct sub classes of this class are typically abstract classes to but define
+ * Direct sub classes of this class are typically abstract classes to define
  * the generic type parameters and implement the getEmptyParameter() and 
  * defaultReturnValue() methods. Thus classes define the operation type but give no
  * implementation for the operation type yet.
  *
+ * TODO: Move the <String, String> parameters to another place, they must be saved
+ * on caller side.
+ *
  * @param <TCaller>	Type of the owner of the operator 
- * @param <IN>		Type of the input parameter for the real process internal method
+ * @param <IN>		Type of the input parameter of the operator.
  * @param <OUT>		Type of the output (return value) of the operator.
  * 
  * @author Tim Janus
  */
-public abstract class Operator<TCaller extends OperatorVisitor, IN extends OperatorParameter, OUT extends Object> 
+public abstract class Operator<TCaller extends OperatorStack, IN extends OperatorParameter, OUT extends Object> 
 	implements 
 	BaseOperator,
 	ReportPoster {
@@ -81,7 +86,7 @@ public abstract class Operator<TCaller extends OperatorVisitor, IN extends Opera
 			preparedParams.fromGenericParameter(genericParams);
 			preparedParams.visit(this);
 			reval = processInternal(preparedParams);
-		} catch(ConversionException ex) {
+		} catch(AttributeNotFoundException | ConversionException ex) {
 			reval = defaultReturnValue();
 			LOG.error("Operator '{}' is not able to fetch the parameters: '{}'",
 					this.getClass().getName(), ex.getMessage());

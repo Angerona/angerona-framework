@@ -1,5 +1,6 @@
 package angerona.fw.error;
 
+
 /**
  * An exception indicating an error occurred by the conversion between 
  * to types.

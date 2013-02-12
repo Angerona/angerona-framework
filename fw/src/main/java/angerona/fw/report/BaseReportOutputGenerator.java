@@ -2,7 +2,7 @@ package angerona.fw.report;
 
 import angerona.fw.Agent;
 import angerona.fw.internal.Entity;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
 
 /**
  * Abstract base class for an output generator of Angerona reports.

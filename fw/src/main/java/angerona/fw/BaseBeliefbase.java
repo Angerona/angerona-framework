@@ -28,8 +28,9 @@ import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
 import angerona.fw.parser.ParseException;
+import angerona.fw.report.FullReporter;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
@@ -49,9 +50,9 @@ import angerona.fw.serialize.BeliefbaseConfig;
  * @author Tim Janus
  */
 public abstract class BaseBeliefbase 
-	extends BaseAgentComponent 
-	implements BeliefBase 
-				, OperatorVisitor {
+	extends 	BaseAgentComponent 
+	implements 	BeliefBase, 
+				OperatorStack {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(BaseBeliefbase.class);
@@ -380,5 +381,10 @@ public abstract class BaseBeliefbase
 	@Override
 	public Stack<BaseOperator> getStack() {
 		return getAgent().getStack();
+	}
+	
+	@Override
+	public FullReporter getReporter() {
+		return getAgent().getReporter();
 	}
 }

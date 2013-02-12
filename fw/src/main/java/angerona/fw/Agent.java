@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.asml.CommandSequence;
 import angerona.fw.error.AgentInstantiationException;
+import angerona.fw.internal.AngeronaReporter;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.internal.PluginInstantiator;
@@ -36,13 +37,13 @@ import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.GenericOperatorParameter;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
 import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
+import angerona.fw.report.FullReporter;
 import angerona.fw.report.ReportPoster;
-import angerona.fw.report.Reporter;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.BeliefbaseConfig;
@@ -61,9 +62,8 @@ import angerona.fw.serialize.SimulationConfiguration;
 public class Agent extends AgentArchitecture 
 	implements ContextProvider
 	, Entity
-	, OperatorVisitor
+	, OperatorStack
 	, ReportPoster
-	, Reporter
 	, ActionProcessor
 	, PropertyChangeListener {
 
@@ -78,6 +78,8 @@ public class Agent extends AgentArchitecture
 	
 	/** id in the report-attachment hierarchy. */
 	private Long id;
+	
+	private AngeronaReporter reporter;
 	
 	private List<Long> childrenIds = new LinkedList<Long>();
 	
@@ -148,6 +150,7 @@ public class Agent extends AgentArchitecture
 	 * @param views			A map of agent names to belief bases representing the views onto the knowledge of other agents 
 	 */
 	public void setBeliefs(BaseBeliefbase world, Map<String, BaseBeliefbase> views) {
+		// remove old belief entities from the agent
 		if(beliefs != null) {
 			childrenIds.remove(beliefs.getWorldKnowledge().getGUID());
 			beliefs.getWorldKnowledge().removePropertyChangeListener(this);
@@ -157,6 +160,8 @@ public class Agent extends AgentArchitecture
 				childrenIds.remove(act.getGUID());
 			}
 		}
+		
+		// create new beliefs and register as entities of the agent:
 		beliefs = new Beliefs(world, views);
 		childrenIds.add(world.getGUID());
 		world.setParent(id);
@@ -179,6 +184,7 @@ public class Agent extends AgentArchitecture
 			throws AgentInstantiationException {
 		this.id = new Long(IdGenerator.generate(this));
 		context = new Context();
+		this.reporter = new AngeronaReporter(this, this);
 		
 		capabilities.addAll(ai.getCapabilities());
 		
@@ -502,7 +508,7 @@ public class Agent extends AgentArchitecture
 	 * Helper method: Regenerates the context for the agent. The agent context
 	 * is somewhat special because we don't use the beliefs structure but add
 	 * world and confidential directly to the agent context. We also add a 
-	 * view context which holds all the view beliefbases of the agent.
+	 * view context which holds all the view belief bases of the agent.
 	 */
 	private void regenContext() {
 		context = ContextFactory.createContext(this);
@@ -532,7 +538,7 @@ public class Agent extends AgentArchitecture
 		updateBeliefs(act);
 		act.onSubgoalFinished(null);
 		LOG.info("Action performed: " + act.toString());
-		report("Action: '"+act.toString()+"' performed.");
+		reporter.report("Action: '"+act.toString()+"' performed.");
 		Angerona.getInstance().onActionPerformed(this, act);
 		actionsHistory.add(act);
 	}
@@ -684,41 +690,26 @@ public class Agent extends AgentArchitecture
 	 * the report-system.
 	 */
 	protected void reportCreation() {
-		report("Agent: '" + getName()+"' created.");
+		reporter.report("Agent: '" + getName()+"' created.");
 		
-		report("Desires Set of '" + getName() + "' created.", this.getDesires());
+		reporter.report("Desires Set of '" + getName() + "' created.", this.getDesires());
 		
 		Beliefs b = getBeliefs();
-		report("World Beliefbase of '" + this.getName()+"' created.", b.getWorldKnowledge() );
+		reporter.report("World Beliefbase of '" + this.getName()+"' created.", b.getWorldKnowledge() );
 		
 		Map<String, BaseBeliefbase> views = b.getViewKnowledge();
 		for(String name : views.keySet()) {
 			BaseBeliefbase actView = views.get(name);
-			report("View->'" + name +"' Beliefbase of '" + getName() + "' created.", actView);
+			reporter.report("View->'" + name +"' Beliefbase of '" + getName() + "' created.", actView);
 		}
 		
 		for(AgentComponent ac : getComponents()) {
-			report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", ac);
+			reporter.report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", ac);
 		}
-	}
-	
-	@Override
-	public void report(String message) {
-		Angerona.getInstance().report(message, this, this);
-	}
-	
-	@Override
-	public void report(String message, Entity attachment) {
-		Angerona.getInstance().report(message, attachment, this, this);
 	}
 
 	@Override
-	public void report(String message, ReportPoster poster) {
-		Angerona.getInstance().report(message, this, poster);
-	}
-	
-	@Override
-	public void report(String message, Entity attachment, ReportPoster poster) {
-		Angerona.getInstance().report(message, attachment, this, poster);
+	public FullReporter getReporter() {
+		return reporter;
 	}
 }

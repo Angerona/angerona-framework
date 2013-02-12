@@ -8,6 +8,7 @@ import java.util.Map;
 
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
+import angerona.fw.report.Reporter;
 
 /**
  * Base class for special extensions of the agent model. Every subclass
@@ -23,7 +24,9 @@ import angerona.fw.internal.IdGenerator;
  * @author Tim Janus
  *
  */
-public abstract class BaseAgentComponent implements AgentComponent {
+public abstract class BaseAgentComponent 
+implements 	AgentComponent,
+			Reporter {
 	
 	/** unique id of the parent (the agent) */
 	private Long parentId;
@@ -97,10 +100,19 @@ public abstract class BaseAgentComponent implements AgentComponent {
 		return null;
 	}
 	
+	@Override
 	public void report(String msg) {
 		/** unit tests will run without an agent on the component so test for the agent before reporting to angerona */
 		if(getAgent() != null)
-			getAgent().report(msg, this);
+			getAgent().getReporter().report(msg, (Entity)this);
+	}
+	
+	@Override
+	public void report(String msg, Entity attachment) {
+		/** unit tests will run without an agent on the component so test for the agent before reporting to angerona */
+		if(getAgent() != null) {
+			getAgent().getReporter().report(msg, attachment);
+		}
 	}
 		
 	@Override

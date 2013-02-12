@@ -1,10 +1,11 @@
 package angerona.fw.am.secrecy.operators.parameter;
 
+import javax.management.AttributeNotFoundException;
+
 import angerona.fw.PlanComponent;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.parameter.OperatorPluginParameter;
-import angerona.fw.report.ReportPoster;
 
 /**
  * These are the parameters used by a Planer.
@@ -22,8 +23,8 @@ public class PlanParameter extends OperatorPluginParameter {
 	 * @param actualPlan	the high level plan of the agent
 	 * @param forbidden		list of forbidden actions.
 	 */
-	public PlanParameter(ReportPoster operator, PlanComponent actualPlan) {
-		super(actualPlan.getAgent(), operator);
+	public PlanParameter(PlanComponent actualPlan) {
+		super(actualPlan.getAgent());
 		this.actualPlan = actualPlan;
 	}
 	
@@ -33,7 +34,7 @@ public class PlanParameter extends OperatorPluginParameter {
 	
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter gop) 
-			throws ConversionException {
+			throws ConversionException, AttributeNotFoundException {
 		super.fromGenericParameter(gop);
 		Object plan = gop.getParameter("plan");
 		if(!(plan instanceof PlanComponent)) {

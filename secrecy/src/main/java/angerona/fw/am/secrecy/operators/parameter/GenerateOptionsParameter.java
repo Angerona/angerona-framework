@@ -1,11 +1,12 @@
 package angerona.fw.am.secrecy.operators.parameter;
 
+import javax.management.AttributeNotFoundException;
+
 import angerona.fw.Agent;
 import angerona.fw.Perception;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.parameter.OperatorPluginParameter;
-import angerona.fw.report.ReportPoster;
 
 /**
  * Class encoding the input parameter for the GenerateOptionsOperator.
@@ -23,8 +24,8 @@ public class GenerateOptionsParameter extends OperatorPluginParameter {
 	 * @param agent			The agent containing the desires and beliefs.
 	 * @param perception	the last received perception
 	 */
-	public GenerateOptionsParameter(Agent agent, ReportPoster operator, Perception perception) {
-		super(agent, operator);
+	public GenerateOptionsParameter(Agent agent, Perception perception) {
+		super(agent);
 		this.perception = perception;
 	}
 	
@@ -35,13 +36,13 @@ public class GenerateOptionsParameter extends OperatorPluginParameter {
 	
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter gop) 
-		throws ConversionException {
+		throws ConversionException, AttributeNotFoundException {
 		super.fromGenericParameter(gop);
 		
 		Object obj = gop.getParameter("perception");
 		if(obj != null) {
 			if(! (obj instanceof Perception)) {
-				throwException("perception", obj, Perception.class);
+				throw conversionException("perception", Perception.class);
 			}
 			this.perception= (Perception)obj;
 		}

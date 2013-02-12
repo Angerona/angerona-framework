@@ -8,9 +8,6 @@ import angerona.fw.util.Pair;
  * Interface for all operators implementing operation types. All operators
  * need the ability to save and change parameter in a generic way and to
  * get and change the owner of the base operator.
- * TODO: Move the owner into the parameters to make it instance independent
- * A operator also provides its operation type allowing the owner to select
- * the operators.
  * 
  * @author Tim Janus
  */

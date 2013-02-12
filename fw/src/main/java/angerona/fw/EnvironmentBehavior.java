@@ -1,7 +1,7 @@
 package angerona.fw;
 
 /**
- * This interface defines an behavior for an Environment.
+ * This interface defines an behavior for an environment.
  *
  * Also see the DefaultBehavior class it implements a simulation
  * cylce. Subclasses can adapt a lot by overloading sendAction,

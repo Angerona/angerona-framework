@@ -8,7 +8,7 @@ import angerona.fw.util.Pair;
 
 /** 
  *	A data-structure containing information about the result of a violation processing.
- *	The base idea was given by Daniels SecrecyStrength-Pair.
+ *	The base idea was given by Daniel Dilger's SecrecyStrength-Pair.
  *	The flag alright is used to determine if a secret has to be weaken or if no secrecy violation occurs.
  *	List of Pairs is used to save the needed weakening for the secrets to perform the action which was
  *	checked for violating secrecy. Every Pair consists of an Secret and a Double where the Secret references

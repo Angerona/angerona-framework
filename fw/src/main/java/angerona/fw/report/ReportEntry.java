@@ -8,7 +8,7 @@ import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.internal.Entity;
 import angerona.fw.operators.BaseOperator;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
 
 /**
  * A ReportEntry contains informations about a report, like the message, the poster or the attachment.
@@ -51,7 +51,7 @@ public class ReportEntry implements Cloneable {
 	 * @param poster		A reference to the poster of the entry, in most cases an operator.
 	 */
 	public ReportEntry(String message, Entity attachment, 
-			OperatorVisitor scope, ReportPoster poster, AngeronaEnvironment simulation) {
+			OperatorStack scope, ReportPoster poster, AngeronaEnvironment simulation) {
 		// check for valid parameters
 		if(poster == null)
 			throw new IllegalArgumentException("poster must not be null");
@@ -151,11 +151,11 @@ public class ReportEntry implements Cloneable {
 	}
 	
 	public class Scope {
-		private OperatorVisitor visitor;
+		private OperatorStack visitor;
 		
 		private Agent agent;
 		
-		public Scope(OperatorVisitor visitor) {
+		public Scope(OperatorStack visitor) {
 			this.visitor = visitor;
 			if(visitor instanceof Agent) {
 				agent = (Agent)visitor;
@@ -164,7 +164,7 @@ public class ReportEntry implements Cloneable {
 			}
 		}
 		
-		public OperatorVisitor getScope() {
+		public OperatorStack getScope() {
 			return visitor;
 		}
 		

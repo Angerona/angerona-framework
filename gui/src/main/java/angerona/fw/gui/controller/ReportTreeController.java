@@ -21,7 +21,7 @@ import angerona.fw.gui.NavigationUser;
 import angerona.fw.gui.view.View;
 import angerona.fw.internal.Entity;
 import angerona.fw.listener.SimulationAdapter;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportOutputGenerator;
 

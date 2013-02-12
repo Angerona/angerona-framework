@@ -159,7 +159,7 @@ public class Secret implements Cloneable {
 	
 	/**
 	 * Tests if two secrets are alike. That means they have the same information
-	 * and agent who is not allowed to unreveile the information. The used reasoner
+	 * and agent who is not allowed to unravel the information. The used reasoner
 	 * and its parameters are not important for this method.
 	 * @param other		Reference to the other secret object for the alike-test.
 	 * @return			true if the both objects are alike, false otherwise.

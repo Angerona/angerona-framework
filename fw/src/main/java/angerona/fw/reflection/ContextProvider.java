@@ -1,10 +1,12 @@
 package angerona.fw.reflection;
 
 /**
- * Interface for all objects which provide a context of themself.
+ * Classes implementing this interface provide a script context of itself.
+ * This means they can expose itself to the ASML script language.
+ * 
  * @author Tim Janus
  */
 public interface ContextProvider {
-	/** returns a Context object representing the attributes of this */
+	/** @return A context object representing the attributes of this instance. */
 	public Context getContext();
 }

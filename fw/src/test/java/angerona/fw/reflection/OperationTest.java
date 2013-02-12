@@ -14,11 +14,12 @@ import angerona.fw.asml.InvokeOperation;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
+import angerona.fw.report.FullReporter;
 import angerona.fw.util.Pair;
 
 public class OperationTest {
-	private class MockVisitor implements OperatorVisitor {
+	private class MockVisitor implements OperatorStack {
 
 		private Stack<BaseOperator> stack = new Stack<>();
 		
@@ -35,6 +36,11 @@ public class OperationTest {
 		@Override
 		public Stack<BaseOperator> getStack() {
 			return stack;
+		}
+
+		@Override
+		public FullReporter getReporter() {
+			return null;
 		}
 
 	}

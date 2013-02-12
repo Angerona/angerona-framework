@@ -12,7 +12,7 @@ import angerona.fw.OperatorProvider;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
 import angerona.fw.reflection.Value;
 import angerona.fw.serialize.SerializeHelper;
 
@@ -76,7 +76,7 @@ public class InvokeOperation extends ASMLCommand {
 		}
 		
 		// Find caller:
-		OperatorVisitor self = getParameter("self");
+		OperatorStack self = getParameter("self");
 		GenericOperatorParameter gop = new GenericOperatorParameter(self);
 		
 		// prepare parameters:

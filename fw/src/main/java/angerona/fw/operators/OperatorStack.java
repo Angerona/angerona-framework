@@ -2,15 +2,18 @@ package angerona.fw.operators;
 
 import java.util.Stack;
 
+import angerona.fw.report.FullReporter;
+
 
 
 /**
- * The owner of an operator must implement this interface
- * which allows the owner to save the stack-trace of the 
- * operators.
+ * The caller of operators must implement this interface
+ * which allows the caller to save the stack-trace of the 
+ * operators and to use the report mechanism.
+ * 
  * @author Tim Janus
  */
-public interface OperatorVisitor {
+public interface OperatorStack {
 	/**
 	 * Push the given operator on the stack
 	 * @param op	reference to an operator.
@@ -22,4 +25,6 @@ public interface OperatorVisitor {
 	
 	/** returns the actual state of the operator stack */
 	Stack<BaseOperator> getStack();
+	
+	FullReporter getReporter();
 }

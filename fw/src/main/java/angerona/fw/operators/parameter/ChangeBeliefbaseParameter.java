@@ -5,32 +5,36 @@ import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
 
 /**
- * Parameter class for change operations on belief bases.
+ * Input-parameter class for change operations on a belief bases.
+ * 
  * @author Tim Janus
- *
  */
 public class ChangeBeliefbaseParameter extends BeliefbasePluginParameter {
 	/** belief base representing the new knowledge. */
 	private BaseBeliefbase newKnowledge;
 	
+	/** Default Ctor: Used for dynamic instantiation */
 	public ChangeBeliefbaseParameter() {}
 	
-	@Override
-	public void fromGenericParameter(GenericOperatorParameter input)
-			throws ConversionException {
-		super.fromGenericParameter(input);
-		input.getParameter("sourceBelief");
-		this.newKnowledge = (BaseBeliefbase)input.getParameter("newBelief");
-	}
-	
 	/**
-	 * Ctor: Generates the Parameter class
+	 * Ctor: Used to generate an instance of the class in-code.
 	 * @param source		belief base
 	 * @param newKnowledge	set of formula with new knowledge.
 	 */
 	public ChangeBeliefbaseParameter(BaseBeliefbase source, BaseBeliefbase newKnowledge) {
 		super(source);
 		this.newKnowledge = newKnowledge;
+	}
+	
+	/**
+	 * Calls it super method and receives the newBelief belief base from 
+	 * the generic parameter and encapsulates it for further used by the operator.
+	 */
+	@Override
+	public void fromGenericParameter(GenericOperatorParameter input)
+			throws ConversionException {
+		super.fromGenericParameter(input);
+		this.newKnowledge = (BaseBeliefbase)input.getParameter("newBelief");
 	}
 
 	/** @return the belief base on which the update operation will be performed */

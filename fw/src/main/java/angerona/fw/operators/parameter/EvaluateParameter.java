@@ -1,12 +1,20 @@
 package angerona.fw.operators.parameter;
 
+import javax.management.AttributeNotFoundException;
+
 import angerona.fw.Agent;
 import angerona.fw.AngeronaAtom;
 import angerona.fw.error.ConversionException;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.GenericOperatorParameter;
-import angerona.fw.report.ReportPoster;
 
+/**
+ * This class represents input-parameter for operators which evaluate 
+ * informations like perceptions, actions or plan elements. The 
+ * UpdateBeliefs and the Violates Operator uses this parameter type.
+ * 
+ * @author Tim Janus
+ */
 public class EvaluateParameter extends OperatorPluginParameter {
 	
 	/** the action applied before proofing for violation */
@@ -15,6 +23,7 @@ public class EvaluateParameter extends OperatorPluginParameter {
 	/** the beliefs which are used as basic */
 	private Beliefs beliefs;
 	
+	/** Default Ctor: Used for dynamic instantiation */
 	public EvaluateParameter() {}
 	
 	/**
@@ -24,8 +33,8 @@ public class EvaluateParameter extends OperatorPluginParameter {
 	 * @param intent	The intention of the agent which needs a check. This might be
 	 * 					an action or a complete plan.
 	 */
-	public EvaluateParameter(Agent agent, ReportPoster operator, AngeronaAtom intent) {
-		this(agent, operator, (Beliefs)agent.getBeliefs(), intent);
+	public EvaluateParameter(Agent agent, AngeronaAtom intent) {
+		this(agent, (Beliefs)agent.getBeliefs(), intent);
 	}
 	
 	/**
@@ -34,8 +43,8 @@ public class EvaluateParameter extends OperatorPluginParameter {
 	 * @param beliefs
 	 * @param intent
 	 */
-	public EvaluateParameter(Agent agent, ReportPoster operator, Beliefs beliefs, AngeronaAtom intent) {
-		super(agent, operator);
+	public EvaluateParameter(Agent agent, Beliefs beliefs, AngeronaAtom intent) {
+		super(agent);
 		this.information = intent;
 		this.beliefs = (Beliefs)beliefs;
 	}
@@ -52,17 +61,21 @@ public class EvaluateParameter extends OperatorPluginParameter {
 	
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter gop) 
-		throws ConversionException {
+		throws ConversionException, AttributeNotFoundException {
 		super.fromGenericParameter(gop);
-		Object obj = gop.getParameter("beliefs");
+		
+		// Get the used beliefs
+		Object obj = gop.getParameterRequired("beliefs");
 		if(! (obj instanceof Beliefs)) {
-			throwException("beliefs", obj, Beliefs.class);
+			throw conversionException("beliefs", Beliefs.class);
 		}
 		this.beliefs = (Beliefs)obj;
 		
+		// Get the information to evaluate: It might be null in case no perception
+		// is received in the cycle:
 		obj = gop.getParameter("information");
-		if(obj != null && !(obj instanceof AngeronaAtom)) {
-			throwException("information", obj, AngeronaAtom.class);
+		if(obj != null && ! (obj instanceof AngeronaAtom)) {
+			throw conversionException("information", AngeronaAtom.class);
 		}
 		this.information = (AngeronaAtom)obj;
 	}

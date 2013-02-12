@@ -200,8 +200,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				return candidate;
 			
 			BaseViolatesOperator vop = (BaseViolatesOperator) param.getAgent().getOperators().getPreferedByType(ViolatesOperator.OPERATION_NAME);
-			EvaluateParameter eparam = new EvaluateParameter(param.getAgent(), vop, 
-					param.getAgent().getBeliefs(), candidate);
+			EvaluateParameter eparam = new EvaluateParameter(param.getAgent(), param.getAgent().getBeliefs(), candidate);
 			res = vop.process(eparam);
 			if(!res.isAlright())
 				lastUsedStrategy.fallback();

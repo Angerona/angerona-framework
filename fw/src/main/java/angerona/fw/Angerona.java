@@ -19,7 +19,7 @@ import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.FrameworkListener;
 import angerona.fw.listener.SimulationListener;
-import angerona.fw.operators.OperatorVisitor;
+import angerona.fw.operators.OperatorStack;
 import angerona.fw.report.Report;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
@@ -131,7 +131,7 @@ public class Angerona {
 	 * @param msg		String representing the message.
 	 * @param poster	Reference to the poster of the report (an operator or an agent)
 	 */
-	public void report(String msg, OperatorVisitor scope, ReportPoster poster) {
+	public void report(String msg, OperatorStack scope, ReportPoster poster) {
 		report(msg, null, scope, poster);
 	}
 	
@@ -144,7 +144,7 @@ public class Angerona {
 	 * 						the Secrecy-Knowledge or a Belief base. 
 	 * @param poster		Reference to the poster of the report(an operator or an agent)
 	 */
-	public void report(String msg, Entity attachment, OperatorVisitor scope, ReportPoster poster) {
+	public void report(String msg, Entity attachment, OperatorStack scope, ReportPoster poster) {
 		String logOut = msg;
 		
 		if (poster == null){

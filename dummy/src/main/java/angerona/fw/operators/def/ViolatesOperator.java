@@ -112,7 +112,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	@Override
 	public void performAction(Action action, Agent agent, Beliefs beliefs) {
-		EvaluateParameter param = new EvaluateParameter(agent, this, beliefs, action);
-		violates = violates.combine(onPerception(action, param));
+		EvaluateParameter param = new EvaluateParameter(agent,  beliefs, action);
+		violates = violates.combine(process(param));
 	}
 }

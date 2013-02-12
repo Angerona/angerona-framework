@@ -96,7 +96,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 						pe.setCosts(cost + pe.getCosts());
 						atomicIntentions.add(pe);
 					} else {
-						EvaluateParameter eparam = new EvaluateParameter(ag, vop, ag.getBeliefs(), pe);
+						EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
 						
 						List<Pair<Secret, Double>> weakenings = vop.process(eparam).getPairs();
 						
