@@ -15,6 +15,7 @@ import angerona.fw.parser.ParseException;
 
 /**
  * Just a dummy belief base for testing purposes.
+ * It implements a set of literals using tweety-fol.
  *
  * @author Tim Janus
  */

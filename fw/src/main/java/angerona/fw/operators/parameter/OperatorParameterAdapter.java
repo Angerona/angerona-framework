@@ -9,11 +9,22 @@ import angerona.fw.report.FullReporter;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
 
+/**
+ * Abstract base class for all input-parameter implementations 
+ * for the operators. The class implements the interface between
+ * the operator and the Angerona report mechanism.
+ * 
+ * The visitor pattern is used to inform the reporter interface about
+ * the current default report poster.
+ * 
+ * @author Tim Janus
+ */
 public abstract class OperatorParameterAdapter implements 
 	OperatorParameter,
 	Reporter
 	{
 
+	/** reference to the reporter interface used to post reports. */
 	private FullReporter reporter;
 	
 	@Override
@@ -26,10 +37,12 @@ public abstract class OperatorParameterAdapter implements
 		reporter.setDefaultPoster(op);
 	}
 	
+	@Override
 	public void report(String message) {
 		reporter.report(message);
 	}
 	
+	@Override
 	public void report(String message, Entity attachment) {
 		reporter.report(message, attachment);
 	}

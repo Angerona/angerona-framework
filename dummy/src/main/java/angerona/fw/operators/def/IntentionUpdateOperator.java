@@ -16,7 +16,14 @@ import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.operators.parameter.EvaluateParameter;
 
 /**
- * 	
+ * 	The default implementation of the IntentionUpdate operation searches the 
+ * 	PlanComponent for the first action. The first stack in the collection
+ * 	containing an action on top provides the action which is performed.
+ * 	Therefore this implementation is order dependent.
+ * 
+ * 	The caller of the operator can use the parameter 'allowUnsafe' to turn 
+ * 	violation checking on/off.
+ * 
  * 	@author Tim Janus
  */
 public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {

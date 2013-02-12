@@ -8,7 +8,8 @@ import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
 
 /**
- * Base class for all parameter for operators defined in the Operator-Plugin.
+ * Base class for all input parameters for operators defined in the
+ * operator plugin.
  * 
  * @author Tim Janus
  */

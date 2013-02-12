@@ -6,12 +6,13 @@ import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
 /**
- * Base class for Update Beliefs process of the Agent.
+ * Base class for the update beliefs process of the Agent.
  * @author Tim Janus
  */
 public abstract class BaseUpdateBeliefsOperator extends 
 	Operator<Agent, EvaluateParameter, Beliefs> {
 
+	/** unique name of the operation implemented by subclasses. */
 	public static final String OPERATION_NAME = "UpdateBeliefs";
 	
 	@Override
@@ -29,5 +30,4 @@ public abstract class BaseUpdateBeliefsOperator extends
 	protected Beliefs defaultReturnValue() {
 		return null;
 	}
-
 }

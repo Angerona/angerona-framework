@@ -5,13 +5,25 @@ import angerona.fw.operators.OperatorStack;
 import angerona.fw.report.FullReporter;
 import angerona.fw.report.ReportPoster;
 
-
+/**
+ * This implementation of the report interface directly delegates the
+ * calls to the Angerona report mechanism. 
+ * 
+ * @author Tim Janus
+ */
 public class AngeronaReporter implements FullReporter {
 
+	/** reference to object providing a stack of operators */
 	private OperatorStack stack;
 	
+	/** the default poster */
 	private ReportPoster defaultPoster;
 
+	/**
+	 * Ctor: Initializes the used operator stack and the default poster.
+	 * @param stack
+	 * @param defaultPoster
+	 */
 	public AngeronaReporter(OperatorStack stack, ReportPoster defaultPoster) {
 		if(stack == null)
 			throw new IllegalArgumentException("The stack most not be null.");
