@@ -39,6 +39,8 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Element(name="beliefbase-class")
 	protected String beliefbaseClassName;
 
+	protected String viewName;
+	
 	@Commit
 	protected void createOperationTypes() {
 		// extract operation type from element name...
@@ -82,5 +84,10 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Override
 	public OperationSetConfig getTranslators() {
 		return translators;
+	}
+
+	@Override
+	public String getViewOn() {
+		return viewName;
 	}
 }

@@ -5,7 +5,7 @@
 	
 	<agent-instance>
 		<name>employee</name>
-        <beliefbase-name>employee</beliefbase-name>
+        
         
         
         <agent-config source="config/agents/knowhow_agent.xml" />         
@@ -32,7 +32,7 @@
       
 	<agent-instance>
       	<name>boss</name>
-      	<beliefbase-name>boss</beliefbase-name>
+      	
       	
       	
         <agent-config source="config/agents/knowhow_agent.xml" />         

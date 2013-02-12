@@ -3,7 +3,6 @@ package angerona.fw.serialize;
 import java.io.File;
 
 import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Resolve;
 
 /**
@@ -12,7 +11,6 @@ import org.simpleframework.xml.core.Resolve;
  * belief base configuration file.
  * @author Tim Janus
  */
-@Root(name="beliefbase-config-import")
 public class BeliefbaseConfigImport implements BeliefbaseConfig {
 
 	@Attribute(name="source")
@@ -45,6 +43,11 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 
 	@Override
 	public OperationSetConfig getTranslators() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public String getViewOn() {
 		throw new IllegalStateException("Method not supported.");
 	}
 }

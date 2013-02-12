@@ -32,6 +32,8 @@ public class FileFormatExample {
 			conf.validate();
 		} catch (PersistenceException e) {
 			System.out.println("Validation Error: " + e.getMessage());
+		} catch (Exception e) {
+			
 		}
 		// Output example simulation configuration file:
 		System.out.println("Simulation - Configuration - An example XML:");
@@ -77,13 +79,10 @@ public class FileFormatExample {
 		AgentInstance test = new AgentInstance();
 		test.name = "Employee";
 		test.additionalData.put("Confidential", "(Boss, a.b.reasoner{param=1}, attend_scm)");
-		test.filePrefix = "asp";
+		test.alternativeBBName = "asp";
 		test.config = getAgentConfig();
 		test.beliefbaseConfig = getBeliefbaseConfig();
-		AgentInstance.ViewBeliefbaseConfig vbbc = new AgentInstance.ViewBeliefbaseConfig();
-		vbbc.source = new File("config/beliefbases/asp_beliefbase.xml");
-		vbbc.agentName = "Bob";
-		test.viewBeliefbaseConfigs.add(vbbc);
+		test.fileViewMap.put("Bob", new File("config/beliefbases/asp_beliefbase.xml"));
 		test.desires.add(new Atom(new Predicate("attend_scm")));
 		test.capabilities.add("fully.qualified.class.name");
 		

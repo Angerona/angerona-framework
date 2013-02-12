@@ -227,7 +227,7 @@ public class Agent extends AgentArchitecture
 		try {
 			// parse the content of the world belief base:
 			BaseBeliefbase world = getBeliefs().getWorldKnowledge();
-			File worldBBFile = new File(dir + ai.getName() + "." + world.getFileEnding());
+			File worldBBFile = new File(dir + ai.getBeliefbaseName() + "." + world.getFileEnding());
 			if(worldBBFile.exists()) {
 				world.parse(new BufferedReader(new FileReader(worldBBFile)));
 			} else {
@@ -237,7 +237,7 @@ public class Agent extends AgentArchitecture
 			Map<String, BaseBeliefbase> views = getBeliefs().getViewKnowledge();
 			for(String key : views.keySet()) {
 				BaseBeliefbase actView = views.get(key);
-				File viewFile = new File(dir + ai.getName() + "_" + key + "." + actView.getFileEnding());
+				File viewFile = new File(dir + ai.getBeliefbaseName() + "_" + key + "." + actView.getFileEnding());
 				if(viewFile.exists()) {
 					actView.parse(new BufferedReader(new FileReader(viewFile)));
 				} else {

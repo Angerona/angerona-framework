@@ -5,7 +5,7 @@
     
 	<agent-instance>
 		<name>Mary</name>
-       	<beliefbase-name>mary</beliefbase-name>
+       	
         
        	
         <agent-config source="config/agents/mary.xml" />         
@@ -19,7 +19,7 @@
       
 	<agent-instance>
    		<name>Coroner</name>
-   		<beliefbase-name>coroner</beliefbase-name>
+   		
    		
    		
         <agent-config source="config/agents/mary.xml" />         

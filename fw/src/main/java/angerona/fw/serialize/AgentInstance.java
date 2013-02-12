@@ -1,5 +1,6 @@
 package angerona.fw.serialize;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,7 +9,6 @@ import java.util.Map;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 
-import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
@@ -21,19 +21,13 @@ import org.simpleframework.xml.Root;
  * agent, a reference to the agent's configuration file, a reference to the
  * belief base configuration file of the belief base instantiated by the
  * agent, a default file name suffix for this belief base, a list of desires
- * a list of capabilities and a list key data pairs representing the initial configuration
- * of the agent's components.
+ * a list of capabilities and a list key data pairs representing the initial 
+ * configuration of the agent's components.
+ * 
  * @author Tim Janus
  */
 @Root(name="agent-instance")
 public class AgentInstance {	
-	
-	@Root(name="view-beliefbase-config")
-	protected static class ViewBeliefbaseConfig extends BeliefbaseConfigImport{
-		@Attribute 
-		public String agentName;
-	}
-	
 	/** the unique name of the agent */
 	@Element(name="name")
 	protected String name;
@@ -46,12 +40,15 @@ public class AgentInstance {
 	@Element(name="beliefbase-config", type=BeliefbaseConfigImport.class)
 	protected BeliefbaseConfig beliefbaseConfig;
 	
-	@ElementList(entry="view-beliefbase-config", type=ViewBeliefbaseConfig.class, inline=true, required=false)
-	protected List<ViewBeliefbaseConfig> viewBeliefbaseConfigs = new LinkedList<>();
+	@ElementMap(entry="view-config", required=false, key="agent", attribute=true, 
+			empty=false, inline=true, valueType=File.class)
+	protected Map<String, File> fileViewMap = new HashMap<>();
 
+	protected Map<String, BeliefbaseConfig> realViewMap = new HashMap<>();
+	
 	/** the file suffix identifying the belief base */
-	@Element(name="beliefbase-name")
-	protected String filePrefix;
+	@Element(name="beliefbase-name", required=false)
+	protected String alternativeBBName;
 	
 	/** list of fol-formulas representing the initial desires of the agent */
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
@@ -78,12 +75,7 @@ public class AgentInstance {
 	}
 	
 	public BeliefbaseConfig getBeliefBaseConfig(String agName) {
-		for(ViewBeliefbaseConfig vbbc : viewBeliefbaseConfigs) {
-			if(vbbc.agentName.equals(agName)) {
-				return vbbc;
-			}
-		}
-		return null;
+		return realViewMap.get(agName);
 	}
 	
 	public List<Atom> getDesires() {
@@ -98,7 +90,7 @@ public class AgentInstance {
 		return Collections.unmodifiableMap(additionalData);
 	}
 
-	public String getFileSuffix() {
-		return filePrefix;
+	public String getBeliefbaseName() {
+		return alternativeBBName == null ? getName() : alternativeBBName;
 	}
 }

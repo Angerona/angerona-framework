@@ -5,7 +5,7 @@
     
 	<agent-instance>
 		<name>Student</name>
-        <beliefbase-name>student</beliefbase-name>
+        
          
         <agent-config source="config/agents/default_agent.xml" />
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
@@ -19,7 +19,7 @@
       
 	<agent-instance>
       	<name>Girlfriend</name>
-      	<beliefbase-name>girlfriend</beliefbase-name>
+      	
       	
       	<agent-config source="config/agents/default_agent.xml" />
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />

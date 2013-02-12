@@ -1,5 +1,7 @@
 package angerona.fw.serialize;
 
+import org.simpleframework.xml.Root;
+
 /**
  * Interface for serializable simple xml classes of the agent configuration file.
  * It contains all the information needed to define a belief base: The full java
@@ -9,6 +11,7 @@ package angerona.fw.serialize;
  * configuration.
  * @author Tim Janus
  */
+@Root(name="entry")
 public interface BeliefbaseConfig {
 	public OperationSetConfig getReasoners();
 	
@@ -21,4 +24,11 @@ public interface BeliefbaseConfig {
 	
 	/** @return the name of the configuration */
 	public String getName();
+	
+	/** 
+	 * @return 	null if the config is for a world belief base or if it
+	 * 			is the view onto another agent then the name of the
+	 * 			viewed agent is returned.
+	 */
+	public String getViewOn();
 }

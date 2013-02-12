@@ -10,6 +10,7 @@ import java.util.Set;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.core.Commit;
 import org.simpleframework.xml.core.PersistenceException;
 import org.simpleframework.xml.core.Validate;
 
@@ -106,14 +107,26 @@ public class SimulationConfiguration {
 			agentNames.add(ai.getName());
 		}
 
-		// test if agent mapping view-bliefbase-config are functional
+		// test if agent mapping view-beliefbase-config are functional
 		for(AgentInstance ai : agents) {
-			for(AgentInstance.ViewBeliefbaseConfig vbbc : ai.viewBeliefbaseConfigs) {
-				if(!agentNames.contains(vbbc.agentName)) {
-					throw new PersistenceException("The view-beliefbase-config of agent '%s'" + 
-							" cannot be mapped cause an agent with name '%s' does not exists",
-							ai.getName(), vbbc.agentName);
-				}
+			if(!agentNames.containsAll(ai.fileViewMap.keySet())) {
+				Set<String> notMapped = new HashSet<>(ai.fileViewMap.keySet());
+				notMapped.removeAll(agentNames);
+				throw new PersistenceException("The view-beliefbase-config of agent '%s'" + 
+						" cannot be mapped cause an agents with names '%s' does not exist",
+						ai.getName(), notMapped);
+			}
+		}
+	}
+	
+	@Commit
+	public void commit() {
+		for(AgentInstance ai : agents) {
+			for(String viewedAgent : ai.fileViewMap.keySet()) {
+				File f = ai.fileViewMap.get(viewedAgent);
+				BeliefbaseConfigReal conf = SerializeHelper.loadXml(
+						BeliefbaseConfigReal.class, f);
+				ai.realViewMap.put(viewedAgent, conf);
 			}
 		}
 	}
