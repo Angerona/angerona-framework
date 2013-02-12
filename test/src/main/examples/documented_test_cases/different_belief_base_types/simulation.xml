@@ -1,0 +1,28 @@
+<simulation-configuration>
+
+	<name>Test Different Belief Base Types</name>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+	<category>feature-test</category>
+    
+	<agent-instance>
+		<name>Alice</name>
+       	<beliefbase-name>Alice2</beliefbase-name>
+       	
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
+       	<view-config agent="Bob">config/beliefbases/ocf_beliefbase.xml</view-config>
+		
+       	<capability>QueryAnswer</capability>
+		
+	</agent-instance>
+      
+	<agent-instance>
+  		<name>Bob</name>
+  		
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+        
+  		<capability>Query</capability>	
+	</agent-instance>
+
+</simulation-configuration>
