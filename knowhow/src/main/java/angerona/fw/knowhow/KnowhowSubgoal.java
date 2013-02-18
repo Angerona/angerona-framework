@@ -492,8 +492,10 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			Atom temp =  createAtom(variableWithPrefix);
 			List<Term> terms = new LinkedList<>();
 			for(Term t : temp.getArguments()) {
-				if(t.getName().charAt(1) == '_') {
-					Agent newName = processVariable(t.getName(), pp);
+				// TODO: Test if that works:
+				//if(t.getName().charAt(1) == '_') {
+				if(t.toString().charAt(1) == '_') {
+					Agent newName = processVariable(t.toString(), pp);
 					terms.add(new Constant(newName.getName()));
 				} else {
 					terms.add(t);

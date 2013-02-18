@@ -2,14 +2,11 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
+import javax.management.openmbean.InvalidOpenTypeException;
+
 import net.sf.tweety.Signature;
-import net.sf.tweety.SymbolSet;
-import net.sf.tweety.logics.CommonStructure;
-import net.sf.tweety.logics.CommonTerm;
 import net.sf.tweety.logics.LogicalSymbols;
 
 /**
@@ -32,15 +29,6 @@ public class FolSignature extends Signature implements LogicalSymbols{
 		this.sorts = new HashSet<Sort>();
 		this.predicates = new HashSet<Predicate>();
 		this.functors = new HashSet<Functor>();
-	}
-	
-	/**
-	 * Creates an FOL Signature from the given SymbolSet
-	 * @param symbols	reference to the SymbolSet used for creating this signature.
-	 */
-	public FolSignature(SymbolSet symbols) {
-		this();
-		fromSymbolSet(symbols);
 	}
 	
 	/**
@@ -262,33 +250,6 @@ public class FolSignature extends Signature implements LogicalSymbols{
 		
 	}
 
-	@Override
-	public void fromSymbolSet(SymbolSet symbols) {
-		clear();
-		
-		for(String constant : symbols.getConstants()) {
-			if(symbols.isSorted()) {
-				Sort sort = new Sort(symbols.getConstantSort(constant));
-				this.add(new Constant(constant, sort));
-			} else {
-				this.add(new Constant(constant));
-			}
-		}
-		
-		for(String symbol : symbols.getSymbols()) {
-			int arity = symbols.getArity(symbol);
-			if(symbols.isSorted()) {
-				List<Sort> sorts = new LinkedList<Sort>();
-				for(int i=0; i<arity; ++i) {
-					sorts.add(new Sort(symbols.getSymbolSort(symbol, i)));
-				}
-				this.add(new Predicate(symbol, sorts));
-			} else {
-				this.add(new Predicate(symbol, arity));
-			}
-		}
-	}
-
 	private void clear() {
 		this.constants.clear();
 		this.functors.clear();
@@ -296,46 +257,14 @@ public class FolSignature extends Signature implements LogicalSymbols{
 		this.sorts.clear();
 	}
 
-	@Override
-	public Set<CommonStructure> getCommonStructureElements() {
-		Set<CommonStructure> reval = new HashSet<CommonStructure>();
-		reval.addAll(predicates);
-		reval.addAll(functors);
-		return reval;
-	}
-
-	@Override
-	public Set<CommonTerm> getCommonTermElements() {
-		Set<CommonTerm> reval = new HashSet<CommonTerm>();
-		reval.addAll(constants);
-		return reval;
-	}
-
+	
 	@Override
 	public void fromSignature(Signature signature) {
 		clear();
 		if(signature instanceof FolSignature) {
 			this.addSignature(signature);
 		} else {
-			for(CommonStructure cs : signature.getCommonStructureElements()) {
-				List<Sort> sorts = new LinkedList<Sort>();
-				for(String sort : cs.getSorts()) {
-					sorts.add(new Sort(sort));
-				}
-				if(cs.isPredicate()) {
-					add(new Predicate(cs.getName(), sorts));
-				} else if(cs.isFunctional()) {
-					Sort target = sorts.get(sorts.size()-1);
-					sorts.remove(sorts.size()-1);
-					add(new Functor(cs.getName(), sorts, target));
-				}
-			}
-			
-			for(CommonTerm ct : signature.getCommonTermElements()) {
-				if(ct.isConstant()) {
-					add(new Constant(ct.getName(), new Sort(ct.getSortName())));
-				}
-			}
+			throw new InvalidOpenTypeException();
 		}
 	}
 	

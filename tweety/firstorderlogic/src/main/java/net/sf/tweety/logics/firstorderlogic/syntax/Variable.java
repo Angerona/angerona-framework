@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A variable of first-order logic, i.e. a placeholder for an object of a specific sort.
@@ -107,20 +108,5 @@ public class Variable extends Term{
 		if(!other.getSort().equals(this.getSort()))
 			return false;
 		return true;
-	}
-
-	@Override
-	public boolean isVariable() {
-		return true;
-	}
-
-	@Override
-	public boolean isConstant() {
-		return false;
-	}
-	
-	@Override 
-	public boolean isNumber() {
-		return false;
 	}
 }

@@ -1,8 +1,10 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
-
-import net.sf.tweety.SymbolSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A sort of first-order logic. i.e. a set of constant objects and a set of variables that represent
@@ -29,7 +31,7 @@ public class Sort {
 	/**
 	 * Default sort for unsorted first-order logics
 	 */
-	public static final Sort THING = new Sort(SymbolSet.THING);
+	public static final Sort THING = new Sort("THING");
 	
 	public Sort(String name){
 		this.constants = new HashSet<Constant>();

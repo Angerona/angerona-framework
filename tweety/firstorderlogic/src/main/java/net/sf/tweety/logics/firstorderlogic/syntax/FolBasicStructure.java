@@ -1,8 +1,8 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
-
-import net.sf.tweety.logics.CommonStructure;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The abstract parent for predicates and functors. This class captures their common
@@ -11,14 +11,11 @@ import net.sf.tweety.logics.CommonStructure;
  * @author Matthias Thimm
  *
  */
-public abstract class FolBasicStructure implements CommonStructure {
+public abstract class FolBasicStructure {
 	/**
 	 * The name of this structure
 	 */
 	private String name;
-	
-	/** flag indicating if the Structure is sorted. */
-	private boolean sorted;
 	
 	/**
 	 * This list constrains the possible arguments of this structure
@@ -34,7 +31,6 @@ public abstract class FolBasicStructure implements CommonStructure {
 	public FolBasicStructure(String name){
 		this.name = name;
 		this.arguments = new ArrayList<Sort>();
-		sorted = false;
 	}
 	
 	/**
@@ -46,7 +42,6 @@ public abstract class FolBasicStructure implements CommonStructure {
 		this(name);
 		for(int i = 0; i < arity; i++)
 			this.arguments.add(Sort.THING);
-		sorted = false;
 	}
 	
 	/**
@@ -58,7 +53,6 @@ public abstract class FolBasicStructure implements CommonStructure {
 	public FolBasicStructure(String name, List<Sort> arguments){
 		this(name);
 		this.arguments.addAll(arguments);
-		updateSorted();
 	}
 	
 	/**
@@ -85,7 +79,6 @@ public abstract class FolBasicStructure implements CommonStructure {
 	 */
 	protected void setArguments(List<Sort> arguments){
 		this.arguments = arguments;
-		updateSorted();
 	}
 	
 	/**
@@ -146,20 +139,6 @@ public abstract class FolBasicStructure implements CommonStructure {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-	
-	@Override
-	public boolean isSorted() {
-		return sorted;
-	}
-	
-	/** helper method: Updates the sorted flag */
-	private void updateSorted() {
-		sorted = false;
-		for(Sort s : arguments) {
-			if(!s.getName().equals(Sort.THING.getName()))
-				sorted = true;
-		}
 	}
 	
 	public List<String> getSorts() {

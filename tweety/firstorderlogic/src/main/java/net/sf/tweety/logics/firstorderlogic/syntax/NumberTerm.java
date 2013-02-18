@@ -20,26 +20,6 @@ public class NumberTerm extends Term {
 	public int getNumber() {
 		return number;
 	}
-	
-	@Override
-	public String getName() {
-		return String.valueOf(number);
-	}
-
-	@Override
-	public boolean isVariable() {
-		return false;
-	}
-
-	@Override
-	public boolean isConstant() {
-		return false;
-	}
-
-	@Override
-	public boolean isNumber() {
-		return false;
-	}
 
 	@Override
 	public Term substitute(Term v, Term t) throws IllegalArgumentException {

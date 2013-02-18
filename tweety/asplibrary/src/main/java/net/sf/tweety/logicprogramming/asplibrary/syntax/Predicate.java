@@ -1,15 +1,11 @@
 package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import net.sf.tweety.logics.CommonStructure;
 
 /**
  * A predicate has an name and an arity. 
  * @author Tim Janus
  */
-public class Predicate implements CommonStructure {
+public class Predicate {
 
 	private String name;
 	
@@ -24,39 +20,14 @@ public class Predicate implements CommonStructure {
 		this.arity = arity;
 	}
 	
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
 	public int getArity() {
 		return arity;
 	}
 
-	@Override
-	public boolean isPredicate() {
-		return true;
-	}
-
-	@Override
-	public boolean isFunctional() {
-		return false;
-	}
-
-	@Override
-	public boolean isSorted() {
-		return false;
-	}
-
-	@Override
-	public List<String> getSorts() {
-		List<String> reval = new LinkedList<String>();
-		for(int i=0; i<arity; ++i) {
-			reval.add(null);
-		}
-		return reval;
-	}
 
 	@Override
 	public boolean equals(Object other) {

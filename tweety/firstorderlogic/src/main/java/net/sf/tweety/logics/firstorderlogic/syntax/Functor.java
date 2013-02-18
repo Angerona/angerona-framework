@@ -98,13 +98,4 @@ public class Functor extends FolBasicStructure {
 			return false;
 		return true;
 	}
-	@Override
-	public boolean isPredicate() {
-		return false;
-	}
-	@Override
-	public boolean isFunctional() {
-		return true;
-	}
-
 }

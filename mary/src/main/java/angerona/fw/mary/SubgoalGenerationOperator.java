@@ -114,9 +114,9 @@ public class SubgoalGenerationOperator extends
 				Term t1 = f1.getAtom().getArguments().get(1);
 				Term t2 = f2.getAtom().getArguments().get(1);
 				
-				if(!t1.isNumber()) {
+				if(! (t1 instanceof NumberTerm)) {
 					return -1;
-				} else if(!t2.isNumber()) {
+				} else if(! (t2 instanceof NumberTerm)) {
 					return 1;
 				}
 				

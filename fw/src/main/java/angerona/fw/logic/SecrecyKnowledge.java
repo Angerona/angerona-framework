@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,13 +158,16 @@ public class SecrecyKnowledge extends BaseAgentComponent implements
 						getAgent().getName(), e.getMessage());
 			}
 
-			FolSignature sig = getAgent().getBeliefs().getSignature();
+			/// FolSignature sig = getAgent().getBeliefs().getSignature();
 			for (Secret s : secrets) {
+				// TODO Shared signatures between languages: in tweety svn.
+				/*
 				if (!sig.isRepresentable(s.getInformation())) {
 					LOG.warn(
 							"Secret '{}' is not representable by the agents '{}' beliefs signature yet.",
 							s, getAgent().getName());
 				}
+				*/
 				addSecret(s);
 			}
 

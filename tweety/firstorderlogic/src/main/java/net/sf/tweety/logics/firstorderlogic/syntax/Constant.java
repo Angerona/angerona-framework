@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A constant of first-order logic, i.e. a term that names a specific object.
@@ -107,21 +108,6 @@ public class Constant extends Term {
 		if(!other.getSort().equals(this.getSort()))
 			return false;
 		return true;
-	}
-
-	@Override
-	public boolean isVariable() {
-		return false;
-	}
-
-	@Override
-	public boolean isConstant() {
-		return true;
-	}
-
-	@Override
-	public boolean isNumber() {
-		return false;
 	}
 	
 }

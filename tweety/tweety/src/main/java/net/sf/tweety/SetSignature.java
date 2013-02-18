@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.sf.tweety.logics.CommonStructure;
-import net.sf.tweety.logics.CommonTerm;
-
 /**
  * This class models a signature as a set of formulas.
  * 
@@ -196,23 +193,6 @@ public class SetSignature<T extends Formula> extends Signature implements Collec
 		} else if (!formulas.equals(other.formulas))
 			return false;
 		return true;
-	}
-
-	@Override
-	public void fromSymbolSet(SymbolSet symbols) {
-		// TODO does not supports the symbol translation, cant see an easy way here.
-	}
-
-	@Override
-	public Set<CommonStructure> getCommonStructureElements() {
-		// TODO does not supports the symbol translation, cant see an easy way here.
-		return null;
-	}
-
-	@Override
-	public Set<CommonTerm> getCommonTermElements() {
-		// TODO does not supports the symbol translation, cant see an easy way here.
-		return null;
 	}
 
 	@Override

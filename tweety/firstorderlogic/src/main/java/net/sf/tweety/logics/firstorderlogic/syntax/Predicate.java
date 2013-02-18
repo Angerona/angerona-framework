@@ -65,12 +65,5 @@ public class Predicate extends FolBasicStructure  {
 			return false;		
 		return super.equals(obj);
 	}
-	@Override
-	public boolean isPredicate() {
-		return true;
-	}
-	@Override
-	public boolean isFunctional() {
-		return false;
-	}
+
 }

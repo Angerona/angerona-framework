@@ -1,12 +1,11 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import net.sf.tweety.logics.CommonTerm;
 
 /**
  * A term of first-order logic, i.e. an object of a specific sort.
  * @author Matthias Thimm
  */
-public abstract class Term extends LogicStructure implements CommonTerm {
+public abstract class Term extends LogicStructure {
 		
 	private Sort sort;
 		
@@ -35,11 +34,6 @@ public abstract class Term extends LogicStructure implements CommonTerm {
 	public Sort getSort(){
 		return this.sort;
 	}	
-	
-	@Override
-	public String getSortName() {
-		return getSort().getName();
-	}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

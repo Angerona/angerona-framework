@@ -1,6 +1,9 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A functional term in first-order logic, i.e. a functor and a list
@@ -189,25 +192,5 @@ public class FunctionalTerm extends Term {
 		} else if (!functor.equals(other.functor))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String getName() {
-		return this.functor.getName();
-	}
-
-	@Override
-	public boolean isVariable() {
-		return false;
-	}
-
-	@Override
-	public boolean isConstant() {
-		return false;
-	}
-
-	@Override
-	public boolean isNumber() {
-		return false;
 	}
 }

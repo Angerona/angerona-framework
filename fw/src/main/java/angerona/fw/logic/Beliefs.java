@@ -2,11 +2,6 @@ package angerona.fw.logic;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import net.sf.tweety.Signature;
-import net.sf.tweety.SymbolSet;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
 import angerona.fw.BaseBeliefbase;
 
@@ -69,22 +64,4 @@ public class Beliefs implements Cloneable
 		return reval;
 	}
 	
-	/**
-	 * This method generates a FOL-Signature by the union of the FolSignatures
-	 * of all belief bases in the Beliefs (world and views).
-	 * @return	A FOL-Signature containing the union of the signatures of every
-	 * 			belief base of the agent (world and views).
-	 */
-	public FolSignature getSignature() {
-		BaseBeliefbase world = getWorldKnowledge();
-		Signature worldSig = world.getSignature();
-		SymbolSet ss = worldSig.getSymbolSet();
-		Set<String> views = getViewKnowledge().keySet();
-		for(String viewname : views) {
-			BaseBeliefbase view = getViewKnowledge().get(viewname);
-			Signature sig = view.getSignature();
-			ss.add(sig.getSymbolSet());
-		}
-		return new FolSignature(ss);
-	}
 }
