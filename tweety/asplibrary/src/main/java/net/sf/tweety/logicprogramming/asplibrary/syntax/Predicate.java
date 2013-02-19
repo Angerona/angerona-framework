@@ -2,7 +2,7 @@ package net.sf.tweety.logicprogramming.asplibrary.syntax;
 
 
 /**
- * A predicate has an name and an arity. 
+ * A predicate has a name and an arity. 
  * @author Tim Janus
  */
 public class Predicate {
