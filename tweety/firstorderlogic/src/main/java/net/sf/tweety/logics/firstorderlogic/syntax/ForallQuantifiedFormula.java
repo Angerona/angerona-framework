@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * For-All quantified formula.
  * @author Matthias Thimm
@@ -58,7 +60,7 @@ public class ForallQuantifiedFormula extends QuantifiedFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
 	public String toString(){
-		String s = FolSignature.FORALLQUANTIFIER + " ";
+		String s = LogicalSymbols.FORALLQUANTIFIER() + " ";
 		Iterator<Variable> it = this.getQuantifierVariables().iterator();
 		if(it.hasNext())
 			s += it.next();

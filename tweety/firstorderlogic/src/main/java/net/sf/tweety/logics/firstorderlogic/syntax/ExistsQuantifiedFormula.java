@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 public class ExistsQuantifiedFormula extends QuantifiedFormula{
 	
 	/**
@@ -53,7 +55,7 @@ public class ExistsQuantifiedFormula extends QuantifiedFormula{
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */
 	public String toString(){
-		String s = FolSignature.EXISTSQUANTIFIER + " ";
+		String s = LogicalSymbols.EXISTSQUANTIFIER() + " ";
 		Iterator<Variable> it = this.getQuantifierVariables().iterator();
 		if(it.hasNext())
 			s += it.next();

@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * The classical disjunction of first-order logic.
  * @author Matthias Thimm
@@ -57,17 +59,17 @@ public class Disjunction extends AssociativeFormula{
 	 */
 	public String toString(){
 		if(this.isEmpty())
-			return FolSignature.TAUTOLOGY;
+			return LogicalSymbols.TAUTOLOGY();
 		String s = "";
 		boolean isFirst = true;
 		for(RelationalFormula f: this){
 			if(isFirst)			
 				isFirst = false;
 			else
-				s  += FolSignature.DISJUNCTION;
+				s  += LogicalSymbols.DISJUNCTION();
 			// check if parentheses are needed
 			if(f instanceof Disjunction && ((Disjunction)f).size()>1 )
-				s += FolSignature.PARENTHESES_LEFT + f.toString() + FolSignature.PARENTHESES_RIGHT;
+				s += LogicalSymbols.PARENTHESES_LEFT() + f.toString() + LogicalSymbols.PARENTHESES_RIGHT();
 			else s += f.toString();
 		}
 		return s;

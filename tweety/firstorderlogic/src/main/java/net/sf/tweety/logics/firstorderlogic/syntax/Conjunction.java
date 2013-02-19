@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * The classical conjunction of first-order logic.
  * @author Matthias Thimm
@@ -39,17 +41,17 @@ public class Conjunction extends AssociativeFormula {
 	 */
 	public String toString(){
 		if(this.isEmpty())
-			return FolSignature.CONTRADICTION;
+			return LogicalSymbols.CONTRADICTION();
 		String s = "";
 		boolean isFirst = true;
 		for(RelationalFormula f: this){
 			if(isFirst)			
 				isFirst = false;
 			else
-				s  += FolSignature.CONJUNCTION;
+				s  += LogicalSymbols.CONJUNCTION();
 			// check if parentheses are needed
 			if(f instanceof Disjunction && ((Disjunction)f).size()>1 )
-				s += FolSignature.PARENTHESES_LEFT + f.toString() + FolSignature.PARENTHESES_RIGHT;
+				s += LogicalSymbols.PARENTHESES_LEFT() + f.toString() + LogicalSymbols.PARENTHESES_RIGHT();
 			else s += f.toString();
 		}
 		return s;

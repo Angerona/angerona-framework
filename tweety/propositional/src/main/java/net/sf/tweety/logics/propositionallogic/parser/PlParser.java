@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.propositionallogic.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
 
@@ -104,12 +105,12 @@ public class PlParser extends Parser {
 	private PropositionalFormula parseDisjunction(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(PropositionalSignature.DISJUNCTION)))
+		if(!(l.contains(LogicalSymbols.DISJUNCTION())))
 			return this.parseConjunction(l);		
 		Disjunction d = new Disjunction();
 		List<Object> tmp = new ArrayList<Object>(); 
 		for(Object o: l){
-			if((o instanceof String) && ((String)o).equals(PropositionalSignature.DISJUNCTION) ){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.DISJUNCTION()) ){
 				d.add(this.parseConjunction(tmp));
 				tmp = new ArrayList<Object>();
 			}else tmp.add(o);
@@ -130,12 +131,12 @@ public class PlParser extends Parser {
 	private PropositionalFormula parseConjunction(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("General parsing exception.");
-		if(!(l.contains(PropositionalSignature.CONJUNCTION)))
+		if(!(l.contains(LogicalSymbols.CONJUNCTION())))
 			return this.parseNegation(l);		
 		Conjunction c = new Conjunction();
 		List<Object> tmp = new ArrayList<Object>(); 
 		for(Object o: l){
-			if((o instanceof String) && ((String)o).equals(PropositionalSignature.CONJUNCTION) ){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.CONJUNCTION()) ){
 				c.add(this.parseNegation(tmp));
 				tmp = new ArrayList<Object>();
 			}else tmp.add(o);
@@ -154,7 +155,7 @@ public class PlParser extends Parser {
 	 * @throws ParserException if the list could not be parsed.
 	 */
 	private PropositionalFormula parseNegation(List<Object> l) throws ParserException{
-		if(l.get(0).equals(PropositionalSignature.CLASSICAL_NEGATION)){
+		if(l.get(0).equals(LogicalSymbols.CLASSICAL_NEGATION())){
 			l.remove(0);
 			return new Negation(this.parseAtomic(l));			
 		}
@@ -175,9 +176,9 @@ public class PlParser extends Parser {
 			if(o instanceof PropositionalFormula) return (PropositionalFormula) o;
 			if(o instanceof String){
 				String s = (String) o;
-				if(s.equals(PropositionalSignature.CONTRADICTION))
+				if(s.equals(LogicalSymbols.CONTRADICTION()))
 					return new Contradiction();
-				if(s.equals(PropositionalSignature.TAUTOLOGY))
+				if(s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
 				if(s.matches("[a-z,A-Z]"))
 					return new Proposition(s);

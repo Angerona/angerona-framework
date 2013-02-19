@@ -1,16 +1,17 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.Signature;
 
 /**
  * This class captures the signature of a specific
  * first-order language.
  * @author Matthias Thimm
  */
-public class FolSignature extends Signature implements LogicalSymbols{
+public class FolSignature extends Signature{
 	
 	private Set<Term> constants;
 	private Set<Sort> sorts;

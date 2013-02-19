@@ -2,6 +2,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * The classical negation of first-order logic.
  * @author Matthias Thimm
@@ -124,7 +126,7 @@ public class Negation extends FolFormula{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return FolSignature.CLASSICAL_NEGATION + this.folFormula;
+		return LogicalSymbols.CLASSICAL_NEGATION() + this.folFormula;
 	}
 
 	/* (non-Javadoc)

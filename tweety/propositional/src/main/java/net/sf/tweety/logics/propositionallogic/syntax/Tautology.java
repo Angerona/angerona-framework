@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * A tautological formula.
  * @author Matthias Thimm
@@ -18,6 +20,6 @@ public class Tautology extends SpecialFormula {
 	 */
 	@Override
 	public String toString() {
-		return PropositionalSignature.TAUTOLOGY;
+		return LogicalSymbols.TAUTOLOGY();
 	}
 }

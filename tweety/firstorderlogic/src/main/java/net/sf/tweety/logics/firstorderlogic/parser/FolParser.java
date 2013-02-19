@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.firstorderlogic.*;
 import net.sf.tweety.logics.firstorderlogic.syntax.*;
 
@@ -364,12 +365,12 @@ public class FolParser extends Parser {
 	private FolFormula parseDisjunction(List<Object> l){
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(FolSignature.DISJUNCTION)))
+		if(!(l.contains(LogicalSymbols.DISJUNCTION())))
 			return this.parseConjunction(l);		
 		Disjunction d = new Disjunction();
 		List<Object> tmp = new ArrayList<Object>(); 
 		for(Object o: l){
-			if((o instanceof String) && ((String)o).equals(FolSignature.DISJUNCTION) ){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.DISJUNCTION()) ){
 				d.add(this.parseConjunction(tmp));
 				tmp = new ArrayList<Object>();
 			}else tmp.add(o);
@@ -389,12 +390,12 @@ public class FolParser extends Parser {
 	private FolFormula parseConjunction(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("General parsing exception.");
-		if(!(l.contains(FolSignature.CONJUNCTION)))
+		if(!(l.contains(LogicalSymbols.CONJUNCTION())))
 			return this.parseNegation(l);		
 		Conjunction c = new Conjunction();
 		List<Object> tmp = new ArrayList<Object>(); 
 		for(Object o: l){
-			if((o instanceof String) && ((String)o).equals(FolSignature.CONJUNCTION) ){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.CONJUNCTION()) ){
 				c.add(this.parseNegation(tmp));
 				tmp = new ArrayList<Object>();
 			}else tmp.add(o);
@@ -413,7 +414,7 @@ public class FolParser extends Parser {
 	 * @throws ParserException if the list could not be parsed.
 	 */
 	private FolFormula parseNegation(List<Object> l) throws ParserException{
-		if(l.get(0).equals(FolSignature.CLASSICAL_NEGATION)){
+		if(l.get(0).equals(LogicalSymbols.CLASSICAL_NEGATION())){
 			l.remove(0);
 			return new Negation(this.parseAtomic(l));			
 		}
@@ -436,9 +437,9 @@ public class FolParser extends Parser {
 			if(o instanceof FolFormula) return (FolFormula) o;
 			if(o instanceof String){
 				String s = (String) o;
-				if(s.equals(FolSignature.CONTRADICTION))
+				if(s.equals(LogicalSymbols.CONTRADICTION()))
 					return new Contradiction();
-				if(s.equals(FolSignature.TAUTOLOGY))
+				if(s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
 				if(this.signature.containsPredicate( s )) {
 				  Predicate p = this.signature.getPredicate( s );

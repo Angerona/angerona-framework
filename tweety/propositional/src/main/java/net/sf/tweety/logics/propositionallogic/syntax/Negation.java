@@ -2,6 +2,8 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * This class models classical negation of propositional logic.
  * 
@@ -57,8 +59,8 @@ public class Negation extends PropositionalFormula {
 	 */
 	public String toString(){
 		if(this.formula instanceof AssociativeFormula || this.formula instanceof Negation)			
-			return PropositionalSignature.CLASSICAL_NEGATION + "(" + this.formula + ")";
-		return PropositionalSignature.CLASSICAL_NEGATION + this.formula;
+			return LogicalSymbols.CLASSICAL_NEGATION() + "(" + this.formula + ")";
+		return LogicalSymbols.CLASSICAL_NEGATION() + this.formula;
 	}
 	
   /* (non-Javadoc)

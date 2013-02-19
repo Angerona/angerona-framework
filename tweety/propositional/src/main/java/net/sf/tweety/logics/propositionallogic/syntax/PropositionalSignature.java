@@ -1,9 +1,8 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.SetSignature;
 
 
 /**
@@ -11,7 +10,7 @@ import net.sf.tweety.logics.commons.LogicalSymbols;
  * propositional language.
  * @author Matthias Thimm, Sebastian Homann
  */
-public class PropositionalSignature extends SetSignature<Proposition> implements LogicalSymbols {
+public class PropositionalSignature extends SetSignature<Proposition> {
 	
 	/**
 	 * Creates a new propositional signature with the given set

@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * A contradictory formula.
  * @author Matthias Thimm
@@ -18,7 +20,7 @@ public class Contradiction extends SpecialFormula{
 	 */
 	@Override
 	public String toString() {
-		return FolSignature.CONTRADICTION;
+		return LogicalSymbols.CONTRADICTION();
 	}
 	
 	/* (non-Javadoc)

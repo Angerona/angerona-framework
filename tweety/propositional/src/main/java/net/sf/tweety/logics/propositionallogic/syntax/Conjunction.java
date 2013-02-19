@@ -2,6 +2,8 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * This class represents a conjunction in propositional logic.
  * 
@@ -58,17 +60,17 @@ public class Conjunction extends AssociativeFormula {
 	 */
 	public String toString(){
 		if(this.isEmpty())
-			return PropositionalSignature.CONTRADICTION;
+			return LogicalSymbols.CONTRADICTION();
 		String s = "";
 		boolean isFirst = true;
 		for(PropositionalFormula f: this){
 			if(isFirst)			
 				isFirst = false;
 			else
-				s  += PropositionalSignature.CONJUNCTION;
+				s  += LogicalSymbols.CONJUNCTION();
 			// check if parentheses are needed
 			if(f instanceof Disjunction && ((Disjunction)f).size()>1 )
-				s += PropositionalSignature.PARENTHESES_LEFT + f.toString() + PropositionalSignature.PARENTHESES_RIGHT;
+				s += LogicalSymbols.PARENTHESES_LEFT() + f.toString() + LogicalSymbols.PARENTHESES_RIGHT();
 			else s += f.toString();
 		}
 		return s;

@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * A tautological formula.
  * @author Matthias Thimm
@@ -17,7 +19,7 @@ public class Tautology extends SpecialFormula {
 	 */
 	@Override
 	public String toString() {
-		return FolSignature.TAUTOLOGY;
+		return LogicalSymbols.TAUTOLOGY();
 	}
 	
 	/* (non-Javadoc)

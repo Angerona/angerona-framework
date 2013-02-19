@@ -2,6 +2,8 @@ package net.sf.tweety.logics.propositionallogic.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 /**
  * This class represents a disjunction in propositional logic.
  * 
@@ -58,14 +60,14 @@ public class Disjunction extends AssociativeFormula {
 	 */
 	public String toString(){
 		if(this.isEmpty())
-			return PropositionalSignature.TAUTOLOGY;
+			return LogicalSymbols.TAUTOLOGY();
 		String s = "";
 		boolean isFirst = true;
 		for(PropositionalFormula f: this){
 			if(isFirst)			
 				isFirst = false;
 			else
-				s  += PropositionalSignature.DISJUNCTION;
+				s  += LogicalSymbols.DISJUNCTION();
 			s += f.toString();
 		}
 		return s;

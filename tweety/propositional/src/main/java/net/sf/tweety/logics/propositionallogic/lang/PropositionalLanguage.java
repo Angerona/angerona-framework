@@ -1,17 +1,19 @@
 package net.sf.tweety.logics.propositionallogic.lang;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.*;
-import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.logics.propositionallogic.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
+import net.sf.tweety.BeliefBase;
+import net.sf.tweety.Formula;
+import net.sf.tweety.Language;
+import net.sf.tweety.Signature;
+import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
 
 /**
  * This class models a propositional language for a given signature.
  * @author mthimm
  *
  */
-public class PropositionalLanguage extends Language implements LogicalSymbols {
+public class PropositionalLanguage extends Language {
 
 	/**
 	 * Creates a new language on the given first-order signature.
