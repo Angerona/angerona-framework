@@ -12,7 +12,7 @@ public abstract class Reasoner {
 	/**
 	 * The knowledge base on which reasoning is performed.
 	 */
-	protected BeliefBase beliefBase;
+	private BeliefBase beliefBase;
 	
 	/**
 	 * Creates a new reasoner for the given knowledge base.

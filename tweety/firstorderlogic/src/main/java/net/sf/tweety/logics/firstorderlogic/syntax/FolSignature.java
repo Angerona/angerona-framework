@@ -1,13 +1,9 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-import javax.management.openmbean.InvalidOpenTypeException;
-
-import net.sf.tweety.Signature;
-import net.sf.tweety.logics.LogicalSymbols;
+import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 
 /**
  * This class captures the signature of a specific
@@ -249,47 +245,5 @@ public class FolSignature extends Signature implements LogicalSymbols{
 		this.sorts.addAll(folSig.sorts);
 		
 	}
-
-	private void clear() {
-		this.constants.clear();
-		this.functors.clear();
-		this.predicates.clear();
-		this.sorts.clear();
-	}
-
 	
-	@Override
-	public void fromSignature(Signature signature) {
-		clear();
-		if(signature instanceof FolSignature) {
-			this.addSignature(signature);
-		} else {
-			throw new InvalidOpenTypeException();
-		}
-	}
-	
-	@Override
-	public String toString() {
-		String reval = "Sorts:\n";
-		for(Sort s : sorts) {
-			reval += s.getName() + " - " + s.getConstants() + "\n";
-		}
-		
-		reval += "\nPredicates:\n";
-		for(Predicate p : predicates) {
-			reval += p.getName() + "/" + p.getArity() + "\n";
-		}
-		
-		reval += "\nFunctors:\n";
-		for(Functor f : functors) {
-			reval += f.getName() + "(";
-			for(Sort s : f.getArguments()) {
-				reval += s.getName() + ", ";
-			}
-			reval = reval.substring(0, reval.length()-2);
-			reval += ") --> " + f.getTargetSort().getName();
-		}
-		
-		return reval;
-	}
 }

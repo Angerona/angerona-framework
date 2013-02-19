@@ -1,7 +1,6 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A variable of first-order logic, i.e. a placeholder for an object of a specific sort.

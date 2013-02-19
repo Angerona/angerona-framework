@@ -38,7 +38,7 @@ public class OpenOptSolver extends Solver {
 	/**
 	 * Logger.
 	 */
-	static private Logger log = LoggerFactory.getLogger(OpenOptSolver.class);	
+	private Logger log = LoggerFactory.getLogger(OpenOptSolver.class);
 	
 	// TODO make the following private and add getter/setter
 	public double contol = 1e-8;
@@ -101,9 +101,9 @@ public class OpenOptSolver extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {		
+	public Map<Variable, Term> solve() throws GeneralMathException {
 		String output = "";
-		String error = "";
+		//String error = "";
 		InputStream in = null;
 		Process child = null;
 		try{
@@ -112,11 +112,11 @@ public class OpenOptSolver extends Solver {
 			ooFile.deleteOnExit();    
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
-			OpenOptSolver.log.info("Building Python code for OpenOpt.");
+			this.log.info("Building Python code for OpenOpt.");
 			out.write(this.getOpenOptCode());			
 			out.close();
 			//execute openopt on problem and retrieve console output
-			OpenOptSolver.log.info("Calling OpenOpt optimization library.");
+			this.log.info("Calling OpenOpt optimization library.");
 			child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
 			int c;		
 			in = child.getInputStream();
@@ -125,8 +125,8 @@ public class OpenOptSolver extends Solver {
 	        }
 			in.close();		        		        
 	        in = child.getErrorStream();
-	        while ((c = in.read()) != -1)
-	            error += (char)c;	        	        
+	      //  while ((c = in.read()) != -1)
+	      //      error += (char)c;	        	        
 		}catch(IOException e){
 			log.error(e.getMessage());
 			return null;
@@ -140,11 +140,11 @@ public class OpenOptSolver extends Solver {
 		}
 		// TODO check error appropriately
 		if(output.contains("NO FEASIBLE SOLUTION") && !this.ignoreNotFeasibleError){
-			OpenOptSolver.log.info("The optimization problem seems to be unfeasible.");
+			this.log.info("The optimization problem seems to be unfeasible.");
 			throw new GeneralMathException("The optimization problem seems to be unfeasible.");
 		}
 		// parser output
-		OpenOptSolver.log.info("Parsing solution from OpenOpt.");
+		this.log.info("Parsing solution from OpenOpt.");
 		try{
 			double[] values = this.parseOutput(output, this.idx2newVars.keySet().size());
 			Map<Variable,Term> result = new HashMap<Variable,Term>();
@@ -152,7 +152,7 @@ public class OpenOptSolver extends Solver {
 				result.put(this.newVars2oldVars.get(this.idx2newVars.get(i)), new FloatConstant(values[i]));
 			return result;
 		}catch(Exception e){
-			OpenOptSolver.log.error(e.getMessage());
+			this.log.error(e.getMessage());
 			throw new GeneralMathException(e.getMessage());
 		}
 	}
@@ -249,14 +249,14 @@ public class OpenOptSolver extends Solver {
 			code += "\np.c = " + inequalities + "\n\n";
 		// write commands			
 		code += "p.contol = " + this.contol + "\n";
-		code += "p.ftol = " + this.ftol + "\n";
-		code += "p.gtol = " + this.gtol + "\n";
-		code += "p.xtol = " + this.xtol + "\n";
-		code += "p.maxIter = " + this.maxIter + "\n";
-		code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
+	//	code += "p.ftol = " + this.ftol + "\n";
+	//	code += "p.gtol = " + this.gtol + "\n";
+	//	code += "p.xtol = " + this.xtol + "\n";
+	//	code += "p.maxIter = " + this.maxIter + "\n";
+	//	code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
 		code += "r = p.solve('" + this.solver + "')\n";
 		code += "print r.xf";
-		OpenOptSolver.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");
+		this.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");		
 		return code;
 	}
 	
@@ -283,7 +283,7 @@ public class OpenOptSolver extends Solver {
 			}
 			return result;
 		}catch(Exception e){
-			OpenOptSolver.log.error(e.getMessage());
+			this.log.error(e.getMessage());
 			throw new RuntimeException(e.getMessage());
 		}
 	}

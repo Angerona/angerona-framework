@@ -1,12 +1,12 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * A predicate in first-order logic, i.e. an identifier for a relation between objects.
  * @author Matthias Thimm
  */
-public class Predicate extends FolBasicStructure  {
+public class Predicate extends FolBasicStructure {
 	
 	/**
 	 * Initializes a predicate of arity zero with the given name; 
@@ -23,7 +23,6 @@ public class Predicate extends FolBasicStructure  {
 	public Predicate(String name, int arity){
 		super(name,arity);
 	}
-	
 	
 	/**
 	 * Initializes a predicate with the given name and the given list
@@ -47,7 +46,7 @@ public class Predicate extends FolBasicStructure  {
 		this.setArguments(arguments);
 		return this;
 	}
-	
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#hashCode()
 	 */
@@ -65,5 +64,4 @@ public class Predicate extends FolBasicStructure  {
 			return false;		
 		return super.equals(obj);
 	}
-
 }

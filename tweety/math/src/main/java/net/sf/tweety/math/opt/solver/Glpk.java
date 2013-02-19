@@ -1,6 +1,6 @@
 package net.sf.tweety.math.opt.solver;
 
-import java.io.*;
+//import java.io.*;
 import java.util.*;
 
 import net.sf.tweety.math.opt.*;
@@ -30,6 +30,7 @@ public class Glpk extends Solver{
 	 */
 	@Override
 	public Map<Variable, Term> solve() {
+		/*
 		String output = new String();
 		String error = "";
 		try{
@@ -57,6 +58,8 @@ public class Glpk extends Solver{
 			return null;
 		}	
 		//parse output
+		 * 
+		 */
 		//TODO IMPLEMENT ME
 		return null;
 	}

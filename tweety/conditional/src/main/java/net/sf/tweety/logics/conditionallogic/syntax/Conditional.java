@@ -1,11 +1,14 @@
 package net.sf.tweety.logics.conditionallogic.syntax;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.propositionallogic.syntax.*;
-import net.sf.tweety.util.*;
-import net.sf.tweety.util.rules.*;
+import net.sf.tweety.Signature;
+import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
+import net.sf.tweety.math.probability.Probability;
+import net.sf.tweety.util.rules.Rule;
 
 /**
  * This class represents a basic conditional (B|A) with formulas A,B.

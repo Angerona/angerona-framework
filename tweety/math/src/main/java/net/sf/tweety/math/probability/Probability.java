@@ -1,4 +1,4 @@
-package net.sf.tweety.util;
+package net.sf.tweety.math.probability;
 
 /**
  * This class represents a probability, i.e. a double in the interval [0,1].
@@ -38,6 +38,14 @@ public class Probability extends Number {
 	}
 	
 	/**
+	 * Creates a new probability from the given probability
+	 * @param other another probability
+	 */
+	public Probability(Probability other){		
+		this.value = other.value;
+	}
+	
+	/**
 	 * Returns the complement of this probability, i.e. a probability of
 	 * one minus the value of this probability.
 	 * @return the complement of this probability.
@@ -71,6 +79,15 @@ public class Probability extends Number {
 	 */
 	public Probability mult(Integer other){
 		return new Probability(this.value * other);
+	}
+	
+	/**
+	 * Computes the product of this probability and the given probability.
+	 * @param other a probability.
+	 * @return a probability.
+	 */
+	public Probability mult(Probability other){
+		return new Probability(this.value * other.value);
 	}
 	
 	/**
@@ -115,7 +132,7 @@ public class Probability extends Number {
 	 */
 	@Override
 	public double doubleValue() {
-		return this.value.doubleValue();
+		return this.value.doubleValue();	
 	}
 
 	/* (non-Javadoc)

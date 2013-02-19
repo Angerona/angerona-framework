@@ -1,4 +1,8 @@
-package net.sf.tweety;
+package net.sf.tweety.logics.commons;
+
+import net.sf.tweety.Formula;
+import net.sf.tweety.math.probability.Probability;
+
 
 /**
  * This interface models a classical formula, i.e. a formula that can be connected
@@ -29,4 +33,10 @@ public interface ClassicalFormula extends Formula{
 	 * @return the complement of this formula.
 	 */
 	public ClassicalFormula complement();
+	
+	/**
+	 * Returns this formula's probability in the uniform distribution. 
+	 * @return this formula's probability in the uniform distribution.
+	 */
+	public Probability getUniformProbability();
 }

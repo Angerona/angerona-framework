@@ -60,6 +60,11 @@
     	<artifactId>tweety</artifactId>
     	<version>0.1.69-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>net.sf.tweety.logics</groupId>
+    	<artifactId>commons</artifactId>
+    	<version>0.0.82-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>angerona.fw</groupId>

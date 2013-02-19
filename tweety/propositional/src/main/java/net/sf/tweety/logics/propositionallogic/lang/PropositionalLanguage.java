@@ -2,6 +2,7 @@ package net.sf.tweety.logics.propositionallogic.lang;
 
 import net.sf.tweety.*;
 import net.sf.tweety.logics.*;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.propositionallogic.*;
 import net.sf.tweety.logics.propositionallogic.syntax.*;
 

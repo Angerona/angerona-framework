@@ -181,7 +181,7 @@ FolBeliefSet KB() :{
   FolFormula ff;
   FolBeliefSet bb = new FolBeliefSet();
   FolSignature signature = (FolSignature)bb.getSignature();
-  System.out.println("KB");}
+}
 {
  (
    LOOKAHEAD(2)
@@ -208,7 +208,7 @@ FolFormula formula(FolSignature signature) :
   Pair<Integer, FolFormula > ex;
   FolFormula reval;
   Variable v = null;
-  System.out.println("formula");}
+}
 {
   (  
 	  (
@@ -247,7 +247,6 @@ FolFormula formula(FolSignature signature) :
 
 Pair<Integer, FolFormula> formulaex(FolSignature signature) :
 {
-  System.out.println("formulaex");
   Integer status = 0; // 0 nothing, 1 and, 2 or
   FolFormula form = null;
   Pair<Integer, FolFormula> reval = new Pair<Integer, FolFormula>();}
@@ -270,7 +269,6 @@ Pair<Integer, FolFormula> formulaex(FolSignature signature) :
 
 Atom atom(FolSignature signature) :
 {
-  System.out.println("atom");
   String identifier;
   Term t;
   Atom reval;
@@ -304,13 +302,11 @@ Atom atom(FolSignature signature) :
       p = new Predicate(identifier, terms.size());
       signature.add(p);
 	}
-	System.out.println(p.getSorts() + " - ( " + terms + " )");
-    reval = new Atom(p, terms);    return reval;
+	reval = new Atom(p, terms);    return reval;
   }}
 
 Term term(FolSignature signature, Sort type) :
 {
-  System.out.println("term");
   Term temp;
   String fname;
   int count = 0;
@@ -360,7 +356,6 @@ Term term(FolSignature signature, Sort type) :
   )}
 String identifier() :
 {
-  System.out.print("identifier: ");
   Token t;}
 {
   (    
@@ -371,12 +366,10 @@ String identifier() :
       t = < VARIABLE >    )
   )
   {
-    System.out.println(t.image);
     return t.image;  }}
 
 List<Sort > sortdecl() :
 {
-  System.out.println("sortdecl");
   Set<Constant > temp;
   Sort act;
   List<Sort > reval = new LinkedList<Sort >();
@@ -396,7 +389,7 @@ List<Sort > sortdecl() :
   	{
   	  for(Constant c : temp)  	  {
   	    act.add(c);  	  }
-  	  System.out.println("add sort: " + name);  	}
+  	}
   )+
   {
     return reval;  }
@@ -406,7 +399,7 @@ Set<Constant > constants(Sort type) :
 {
   Token t;
   Set<Constant > reval = new HashSet<Constant >();
-  System.out.println("constants");}
+}
 {
   t = < CONSTANT >
   {
@@ -422,8 +415,7 @@ Set<Constant > constants(Sort type) :
 void declar(FolSignature signature) :
 {
   String name;
-  FolBasicStructure fbs = null;
-  System.out.println("declar");}
+  FolBasicStructure fbs = null;}
 {
   < TYPE > < LBRA > name = identifier()
   (
@@ -449,7 +441,7 @@ FolBasicStructure endPredicateDeclar(FolSignature signature, String name) :
   String sort;
   Predicate reval = null;
   List<String > sorts = new LinkedList<String >();
-  System.out.print("endPredicateDeclar: ");}
+  }
 {
   (
     < LBRA >
@@ -469,12 +461,10 @@ FolBasicStructure endPredicateDeclar(FolSignature signature, String name) :
     {
       throw new ParseException("Predicate with name '" + name + "' already exists. Proof your kb for duplicate declarations.");    }
     reval = new Predicate(name, getSorts(signature, sorts));
-    System.out.println(reval);
     return reval;  }}
 
 FolBasicStructure endFunctorDeclar(FolSignature signature, String sortName) :
 {
-  System.out.println("endFunctorDeclar");
   String name;
   String tempType;
   List<String >sorts = new LinkedList<String >();

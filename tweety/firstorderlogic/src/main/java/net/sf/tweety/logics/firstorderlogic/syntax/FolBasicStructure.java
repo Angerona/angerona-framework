@@ -1,8 +1,6 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The abstract parent for predicates and functors. This class captures their common
@@ -103,6 +101,7 @@ public abstract class FolBasicStructure {
 		s += ")";*/		
 		return s;
 	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -139,13 +138,5 @@ public abstract class FolBasicStructure {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-	
-	public List<String> getSorts() {
-		List<String> reval = new LinkedList<String>();
-		for(Sort s : arguments) {
-			reval.add(s.getName());
-		}
-		return reval;
 	}
 }

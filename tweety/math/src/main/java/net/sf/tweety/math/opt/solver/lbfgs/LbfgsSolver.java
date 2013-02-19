@@ -1,14 +1,22 @@
 package net.sf.tweety.math.opt.solver.lbfgs;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
+import net.sf.tweety.util.VectorTools;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.sf.tweety.math.*;
-import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.term.*;
-import net.sf.tweety.util.*;
 
 
 /**
@@ -21,7 +29,8 @@ public class LbfgsSolver extends Solver {
 	/**
 	 * Logger.
 	 */
-	static private Logger log = LoggerFactory.getLogger(LbfgsSolver.class);	
+	private Logger log = LoggerFactory.getLogger(LbfgsSolver.class);
+	
 	/**
 	 * The starting point for the solver.
 	 */
@@ -39,7 +48,7 @@ public class LbfgsSolver extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
-		LbfgsSolver.log.trace("Solving the following optimization problem using L-BFGS:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
+		this.log.trace("Solving the following optimization problem using L-BFGS:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
 		Term func = ((OptimizationProblem)this.getProblem()).getTargetFunction();
 		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
@@ -68,11 +77,11 @@ public class LbfgsSolver extends Solver {
 		double xtol = 10e-16;
 		int[] iflag = new int[1];
 		iflag[0] = 0;
-		LbfgsSolver.log.trace("Starting optimization.");
+		this.log.trace("Starting optimization.");
 		while(iflag[0] >= 0){
 			try{
 				Lbfgs.lbfgs(n, m, x, f, g, diagco, diag, iprint, eps, xtol, iflag);
-				LbfgsSolver.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(g));
+				this.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(g));
 			}catch(Exception e){
 				throw new GeneralMathException("Call to L-BFGS failed.");
 			}
@@ -98,7 +107,7 @@ public class LbfgsSolver extends Solver {
 					g[i] = gradient.get(i).replaceAllTerms(currentGuess).doubleValue();					
 			}
 		}
-		LbfgsSolver.log.trace("Optimum found: " + currentGuess);
+		this.log.trace("Optimum found: " + currentGuess);
 		return currentGuess;
 	}	
 }

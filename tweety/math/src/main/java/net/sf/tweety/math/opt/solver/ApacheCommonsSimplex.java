@@ -29,6 +29,7 @@ import org.apache.commons.math.optimization.linear.SimplexSolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * This class is a wrapper for the Apache Commons Math Simplex implementation.
  * See http://commons.apache.org/math.  
@@ -39,7 +40,7 @@ public class ApacheCommonsSimplex extends Solver {
 	/**
 	 * Logger.
 	 */
-	static private Logger log = LoggerFactory.getLogger(ApacheCommonsSimplex.class);	
+	private Logger log = LoggerFactory.getLogger(ApacheCommonsSimplex.class);
 	
 	/**
 	 * The maximum number of iterations of the simplex algorithm.
@@ -61,7 +62,7 @@ public class ApacheCommonsSimplex extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() {	
-		ApacheCommonsSimplex.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
+		this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
 		for(Statement s: this.getProblem())
@@ -135,7 +136,7 @@ public class ApacheCommonsSimplex extends Solver {
 		}
 		// 6.) Optimize.
 		try{
-			ApacheCommonsSimplex.log.info("Calling the Apache Commons Simplex algorithm.");
+			this.log.info("Calling the Apache Commons Simplex algorithm.");
 			SimplexSolver solver = new SimplexSolver(0.01);
 			solver.setMaxIterations(ApacheCommonsSimplex.MAXITERATIONS);
 			RealPointValuePair r = null;
@@ -145,7 +146,7 @@ public class ApacheCommonsSimplex extends Solver {
 				int type = ((OptimizationProblem)this.getProblem()).getType();
 				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), justPositive);
 			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, justPositive);
-			ApacheCommonsSimplex.log.info("Parsing output from the Apache Commons Simplex algorithm.");
+			this.log.info("Parsing output from the Apache Commons Simplex algorithm.");
 			Map<Variable, Term> result = new HashMap<Variable, Term>();
 			for(Variable v: origVars2Idx.keySet())
 				result.put(v, new FloatConstant(r.getPoint()[origVars2Idx.get(v)]));

@@ -31,8 +31,7 @@ public class GradientDescent extends Solver {
 	/**
 	 * Logger.
 	 */
-	static private Logger log = LoggerFactory.getLogger(GradientDescent.class);	
-
+	private Logger log = LoggerFactory.getLogger(GradientDescent.class);
 	
 	/**
 	 * The precision of the approximation.
@@ -71,7 +70,7 @@ public class GradientDescent extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
-		GradientDescent.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
+		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
 		Term f = ((OptimizationProblem)this.getProblem()).getTargetFunction();
 		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
 			f = new IntegerConstant(-1).mult(f);	
@@ -87,7 +86,7 @@ public class GradientDescent extends Solver {
 		double actualPrecision = this.precision * variables.size();
 		int idx;
 		double step,val;
-		GradientDescent.log.trace("Starting optimization.");
+		this.log.trace("Starting optimization.");
 		do{
 			// find the best step length
 			step = GradientDescent.MAX_STEP_LENGTH;			
@@ -111,9 +110,9 @@ public class GradientDescent extends Solver {
 				if(step < GradientDescent.MIN_STEP_LENGTH)
 					throw new GeneralMathException();
 			}			
-			GradientDescent.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(currentGradient));
+			this.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(currentGradient));
 		}while(VectorTools.manhattanDistanceToZero(currentGradient) > actualPrecision);
-		GradientDescent.log.trace("Optimum found: " + currentGuess);
+		this.log.trace("Optimum found: " + currentGuess);
 		return currentGuess;
 	}
 

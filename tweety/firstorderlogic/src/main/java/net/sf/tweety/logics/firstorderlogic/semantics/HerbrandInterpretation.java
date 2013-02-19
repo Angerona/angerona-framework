@@ -76,9 +76,15 @@ public class HerbrandInterpretation extends InterpretationSet<Atom> {
 			Variable v = e.getQuantifierVariables().iterator().next();
 			Set<Variable> remainingVariables = e.getQuantifierVariables();
 			remainingVariables.remove(v);
-			for(Constant c: v.getSort().getConstants()){
-				if(this.satisfies(new ExistsQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables)))
-					return true;
+			if(remainingVariables.isEmpty()){
+				for(Constant c: v.getSort().getConstants())
+					if(this.satisfies(e.getFormula().substitute(v, c)))
+						return true;
+			}else{
+				for(Constant c: v.getSort().getConstants()){
+					if(this.satisfies(new ExistsQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables)))
+						return true;
+					}
 			}
 			return false;
 		}

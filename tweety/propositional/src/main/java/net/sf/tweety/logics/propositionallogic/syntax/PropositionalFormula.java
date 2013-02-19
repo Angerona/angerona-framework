@@ -1,10 +1,13 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.*;
-import net.sf.tweety.logics.propositionallogic.semantics.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.Signature;
+import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
+import net.sf.tweety.math.probability.Probability;
+import net.sf.tweety.util.SetTools;
 
 /**
  * This class represents the common ancestor for propositional formulae.

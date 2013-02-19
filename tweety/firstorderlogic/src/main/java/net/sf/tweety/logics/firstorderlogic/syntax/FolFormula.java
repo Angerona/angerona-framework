@@ -2,7 +2,10 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandBase;
+import net.sf.tweety.logics.firstorderlogic.semantics.HerbrandInterpretation;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.SetTools;
 
 
@@ -105,15 +108,6 @@ public abstract class FolFormula extends RelationalFormula{
     return nnf;
 	}
 	
-	//************Begin Daniel's changes*************//
-	public boolean equals(FolFormula f)
-	{
-		if(f.toString().equals(this.toString()))
-			return true;
-		return false;
-	}
-	//************End Daniel's changes*************//
-	
 	/**
 	 * Makes the negation normal form of this formula.
 	 * @return the NNF of this formula
@@ -145,6 +139,29 @@ public abstract class FolFormula extends RelationalFormula{
 	 * @return the set of all conjunctions appearing in this formula.
 	 */
 	public abstract Set<Conjunction> getConjunctions();
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
+	 */
+	public Probability getUniformProbability(){
+		Set<Variable> vars = this.getUnboundVariables();
+		Map<Variable,Constant> map = new HashMap<Variable,Constant>();
+		int i = 0;
+		FolSignature sig = (FolSignature) this.getSignature();
+		for(Variable var: vars){
+			Constant c = new Constant("d" + i++);
+			map.put(var, c);
+			sig.add(c);
+		}
+		FolFormula groundFormula = (FolFormula) this.substitute(map);
+		HerbrandBase hBase = new HerbrandBase(sig);
+		Collection<HerbrandInterpretation> allWorlds = hBase.allHerbrandInterpretations();
+		int cnt = 0;
+		for(HerbrandInterpretation hInt: allWorlds)
+			if(hInt.satisfies(groundFormula))
+				cnt++;
+		return new Probability(new Double(cnt)/new Double(allWorlds.size()));
+	}
 	
 	/**
 	 * Checks whether this formula is in disjunctive normal form.

@@ -27,8 +27,7 @@ public class BfgsSolver extends Solver {
 	/**
 	 * Logger.
 	 */
-	static private Logger log = LoggerFactory.getLogger(BfgsSolver.class);	
-
+	private Logger log = LoggerFactory.getLogger(BfgsSolver.class);
 	
 	private static final double PRECISION = 0.000000000000000001;
 	
@@ -69,7 +68,7 @@ public class BfgsSolver extends Solver {
 		while(true){
 			evaluatedGradient = this.evaluate(gradient, currentGuess, variables);
 			distanceToZero = evaluatedGradient.distanceToZero();
-			BfgsSolver.log.trace("Current manhattan distance of gradient to zero: " + distanceToZero);
+			this.log.trace("Current manhattan distance of gradient to zero: " + distanceToZero);
 			if(distanceToZero < actualPrecision)
 				break;
 			searchDirection = approxInverseHessian.mult(evaluatedGradient.mult(new IntegerConstant(-1))).simplify();			

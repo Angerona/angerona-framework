@@ -96,7 +96,7 @@ public class Conjunction extends AssociativeFormula {
     }
     return c;
 	}
-	
+		
 	/*
 	 * (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#collapseAssociativeFormulas()

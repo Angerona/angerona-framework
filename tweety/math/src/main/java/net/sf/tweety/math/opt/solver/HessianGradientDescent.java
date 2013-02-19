@@ -1,15 +1,25 @@
 package net.sf.tweety.math.opt.solver;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.equation.Equation;
+import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.FloatVariable;
+import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
+import net.sf.tweety.util.VectorTools;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.sf.tweety.math.*;
-import net.sf.tweety.math.equation.*;
-import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.term.*;
-import net.sf.tweety.util.*;
 
 
 /**
@@ -22,7 +32,7 @@ public class HessianGradientDescent extends Solver {
 	/**
 	 * Logger.
 	 */
-	static private Logger log = LoggerFactory.getLogger(HessianGradientDescent.class);	
+	private Logger log = LoggerFactory.getLogger(HessianGradientDescent.class);
 	
 	private static final double PRECISION = 0.00001;
 	
@@ -43,7 +53,7 @@ public class HessianGradientDescent extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
-		HessianGradientDescent.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
+		this.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
 		Term func = ((OptimizationProblem)this.getProblem()).getTargetFunction();
 		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
@@ -69,11 +79,11 @@ public class HessianGradientDescent extends Solver {
 		double[] dir = new double[variables.size()];
 		double[] evaluatedGradient = new double[variables.size()];
 		double distance;
-		HessianGradientDescent.log.trace("Starting optimization.");
+		this.log.trace("Starting optimization.");
 		while(true){
 			evaluatedGradient = Term.evaluateVector(gradient, currentGuess, variables);
 			distance = VectorTools.manhattanDistanceToZero(evaluatedGradient);
-			HessianGradientDescent.log.trace("Current manhattan distance of gradient to zero: " + distance);
+			this.log.trace("Current manhattan distance of gradient to zero: " + distance);
 			if(distance < HessianGradientDescent.PRECISION)
 				break;
 			evaluatedHessian = Term.evaluateMatrix(hessian, currentGuess, variables);
@@ -84,7 +94,7 @@ public class HessianGradientDescent extends Solver {
 		idx = 0;
 		for(Variable v: variables)
 			result.put(v, new FloatConstant(currentGuess[idx++]));
-		HessianGradientDescent.log.trace("Optimum found: " + result);
+		this.log.trace("Optimum found: " + result);
 		return result;
 	}
 

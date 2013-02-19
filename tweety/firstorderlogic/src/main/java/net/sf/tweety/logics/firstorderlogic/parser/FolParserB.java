@@ -135,7 +135,6 @@ public class FolParserB implements FolParserBConstants {
   FolFormula ff;
   FolBeliefSet bb = new FolBeliefSet();
   FolSignature signature = (FolSignature)bb.getSignature();
-  System.out.println("KB");
     if (jj_2_1(2)) {
       sorts = sortdecl();
      for(Sort s : sorts)
@@ -186,7 +185,6 @@ public class FolParserB implements FolParserBConstants {
   Pair<Integer, FolFormula > ex;
   FolFormula reval;
   Variable v = null;
-  System.out.println("formula");
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSTANT:
     case VARIABLE:
@@ -236,7 +234,6 @@ public class FolParserB implements FolParserBConstants {
   }
 
   final public Pair<Integer, FolFormula> formulaex(FolSignature signature) throws ParseException {
-  System.out.println("formulaex");
   Integer status = 0; // 0 nothing, 1 and, 2 or
   FolFormula form = null;
   Pair<Integer, FolFormula> reval = new Pair<Integer, FolFormula>();
@@ -271,7 +268,6 @@ public class FolParserB implements FolParserBConstants {
   }
 
   final public Atom atom(FolSignature signature) throws ParseException {
-  System.out.println("atom");
   String identifier;
   Term t;
   Atom reval;
@@ -318,14 +314,12 @@ public class FolParserB implements FolParserBConstants {
       p = new Predicate(identifier, terms.size());
       signature.add(p);
         }
-        System.out.println(p.getSorts() + " - ( " + terms + " )");
-    reval = new Atom(p, terms);
+        reval = new Atom(p, terms);
     {if (true) return reval;}
     throw new Error("Missing return statement in function");
   }
 
   final public Term term(FolSignature signature, Sort type) throws ParseException {
-  System.out.println("term");
   Term temp;
   String fname;
   int count = 0;
@@ -393,7 +387,6 @@ public class FolParserB implements FolParserBConstants {
   }
 
   final public String identifier() throws ParseException {
-  System.out.print("identifier: ");
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSTANT:
@@ -407,13 +400,11 @@ public class FolParserB implements FolParserBConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    System.out.println(t.image);
     {if (true) return t.image;}
     throw new Error("Missing return statement in function");
   }
 
   final public List<Sort > sortdecl() throws ParseException {
-  System.out.println("sortdecl");
   Set<Constant > temp;
   Sort act;
   List<Sort > reval = new LinkedList<Sort >();
@@ -431,7 +422,6 @@ public class FolParserB implements FolParserBConstants {
           {
             act.add(c);
           }
-          System.out.println("add sort: " + name);
       if (jj_2_2(2)) {
         ;
       } else {
@@ -445,7 +435,6 @@ public class FolParserB implements FolParserBConstants {
   final public Set<Constant > constants(Sort type) throws ParseException {
   Token t;
   Set<Constant > reval = new HashSet<Constant >();
-  System.out.println("constants");
     t = jj_consume_token(CONSTANT);
     reval.add(new Constant(t.image, type));
     label_6:
@@ -469,7 +458,6 @@ public class FolParserB implements FolParserBConstants {
   final public void declar(FolSignature signature) throws ParseException {
   String name;
   FolBasicStructure fbs = null;
-  System.out.println("declar");
     jj_consume_token(TYPE);
     jj_consume_token(LBRA);
     name = identifier();
@@ -507,7 +495,6 @@ public class FolParserB implements FolParserBConstants {
   String sort;
   Predicate reval = null;
   List<String > sorts = new LinkedList<String >();
-  System.out.print("endPredicateDeclar: ");
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LBRA:
       jj_consume_token(LBRA);
@@ -540,13 +527,11 @@ public class FolParserB implements FolParserBConstants {
       {if (true) throw new ParseException("Predicate with name '" + name + "' already exists. Proof your kb for duplicate declarations.");}
     }
     reval = new Predicate(name, getSorts(signature, sorts));
-    System.out.println(reval);
     {if (true) return reval;}
     throw new Error("Missing return statement in function");
   }
 
   final public FolBasicStructure endFunctorDeclar(FolSignature signature, String sortName) throws ParseException {
-  System.out.println("endFunctorDeclar");
   String name;
   String tempType;
   List<String >sorts = new LinkedList<String >();
@@ -595,16 +580,6 @@ public class FolParserB implements FolParserBConstants {
     finally { jj_save(1, xla); }
   }
 
-  private boolean jj_3R_10() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(23)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(24)) return true;
-    }
-    return false;
-  }
-
   private boolean jj_3_1() {
     if (jj_3R_9()) return true;
     return false;
@@ -622,6 +597,16 @@ public class FolParserB implements FolParserBConstants {
     while (true) {
       xsp = jj_scanpos;
       if (jj_3_2()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_10() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(23)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(24)) return true;
     }
     return false;
   }

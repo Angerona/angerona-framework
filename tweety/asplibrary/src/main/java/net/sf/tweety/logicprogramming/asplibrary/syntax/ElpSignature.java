@@ -60,10 +60,4 @@ public class ElpSignature extends Signature {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public void fromSignature(Signature signature) {
-		// TODO: Implement
-	}
-
 }

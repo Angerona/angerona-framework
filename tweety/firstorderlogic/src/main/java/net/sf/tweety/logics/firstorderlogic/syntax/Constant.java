@@ -1,7 +1,6 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A constant of first-order logic, i.e. a term that names a specific object.

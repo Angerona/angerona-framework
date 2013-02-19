@@ -3,6 +3,8 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.ClassicalFormula;
+import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.util.*;
 
 
@@ -133,6 +135,16 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	}
 	
 	/**
+	 * Returns the ratio of worlds not satisfying this formula to
+	 *  worlds satisfying this formula.
+	 * @return the ratio of worlds not satisfying this formula to
+	 *  worlds satisfying this formula.
+	 */
+	public double getSatisfactionRatio(){
+		return this.complement().getUniformProbability().doubleValue() / this.getUniformProbability().doubleValue();
+	}
+	
+	/**
 	 * Gets all unbound variables in this formula.
 	 * @return the set of unbound variables of this formula.
 	 */
@@ -153,6 +165,12 @@ public abstract class RelationalFormula extends LogicStructure implements Classi
 	 * @return "true" if this formula is closed wrt. "boundVariables", "false" otherwise.
 	 */
 	public abstract boolean isClosed(Set<Variable> boundVariables);
+	
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.ClassicalFormula#getUniformProbability()
+	 */
+	public abstract Probability getUniformProbability();
 	
 	/**
 	 * Checks whether this formula is ground, i.e. whether there appears

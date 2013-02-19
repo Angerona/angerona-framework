@@ -1,10 +1,9 @@
 package net.sf.tweety.logics.propositionallogic.syntax;
 
-import java.util.Collection;
+import java.util.*;
 
-import net.sf.tweety.SetSignature;
-import net.sf.tweety.Signature;
-import net.sf.tweety.logics.LogicalSymbols;
+import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 
 
 /**
@@ -29,23 +28,5 @@ public class PropositionalSignature extends SetSignature<Proposition> implements
 	public PropositionalSignature(){
 		super();
 	}
-	
-	/** 
-	 * SymbolSet helper methods - basically some glue code between angeronas fol-based internal structure and
-	 * propositional signatures
-	 */
-	
-
-	/**
-	 * Populate this propositional signature from another signature which may either be
-	 */
-	@Override
-	public void fromSignature(Signature signature) {
-		clear();
-		if(signature instanceof PropositionalSignature) {
-			this.addSignature(signature);
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
+		
 }

@@ -30,7 +30,7 @@ public class LpSolve extends Solver {
 	@Override
 	public Map<Variable, Term> solve() {
 		String output = new String();
-		String error = "";
+		//String error = "";
 		try{
 			File lpFile = File.createTempFile("lptmp", null);
 			// Delete temp file when program exits.
@@ -47,8 +47,8 @@ public class LpSolve extends Solver {
 	            output += ((char)c);
 	        in.close();		        		        
 	        in = child.getErrorStream();
-	        while ((c = in.read()) != -1)
-	            error += (char)c;
+	      //  while ((c = in.read()) != -1)
+	      //      error += (char)c;
 	        in.close();	        
 		}catch(IOException e){
 			//TODO add error handling

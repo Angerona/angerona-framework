@@ -21,10 +21,8 @@ import org.slf4j.LoggerFactory;
  */
 public class GradientDescentRootFinder extends OptimizationRootFinder {
 	
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(GradientDescentRootFinder.class);	
+	/** reference to the logback logger instance */
+	private static Logger LOG = LoggerFactory.getLogger(GradientDescentRootFinder.class);
 	
 	/**
 	 * The precision of the approximation.
@@ -54,7 +52,7 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	 */
 	@Override
 	public Map<Variable, Term> randomRoot() throws GeneralMathException {		
-		GradientDescentRootFinder.log.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
+		LOG.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
 		GradientDescent solver = new GradientDescent(this.buildOptimizationProblem(),this.getStartingPoint());
 		solver.precision = this.precision;
 		return solver.solve();

@@ -54,6 +54,19 @@ public abstract class EntailmentRelation<T extends Formula> {
 		return this.entails(formulas, formula2);
 	}
 	
+	/** 
+	 * Checks whether the first formula entails the other set of formulas.
+	 * @param formula a formula.
+	 * @param formulas2 a set of formulas.
+	 * @return "true" if the former entails the latter.
+	 */
+	public boolean entails(T formula, Collection<T>  formulas2){
+		for(T f: formulas2)
+			if(!this.entails(formula, f))
+				return false;
+		return true;
+	}
+	
 	/**
 	 * Retrieves the set of kernels for the given formula
 	 * from the given set of formulas.

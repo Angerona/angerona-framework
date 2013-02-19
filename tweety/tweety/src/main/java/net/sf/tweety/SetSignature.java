@@ -1,9 +1,6 @@
 package net.sf.tweety;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class models a signature as a set of formulas.
@@ -195,9 +192,10 @@ public class SetSignature<T extends Formula> extends Signature implements Collec
 		return true;
 	}
 
-	@Override
-	public void fromSignature(Signature signature) {
-		// TODO does not supports the symbol translation, cant see an easy way here.
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return this.formulas.toString();
 	}
-
 }

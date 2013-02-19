@@ -32,9 +32,9 @@
     	<version>2.1</version>
     </dependency>
     <dependency>
-    	<groupId>angerona</groupId>
-    	<artifactId>fw</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>log4j-over-slf4j</artifactId>
+    	<version>1.6.3</version>
     </dependency>
   </dependencies>
   <parent>

@@ -51,7 +51,7 @@ public class Disjunction extends AssociativeFormula{
 		this.add(first);
 		this.add(second);
 	}	
-	
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#toString()
 	 */

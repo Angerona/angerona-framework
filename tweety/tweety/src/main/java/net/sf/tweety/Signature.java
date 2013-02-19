@@ -1,19 +1,11 @@
 package net.sf.tweety;
 
-
 /**
  * A signatures lists the atomic language structures for some language.
  * @author Matthias Thimm
  */
 public abstract class Signature {
 	
-	/**
-	 * builds the signature from the given signature, uses the CommonStrcture
-	 * and CommonTerm interfaces.
-	 * @param signature
-	 */
-	public abstract void fromSignature(Signature signature);
-
 	/**
 	 * Checks whether this signature is a sub-signature of the
 	 * given signature, i.e. whether each logical expression expressible

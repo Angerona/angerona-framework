@@ -1,9 +1,6 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A functional term in first-order logic, i.e. a functor and a list

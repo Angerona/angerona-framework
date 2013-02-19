@@ -1,11 +1,10 @@
 package net.sf.tweety.logics.firstorderlogic.syntax;
 
-
 /**
  * A term of first-order logic, i.e. an object of a specific sort.
  * @author Matthias Thimm
  */
-public abstract class Term extends LogicStructure {
+public abstract class Term extends LogicStructure{
 		
 	private Sort sort;
 		
@@ -18,8 +17,7 @@ public abstract class Term extends LogicStructure {
 	 * by term "t" and returns the new term.
 	 * @param v the term to be substituted.
 	 * @param t the term to substitute.
-	 * @return a term where every occurenIf you use logical programs but you have to parse FOL formulas this interface
- * helps by translating between the two different signatures.ce of "v" is replaced
+	 * @return a term where every occurence of "v" is replaced
 	 * 		by "t".
 	 * @throws IllegalArgumentException if "v" and "t" are of different sorts
 	 *    (NOTE: this exception is only thrown when "v" actually appears in this

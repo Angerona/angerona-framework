@@ -2,6 +2,7 @@ package net.sf.tweety.logics.firstorderlogic.syntax;
 
 import java.util.*;
 
+
 /**
  * This class captures the common functionalities of binary formulas like conjunction,
  * disjunction, etc.
@@ -39,7 +40,7 @@ public abstract class AssociativeFormula extends FolFormula implements Collectio
 		this.add(first);
 		this.add(second);
 	}
-	
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getConstants()
 	 */

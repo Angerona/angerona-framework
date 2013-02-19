@@ -98,4 +98,5 @@ public class Functor extends FolBasicStructure {
 			return false;
 		return true;
 	}
+
 }

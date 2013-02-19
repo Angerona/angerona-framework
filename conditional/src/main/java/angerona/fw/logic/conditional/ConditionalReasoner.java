@@ -3,8 +3,8 @@ package angerona.fw.logic.conditional;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.ClassicalFormula;
 import net.sf.tweety.Formula;
+import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;

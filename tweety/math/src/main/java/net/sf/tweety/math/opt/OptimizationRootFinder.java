@@ -22,7 +22,8 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	/**
 	 * Logger.
 	 */
-	static private Logger log = LoggerFactory.getLogger(OptimizationRootFinder.class);	
+	/** reference to the logback logger instance */
+	private static Logger LOG = LoggerFactory.getLogger(OptimizationRootFinder.class);
 	
 	/**
 	 * Creates a new root finder for the given function.
@@ -54,7 +55,7 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	 * @return an optimization problem for the task of root finding.
 	 */
 	protected OptimizationProblem buildOptimizationProblem(){
-		OptimizationRootFinder.log.trace("Constructing optimization problem to find a root of the function '" + this.getFunctions() + "'.");
+		LOG.trace("Constructing optimization problem to find a root of the function '" + this.getFunctions() + "'.");
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		Term target = null;
 		for(Term f: this.getFunctions())
@@ -62,7 +63,7 @@ public abstract class OptimizationRootFinder extends RootFinder {
 				target = f.mult(f);
 			else target = target.add(f.mult(f));
 		problem.setTargetFunction(target);
-		OptimizationRootFinder.log.trace("Constructing optimization problem finished; the target function is '" + target + "'.");
+		LOG.trace("Constructing optimization problem finished; the target function is '" + target + "'.");
 		return problem;
 	}
 	
