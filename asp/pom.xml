@@ -34,8 +34,8 @@
     
     <dependency>
     	<groupId>net.sf.tweety.logicprogramming</groupId>
-    	<artifactId>asplibrary</artifactId>
-    	<version>0.1.69-SNAPSHOT</version>
+    	<artifactId>asp</artifactId>
+    	<version>0.2.0-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>angerona.fw</groupId>
