@@ -5,7 +5,7 @@
   <artifactId>asp</artifactId>
   <packaging>jar</packaging>
 
-  <name>Angerona (Asp Plugin)</name>
+  <name>Angerona (BPlugin-ASP)</name>
   <url>http://maven.apache.org</url>
 
   <properties>

@@ -5,7 +5,7 @@
   <artifactId>knowhow</artifactId>
   <packaging>jar</packaging>
 
-  <name>Angerona (Know-How Plugin)</name>
+  <name>Angerona (FPlugin-Know-How)</name>
   <url>http://maven.apache.org</url>
 
   <build>

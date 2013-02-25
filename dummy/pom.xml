@@ -5,7 +5,7 @@
   <artifactId>dummy</artifactId>
   <packaging>jar</packaging>
 
-  <name>Angerona (Example Plugin)</name>
+  <name>Angerona (BPlugin-Dummy)</name>
   <url>http://maven.apache.org</url>
 
   <properties>

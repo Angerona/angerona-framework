@@ -5,7 +5,7 @@
   <groupId>angerona</groupId>
   <artifactId>fw</artifactId>
 
-  <name>Angerona Framework</name>
+  <name>Angerona (Framework)</name>
   <url>http://maven.apache.org</url>
 
   <properties>
