@@ -78,9 +78,9 @@
   
   <modules>
   	<module>asp</module>
-  	<module>dummy</module>
   	<module>fw</module>
-  	<module>test</module>
+  	<module>app</module>
+  	<module>example</module>
   	<module>gui</module>
   	<module>knowhow</module>
   	<module>mary</module>

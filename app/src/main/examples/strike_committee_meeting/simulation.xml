@@ -8,7 +8,7 @@
 			
 		
         <agent-config source="config/agents/default_agent.xml" />         
-        <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
+        <beliefbase-config source="config/beliefbases/example_beliefbase.xml" />
 		
 		<data key="Confidential">(Boss, __DEFAULT__, attend_scm)</data>
 	</agent-instance>
@@ -19,7 +19,7 @@
 	
 		
         <agent-config source="config/agents/default_agent.xml" />         
-        <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
+        <beliefbase-config source="config/beliefbases/example_beliefbase.xml" />
         
         <desire>q_Employee(attend_scm)</desire>
 	</agent-instance>

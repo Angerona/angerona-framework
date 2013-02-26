@@ -18,7 +18,7 @@
         <include>angerona.fw.am:secrecy</include>
         <include>angerona.fw:asp</include>
         <include>angerona.fw:conditional</include>
-        <include>angerona.fw:dummy</include>
+        <include>angerona.fw:example</include>
         <include>angerona.fw:gui</include>
         <include>angerona.fw:knowhow</include>
         <include>angerona.fw:mary</include>

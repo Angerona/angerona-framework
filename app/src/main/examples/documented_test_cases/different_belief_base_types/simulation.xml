@@ -9,7 +9,7 @@
        	<beliefbase-name>Alice2</beliefbase-name>
        	
         <agent-config source="config/agents/default_agent.xml" />         
-        <beliefbase-config source="config/beliefbases/dummy_beliefbase.xml" />
+        <beliefbase-config source="config/beliefbases/example_beliefbase.xml" />
        	<view-config agent="Bob">config/beliefbases/ocf_beliefbase.xml</view-config>
 		
        	<capability>QueryAnswer</capability>

@@ -61,7 +61,7 @@ public class MockBeliefbase extends AspBeliefbase {
 		}
 		
 		final String path = System.getProperty("user.dir") +
-				"/../test/src/main/tools/" + os + "/solver/asp/dlv/dlv" + ending;
+				"/../app/src/main/tools/" + os + "/solver/asp/dlv/dlv" + ending;
 		
 		((AspReasoner)getReasoningOperator()).setSolverWrapper(new ISolverWrapper() {
 			@Override
