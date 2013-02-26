@@ -1,4 +1,4 @@
-package angerona.fw.logic.dummy;
+package angerona.fw.example.logic;
 
 import java.util.Set;
 
@@ -16,7 +16,7 @@ import angerona.fw.logic.BaseTranslator;
  * supports the handling of the Answer Speech act.
  * @author Tim Janus
  */
-public class DummyTranslator extends BaseTranslator {
+public class ExampleTranslator extends BaseTranslator {
 
 	@Override
 	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
@@ -29,7 +29,7 @@ public class DummyTranslator extends BaseTranslator {
 			} else if(a.getAnswer().getAnswerValue() == AnswerValue.AV_FALSE) {
 				formula = new Negation(a.getRegarding());
 			} else {
-				return new DummyBeliefbase();
+				return new ExampleBeliefbase();
 			}
 			return translateFOLInt(caller, formula);
 		}
@@ -40,7 +40,7 @@ public class DummyTranslator extends BaseTranslator {
 
 	@Override
 	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas) {
-		DummyBeliefbase reval = new DummyBeliefbase();
+		ExampleBeliefbase reval = new ExampleBeliefbase();
 		reval.fbs.addAll(formulas);
 		return reval;
 	}

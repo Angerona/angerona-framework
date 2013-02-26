@@ -1,4 +1,4 @@
-package angerona.fw.logic.dummy;
+package angerona.fw.example.logic;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,17 +16,17 @@ import angerona.fw.util.Pair;
  * Just a dummy Reasoner for testing purposes.
  * @author Tim Janus
  */
-public class DummyReasoner extends BaseReasoner {
+public class ExampleReasoner extends BaseReasoner {
 
 	@Override
 	public Class<? extends BaseBeliefbase> getSupportedBeliefbase() {
-		return DummyBeliefbase.class;
+		return ExampleBeliefbase.class;
 	}
 
 	@Override
 	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {
 		
-		DummyBeliefbase bb = (DummyBeliefbase)params.getBeliefBase();
+		ExampleBeliefbase bb = (ExampleBeliefbase)params.getBeliefBase();
 		boolean b = bb.fbs.contains(params.getQuery());
 		AnswerValue ae = b ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
 		
@@ -35,7 +35,7 @@ public class DummyReasoner extends BaseReasoner {
 
 	@Override
 	protected Set<FolFormula> inferInt(ReasonerParameter params) {
-		FolBeliefSet fbs = ((DummyBeliefbase)params.getBeliefBase()).getBeliefSet();
+		FolBeliefSet fbs = ((ExampleBeliefbase)params.getBeliefBase()).getBeliefSet();
 		Set<FolFormula> reval = new HashSet<>();
 		reval.addAll(fbs);
 		return reval;

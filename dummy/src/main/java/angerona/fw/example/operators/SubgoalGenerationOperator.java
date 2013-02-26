@@ -1,4 +1,4 @@
-package angerona.fw.operators.def;
+package angerona.fw.example.operators;
 
 import java.io.StringReader;
 import java.util.Set;

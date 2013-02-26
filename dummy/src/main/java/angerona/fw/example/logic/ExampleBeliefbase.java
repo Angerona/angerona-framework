@@ -1,4 +1,4 @@
-package angerona.fw.logic.dummy;
+package angerona.fw.example.logic;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,20 +19,20 @@ import angerona.fw.parser.ParseException;
  *
  * @author Tim Janus
  */
-public class DummyBeliefbase extends BaseBeliefbase {
+public class ExampleBeliefbase extends BaseBeliefbase {
 
 	/** the beliefset of the beliefbase */
 	FolBeliefSet fbs = new FolBeliefSet();
 	
 	/** Default Ctor: Needed for dynamic instantiation */
-	public DummyBeliefbase() {	
+	public ExampleBeliefbase() {	
 	}
 	
 	/** Copy-Ctor: Copies a Dummy-Beliefbase, the copied object has the
 	 * 	same object id like the given parameter.
 	 * 	@param other
 	 */
-	public DummyBeliefbase(DummyBeliefbase other) {
+	public ExampleBeliefbase(ExampleBeliefbase other) {
 		super(other);
 		fbs.addAll(other.fbs);
 	}
@@ -58,7 +58,7 @@ public class DummyBeliefbase extends BaseBeliefbase {
 
 	@Override
 	public Object clone() {
-		return new DummyBeliefbase(this);
+		return new ExampleBeliefbase(this);
 	}
 
 	// Belief base is a simple FOL Beliefbase.

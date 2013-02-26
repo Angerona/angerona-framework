@@ -49,6 +49,20 @@
   </reporting>
   
   <build>
+  	<pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.4</version>
+          <configuration>
+            <descriptors>
+              <descriptor>src/assemble/angerona-zip.xml</descriptor>
+            </descriptors>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -67,18 +81,11 @@
   	<module>dummy</module>
   	<module>fw</module>
   	<module>test</module>
-  	<module>tweety/asplibrary</module>
-  	<module>tweety/tweety</module>
-  	<module>tweety/firstorderlogic</module>
   	<module>gui</module>
   	<module>knowhow</module>
-  	
   	<module>mary</module>
-  	
-  	<module>tweety/math</module>
-  	<module>tweety/propositional</module>
-  	<module>conditional</module>
-  	<module>tweety/conditional</module>
   	<module>secrecy</module>
+  	<module>deploy</module>
+  	<module>conditional</module>
   </modules>
 </project>

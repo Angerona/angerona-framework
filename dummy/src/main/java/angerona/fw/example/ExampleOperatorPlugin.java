@@ -1,12 +1,12 @@
-package angerona.fw.dummy;
+package angerona.fw.example;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import angerona.fw.example.operators.GenerateOptionsOperator;
+import angerona.fw.example.operators.IntentionUpdateOperator;
+import angerona.fw.example.operators.SubgoalGenerationOperator;
+import angerona.fw.example.operators.UpdateBeliefsOperator;
+import angerona.fw.example.operators.ViolatesOperator;
 import angerona.fw.internal.OperatorPluginAdapter;
-import angerona.fw.operators.def.GenerateOptionsOperator;
-import angerona.fw.operators.def.IntentionUpdateOperator;
-import angerona.fw.operators.def.SubgoalGenerationOperator;
-import angerona.fw.operators.def.UpdateBeliefsOperator;
-import angerona.fw.operators.def.ViolatesOperator;
 
 /**
  * The dummy operator plugin is an example/test plugin for the Angerona framework.
@@ -15,7 +15,7 @@ import angerona.fw.operators.def.ViolatesOperator;
  * @author Tim Janus
  */
 @PluginImplementation
-public class DummyOperatorPlugin extends OperatorPluginAdapter {
+public class ExampleOperatorPlugin extends OperatorPluginAdapter {
 	
 	@Override
 	protected void registerOperators() {

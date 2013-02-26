@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>angerona.fw</groupId>
+    <artifactId>maven-build-all</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  
+  <artifactId>distribution</artifactId>
+
+  <packaging>pom</packaging>
+
+  <name>Distribution</name>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>distro-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assemble/angerona-zip.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
+   <!-- 
+   		NOTE: These dependency declarations are only required to sort this project to the 
+      	end of the line in the multimodule build. 
+   !-->
+   <dependencies>
+   	<dependency>
+   		<groupId>angerona</groupId>
+   		<artifactId>fw</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona.fw</groupId>
+   		<artifactId>asp</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona.fw.am</groupId>
+   		<artifactId>secrecy</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona.fw</groupId>
+   		<artifactId>conditional</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona.fw</groupId>
+   		<artifactId>dummy</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona.fw</groupId>
+   		<artifactId>gui</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona.fw</groupId>
+   		<artifactId>knowhow</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona.fw</groupId>
+   		<artifactId>mary</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>angerona</groupId>
+   		<artifactId>test</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+   	</dependency>
+   </dependencies>
+</project>

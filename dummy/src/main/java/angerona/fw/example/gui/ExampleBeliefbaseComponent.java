@@ -1,4 +1,4 @@
-package angerona.fw.gui.dummy;
+package angerona.fw.example.gui;
 import angerona.fw.gui.view.BeliefbaseView;
 
 /**
@@ -7,7 +7,7 @@ import angerona.fw.gui.view.BeliefbaseView;
  * 
  * @author Tim Janus
  */
-public class DummyBeliefbaseComponent extends BeliefbaseView {
+public class ExampleBeliefbaseComponent extends BeliefbaseView {
 
 
 }

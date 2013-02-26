@@ -1,4 +1,4 @@
-package angerona.fw.operators.def;
+package angerona.fw.example.operators;
 
 
 //import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;

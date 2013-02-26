@@ -3,23 +3,23 @@
 	<cycle-script source="config/secrecy_cycle.xml" />
 	
 	<operation-set operation-type="GenerateOptions">
-      <default-operator-cls>angerona.fw.operators.def.GenerateOptionsOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.GenerateOptionsOperator</default-operator-cls>
    	</operation-set>
 	
 	<operation-set operation-type="IntentionUpdate">
-      <default-operator-cls>angerona.fw.operators.def.IntentionUpdateOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.IntentionUpdateOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>angerona.fw.operators.def.SubgoalGenerationOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.SubgoalGenerationOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
-      <default-operator-cls>angerona.fw.operators.def.UpdateBeliefsOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.UpdateBeliefsOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="Violates">
-      <default-operator-cls>angerona.fw.operators.def.ViolatesOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.ViolatesOperator</default-operator-cls>
    	</operation-set>
 	
 	<component>angerona.fw.logic.Desires</component>

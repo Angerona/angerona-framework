@@ -1,4 +1,4 @@
-package angerona.test;
+package angerona.fw.app;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import angerona.fw.gui.AngeronaWindow;
-public class GUITest {
+public class GUIApplication {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		AngeronaWindow.getInstance().init();

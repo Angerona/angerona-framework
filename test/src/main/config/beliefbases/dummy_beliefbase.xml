@@ -1,17 +1,15 @@
 <beliefbase-configuration>
-   <name>Dummy Belief base Implementation</name>
+   <name>Example Belief base Implementation</name>
    
    <reasoners>
-      <default-operator-cls>angerona.fw.logic.dummy.DummyReasoner</default-operator-cls>
-      <operator-cls>angerona.fw.logic.dummy.DummyReasoner</operator-cls>
+      <default-operator-cls>angerona.fw.example.logic.ExampleReasoner</default-operator-cls>
    </reasoners>
    <change-operators>
-      <default-operator-cls>angerona.fw.logic.dummy.DummyExpansion</default-operator-cls>
-      <operator-cls>angerona.fw.logic.dummy.DummyExpansion</operator-cls>
+      <default-operator-cls>angerona.fw.example.logic.ExampleExpansion</default-operator-cls>
    </change-operators>
    <translators>
-      <default-operator-cls>angerona.fw.logic.dummy.DummyTranslator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.logic.ExampleTranslator</default-operator-cls>
    </translators>
    
-   <beliefbase-class>angerona.fw.logic.dummy.DummyBeliefbase</beliefbase-class>
+   <beliefbase-class>angerona.fw.example.logic.ExampleBeliefbase</beliefbase-class>
 </beliefbase-configuration>

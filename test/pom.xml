@@ -2,8 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>angerona</groupId>
-  <artifactId>test</artifactId>
+  <artifactId>app</artifactId>
   <packaging>jar</packaging>
 
   <name>Angerona (Functional Test)</name>
@@ -60,6 +59,7 @@
       <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-jar-plugin</artifactId>
+		<version>2.4</version>
 	 	<configuration>
 		  <archive>
 			<manifest>
@@ -261,12 +261,6 @@
   
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
     	<groupId>angerona</groupId>
     	<artifactId>fw</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
@@ -274,12 +268,6 @@
     <dependency>
     	<groupId>angerona.fw</groupId>
     	<artifactId>asp</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>angerona.fw</groupId>
-    	<artifactId>dummy</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
@@ -303,6 +291,12 @@
     <dependency>
     	<groupId>angerona.fw</groupId>
     	<artifactId>conditional</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
+    </dependency>
+    <dependency>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>example</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>

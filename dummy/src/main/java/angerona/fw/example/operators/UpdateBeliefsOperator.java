@@ -1,4 +1,4 @@
-package angerona.fw.operators.def;
+package angerona.fw.example.operators;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
