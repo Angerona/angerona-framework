@@ -128,5 +128,13 @@ public class View {
 	public PlBeliefSet getBeliefSet() {
 		return beliefSet;
 	}
+
+	public Set<Conditional> getPositiveConditionalBeliefs() {
+		return positiveConditionalBeliefs;
+	}
+
+	public Set<Conditional> getNegativeConditionalBeliefs() {
+		return negativeConditionalBeliefs;
+	}
 	
 }

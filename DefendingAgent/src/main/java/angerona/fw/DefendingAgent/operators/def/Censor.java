@@ -4,14 +4,15 @@ import java.util.Collection;
 import java.util.Set;
 
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import angerona.fw.Action;
 import angerona.fw.Agent;
+import angerona.fw.DefendingAgent.View;
+import angerona.fw.DefendingAgent.ViewComponent;
+import angerona.fw.DefendingAgent.Prover.Prover;
 import angerona.fw.DefendingAgent.comm.Revision;
-import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
-import angerona.fw.logic.AnswerValue;
 
 /**
  * Implementation of the censor component of a defending censor agent.
@@ -25,25 +26,29 @@ import angerona.fw.logic.AnswerValue;
  */
 public class Censor {
 
-	public Action processQuery(Agent ag, Query q) {
-
-		return new Answer(ag, q.getReceiverId(), q.getQuestion(), AnswerValue.AV_REJECT);
+	public boolean processQuery(Agent ag, Query q) {
+		String[] knowledgeBase = this.makeBeliefBase(ag.getComponent(ViewComponent.class).getView(ag.toString()));
+		Prover p = new Prover();
+		return p.prove(knowledgeBase, translate(q.getQuestion()), Prover.Solver.FREE_RATIONAL);
 	}
 	
-	public Action processRevision(Agent ag, Revision rev) {
-		return new Answer(ag, rev.getReceiverId(), rev.getProposition(), AnswerValue.AV_REJECT);
-
+	public boolean processRevision(Agent ag, Revision rev) {
+		String[] knowledgeBase = this.makeBeliefBase(ag.getComponent(ViewComponent.class).getView(ag.toString()));
+		Prover p = new Prover();
+		return p.prove(knowledgeBase, translate(rev.getProposition()), Prover.Solver.FREE_RATIONAL);
 	}
 	
 	/**
 	 * Create a BelifeBase out of the View on the attacking agent
-	 * @param positiveConditionalBeliefs
-	 * @param negativeConditionalBeliefs
-	 * @param beliefSet
+	 * @param v
+	 * 	View on the attacking agent
 	 * @return a String[] that represent the approximation of the knowledge of the attacking agent
 	 * @see[1] Biskup, Joachim and Tadros, Cornelia. Revising Belief without Revealing Secrets
 	 */
-	private String[] makeBelifeBase(Set<Conditional> positiveConditionalBeliefs, Set<Conditional> negativeConditionalBeliefs, PlBeliefSet beliefSet){
+	private String[] makeBeliefBase(View v){
+		Set<Conditional> positiveConditionalBeliefs = v.getPositiveConditionalBeliefs();
+		Set<Conditional> negativeConditionalBeliefs = v.getNegativeConditionalBeliefs();
+		PlBeliefSet beliefSet = v.getBeliefSet();
 		int n = 0, i=0;
 		n += positiveConditionalBeliefs.size() + negativeConditionalBeliefs.size() + beliefSet.size();
 		String[] belifeBase = new String[n];
@@ -90,6 +95,46 @@ public class Censor {
 	 * @return a String where the operators are changed to "or" "and" "neg"
 	 */
 	private String translate(PropositionalFormula formula){
+		String[] b;
+		String result = "";
+		//change || to or
+		b = formula.toString().split("||");
+		if(b.length > 1){
+			for(int i = 0; i<b.length-1;i++){
+				result += b[i] + " or ";
+			}
+		}
+		result += b[b.length-1];
+		//change && to and
+		b = result.split("&&");
+		result = "";
+		if(b.length > 1){
+			for(int i = 0; i<b.length-1;i++){
+			result += b[i] + " and ";
+			}
+		}
+		result += b[b.length-1];
+		//change - to neg
+		b = result.split("-");
+		result = "";
+		if(b.length > 1){
+			for(int i = 0; i<b.length-1;i++){
+			result += b[i] + " neg ";
+			}
+		}
+		result += b[b.length-1];
+		
+		return "( "+ result +" )";
+	}
+	
+	/**
+	 * Translate FolForumla to a String that the TheoremSolver 
+	 * can understand by changing "||" "&&" "-" to "or" "and" "neg"
+	 * @param formula
+	 * 	the FolFormula to translate
+	 * @return a String where the operators are changed to "or" "and" "neg"
+	 */
+	private String translate(FolFormula formula){
 		String[] b;
 		String result = "";
 		//change || to or

@@ -49,7 +49,7 @@ public class Prover {
 	 *            FREE_RATIONAL - Rational logic with free variables
 	 * @return String with the result or null
 	 */
-	public String prove(String[] kFormulas, String formulaToProve,
+	public boolean prove(String[] kFormulas, String formulaToProve,
 			Solver chooseSolver) {
 		this.kFormulas = kFormulas;
 		this.formulaToProve = formulaToProve;
@@ -131,11 +131,13 @@ public class Prover {
 			q = sp.openPrologQuery(goal, map);
 			if (q.nextSolution()) {
 				// Success
-				return new String(map.toString());
+				//return new String(map.toString());
+				return true;
 
 			} else {
 				// Failure
-				return null;
+				//return null;
+				return false;
 			}
 
 		} catch (Exception choosingKLM) {
