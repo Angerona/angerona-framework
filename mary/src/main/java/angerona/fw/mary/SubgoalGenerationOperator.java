@@ -32,7 +32,7 @@ import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
-import angerona.fw.operators.def.GenerateOptionsOperator;
+import angerona.fw.example.operators.GenerateOptionsOperator;
 
 /**
 * This implementation of a subgoal generation operator allows for the asking of multiple, detail query-type questions. 
@@ -43,7 +43,7 @@ import angerona.fw.operators.def.GenerateOptionsOperator;
 * @author Daniel Dilger, Tim Janus
 */
 public class SubgoalGenerationOperator extends
-		angerona.fw.operators.def.SubgoalGenerationOperator {
+		angerona.fw.example.operators.SubgoalGenerationOperator {
 	private static Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
 	
 	/** flag indicating if the lies should be generated. */

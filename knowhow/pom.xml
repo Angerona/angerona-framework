@@ -50,13 +50,13 @@
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>angerona.fw</groupId>
-    	<artifactId>dummy</artifactId>
+    	<groupId>angerona.fw.am</groupId>
+    	<artifactId>secrecy</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>angerona.fw.am</groupId>
-    	<artifactId>secrecy</artifactId>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>example</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>

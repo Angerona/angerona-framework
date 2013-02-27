@@ -39,8 +39,8 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.SolverWrapper;
-import angerona.fw.operators.def.SubgoalGenerationOperator;
-import angerona.fw.operators.def.ViolatesOperator;
+import angerona.fw.example.operators.SubgoalGenerationOperator;
+import angerona.fw.example.operators.ViolatesOperator;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 

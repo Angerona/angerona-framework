@@ -13,8 +13,8 @@ public class Plugin extends OperatorPluginAdapter {
 	@Override
 	protected void registerOperators() {
 		registerOperator(angerona.fw.mary.SubgoalGenerationOperator.class);
-		registerOperator(angerona.fw.operators.def.WeakeningViolatesOperator.class);
-		registerOperator(angerona.fw.operators.def.MaryIntentionUpdateOperator.class);
+		registerOperator(angerona.fw.example.operators.WeakeningViolatesOperator.class);
+		registerOperator(angerona.fw.example.operators.MaryIntentionUpdateOperator.class);
 	}
 
 }
