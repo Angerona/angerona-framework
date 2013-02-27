@@ -43,6 +43,8 @@ public class ConditionalReasoner extends BaseReasoner {
 		// Calculate c-representation
 		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
 		
+		// TODO: use caching
+		
 		log.info("compute c-representation (bruteforce)");
 		long startTime = System.currentTimeMillis();
 		ocf = creasoner.getCRepresentation();
@@ -93,6 +95,8 @@ public class ConditionalReasoner extends BaseReasoner {
 			return retval;
 		}
 		
+		// TODO: rewrite to work with arbitrary formulas ...
+		
 		// A |~ B, i.e. B follows defeasibly from A iff k(A)=INF or B holds in all smallest
 		// worlds according to k, in which A holds. This is equivalent to k(AB) < k(A -B)
 		for(Proposition prop : sig) {
@@ -120,6 +124,7 @@ public class ConditionalReasoner extends BaseReasoner {
 
 	@Override
 	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {
+		// TODO: calculate only the value in question and not the whole set!
 		Set<FolFormula> answers = inferInt(params);
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 		FolFormula query = params.getQuery();

@@ -26,16 +26,33 @@ import angerona.fw.comm.Query;
  */
 public class Censor {
 
+	
+	// rethink separation of censor/subgoalgenerator. the current cut seems forced and unintuitive
 	public boolean processQuery(Agent ag, Query q) {
-		String[] knowledgeBase = this.makeBeliefBase(ag.getComponent(ViewComponent.class).getView(ag.toString()));
-		Prover p = new Prover();
-		return p.prove(knowledgeBase, translate(q.getQuestion()), Prover.Solver.FREE_RATIONAL);
+		// procedure 3
+		
+//		String[] knowledgeBase = this.makeBeliefBase(ag.getComponent(ViewComponent.class).getView(ag.toString()));
+//		Prover p = new Prover();
+//		return p.prove(knowledgeBase, translate(q.getQuestion()), Prover.Solver.FREE_RATIONAL);
+		return false;
 	}
 	
 	public boolean processRevision(Agent ag, Revision rev) {
-		String[] knowledgeBase = this.makeBeliefBase(ag.getComponent(ViewComponent.class).getView(ag.toString()));
+		// procedure 4
+		
+		return false;
+	}
+	
+	public boolean skepticalInference(View view, FolFormula formula) {
+		String[] knowledgeBase = this.makeBeliefBase(view);
 		Prover p = new Prover();
-		return p.prove(knowledgeBase, translate(rev.getProposition()), Prover.Solver.FREE_RATIONAL);
+		return p.prove(knowledgeBase, translate(formula), Prover.Solver.FREE_RATIONAL);
+	}
+	
+	public boolean poss(View view) {
+		//TODO write
+		// check if an ocf exists, which is compatible to view
+		return false;
 	}
 	
 	/**
