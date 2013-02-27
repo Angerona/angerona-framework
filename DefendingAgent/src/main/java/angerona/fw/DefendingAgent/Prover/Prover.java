@@ -12,6 +12,11 @@ import se.sics.jasper.SICStus;
  * implementations consist of files with 'sav' extension
  */
 public class Prover {
+	
+	public enum Solver {
+	    CUMMULATIV, LOOP_CUMMULATIV, PREFERENTIAL, 
+	    RATIONAL, FREE_RATIONAL
+	}
 
 	private String[] kFormulas;
 	private String formulaToProve;
@@ -36,16 +41,16 @@ public class Prover {
 	 *            the knowledgebase
 	 * @param formulaToProve
 	 *            the formula to prove
-	 * @param chooseProver
-	 *            1 Cumulative logic, 
-	 *            2 Loop-Cumulative logic, 
-	 *            3 Preferential logic, 
-	 *            4 Rational logic, 
-	 *            5 Rational logic with free variables
+	 * @param chooseSolver
+	 *            CUMMULATIV - Cumulative logic, 
+	 *            LOOP_CUMMULATIV - Loop-Cumulative logic, 
+	 *            PREFERENTIAL - Preferential logic, 
+	 *            RATIONAL - Rational logic, 
+	 *            FREE_RATIONAL - Rational logic with free variables
 	 * @return String with the result or null
 	 */
 	public String prove(String[] kFormulas, String formulaToProve,
-			int chooseProver) {
+			Solver chooseSolver) {
 		this.kFormulas = kFormulas;
 		this.formulaToProve = formulaToProve;
 		Query q;
@@ -58,24 +63,24 @@ public class Prover {
 				sp = new SICStus();
 			}
 			/* Parameter 1 determines the KLM logic to consider */
-			switch (chooseProver) {
-			case 1: {
+			switch (chooseSolver) {
+			case CUMMULATIV: {
 				sp.restore("tct.sav");
 				break;
 			}
-			case 2: {
+			case LOOP_CUMMULATIV: {
 				sp.restore("tclt.sav");
 				break;
 			}
-			case 3: {
+			case PREFERENTIAL: {
 				sp.restore("tpt.sav");
 				break;
 			}
-			case 4: {
+			case RATIONAL: {
 				sp.restore("trt.sav");
 				break;
 			}
-			case 5: {
+			case FREE_RATIONAL: {
 				sp.restore("trtfree.sav");
 				break;
 			}
