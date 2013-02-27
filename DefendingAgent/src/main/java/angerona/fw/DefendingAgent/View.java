@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
@@ -68,8 +69,8 @@ public class View {
 	 * @param av a fixed answer value
 	 * @return the resulting view after the consideration of the query and the answer value
 	 */
-	public View RefineViewByQuery(Query query, AnswerValue av) {
-		PropositionalFormula q = LogicTranslator.FoToPl(query.getQuestion());
+	public View RefineViewByQuery(FolFormula query, AnswerValue av) {
+		PropositionalFormula q = LogicTranslator.FoToPl(query);
 		View newView = new View(this);
 		
 		if(av == AnswerValue.AV_TRUE) {
@@ -100,8 +101,8 @@ public class View {
 	 * @param notification a fixed success/failure notification
 	 * @return the resulting view after the consideration of the revision and the notification
 	 */
-	public View RefineViewByRevision(Revision revision, AnswerValue notification) {
-		PropositionalFormula q = LogicTranslator.FoToPl(revision.getProposition());
+	public View RefineViewByRevision(FolFormula revision, AnswerValue notification) {
+		PropositionalFormula q = LogicTranslator.FoToPl(revision);
 		View newView = new View(this);
 		if(notification == AnswerValue.AV_TRUE) {
 			Conjunction conj = new Conjunction(beliefSet);

@@ -14,9 +14,10 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.logic.conditional.ConditionalBeliefbase;
 
 /**
- * Data component of an agent containing a set of personal secrets.
+ * Data component of an agent containing a set of views on other agents.
+ * @see angerona.fw.DefendingAgent.View for details on views.
  * 
- * @author Tim Janus
+ * @author Sebastian Homann
  */
 public class ViewComponent extends BaseAgentComponent {
 
