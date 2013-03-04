@@ -35,7 +35,7 @@ public class Censor {
 	public void setSolver(Prover.Solver solver) {
 		this.solver = solver;
 	}
-		
+
 	public boolean skepticalInference(View view, FolFormula formula) {
 		String[] knowledgeBase = this.makeBeliefBase(view);
 		Prover p = new Prover();
