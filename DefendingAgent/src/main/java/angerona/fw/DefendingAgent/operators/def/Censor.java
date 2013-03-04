@@ -3,7 +3,6 @@ package angerona.fw.DefendingAgent.operators.def;
 import java.util.Collection;
 import java.util.Set;
 
-import net.sf.tweety.logics.LogicalSymbols;
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
@@ -12,12 +11,8 @@ import net.sf.tweety.logics.propositionallogic.syntax.Disjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
-import angerona.fw.Agent;
 import angerona.fw.DefendingAgent.View;
-import angerona.fw.DefendingAgent.ViewComponent;
 import angerona.fw.DefendingAgent.Prover.Prover;
-import angerona.fw.DefendingAgent.comm.Revision;
-import angerona.fw.comm.Query;
 
 /**
  * Implementation of the censor component of a defending censor agent.
@@ -32,16 +27,31 @@ import angerona.fw.comm.Query;
 public class Censor {
 	private Prover.Solver solver = Prover.Solver.FREE_RATIONAL;
 	
+	/**
+	 *  the censor uses the klmlean framework to prove sentences in
+	 *  one of five possible inference systems. The default is Rational.
+	 */
 	public void setSolver(Prover.Solver solver) {
 		this.solver = solver;
 	}
 
+	/**
+	 * Calculate a skeptical inference of a given formula under a specific view.
+	 * Returns true iff formula follows skeptically from the view and false otherwise 
+	 * @param view
+	 * @param formula
+	 * @return
+	 */
 	public boolean skepticalInference(View view, FolFormula formula) {
 		String[] knowledgeBase = this.makeBeliefBase(view);
 		Prover p = new Prover();
 		return p.prove(knowledgeBase, translate(formula), solver);
 	}
 	
+	/**
+	 * Check if there exists a consistent consequence relation that is compatible with the given view 
+	 * @param view
+	 */
 	public boolean poss(View view) {
 		// there is a possible consequence relation for a view V iff "true -> false" does not
 		// follow from CL(V)

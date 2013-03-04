@@ -96,7 +96,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				String recvName = atom.toString().substring(si, li);
 				
 				si = atom.toString().indexOf("(")+1;
-				li = atom.toString().indexOf(")");
+				li = atom.toString().lastIndexOf(")");
 				if(si == -1 || li == -1)
 					continue;
 				String content = atom.toString().substring(si,li);
