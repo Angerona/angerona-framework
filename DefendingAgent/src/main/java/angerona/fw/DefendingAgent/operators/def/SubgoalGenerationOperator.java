@@ -5,7 +5,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.Subgoal;
@@ -15,13 +14,10 @@ import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
-import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.Desires;
 import angerona.fw.logic.SecrecyKnowledge;
 import angerona.fw.logic.Secret;
-import angerona.fw.operators.parameter.ReasonerParameter;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the
@@ -58,6 +54,13 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	}
 	
 	// TODO: javadoc
+	/**
+	 * 
+	 * @param desire
+	 * @param pp
+	 * @param ag
+	 * @see [1] Biskup, Joachim and Tadros, Cornelia. Revising Belief without Revealing Secrets
+	 */
 	public void processQuery(Desire desire, PlanParameter pp, Agent ag) {
 		Censor cexec = new Censor();
 		Query query = (Query) desire.getPerception();
@@ -104,12 +107,16 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				return;
 			}
 		}
+		
 		AnswerValue answerValue;
 		if(cexec.skepticalInference(ag.getComponent(ViewComponent.class).getView(ag.toString()), query.getQuestion())){
 			answerValue = AnswerValue.AV_TRUE;
 		}else{
 			answerValue = AnswerValue.AV_FALSE;
 		}
+		
+		ag.getComponent(ViewComponent.class).setView(ag.toString(), ag.getComponent(ViewComponent.class).getView(ag.toString()).RefineViewByQuery(query.getQuestion(), answerValue));
+		
 		Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), answerValue);
 		Subgoal answerGoal = new Subgoal(ag, desire);
 		answerGoal.newStack(answer);
@@ -119,6 +126,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				"' to the plan", ag.getPlanComponent());
 	}
 	
+	// TODO: javadoc
+	/**
+	 * 
+	 * @param desire
+	 * @param pp
+	 * @param ag
+	 * @see [1] Biskup, Joachim and Tadros, Cornelia. Revising Belief without Revealing Secrets
+	 */
 	public void processRevision(Desire desire, PlanParameter pp, Agent ag) {
 		Censor cexec = new Censor();
 		Revision revision = (Revision) desire.getPerception();
@@ -126,7 +141,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		for(Secret a : conf.getTargets()){
 		if(cexec.skepticalInference(ag.getComponent(ViewComponent.class).getView(ag.toString())
-				.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE), a.getInformation())){
+				.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE), a.getInformation())){
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
@@ -137,9 +152,9 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				}
 		}
 		if(cexec.poss(ag.getComponent(ViewComponent.class).getView(ag.toString())
-				.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_FALSE))){
+				.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_FALSE))){
 			if(!cexec.poss(ag.getComponent(ViewComponent.class).getView(ag.toString())
-					.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE))){
+					.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE))){
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_FALSE);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
@@ -150,7 +165,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			}else{
 				for(Secret a : conf.getTargets()){
 					if(cexec.skepticalInference(ag.getComponent(ViewComponent.class).getView(ag.toString())
-							.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_FALSE), a.getInformation())){
+							.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_FALSE), a.getInformation())){
 								Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 								Subgoal answerGoal = new Subgoal(ag, desire);
 								answerGoal.newStack(answer);
@@ -169,6 +184,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}else{
 			answerValue = AnswerValue.AV_FALSE;
 		}
+		
+		ag.getComponent(ViewComponent.class).setView(ag.toString(), ag.getComponent(ViewComponent.class).getView(ag.toString()).RefineViewByRevision(revision.getProposition(), answerValue));
 		
 		Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), answerValue);
 		Subgoal answerGoal = new Subgoal(ag, desire);
