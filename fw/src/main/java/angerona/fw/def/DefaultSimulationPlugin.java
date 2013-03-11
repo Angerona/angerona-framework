@@ -3,6 +3,7 @@ package angerona.fw.def;
 import java.util.LinkedList;
 import java.util.List;
 
+import angerona.fw.Action;
 import angerona.fw.EnvironmentBehavior;
 import angerona.fw.Perception;
 import angerona.fw.internal.SimulationPlugin;
@@ -27,6 +28,11 @@ public class DefaultSimulationPlugin implements SimulationPlugin {
 
 	@Override
 	public List<Class<? extends Perception>> getPerceptions() {
+		return new LinkedList<>();
+	}
+
+	@Override
+	public List<Class<? extends Action>> getActions() {
 		return new LinkedList<>();
 	}
 	

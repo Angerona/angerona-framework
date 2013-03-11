@@ -3,7 +3,6 @@ package angerona.fw.internal;
 import java.util.List;
 
 import net.xeoh.plugins.base.Plugin;
-import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.BaseAgentComponent;
 
@@ -17,6 +16,4 @@ import angerona.fw.BaseAgentComponent;
  */
 public interface AgentPlugin extends Plugin{
 	List<Class<? extends AgentComponent>> getAgentComponents();
-	
-	List<Class<? extends Action>> getActions();
 }

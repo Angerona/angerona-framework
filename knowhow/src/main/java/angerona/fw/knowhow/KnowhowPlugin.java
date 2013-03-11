@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.view.View;
@@ -29,11 +28,6 @@ public class KnowhowPlugin extends OperatorPluginAdapter implements
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
 		reval.add(KnowhowBase.class);
 		return reval;
-	}
-
-	@Override
-	public List<Class<? extends Action>> getActions() {
-		return new LinkedList<>();
 	}
 
 	@Override

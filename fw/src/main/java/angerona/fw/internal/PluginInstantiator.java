@@ -196,11 +196,6 @@ public class PluginInstantiator {
 				LOG.info("Agent-Component: '{}' loaded.", ac.getName());
 			}
 			
-			implMap.get(Action.class).addAll(ap.getActions());
-			for(Class<? extends Action> actc : ap.getActions()) {
-				LOG.info("Agent-Action: '{}' loaded.", actc.getSimpleName());
-			}
-			
 			LOG.info("Agent-Pluign '{}' loading complete", ap.getClass().getName());
 		}
 		
@@ -222,6 +217,12 @@ public class PluginInstantiator {
 			for(Class<? extends Perception> percept : sp.getPerceptions()) {
 				LOG.info("Perception-Type: '{}' loaded.", percept.getSimpleName());
 			}
+			
+			implMap.get(Action.class).addAll(sp.getActions());
+			for(Class<? extends Action> actc : sp.getActions()) {
+				LOG.info("Agent-Action: '{}' loaded.", actc.getSimpleName());
+			}
+			
 		}
 		
 		// Instantiate one operator for every loaded class definition.
