@@ -1,11 +1,14 @@
 package angerona.fw.logic.conditional;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
+import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -33,35 +36,29 @@ import angerona.fw.util.Pair;
 public class ConditionalReasoner extends BaseReasoner {
 	/** reference to the logging facility */
 	private static Logger log = LoggerFactory.getLogger(ConditionalReasoner.class);
-	
-	public RankingFunction ocf;
+
+	private Map<ClBeliefSet, RankingFunction> cache = new HashMap<ClBeliefSet, RankingFunction>();
 	
 	public ConditionalReasoner() {
 	}
 	
-	public void calculateCRepresentation(ConditionalBeliefbase bbase) {
-		// Calculate c-representation
-		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
+	public RankingFunction calculateCRepresentation(ClBeliefSet bbase) {
+		RankingFunction result = cache.get(bbase);
 		
-		log.info("compute c-representation (bruteforce)");
-		long startTime = System.currentTimeMillis();
-		ocf = creasoner.getCRepresentation();
-		long duration = System.currentTimeMillis() - startTime;
-		log.info("done. duration: {}ms", duration);
-	}
-
-	/*
-	@Override
-	protected Pair<Set<FolFormula>, AngeronaAnswer> processInternal(ReasonerParameter params) {
-		if(params.getQuery() == null) {
-			Pair<Set<FolFormula>, AngeronaAnswer> reval = new Pair<>();
-			reval.first = inferInternal((ConditionalBeliefbase)params.getBeliefBase());
-			return reval;
-		} else {
-			return queryInternal((ConditionalBeliefbase)params.getBeliefBase(), params.getQuery());
+		if(result == null) {
+			// Calculate c-representation
+			BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase, true);
+			
+			log.info("compute c-representation (bruteforce)");
+			long startTime = System.currentTimeMillis();
+			result = creasoner.getCRepresentation();
+			long duration = System.currentTimeMillis() - startTime;
+			log.info("done. duration: {}ms", duration);
+			cache.put(bbase, result);
 		}
+		
+		return result;
 	}
-	*/
 	
 	/**
 	 * Calculates the conditional belief set from a conditional belief base.
@@ -76,10 +73,8 @@ public class ConditionalReasoner extends BaseReasoner {
 		Set<FolFormula> retval = new HashSet<FolFormula>();
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
 		
-		if(this.ocf == null) {
-			calculateCRepresentation(bbase);
-		}
-		
+		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs());
+				
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
 		Conjunction conjunction = new Conjunction(propositions);
 		
@@ -93,6 +88,8 @@ public class ConditionalReasoner extends BaseReasoner {
 			return retval;
 		}
 		
+		// TODO: rewrite to work with arbitrary formulas ...
+		
 		// A |~ B, i.e. B follows defeasibly from A iff k(A)=INF or B holds in all smallest
 		// worlds according to k, in which A holds. This is equivalent to k(AB) < k(A -B)
 		for(Proposition prop : sig) {
@@ -102,34 +99,42 @@ public class ConditionalReasoner extends BaseReasoner {
 			Integer rankAandNotB = ocf.rank(AandNotB);
 			if(rankAandB < rankAandNotB) {
 				retval.add(new Atom(new Predicate(prop.getName())));
-			}
-		}
-		// the same for negations
-		for(Proposition prop : sig) {
-			ClassicalFormula nprop = prop.complement();
-			Formula AandB = conjunction.combineWithAnd(nprop);
-			Formula AandNotB = conjunction.combineWithAnd(nprop.complement());
-			Integer rankAandB = ocf.rank(AandB);
-			Integer rankAandNotB = ocf.rank(AandNotB);
-			if(rankAandB < rankAandNotB) {
+			} else if(rankAandNotB < rankAandB) {
 				retval.add(new Negation(new Atom(new Predicate(prop.getName()))));
 			}
 		}
+
 		return retval;
 	}
 
 	@Override
 	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {
-		Set<FolFormula> answers = inferInt(params);
-		AnswerValue av = AnswerValue.AV_UNKNOWN;
-		FolFormula query = params.getQuery();
 		
-		if(answers.contains(query)) {
-			av = AnswerValue.AV_TRUE;
-		} else if( answers.contains(new Negation(query)) ) {
-			av = AnswerValue.AV_FALSE;
+		AnswerValue answer = AnswerValue.AV_FALSE;
+		
+		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
+		
+		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs());
+				
+		Set<PropositionalFormula> propositions = bbase.getPropositions();
+		Conjunction conjunction = new Conjunction(propositions);
+		
+		if( ocf.rank(conjunction) == RankingFunction.INFINITY ) {
+			// premise is considered impossible, everything can be concluded
+			answer = AnswerValue.AV_TRUE;
+		} else {
+			Formula AandB = conjunction.combineWithAnd(params.getQuery());
+			Formula AandNotB = conjunction.combineWithAnd(params.getQuery().complement());
+			Integer rankAandB = ocf.rank(AandB);
+			Integer rankAandNotB = ocf.rank(AandNotB);
+			if(rankAandB < rankAandNotB) {
+				answer = AnswerValue.AV_TRUE;
+			} else if(rankAandB == rankAandNotB) {
+				answer = AnswerValue.AV_UNKNOWN;
+			}
 		}
-		return new Pair<>(answers, new AngeronaAnswer(params.getBeliefBase(), query, av));
+		Set<FolFormula> answers = new HashSet<FolFormula>();
+		return new Pair<>(answers, new AngeronaAnswer(params.getBeliefBase(), params.getQuery(), answer));
 	}
 
 	@Override
