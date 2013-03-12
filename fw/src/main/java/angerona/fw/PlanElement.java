@@ -2,7 +2,6 @@ package angerona.fw;
 
 import angerona.fw.listener.ActionProcessor;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.ViolatesResult;
 
 /**
  * A PlanElement is the data structure storing a step in a plan. It decouples the behavior of the plan
@@ -31,9 +30,6 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	 * 	The intentionUpdateOperator will use this member to select the best PlanElement
 	 */
 	private double costs;
-	
-	/**	data-structure containing information about the result of the last violates run */
-	private ViolatesResult violates;
 	
 	/** internal flag used to proof if the prepare method was called before try to run the PlanElement */
 	private boolean prepared;
@@ -106,7 +102,6 @@ public class PlanElement implements AngeronaAtom, Runnable {
 		this.executionData = other.executionData;
 		this.userData = other.userData;
 		this.costs = other.costs;
-		this.violates = new ViolatesResult(other.violates);
 	}
 	
 	/** @return	the intention representing the behavior of the PlanElement */
@@ -148,19 +143,6 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	/** @return the user-data object used to save additional data about the PlanElement */
 	public Object getUserData() {
 		return userData;
-	}
-
-	@Override
-	public ViolatesResult violates() {
-		return violates;
-	}
-	
-	/**
-	 * internally used by the ViolatesOperator to save the results of the last violation check.
-	 * @param violates	data-structure containg results of violation check
-	 */
-	public void setViolatesResult(ViolatesResult violates) {
-		this.violates = violates;
 	}
 	
 	/** @return true if the intention of this PlanElement is an action otherwise false */

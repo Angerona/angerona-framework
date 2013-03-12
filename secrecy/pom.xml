@@ -4,15 +4,10 @@
 
   <groupId>angerona.fw.am</groupId>
   <artifactId>secrecy</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Angerona (FPlugin-Secrecy)</name>
   <url>http://maven.apache.org</url>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
 
   <dependencies>
     <dependency>
@@ -27,4 +22,9 @@
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <parent>
+  	<groupId>angerona.fw</groupId>
+  	<artifactId>maven-build-all</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  </parent>
 </project>

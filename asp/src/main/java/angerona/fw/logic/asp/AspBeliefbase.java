@@ -105,4 +105,16 @@ public class AspBeliefbase extends BaseBeliefbase {
 		return reval;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof AspBeliefbase))	return false;
+		AspBeliefbase co = (AspBeliefbase)other;
+		return co.program.equals(program);
+	}
+
+	@Override
+	public int hashCode() {
+		return program.hashCode();
+	}
+
 }

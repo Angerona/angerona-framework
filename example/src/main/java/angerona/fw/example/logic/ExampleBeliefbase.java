@@ -85,4 +85,17 @@ public class ExampleBeliefbase extends BaseBeliefbase {
 			reval.add(ff.toString());
 		return reval;
 	}
+
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof ExampleBeliefbase)) return false;
+		ExampleBeliefbase co = (ExampleBeliefbase)other;
+		
+		return fbs.equals(co.fbs);
+	}
+
+	@Override
+	public int hashCode() {
+		return fbs.hashCode();
+	}
 }

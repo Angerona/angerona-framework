@@ -188,4 +188,20 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 		return retval;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof ConditionalBeliefbase))	return false;
+		ConditionalBeliefbase co = (ConditionalBeliefbase)other;
+		
+		if(!propositions.equals(co.propositions))	return false;
+		if(!conditionals.equals(co.conditionals))	return false;
+		
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return propositions.hashCode() + conditionals.hashCode() + 7;
+	}
+
 }

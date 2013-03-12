@@ -3,7 +3,6 @@ package angerona.fw;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.core.Commit;
 
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
@@ -24,21 +23,8 @@ public class Action
 	@Element(name="receiver")
 	private String receiver;
 
-	/** the flag contains information about the last violates run */
-	private ViolatesResult violates;
-	
 	/** this field is used if the action should be received by every agent in the network */
 	public static final String ALL = "__ALL__";
-	
-	@Override
-	public ViolatesResult violates() {
-		return violates;
-	}
-	
-	@Override
-	public void setViolates(ViolatesResult res) {
-		violates = res;
-	}
 	
 	/** Ctor used for deserialization */
 	public Action(	@Element(name="sender") String senderId, 

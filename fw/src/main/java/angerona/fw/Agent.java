@@ -33,7 +33,6 @@ import angerona.fw.listener.SubgoalListener;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.GenericOperatorParameter;
@@ -112,16 +111,10 @@ public class Agent extends AgentArchitecture
 	/** object represents the last action performed by the agent. */
 	private Action lastAction;
 	
-	/** HACK: internal data structure containing the violates information for the action which is in processing */
-	private ViolatesResult violates;
+	private CommandSequence asmlCylce;
 	
 	public OperatorProvider getOperators() {
 		return operators;
-	}
-	
-	// HACK:
-	public void setViolatesResult(ViolatesResult res) {
-		this.violates = res;
 	}
 	
 	public Agent(String name) {
@@ -210,7 +203,9 @@ public class Agent extends AgentArchitecture
 		}
 
 		// init the custom components
-		initComponents(ai.getAdditionalData());
+		for(AgentComponent ac : customComponents) {
+			ac.init(ai.getAdditionalData());
+		}
 	}
 
 	/**
@@ -337,17 +332,6 @@ public class Agent extends AgentArchitecture
 	}
 	
 	/**
-	 * Helper method: Initialize every component of the agent.
-	 * @param additionalData	map containing further parameters which will be used
-	 * 							by the components.
-	 */
-	private void initComponents(Map<String, String> additionalData) {
-		for(AgentComponent ac : customComponents) {
-			ac.init(additionalData);
-		}
-	}
-	
-	/**
 	 * adds the given component to the agent.
 	 * @param component	Reference to the component.
 	 * @return	true if the component was successfully added, false if a component of the type already exists.
@@ -416,8 +400,6 @@ public class Agent extends AgentArchitecture
 		}
 	}
 	
-	// Hacked test version of asml cyle:
-	CommandSequence asmlCylce;
 	@Override
 	public boolean cycle(Object perception) {
 		LOG.info("[" + this.getName() + "] Cylce starts: " + perception);
@@ -435,6 +417,17 @@ public class Agent extends AgentArchitecture
 		// no cleanup work yet.
 	}
 
+	/** 
+	 * informs all the agent listeners of the agent about the update beliefs process
+	 * using the given perception
+	 * @param perception
+	 */
+	public void onUpdateBeliefs(Perception perception, Beliefs oldBeliefs) {
+		for(AgentListener al : listeners) {
+			al.updateBeliefs(perception, oldBeliefs, beliefs);
+		}
+	}
+	
 	public Beliefs updateBeliefs(Perception perception) {
 		return updateBeliefs(perception, beliefs);
 	}
@@ -532,8 +525,6 @@ public class Agent extends AgentArchitecture
 	}
 	
 	public void performAction(Action act) {
-		act.setViolates(violates);
-		violates = null;
 		getAgentProcess().act(act);
 		updateBeliefs(act);
 		act.onSubgoalFinished(null);
@@ -662,7 +653,7 @@ public class Agent extends AgentArchitecture
 			if(ev.getPropertyName().equals(BaseBeliefbase.BELIEFBASE_CHANGE_PROPERTY_NAME)) {
 				onBeliefBaseChange(bb);	
 			}
-		} 
+		}
 	}
 	
 	private void onBeliefBaseChange(BaseBeliefbase bb) {

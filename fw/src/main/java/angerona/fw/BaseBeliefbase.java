@@ -387,4 +387,10 @@ public abstract class BaseBeliefbase
 	public FullReporter getReporter() {
 		return getAgent().getReporter();
 	}
+	
+	@Override
+	public abstract boolean equals(Object other);
+	
+	@Override
+	public abstract int hashCode();
 }

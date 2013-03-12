@@ -40,8 +40,6 @@ public class Execute extends ASMLCommand {
 		// receive the action in the plan element and execute it.
 		PlanElement element = (PlanElement)action.getValue();
 		if(element != null) {
-			// TODO: Hack (Use a more general solution for the agent as data holder)
-			ag.setViolatesResult(element.violates());
 			element.prepare(ag, ag.getBeliefs());
 			element.run();
 		}

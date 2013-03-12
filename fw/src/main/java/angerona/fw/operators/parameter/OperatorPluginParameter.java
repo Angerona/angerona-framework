@@ -46,4 +46,18 @@ public class OperatorPluginParameter extends OperatorParameterAdapter {
 		}
 		this.caller = (Agent)param.getCaller();
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof OperatorPluginParameter))
+			return false;
+		
+		OperatorPluginParameter co = (OperatorPluginParameter)other;
+		return co.caller == this.caller;
+	}
+	
+	@Override
+	public int hashCode() {
+		return caller.hashCode() + 5;
+	}
 }

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
+import angerona.fw.listener.AgentListener;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.report.Reporter;
 
 /**
@@ -26,15 +28,17 @@ import angerona.fw.report.Reporter;
  */
 public abstract class BaseAgentComponent 
 implements 	AgentComponent,
-			Reporter {
+			Reporter,
+			AgentListener {
 	
-	/** unique id of the parent (the agent) */
+	/** the unique id of the parent of the component (the agent) */
 	private Long parentId;
 	
-	/** own unique id */
+	/** the unique id of the agent component */
 	private Long id;
 	
-	/** how deep is this instance in the copy hierachy. 0 means its original, 1 its 
+	/** 
+	 * 	how deep is this instance in the copy hierachy. 0 means its original, 1 its 
 	 *  a copy of the orignal and 2 that it is a copy of the copy of the original.
 	 */
 	private int copyDepth;
@@ -89,6 +93,7 @@ implements 	AgentComponent,
 	@Override
 	public void setParent(Long id) {
 		parentId = id;
+		getAgent().addListener(this);
 	}
 
 	@Override
@@ -140,4 +145,24 @@ implements 	AgentComponent,
 	
 	@Override
 	public abstract Object clone();
+	
+	@Override
+	public void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs) {
+		// does nothing in default case, sub classes may override it.	
+	}
+	
+	@Override
+	public void beliefbaseChanged(BaseBeliefbase bb, Perception percept, String space) {
+		// does nothing in default case, sub classes may override it.
+	}
+	
+	@Override
+	public void componentAdded(BaseAgentComponent comp) {
+		// does nothing
+	}
+
+	@Override
+	public void componentRemoved(BaseAgentComponent comp) {
+		// does nothing
+	}
 }

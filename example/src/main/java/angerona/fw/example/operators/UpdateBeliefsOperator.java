@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.Cache;
+import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
 import angerona.fw.comm.Justification;
@@ -16,7 +18,8 @@ import angerona.fw.operators.parameter.EvaluateParameter;
 /**
  * Default Update Beliefs reacts on Answer and Query speech acts.
  * Sub-classes can use the default behavior and add their custom knowledge
- * updates on custom perceptions/actions
+ * updates on custom perceptions/actions.
+ * 
  * @author Tim Janus
  */
 public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
@@ -24,10 +27,15 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(UpdateBeliefsOperator.class);
 	
+	/** cache for saving update beliefs operator calls */
+	private static Cache<EvaluateParameter, Beliefs> cache = new Cache<>();
+	
 	@Override
 	protected Beliefs processInternal(EvaluateParameter param) {
 		LOG.info("Run Default-Update-Beliefs-Operator");
+		
 		Beliefs beliefs = param.getBeliefs();
+		Beliefs oldBeliefs = (Beliefs)param.getBeliefs().clone();
 		String id = param.getAgent().getAgentProcess().getName();
 		String out = "Update-Beliefs: ";
 		
@@ -38,7 +46,6 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		} else {
 			receiver = true;
 		}
-		
 		
 		if(param.getAtom() instanceof Answer) {
 			Answer naa = (Answer)param.getAtom();
@@ -101,7 +108,10 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		} else if(param.getAtom() != null){
 			param.report("Update-Operator: Cant handle perception of type: " + param.getAtom().getClass().getName());
 		}
-		
+			
+		if(beliefs.getCopyDepth() == 0) {
+			param.getAgent().onUpdateBeliefs((Perception)param.getAtom(), oldBeliefs);
+		}
 		return beliefs;
 	}
 }

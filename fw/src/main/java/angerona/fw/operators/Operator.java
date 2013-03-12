@@ -85,6 +85,7 @@ public abstract class Operator<TCaller extends OperatorStack, IN extends Operato
 		try {
 			preparedParams.fromGenericParameter(genericParams);
 			preparedParams.visit(this);
+			prepare(preparedParams);
 			reval = processInternal(preparedParams);
 		} catch(AttributeNotFoundException | ConversionException ex) {
 			reval = defaultReturnValue();
@@ -107,6 +108,7 @@ public abstract class Operator<TCaller extends OperatorStack, IN extends Operato
 	public OUT process(IN params) {
 		params.getCaller().pushOperator(this);
 		params.visit(this);
+		prepare(params);
 		OUT reval = processInternal(params);
 		params.getCaller().popOperator();
 		return reval;
@@ -145,5 +147,14 @@ public abstract class Operator<TCaller extends OperatorStack, IN extends Operato
 	public String getNameAndParameters() {
 		return this.getClass().getSimpleName() + ":"
 				+ this.parameters.toString();
+	}
+	
+	/**
+	 * This method gives sub classes which are no leafes the ability to do further
+	 * preparation before invoking processInternal.
+	 * @param params	The input parameters
+	 */
+	protected void prepare(IN params) {
+		
 	}
 }

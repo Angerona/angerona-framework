@@ -79,4 +79,25 @@ public class EvaluateParameter extends OperatorPluginParameter {
 		}
 		this.information = (AngeronaAtom)obj;
 	}
+	
+	@Override 
+	public boolean equals(Object other) {
+		if(!(other instanceof EvaluateParameter))
+			return false;
+		
+		EvaluateParameter co = (EvaluateParameter)other;
+		
+		if(!super.equals(co))							return false;
+		if(!this.information.equals(co.information))	return false;
+		if(!this.beliefs.equals(co.beliefs))			return false;
+		
+		return true;
+	}
+	
+	@Override 
+	public int hashCode() {
+		return super.hashCode() + 
+				(information != null ? information.hashCode() : 0) +
+				(beliefs != null ? beliefs.hashCode() : 0);
+	}
 }

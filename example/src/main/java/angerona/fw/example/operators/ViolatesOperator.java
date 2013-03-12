@@ -44,7 +44,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
 		
-		// only apply violates if confidential knowledge is saved in agent.
+		// only apply violates if secrecy knowledge is saved in agent.
 		SecrecyKnowledge conf = param.getAgent().getComponent(SecrecyKnowledge.class);
 		if(conf == null)
 			return new ViolatesResult();
@@ -77,7 +77,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						
 						boolean inClone = cloneInfere.contains(secret.getInformation());
 						if(	inClone )  {
-							param.report("Confidential-Target: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'");
+							param.report("Secret: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'");
 							pairs.add(new Pair<>(secret, 1.0));
 						}
 					}
@@ -103,8 +103,6 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			pe.prepare(this, param.getBeliefs());
 			pe.run();
 			
-			// save the violates result in the plan-element.
-			pe.setViolatesResult(violates);
 			return violates;
 		}
 		throw new NotImplementedException("No complex plans supported by violate operator yet.");
