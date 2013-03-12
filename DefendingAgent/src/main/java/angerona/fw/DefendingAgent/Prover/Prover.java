@@ -143,7 +143,7 @@ public class Prover {
 		} catch (Exception choosingKLM) {
 			System.out.println("\nERROR connecting to SICStus Prolog engine");
 		}
-		return null;
+		return false;
 
 	}
 }

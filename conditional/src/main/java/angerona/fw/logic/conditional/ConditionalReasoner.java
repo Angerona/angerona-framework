@@ -6,6 +6,7 @@ import java.util.Set;
 import net.sf.tweety.ClassicalFormula;
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
+import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -39,9 +40,9 @@ public class ConditionalReasoner extends BaseReasoner {
 	public ConditionalReasoner() {
 	}
 	
-	public void calculateCRepresentation(ConditionalBeliefbase bbase) {
+	public void calculateCRepresentation(ClBeliefSet bbase) {
 		// Calculate c-representation
-		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
+		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase, true);
 		
 		// TODO: use caching
 		
@@ -79,7 +80,7 @@ public class ConditionalReasoner extends BaseReasoner {
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
 		
 		if(this.ocf == null) {
-			calculateCRepresentation(bbase);
+			calculateCRepresentation(bbase.getConditionalBeliefs());
 		}
 		
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
@@ -106,35 +107,54 @@ public class ConditionalReasoner extends BaseReasoner {
 			Integer rankAandNotB = ocf.rank(AandNotB);
 			if(rankAandB < rankAandNotB) {
 				retval.add(new Atom(new Predicate(prop.getName())));
-			}
-		}
-		// the same for negations
-		for(Proposition prop : sig) {
-			ClassicalFormula nprop = prop.complement();
-			Formula AandB = conjunction.combineWithAnd(nprop);
-			Formula AandNotB = conjunction.combineWithAnd(nprop.complement());
-			Integer rankAandB = ocf.rank(AandB);
-			Integer rankAandNotB = ocf.rank(AandNotB);
-			if(rankAandB < rankAandNotB) {
+			} else if(rankAandNotB < rankAandB) {
 				retval.add(new Negation(new Atom(new Predicate(prop.getName()))));
 			}
 		}
+		// the same for negations
+//		for(Proposition prop : sig) {
+//			ClassicalFormula nprop = prop.complement();
+//			Formula AandB = conjunction.combineWithAnd(nprop);
+//			Formula AandNotB = conjunction.combineWithAnd(nprop.complement());
+//			Integer rankAandB = ocf.rank(AandB);
+//			Integer rankAandNotB = ocf.rank(AandNotB);
+//			if(rankAandB < rankAandNotB) {
+//				retval.add(new Negation(new Atom(new Predicate(prop.getName()))));
+//			}
+//		}
 		return retval;
 	}
 
 	@Override
 	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {
-		// TODO: calculate only the value in question and not the whole set!
-		Set<FolFormula> answers = inferInt(params);
-		AnswerValue av = AnswerValue.AV_UNKNOWN;
-		FolFormula query = params.getQuery();
 		
-		if(answers.contains(query)) {
-			av = AnswerValue.AV_TRUE;
-		} else if( answers.contains(new Negation(query)) ) {
-			av = AnswerValue.AV_FALSE;
+		AnswerValue answer = AnswerValue.AV_FALSE;
+		
+		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
+		
+		if(this.ocf == null) {
+			calculateCRepresentation(bbase);
 		}
-		return new Pair<>(answers, new AngeronaAnswer(params.getBeliefBase(), query, av));
+		
+		Set<PropositionalFormula> propositions = bbase.getPropositions();
+		Conjunction conjunction = new Conjunction(propositions);
+		
+		if( ocf.rank(conjunction) == RankingFunction.INFINITY ) {
+			// premise is considered impossible, everything can be concluded
+			answer = AnswerValue.AV_TRUE;
+		} else {
+			Formula AandB = conjunction.combineWithAnd(params.getQuery());
+			Formula AandNotB = conjunction.combineWithAnd(params.getQuery().complement());
+			Integer rankAandB = ocf.rank(AandB);
+			Integer rankAandNotB = ocf.rank(AandNotB);
+			if(rankAandB < rankAandNotB) {
+				answer = AnswerValue.AV_TRUE;
+			} else if(rankAandB == rankAandNotB) {
+				answer = AnswerValue.AV_UNKNOWN;
+			}
+		}
+		Set<FolFormula> answers = new HashSet<FolFormula>();
+		return new Pair<>(answers, new AngeronaAnswer(params.getBeliefBase(), params.getQuery(), answer));
 	}
 
 	@Override

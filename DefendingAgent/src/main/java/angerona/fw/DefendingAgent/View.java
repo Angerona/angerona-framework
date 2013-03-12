@@ -14,8 +14,6 @@ import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.DefendingAgent.comm.Revision;
-import angerona.fw.comm.Query;
 import angerona.fw.logic.AnswerValue;
 
 /**

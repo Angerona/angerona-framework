@@ -164,17 +164,18 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View view = ag.getComponent(ViewComponent.class).getView(revision.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		
+		// check for each secret whether it might be revealed by this revision operation
 		for(Secret a : conf.getTargets()){
-		if(cexec.skepticalInference(view
-				.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE), a.getInformation())){
-					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
-					Subgoal answerGoal = new Subgoal(ag, desire);
-					answerGoal.newStack(answer);
-					ag.getPlanComponent().addPlan(answerGoal);
-					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
-							"' to the plan", ag.getPlanComponent());
-					return;
-				}
+			if(cexec.skepticalInference(view
+					.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE), a.getInformation())){
+						Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
+						Subgoal answerGoal = new Subgoal(ag, desire);
+						answerGoal.newStack(answer);
+						ag.getPlanComponent().addPlan(answerGoal);
+						pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+								"' to the plan", ag.getPlanComponent());
+						return;
+			}
 		}
 		if(cexec.poss(view
 				.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_FALSE))){
@@ -203,9 +204,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			}
 		}
 		
+		// revision would not breach confidentiality, continue revising beliefbase
 		AnswerValue answerValue = AnswerValue.AV_FALSE;
 		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();
 		
+		// slightly hacked: we need to get the revision result from the revision operator
 		BaseChangeBeliefs changeOp = bbase.getChangeOperator();
 		boolean success = false;
 		if(changeOp instanceof ConditionalRevision) {
@@ -218,6 +221,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		if(success) {
+
 			bbase.addKnowledge(revision.getProposition());
 			answerValue = AnswerValue.AV_TRUE;
 		}
@@ -225,7 +229,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		// refine view on the attacking agent
 		ag.getComponent(ViewComponent.class).setView(revision.getSenderId(), view.RefineViewByRevision(revision.getProposition(),answerValue));
 		
-		
+		// send answer
 		Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), answerValue);
 		Subgoal answerGoal = new Subgoal(ag, desire);
 		answerGoal.newStack(answer);
