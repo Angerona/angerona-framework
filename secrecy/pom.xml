@@ -21,6 +21,11 @@
     	<artifactId>fw</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>gui</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>angerona.fw</groupId>

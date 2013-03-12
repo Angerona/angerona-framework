@@ -1,4 +1,4 @@
-package angerona.fw.logic;
+package angerona.fw.am.secrecy.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -15,8 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.Perception;
+import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
 import angerona.fw.listener.AgentAdapter;
-import angerona.fw.listener.AgentListener;
+import angerona.fw.logic.Beliefs;
+import angerona.fw.logic.Secret;
+import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
@@ -299,13 +302,9 @@ public class SecrecyKnowledge extends BaseAgentComponent
 				return;
 			
 			EvaluateParameter param = new EvaluateParameter(getAgent(), oldBeliefs, percept);
-			
-			// TODO: Find a better concept for the information flow.
-			// TODO: Add the updating of secrets again.
-			// ViolatesResult res = percept.violates();
-			ViolatesResult res = null;
-			if(res == null)
-				return;
+			BaseViolatesOperator op = (BaseViolatesOperator) 
+					getAgent().getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
+			ViolatesResult res = op.process(param);
 			
 			for(Pair<Secret, Double> p : res.getPairs()) {
 				if(p.second != 0) {

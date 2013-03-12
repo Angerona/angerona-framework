@@ -8,7 +8,6 @@ import angerona.fw.AgentComponent;
 import angerona.fw.PlanComponent;
 import angerona.fw.internal.AgentPlugin;
 import angerona.fw.logic.Desires;
-import angerona.fw.logic.SecrecyKnowledge;
 
 @PluginImplementation
 /**
@@ -22,7 +21,6 @@ public class DefaultAgentPlugin implements AgentPlugin {
 	@Override
 	public List<Class<? extends AgentComponent>> getAgentComponents() {
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
-		reval.add(SecrecyKnowledge.class);
 		reval.add(PlanComponent.class);
 		reval.add(Desires.class);
 		return reval;

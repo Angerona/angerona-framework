@@ -300,6 +300,12 @@
     	<version>0.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
+    <dependency>
+    	<groupId>angerona.fw.am</groupId>
+    	<artifactId>secrecy</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>angerona.fw</groupId>

@@ -1,10 +1,11 @@
-package angerona.fw.gui.view;
+package angerona.fw.am.secrecy.gui;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import angerona.fw.am.secrecy.components.SecrecyKnowledge;
+import angerona.fw.gui.view.ListViewColored;
 import angerona.fw.internal.Entity;
-import angerona.fw.logic.SecrecyKnowledge;
 import angerona.fw.logic.Secret;
 
 /**
@@ -15,6 +16,11 @@ import angerona.fw.logic.Secret;
  */
 public class SecrecyView extends ListViewColored<SecrecyKnowledge> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5599204624867315364L;
+
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
 		SecrecyKnowledge ck = (SecrecyKnowledge)obj;
