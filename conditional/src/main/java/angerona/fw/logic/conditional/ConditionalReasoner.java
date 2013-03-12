@@ -1,9 +1,10 @@
 package angerona.fw.logic.conditional;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.ClassicalFormula;
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
 import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
@@ -34,37 +35,29 @@ import angerona.fw.util.Pair;
 public class ConditionalReasoner extends BaseReasoner {
 	/** reference to the logging facility */
 	private static Logger log = LoggerFactory.getLogger(ConditionalReasoner.class);
-	
-	public RankingFunction ocf;
+
+	private Map<ClBeliefSet, RankingFunction> cache = new HashMap<ClBeliefSet, RankingFunction>();
 	
 	public ConditionalReasoner() {
 	}
 	
-	public void calculateCRepresentation(ClBeliefSet bbase) {
-		// Calculate c-representation
-		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase, true);
+	public RankingFunction calculateCRepresentation(ClBeliefSet bbase) {
+		RankingFunction result = cache.get(bbase);
 		
-		// TODO: use caching
-		
-		log.info("compute c-representation (bruteforce)");
-		long startTime = System.currentTimeMillis();
-		ocf = creasoner.getCRepresentation();
-		long duration = System.currentTimeMillis() - startTime;
-		log.info("done. duration: {}ms", duration);
-	}
-
-	/*
-	@Override
-	protected Pair<Set<FolFormula>, AngeronaAnswer> processInternal(ReasonerParameter params) {
-		if(params.getQuery() == null) {
-			Pair<Set<FolFormula>, AngeronaAnswer> reval = new Pair<>();
-			reval.first = inferInternal((ConditionalBeliefbase)params.getBeliefBase());
-			return reval;
-		} else {
-			return queryInternal((ConditionalBeliefbase)params.getBeliefBase(), params.getQuery());
+		if(result == null) {
+			// Calculate c-representation
+			BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase, true);
+			
+			log.info("compute c-representation (bruteforce)");
+			long startTime = System.currentTimeMillis();
+			result = creasoner.getCRepresentation();
+			long duration = System.currentTimeMillis() - startTime;
+			log.info("done. duration: {}ms", duration);
+			cache.put(bbase, result);
 		}
+		
+		return result;
 	}
-	*/
 	
 	/**
 	 * Calculates the conditional belief set from a conditional belief base.
@@ -79,10 +72,8 @@ public class ConditionalReasoner extends BaseReasoner {
 		Set<FolFormula> retval = new HashSet<FolFormula>();
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
 		
-		if(this.ocf == null) {
-			calculateCRepresentation(bbase.getConditionalBeliefs());
-		}
-		
+		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs());
+				
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
 		Conjunction conjunction = new Conjunction(propositions);
 		
@@ -111,17 +102,7 @@ public class ConditionalReasoner extends BaseReasoner {
 				retval.add(new Negation(new Atom(new Predicate(prop.getName()))));
 			}
 		}
-		// the same for negations
-//		for(Proposition prop : sig) {
-//			ClassicalFormula nprop = prop.complement();
-//			Formula AandB = conjunction.combineWithAnd(nprop);
-//			Formula AandNotB = conjunction.combineWithAnd(nprop.complement());
-//			Integer rankAandB = ocf.rank(AandB);
-//			Integer rankAandNotB = ocf.rank(AandNotB);
-//			if(rankAandB < rankAandNotB) {
-//				retval.add(new Negation(new Atom(new Predicate(prop.getName()))));
-//			}
-//		}
+
 		return retval;
 	}
 
@@ -132,10 +113,8 @@ public class ConditionalReasoner extends BaseReasoner {
 		
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
 		
-		if(this.ocf == null) {
-			calculateCRepresentation(bbase);
-		}
-		
+		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs());
+				
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
 		Conjunction conjunction = new Conjunction(propositions);
 		

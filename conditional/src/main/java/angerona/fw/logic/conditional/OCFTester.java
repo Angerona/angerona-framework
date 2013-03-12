@@ -42,14 +42,13 @@ public class OCFTester {
 		System.out.println(bbase.toString());
 		
 		System.out.println("c-representation:");
-		bbasereasoner.calculateCRepresentation(bbase);
-		RankingFunction ocf = bbasereasoner.ocf;
+		RankingFunction ocf = bbasereasoner.calculateCRepresentation(bbase.getConditionalBeliefs());
 		System.out.println(ocf);
 		
-		rev1reasoner.ocf = ocf;
-		rev2reasoner.ocf = ocf;
-		rev3reasoner.ocf = ocf;
-		rev4reasoner.ocf = ocf;
+//		rev1reasoner.ocf = ocf;
+//		rev2reasoner.ocf = ocf;
+//		rev3reasoner.ocf = ocf;
+//		rev4reasoner.ocf = ocf;
 		
 		System.out.println("\n propositions:");
 		System.out.println(rev1.getPropositions());
