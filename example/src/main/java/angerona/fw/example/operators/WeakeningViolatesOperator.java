@@ -212,6 +212,8 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 								+ "'", view);
 					}
 				}
+			} else {
+				return super.onPerception(percept, param);
 			}
 		}
 

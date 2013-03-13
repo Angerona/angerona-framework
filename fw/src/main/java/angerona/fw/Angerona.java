@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -413,6 +415,8 @@ public class Angerona {
 	public void bootstrap() throws IOException, ParserConfigurationException, SAXException {
 		
 		if(!bootstrapDone) {
+			LogicalSymbols.setClassicalNegationSymbol("-");
+			LogicalSymbols.setContradictionSymbol("!");
 			
 			AgentConfigLoader acl = new AgentConfigLoader();
 			for(String folder : agentConfigFolders) {
