@@ -1,6 +1,10 @@
 package angerona.fw.example.operators;
 
 import java.io.StringReader;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
@@ -8,6 +12,7 @@ import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
@@ -85,22 +90,19 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				continue;
 			
 			Atom atom = desire.getAtom();
-			String atomStr = atom.toString().trim();
-			boolean informDesire = atomStr.startsWith("v_");
-			boolean queryDesire = atomStr.startsWith("q_");
+			String predicateName = atom.getPredicate().getName();
+			boolean informDesire = predicateName.startsWith("v_");
+			boolean queryDesire = predicateName.startsWith("q_");
 			
 			if(informDesire || queryDesire) {
-				int si = atom.toString().indexOf("_")+1;
-				int li = atom.toString().indexOf("(", si);
-				if(si == -1 || li == -1)
+				int si = predicateName.indexOf("_")+1;
+				if(si == -1)
 					continue;
-				String recvName = atom.toString().substring(si, li);
+				String recvName = predicateName.substring(si);
 				
-				si = atom.toString().indexOf("(")+1;
-				li = atom.toString().indexOf(")");
-				if(si == -1 || li == -1)
+				if(atom.getArguments().size() < 1)
 					continue;
-				String content = atom.toString().substring(si,li);
+				String content = atom.getArguments().get(0).toString();
 				
 				LOG.info("'{}' wants '"+recvName+"' to believe: '{}'",  ag.getName(), content);
 		
@@ -111,6 +113,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					a = parser.atom(new FolSignature());
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
+					System.err.println("parsing: " + content);
 					e.printStackTrace();
 				}
 				
@@ -131,7 +134,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 	/**
 	 * Helper method: Reacts on desires which were created by a Query. The default implementation creates two answers for the query:
-	 * one with the answer-value true the other with the answer-value false. Complex queries are not supported by this method.
+	 * one with the answer-value true the other with the answer-value false.
+	 * When the query is a complex query then the answers and their lies are generated.
 	 * @param des	The desire containing the query to answer
 	 * @param pp	The data-structure containing parameters for the operator.
 	 * @param ag	The agent
@@ -143,6 +147,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		BaseBeliefbase bb = ag.getBeliefs().getWorldKnowledge();
 		AngeronaAnswer aa = bb.reason(q.getQuestion());
+		
+		boolean generateLies = Boolean.parseBoolean(getParameter("generateLies", "TRUE"));	
 		
 		if(aa.getAnswerValue() == AnswerValue.AV_TRUE ||
 				aa.getAnswerValue() == AnswerValue.AV_FALSE) {
@@ -159,27 +165,76 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			answer.newStack(new Answer(ag, q.getSenderId(), 
 					q.getQuestion(), real));
 			
-			answer.newStack(new Answer(ag, q.getSenderId(), 
-					q.getQuestion(), invert));
+			if(generateLies) {
+				answer.newStack(new Answer(ag, q.getSenderId(), 
+						q.getQuestion(), invert));
+			}
 			
-		} else {
+		} else if(	aa.getAnswerValue() == AnswerValue.AV_UNKNOWN || 
+					aa.getAnswerValue() == AnswerValue.AV_REJECT) {
 			// use the answer value returned by reasoner (unknown or rejected).
 			answer.newStack(new Answer(ag, q.getSenderId(), 
 					q.getQuestion(), aa.getAnswerValue()));
 			
-			// generate alternative plans if a secret is not safe with the
-			// real answer (lie by answering the query with true or false).
-			answer.newStack(new Answer(ag, q.getSenderId(), 
-					q.getQuestion(), AnswerValue.AV_TRUE));
+			if(generateLies) {
+				// generate alternative plans if a secret is not safe with the
+				// real answer (lie by answering the query with true or false).
+				answer.newStack(new Answer(ag, q.getSenderId(), 
+						q.getQuestion(), AnswerValue.AV_TRUE));
 			
-			answer.newStack(new Answer(ag, q.getSenderId(), 
-					q.getQuestion(), AnswerValue.AV_FALSE));
+				answer.newStack(new Answer(ag, q.getSenderId(), 
+						q.getQuestion(), AnswerValue.AV_FALSE));
+			}
+			
+		} else if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
+			List<FolFormula> answers = new LinkedList<>(aa.getAnswers());
+			
+			Collections.sort(answers, new Comparator<FolFormula>() {
+				public int compare(FolFormula a1, FolFormula a2) {
+					return a1.toString().compareTo(a2.toString());
+				}
+			}); 
+			
+			List<FolFormula> lies = new LinkedList<>();
+			if(generateLies) {
+				// create lieing alternatives:
+				for(int i=0; i<answers.size(); i++) {
+					//if(isClosedQuery(answers.get(i))) {
+					if(answers.get(i).isGround()) {
+						FolFormula simpleLie = generateLie(answers.get(i));
+						lies.add(simpleLie);
+					}
+				}
+			}
+			
+			Query query = (Query) des.getPerception();
+			Subgoal sg = new Subgoal(ag, des);
+			createSubgoals(answers, sg, query, new Boolean(false), ag);
+			createSubgoals(lies, sg, query, new Boolean(true), ag);
+			ag.getPlanComponent().addPlan(sg);
+			return true;
 		}
 		
 		ag.getPlanComponent().addPlan(answer);
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
 		return true;
+	}
+	
+	private void createSubgoals(List<FolFormula> answers, Subgoal sg, Query q, Boolean ud, Agent ag) {
+		for(int i=0;i<answers.size();i++) {
+			Answer a = new Answer(ag, q.getSenderId(), q.getQuestion(), answers.get(i));
+			sg.newStack(a);
+			sg.peekStack(sg.getNumberOfStacks()-1).setUserData(ud);
+		}
+	}
+		
+	protected FolFormula generateLie(FolFormula truth) {
+		if(truth instanceof Negation) {
+			return ((Negation)truth).getFormula();
+		} else {
+			return new Negation(truth);
+		}
 	}
 	
 	/**

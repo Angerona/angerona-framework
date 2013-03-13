@@ -1,0 +1,35 @@
+<simulation-configuration>
+	<name>Answer Behavior Test</name>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+    <category>feature-test</category>
+    <!--
+	<description>
+	This scenario tests the answer behavior of the default subgoal-generation
+	operator. The following list describes the questions:
+	1. info(test) answered with true
+	2. info(X) answered with {info(test), info(product)}
+	3. -info(test) answered with false
+	4. info(worldformula) answered with unknown
+	</description>
+	!-->
+	
+	<agent-instance>
+		<name>Alice</name>
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+       	<capability>QueryAnswer</capability>
+	</agent-instance>
+      
+	<agent-instance>
+	    <name>Bob</name>
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+   		<capability>Query</capability>
+			
+	 	<desire>q_Alice(info(test),1)</desire>
+		<desire>q_Alice(info(X),2)</desire>
+		<desire>q_Alice(info(test),3)</desire>
+		<desire>q_Alice(info(worldformula),4)</desire>
+	</agent-instance>
+
+</simulation-configuration>

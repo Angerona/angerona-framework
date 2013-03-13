@@ -26,7 +26,7 @@ import angerona.fw.util.Pair;
  * made to distinguish between all options available in particular plans. The
  * operator currently chooses from all options from all plans.
  * 
- * @author Daniel Dilger
+ * @author Daniel Dilger, Tim Janus
  */
 public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 
@@ -34,6 +34,13 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	private static Logger LOG = LoggerFactory
 			.getLogger(IntentionUpdateOperator.class);
 
+	/** 
+	 * Checks if the given plan element represents a lie. It assumes that the 
+	 * user data is given as boolean which indicates if it is a lie (true) or
+	 * if it the truth (false).
+	 * @param pe	The plan element
+	 * @return		true if the plan element represents a lie, false otherwise.
+	 */
 	private boolean isLie(PlanElement pe) {
 		if(pe.getUserData() instanceof Boolean) {
 			return (Boolean)pe.getUserData();
@@ -41,6 +48,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		return false;
 	}
 
+	
 	private double lyingCost(Intention intention, PlanParameter pp) {
 		double estimate = 0.5;
 		pp.report(intention
