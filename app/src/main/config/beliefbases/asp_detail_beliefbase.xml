@@ -4,8 +4,8 @@
       <default-operator-cls>angerona.fw.logic.asp.AspReasoner{d=1.0}</default-operator-cls>
    </reasoners>
    <change-operators>
-      <default-operator-cls>angerona.fw.logic.asp.AspExpansion</default-operator-cls>
-      <operator-cls>angerona.fw.logic.asp.AspRevision</operator-cls>
+      <default-operator-cls>angerona.fw.logic.asp.AspRevision</default-operator-cls>
+      <operator-cls>angerona.fw.logic.asp.AspExpansion</operator-cls>
    </change-operators>
    <translators>
       <default-operator-cls>angerona.fw.logic.asp.AspTranslator</default-operator-cls>
