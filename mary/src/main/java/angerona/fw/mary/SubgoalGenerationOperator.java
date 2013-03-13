@@ -236,7 +236,7 @@ public class SubgoalGenerationOperator extends
 			return true;
 		}
 		
-		return false;
+		return super.answerQuery(des, pp, ag);
 	}
 	
 	private void createSubgoals(List<FolFormula> answers, Subgoal sg, Query q, Boolean ud, Agent ag) {

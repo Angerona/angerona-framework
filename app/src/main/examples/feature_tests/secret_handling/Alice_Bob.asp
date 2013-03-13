@@ -1,0 +1,1 @@
+inlove(claire, bob) :- buyed(gift, claire).
