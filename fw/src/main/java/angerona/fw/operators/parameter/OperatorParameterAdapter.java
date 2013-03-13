@@ -5,8 +5,6 @@ import javax.management.AttributeNotFoundException;
 import angerona.fw.error.ConversionException;
 import angerona.fw.internal.Entity;
 import angerona.fw.operators.GenericOperatorParameter;
-import angerona.fw.report.FullReporter;
-import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
 
 /**
@@ -24,27 +22,18 @@ public abstract class OperatorParameterAdapter implements
 	Reporter
 	{
 
-	/** reference to the reporter interface used to post reports. */
-	private FullReporter reporter;
-	
 	@Override
 	public abstract void fromGenericParameter(GenericOperatorParameter input) 
 			throws ConversionException, AttributeNotFoundException;
 	
 	@Override
-	public void visit(ReportPoster op) {
-		reporter = getCaller().getReporter();
-		reporter.setDefaultPoster(op);
-	}
-	
-	@Override
 	public void report(String message) {
-		reporter.report(message);
+		getReporter().report(message);
 	}
 	
 	@Override
 	public void report(String message, Entity attachment) {
-		reporter.report(message, attachment);
+		getReporter().report(message, attachment);
 	}
 	
 	/**

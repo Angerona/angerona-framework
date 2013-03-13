@@ -77,9 +77,9 @@ public abstract class BaseTranslator
 	 * @return		A beliefbase containing the information encoded in the perception.
 	 */
 	public BaseBeliefbase translatePerception(BaseBeliefbase caller, Perception p) {
-		caller.pushOperator(this);
+		caller.getStack().pushOperator(this);
 		BaseBeliefbase reval = translatePerceptionInt(caller, p);
-		caller.popOperator();
+		caller.getStack().popOperator();
 		return reval;
 	}
 	
@@ -110,9 +110,9 @@ public abstract class BaseTranslator
 	 * @return		A beliefbase containing the information encoded in the set of formulas.
 	 */
 	public BaseBeliefbase translateFOL(BaseBeliefbase caller, Set<FolFormula> formulas) {
-		caller.pushOperator(this);
+		caller.getStack().pushOperator(this);
 		BaseBeliefbase reval = translateFOLInt(caller, formulas);
-		caller.popOperator();
+		caller.getStack().popOperator();
 		return reval;
 	}
 }

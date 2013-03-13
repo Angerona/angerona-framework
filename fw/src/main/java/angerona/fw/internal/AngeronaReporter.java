@@ -19,17 +19,28 @@ public class AngeronaReporter implements FullReporter {
 	/** the default poster */
 	private ReportPoster defaultPoster;
 
+	/** 
+	 * Ctor: 	Creating an unitialized reporter. To use it the setOperatorStack
+	 * 			and setDefaultPoster must be invoked.
+	 */
+	public AngeronaReporter() {
+	}
+	
 	/**
 	 * Ctor: Initializes the used operator stack and the default poster.
 	 * @param stack
 	 * @param defaultPoster
 	 */
 	public AngeronaReporter(OperatorStack stack, ReportPoster defaultPoster) {
+		setOperatorStack(stack);
+		setDefaultPoster(defaultPoster);
+	}
+	
+	@Override
+	public void setOperatorStack(OperatorStack stack) {
 		if(stack == null)
 			throw new IllegalArgumentException("The stack most not be null.");
-		
 		this.stack = stack;
-		setDefaultPoster(defaultPoster);
 	}
 	
 	@Override
@@ -41,22 +52,26 @@ public class AngeronaReporter implements FullReporter {
 	
 	@Override
 	public void report(String message) {
-		Angerona.getInstance().report(message, stack, defaultPoster);
+		if(stack != null && defaultPoster != null)
+			Angerona.getInstance().report(message, stack, defaultPoster);
 	}
 	
 	@Override
 	public void report(String message, Entity attachment) {
-		Angerona.getInstance().report(message, attachment, stack, defaultPoster);
+		if(stack != null && defaultPoster != null)
+			Angerona.getInstance().report(message, attachment, stack, defaultPoster);
 	}
 
 	@Override
 	public void report(String message, ReportPoster poster) {
-		Angerona.getInstance().report(message, stack, poster);
+		if(stack != null)
+			Angerona.getInstance().report(message, stack, poster);
 	}
 	
 	@Override
 	public void report(String message, Entity attachment, ReportPoster poster) {
-		Angerona.getInstance().report(message, attachment, stack, poster);
+		if(stack != null)
+			Angerona.getInstance().report(message, attachment, stack, poster);
 	}
 
 }

@@ -67,7 +67,7 @@ public class ReportEntry implements Cloneable {
 		this.simulationTick = simulation.getSimulationTick();
 		this.realTime = new Date();
 		
-		for(BaseOperator op : scope.getStack()) {
+		for(BaseOperator op : scope.getOperatorStack()) {
 			operatorCallstack.add(op.getClass().getName());
 		}
 	}

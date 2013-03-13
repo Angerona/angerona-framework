@@ -2,30 +2,22 @@ package angerona.fw.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
+import angerona.fw.OperatorCaller;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.Operator;
-import angerona.fw.operators.OperatorStack;
-import angerona.fw.report.ReportPoster;
 
 /**
  * classes implementing this interface act as input parameters for the generic Operator
- * process method.
+ * process methods. The OperatorParameter provides the functionality given by the
+ * OperatorCaller to the Operator, this means the operator can access the call stack to
+ * push and pop itself on the stack and it can access the reporter to access the Angerona
+ * report system.
+ * 
  * @see Operator
  * @author Tim Janus
  */
-public interface OperatorParameter {
-	
-	/** @return the caller of the operator as call stack interface */
-	OperatorStack getCaller();
-	
-	/**
-	 * This method is called before the operator parameter is used by the operator op.
-	 * Thus allows the parameter to know its operator
-	 * @param op
-	 */
-	void visit(ReportPoster op);
-	
+public interface OperatorParameter extends OperatorCaller {
 	/** 
 	 * This method converts the given GenericOperatorParameter into a more
 	 * user friendly version which has type information.

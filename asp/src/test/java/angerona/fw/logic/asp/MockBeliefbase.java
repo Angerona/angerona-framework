@@ -2,12 +2,11 @@ package angerona.fw.logic.asp;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
-import angerona.fw.OperatorSet;
 import angerona.fw.OperatorProvider;
+import angerona.fw.OperatorSet;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
-import angerona.fw.operators.BaseOperator;
 import angerona.fw.util.OSValidator;
 
 /**
@@ -72,10 +71,4 @@ public class MockBeliefbase extends AspBeliefbase {
 		});
 		getReasoningOperator().infer(this);
 	}
-	
-	@Override
-	public void pushOperator(BaseOperator op) {}
-	
-	@Override
-	public void popOperator() {}
 }

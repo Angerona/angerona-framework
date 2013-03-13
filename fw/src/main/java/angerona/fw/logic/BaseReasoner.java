@@ -58,9 +58,9 @@ public abstract class BaseReasoner
 	 */
 	public Set<FolFormula> infer(BaseBeliefbase caller) {
 		ReasonerParameter params = new ReasonerParameter(caller, null);
-		caller.pushOperator(this);
+		caller.getStack().pushOperator(this);
 		Set<FolFormula> reval = processInternal(params).first;
-		caller.popOperator();
+		caller.getStack().popOperator();
 		return reval;
 	}
 	
@@ -81,9 +81,9 @@ public abstract class BaseReasoner
 	 */
 	public Pair<Set<FolFormula>, AngeronaAnswer> query(BaseBeliefbase caller, FolFormula query) {
 		ReasonerParameter params = new ReasonerParameter(caller, query);
-		caller.pushOperator(this);
+		caller.getStack().pushOperator(this);
 		Pair<Set<FolFormula>, AngeronaAnswer> reval = processInternal(params);
-		caller.popOperator();
+		caller.getStack().popOperator();
 		return reval;
 	}
 	

@@ -2,8 +2,6 @@ package angerona.fw.operators;
 
 import java.util.Stack;
 
-import angerona.fw.report.FullReporter;
-
 /**
  * The caller of operators must implement this interface
  * which allows the caller to save the stack-trace of the 
@@ -22,11 +20,5 @@ public interface OperatorStack {
 	void popOperator();
 	
 	/** returns the actual state of the operator stack */
-	Stack<BaseOperator> getStack();
-	
-	/** 
-	 * 	@return the report interface used to communicate with the Angerona
-	 * 			report mechanism.
-	 */
-	FullReporter getReporter();
+	Stack<BaseOperator> getOperatorStack();
 }

@@ -6,10 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import angerona.fw.internal.AngeronaReporter;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.listener.AgentListener;
 import angerona.fw.logic.Beliefs;
+import angerona.fw.report.FullReporter;
+import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
 
 /**
@@ -29,13 +32,16 @@ import angerona.fw.report.Reporter;
 public abstract class BaseAgentComponent 
 implements 	AgentComponent,
 			Reporter,
-			AgentListener {
+			AgentListener,
+			ReportPoster {
 	
 	/** the unique id of the parent of the component (the agent) */
 	private Long parentId;
 	
 	/** the unique id of the agent component */
 	private Long id;
+	
+	private FullReporter reporter = new AngeronaReporter();
 	
 	/** 
 	 * 	how deep is this instance in the copy hierachy. 0 means its original, 1 its 
@@ -94,6 +100,8 @@ implements 	AgentComponent,
 	public void setParent(Long id) {
 		parentId = id;
 		getAgent().addListener(this);
+		reporter.setDefaultPoster(this);
+		reporter.setOperatorStack(getAgent());
 	}
 
 	@Override
@@ -107,17 +115,12 @@ implements 	AgentComponent,
 	
 	@Override
 	public void report(String msg) {
-		/** unit tests will run without an agent on the component so test for the agent before reporting to angerona */
-		if(getAgent() != null)
-			getAgent().getReporter().report(msg, (Entity)this);
+		reporter.report(msg, (Entity)this);
 	}
 	
 	@Override
 	public void report(String msg, Entity attachment) {
-		/** unit tests will run without an agent on the component so test for the agent before reporting to angerona */
-		if(getAgent() != null) {
-			getAgent().getReporter().report(msg, attachment);
-		}
+		reporter.report(msg, attachment);
 	}
 		
 	@Override
@@ -164,5 +167,10 @@ implements 	AgentComponent,
 	@Override
 	public void componentRemoved(BaseAgentComponent comp) {
 		// does nothing
+	}
+	
+	@Override
+	public String getPosterName() {
+		return getClass().getSimpleName();
 	}
 }

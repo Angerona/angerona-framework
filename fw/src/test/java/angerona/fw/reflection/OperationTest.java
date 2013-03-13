@@ -15,7 +15,6 @@ import angerona.fw.error.InvokeException;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
-import angerona.fw.report.FullReporter;
 import angerona.fw.util.Pair;
 
 public class OperationTest {
@@ -34,13 +33,8 @@ public class OperationTest {
 		}
 
 		@Override
-		public Stack<BaseOperator> getStack() {
+		public Stack<BaseOperator> getOperatorStack() {
 			return stack;
-		}
-
-		@Override
-		public FullReporter getReporter() {
-			return null;
 		}
 
 	}
@@ -69,6 +63,12 @@ public class OperationTest {
 		@Override
 		public Object process(GenericOperatorParameter gop) {
 			return "";
+		}
+
+		@Override
+		public String getPosterName() {
+			// TODO Auto-generated method stub
+			return "MockOperation";
 		}
 		
 	}

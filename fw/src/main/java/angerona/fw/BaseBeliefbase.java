@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
@@ -26,11 +25,10 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
-import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
 import angerona.fw.parser.ParseException;
-import angerona.fw.report.FullReporter;
+import angerona.fw.report.Reporter;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
@@ -51,8 +49,8 @@ import angerona.fw.serialize.BeliefbaseConfig;
  */
 public abstract class BaseBeliefbase 
 	extends 	BaseAgentComponent 
-	implements 	BeliefBase, 
-				OperatorStack {
+	implements 	BeliefBase,
+				OperatorCaller {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(BaseBeliefbase.class);
@@ -369,28 +367,18 @@ public abstract class BaseBeliefbase
 	}
 	
 	@Override
-	public void pushOperator(BaseOperator op) {
-		getAgent().pushOperator(op);
-	}
-
-	@Override
-	public void popOperator() {
-		getAgent().popOperator();
-	}
-
-	@Override
-	public Stack<BaseOperator> getStack() {
-		return getAgent().getStack();
-	}
-	
-	@Override
-	public FullReporter getReporter() {
-		return getAgent().getReporter();
-	}
-	
-	@Override
 	public abstract boolean equals(Object other);
 	
 	@Override
 	public abstract int hashCode();
+
+	@Override
+	public Reporter getReporter() {
+		return getAgent();
+	}
+
+	@Override
+	public OperatorStack getStack() {
+		return getAgent();
+	}
 }

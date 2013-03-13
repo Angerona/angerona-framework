@@ -6,6 +6,7 @@ import angerona.fw.Agent;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
+import angerona.fw.report.Reporter;
 
 /**
  * Base class for all input parameters for operators defined in the
@@ -29,7 +30,7 @@ public class OperatorPluginParameter extends OperatorParameterAdapter {
 	}
 	
 	@Override
-	public OperatorStack getCaller() {
+	public Reporter getReporter() {
 		return caller;
 	}	
 	
@@ -59,5 +60,10 @@ public class OperatorPluginParameter extends OperatorParameterAdapter {
 	@Override
 	public int hashCode() {
 		return caller.hashCode() + 5;
+	}
+
+	@Override
+	public OperatorStack getStack() {
+		return caller;
 	}
 }

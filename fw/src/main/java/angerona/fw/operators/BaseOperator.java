@@ -2,6 +2,7 @@ package angerona.fw.operators;
 
 import java.util.Map;
 
+import angerona.fw.report.ReportPoster;
 import angerona.fw.util.Pair;
 
 /**
@@ -11,7 +12,7 @@ import angerona.fw.util.Pair;
  * 
  * @author Tim Janus
  */
-public interface BaseOperator  {
+public interface BaseOperator extends ReportPoster {
 	
 	/**
 	 * Change the user-parameters used by the operator. 

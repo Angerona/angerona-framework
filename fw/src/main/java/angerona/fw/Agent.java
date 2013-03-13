@@ -41,8 +41,8 @@ import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
 import angerona.fw.reflection.ContextFactory;
 import angerona.fw.reflection.ContextProvider;
-import angerona.fw.report.FullReporter;
 import angerona.fw.report.ReportPoster;
+import angerona.fw.report.Reporter;
 import angerona.fw.serialize.AgentConfig;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.BeliefbaseConfig;
@@ -63,6 +63,8 @@ public class Agent extends AgentArchitecture
 	, Entity
 	, OperatorStack
 	, ReportPoster
+	, Reporter
+	, OperatorCaller
 	, ActionProcessor
 	, PropertyChangeListener {
 
@@ -633,15 +635,17 @@ public class Agent extends AgentArchitecture
 	@Override
 	public void pushOperator(BaseOperator op) {
 		operatorStack.push(op);
+		reporter.setDefaultPoster(op);
 	}
 
 	@Override
 	public void popOperator() {
 		operatorStack.pop();
+		reporter.setDefaultPoster(operatorStack.isEmpty() ? this : operatorStack.peek());
 	}
 	
 	@Override
-	public Stack<BaseOperator> getStack() {
+	public Stack<BaseOperator> getOperatorStack() {
 		return operatorStack;
 	}
 
@@ -681,26 +685,41 @@ public class Agent extends AgentArchitecture
 	 * the report-system.
 	 */
 	protected void reportCreation() {
-		reporter.report("Agent: '" + getName()+"' created.");
+		report("Agent: '" + getName()+"' created.");
 		
-		reporter.report("Desires Set of '" + getName() + "' created.", this.getDesires());
+		report("Desires Set of '" + getName() + "' created.", this.getDesires());
 		
 		Beliefs b = getBeliefs();
-		reporter.report("World Beliefbase of '" + this.getName()+"' created.", b.getWorldKnowledge() );
+		report("World Beliefbase of '" + this.getName()+"' created.", b.getWorldKnowledge() );
 		
 		Map<String, BaseBeliefbase> views = b.getViewKnowledge();
 		for(String name : views.keySet()) {
 			BaseBeliefbase actView = views.get(name);
-			reporter.report("View->'" + name +"' Beliefbase of '" + getName() + "' created.", actView);
+			report("View->'" + name +"' Beliefbase of '" + getName() + "' created.", actView);
 		}
 		
 		for(AgentComponent ac : getComponents()) {
-			reporter.report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", ac);
+			report("Custom component '" + ac.getClass().getSimpleName() + "' of '" + getName() + "' created.", ac);
 		}
 	}
 
 	@Override
-	public FullReporter getReporter() {
-		return reporter;
+	public void report(String message) {
+		reporter.report(message);
+	}
+
+	@Override
+	public void report(String message, Entity attachment) {
+		reporter.report(message, attachment);
+	}
+
+	@Override
+	public Reporter getReporter() {
+		return this;
+	}
+
+	@Override
+	public OperatorStack getStack() {
+		return this;
 	}
 }

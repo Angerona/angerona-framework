@@ -8,9 +8,9 @@ import javax.management.AttributeNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.OperatorCaller;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.parameter.OperatorParameter;
-import angerona.fw.report.ReportPoster;
 import angerona.fw.util.Pair;
 
 /**
@@ -29,10 +29,9 @@ import angerona.fw.util.Pair;
  * 
  * @author Tim Janus
  */
-public abstract class Operator<TCaller extends OperatorStack, IN extends OperatorParameter, OUT extends Object> 
+public abstract class Operator<TCaller extends OperatorCaller, IN extends OperatorParameter, OUT extends Object> 
 	implements 
-	BaseOperator,
-	ReportPoster {
+	BaseOperator {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Operator.class);
@@ -79,12 +78,13 @@ public abstract class Operator<TCaller extends OperatorStack, IN extends Operato
 	 */
 	@Override
 	public OUT process(GenericOperatorParameter genericParams) {
-		genericParams.getCaller().pushOperator(this);
+		OperatorStack stack = genericParams.getCaller().getStack();
+		stack.pushOperator(this);
+		
 		IN preparedParams = getEmptyParameter();
 		OUT reval = null;
 		try {
 			preparedParams.fromGenericParameter(genericParams);
-			preparedParams.visit(this);
 			prepare(preparedParams);
 			reval = processInternal(preparedParams);
 		} catch(AttributeNotFoundException | ConversionException ex) {
@@ -93,7 +93,7 @@ public abstract class Operator<TCaller extends OperatorStack, IN extends Operato
 					this.getClass().getName(), ex.getMessage());
 			throw new RuntimeException();
 		} finally { 
-			genericParams.getCaller().popOperator();
+			stack.popOperator();
 		}
 		return reval;
 	}
@@ -106,11 +106,10 @@ public abstract class Operator<TCaller extends OperatorStack, IN extends Operato
 	 * @return	
 	 */
 	public OUT process(IN params) {
-		params.getCaller().pushOperator(this);
-		params.visit(this);
+		params.getStack().pushOperator(this);
 		prepare(params);
 		OUT reval = processInternal(params);
-		params.getCaller().popOperator();
+		params.getStack().popOperator();
 		return reval;
 	}
 	

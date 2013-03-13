@@ -4,7 +4,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
-import angerona.fw.report.ReportPoster;
+import angerona.fw.report.Reporter;
 
 /**
  * Base class for input parameter of operators of the belief base plugin. 
@@ -49,13 +49,23 @@ public class BeliefbasePluginParameter implements OperatorParameter {
 		this.caller = (BaseBeliefbase)input.getCaller();
 	}
 
+	/**
+	 * Returns the reporter which shall be used by functional operators, the belief
+	 * base as a sub class of base agent component has an reporter itself but this
+	 * reporter is statically bound to the base belief base. Therefore the agents
+	 * reporter is used. When the operator call stack is updated then the report poster
+	 * of the agent's reporter is also updated.
+	 */
 	@Override
-	public void visit(ReportPoster op) {
-		// does nothing yet...
+	public Reporter getReporter() {
+		return caller.getAgent();
 	}
 
+	/**
+	 * Use the stack provided by the agent.
+	 */
 	@Override
-	public OperatorStack getCaller() {
-		return caller;
+	public OperatorStack getStack() {
+		return caller.getAgent();
 	}
 }

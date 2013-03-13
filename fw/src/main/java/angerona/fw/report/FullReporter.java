@@ -1,6 +1,7 @@
 package angerona.fw.report;
 
 import angerona.fw.internal.Entity;
+import angerona.fw.operators.OperatorStack;
 
 /**
  * This interface gives the user of the report mechanism all features. 
@@ -33,4 +34,6 @@ public interface FullReporter extends Reporter {
 	 * @param defaultPoster	Reference to the new default report poster.
 	 */
 	void setDefaultPoster(ReportPoster defaultPoster);
+	
+	void setOperatorStack(OperatorStack stack);
 }

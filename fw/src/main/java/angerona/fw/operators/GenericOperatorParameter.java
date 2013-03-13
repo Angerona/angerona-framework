@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.management.AttributeNotFoundException;
 
+import angerona.fw.OperatorCaller;
+
 /**
  * Implements a generic operator parameter wrapper by using a String to Object
  * map to represent the parameter. It is the task of the operators to translate the
@@ -14,7 +16,7 @@ import javax.management.AttributeNotFoundException;
  */
 public class GenericOperatorParameter {
 	/** The caller of the operator */
-	private OperatorStack caller;
+	private OperatorCaller caller;
 	
 	/** The parameter map */
 	private Map<String, Object> parameters = new HashMap<String, Object>();
@@ -23,12 +25,12 @@ public class GenericOperatorParameter {
 	 * CTor: Requres the caller as parameter
 	 * @param caller	reference to the caller of an operator.
 	 */
-	public GenericOperatorParameter(OperatorStack caller) {
+	public GenericOperatorParameter(OperatorCaller caller) {
 		this.caller = caller;
 	}
 	
 	/** @return the caller of an operator */
-	public OperatorStack getCaller() {
+	public OperatorCaller getCaller() {
 		return caller;
 	}
 	
