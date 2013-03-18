@@ -11,11 +11,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 import net.sf.beenuts.ap.AgentArchitecture;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
@@ -197,7 +195,7 @@ public class Agent extends AgentArchitecture
 		parseBeliefbases(ai);
 		
 		// add desire component if necessary.
-		Desires desires = getDesires();
+		Desires desires = getComponent(Desires.class);
 		if(desires == null && ai.getDesires().size() > 0) {
 			LOG.warn("No desire-component added to agent '{}' but desires, auto-add the desire component.", getName());
 			desires = new Desires();
@@ -466,16 +464,6 @@ public class Agent extends AgentArchitecture
 		return beliefs;
 	}
 	
-	/** @return a set of formulas representing the desires of the agent. */
-	public Desires getDesires() {
-		Desires desires = getComponent(Desires.class);
-		if(desires == null) {
-			LOG.warn("Tried to access the desires of agent '{}' which has no desire-component.", getName());
-			return null;
-		}
-		return desires;
-	}
-	
 	public PlanComponent getPlanComponent() {
 		PlanComponent plan = getComponent(PlanComponent.class);
 		if(plan == null) {
@@ -541,67 +529,6 @@ public class Agent extends AgentArchitecture
 		// ignore beliefs parameter because we really perform the action:
 		performAction(action);
 	};
-	
-	/**
-	 * Adds a desire to the set of the agents desires.
-	 * @param desire	Reference to the desire to add
-	 * @return			true if the desire was successfully added (not yet part of the agent
-	 * 					desires), false otherwise.
-	 */
-	public boolean addDesire(Desire desire) {
-		Desires desires = getDesires();
-		if(desires != null) {
-			return getDesires().add(desire);			
-		}
-		LOG.warn("Tried to add a desire to agent '{}' lacking the desire component.", getName());
-		return false;
-	}
-	
-	/**
-	 * Adds the given tweety atom as desire
-	 * @param desire
-	 * @return	true if the desire is successfully added (not yet part of the agent
-	 * 			desires), false otherwise.
-	 */
-	public boolean addDesire(Atom desire) {
-		return addDesire(new Desire(desire));
-	}
-	
-	/**
-	 * Adds the given set of tweety atoms as desire to the desire component.
-	 * @param set	A set of atoms which represent desires.
-	 * @return 	true if the desires are successfully added (none of them are part of the agent
-	 * 			desires yet), false otherwise.
-	 */
-	public boolean addDesires(Set<Atom> set) {
-		for(Atom a : set) {
-			if(!addDesire(a))
-				return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Removes the given desire
-	 * @param desire	The reference to the desire to remove.
-	 * @return	true if the desire is removed successful
-	 */
-	public boolean removeDesire(Desire desire) {
-		Desires desires = getDesires();
-		if(desires != null) {
-			return desires.remove(desire);
-		}
-		return false;
-	}
-	
-	/**
-	 * Removes the given desire
-	 * @param desire	An atom representing the desire
-	 * @return			true if the desire is removed successful.
-	 */
-	public boolean removeDesire(Atom desire) {
-		return removeDesire(new Desire(desire));
-	}
 	
 	@Override
 	public Long getGUID() {
@@ -686,8 +613,6 @@ public class Agent extends AgentArchitecture
 	 */
 	protected void reportCreation() {
 		report("Agent: '" + getName()+"' created.");
-		
-		report("Desires Set of '" + getName() + "' created.", this.getDesires());
 		
 		Beliefs b = getBeliefs();
 		report("World Beliefbase of '" + this.getName()+"' created.", b.getWorldKnowledge() );

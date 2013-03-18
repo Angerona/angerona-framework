@@ -18,6 +18,7 @@ import angerona.fw.comm.Justification;
 import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
 import angerona.fw.internal.IdGenerator;
+import angerona.fw.logic.Desires;
 
 /**
  * The default generate options operator. It generates desires to answer to
@@ -60,7 +61,7 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 			reval.add(new Desire(ad, param.getPerception()));
 		}
 		for(Desire des : reval) {
-			param.getAgent().addDesire(des);
+			param.getAgent().getComponent(Desires.class).add(des);
 		}
 		return reval.size();
 	}

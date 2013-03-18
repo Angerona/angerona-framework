@@ -20,6 +20,7 @@ import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.logic.Beliefs;
+import angerona.fw.logic.Desires;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
 
@@ -207,7 +208,7 @@ public class AngeronaEnvironment extends APR {
 			
 			// and initialize the desires:
 			for(Atom a : ai.getDesires()) {
-				agent.getDesires().add(new Desire(a));
+				agent.getComponent(Desires.class).add(new Desire(a));
 			}
 		}
 		

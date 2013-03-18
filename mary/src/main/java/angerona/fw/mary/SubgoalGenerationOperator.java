@@ -29,10 +29,10 @@ import angerona.fw.Subgoal;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
+import angerona.fw.example.operators.GenerateOptionsOperator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
-import angerona.fw.example.operators.GenerateOptionsOperator;
 
 /**
 * This implementation of a subgoal generation operator allows for the asking of multiple, detail query-type questions. 
@@ -57,7 +57,7 @@ public class SubgoalGenerationOperator extends
 		boolean reval = interrogateOtherAgent(pp, ag);
 
 
-		Desires des = ag.getDesires();
+		Desires des = ag.getComponent(Desires.class);
 		if(des != null) {
 			Set<Desire> actual;
 			actual = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
@@ -95,7 +95,8 @@ public class SubgoalGenerationOperator extends
 	public boolean interrogateOtherAgent(PlanParameter pp, Agent ag) {
 
 		boolean reval = false;
-		if(ag.getDesires() == null)
+		Desires compDes = ag.getComponent(Desires.class);
+		if(compDes == null)
 			return false;
 		
 		/**
@@ -127,8 +128,8 @@ public class SubgoalGenerationOperator extends
 			}
 		}
 		
-		Desire[] desires = new Desire[ag.getDesires().getDesires().size()];
-		ag.getDesires().getDesires().toArray(desires);
+		Desire[] desires = new Desire[compDes.getDesires().size()];
+		compDes.getDesires().toArray(desires);
 		Arrays.sort(desires, new DesireComp());
 
 		int numDesires = desires.length;

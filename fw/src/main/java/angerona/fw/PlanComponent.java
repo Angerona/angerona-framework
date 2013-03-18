@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import angerona.fw.listener.SubgoalListener;
+import angerona.fw.logic.Desires;
 
 /**
  * The PlanComponent is data storage for plans.
@@ -75,7 +76,7 @@ public class PlanComponent extends BaseAgentComponent implements SubgoalListener
 			Subgoal sg = (Subgoal) subgoal;
 			removePlan(sg);
 			if(sg.getFulfillsDesire() != null) {
-				getAgent().removeDesire(sg.getFulfillsDesire());
+				getAgent().getComponent(Desires.class).remove(sg.getFulfillsDesire());
 			}
 		}
 	}

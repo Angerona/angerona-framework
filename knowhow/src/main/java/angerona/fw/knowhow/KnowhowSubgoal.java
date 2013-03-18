@@ -37,6 +37,7 @@ import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.logic.Desires;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.SolverWrapper;
 import angerona.fw.example.operators.SubgoalGenerationOperator;
@@ -61,7 +62,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		param.report("Using Knowhow for Subgoal Generation.");
 		
 		boolean gen  = false;
-		for (Desire des : param.getAgent().getDesires().getDesires()) {
+		for (Desire des : param.getAgent().getComponent(Desires.class).getDesires()) {
 			// scenario specific tests:
 			boolean revReq = des.getAtom().getPredicate().getName().equals("attend_scm");
 			if(revReq) {

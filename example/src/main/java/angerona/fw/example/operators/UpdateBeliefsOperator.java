@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.Cache;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
@@ -26,9 +25,6 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(UpdateBeliefsOperator.class);
-	
-	/** cache for saving update beliefs operator calls */
-	private static Cache<EvaluateParameter, Beliefs> cache = new Cache<>();
 	
 	@Override
 	protected Beliefs processInternal(EvaluateParameter param) {

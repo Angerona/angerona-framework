@@ -50,7 +50,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 		boolean reval = processPersuadeOtherAgentsDesires(pp, ag);
 
-		Desires des = ag.getDesires();
+		Desires des = ag.getComponent(Desires.class);
 		if(des != null) {
 			Set<Desire> currentDesires;
 			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
@@ -81,10 +81,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	protected boolean processPersuadeOtherAgentsDesires(
 			PlanParameter pp, Agent ag) {
 		boolean reval = false;
-		if(ag.getDesires() == null)
+		Desires desComp = ag.getComponent(Desires.class);
+		if(desComp == null)
 			return false;
 		
-		for(Desire desire : ag.getDesires().getDesires()) {
+		for(Desire desire : desComp.getDesires()) {
 			// only add a plan if no plan for the desire exists.
 			if(ag.getPlanComponent().countPlansFor(desire) > 0)
 				continue;
