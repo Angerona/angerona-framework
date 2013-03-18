@@ -78,7 +78,7 @@ public class BooleanExpression implements Condition {
 	}
 	
 	/**
-	 * Ctor: Used for the binary case of a boolean expression in the form: left <op> right.
+	 * Ctor: Used for the binary case of a boolean expression in the form: left op right.
 	 * @param left	The value on the left of the operator
 	 * @param op	The operator 
 	 * @param right	The value on the right of the operator

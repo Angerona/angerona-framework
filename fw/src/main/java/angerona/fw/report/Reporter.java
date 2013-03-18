@@ -7,7 +7,7 @@ import angerona.fw.internal.Entity;
  * to use the report system of Angerona to 
  * inform about changes.
  * 
- * To use more feature see the FullReporter inteface
+ * To use more feature see the FullReporter interface.
  * @see FullReporter
  * @author Tim Janus
  *

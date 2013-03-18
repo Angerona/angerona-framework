@@ -19,7 +19,9 @@ public interface AgentListener {
 	
 	/** 
 	 * is called when the agent updates it's beliefs with the given perception.
-	 * @param percept	Reference to the perception used for the belief update.
+	 * @param percept		Reference to the perception used for the belief update.
+	 * @param oldBeliefs	The beliefs before the update beliefs process is finished
+	 * @param newBeliefs	The beliefs of the agent after he update belief process is finished.
 	 */
 	void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs);
 	

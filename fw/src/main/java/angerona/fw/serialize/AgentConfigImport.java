@@ -10,12 +10,16 @@ import org.simpleframework.xml.core.Resolve;
 import angerona.fw.asml.CommandSequence;
 
 /**
- * An implementation of the agent configuration file as a reference of the form:
- * <source>filename.xml</source>. It is used by simple xml internally to load the
+ * An implementation of the agent configuration file as a reference to another file.
+ * It uses the following form:
+ * 
+ *     <agent-config source="filename.xml" />
+ * 
+ * It is used by simple xml internally to load the
  * agent configuration file.
  * @author Tim Janus
  */
-@Root(name="agent-config-file")
+@Root(name="agent-config")
 public class AgentConfigImport implements AgentConfig {
 	@Attribute(name="source")
 	protected File source;

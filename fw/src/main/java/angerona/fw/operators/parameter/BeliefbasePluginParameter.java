@@ -38,6 +38,7 @@ public class BeliefbasePluginParameter implements OperatorParameter {
 	 * instance and saved in this object. Subclasses shall override this method to request more
 	 * parameters from the generic parameter structure. The override method has to call the super
 	 * method.
+	 * @param input	The input parameters in generic form.
 	 */
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter input)
@@ -55,6 +56,8 @@ public class BeliefbasePluginParameter implements OperatorParameter {
 	 * reporter is statically bound to the base belief base. Therefore the agents
 	 * reporter is used. When the operator call stack is updated then the report poster
 	 * of the agent's reporter is also updated.
+	 * @return	An interface to report system which dynamically keeps track of the correct
+	 * 			report poster.
 	 */
 	@Override
 	public Reporter getReporter() {

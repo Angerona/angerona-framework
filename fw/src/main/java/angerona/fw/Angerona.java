@@ -131,6 +131,7 @@ public class Angerona {
 	 * Writes a report entry with the given message of the given poster
 	 * to the Angerona Report-System. No attachment is given to the report entry.
 	 * @param msg		String representing the message.
+	 * @param scope		The scope of the report as call-stack of operators.
 	 * @param poster	Reference to the poster of the report (an operator or an agent)
 	 */
 	public void report(String msg, OperatorStack scope, ReportPoster poster) {
@@ -143,7 +144,8 @@ public class Angerona {
 	 * system.
 	 * @param msg			String representing the message.
 	 * @param attachment	A reference to the attachment which has to be an entity like
-	 * 						the Secrecy-Knowledge or a Belief base. 
+	 * 						the Secrecy-Knowledge or a Belief base.
+	 * @param scope		The scope of the report as call-stack of operators.
 	 * @param poster		Reference to the poster of the report(an operator or an agent)
 	 */
 	public void report(String msg, Entity attachment, OperatorStack scope, ReportPoster poster) {

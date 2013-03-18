@@ -10,9 +10,9 @@ import angerona.fw.operators.parameter.ReasonerParameter;
 import angerona.fw.util.Pair;
 
 /**
- * Base class for all reasoner used by the Angerona project.
+ * Base class for all reasoners used by the Angerona project.
  * 
- * To query the reasoner a subset of the FOL Language defined in tweety is used.
+ * To query the reasoner a subset of the FOL Language defined in Tweety is used.
  * It is the responsibility of the Reasoner implementation to translate the given
  * query into its native language. 
  * 
@@ -46,15 +46,17 @@ public abstract class BaseReasoner
 	}
 	
 	/** 
-	 * infers all the knowledge of the beliefbase and saves it in FolFormula (only Atom and Negation)
-	 * @return	A set of FolFormulas representing Cn(Bel).
+	 * Infers all the knowledge of the BaseBeliefbase and saves it in FolFormula (only Atom and Negation)
+	 * @param params	The input parameter containing the BaseBeliefbase.
+	 * @return	A set of FolFormula representing Cn(Bel).
 	 */
 	protected abstract Set<FolFormula> inferInt(ReasonerParameter params);
 	
 	/**
-	 * Infers all the knowledge in a given belief base and returns it as a set of FOL formulas.
+	 * Infers all the knowledge in a given BaseBeliefbase and returns it as a set of FOLFormula.
 	 * This helper method maintains the operator callstack and calls inferInt to get the work done.
-	 * @return	a set of FOL formulas representing Cn(belief base).
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @return	A set of FolFormula representing Cn(belief base).
 	 */
 	public Set<FolFormula> infer(BaseBeliefbase caller) {
 		ReasonerParameter params = new ReasonerParameter(caller, null);
@@ -65,18 +67,18 @@ public abstract class BaseReasoner
 	}
 	
 	/**
-	 * This method determines the answer of the given query
-	 * wrt. using the last used beliefbase (if beliefbase is not set null is returned)
-	 * @param query a query.
+	 * This method determines the answer of the given Query.
+	 * @param params 	A structure containing the BaseBeliefbase and the Query.
 	 * @return the answer to the query.
 	 */
 	protected abstract  Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params);
 	
 	/**
-	 * Querys for the formula given as parameter. Its a helper method which 
+	 * Query for the FolFormula given as parameter. Its a helper method which 
 	 * maintains the state of the operator callstack and calls the queryInt 
 	 * method to get the work done.
-	 * @param query
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @param query		The query.
 	 * @return An AngeronaAnswer which represents the answer to the query
 	 */
 	public Pair<Set<FolFormula>, AngeronaAnswer> query(BaseBeliefbase caller, FolFormula query) {

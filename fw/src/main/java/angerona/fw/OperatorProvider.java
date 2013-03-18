@@ -107,6 +107,9 @@ public class OperatorProvider {
 	 * set of operators.
 	 * @param config	reference to the serialization object containing the raw-data 
 	 * 					which are strings of java-class-names.
+	 * @return			True if the operators in the config are successfully added, false if
+	 * 					an error occurred. 
+	 * 
 	 */
 	public boolean addOperationSet(OperationSetConfig config) {
 		OperatorSet os = getOperationSetByType(config.getOperationType());

@@ -48,7 +48,9 @@ public class ReportEntry implements Cloneable {
 	 * @param message		A string representing the message saved in the report entry
 	 * @param attachment	An optional attachment like a belief base or a data component like 
 	 * 						Secrecy Knowledge.
+	 * @param scope			The scope of in which the report entry is generated as OperatorStack.
 	 * @param poster		A reference to the poster of the entry, in most cases an operator.
+	 * @param simulation	A reference to the current simulation.
 	 */
 	public ReportEntry(String message, Entity attachment, 
 			OperatorStack scope, ReportPoster poster, AngeronaEnvironment simulation) {

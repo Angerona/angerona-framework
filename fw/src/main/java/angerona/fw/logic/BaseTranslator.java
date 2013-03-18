@@ -61,20 +61,21 @@ public abstract class BaseTranslator
 	}
 	
 	/**
-	 * Sub classes implement this method to translate a perception into the
-	 * belief base type represented by the translator.
-	 * @param p
-	 * @return	A BaseBeliefbase instance containing the knowledge encapsulated in p.
+	 * Sub classes implement this method to translate a Perception into a sub class of
+	 * BaseBeliefbase.
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @param p			The Perception which shall be translated into a BaseBeliefbase.
+	 * @return			A BaseBeliefbase instance containing the knowledge encapsulated in p.
 	 */
 	protected abstract BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p);
 	
 	/**
-	 * Translates the given perception in a beliefbase only containing the knowledge 
-	 * encoded in the perception.
-	 * Work is done in the translatePerceptionInt method. This method ensures that
-	 * the operator callstack is updated.
-	 * @param p		Reference to the perception.
-	 * @return		A beliefbase containing the information encoded in the perception.
+	 * Translates the given perception in a belief base only containing the knowledge 
+	 * encoded in the Perception. This method ensures that the operator callstack is updated
+	 * but the real work is done in the translatePerceptionInt method. 
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @param p			The Perception which shall be translated into a BaseBeliefbase.
+	 * @return			A BaseBeliefbase containing the information encoded in the Perception.
 	 */
 	public BaseBeliefbase translatePerception(BaseBeliefbase caller, Perception p) {
 		caller.getStack().pushOperator(this);
@@ -86,8 +87,9 @@ public abstract class BaseTranslator
 	/**
 	 * Helper method: Extends the interface to easily handle one FOL-
 	 * Formula instead a set of formulas.
-	 * @param formula		Reference to the formula
-	 * @return	A belief base containing the knowledge encoded in the FOL-Formula
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @param formula	The FolFormula containing the information which shall be translated
+	 * @return	A belief base containing the knowledge encoded in the FOLFormula
 	 */
 	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, FolFormula formula) {
 		Set<FolFormula> set = new HashSet<>();
@@ -98,16 +100,18 @@ public abstract class BaseTranslator
 	/**
 	 * Sub classes implement this method to translate a set of formulas into the
 	 * belief base type represented by the translator.
-	 * @param formulas
-	 * @return A belief base containing the knowledge encoded in the set of FOL-Formulas
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @param formulas	A set of FolFormula containing the information which shall be translated.
+	 * @return A BaseBeliefbase containing the knowledge encoded in the set of FolFormula.
 	 */
 	protected abstract BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas);
 	
 	/**
-	 * Translates the given set of FOL-Formulas in a beliefbase only containing the knowledge
-	 * encoded in the set of formulas.
-	 * @param formulas	Reference to the set of formulas
-	 * @return		A beliefbase containing the information encoded in the set of formulas.
+	 * Translates the given set of FOL-Formulas in a BaseBeliefbase only containing the knowledge
+	 * encoded in the set of FolFormula.
+	 * @param 	caller		The BaseBeliefbase which acts as caller.
+	 * @param 	formulas	Reference to the set of formulas
+	 * @return	A BaseBeliefbase containing the information encoded in the set of FolFormula.
 	 */
 	public BaseBeliefbase translateFOL(BaseBeliefbase caller, Set<FolFormula> formulas) {
 		caller.getStack().pushOperator(this);

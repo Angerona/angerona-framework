@@ -169,8 +169,9 @@ public class Agent extends AgentArchitecture
 	}
 	
 	/**
-	 * creates the belief bases, operators and components of the agent.
-	 * @param ai	The configuration of the agent
+	 * Creates the belief bases, operators and components of the agent.
+	 * @param ai		The configuration of the agent instance.
+	 * @param config	The configuration of the simulation.
 	 * @throws AgentInstantiationException
 	 */
 	public void create(AgentInstance ai, SimulationConfiguration config) 
@@ -418,9 +419,11 @@ public class Agent extends AgentArchitecture
 	}
 
 	/** 
-	 * informs all the agent listeners of the agent about the update beliefs process
-	 * using the given perception
-	 * @param perception
+	 * Informs all the agent listeners of the agent about the update beliefs process
+	 * using the given perception and the given old beliefs.
+	 * @param perception	The perception responsible for the update beliefs process
+	 * @param oldBeliefs	A reference to the beliefs of the agent before the 
+	 * 						update beliefs process was invoked.
 	 */
 	public void onUpdateBeliefs(Perception perception, Beliefs oldBeliefs) {
 		for(AgentListener al : listeners) {
@@ -433,8 +436,11 @@ public class Agent extends AgentArchitecture
 	}
 	
 	/**
-	 * updates the beliefs of the agent, this method searchs for the correct Update operator and calls its process method.
-	 * @param perception	the perception causing the update
+	 * Updates the beliefs of the agent. This method searches for the 
+	 * correct Update operator and calls its process method.
+	 * @param perception	The perception causing the update.
+	 * @param beliefs		The Beliefs used as basis for the update process.
+	 * @return			The updated version of the beliefs.
 	 */
 	public Beliefs updateBeliefs(Perception perception, Beliefs beliefs) {
 		if(perception != null) {
