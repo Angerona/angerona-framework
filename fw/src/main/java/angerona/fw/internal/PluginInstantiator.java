@@ -18,11 +18,9 @@ import net.xeoh.plugins.base.util.uri.ClassURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Action;
 import angerona.fw.AgentComponent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.EnvironmentBehavior;
-import angerona.fw.Perception;
 import angerona.fw.def.DefaultAgentPlugin;
 import angerona.fw.def.DefaultSimulationPlugin;
 import angerona.fw.listener.PluginListener;
@@ -85,8 +83,6 @@ public class PluginInstantiator {
 		implMap.put(BaseChangeBeliefs.class, new HashSet<Class<?>>());
 		implMap.put(BaseTranslator.class, new HashSet<Class<?>>());
 		implMap.put(AgentComponent.class, new HashSet<Class<?>>());
-		implMap.put(Action.class, new HashSet<Class<?>>());
-		implMap.put(Perception.class, new HashSet<Class<?>>());
 		implMap.put(EnvironmentBehavior.class, new HashSet<Class<?>>());
 		
 		pm = PluginManagerFactory.createPluginManager();
@@ -211,18 +207,7 @@ public class PluginInstantiator {
 			implMap.get(EnvironmentBehavior.class).addAll(sp.getEnvironmentBehaviors());
 			for(Class<? extends EnvironmentBehavior> eb : sp.getEnvironmentBehaviors()) {
 				LOG.info("Environment-Behavior: '{}' loaded.", eb.getSimpleName());
-			}
-			
-			implMap.get(Perception.class).addAll(sp.getPerceptions());
-			for(Class<? extends Perception> percept : sp.getPerceptions()) {
-				LOG.info("Perception-Type: '{}' loaded.", percept.getSimpleName());
-			}
-			
-			implMap.get(Action.class).addAll(sp.getActions());
-			for(Class<? extends Action> actc : sp.getActions()) {
-				LOG.info("Agent-Action: '{}' loaded.", actc.getSimpleName());
-			}
-			
+			}			
 		}
 		
 		// Instantiate one operator for every loaded class definition.

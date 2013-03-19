@@ -14,6 +14,10 @@
 		
        	<capability>QueryAnswer</capability>
 		
+		<data key="Confidential">
+            (Bob, angerona.fw.logic.asp.AspReasoner{d=1}, moneyWitch(alice, don))
+			(Bob, angerona.fw.logic.asp.AspReasoner{d=1}, inlove(claire, bob))
+        </data>
 	</agent-instance>
       
 	<agent-instance>
@@ -23,6 +27,8 @@
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
         
   		<capability>Query</capability>	
+		
+		<desire>q_Alice(moneyWitch(Alice),1)</desire>
 	</agent-instance>
 
 </simulation-configuration>

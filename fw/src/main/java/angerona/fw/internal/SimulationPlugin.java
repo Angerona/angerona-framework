@@ -3,10 +3,7 @@ package angerona.fw.internal;
 import java.util.List;
 
 import net.xeoh.plugins.base.Plugin;
-
-import angerona.fw.Action;
 import angerona.fw.EnvironmentBehavior;
-import angerona.fw.Perception;
 
 /**
  * 	A Simulation Plugin can adapt the handling of simulations by providing
@@ -20,8 +17,4 @@ import angerona.fw.Perception;
  */
 public interface SimulationPlugin extends Plugin {
 	List<Class<? extends EnvironmentBehavior>> getEnvironmentBehaviors();
-	
-	List<Class<? extends Perception>> getPerceptions();
-	
-	List<Class<? extends Action>> getActions();
 }
