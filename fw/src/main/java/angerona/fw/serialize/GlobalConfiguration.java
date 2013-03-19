@@ -84,7 +84,6 @@ public class GlobalConfiguration {
 		try {
 			serializer.write(test, System.out);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

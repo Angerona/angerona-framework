@@ -166,7 +166,7 @@ public class OperatorProvider {
 		throws ParseException, ClassNotFoundException {
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		
-		// TODO: Use a basic parser for stuff like that...
+		// @todo Use a basic parser for stuff like that...
 		SecretParser parser = new SecretParser(new StringReader(clsNameAndParams));
 		Map<String, String> parameters = new HashMap<String, String>();
 		clsNameAndParams = parser.java_cls(parameters);

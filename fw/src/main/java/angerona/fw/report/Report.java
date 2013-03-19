@@ -47,7 +47,7 @@ public class Report  {
 				List<ReportEntry> entries = null;
 				
 				if(id == null) {
-					// TODO: Error
+					throw new IllegalArgumentException("The id of attached entity must not be null.");
 				}
 				
 				if(!attachmentEntriesMap.containsKey(id)) {

@@ -23,7 +23,7 @@ import angerona.fw.serialize.SerializeHelper;
  * also be given using the output element. 
  * 
  * The current implementation uses the preferred operator of the OperatorSet.
- * TODO: Give the script writer the ability to choose the operator.
+ * @todo Give the ASML script writer the ability to choose the operator.
  * 
  * @author Tim Janus
  *

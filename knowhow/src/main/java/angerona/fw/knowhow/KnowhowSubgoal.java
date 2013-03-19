@@ -161,7 +161,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * adapt the default behavior for strike-committee meeting: 
 	 * Searches for a valid answer in the knowhow until one answer was
 	 * found. If no answer is found no reaction is given by the agent.
-	 * TODO: Answer with Unknown if no valid answer is found.
+	 * @todo Answer with Unknown if no valid answer is found.
 	 */
 	@Override 
 	protected Boolean answerQuery(Desire des, PlanParameter param, Agent ag) {
@@ -296,6 +296,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	/**
 	 * This method creates a Subgoal containing an atomic action by mapping the action found by the knowhow
 	 * into the Angerona System.
+	 * @todo replace string tests to with something faster to determine the capabilitity (Skill)
 	 * @param param		Subgoal-Generation parameter data-structure
 	 * @param des		The associated desire.
 	 * @return			A Skill context pair representing the last found atomic action or null if an error occurred.
@@ -314,7 +315,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		
 		// create the action using the SkillParameter map and the name of the skill
 		Action act = null;
-		// TODO: String tests are not perfect here.
+		// String tests are not perfect here.
 		if(skillName.equals("Inform")) {
 			act = createInform(action.second, param);
 		} else if(skillName.equals("Query")) {
@@ -426,6 +427,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	/**
 	 * Helper method: Creates an instance of the QueryAnswer class from the parameter-map given
 	 * by the knowhow part of the program.
+	 * @todo use lying methods
 	 * @param paramMap		Reference to the map representing the parameters
 	 * @return				An object of type QueryAnswer which represents the Angerona version of the
 	 * 						action found by the knowhow.

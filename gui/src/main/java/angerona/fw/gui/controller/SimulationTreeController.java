@@ -84,7 +84,7 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 			}
 		}
 		
-		// TODO: More dynamically... using plugin architecture etc.
+		/** @todo More dynamically... using plugin architecture etc. */
 		Dockable dd = null;
 		if(bb.getFileEnding().toLowerCase().equals("asp")) {
 			View view = AngeronaWindow.getInstance().createViewForEntityComponent(bb);

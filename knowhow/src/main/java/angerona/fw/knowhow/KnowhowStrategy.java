@@ -100,6 +100,7 @@ public class KnowhowStrategy {
 	
 	/**
 	 * Initialize the knowhow-strategy to calculate plans for a specific agent
+	 * @todo handle negative literals with nholds(lit) for example.
 	 * @param kb				Reference to the knowhow-base
 	 * @param initialIntention	the name of the intention which should be fulfilled by the plan.
 	 * @param atomicActions		collection of strings identifying the atomic actions

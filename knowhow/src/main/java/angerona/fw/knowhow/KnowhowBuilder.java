@@ -31,6 +31,7 @@ public class KnowhowBuilder {
 	
 	/**
 	 * Creates an extended Logic program from the given KnowhowBase.
+	 * @todo Implement variables for Knowhow-Statement targets
 	 * @param kb	reference to the knowhow base.
 	 * @return		extended logic program representing the given KnowhowBase.
 	 */
@@ -53,7 +54,6 @@ public class KnowhowBuilder {
 			}
 
 			if(!closed) {
-				// TODO: Implement variables:
 				reconsider.add(ks);
 				throw new NotImplementedException("variables are not supported by Knowhow yet");
 			} else {

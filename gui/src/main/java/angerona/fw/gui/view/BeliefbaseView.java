@@ -69,6 +69,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	 * Helper method: Updates the inference output and adds the output to the
 	 * list model.
 	 * @param model	Reference to the list model.
+	 * @todo ordering of the lists of FolFormula
 	 */
 	protected void updateInferenceOutput(DefaultListModel<ListElement> model) {
 		// add a placeholder and then show the inference result:
@@ -82,7 +83,6 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 		Set<FolFormula> inferenceAct = bAct.infere();
 		Set<FolFormula> inferenceOld = bPrev == null ? null : bPrev.infere();
 		
-		// TODO: Ordering
 		for(FolFormula f : inferenceAct) {
 			if(inferenceOld != null && !inferenceOld.contains(f)) {
 				model.addElement(new ListElement(f.toString(), ListElement.ST_NEW));

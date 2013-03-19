@@ -83,8 +83,6 @@ public class SubgoalGenerationOperator extends
 					continue;
 				reval = reval || revisionRequest(d, pp, ag);
 			}
-			
-			// Todo prepare reason
 		}
 		
 		if(!reval)

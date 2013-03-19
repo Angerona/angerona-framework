@@ -38,7 +38,7 @@ import angerona.fw.serialize.SimulationConfiguration;
  * as resource folders, all the files in those folders
  * will be loaded.
  * @author Tim Janus
- * TODO: Also handle plugins as resource.
+ * @todo Also handle plugins as resource.
  *
  */
 public class Angerona {
@@ -58,8 +58,10 @@ public class Angerona {
 	/** the list of registered error listeners */
 	private List<FrameworkListener> frameworkListeners = new LinkedList<FrameworkListener>();
 	
-	// TODO: Differentiate between environment and simulation.
-	/** A Map containing the Report instances for specific simulations */
+	/** 
+	 * A Map containing the Report instances for specific simulations 
+	 * @todo Differentiate between environment and simulation.
+	 */
 	private Map<AngeronaEnvironment, Report> reports = new HashMap<AngeronaEnvironment, Report>(); 
 	
 	/** reference to the report of the actual running simulation */

@@ -53,7 +53,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		Beliefs beliefs = param.getBeliefs();
 		Action p = (Action) param.getAtom();
 		
-		// TODO: Clone internally???
+		// use cloned beliefs to generate new beliefs:
 		Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAtom(), (Beliefs)beliefs.clone());
 		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 		BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());

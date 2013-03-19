@@ -15,6 +15,9 @@ import javax.swing.ListCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.gui.NavigationPanel;
@@ -35,6 +38,12 @@ public abstract class ListViewColored<T extends Entity>
 	implements 
 	ReportListener, 
 	NavigationUser {
+
+	/** reference to the logback instance used for logging */
+	private static Logger LOG = LoggerFactory.getLogger(ListViewColored.class);
+	
+	/** kill warning */
+	private static final long serialVersionUID = 5572343160200460695L;
 
 	/** reference to the original data (which is in the agent) */
 	protected T ref;
@@ -119,10 +128,10 @@ public abstract class ListViewColored<T extends Entity>
 			if(entries != null && entries.size() > 0) {
 				actEntry = entries.get(entries.size()-1);
 			} else {
-				// TODO: LOG
+				LOG.info("No entry added to report system yet.");
 			}
 		} else {
-			// TODO: Error
+			throw new IllegalArgumentException("The attribute ref must not be null.");
 		}
 		
 		this.setLayout(new BorderLayout());
@@ -135,8 +144,7 @@ public abstract class ListViewColored<T extends Entity>
 		this.add(actualLiterals, BorderLayout.CENTER);
 		
 		model = new DefaultListModel<ListElement>();
-		actualLiterals.setModel(model);
-		
+		actualLiterals.setModel(model);	
 		actualLiterals.addMouseListener(new MouseAdapter() {
 			
 			@Override

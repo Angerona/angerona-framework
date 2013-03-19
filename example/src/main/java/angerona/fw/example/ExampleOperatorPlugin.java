@@ -12,6 +12,8 @@ import angerona.fw.internal.OperatorPluginAdapter;
  * The dummy operator plugin is an example/test plugin for the Angerona framework.
  * The classes provided by this plugin only implement some dummy functionality to test
  * the program flow of the Angerona framework.
+ * 
+ * @todo Move UpdateBeliefsOperator to fw
  * @author Tim Janus
  */
 @PluginImplementation
@@ -23,8 +25,6 @@ public class ExampleOperatorPlugin extends OperatorPluginAdapter {
 		registerOperator(ViolatesOperator.class);
 		registerOperator(GenerateOptionsOperator.class);
 		registerOperator(IntentionUpdateOperator.class);
-		
-		// TODO: Move the following to fw
 		registerOperator(UpdateBeliefsOperator.class);
 	}
 

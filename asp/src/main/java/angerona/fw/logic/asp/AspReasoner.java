@@ -35,7 +35,8 @@ import angerona.fw.util.Pair;
  * It supports multiple semantics and has a three valued answer behavior:
  * true, false, unknown
  * 
- * @author Tim Janus, Daniel Dilger
+ * @author Tim Janus
+ * @author Daniel Dilger
  */
 public class AspReasoner extends BaseReasoner {
 
@@ -66,7 +67,8 @@ public class AspReasoner extends BaseReasoner {
 	}
 
 	/**
-	 * Process the answer sets for the beliefbase owning the operator.
+	 * Process the answer sets for the belief base owning the operator.
+	 * @param bb	The AspBeliefbase used to process the answer sets.
 	 * @return a list of answer sets representing the solver output.
 	 */
 	public List<AnswerSet> processAnswerSets(AspBeliefbase bb) {
@@ -148,6 +150,7 @@ public class AspReasoner extends BaseReasoner {
 		return s.computeModels(bb.getProgram(), 10);
 	}
 
+	/** @todo The code in the literal loop is mostly conversion. Logic conversion module? */
 	@Override
 	protected Set<FolFormula> inferInt(ReasonerParameter params) {
 		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)params.getBeliefBase());
@@ -207,6 +210,8 @@ public class AspReasoner extends BaseReasoner {
 	 * @param dValue			The value of the parameter d.
 	 * @return					A list of FOL formulas representing the result of the d-
 	 * 							inference-selection.
+	 * @todo 	Step Three: resolve contradictions,
+	 *			requires identifying contradictions first.
 	 */
 	private Set<FolFormula> dSelection(List<Set<FolFormula>> answerSetsTrans,
 			double dValue) {
@@ -237,8 +242,10 @@ public class AspReasoner extends BaseReasoner {
 		}
 		reval.removeAll(toRemove);
 		
-		//TODO: Step Three: resolve contradictions
-		//Requires identifying contradictions first...
+		// Step three, contradiction
+		/// 
+		
+		
 		return reval;
 	}
 

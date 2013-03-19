@@ -88,9 +88,10 @@ public class PlanElement implements AngeronaAtom, Runnable {
 	/**
 	 * Copy-Ctor: Copies all data of the plan element.
 	 * @param other	Reference to the PlanElement which is source of the copy.
+	 * @todo Implement deep copy correctly
+	 * @todo Proof that exeuctionData and userData are cloneable
 	 */
 	public PlanElement(PlanElement other) {
-		// TODO: Implement deep copy correctly
 		if(other.intention instanceof Action) {
 			this.intention = other.intention;
 		} else {
@@ -98,7 +99,6 @@ public class PlanElement implements AngeronaAtom, Runnable {
 			this.intention = (Intention)sg.clone();
 		}
 		
-		// TODO: Proof that exeuctionData and userData are cloneable
 		this.executionData = other.executionData;
 		this.userData = other.userData;
 		this.costs = other.costs;

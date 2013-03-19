@@ -62,8 +62,6 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			for(Desire d : currentDesires) {
 				reval = reval || revisionRequest(d, pp, ag);
 			}
-			
-			// Todo prepare reason
 		}
 		
 		if(!reval)
@@ -113,7 +111,6 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				try {
 					a = parser.atom(new FolSignature());
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					System.err.println("parsing: " + content);
 					e.printStackTrace();
 				}

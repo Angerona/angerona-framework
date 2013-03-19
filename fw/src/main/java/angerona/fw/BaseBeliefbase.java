@@ -328,7 +328,7 @@ public abstract class BaseBeliefbase
 	 * Subclasses have to implement the method. For every entry in the belief base like a fact, a rule or a conditional
 	 * a string has to be added to the list of strings which is returned.
 	 * @return a list of strings representing the content of the belief base.
-	 * // TODO: Think about a more complex object which could map to the belief base for example.
+	 * @todo Think about a more complex object which could map to the belief base for example.
 	 */
 	public abstract List<String> getAtoms();
 	

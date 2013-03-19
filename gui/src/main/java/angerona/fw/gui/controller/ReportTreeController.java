@@ -21,7 +21,6 @@ import angerona.fw.gui.NavigationUser;
 import angerona.fw.gui.view.View;
 import angerona.fw.internal.Entity;
 import angerona.fw.listener.SimulationAdapter;
-import angerona.fw.operators.OperatorStack;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportOutputGenerator;
 
@@ -67,7 +66,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 				Component ret = super.getTreeCellRendererComponent(tree, value,
 			            selected, expanded, leaf, row, hasFocus);
 
-				// TODO: This looks ugly maybe there is a nicer solution:
+				/** @todo This looks ugly maybe there is a nicer solution. */
 	            JLabel label = (JLabel) ret ;
 	            if(value instanceof DefaultMutableTreeNode) {
 	            	DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode) value;

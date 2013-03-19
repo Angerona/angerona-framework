@@ -13,7 +13,6 @@ import angerona.fw.listener.FrameworkListener;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
- * TODO
  * 
  * @author Tim Janus
  */

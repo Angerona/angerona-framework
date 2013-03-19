@@ -67,7 +67,6 @@ public class OperationTest {
 
 		@Override
 		public String getPosterName() {
-			// TODO Auto-generated method stub
 			return "MockOperation";
 		}
 		

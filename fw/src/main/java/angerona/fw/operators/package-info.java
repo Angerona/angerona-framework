@@ -4,8 +4,9 @@
  * This documentation page explains the concept of an operator in Angerona and
  * how it is technically implemented.
  * Angerona uses the term operator to define a piece of functionality. An
- * operator has a operation type, an input parameter type and a result or output
- * type. Given this information the following conceputal hierarchy can be defined:
+ * operator has an operation type which consist of an input parameter type and a 
+ * result or output type and is identified by a unique name like UpdateBeliefs. 
+ * Given this information the following conceptual hierarchy can be defined:
  * 
  * - Abstract base class for all operators
  * - Abstract base class for an specific operation type.

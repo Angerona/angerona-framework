@@ -120,7 +120,6 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 
 				BaseBeliefbase view = views.get(a.getReceiverId());
 				
-				// TODO: Merge violates operators
 				Set<FolFormula> answers = a.getAnswer().getAnswers();
 				if (answers.size() == 0) {
 					LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
@@ -128,7 +127,6 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				}
 				
 				LOG.info("Make Revision for QueryAnswer: '{}'", answers);
-				// TODO:
 				BaseChangeBeliefs bcb = (BaseChangeBeliefs)view.getOperators().getOperationSetByType(
 						BaseChangeBeliefs.OPERATION_TYPE).getOperator(EXPANSION);
 				if(bcb == null) {
@@ -174,8 +172,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 						sPair.first = secret;
 						double newStrength = calculateSecrecyStrength(secretInfo, newAnsSets);
 
-						// TODO: Find default policy like a default parameter
-						// value if not set yet.
+						/** @todo Find default policy like a default parameter value if not set yet. */
 						String d = secret.getReasonerParameters().get("d");
 						double curStrength = 0;
 						if (d == null) {

@@ -158,6 +158,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	 * Sets the default handler if no custom event handler is set and loads/parses
 	 * the data saved in the simulation configuration to fill the secrecy knowledge
 	 * with secrets.
+	 * @todo Find a solution for startup consistency check which does not alter the secrets...
 	 */
 	@Override
 	public void init(Map<String, String> additionalData) {
@@ -189,7 +190,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 				addSecret(s);
 			}
 
-			/* TODO: Find a solution for startup consistency check which does not alter the secrets...
+			/* 
 			 *  Check for startup inconsistency:
 			beliefbaseChanged(getAgent().getBeliefs().getWorldKnowledge(),
 					AgentListener.WORLD);

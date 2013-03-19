@@ -20,8 +20,6 @@ import angerona.fw.util.Pair;
  * 2. translateFOL to transform a set of FOL formulas into a belief base which
  *    which represents the knowledge encoded in FOL.
  * 
- *    // TODO: Remove the duplicate methods
- * 
  * @author Tim Janus
  */
 public abstract class BaseTranslator 
