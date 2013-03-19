@@ -25,8 +25,12 @@
  * 
  * Articles
  * --------
- * TODO
+ * 
+ * - @subpage conceptoperators
+ * - @subpage secrecyawarebdiagentmodel 
  */
+
+
 
 /**
  * This package contains every class which is an 

@@ -17,10 +17,9 @@ import angerona.fw.serialize.OperationSetConfig;
 import angerona.fw.util.Pair;
 
 /**
- * An OperatorProvider manages a set of operators for an entity like the agent or the
- * belief base. It is structured into multiple OperatorSets. An OperatorSet contains
- * operators which perform the same operation. This means the operators have the same type
- * of input and output parameters.
+ * An OperatorProvider manages a set of operators for an entity, it is structured into multiple 
+ * OperatorSets. An OperatorSet contains operators which perform the same operation. This means 
+ * the operators have the same type of input and output parameters.
  *
  * @author Tim Janus
  */

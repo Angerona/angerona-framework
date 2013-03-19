@@ -1,6 +1,6 @@
 /**
  * 	Contains classes which use the reflection features of Java
- * 	to dynamically define a Context for example. 
+ * 	to dynamically define a runtime Context for example. 
  * 
  * 	@author Tim Janus
  */

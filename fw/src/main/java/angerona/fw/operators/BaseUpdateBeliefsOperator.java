@@ -1,12 +1,14 @@
 package angerona.fw.operators;
 
 import angerona.fw.Agent;
+import angerona.fw.Perception;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
 /**
- * Base class for the update beliefs process of the Agent.
+ * Abstract base class for the update beliefs process of the Agent, sub classes have
+ * to inform
  * @author Tim Janus
  */
 public abstract class BaseUpdateBeliefsOperator extends 
@@ -29,5 +31,20 @@ public abstract class BaseUpdateBeliefsOperator extends
 	@Override
 	protected Beliefs defaultReturnValue() {
 		return null;
+	}
+	
+	@Override
+	protected void prepare(EvaluateParameter params) {
+		
+	}
+	
+	/**
+	 * This method has to be called by sub classes when a belief base has changed.
+	 * It informs the AgentComponent instances of the agent about the update.
+	 * @param param			The EvaluateParameter
+	 * @param oldBeliefs	The version of the Beliefs before the update.
+	 */
+	protected void onBeliefbaseUpdate(EvaluateParameter param, Beliefs oldBeliefs) {
+		param.getAgent().onUpdateBeliefs((Perception)param.getAtom(), oldBeliefs);
 	}
 }

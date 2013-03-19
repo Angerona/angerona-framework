@@ -13,6 +13,11 @@ import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.view.View;
 import angerona.fw.internal.AgentPlugin;
 
+/**
+ * Provides AgentComponent implementations like the SecrecyKnowledge and a UI View
+ * for the SecrecyKnowledge
+ * @author Tim Janus
+ */
 @PluginImplementation
 public class SecrecyPlugin 
 	implements 

@@ -14,22 +14,23 @@ import angerona.fw.operators.parameter.OperatorPluginParameter;
 public class PlanParameter extends OperatorPluginParameter {
 
 	/** the actual working goals */
-	private PlanComponent actualPlan;
+	private PlanComponent currentPlan;
 
+	/** Default Ctor used for empty generation */
 	public PlanParameter() {}
 	
 	/**
 	 * Ctor: Generation the PlanerParameter data-structure with the following parameters:
-	 * @param actualPlan	the high level plan of the agent
-	 * @param forbidden		list of forbidden actions.
+	 * @param currentPlan	the high level plan of the agent
 	 */
-	public PlanParameter(PlanComponent actualPlan) {
-		super(actualPlan.getAgent());
-		this.actualPlan = actualPlan;
+	public PlanParameter(PlanComponent currentPlan) {
+		super(currentPlan.getAgent());
+		this.currentPlan = currentPlan;
 	}
 	
+	/** @return the PlanComponent of the calling Agent */
 	public PlanComponent getActualPlan() {
-		return actualPlan;
+		return currentPlan;
 	}
 	
 	@Override
@@ -41,6 +42,6 @@ public class PlanParameter extends OperatorPluginParameter {
 			throw new ConversionException(GenericOperatorParameter.class, this.getClass(),
 					new ClassCastException("Cannot cast plan to PlanComponent."));
 		}
-		this.actualPlan = (PlanComponent)plan;
+		this.currentPlan = (PlanComponent)plan;
 	}
 }

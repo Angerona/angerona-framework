@@ -10,6 +10,7 @@ import angerona.fw.asml.CommandSequence;
  * name of the configuration. The List of operation sets the agent can use and the list
  * of components (identified by full java class name) the agent instantiates at run-
  * time.
+ * 
  * @author Tim Janus
  */
 public interface AgentConfig {

@@ -16,11 +16,13 @@ public interface BaseOperator extends ReportPoster {
 	
 	/**
 	 * Change the user-parameters used by the operator. 
+	 * @todo move to caller side, make operator stateless
 	 * @param parameters
 	 */
 	void setParameters(Map<String, String> parameters);
 	
 	/**
+	 * @todo move to caller side, make operator stateless
 	 * @return 	a map from parameter names to values in a generic string
 	 * 			representation.
 	 */

@@ -6,12 +6,14 @@ import angerona.fw.internal.Entity;
 
 /**
  * An AgentComponent is an part of an Agent. Every data component of
- * the agent implements the agent interface. The belief bases are
+ * the agent implements the agent component interface. The belief bases are
  * the most important agent components. But the AgentComponent
- * interface is also implemented by the Secrecy Knowledge or the
- * agents plan component. 
+ * interface is also implemented by the SecrecyKnowledge or the
+ * agent's PlanComponent. 
  * 
- * Other interesting specializations are: Motivations, etc.
+ * Every agent component supports a copy mechanism which copies all the data of the
+ * component but uses the same id like the original object. It also saves it's copy
+ * depth
  * 
  * @author Tim Janus
  */

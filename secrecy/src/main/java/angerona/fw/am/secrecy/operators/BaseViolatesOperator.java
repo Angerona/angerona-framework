@@ -96,7 +96,7 @@ public abstract class BaseViolatesOperator
 	protected abstract ViolatesResult onPerception(Perception percept, EvaluateParameter param);
 	
 	/**
-	 * Is called by the processInt method when a Plan was given for violation checking..
+	 * Is called by the processInt method when a Plan was given for violation checking.
 	 * @param plan		Casted Reference to the plan element
 	 * @param param		The rest parameters for the violation invoking.
 	 * @return			A ViolatesResult structure containing information about secrecy violation 
@@ -106,7 +106,10 @@ public abstract class BaseViolatesOperator
 	/**
 	 * Is called if the given agent wants to perform the given action in its mental state.
 	 * Subclasses must implement this method to allow the Violates-Operator to be an
-	 * Action-Processor for working through a plan for example.
+	 * ActionProcessor for mentally working through a plan for example.
+	 * @param action	The action which shall be performed.
+	 * @param agent		The agent performing the action.
+	 * @param beliefs	The beliefs used as basis for performing the action.
 	 */
 	public abstract void performAction(Action action, Agent agent, Beliefs beliefs);
 }

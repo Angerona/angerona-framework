@@ -48,11 +48,21 @@ import angerona.fw.serialize.OperationSetConfig;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
- * Implementation of an agent in the Angerona Framework.
- * An agent defines it functionality by the used operator instances. The
- * data structure AgentConfiguration is used to dynamically instantiate
- * an agent.
- * The agent defines helper methods to use the operators of the agent.
+ * An agent in the Angerona framework defines itself with the registered instances
+ * of AgentComponent and it's used Operator instances. The data structure AgentInstance is 
+ * used to dynamically instantiate an agent. Every Agent is an Entity in the Angerona
+ * Framework and provides its own id, its parentId which is null for an agent and a 
+ * list of child ids which identify the AgentComponent instances.
+ * 
+ * An agent also implements the ActionProcessor interface. This implementation updates the
+ * agent's own beliefs and sends the performed action to the Environment.
+ * 
+ * Every agent implements the OperatorCaller interface and implements an operator call 
+ * stack as described in OperatorStack. The agent also implements the Reporter interface
+ * to give its called Operator instances the ability to use the Angerona report system. 
+ * The call stack implementation also updates the used ReportPoster of the Reporter to the
+ * currently active Operator.
+ * 
  * @author Tim Janus
  * @author Daniel Dilger
  */
@@ -78,10 +88,13 @@ public class Agent extends AgentArchitecture
 	/** id in the report-attachment hierarchy. */
 	private Long id;
 	
+	/** this instance is responsible to communicate with the Angerona report system */
 	private AngeronaReporter reporter;
 	
+	/** A list of children Ids which identify the AgentComponent instances linked to the agent */
 	private List<Long> childrenIds = new LinkedList<Long>();
 	
+	/** The list of all registered AgentComponent instances */
 	private List<AgentComponent> customComponents = new LinkedList<AgentComponent>();
 	
 	private List<SubgoalListener> subgoalListeners = new LinkedList<SubgoalListener>();
@@ -91,15 +104,19 @@ public class Agent extends AgentArchitecture
 	/** The context of the agents used for dynamic code defined in xml files (intentions) */
 	private Context context;
 	
-	/** History of actions performed by the agent */
+	/** 
+	 * History of actions performed by the agent 
+	 * @todo Implement this as an AgentComponent
+	 */
 	private List<Action> actionsHistory = new LinkedList<Action>();
 	
 	/** a list of capabilities which describe actions the agent can perform*/
 	private List<String> capabilities = new LinkedList<>();
 	
+	/** The OperatorProvider instance responsible to manage the different operators of the agent */
 	private OperatorProvider operators = new OperatorProvider();
 	
-	/** reference to the current used operator in the cycle process. */
+	/** The call stack of operators */
 	private Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
 	
 	/** the perception received by the last or running cylce call */
@@ -479,7 +496,10 @@ public class Agent extends AgentArchitecture
 		return plan;
 	}
 	
-	/** @return the perception the agent is working on. */
+	/** 
+	 * @todo remove this method, save perceptions and actions in a history
+	 * @return the perception the agent is working on. 
+	 */
 	public Perception getActualPerception() {
 		return currentPerception;
 	}

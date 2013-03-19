@@ -19,13 +19,15 @@ import angerona.fw.util.Pair;
  * the generic type parameters and implement the getEmptyParameter() and 
  * defaultReturnValue() methods. Thus classes define the operation type but give no
  * implementation for the operation type yet.
+ * 
+ * @remark 	Every instance of an operator is stateless this means the developer subclassing
+ * 			the Operator is not allowed to use member variables. To save data between the
+ * 			prepare(), proccessInternal() and finish() method one can use the input parameter data
+ * 			structure of type IN.
  *
- * TODO: Move the <String, String> parameters to another place, they must be saved
- * on caller side.
- *
- * @param <TCaller>	Type of the owner of the operator 
- * @param <IN>		Type of the input parameter of the operator.
- * @param <OUT>		Type of the output (return value) of the operator.
+ * @tparam <TCaller>	Type of the owner of the operator 
+ * @tparam <IN>			Type of the input parameter of the operator.
+ * @tparam <OUT>		Type of the output (return value) of the operator.
  * 
  * @author Tim Janus
  */
@@ -36,7 +38,11 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Operator.class);
 	
-	/** a map containing parameters for the operator in a generic representation */
+	/** 
+	 * a map containing parameters for the operator in a generic representation 
+	 * @todo Move the these parameters to another place, they must be saved
+	 * on caller side.
+	 */
 	protected Map<String, String> parameters = new HashMap<String, String>();
 	
 	/**
@@ -72,9 +78,9 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	
 	/**
 	 * Starts the processing of the operator with the given generic operator parameters.
-	 * 
-	 * @param genericParams
-	 * @return
+	 * This method is used by ASML.
+	 * @param genericParams	A generic version of the data structure representing the input parameters.
+	 * @return	The result of the operation as type OUT.
 	 */
 	@Override
 	public OUT process(GenericOperatorParameter genericParams) {
@@ -100,8 +106,7 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	
 	/**
 	 * process version which used the specialized input parameters as argument.
-	 * This allows easier invocation from the java side. The other method defined
-	 * in the interface is useful for ASML invocation.
+	 * This allows easier invocation from the java code. 
 	 * @param params	The parameters for the operator invocation in specialized version.
 	 * @return	
 	 */
@@ -149,11 +154,26 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	}
 	
 	/**
-	 * This method gives sub classes which are no leafes the ability to do further
+	 * This method can be overridden by sub classes to do further
 	 * preparation before invoking processInternal.
-	 * @param params	The input parameters
+	 * @remark 	The operator instances are stateless this means if this
+	 * 			method shall save something it has to use the data 
+	 * 			structure given as parameter.
+	 * @param params	The input parameter data structure.
 	 */
 	protected void prepare(IN params) {
+		
+	}
+	
+	/**
+	 * This method can be overridden by sub classes to do further
+	 * processing after the processInternal method is finished.
+	 * @remark 	The operator instances are stateless this means if this
+	 * 			method shall use something processed earlier in prepare() or
+	 * 			processInternal it has to use the params parameter.
+	 * @param params	The input parameter data structure.
+	 */
+	protected void finish(IN params) {
 		
 	}
 }
