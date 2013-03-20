@@ -10,6 +10,7 @@ public class DefendingAgentOperatorsPlugin extends OperatorPluginAdapter {
 	protected void registerOperators() {
 		registerOperator(angerona.fw.DefendingAgent.operators.def.GenerateOptionsOperator.class);
 		registerOperator(angerona.fw.DefendingAgent.operators.def.SubgoalGenerationOperator.class);
+		registerOperator(angerona.fw.DefendingAgent.operators.def.UpdateBeliefsOperator.class);
 		
 	}
 

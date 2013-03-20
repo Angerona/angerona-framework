@@ -32,6 +32,9 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		Beliefs beliefs = param.getBeliefs();
 		String id = param.getAgent().getAgentProcess().getName();
 		Action act = (Action)param.getAtom();
+		if(act == null) {
+			return beliefs;
+		}
 		ViewComponent views = param.getAgent().getComponent(ViewComponent.class);
 		String out = "Update-Beliefs: ";
 		

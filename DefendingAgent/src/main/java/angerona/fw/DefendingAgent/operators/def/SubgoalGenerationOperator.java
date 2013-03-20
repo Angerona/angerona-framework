@@ -260,10 +260,10 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			
 			FolFormula formula = desire.getFormula();
 			String atomStr = formula.toString().trim();
-			boolean informDesire = atomStr.startsWith("v_");
+			boolean revisionDesire = atomStr.startsWith("r_");
 			boolean queryDesire = atomStr.startsWith("q_");
 			
-			if(informDesire || queryDesire) {
+			if(revisionDesire || queryDesire) {
 				int si = formula.toString().indexOf("_")+1;
 				int li = formula.toString().indexOf("(", si);
 				if(si == -1 || li == -1)
@@ -288,15 +288,20 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					e.printStackTrace();
 				}
 				
-				if(informDesire) {
-					sg.newStack( new Inform(ag, recvName, a));
+				if(revisionDesire) {
+					sg.newStack( new Revision(ag, recvName, a));
+					ag.getPlanComponent().addPlan(sg);
+					pp.report("Add the new atomic action '" + Revision.class.getSimpleName() + 
+							"' to the plan, chosen by desire: " + desire.toString(), 
+							ag.getPlanComponent());
 				} else {
 					sg.newStack( new Query(ag, recvName, a));
+					ag.getPlanComponent().addPlan(sg);
+					pp.report("Add the new atomic action '" + Query.class.getSimpleName() + 
+							"' to the plan, chosen by desire: " + desire.toString(), 
+							ag.getPlanComponent());
 				}
-				ag.getPlanComponent().addPlan(sg);
-				pp.report("Add the new atomic action '" + Inform.class.getSimpleName() + 
-						"' to the plan, choosed by desire: " + desire.toString(), 
-						ag.getPlanComponent());
+				
 				reval = true;
 			}
 		}

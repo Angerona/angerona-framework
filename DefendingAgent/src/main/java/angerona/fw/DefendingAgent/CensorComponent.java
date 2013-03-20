@@ -145,7 +145,7 @@ public class CensorComponent extends BaseAgentComponent {
 
 		// TODO: i'm not sure if the prolog-parser understands true and false ... 
 		result.replaceAll("-", " neg ");
-		result.replaceAll("+", " true ");
+		result.replaceAll("\\+", " true ");
 		result.replaceAll("!", " false ");
 		
 		return "( "+ result +" )";

@@ -80,7 +80,9 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 		String line;
 		while( (line = br.readLine()) != null) {
 			line = line.trim();
-			if(line.contains("|")) {
+			if(line.equals("")) {
+				continue;
+			} else if(line.matches(".*(?<!\\|)\\|(?!\\|).*")) {
 				// conditional of the form ( B | A )
 				log.info("parsing conditional: {}", line);
 				line = line.substring(1, line.length()-1); // remove braces
