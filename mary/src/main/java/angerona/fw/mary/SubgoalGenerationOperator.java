@@ -105,14 +105,20 @@ public class SubgoalGenerationOperator extends
 			
 			public int compare(Desire f1, Desire f2)
 			{
-				if(	f1.getAtom().getArguments().size() < 2) {
+				if(! (f1.getFormula() instanceof Atom) ) {
 					return -1;
-				} else if( f2.getAtom().getArguments().size() < 2 ) {
+				}
+				if(! (f2.getFormula() instanceof Atom) ) {
+					return -1;
+				}
+				if(	((Atom)f1.getFormula()).getArguments().size() < 2) {
+					return -1;
+				} else if( ((Atom)f2.getFormula()).getArguments().size() < 2 ) {
 					return 1;
 				}
 					
-				Term t1 = f1.getAtom().getArguments().get(1);
-				Term t2 = f2.getAtom().getArguments().get(1);
+				Term t1 = ((Atom)f1.getFormula()).getArguments().get(1);
+				Term t2 = ((Atom)f2.getFormula()).getArguments().get(1);
 				
 				if(! (t1 instanceof NumberTerm)) {
 					return -1;
@@ -135,7 +141,10 @@ public class SubgoalGenerationOperator extends
 		for(int i=numDesires-1;i>=0;i--)
 		{
 			Desire des = desires[i];
-			Atom atom = desires[i].getAtom();
+			if(! (des.getFormula() instanceof Atom) ) {
+				continue;
+			}
+			Atom atom = (Atom) desires[i].getFormula();
 			if(atom.getPredicate().getName().startsWith("q_"))
 			{
 				if(!ag.hasCapability("Query")) {

@@ -30,6 +30,7 @@ public class DefendingAgentPlugin implements AgentPlugin {
 		reval.add(PlanComponent.class);
 		reval.add(Desires.class);
 		reval.add(ViewComponent.class);
+		reval.add(CensorComponent.class);
 		return reval;
 	}
 

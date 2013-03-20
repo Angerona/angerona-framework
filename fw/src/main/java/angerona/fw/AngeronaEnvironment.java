@@ -10,7 +10,7 @@ import java.util.Set;
 
 import net.sf.beenuts.ap.AgentProcess;
 import net.sf.beenuts.apr.APR;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,7 +206,7 @@ public class AngeronaEnvironment extends APR {
 			agent.reportCreation();
 			
 			// and initialize the desires:
-			for(Atom a : ai.getDesires()) {
+			for(FolFormula a : ai.getDesires()) {
 				agent.getDesires().add(new Desire(a));
 			}
 		}

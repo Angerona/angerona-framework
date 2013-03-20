@@ -18,6 +18,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 
 import org.slf4j.Logger;
@@ -63,7 +64,13 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		boolean gen  = false;
 		for (Desire des : param.getAgent().getDesires().getDesires()) {
 			// scenario specific tests:
-			boolean revReq = des.getAtom().getPredicate().getName().equals("attend_scm");
+			boolean revReq = false;
+			for(Predicate p : des.getFormula().getPredicates()) {
+				if(p.getName().equals("attend_scm")) {
+					revReq = true;
+					break;
+				}
+			}
 			if(revReq) {
 				PlanElement next = nextSafeAction("attend_scm", param, des);
 				if(next != null) {

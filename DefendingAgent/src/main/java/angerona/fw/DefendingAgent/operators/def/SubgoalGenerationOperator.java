@@ -17,6 +17,7 @@ import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Desire;
 import angerona.fw.Subgoal;
+import angerona.fw.DefendingAgent.CensorComponent;
 import angerona.fw.DefendingAgent.View;
 import angerona.fw.DefendingAgent.ViewComponent;
 import angerona.fw.DefendingAgent.comm.Revision;
@@ -81,8 +82,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag
 	 */
 	public void processQuery(Desire desire, PlanParameter pp, Agent ag) {
-		Censor cexec = new Censor();
-
+		CensorComponent cexec = ag.getComponent(CensorComponent.class);
+		
 		Query query = (Query) desire.getPerception();
 
 		View view = ag.getComponent(ViewComponent.class).getView(query.getSenderId());
@@ -158,7 +159,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag
 	 */
 	public void processRevision(Desire desire, PlanParameter pp, Agent ag) {
-		Censor cexec = new Censor();
+		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Revision revision = (Revision) desire.getPerception();
 		View view = ag.getComponent(ViewComponent.class).getView(revision.getSenderId());
@@ -257,23 +258,23 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			if(ag.getPlanComponent().countPlansFor(desire) > 0)
 				continue;
 			
-			Atom atom = desire.getAtom();
-			String atomStr = atom.toString().trim();
+			FolFormula formula = desire.getFormula();
+			String atomStr = formula.toString().trim();
 			boolean informDesire = atomStr.startsWith("v_");
 			boolean queryDesire = atomStr.startsWith("q_");
 			
 			if(informDesire || queryDesire) {
-				int si = atom.toString().indexOf("_")+1;
-				int li = atom.toString().indexOf("(", si);
+				int si = formula.toString().indexOf("_")+1;
+				int li = formula.toString().indexOf("(", si);
 				if(si == -1 || li == -1)
 					continue;
-				String recvName = atom.toString().substring(si, li);
+				String recvName = formula.toString().substring(si, li);
 				
-				si = atom.toString().indexOf("(")+1;
-				li = atom.toString().lastIndexOf(")");
+				si = formula.toString().indexOf("(")+1;
+				li = formula.toString().lastIndexOf(")");
 				if(si == -1 || li == -1)
 					continue;
-				String content = atom.toString().substring(si,li);
+				String content = formula.toString().substring(si,li);
 				
 				LOG.info("'{}' wants '"+recvName+"' to believe: '{}'",  ag.getName(), content);
 		

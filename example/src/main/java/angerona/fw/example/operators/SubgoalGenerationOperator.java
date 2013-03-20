@@ -84,7 +84,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			if(ag.getPlanComponent().countPlansFor(desire) > 0)
 				continue;
 			
-			Atom atom = desire.getAtom();
+			FolFormula atom = desire.getFormula();
 			String atomStr = atom.toString().trim();
 			boolean informDesire = atomStr.startsWith("v_");
 			boolean queryDesire = atomStr.startsWith("q_");

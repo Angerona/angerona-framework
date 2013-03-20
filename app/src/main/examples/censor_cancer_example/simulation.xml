@@ -1,5 +1,6 @@
 <simulation-configuration>
-	<name>Censor Example</name>
+	<name>Cancer Example</name>
+	<category>censor</category>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
     
     <agent-instance>
@@ -12,9 +13,20 @@
       	<data key="Confidential">
             (Attacker, __DEFAULT__, c)
         </data>
+        
+        <!-- Choose a semantic for the klmlean solver used by the censor component
+		     * CUMMULATIV - Cumulative logic, 
+			 * LOOP_CUMMULATIV - Loop-Cumulative logic, 
+			 * PREFERENTIAL - Preferential logic, 
+			 * RATIONAL - Rational logic, 
+			 * FREE_RATIONAL - Rational logic with free variables
+         -->
+        <data key="KLMSemantics">
+        FREE_RATIONAL
+        </data>
   	
-      	<skill>Answer</skill>
-      	<skill>RevisionAnswer</skill>
+      	<capability>Answer</capability>
+      	<capability>RevisionAnswer</capability>
          
 	</agent-instance>
     
@@ -26,10 +38,10 @@
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
         
         
-        <desire>q_Defender((s1 && c) || s2)</desire>
+        <desire>q_Defender(c)</desire>
         
-        <skill>Query</skill>
-        <skill>Revision</skill>
+        <capability>Query</capability>
+        <capability>Revision</capability>
         
 	</agent-instance>	
 </simulation-configuration>

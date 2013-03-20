@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.Desire;
@@ -65,7 +66,7 @@ public class Desires extends BaseAgentComponent {
 	
 	public Desire getDesire(Atom twettyAtom) {
 		for(Desire des : desires) {
-			if(des.getAtom().equals(twettyAtom))
+			if(des.getFormula().equals(twettyAtom))
 				return des;
 		}
 		return null;
@@ -75,19 +76,21 @@ public class Desires extends BaseAgentComponent {
 		return Collections.unmodifiableSet(desires);
 	}
 	
-	public Set<Atom> getTweety() {
-		Set<Atom> atoms = new HashSet<Atom>();
+	public Set<FolFormula> getTweety() {
+		Set<FolFormula> formulas = new HashSet<FolFormula>();
 		for(Desire des : desires) {
-			atoms.add(des.getAtom());
+			formulas.add(des.getFormula());
 		}
-		return atoms;
+		return formulas;
 	}
 	
 	public Set<Desire> getDesiresByPredicate(Predicate pred) {
 		Set<Desire> reval = new HashSet<Desire>();
 		for(Desire d : desires) {
-			if(d.getAtom().getPredicate().equals(pred)) {
-				reval.add(d);
+			for(Atom a : d.getFormula().getAtoms()) {
+				if(a.getPredicate().equals(pred)) {
+					reval.add(d);
+				}
 			}
 		}
 		return reval;

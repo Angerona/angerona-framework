@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -52,7 +52,7 @@ public class AgentInstance {
 	
 	/** list of fol-formulas representing the initial desires of the agent */
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
-	protected List<Atom> desires = new LinkedList<Atom>();
+	protected List<FolFormula> desires = new LinkedList<FolFormula>();
 	
 	@ElementList(entry="capability", inline=true, required=false, empty=false)
 	protected List<String> capabilities = new LinkedList<>();
@@ -78,7 +78,7 @@ public class AgentInstance {
 		return realViewMap.get(agName);
 	}
 	
-	public List<Atom> getDesires() {
+	public List<FolFormula> getDesires() {
 		return Collections.unmodifiableList(desires);
 	}
 	

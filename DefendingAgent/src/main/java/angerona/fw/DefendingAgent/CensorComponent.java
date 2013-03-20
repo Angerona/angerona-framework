@@ -1,7 +1,11 @@
-package angerona.fw.DefendingAgent.operators.def;
+package angerona.fw.DefendingAgent;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -11,8 +15,11 @@ import net.sf.tweety.logics.propositionallogic.syntax.Disjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
+import angerona.fw.BaseAgentComponent;
+import angerona.fw.BaseBeliefbase;
 import angerona.fw.DefendingAgent.View;
 import angerona.fw.DefendingAgent.Prover.Prover;
+import angerona.fw.logic.conditional.ConditionalBeliefbase;
 
 /**
  * Implementation of the censor component of a defending censor agent.
@@ -24,8 +31,21 @@ import angerona.fw.DefendingAgent.Prover.Prover;
  * @author Sebastian Homann, Pia Wierzoch
  * @see [1] Biskup, Joachim and Tadros, Cornelia. Revising Belief without Revealing Secrets
  */
-public class Censor {
+public class CensorComponent extends BaseAgentComponent {
+	/** reference to the logback instance used for logging */
+	private static Logger LOG = LoggerFactory
+			.getLogger(CensorComponent.class);
+	
 	private Prover.Solver solver = Prover.Solver.FREE_RATIONAL;
+	
+	public CensorComponent() {
+		super();
+	}
+	
+	public CensorComponent(Prover.Solver solver) {
+		super();
+		this.solver = solver; 
+	}	
 	
 	/**
 	 *  the censor uses the klmlean framework to prove sentences in
@@ -148,5 +168,23 @@ public class Censor {
 		result.replaceAll("!", " false ");
 		
 		return "( "+ result +" )";
+	}
+
+	@Override
+	public void init(Map<String, String> additionalData) {
+		if(additionalData.containsKey("KLMSemantics")) {
+			String str = additionalData.get("KLMSemantics");
+			try {
+				solver = Prover.Solver.valueOf(str.trim());
+			} catch(Exception e) {
+				LOG.error("Illegal argument for additionalData field 'KLMSemantics' in simulation description: " + str + ". Using default solver: RATIONAL.");
+				
+			}
+		}
+	}
+	
+	@Override
+	public Object clone() {
+		return new CensorComponent(this.solver);
 	}
 }
