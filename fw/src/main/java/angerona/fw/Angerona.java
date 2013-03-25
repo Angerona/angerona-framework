@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import angerona.fw.def.FrameworkPlugin;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.FrameworkListener;
@@ -438,6 +439,7 @@ public class Angerona {
 			}
 			
 			PluginInstantiator.getInstance().addPlugins(getConfig().getPluginPaths());
+			PluginInstantiator.getInstance().registerPlugin(new FrameworkPlugin());
 			bootstrapDone = true;
 			
 			for(FrameworkListener fl : frameworkListeners) {

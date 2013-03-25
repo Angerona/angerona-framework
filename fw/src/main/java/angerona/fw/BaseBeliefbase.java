@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
@@ -25,6 +26,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
+import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
 import angerona.fw.parser.ParseException;
@@ -379,6 +381,29 @@ public abstract class BaseBeliefbase
 
 	@Override
 	public OperatorStack getStack() {
-		return getAgent();
+		// only provide the operator stack functionality when attached to an agent
+		// for tests use the EmptyStackImplementation
+		return getAgent() != null ? getAgent() : new EmptyStackImplementation();
+	}
+	
+	/**
+	 * This implementation does nothing it can be used as mock object for tests etc.
+	 * @author Tim Janus
+	 */
+	private class EmptyStackImplementation implements OperatorStack {
+
+		@Override
+		public void pushOperator(BaseOperator op) {
+		}
+
+		@Override
+		public void popOperator() {
+		}
+
+		@Override
+		public Stack<BaseOperator> getOperatorStack() {
+			return new Stack<>();
+		}
+
 	}
 }

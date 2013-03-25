@@ -11,11 +11,11 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.asp.AspBeliefbaseView;
 import angerona.fw.gui.view.View;
-import angerona.fw.internal.BeliefbasePlugin;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
@@ -35,24 +35,25 @@ import angerona.fw.logic.asp.AspTranslator;
  * @author Tim Janus
  */
 @PluginImplementation
-public class AspPlugin implements BeliefbasePlugin, UIPlugin {
+public class AspPlugin extends AngeronaPluginAdapter 
+	implements UIPlugin {
 
 	@Override
-	public List<Class<? extends BaseBeliefbase>> getSupportedBeliefbases() {
+	public List<Class<? extends BaseBeliefbase>> getBeliefbaseImpl() {
 		List<Class<? extends BaseBeliefbase>> reval = new LinkedList<Class<? extends BaseBeliefbase>>();
 		reval.add(AspBeliefbase.class);
 		return reval;
 	}
 
 	@Override
-	public List<Class<? extends BaseReasoner>> getSupportedReasoners() {
+	public List<Class<? extends BaseReasoner>> getReasonerImpl() {
 		List<Class<? extends BaseReasoner>> reval = new LinkedList<Class<? extends BaseReasoner>>();
 		reval.add(AspReasoner.class);
 		return reval;
 	}
 
 	@Override
-	public List<Class<? extends BaseChangeBeliefs>> getSupportedChangeOperations() {
+	public List<Class<? extends BaseChangeBeliefs>> getChangeImpl() {
 		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
 		reval.add(AspRevision.class);
 		reval.add(AspExpansion.class);
@@ -60,7 +61,7 @@ public class AspPlugin implements BeliefbasePlugin, UIPlugin {
 	}
 	
 	@Override
-	public List<Class<? extends BaseTranslator>> getSupportedTranslators() {
+	public List<Class<? extends BaseTranslator>> getTranslatorImpl() {
 		List<Class<? extends BaseTranslator>> reval = new LinkedList<Class<? extends BaseTranslator>>();
 		reval.add(AspTranslator.class);
 		return reval;

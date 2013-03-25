@@ -7,32 +7,37 @@ import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.AgentComponent;
+import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.view.View;
-import angerona.fw.internal.AgentPlugin;
-import angerona.fw.internal.OperatorPluginAdapter;
 import angerona.fw.knowhow.gui.KnowhowView;
+import angerona.fw.operators.BaseOperator;
 
 @PluginImplementation
-public class KnowhowPlugin extends OperatorPluginAdapter implements 
-	  AgentPlugin
-	, UIPlugin {
+public class KnowhowPlugin extends AngeronaPluginAdapter 
+	implements UIPlugin {
 
+	@Override
 	public Map<String, Class<? extends View>> getUIComponents() {
 		Map<String, Class<? extends View>> reval = new HashMap<String, Class<? extends View>>();
 		reval.put("Knowhow", KnowhowView.class);
 		return reval;
 	}
-
-	public List<Class<? extends AgentComponent>> getAgentComponents() {
+	
+	@Override
+	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
 		reval.add(KnowhowBase.class);
 		return reval;
 	}
-
+	
 	@Override
-	protected void registerOperators() {
-		registerOperator(KnowhowSubgoal.class);
+	public List<Class<? extends BaseOperator>> getOperators() {
+		List<Class<? extends BaseOperator>> reval = new LinkedList<>();
+		reval.add(KnowhowSubgoal.class);
+		return reval;
 	}
+
+
 
 }

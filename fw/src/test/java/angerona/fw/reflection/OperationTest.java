@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import org.junit.Test;
 
+import angerona.fw.OperatorCaller;
 import angerona.fw.OperatorProvider;
 import angerona.fw.OperatorSet;
 import angerona.fw.asml.InvokeOperation;
@@ -15,10 +16,11 @@ import angerona.fw.error.InvokeException;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
+import angerona.fw.report.Reporter;
 import angerona.fw.util.Pair;
 
 public class OperationTest {
-	private class MockVisitor implements OperatorStack {
+	private class MockVisitor implements OperatorStack, OperatorCaller {
 
 		private Stack<BaseOperator> stack = new Stack<>();
 		
@@ -37,6 +39,16 @@ public class OperationTest {
 			return stack;
 		}
 
+		@Override
+		public Reporter getReporter() {
+			return null;
+		}
+
+		@Override
+		public OperatorStack getStack() {
+			return this;
+		}
+
 	}
 	
 	private class MockOperation implements BaseOperator {
@@ -47,7 +59,7 @@ public class OperationTest {
 
 		@Override
 		public Map<String, String> getParameters() {
-			return null;
+			return new HashMap<>();
 		}
 
 		@Override
