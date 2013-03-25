@@ -22,5 +22,9 @@ public enum AnswerValue {
 	 * program to go through additional reasoning and 
 	 * answering processes. 
 	 */
-	AV_COMPLEX
+	AV_COMPLEX;
+	
+	public String toString() {
+		return name().toString();
+	}
 }

@@ -82,13 +82,17 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		Desires desComp = ag.getComponent(Desires.class);
 		if(desComp == null)
 			return false;
-		
+
 		for(Desire desire : desComp.getDesires()) {
 			// only add a plan if no plan for the desire exists.
 			if(ag.getPlanComponent().countPlansFor(desire) > 0)
 				continue;
 			
-			Atom atom = desire.getAtom();
+			FolFormula f = desire.getFormula();
+			if(!(f instanceof Atom)) 
+				continue;
+			
+			Atom atom = (Atom)f;
 			String predicateName = atom.getPredicate().getName();
 			boolean informDesire = predicateName.startsWith("v_");
 			boolean queryDesire = predicateName.startsWith("q_");

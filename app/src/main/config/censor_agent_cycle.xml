@@ -1,9 +1,10 @@
-<asml-script name="secrecyCycle">
-    <operation type="UpdateBeliefs">
+<asml-script name="censorAgentCycle">
+    	
+	<operation type="UpdateBeliefs">
         <param name="information" value="$perception" />
         <param name="beliefs" value="$beliefs" />
     </operation>
-     
+    
 	<operation type="GenerateOptions">
 	    <param name="perception" value="$perception" />
 	    <output>newDesireCount</output>
@@ -31,6 +32,6 @@
 		
 		<assign name="searching" value="$changed" />
 	</while>
-	
+
 	<execute action="$action" />
 </asml-script>

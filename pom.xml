@@ -87,5 +87,6 @@
   	<module>secrecy</module>
   	<module>deploy</module>
   	<module>conditional</module>
+  	<module>DefendingAgent</module>
   </modules>
 </project>

@@ -1,6 +1,7 @@
 package angerona.fw;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class Desire {
 	Logger LOG = LoggerFactory.getLogger(Desire.class);
 	
 	/** tweety atom representing the desire */
-	private Atom atom;
+	private FolFormula formula;
 	
 	/** plan as subgoal */
 	private Subgoal plan;
@@ -31,12 +32,12 @@ public class Desire {
 	 * Ctor which sets the logical representation of the desire
 	 * @param desire	a tweety atom representing the desire.
 	 */
-	public Desire(Atom desire) {
+	public Desire(FolFormula desire) {
 		this(desire, null);
 	}
 	
-	public Desire(Atom desire, Perception reason) {
-		this.atom = desire;
+	public Desire(FolFormula desire, Perception reason) {
+		this.formula = desire;
 		this.perception = reason;
 	}
 	
@@ -66,8 +67,8 @@ public class Desire {
 	}
 	
 	/** @return tweety representation of the desire */
-	public Atom getAtom() {
-		return atom;
+	public FolFormula getFormula() {
+		return formula;
 	}
 
 	public Perception getPerception() {
@@ -76,7 +77,7 @@ public class Desire {
 	
 	@Override
 	public String toString() {
-		return atom.toString();
+		return formula.toString();
 	}
 	
 	@Override 
@@ -84,17 +85,17 @@ public class Desire {
 		if(other == null)	return false;
 		
 		if(other instanceof Atom) {
-			return this.atom.equals((Atom)other);
+			return this.formula.equals((Atom)other);
 		}
 		
 		if(other instanceof Desire) {
 			Desire od = (Desire)other;
 			
 			try {
-				boolean reval = od.atom.equals(this.atom);
+				boolean reval = od.formula.equals(this.formula);
 				return reval;
 			} catch(IllegalArgumentException e) {
-				LOG.warn("'{}' or '{}' not well formed.", od.atom, this.atom);
+				LOG.warn("'{}' or '{}' not well formed.", od.formula, this.formula);
 				throw e;
 			}
 		}

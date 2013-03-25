@@ -51,5 +51,22 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 		
 		return beliefbase;
 	}
+	
+	public boolean simulateRevision(ConditionalBeliefbase bbase, ConditionalBeliefbase newKnowledge) {
+		log.info("Simulating revision by '{}'", newKnowledge);
+		
+		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
+		
+		log.info("compute c-representation (bruteforce)");
+		long startTime = System.currentTimeMillis();
+		RankingFunction ranking = creasoner.getCRepresentation();
+		long duration = System.currentTimeMillis() - startTime;
+		log.info("done. duration: {}ms", duration);
+				
+		Conjunction con = new Conjunction(bbase.getPropositions());
+		con.addAll(newKnowledge.getPropositions());
+		
+		return ranking.rank(con) < RankingFunction.INFINITY;
+	}
 
 }

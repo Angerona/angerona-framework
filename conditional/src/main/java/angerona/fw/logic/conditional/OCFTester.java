@@ -4,66 +4,37 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import angerona.fw.operators.parameter.ReasonerParameter;
 import angerona.fw.parser.ParseException;
 
 
 public class OCFTester {
 	
-	public static String rawbbase = "(d22|s22) \n (d11|s11) \n (r|d22 && d11) \n (-d22 || -d11 | s22 && s11 && i11_22) \n (d21|s21) \n (r|d21 && d11)";
-	public static String rawrev1 = "s22";
-	public static String rawrev2 = "s11";
-	public static String rawrev3 = "i11_22";
-	public static String rawrev4 = "s21";
+//	public static String rawbbase = "(d22|s22) \n (d11|s11) \n (r|d22 && d11) \n (-d22 || -d11 | s22 && s11 && i11_22) \n (d21|s21) \n (r|d21 && d11)";
+	public static String rawbbase = "(c|s1) \n (!s3|s2) \n (!s2|s3) \n (!s1 | s4)";
 	
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, net.sf.tweety.logics.firstorderlogic.parser.ParseException {
 		ConditionalBeliefbase bbase = new ConditionalBeliefbase();
 		bbase.parse(new BufferedReader(new StringReader(rawbbase)));
 		ConditionalReasoner bbasereasoner = new ConditionalReasoner();
-		
-		ConditionalBeliefbase rev1 = new ConditionalBeliefbase();
-		rev1.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1)));
-		ConditionalReasoner rev1reasoner = new ConditionalReasoner();
-		
-		ConditionalBeliefbase rev2 = new ConditionalBeliefbase();
-		rev2.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1 + "\n" + rawrev2)));
-		ConditionalReasoner rev2reasoner = new ConditionalReasoner();
-		
-		ConditionalBeliefbase rev3 = new ConditionalBeliefbase();
-		rev3.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1 + "\n" + rawrev2 + "\n" + rawrev3)));
-		ConditionalReasoner rev3reasoner = new ConditionalReasoner();
-		
-		ConditionalBeliefbase rev4 = new ConditionalBeliefbase();
-		rev4.parse(new BufferedReader(new StringReader(rawbbase + "\n" + rawrev1 + "\n" + rawrev2 + "\n" + rawrev3 + "\n" + rawrev4)));
-		ConditionalReasoner rev4reasoner = new ConditionalReasoner();
-		
+				
 		
 		System.out.println("Initial beliefbase:");
 		System.out.println(bbase.toString());
 		
 		System.out.println("c-representation:");
-		bbasereasoner.calculateCRepresentation(bbase);
-		RankingFunction ocf = bbasereasoner.ocf;
+		RankingFunction ocf = bbasereasoner.calculateCRepresentation(bbase.getConditionalBeliefs());
 		System.out.println(ocf);
 		
-		rev1reasoner.ocf = ocf;
-		rev2reasoner.ocf = ocf;
-		rev3reasoner.ocf = ocf;
-		rev4reasoner.ocf = ocf;
+		String fol = "a || b";
 		
-		System.out.println("\n propositions:");
-		System.out.println(rev1.getPropositions());
-		System.out.println("propositional beliefs:");
-		System.out.println(rev1reasoner.inferInt(new ReasonerParameter(rev1, null)));
 		
-		System.out.println("\n results of revision by " + rawrev2);
-		System.out.println(rev2reasoner.inferInt(new ReasonerParameter(rev2, null)));
-		
-		System.out.println("\n results of revision by " + rawrev3);
-		System.out.println(rev3reasoner.inferInt(new ReasonerParameter(rev3, null)));
-		
-		System.out.println("\n results of revision by " + rawrev4);
-		System.out.println(rev4reasoner.inferInt(new ReasonerParameter(rev4, null)));
+		FolParserB parser = new FolParserB(new StringReader(fol));
+		FolFormula formula = parser.formula(new FolSignature());
+		System.out.println(fol + " => " + formula.toString());
 		
 	}
 	
