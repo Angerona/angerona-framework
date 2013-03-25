@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import angerona.fw.def.FrameworkPlugin;
 import angerona.fw.internal.Entity;
+import angerona.fw.internal.OperatorMap;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.listener.FrameworkListener;
 import angerona.fw.listener.SimulationListener;
@@ -438,8 +439,11 @@ public class Angerona {
 				forAllFilesIn(folder, scl);
 			}
 			
-			PluginInstantiator.getInstance().addPlugins(getConfig().getPluginPaths());
-			PluginInstantiator.getInstance().registerPlugin(new FrameworkPlugin());
+			// create plugin manager classes
+			PluginInstantiator pi = PluginInstantiator.getInstance();
+			pi.addListener(OperatorMap.get());
+			pi.addPlugins(getConfig().getPluginPaths());
+			pi.registerPlugin(new FrameworkPlugin());
 			bootstrapDone = true;
 			
 			for(FrameworkListener fl : frameworkListeners) {

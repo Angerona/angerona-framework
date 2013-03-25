@@ -17,6 +17,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.view.BeliefbaseView;
 import angerona.fw.gui.view.View;
+import angerona.fw.internal.ViewFactory;
 import angerona.fw.listener.SimulationListener;
 import bibliothek.gui.Dockable;
 
@@ -27,7 +28,6 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	private DefaultTreeModel treeModel;
 	
 	private DefaultMutableTreeNode root;
-
 	
 	public SimulationTreeController(JTree tree) {
 		super(tree);
@@ -43,7 +43,7 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	private void handlerAgentComponent(AgentComponent component) {
 		String agname = component.getAgent().getName();
 		LOG.trace("Handle AgentComponent: '{}' of Agent '{}'.", agname);
-		View view = AngeronaWindow.getInstance().createViewForEntityComponent(component);
+		View view = ViewFactory.getInstance().createViewForEntityComponent(component);
 		if(view != null) {
 			Dockable dd = AngeronaWindow.getInstance().openView(view, 
 					component.getClass().getSimpleName() + " - " + agname);
@@ -87,12 +87,12 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 		/** @todo More dynamically... using plugin architecture etc. */
 		Dockable dd = null;
 		if(bb.getFileEnding().toLowerCase().equals("asp")) {
-			View view = AngeronaWindow.getInstance().createViewForEntityComponent(bb);
+			View view = ViewFactory.getInstance().createViewForEntityComponent(bb);
 			if(view != null) {
 				dd = AngeronaWindow.getInstance().openView(view, title);
 			}
 		} else {
-			BeliefbaseView bc = AngeronaWindow.getInstance().createEntityView(
+			BeliefbaseView bc = ViewFactory.getInstance().createEntityView(
 					BeliefbaseView.class, bb);
 			dd = AngeronaWindow.getInstance().openView(bc, title);
 		}

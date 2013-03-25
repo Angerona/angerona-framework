@@ -9,7 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.internal.PluginInstantiator;
+import angerona.fw.internal.OperatorMap;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
@@ -164,7 +164,6 @@ public class OperatorProvider {
 	 */
 	private Pair<String, BaseOperator> fetch(String clsNameAndParams)
 		throws ParseException, ClassNotFoundException {
-		PluginInstantiator pi = PluginInstantiator.getInstance();
 		
 		// @todo Use a basic parser for stuff like that...
 		SecretParser parser = new SecretParser(new StringReader(clsNameAndParams));
@@ -176,7 +175,7 @@ public class OperatorProvider {
 			return null;
 		}
 		
-		BaseOperator op = pi.getOperator(clsNameAndParams);
+		BaseOperator op = OperatorMap.get().getOperator(clsNameAndParams);
 		if(op == null)
 			throw new ClassNotFoundException(clsNameAndParams);
 		op.setParameters(parameters);

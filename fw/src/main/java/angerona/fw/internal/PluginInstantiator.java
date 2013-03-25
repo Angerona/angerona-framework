@@ -2,6 +2,7 @@ package angerona.fw.internal;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,26 +29,15 @@ import angerona.fw.operators.BaseOperator;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
- * 	This class collects all the implementation of the plugins and gives 
- * 	the user the ability to dynamically instantiate them.
+ * 	This class loads all the implementation of the plugins and povides 
+ * 	the ability to dynamically instantiate them.
  * 
- * 	By using listeners extensions of the angerona-core framework can define
- * 	their own plugins to load in the extension. This feature is used by the
- * 	gui-extension of Angerona.
+ * 	This is only a storage which saves the class implementations loaded by
+ * 	the plugins and provides method to instantiate those implementations.
  * 
  * 	@author Tim Janus
  */
 public class PluginInstantiator {
-	/** singleton instance */
-	private static PluginInstantiator instance;
-	
-	/** @return the only instance of the PluginInstantiator */
-	public static PluginInstantiator getInstance() {
-		if(instance == null) {
-			instance = new PluginInstantiator();
-		}
-		return instance;
-	}
 	
 	/** reference to logger implementation */
 	private Logger LOG = LoggerFactory.getLogger(PluginInstantiator.class);
@@ -61,31 +51,26 @@ public class PluginInstantiator {
 	/** the plugin manager utiltiy */
 	private PluginManagerUtil util;
 	
+	/** set of already loaded plugins */
 	private Set<AngeronaPlugin> loadedPlugins = new HashSet<>();
 	
 	/** a map of Classes defining the basis type to a set of classes defining implementations */
 	private Map<Class<?>, Set<Class<?>>> implMap = new HashMap<Class<?>, Set<Class<?>>>();
 	
-	private Map<String, BaseOperator> operatorInstanceMap = new HashMap<>();
-	
+	/** Ctor: Initializes the simple plugin framework, private to force singleton paradigm. */
+	private PluginInstantiator() {
+		implMap = createImplementationMap(null);		
+		pm = PluginManagerFactory.createPluginManager();
+		util = new PluginManagerUtil(pm);
+	}
 	
 	/** @return the utility class of the plugin API to load plugins ect. */
 	public PluginManagerUtil getPluginUtil() {
 		return util;
 	}
 	
-	/** Ctor: Initializes the simple plugin framework, private to force singleton paradigm. */
-	private PluginInstantiator() {
-		implMap.put(BaseOperator.class, new HashSet<Class<?>>());
-		implMap.put(BaseBeliefbase.class, new HashSet<Class<?>>());
-		implMap.put(BaseReasoner.class, new HashSet<Class<?>>());
-		implMap.put(BaseChangeBeliefs.class, new HashSet<Class<?>>());
-		implMap.put(BaseTranslator.class, new HashSet<Class<?>>());
-		implMap.put(AgentComponent.class, new HashSet<Class<?>>());
-		implMap.put(EnvironmentBehavior.class, new HashSet<Class<?>>());
-		
-		pm = PluginManagerFactory.createPluginManager();
-		util = new PluginManagerUtil(pm);
+	public Map<Class<?>, Set<Class<?>>> getImplementationMap() {
+		return Collections.unmodifiableMap(implMap);
 	}
 	
 	/**
@@ -149,28 +134,11 @@ public class PluginInstantiator {
 	}
 	
 	/**
-	 * Helper method: Collecting the set of all interfaces implemented by the
-	 * given class
-	 * @param cls	The class description
-	 * @return	A set containing all interfaces implemented by the given class.
-	 */
-	private Set<Class<?>> getAllInterfaces(Class<?> cls) {
-		Set<Class<?>> reval = new HashSet<>();
-		while(cls != null) {
-			for(Class<?> i : cls.getInterfaces()) {
-				reval.add(i);
-			}
-			cls = cls.getSuperclass();
-		}
-		return reval;
-	}
-	
-	/**
 	 * 	Loads the plugins for the core Angerona Framework and informs the listeners about the
 	 * 	loading. The listeners can load different plugins on their own like the gui extension:
 	 * 	It loads UI-Components to enhance the GUI with views for the data components defined
 	 * 	in different plugins.
-	 * @todo listener used to load UI Plugins, find easier concept
+	 * @todo listener used to load UI Plugins, find other concept
 	 */
 	private void loadAllPlugins() {
 		List<AngeronaPlugin> plugins = new LinkedList<AngeronaPlugin>();
@@ -178,44 +146,6 @@ public class PluginInstantiator {
 		
 		for(AngeronaPlugin plugin : plugins) {
 			registerPlugin(plugin);
-		}
-		
-		for(PluginListener pl : listeners) {
-			pl.loadingImplementations(this);
-		}
-	}
-
-	/**
-	 * Helper method: Tests if the given cls implements the BaseOperator interface
-	 * and if this is the case creates an operator instance in the operator instance
-	 * map.
-	 * @todo move in extra class.
-	 * @param cls	The cls which might be an implementation of BaseOperator
-	 */
-	private void createOperatorInstance(Class<?> cls) {
-		if( getAllInterfaces(cls).contains(BaseOperator.class) &&
-			!operatorInstanceMap.containsKey(cls.getName())) {		
-			BaseOperator op = null;
-			try {
-				op = (BaseOperator)createInstance(cls.getName());
-				operatorInstanceMap.put(cls.getName(), op);
-			} catch (InstantiationException|IllegalAccessException e) {
-				e.printStackTrace();
-				LOG.error("Cannot instantiate '{}': '{}'", cls.getName(), e.getMessage());
-			}
-		}
-	}
-	
-	/**
-	 * Tests if the given class implements the BaseOperator interface and if this
-	 * is the case destroy the operator instance in the operator instance map.
-	 * @todo move operator instance map in own class
-	 * @param cls
-	 */
-	private void destroyOperatorInstance(Class<?> cls) {
-		if( getAllInterfaces(cls).contains(BaseOperator.class) &&
-			operatorInstanceMap.containsKey(cls.getName())) {		
-			operatorInstanceMap.remove(cls.getName());
 		}
 	}
 
@@ -227,16 +157,22 @@ public class PluginInstantiator {
 	 */
 	public void registerPlugin(AngeronaPlugin plugin) {
 		if(!loadedPlugins.contains(plugin)) {
-			Map<Class<?>, List<Class<?>>> temp = createTemporaryPluginMap(plugin);
+			for(PluginListener listener : listeners) {
+				listener.loadingPlugin(plugin);
+			}
+			
+			Map<Class<?>, Set<Class<?>>> temp = createImplementationMap(plugin);
 
 			for(Class<?> base : temp.keySet()) {
 				for(Class<?> impl : temp.get(base)) {
 					register(base, impl);
-					createOperatorInstance(impl);
 				}
 			}
 			
 			loadedPlugins.add(plugin);
+			for(PluginListener listener : listeners) {
+				listener.loadedPlugin(plugin);
+			}
 			LOG.info("Plugin '{}' loaded", plugin.getClass().getName());
 		} else {
 			LOG.warn("Plugin '{}' already loaded", plugin.getClass().getName());
@@ -251,12 +187,19 @@ public class PluginInstantiator {
 	 */
 	public void unregisterPlugin(AngeronaPlugin plugin) {
 		if(loadedPlugins.contains(plugin)) {
-			Map<Class<?>, List<Class<?>>> temp = createTemporaryPluginMap(plugin);
+			for(PluginListener listener : listeners) {
+				listener.unloadingPlugin(plugin);
+			}
+			
+			Map<Class<?>, Set<Class<?>>> temp = createImplementationMap(plugin);
 			for(Class<?> base : temp.keySet()) {
 				for(Class<?> impl : temp.get(base)) {
 					unregister(base, impl);
-					destroyOperatorInstance(impl);
 				}
+			}
+			
+			for(PluginListener listener : listeners) {
+				listener.unloadedPlugin(plugin);
 			}
 		}
 	}
@@ -269,6 +212,7 @@ public class PluginInstantiator {
 	 */
 	private void register(Class<?> base, Class<?> impl) {
 		implMap.get(base).add(impl);
+		onRegistered(base, impl);
 		LOG.info("Registered Implementation '{}' for '{}'.", impl.getName(), base.getName());
 	}
 	
@@ -280,43 +224,69 @@ public class PluginInstantiator {
 	 */
 	private void unregister(Class<?> base, Class<?> impl) {
 		implMap.get(base).remove(impl);
+		onUnregistered(base, impl);
 		LOG.info("Unregistered implementation '{}' for '{}'", impl.getName(), base.getName());
+	}
+
+	/** 
+	 * Helper method invokes the listeners and informs them about the unregistration of
+	 * the implementation.
+	 * @param base
+	 * @param impl
+	 */
+	protected void onUnregistered(Class<?> base, Class<?> impl) {
+		for(PluginListener listener : listeners) {
+			listener.implementationUnregistered(base, impl);
+		}
+	}
+	
+	/** 
+	 * Helper method invokes the listeners and informs them about the registration of
+	 * the implementation.
+	 * @param base
+	 * @param impl
+	 */
+	protected void onRegistered(Class<?> base, Class<?> impl) {
+		for(PluginListener listener : listeners) {
+			listener.implementationRegistered(base, impl);
+		}
 	}
 	
 	/**
 	 * Helper method: creates a temporary map from base classes to implementation for use in
 	 * the registerPlugin() and unregisterPlugin() methods.
-	 * @param plugin	The plugin acting as data basis for the map
-	 * @return			A map containg a mapping between base classes to implementations for the
-	 * 					given plugin.
+	 * @param plugin	The plugin acting as data basis for the map, might be null then the returned
+	 * 					map only contains empty sets for the implementations.
+	 * @return			A map containg a mapping between base classes to implementations.
 	 */
-	private Map<Class<?>, List<Class<?>>> createTemporaryPluginMap(
+	private Map<Class<?>, Set<Class<?>>> createImplementationMap(
 			AngeronaPlugin plugin) {
-		Map<Class<?>, List<Class<?>>> temp = new HashMap<Class<?>, List<Class<?>>>();
-		temp.put(AgentComponent.class, new LinkedList<Class<?>>(plugin.getAgentComponentImpl()));
+		Map<Class<?>, Set<Class<?>>> temp = new HashMap<Class<?>, Set<Class<?>>>();
+		temp.put(AgentComponent.class, new HashSet<Class<?>>());
 		
-		temp.put(BaseBeliefbase.class, new LinkedList<Class<?>>(plugin.getBeliefbaseImpl()));
-		temp.put(BaseReasoner.class, new LinkedList<Class<?>>(plugin.getReasonerImpl()));
-		temp.put(BaseChangeBeliefs.class, new LinkedList<Class<?>>(plugin.getChangeImpl()));
-		temp.put(BaseTranslator.class, new LinkedList<Class<?>>(plugin.getTranslatorImpl()));
+		temp.put(BaseBeliefbase.class, new HashSet<Class<?>>());
+		temp.put(BaseReasoner.class, new HashSet<Class<?>>());
+		temp.put(BaseChangeBeliefs.class, new HashSet<Class<?>>());
+		temp.put(BaseTranslator.class, new HashSet<Class<?>>());
 		
-		temp.put(BaseOperator.class, new LinkedList<Class<?>>(plugin.getOperators()));
+		temp.put(BaseOperator.class, new HashSet<Class<?>>());
 		
-		temp.put(EnvironmentBehavior.class, new LinkedList<Class<?>>(plugin.getEnvironmentBehaviors()));
+		temp.put(EnvironmentBehavior.class, new HashSet<Class<?>>());
+		
+		if(plugin != null) {
+			temp.get(AgentComponent.class).addAll(plugin.getAgentComponentImpl());
+			
+			temp.get(BaseBeliefbase.class).addAll(plugin.getBeliefbaseImpl());
+			temp.get(BaseReasoner.class).addAll(plugin.getReasonerImpl());
+			temp.get(BaseChangeBeliefs.class).addAll(plugin.getChangeImpl());
+			temp.get(BaseTranslator.class).addAll(plugin.getTranslatorImpl());
+			
+			temp.get(BaseOperator.class).addAll(plugin.getOperators());
+			
+			temp.get(EnvironmentBehavior.class).addAll(plugin.getEnvironmentBehaviors());
+		}
 		return temp;
 	}
-	
-	/**
-	 * @param fullJavaClsName The full java class name of the operator class which shall be returned
-	 * @return	The operator with the given class name or null if it does not exists.
-	 */
-	public BaseOperator getOperator(String fullJavaClsName) {
-		if(operatorInstanceMap.containsKey(fullJavaClsName)) {
-			return operatorInstanceMap.get(fullJavaClsName);
-		}
-		return null;
-	}
-	
 
 	/**
 	 * creates a new instance of a belief base.
@@ -416,5 +386,16 @@ public class PluginInstantiator {
 		
 		throw new InstantiationException("Cannot find Sub-Type " + className + 
 				" of " + baseType.getName() +  " in the plugins.");
+	}
+	
+	/** singleton instance */
+	private static PluginInstantiator instance;
+	
+	/** @return the only instance of the PluginInstantiator */
+	public static PluginInstantiator getInstance() {
+		if(instance == null) {
+			instance = new PluginInstantiator();
+		}
+		return instance;
 	}
 }
