@@ -8,17 +8,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
+import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
 import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
 import net.sf.tweety.logics.propositionallogic.syntax.Disjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
+import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.DefendingAgent.View;
 import angerona.fw.DefendingAgent.Prover.Prover;
+import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.conditional.ConditionalBeliefbase;
 
 /**
@@ -40,6 +44,36 @@ public class CensorComponent extends BaseAgentComponent {
 	
 	public CensorComponent() {
 		super();
+	}
+	
+	public static void main(String[] args) {
+		CensorComponent cexec = new CensorComponent();
+		
+		// Logistics example - test klm solver
+		PlBeliefSet beliefs = new PlBeliefSet();
+		beliefs.add(new Proposition("d11"));
+		beliefs.add(new Proposition("s21"));
+		beliefs.add(new Proposition("i11_22"));
+		
+		
+		// Build View
+		View v = new View(beliefs);
+		
+		FolFormula d11 = new Atom(new Predicate("d11"));
+		FolFormula s21 = new Atom(new Predicate("s21"));
+		FolFormula not_s21 = new net.sf.tweety.logics.firstorderlogic.syntax.Negation(s21);
+		FolFormula r = new Atom(new Predicate("r"));
+		FolFormula s21_r = new net.sf.tweety.logics.firstorderlogic.syntax.Disjunction(not_s21, r); 
+		
+		v.RefineViewByQuery(d11, AnswerValue.AV_UNKNOWN);
+		v.RefineViewByQuery(s21_r, AnswerValue.AV_TRUE);
+		v.RefineViewByRevision(s21, AnswerValue.AV_TRUE);
+		
+		String[] CL_V = cexec.makeBeliefBase(v);
+		PropositionalFormula plprove = new Disjunction(new Negation(new Tautology()), new Contradiction());
+		
+		Prover prover = new Prover();
+		System.out.println("Prover: "+prover.prove(CL_V, cexec.translate(plprove), cexec.solver));
 	}
 	
 	public CensorComponent(Prover.Solver solver) {
