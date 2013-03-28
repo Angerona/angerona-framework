@@ -95,7 +95,7 @@ public class Prover {
 			 * language
 			 */
 			String kBaseList = new String("[");
-			for (int i = 0; i < 32; i++) {
+			for (int i = 0; i < kFormulas.length; i++) {
 				String currentFormula = this.kFormulas[i];
 				if (currentFormula.length() > 0)
 					kBaseList = kBaseList + currentFormula + ",";
@@ -115,12 +115,12 @@ public class Prover {
 			String toProveList = new String("[" + this.formulaToProve + "]");
 
 			goal = new String("parseinput(" + toProveList + ").");
+			System.out.println("GOAL: "+goal);
 			q = sp.openPrologQuery(goal, map);
 			if (!(q.nextSolution())) {
 				System.err
 						.println("Error in the formula to prove: you cannot use nested conditionals");
 			}
-
 			/*
 			 * Step 3: finding a derivation of the formula from the knowledge
 			 * base by using the calculi for KLM logics
@@ -128,6 +128,7 @@ public class Prover {
 
 			goal = new String("unsatinterface(" + kBaseList + "," + toProveList
 					+ ",Tree).");
+			System.out.println("kbaselist:" + kBaseList);
 			q = sp.openPrologQuery(goal, map);
 			if (q.nextSolution()) {
 				// Success

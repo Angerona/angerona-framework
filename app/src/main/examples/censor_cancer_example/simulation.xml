@@ -21,9 +21,7 @@
 			 * RATIONAL - Rational logic, 
 			 * FREE_RATIONAL - Rational logic with free variables
          -->
-        <data key="KLMSemantics">
-        FREE_RATIONAL
-        </data>
+        <data key="KLMSemantics">RATIONAL</data>
   	
       	<capability>Answer</capability>
       	<capability>RevisionAnswer</capability>

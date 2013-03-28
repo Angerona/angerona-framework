@@ -1,5 +1,6 @@
 package angerona.fw.DefendingAgent;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -40,19 +42,30 @@ public class CensorComponent extends BaseAgentComponent {
 	private static Logger LOG = LoggerFactory
 			.getLogger(CensorComponent.class);
 	
-	private Prover.Solver solver = Prover.Solver.FREE_RATIONAL;
+	private Prover.Solver solver = Prover.Solver.RATIONAL;
 	
 	public CensorComponent() {
 		super();
 	}
 	
 	public static void main(String[] args) {
-		CensorComponent cexec = new CensorComponent();
+		LogicalSymbols.setContradictionSymbol("!");
+		LogicalSymbols.setClassicalNegationSymbol("-");
 		
+		CensorComponent cexec = new CensorComponent();
+		File directory = new File (".");
+		 try {
+		 System.out.println ("Current directory's canonical path: " 
+		  + directory.getCanonicalPath()); 
+		   System.out.println ("Current directory's absolute  path: " 
+		  + directory.getAbsolutePath());
+		 }catch(Exception e) {
+		 System.out.println("Exceptione is ="+e.getMessage());
+		  }
 		// Logistics example - test klm solver
 		PlBeliefSet beliefs = new PlBeliefSet();
 		beliefs.add(new Proposition("d11"));
-		beliefs.add(new Proposition("s21"));
+//		beliefs.add(new Proposition("s21"));
 		beliefs.add(new Proposition("i11_22"));
 		
 		
@@ -65,15 +78,18 @@ public class CensorComponent extends BaseAgentComponent {
 		FolFormula r = new Atom(new Predicate("r"));
 		FolFormula s21_r = new net.sf.tweety.logics.firstorderlogic.syntax.Disjunction(not_s21, r); 
 		
-		v.RefineViewByQuery(d11, AnswerValue.AV_UNKNOWN);
-		v.RefineViewByQuery(s21_r, AnswerValue.AV_TRUE);
-		v.RefineViewByRevision(s21, AnswerValue.AV_TRUE);
+		v = v.RefineViewByQuery(s21, AnswerValue.AV_UNKNOWN);
+		v = v.RefineViewByQuery(s21_r, AnswerValue.AV_FALSE);
+//		v = v.RefineViewByRevision(s21, AnswerValue.AV_TRUE);
+		System.out.println("View:" +v);
 		
 		String[] CL_V = cexec.makeBeliefBase(v);
 		PropositionalFormula plprove = new Disjunction(new Negation(new Tautology()), new Contradiction());
+		String toProve = cexec.translate(plprove);
+		toProve = "(true => false)";
 		
 		Prover prover = new Prover();
-		System.out.println("Prover: "+prover.prove(CL_V, cexec.translate(plprove), cexec.solver));
+		System.out.println("Prover: "+prover.prove(CL_V, toProve, cexec.solver));
 	}
 	
 	public CensorComponent(Prover.Solver solver) {
@@ -110,9 +126,9 @@ public class CensorComponent extends BaseAgentComponent {
 		// there is a possible consequence relation for a view V iff "true -> false" does not
 		// follow from CL(V)
 		String[] knowledgeBase = this.makeBeliefBase(view);
-		PropositionalFormula contradiction = new Disjunction(new Negation(new Tautology()), new Contradiction());
+//		PropositionalFormula contradiction = new Disjunction(new Negation(new Tautology()), new Contradiction());
 		Prover p = new Prover();
-		return ! p.prove(knowledgeBase, translate(contradiction), solver);
+		return ! p.prove(knowledgeBase, "(true => false)", solver);
 	}
 	
 	/**
@@ -122,12 +138,12 @@ public class CensorComponent extends BaseAgentComponent {
 	 * @return a String[] that represent the approximation of the knowledge of the attacking agent
 	 * @see[1] Biskup, Joachim and Tadros, Cornelia. Revising Belief without Revealing Secrets
 	 */
-	private String[] makeBeliefBase(View v){
+	public String[] makeBeliefBase(View v){
 		Set<Conditional> positiveConditionalBeliefs = v.getPositiveConditionalBeliefs();
 		Set<Conditional> negativeConditionalBeliefs = v.getNegativeConditionalBeliefs();
 		PlBeliefSet beliefSet = v.getBeliefSet();
 		int n = 0, i=0;
-		n += positiveConditionalBeliefs.size() + negativeConditionalBeliefs.size() + beliefSet.size();
+		n += positiveConditionalBeliefs.size() + negativeConditionalBeliefs.size() + (beliefSet.isEmpty() ? 0 : 1);
 		String[] beliefBase = new String[n];
 		for(Conditional a: positiveConditionalBeliefs){
 			beliefBase[i] = translate(a.getPremise()) + "=>" + translate(a.getConclusion());
@@ -137,9 +153,12 @@ public class CensorComponent extends BaseAgentComponent {
 			beliefBase[i] = "neg ("+ translate(a.getPremise()) + "=>" + translate(a.getConclusion()) +")";
 			i++;
 		}
-		for(PropositionalFormula a: beliefSet){
-			beliefBase[i] = "neg (" + translate(a) + "=> false)";
-			i++;
+		if(!beliefSet.isEmpty()) {
+			beliefBase[i] = "neg (";
+			for(PropositionalFormula a: beliefSet){
+				beliefBase[i] += translate(a) + " and ";
+			}
+			beliefBase[i] = beliefBase[i].substring(0, beliefBase[i].length()-5) + " => false)";
 		}
 		return beliefBase;
 	}
@@ -152,7 +171,7 @@ public class CensorComponent extends BaseAgentComponent {
 	 * @return a String where the operators are changed to "or" "and" "neg" and the formulas are 
 	 * Connected with "and"
 	 */
-	private String translate(Collection<PropositionalFormula> formulas){
+	public String translate(Collection<PropositionalFormula> formulas){
 		String result = "";
 		for(PropositionalFormula a : formulas){
 			if(result.equalsIgnoreCase("")){
@@ -171,16 +190,14 @@ public class CensorComponent extends BaseAgentComponent {
 	 * 	the PropositionalFormula to translate
 	 * @return a String where the operators are changed to "or" "and" "neg"
 	 */
-	private String translate(PropositionalFormula formula){
+	public String translate(PropositionalFormula formula){
 		String result = formula.toString();
 
-		result.replaceAll("\\|\\|", "or");
-		result.replaceAll("\\&\\&", " and ");
-
-		// TODO: i'm not sure if the prolog-parser understands true and false ... 
-		result.replaceAll("-", " neg ");
-		result.replaceAll("\\+", " true ");
-		result.replaceAll("!", " false ");
+		result = result.replaceAll("\\|\\|", " or ");
+		result = result.replaceAll("\\&\\&", " and ");
+		result = result.replaceAll("-", " neg ");
+		result = result.replaceAll("\\+", " true ");
+		result = result.replaceAll("!", " false ");
 		
 		return "( "+ result +" )";
 	}
@@ -192,14 +209,14 @@ public class CensorComponent extends BaseAgentComponent {
 	 * 	the FolFormula to translate
 	 * @return a String where the operators are changed to "or" "and" "neg"
 	 */
-	private String translate(FolFormula formula){
+	public String translate(FolFormula formula){
 		String result = formula.toString();
 		//change || to or
-		result.replaceAll("\\|\\|", "or");
-		result.replaceAll("\\&\\&", " and ");
-		result.replaceAll("-", " neg ");
-		result.replaceAll("+", " true ");
-		result.replaceAll("!", " false ");
+		result = result.replaceAll("\\|\\|", " or ");
+		result = result.replaceAll("\\&\\&", " and ");
+		result = result.replaceAll("-", " neg ");
+		result = result.replaceAll("\\+", " true ");
+		result = result.replaceAll("!", " false ");
 		
 		return "( "+ result +" )";
 	}
