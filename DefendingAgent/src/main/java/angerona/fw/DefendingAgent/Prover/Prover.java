@@ -141,7 +141,9 @@ public class Prover {
 			}
 
 		} catch (Exception choosingKLM) {
-			System.out.println("\nERROR connecting to SICStus Prolog engine");
+			
+			System.out.println("\nERROR SICStus Prolog engine");
+			choosingKLM.printStackTrace();
 		}
 		return false;
 
