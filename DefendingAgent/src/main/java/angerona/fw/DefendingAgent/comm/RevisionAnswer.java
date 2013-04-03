@@ -28,15 +28,15 @@ public class RevisionAnswer extends Answer {
 	}
 	
 	public RevisionAnswer(Agent sendingAgent, String receiverId, FolFormula regarding, AnswerValue av) {
-		super(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, av));
+		super(sendingAgent, receiverId, regarding, new AngeronaAnswer(regarding, av));
 	}
 	
 	public RevisionAnswer(Agent sendingAgent, String receiverId, FolFormula regarding, FolFormula answer) {
-		super(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, answer));
+		super(sendingAgent, receiverId, regarding, new AngeronaAnswer(regarding, answer));
 	}
 	
 	public RevisionAnswer(Agent sendingAgent, String receiverId, FolFormula regarding, Set<FolFormula> answers) {
-		super(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, answers));
+		super(sendingAgent, receiverId, regarding, new AngeronaAnswer(regarding, answers));
 	}
 
 }

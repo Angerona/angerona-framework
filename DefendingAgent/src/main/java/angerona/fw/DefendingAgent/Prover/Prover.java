@@ -60,7 +60,7 @@ public class Prover {
 		try {
 			if (sp == null) {
 				/* Instantiating a SICStus object */
-				sp = new SICStus();
+					sp = new SICStus();
 			}
 			/* Parameter 1 determines the KLM logic to consider */
 			switch (chooseSolver) {

@@ -465,7 +465,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 					av = AnswerValue.AV_TRUE;
 				}
 				
-				aa = new AngeronaAnswer(aa.getKnowledgeBase(), aa.getQueryFOL(), av);
+				aa = new AngeronaAnswer(aa.getQueryFOL(), av);
 			}
 		}
 		

@@ -30,7 +30,7 @@ public class ExampleReasoner extends BaseReasoner {
 		boolean b = bb.fbs.contains(params.getQuery());
 		AnswerValue ae = b ? AnswerValue.AV_TRUE : AnswerValue.AV_FALSE;
 		
-		return new Pair<Set<FolFormula>, AngeronaAnswer>(new HashSet<FolFormula>(), new AngeronaAnswer(bb, params.getQuery(), ae));
+		return new Pair<Set<FolFormula>, AngeronaAnswer>(new HashSet<FolFormula>(), new AngeronaAnswer(params.getQuery(), ae));
 	}
 
 	@Override

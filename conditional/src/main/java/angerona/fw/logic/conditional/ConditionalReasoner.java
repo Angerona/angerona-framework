@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
-import net.sf.tweety.logics.commons.ClassicalFormula;
 import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
 import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
@@ -134,7 +133,7 @@ public class ConditionalReasoner extends BaseReasoner {
 			}
 		}
 		Set<FolFormula> answers = new HashSet<FolFormula>();
-		return new Pair<>(answers, new AngeronaAnswer(params.getBeliefBase(), params.getQuery(), answer));
+		return new Pair<>(answers, new AngeronaAnswer(params.getQuery(), answer));
 	}
 
 	@Override

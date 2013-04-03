@@ -7,7 +7,6 @@ import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
-import angerona.fw.operators.parameter.ReasonerParameter;
 import angerona.fw.parser.ParseException;
 
 

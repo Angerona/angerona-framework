@@ -4,8 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Answer;
-import net.sf.tweety.BeliefBase;
+import net.sf.tweety.Formula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 /**
@@ -20,7 +19,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
  * @author Tim Janus
  * @author Daniel Dilger
  */
-public class AngeronaAnswer extends Answer {
+public class AngeronaAnswer {
 
 	/** representation of the answer as a enumeration (true,false,unknown,reject or complex) */
 	private AnswerValue answerValue;
@@ -29,41 +28,38 @@ public class AngeronaAnswer extends Answer {
 	private Set<FolFormula> answers;
 	
 	/**
+	 * The original query for this answer.
+	 */
+	private Formula query;
+	
+	/**
 	 * Ctor: Generates an answer for the given query on the given belief base with the default answer-value false.
-	 * @param beliefBase	the belief base used for performing the query
 	 * @param query			the formula representing the query.
 	 */
-	public AngeronaAnswer(BeliefBase beliefBase, FolFormula query) {
-		this(beliefBase, query, AnswerValue.AV_FALSE);
+	public AngeronaAnswer(FolFormula query) {
+		this(query, AnswerValue.AV_FALSE);
 	}
 	
 	/**
 	 * Ctor: Generates an answer for the given query on the given belief base with the given answer-value.
-	 * @param beliefBase	the belief base used for performing the query.
 	 * @param query			the formula representing the query.
 	 * @param av			the AnswerValue representing the value of the Answer.
 	 */
-	public AngeronaAnswer(BeliefBase beliefBase, FolFormula query, AnswerValue av) {
-		super(beliefBase, query);
+	public AngeronaAnswer(FolFormula query, AnswerValue av) {
 		setAnswer(av);
+		this.query = query;
 	}
 	
-	public AngeronaAnswer(BeliefBase beliefBase, FolFormula query, FolFormula answer) {
-		super(beliefBase, query);
+	public AngeronaAnswer(FolFormula query, FolFormula answer) {
 		Set<FolFormula> answers = new HashSet<>();
 		answers.add(answer);
 		setAnswer(answers);
+		this.query = query;
 	}
 	
-	public AngeronaAnswer(BeliefBase beliefBase, FolFormula query, Set<FolFormula> formulas) {
-		super(beliefBase, query);
+	public AngeronaAnswer(FolFormula query, Set<FolFormula> formulas) {
 		setAnswer(formulas);
-	}
-	
-	/** helper method: Sets the other value types (boolean and double) */
-	private void updateValues(boolean internal) {
-		this.setAnswer(internal);
-		this.setAnswer(internal ? 1.0 : 0.0);
+		this.query = query;
 	}
 	
 	public void setAnswer(AnswerValue av) {
@@ -71,7 +67,6 @@ public class AngeronaAnswer extends Answer {
 			throw new IllegalArgumentException("Use the setAnswer method with the formula set as parameter for complex answer-values.");
 		}
 		this.answerValue = av;
-		updateValues(av == AnswerValue.AV_TRUE);
 	}
 	
 	public void setAnswer(Set<FolFormula> formulas) {
@@ -80,7 +75,14 @@ public class AngeronaAnswer extends Answer {
 		}
 		answers = new HashSet<>(formulas);
 		this.answerValue = AnswerValue.AV_COMPLEX;
-		updateValues(!formulas.isEmpty());
+	}
+	
+	/**
+	 * Returns the query this answer relates to.
+	 * @return the query this answer relates to.
+	 */
+	public Formula getQuery(){
+		return this.query;
 	}
 	
 	public FolFormula getQueryFOL() {

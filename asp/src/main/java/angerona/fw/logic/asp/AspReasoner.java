@@ -88,8 +88,7 @@ public class AspReasoner extends BaseReasoner {
 	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {		
 		Set<FolFormula> answers = inferInt(params);
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
-				
-		AspBeliefbase bb = (AspBeliefbase)params.getBeliefBase();
+
 		FolFormula query = params.getQuery();
 		if(query.isGround()) {
 			// Check if the inferred answer-set contains the query or its
@@ -99,7 +98,7 @@ public class AspReasoner extends BaseReasoner {
 			} else if (answers.contains(new Negation(query))) {
 				av = AnswerValue.AV_FALSE;
 			}
-			return new Pair<>(answers, new AngeronaAnswer(bb, query, av));
+			return new Pair<>(answers, new AngeronaAnswer(query, av));
 		} else {
 			// Find all answers with the same predicate like the query.
 			Predicate queryPred = null;
@@ -130,7 +129,7 @@ public class AspReasoner extends BaseReasoner {
 					realAnswers.add(answer);
 				}
 			}
-			return new Pair<>(answers, new AngeronaAnswer(bb, query, realAnswers));
+			return new Pair<>(answers, new AngeronaAnswer(query, realAnswers));
 		}
 	}
 	
