@@ -60,12 +60,12 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			Set<Desire> currentDesires;
 			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareQueryProcessing);
 			for(Desire d : currentDesires) {
-				processQuery(d, pp, ag);
+				reval = reval || processQuery(d, pp, ag);
 			}
 			
 			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareRevisionProcessing);
 			for(Desire d : currentDesires) {
-				processRevision(d, pp, ag);
+				reval = reval || processRevision(d, pp, ag);
 			}
 		}
 		return reval;
@@ -80,7 +80,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param pp
 	 * @param ag
 	 */
-	public void processQuery(Desire desire, PlanParameter pp, Agent ag) {
+	public boolean processQuery(Desire desire, PlanParameter pp, Agent ag) {
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Query query = (Query) desire.getPerception();
@@ -102,7 +102,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				ag.getPlanComponent().addPlan(answerGoal);
 				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
-				return;
+				return true;
 			}
 			//ans := false
 			if(cexec.poss(view
@@ -115,7 +115,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				ag.getPlanComponent().addPlan(answerGoal);
 				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
-				return;
+				return true;
 			}
 			//ans := undef
 			if(cexec.poss(view
@@ -128,7 +128,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				ag.getPlanComponent().addPlan(answerGoal);
 				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
-				return;
+				return true;
 			}
 		}
 		// no secret will be revealed by any possible answer to the query.
@@ -146,6 +146,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
+		return true;
 	}
 
 	/**
@@ -157,7 +158,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param pp
 	 * @param ag
 	 */
-	public void processRevision(Desire desire, PlanParameter pp, Agent ag) {
+	public boolean processRevision(Desire desire, PlanParameter pp, Agent ag) {
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Revision revision = (Revision) desire.getPerception();
@@ -174,7 +175,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 						ag.getPlanComponent().addPlan(answerGoal);
 						pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 								"' to the plan", ag.getPlanComponent());
-						return;
+						return true;
 			}
 		}
 		if(cexec.poss(view
@@ -187,7 +188,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					ag.getPlanComponent().addPlan(answerGoal);
 					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 							"' to the plan", ag.getPlanComponent());
-					return;
+					return true;
 			}else{
 				for(Secret a : conf.getTargets()){
 					if(cexec.skepticalInference(view
@@ -198,7 +199,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 								ag.getPlanComponent().addPlan(answerGoal);
 								pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 										"' to the plan", ag.getPlanComponent());
-								return;
+								return true;
 							}
 					}
 			}
@@ -236,6 +237,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		ag.getPlanComponent().addPlan(answerGoal);
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
+		return true;
 	}
 	
 	
