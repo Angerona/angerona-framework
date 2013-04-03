@@ -225,6 +225,30 @@
                <value>${basedir}/target</value>
            </configuration>
        </plugin>
+       
+       <plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-resources-plugin</artifactId>
+   <version>2.5</version>
+   <executions>
+    <execution>
+            <id>Copy KLM-Files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${basedir}/target/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+    </execution>
+   </executions>
+  </plugin>
       
     </plugins>
     
