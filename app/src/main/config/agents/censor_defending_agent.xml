@@ -23,7 +23,7 @@
    	</operation-set>
 	
 	<component>angerona.fw.logic.Desires</component>
-	<component>angerona.fw.logic.SecrecyKnowledge</component>
+	<component>angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
     <component>angerona.fw.PlanComponent</component>
     <component>angerona.fw.DefendingAgent.ViewComponent</component>
     <component>angerona.fw.DefendingAgent.CensorComponent</component>
