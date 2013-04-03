@@ -88,6 +88,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View view = ag.getComponent(ViewComponent.class).getView(query.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		
+		pp.report("Check all possible answers to query request");
+		
 		// check for all possible answers to the query, whether this answer would
 		// potentially reveal a secret and in that case, refuse to answer.
 		for(Secret a : conf.getTargets()){
@@ -100,6 +102,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
+				pp.report("Answer 'true' would reveal secret " + a + ". reject the query.");
 				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
@@ -113,6 +116,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
+				pp.report("Answer 'false' would reveal secret " + a + ". reject the query.");
+				
 				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
@@ -126,11 +131,15 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
+				pp.report("Answer 'unknown' would reveal secret " + a + ". reject the query.");
+				
 				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
 			}
 		}
+		pp.report("No answer to query '"+ query.getQuestion() + " would reveal a secret. Start actual handling.");
+		
 		// no secret will be revealed by any possible answer to the query.
 		// handle the query and create an appropriate answer action.
 		AnswerValue answerValue;
@@ -165,6 +174,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View view = ag.getComponent(ViewComponent.class).getView(revision.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		
+		pp.report("Check all possible answers to revision request");
+		
 		// check for each secret whether it might be revealed by this revision operation
 		for(Secret a : conf.getTargets()){
 			if(cexec.skepticalInference(view
@@ -173,6 +184,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 						Subgoal answerGoal = new Subgoal(ag, desire);
 						answerGoal.newStack(answer);
 						ag.getPlanComponent().addPlan(answerGoal);
+						pp.report("Answer 'true' would reveal secret " + a + ". reject the revision.");
 						pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 								"' to the plan", ag.getPlanComponent());
 						return true;
@@ -186,6 +198,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
 					ag.getPlanComponent().addPlan(answerGoal);
+					pp.report("Attacker already knows that revision is not even possible. Answer 'false'.");
 					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 							"' to the plan", ag.getPlanComponent());
 					return true;
@@ -197,6 +210,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 								Subgoal answerGoal = new Subgoal(ag, desire);
 								answerGoal.newStack(answer);
 								ag.getPlanComponent().addPlan(answerGoal);
+								pp.report("Answer 'false' would reveal secret " + a + ". reject the revision.");
 								pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 										"' to the plan", ag.getPlanComponent());
 								return true;
@@ -204,7 +218,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					}
 			}
 		}
-		
+		pp.report("No answer would reveal a secret. Comence revision.");
 		// revision would not breach confidentiality, continue revising beliefbase
 		AnswerValue answerValue = AnswerValue.AV_FALSE;
 		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();
@@ -222,9 +236,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		if(success) {
-
+			pp.report("Revision successfull.");
 			bbase.addKnowledge(revision.getProposition());
 			answerValue = AnswerValue.AV_TRUE;
+		} else {
+			pp.report("Revision not successfull.");
 		}
 		
 		// refine view on the attacking agent

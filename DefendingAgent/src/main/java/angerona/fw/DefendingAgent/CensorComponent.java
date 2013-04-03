@@ -48,6 +48,7 @@ public class CensorComponent extends BaseAgentComponent {
 		super();
 	}
 	
+	// for testing purposes only. 
 	public static void main(String[] args) {
 		LogicalSymbols.setContradictionSymbol("!");
 		LogicalSymbols.setClassicalNegationSymbol("-");
