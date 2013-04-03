@@ -26,6 +26,7 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
+import angerona.fw.util.LogicTranslator;
 import angerona.fw.util.Pair;
 
 /**
@@ -122,8 +123,8 @@ public class ConditionalReasoner extends BaseReasoner {
 			// premise is considered impossible, everything can be concluded
 			answer = AnswerValue.AV_TRUE;
 		} else {
-			Formula AandB = conjunction.combineWithAnd(params.getQuery());
-			Formula AandNotB = conjunction.combineWithAnd(params.getQuery().complement());
+			Formula AandB = conjunction.combineWithAnd(LogicTranslator.FoToPl(params.getQuery()));
+			Formula AandNotB = conjunction.combineWithAnd(LogicTranslator.FoToPl(params.getQuery().complement()));
 			Integer rankAandB = ocf.rank(AandB);
 			Integer rankAandNotB = ocf.rank(AandNotB);
 			if(rankAandB < rankAandNotB) {

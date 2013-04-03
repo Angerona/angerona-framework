@@ -1,4 +1,7 @@
-package angerona.fw.DefendingAgent;
+package angerona.fw.util;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
@@ -15,6 +18,13 @@ import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
  *
  */
 public class LogicTranslator {
+	
+	/**
+	 * Translates a closed first order formula with zero-arity predicates to propositional formula.
+	 * Treats predicates with non-zero arity as zero-arity!
+	 * @param formula
+	 * @return formula in propositional syntax
+	 */
 	public static PropositionalFormula FoToPl(RelationalFormula formula) {
 		
 		if(formula instanceof Atom) {
@@ -40,5 +50,19 @@ public class LogicTranslator {
 			return result;
 		}
 		return null;
+	}
+	
+	/**
+	 * Translates a set of closed first order formulae with zero-arity predicates to propositional formulae.
+	 * Treats predicates with non-zero arity as zero-arity!
+	 * @param formulas
+	 * @return formulae in propositional syntax
+	 */
+	public static Set<PropositionalFormula> FoToPl(Set<RelationalFormula> formulas) {
+		HashSet<PropositionalFormula> result = new HashSet<PropositionalFormula>();
+		for(RelationalFormula formula : formulas) {
+			result.add(FoToPl(formula));
+		}
+		return result;
 	}
 }
