@@ -1,7 +1,6 @@
 package angerona.fw.logic.asp;
 
 import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
-import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,7 @@ public class AspRevision extends BaseChangeBeliefs {
 	protected BaseBeliefbase processInternal(
 			ChangeBeliefbaseParameter param) {
 		LOG.info("Perform ASPRevison as change.");
-		PreferenceHandling pf = new PreferenceHandling();
+		PreferenceHandling pf = new PreferenceHandling(wrapper.getSolver());
 		if(! (param.getSourceBeliefBase() instanceof AspBeliefbase))
 			throw new RuntimeException("Error: Beliefbase must be of type asp");
 		AspBeliefbase bb = (AspBeliefbase)param.getSourceBeliefBase();
@@ -52,12 +51,7 @@ public class AspRevision extends BaseChangeBeliefs {
 		
 		AspBeliefbase newK = (AspBeliefbase)param.getNewKnowledge();
 		
-		try {			
-			bb.setProgram(pf.revision(bb.getProgram(), newK.getProgram(), 
-					wrapper.getSolver()));
-		} catch (SolverException e) {
-			e.printStackTrace();
-		} 
+		bb.setProgram(pf.revise(bb.getProgram(), newK.getProgram()));
 		
 		return bb;
 	}

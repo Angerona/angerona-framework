@@ -70,7 +70,7 @@ public class KnowhowView extends EntityView<KnowhowBase>
 		stmtListModel.addElement("and ELP");
 		stmtListModel.addElement("---");
 		
-		for(Rule r : pair.first.getRules()) {
+		for(Rule r : pair.first) {
 			stmtListModel.addElement(r.toString());
 		}
 	}

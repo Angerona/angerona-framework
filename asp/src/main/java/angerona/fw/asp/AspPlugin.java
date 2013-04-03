@@ -73,27 +73,27 @@ public class AspPlugin extends AngeronaPluginAdapter
 		Rule r = new Rule();
 		r.addHead(new Atom("excused"));
 		r.addBody(new Atom("attend_burial"));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Atom("excused"));
 		r.addBody(new Atom("is_ill"));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Atom("fired"));
 		r.addBody(new Neg( new Atom("attend_work")));
 		r.addBody(new Not( new Atom("excused")));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Neg(new Atom("fired")));
 		r.addBody(new Atom("excused"));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Neg(new Atom("attend_work")));
-		p.addRule(r);
+		p.add(r);
 		
 		AspBeliefbase bb = new AspBeliefbase();
 		bb.setProgram(p);
@@ -109,7 +109,7 @@ public class AspPlugin extends AngeronaPluginAdapter
 		
 		r = new Rule();
 		r.addHead(new Atom("attend_burial"));
-		p.addRule(r);
+		p.add(r);
 		
 		//reasoner.query(a);
 		

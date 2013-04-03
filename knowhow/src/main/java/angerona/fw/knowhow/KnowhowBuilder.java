@@ -6,7 +6,7 @@ import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Number;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.NumberTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.StringTerm;
@@ -88,7 +88,7 @@ public class KnowhowBuilder {
 		Rule r = new Rule();
 		r.addHead(new Atom("khstatement", new Constant(ks.name), 
 				new Constant(ks.getTarget().toString())));
-		p.addRule(r);
+		p.add(r);
 		
 		// Subtargets
 		int i = 1;
@@ -116,9 +116,9 @@ public class KnowhowBuilder {
 				
 				a = new Atom(a.getName());
 			}
-			r.addHead(new Atom("khsubgoal", new Constant(ks.name), new Number(i), 
+			r.addHead(new Atom("khsubgoal", new Constant(ks.name), new NumberTerm(i), 
 					new Constant(a.toString())));
-			p.addRule(r);
+			p.add(r);
 			i++;
 		}
 		
@@ -127,7 +127,7 @@ public class KnowhowBuilder {
 			r = new Rule();
 			r.addHead(new Atom("khcondition", new Constant(ks.name), 
 					new Constant(a.toString())));
-			p.addRule(r);
+			p.add(r);
 		}
 		
 		return params;

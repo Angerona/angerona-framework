@@ -2,8 +2,6 @@ package angerona.fw.logic.asp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,10 +94,7 @@ public class AspBeliefbase extends BaseBeliefbase {
 	public List<String> getAtoms() {
 		List<String> reval = new LinkedList<String>();
 		
-		List<Rule> sorted = new ArrayList<>(program.getRules());
-		Collections.sort(sorted);
-		
-		for(Rule r : sorted) {
+		for(Rule r : program) {
 			reval.add(r.toString());
 		}
 		return reval;
