@@ -225,7 +225,6 @@
                <value>${basedir}/target</value>
            </configuration>
        </plugin>
-      
     </plugins>
     
     <pluginManagement>
