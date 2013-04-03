@@ -26,6 +26,7 @@ import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
+import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseTranslator;
@@ -142,16 +143,16 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		// no secret will be revealed by any possible answer to the query.
 		// handle the query and create an appropriate answer action.
-		AnswerValue answerValue;
-		if(cexec.skepticalInference(view, query.getQuestion())){
-			answerValue = AnswerValue.AV_TRUE;
-		}else{
-			answerValue = AnswerValue.AV_FALSE;
-		}
-		Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), answerValue);
+		AngeronaAnswer answer = ag.getBeliefs().getWorldKnowledge().reason(query.getQuestion());
+		pp.report("Answer to query: " + answer.getAnswerValue());
+		Answer answerSpeechAct = new Answer(ag,query.getSenderId(), query.getQuestion(), answer.getAnswerValue());
 		Subgoal answerGoal = new Subgoal(ag, desire);
-		answerGoal.newStack(answer);
+		answerGoal.newStack(answerSpeechAct);
 		ag.getPlanComponent().addPlan(answerGoal);
+		
+		// refine view on the attacking agent
+		ag.getComponent(ViewComponent.class).setView(query.getSenderId(), view.RefineViewByQuery(query.getQuestion(),answer.getAnswerValue()));
+		pp.report("Refined view on agent " + query.getSenderId());
 		
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
@@ -236,15 +237,16 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		if(success) {
-			pp.report("Revision successfull.");
+			pp.report("Revision successful.");
 			bbase.addKnowledge(revision.getProposition());
 			answerValue = AnswerValue.AV_TRUE;
 		} else {
-			pp.report("Revision not successfull.");
+			pp.report("Revision not successful.");
 		}
 		
 		// refine view on the attacking agent
 		ag.getComponent(ViewComponent.class).setView(revision.getSenderId(), view.RefineViewByRevision(revision.getProposition(),answerValue));
+		pp.report("Refined view on agent " + revision.getSenderId());
 		
 		// send answer
 		Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), answerValue);
