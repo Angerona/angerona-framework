@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent;
+package angerona.fw.defendingagent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaPluginAdapter;
-import angerona.fw.DefendingAgent.operators.def.GenerateOptionsOperator;
-import angerona.fw.DefendingAgent.operators.def.SubgoalGenerationOperator;
-import angerona.fw.DefendingAgent.operators.def.UpdateBeliefsOperator;
+import angerona.fw.defendingagent.operators.def.GenerateOptionsOperator;
+import angerona.fw.defendingagent.operators.def.SubgoalGenerationOperator;
+import angerona.fw.defendingagent.operators.def.UpdateBeliefsOperator;
 import angerona.fw.operators.BaseOperator;
 
 @PluginImplementation

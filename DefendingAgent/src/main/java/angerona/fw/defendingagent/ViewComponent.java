@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent;
+package angerona.fw.defendingagent;
 
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import angerona.fw.logic.conditional.ConditionalBeliefbase;
 
 /**
  * Data component of an agent containing a set of views on other agents.
- * @see angerona.fw.DefendingAgent.View for details on views.
+ * @see angerona.fw.defendingagent.View for details on views.
  * 
  * @author Sebastian Homann
  */

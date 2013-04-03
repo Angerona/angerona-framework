@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent;
+package angerona.fw.defendingagent;
 
 import java.util.HashSet;
 import java.util.Set;

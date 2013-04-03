@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent;
+package angerona.fw.defendingagent;
 
 import java.io.File;
 import java.util.Collection;
@@ -22,8 +22,8 @@ import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.DefendingAgent.View;
-import angerona.fw.DefendingAgent.Prover.Prover;
+import angerona.fw.defendingagent.View;
+import angerona.fw.defendingagent.Prover.Prover;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.conditional.ConditionalBeliefbase;
 

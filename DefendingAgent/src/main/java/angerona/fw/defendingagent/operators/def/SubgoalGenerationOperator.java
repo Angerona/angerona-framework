@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent.operators.def;
+package angerona.fw.defendingagent.operators.def;
 
 import java.io.StringReader;
 import java.util.HashSet;
@@ -17,15 +17,15 @@ import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Desire;
 import angerona.fw.Subgoal;
-import angerona.fw.DefendingAgent.CensorComponent;
-import angerona.fw.DefendingAgent.View;
-import angerona.fw.DefendingAgent.ViewComponent;
-import angerona.fw.DefendingAgent.comm.Revision;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
+import angerona.fw.defendingagent.CensorComponent;
+import angerona.fw.defendingagent.View;
+import angerona.fw.defendingagent.ViewComponent;
+import angerona.fw.defendingagent.comm.Revision;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseChangeBeliefs;

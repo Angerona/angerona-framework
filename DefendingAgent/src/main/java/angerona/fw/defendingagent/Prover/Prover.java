@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent.Prover;
+package angerona.fw.defendingagent.Prover;
 
 import java.util.HashMap;
 
