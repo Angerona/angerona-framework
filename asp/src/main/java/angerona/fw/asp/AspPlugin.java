@@ -24,6 +24,8 @@ import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspRevision;
 import angerona.fw.logic.asp.AspTranslator;
+import angerona.fw.logic.asp.RevisionCredibilityPrograms;
+import angerona.fw.logic.asp.RevisionPreferenceHandling;
 
 /**
  * The ASP plugin implements a belief base plugin which provides an ASP
@@ -55,7 +57,8 @@ public class AspPlugin extends AngeronaPluginAdapter
 	@Override
 	public List<Class<? extends BaseChangeBeliefs>> getChangeImpl() {
 		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
-		reval.add(AspRevision.class);
+		reval.add(RevisionPreferenceHandling.class);
+		reval.add(RevisionCredibilityPrograms.class);
 		reval.add(AspExpansion.class);
 		return reval;
 	}
