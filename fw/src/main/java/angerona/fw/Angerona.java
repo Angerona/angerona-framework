@@ -337,7 +337,7 @@ public class Angerona {
 		@Override
 		public void load(File file, Angerona container) throws ParserConfigurationException, SAXException, IOException {
 			SimulationConfiguration sc = SimulationConfiguration.loadXml(file);
-			sc.setFilePath(file.getAbsolutePath());
+			sc.setFile(file);
 			container.simulationConfigurations.put(sc.getName(), sc);
 		}
 	}

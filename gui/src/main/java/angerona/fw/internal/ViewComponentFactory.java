@@ -8,14 +8,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.gui.view.View;
+import angerona.fw.gui.base.EntityViewComponent;
+import angerona.fw.gui.base.ViewComponent;
 
-public class ViewFactory {
+public class ViewComponentFactory {
 	/** reference to logger implementation */
-	private Logger LOG = LoggerFactory.getLogger(ViewFactory.class);
+	private Logger LOG = LoggerFactory.getLogger(ViewComponentFactory.class);
 	
 	/** map containing an Entity as key mapping to all the views showing the entity */
-	private Map<Entity, List<View>> registeredViewsByEntity = new HashMap<Entity, List<View>>();
+	private Map<Entity, List<ViewComponent>> registeredViewsByEntity = new HashMap<Entity, List<ViewComponent>>();
 	
 	/**
 	 * Creates (but not add) a view for the given AgentComponent. 
@@ -23,9 +24,9 @@ public class ViewFactory {
 	 * @return	reference to the created view. null if no view for the AgentComponent is
 	 * 			registered or an error occured.
 	 */
-	public View createViewForEntityComponent(Entity comp) {
-		for (Class<? extends View> cls : UIPluginInstatiator.getInstance().getViewMap().values()) {
-			View view = null;
+	public EntityViewComponent<?> createViewForEntityComponent(Entity comp) {
+		for (Class<? extends EntityViewComponent<?>> cls : UIPluginInstatiator.getInstance().getEntityViewMap().values()) {
+			EntityViewComponent<?> view = null;
 			try {
 				view = cls.newInstance();
 			} catch (InstantiationException e1) {
@@ -40,7 +41,7 @@ public class ViewFactory {
 				return null;
 			
 			if (comp.getClass().equals(view.getObservedType())) {
-				View newly = createEntityView(cls, comp);
+				EntityViewComponent<?> newly = createEntityView(cls, comp);
 				return newly;
 			}
 		}
@@ -56,14 +57,14 @@ public class ViewFactory {
 	 * @param toObserve	reference to the object the UI component should observe (might be null if no direct mapping between observed object and UI component can be given)
 	 * @return a new instance of UIComponent which is ready to use.
 	 */
-	public <E extends Entity, T extends View> T createEntityView(Class<? extends T> cls, E toObserve) {
+	public <E extends Entity, T extends EntityViewComponent<?>> T createEntityView(Class<? extends T> cls, E toObserve) {
 		T reval;
 		try {
 			reval = cls.newInstance();
 			if(toObserve != null) {
 				reval.setObservedEntity(toObserve);
 				if(!registeredViewsByEntity.containsKey(toObserve)) {
-					registeredViewsByEntity.put(toObserve, new LinkedList<View>());
+					registeredViewsByEntity.put(toObserve, new LinkedList<ViewComponent>());
 				}
 				registeredViewsByEntity.get(toObserve).add(reval);
 			}
@@ -80,18 +81,18 @@ public class ViewFactory {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends View> T getBaseViewObservingEntity(Entity ent) {
+	public <T extends ViewComponent> T getBaseViewObservingEntity(Entity ent) {
 		if(registeredViewsByEntity.containsKey(ent)) {
 			return (T) registeredViewsByEntity.get(ent).get(0);
 		}
 		return null;
 	}
 	
-	private static ViewFactory mInstance;
+	private static ViewComponentFactory mInstance;
 	
-	public static ViewFactory getInstance() {
+	public static ViewComponentFactory getInstance() {
 		if(mInstance == null) {
-			mInstance = new ViewFactory();
+			mInstance = new ViewComponentFactory();
 		}
 		return mInstance;
 	}

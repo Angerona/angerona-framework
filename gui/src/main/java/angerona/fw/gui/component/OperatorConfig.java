@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import angerona.fw.OperatorSet;
+import angerona.fw.gui.base.ModelAdapter;
 import angerona.fw.operators.BaseOperator;
 
 /**
@@ -14,7 +15,7 @@ import angerona.fw.operators.BaseOperator;
  *
  * @param <T>
  */
-public class OperatorConfig extends AbstractModel {
+public class OperatorConfig extends ModelAdapter {
 	/** the original parameters of the operator */
 	private Map<String, String> originalParameters = new HashMap<>();
 	

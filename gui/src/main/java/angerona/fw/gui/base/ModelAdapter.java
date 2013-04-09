@@ -1,13 +1,13 @@
-package angerona.fw.gui.component;
+package angerona.fw.gui.base;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class AbstractModel {
+public class ModelAdapter implements Model {
 
-    protected PropertyChangeSupport propertyChangeSupport;
+    private PropertyChangeSupport propertyChangeSupport;
 
-    public AbstractModel()
+    public ModelAdapter()
     {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
@@ -24,4 +24,7 @@ public class AbstractModel {
         propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
 
+    protected void fireIndexedPropertyChange(String propertyName, int index, Object oldValue, Object newValue) {
+    	propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+    }
 }

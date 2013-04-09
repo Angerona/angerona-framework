@@ -1,12 +1,15 @@
 package angerona.fw.app;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import angerona.fw.gui.AngeronaDataStorage;
 import angerona.fw.gui.AngeronaWindow;
+import angerona.fw.serialize.SimulationConfiguration;
 public class GUIApplication {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
@@ -16,7 +19,8 @@ public class GUIApplication {
 		for(int k=0; k<args.length; ++k) {
 			String [] ary = args[k].split("=");
 			if(ary.length == 2 && ary[0].equalsIgnoreCase("simulation")) {
-				AngeronaWindow.getInstance().loadSimulation(ary[1]);
+				SimulationConfiguration config = SimulationConfiguration.loadXml(new File(ary[1]));
+				AngeronaDataStorage.get().getSimulationControl().setSimulation(config);
 			}
 		}
 	}

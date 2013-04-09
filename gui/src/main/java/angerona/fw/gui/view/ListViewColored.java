@@ -22,6 +22,7 @@ import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
 import angerona.fw.gui.NavigationPanel;
 import angerona.fw.gui.NavigationUser;
+import angerona.fw.gui.base.EntityViewComponent;
 import angerona.fw.internal.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
@@ -34,7 +35,7 @@ import angerona.fw.report.ReportListener;
  * @param <T> the type of the observed object
  */
 public abstract class ListViewColored<T extends Entity> 
-	extends EntityView<T>
+	extends EntityViewComponent<T>
 	implements 
 	ReportListener, 
 	NavigationUser {
@@ -308,4 +309,8 @@ public abstract class ListViewColored<T extends Entity>
 		reportReceived(entry);
 	}
 
+	@Override
+	public String getDefaultTitle() {
+		return "ListViewColored";
+	}
 }

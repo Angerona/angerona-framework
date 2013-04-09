@@ -18,9 +18,9 @@ import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.NavigationUser;
-import angerona.fw.gui.view.View;
+import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.ViewFactory;
+import angerona.fw.internal.ViewComponentFactory;
 import angerona.fw.listener.SimulationAdapter;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportOutputGenerator;
@@ -138,9 +138,9 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 			public void onActivated() {
 				if(entry.getAttachment() != null) {
 					Entity at = entry.getAttachment();
-					ViewFactory wnd = ViewFactory.getInstance();
+					ViewComponentFactory wnd = ViewComponentFactory.getInstance();
 					// find the view
-					View view = wnd.getBaseViewObservingEntity(at);
+					ViewComponent view = wnd.getBaseViewObservingEntity(at);
 					if(view == null) {
 						view = wnd.createViewForEntityComponent(at);
 					}

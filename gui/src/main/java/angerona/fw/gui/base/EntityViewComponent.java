@@ -1,10 +1,10 @@
-package angerona.fw.gui.view;
+package angerona.fw.gui.base;
 
 import javax.swing.JPanel;
 
 import angerona.fw.internal.Entity;
 
-public abstract class EntityView<T extends Entity> extends JPanel implements View {
+public abstract class EntityViewComponent<T extends Entity> extends JPanel implements ViewComponent {
 	/** kill warning */
 	private static final long serialVersionUID = -5753200356361676742L;
 
@@ -21,6 +21,15 @@ public abstract class EntityView<T extends Entity> extends JPanel implements Vie
 	public void setObservedEntity(Object obj) {
 		setObservedEntity((T) obj);
 	}
+	
+	@Override
+	public JPanel getPanel() {
+		return this;
+	}
+	
+	public abstract void init();
+
+	public abstract void cleanup();
 	
 	public abstract Class<? extends T> getObservedType();
 }

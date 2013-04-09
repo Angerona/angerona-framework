@@ -47,14 +47,14 @@ public class SimulationConfiguration {
 	protected List<Perception> perceptions = new LinkedList<Perception>();
 	
 	
-	protected String filepath;
+	protected File filepath;
 	
-	public String getFilePath() {
+	public File getFile() {
 		return filepath;
 	}
 	
-	public void setFilePath(String filepath) {
-		this.filepath = filepath;
+	public void setFile(File file) {
+		this.filepath = file;
 	}
 	
 	/** @return name of the simulation */

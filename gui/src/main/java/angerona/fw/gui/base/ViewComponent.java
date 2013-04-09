@@ -1,4 +1,6 @@
-package angerona.fw.gui.view;
+package angerona.fw.gui.base;
+
+import javax.swing.JPanel;
 
 import angerona.fw.gui.UIPlugin;
 
@@ -12,15 +14,8 @@ import angerona.fw.gui.UIPlugin;
  * @see UIPlugin
  * @author Tim Janus
  */
-public interface View {
-
-	void init();
-
-	void cleanup();
-
-	Class<?> getObservedType();
+public interface ViewComponent {
+	JPanel getPanel();
 	
-	void setObservedEntity(Object entity);
-	
-	Object getObservedEntity();
+	String getDefaultTitle();
 }

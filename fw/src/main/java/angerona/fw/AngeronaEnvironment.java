@@ -171,22 +171,20 @@ public class AngeronaEnvironment extends APR {
 		name = config.getName();
 		
 		if(config != null && startImmediately) {
-			File f = new File(filename);
-			String parentDir = f.getParent();
-			return initSimulation(config, parentDir) ? config : null;
+			return initSimulation(config) ? config : null;
 		}
 		return config;
 	}
 	
 	/**
-	 * Initializes an Angerona simulation, with the given config. The root directory of the simulation is also given.
+	 * Initializes an Angerona simulation, with the given config. The root directory of the simulation is determined from the configuration file.
 	 * @param config	reference to the data-structure containing the configuration of the simulation.
-	 * @param simulationDirectory	the root folder for the simulation.
 	 * @return	true if everything was fine, false if an error occurred.
 	 */
-	public boolean initSimulation(SimulationConfiguration config, String simulationDirectory) {
+	public boolean initSimulation(SimulationConfiguration config) {
 		LOG.info("Starting simulation: " + config.getName());
-		this.simDirectory = simulationDirectory;
+		this.simDirectory = config.getFile().getParent();
+
 		// inform listener of start of simulation creation:
 		Angerona.getInstance().onCreateSimulation(this);
 		
