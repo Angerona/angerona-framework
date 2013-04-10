@@ -19,7 +19,7 @@ public abstract class EntityViewComponent<T extends Entity> extends JPanel imple
 	}
 	
 	public void setObservedEntity(Object obj) {
-		setObservedEntity((T) obj);
+		setObservedEntity((Entity) obj);
 	}
 	
 	@Override
