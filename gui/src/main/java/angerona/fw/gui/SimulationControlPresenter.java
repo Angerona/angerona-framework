@@ -11,10 +11,24 @@ import angerona.fw.gui.SimulationControlModel.SimulationState;
 import angerona.fw.gui.base.Presenter;
 import angerona.fw.serialize.SimulationConfiguration;
 
+/**
+ * This class is responsible to wire a SimulationControlModel with a
+ * SimulationControlView.
+ * 
+ * @author Tim Janus
+ */
 public class SimulationControlPresenter 
 	extends Presenter<SimulationControlModel, SimulationControlView>
 	implements ActionListener {
 	
+	/** Default Ctor: The user has to call setModel() and setView(). */
+	public SimulationControlPresenter() {}
+	
+	/** 
+	 * Ctor: Invokes setModel() and setView()
+	 * @param model	The used model.
+	 * @param view	The used view.
+	 */
 	public SimulationControlPresenter(SimulationControlModel model, SimulationControlView view) {
 		setModel(model);
 		setView(view);
@@ -25,22 +39,35 @@ public class SimulationControlPresenter
 		if(ev.getSource() == view.getLoadButton()) {
 			onLoad();
 		} else if(ev.getSource() == view.getSimStateButton()) {
-			switch(model.getSimulationState()) {
-			case SS_LOADED:
-				model.initSimulation();
-				break;
-				
-			case SS_INITALIZED:
-				model.runSimulation();
-				break;
-				
-			case SS_FINISHED:
-				model.setSimulation(model.getSimulation());
-				break;
-			}
+			onSimStateChange();
 		}
 	}
 
+	/** 
+	 * Is called when the SimulationState change button is called and updates the 
+	 * simulation of the SimulationControlModel depending on the current SimulationState
+	 */
+	private void onSimStateChange() {
+		switch(model.getSimulationState()) {
+		case SS_LOADED:
+			model.initSimulation();
+			break;
+			
+		case SS_INITALIZED:
+			model.runSimulation();
+			break;
+			
+		case SS_FINISHED:
+			model.setSimulation(model.getSimulation());
+			break;
+		}
+	}
+
+	/**
+	 * Is called when the load button of the view is called, then it opens a file dialog
+	 * and lets the user decide which file is loaded as SimulationConfiguration. This
+	 * SimulationConfiguration becomes the new simulation of the SimulationControlModel. 
+	 */
 	private void onLoad() {
 		boolean reallyLoad = true;
 		if(	model.getSimulationState() == SimulationState.SS_INITALIZED || 
@@ -65,8 +92,8 @@ public class SimulationControlPresenter
 
 	@Override
 	protected void forceUpdate() {
-		// TODO Auto-generated method stub
-		
+		view.onSimulationConfigChanged(model.getSimulation());
+		view.onSimulationStateChanged(model.getSimulationState());
 	}
 
 	@Override

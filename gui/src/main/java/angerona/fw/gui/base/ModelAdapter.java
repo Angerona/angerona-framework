@@ -3,6 +3,14 @@ package angerona.fw.gui.base;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * Base class for GUI models implementing the Model interface and
+ * providing protected method to fire property change events.
+ * Internally the PropertyChangeSupport class is used as implementation and
+ * therefore the property change implementation is thread safe.
+ * 
+ * @author Tim Janus
+ */
 public class ModelAdapter implements Model {
 
     private PropertyChangeSupport propertyChangeSupport;

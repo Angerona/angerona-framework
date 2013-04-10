@@ -4,13 +4,24 @@ import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.base.ModelAdapter;
 import angerona.fw.serialize.SimulationConfiguration;
 
+/**
+ * Implements the SimulatonControlModel
+ * @author Tim Janus
+ */
 public class SimulationControlModelAdapter extends ModelAdapter implements SimulationControlModel {
+	/** the SimulationConfiguration of the data model */
 	private SimulationConfiguration simulationConfig;
 	
+	/** the SimulationState of the data model */
 	private SimulationState simulationState = SimulationState.SS_UNDEFINED;
 	
+	/** the AngeroneEnvironment representing the dynamic simulation */
 	private AngeronaEnvironment environment = new AngeronaEnvironment();
 	
+	/** 
+	 * Helper method: sets the SimulationState and fires the PropertyChangeEvent
+	 * @param newState	The new SimulationState
+	 */
 	private void setSimulationState(SimulationState newState) {
 		SimulationState oldValue = simulationState;
 		simulationState = newState;
