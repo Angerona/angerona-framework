@@ -19,10 +19,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import angerona.fw.gui.base.ObservingPanel;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.util.Pair;
 
-public class OperatorConfigPanel extends JPanel implements PropertyChangeListener {
+public class OperatorConfigPanel extends ObservingPanel {
 
 	/** kill warning */
 	private static final long serialVersionUID = 782532085136023725L;
@@ -148,17 +149,17 @@ public class OperatorConfigPanel extends JPanel implements PropertyChangeListene
 		cbmOperators.setSelectedItem(model.getDefaultOperator());
 		
 		refillParameterList(model.getParameters());
-		model.addPropertyChangeListener(this);
+		model.addPropertyObserver(this);
 	}
 	
+	
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		Object newValue = evt.getNewValue();
-		if(evt.getPropertyName().equals("parameters")) {
+	public <T> void propertyChange(String propertyName, T oldValue, T newValue) {
+		if(propertyName == "parameters") {
 			Map<String, String> params = (Map<String, String>)newValue;
 			refillParameterList(params);
 			
-		} else if(evt.getPropertyName().equals("selectedOperator")) {
+		} else if(propertyName == "selectedOperator") {
 			
 		}
 	}

@@ -1,8 +1,8 @@
-package angerona.fw.gui;
+package angerona.fw.gui.simctrl;
 
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.gui.base.ModelAdapter;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.ModelAdapter;
 
 /**
  * Implements the SimulatonControlModel
@@ -23,9 +23,7 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	 * @param newState	The new SimulationState
 	 */
 	private void setSimulationState(SimulationState newState) {
-		SimulationState oldValue = simulationState;
-		simulationState = newState;
-		firePropertyChange("simulationState", oldValue, newState);
+		simulationState = changeProperty("simulationState", simulationState, newState);
 	}
 	
 	@Override
@@ -36,10 +34,12 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 				environment.cleanupSimulation();
 			}
 		}
-		SimulationConfiguration oldValue = simulationConfig;
-		simulationConfig = config;
-		firePropertyChange("simulationConfig", oldValue, simulationConfig);
-		setSimulationState(SimulationState.SS_LOADED);
+		simulationConfig = changeProperty("simulationConfig", simulationConfig, config);
+		if(simulationConfig != null) {
+			setSimulationState(SimulationState.SS_LOADED);
+		} else {
+			setSimulationState(SimulationState.SS_UNDEFINED);
+		}
 	}
 	
 	@Override

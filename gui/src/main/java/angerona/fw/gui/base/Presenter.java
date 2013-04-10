@@ -1,6 +1,7 @@
 package angerona.fw.gui.base;
 
-import java.beans.PropertyChangeListener;
+import angerona.fw.util.Model;
+import angerona.fw.util.PropertyObserver;
 
 /**
  * An abstract base class defining general methods of a presenter like setModel()
@@ -11,7 +12,7 @@ import java.beans.PropertyChangeListener;
  * @param <M>	Type of the Model
  * @param <V>	Type of the View
  */
-public abstract class Presenter<M extends Model, V extends PropertyChangeListener> {
+public abstract class Presenter<M extends Model, V extends PropertyObserver> {
 	/** the data model */
 	protected M model;
 	
@@ -25,12 +26,12 @@ public abstract class Presenter<M extends Model, V extends PropertyChangeListene
 	 */
 	public void setModel(M model) {
 		if(this.model != null && view != null) {
-			this.model.removePropertyChangeListener(view);
+			this.model.removePropertyObserver(view);
 		}
 		this.model = model;
 		if(this.model != null && view != null) {
 			forceUpdate();
-			this.model.addPropertyChangeListener(view);
+			this.model.addPropertyObserver(view);
 		}
 	}
 	
@@ -42,13 +43,13 @@ public abstract class Presenter<M extends Model, V extends PropertyChangeListene
 	public void setView(V view) {
 		if(this.view != null && model != null) {
 			unwireViewEvents();
-			this.model.removePropertyChangeListener(this.view);
+			this.model.removePropertyObserver(this.view);
 		}
 		this.view = view;
 		if(this.view != null && model != null) {
 			wireViewEvents();
 			forceUpdate();
-			this.model.addPropertyChangeListener(this.view);
+			this.model.addPropertyObserver(this.view);
 		}
 	}
 	

@@ -7,7 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import angerona.fw.Angerona;
-import angerona.fw.gui.AngeronaDataStorage;
+import angerona.fw.gui.AngeronaGUIDataStorage;
 import angerona.fw.gui.SortedTreeNode;
 import angerona.fw.listener.FrameworkListener;
 import angerona.fw.serialize.SimulationConfiguration;
@@ -79,7 +79,7 @@ public class ResourceTreeController extends TreeControllerAdapter implements Fra
 					@Override
 					public void onActivated() {
 						SimulationConfiguration config = (SimulationConfiguration)this.getUserObject();
-						AngeronaDataStorage.get().getSimulationControl().setSimulation(config);
+						AngeronaGUIDataStorage.get().getSimulationControl().setSimulation(config);
 					}
 				}));
 		}

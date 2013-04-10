@@ -1,7 +1,7 @@
-package angerona.fw.gui;
+package angerona.fw.gui.simctrl;
 
-import angerona.fw.gui.base.Model;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.Model;
 
 /**
  * This data model allows to control a Angerona simulation. 

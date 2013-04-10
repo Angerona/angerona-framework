@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.simctrl;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,8 +7,8 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import angerona.fw.gui.SimulationControlModel.SimulationState;
 import angerona.fw.gui.base.Presenter;
+import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**

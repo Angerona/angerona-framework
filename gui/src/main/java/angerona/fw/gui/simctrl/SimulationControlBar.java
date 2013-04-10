@@ -1,23 +1,22 @@
-package angerona.fw.gui;
+package angerona.fw.gui.simctrl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import angerona.fw.gui.SimulationControlModel.SimulationState;
+import angerona.fw.gui.base.ObservingPanel;
+import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
  * Implementation of the SimulatioonControlView as a Bar using all the horizontal space
  * but only a small amount of vertical space.
  * @author Tim Janus
- *
  */
-public class SimulationControlBar extends JPanel implements SimulationControlView {
+public class SimulationControlBar extends ObservingPanel implements SimulationControlView {
 	/** kill warning */
 	private static final long serialVersionUID = -5662460862082002346L;
 
@@ -54,25 +53,15 @@ public class SimulationControlBar extends JPanel implements SimulationControlVie
 	}
 
 	/**
-	 * Delegates the events to handler methods
-	 */
-	@Override
-	public void propertyChange(PropertyChangeEvent ev) {
-		if(ev.getPropertyName() == "simulationState") {
-			SimulationState newState = (SimulationState)ev.getNewValue();
-			onSimulationStateChanged(newState);
-		} else if(ev.getPropertyName() == "simulationConfig") {
-			SimulationConfiguration config = (SimulationConfiguration)ev.getNewValue();
-			onSimulationConfigChanged(config);
-		}
-	}
-
-	/**
 	 * Saves the name of the new simulation
 	 */
 	@Override
 	public void onSimulationConfigChanged(SimulationConfiguration config) {
-		currentSimulationName = config.getName();
+		if(config != null) {
+			currentSimulationName = config.getName();
+		} else {
+			currentSimulationName = "";
+		}
 	}
 
 	/**
@@ -116,6 +105,17 @@ public class SimulationControlBar extends JPanel implements SimulationControlVie
 	@Override
 	public JButton getLoadButton() {
 		return btnLoad;
+	}
+
+	@Override
+	public <T> void propertyChange(String propertyName, T oldValue, T newValue) {
+		if(propertyName  == "simulationState") {
+			SimulationState newState = (SimulationState)newValue;
+			onSimulationStateChanged(newState);
+		} else if(propertyName == "simulationConfig") {
+			SimulationConfiguration config = (SimulationConfiguration)newValue;
+			onSimulationConfigChanged(config);
+		}
 	}
 
 }

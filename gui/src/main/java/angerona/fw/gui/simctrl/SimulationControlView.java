@@ -1,11 +1,10 @@
-package angerona.fw.gui;
-
-import java.beans.PropertyChangeListener;
+package angerona.fw.gui.simctrl;
 
 import javax.swing.JButton;
 
-import angerona.fw.gui.SimulationControlModel.SimulationState;
+import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.PropertyObserver;
 
 /**
  * This interface returns all important controls which form a View for
@@ -15,7 +14,7 @@ import angerona.fw.serialize.SimulationConfiguration;
  * 
  * @author Tim Janus
  */
-public interface SimulationControlView extends PropertyChangeListener {
+public interface SimulationControlView extends PropertyObserver {
 	/** @return The button responsible for changing the SimulationState. */
 	JButton getSimStateButton();
 	

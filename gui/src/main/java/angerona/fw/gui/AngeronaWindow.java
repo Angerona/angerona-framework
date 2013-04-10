@@ -33,6 +33,8 @@ import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.ResourceTreeController;
 import angerona.fw.gui.controller.SimulationTreeController;
+import angerona.fw.gui.simctrl.SimulationControlBar;
+import angerona.fw.gui.simctrl.SimulationControlPresenter;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
 import angerona.fw.internal.PluginInstantiator;
@@ -371,7 +373,7 @@ public class AngeronaWindow extends WindowAdapter
 		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
 		
 		simLoadBar = new SimulationControlBar();
-		new SimulationControlPresenter(AngeronaDataStorage.get().getSimulationControl(), simLoadBar);
+		new SimulationControlPresenter(AngeronaGUIDataStorage.get().getSimulationControl(), simLoadBar);
 		dd = new DefaultDockable(simLoadBar);
 		dd.setTitleText("Simulation Control Bar");
 		dd.setTitleIcon(control.getIcons().get("monitor"));

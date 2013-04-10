@@ -7,7 +7,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import angerona.fw.gui.AngeronaDataStorage;
+import angerona.fw.gui.AngeronaGUIDataStorage;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.serialize.SimulationConfiguration;
 public class GUIApplication {
@@ -20,7 +20,7 @@ public class GUIApplication {
 			String [] ary = args[k].split("=");
 			if(ary.length == 2 && ary[0].equalsIgnoreCase("simulation")) {
 				SimulationConfiguration config = SimulationConfiguration.loadXml(new File(ary[1]));
-				AngeronaDataStorage.get().getSimulationControl().setSimulation(config);
+				AngeronaGUIDataStorage.get().getSimulationControl().setSimulation(config);
 			}
 		}
 	}
