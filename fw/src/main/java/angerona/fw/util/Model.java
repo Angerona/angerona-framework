@@ -7,6 +7,6 @@ package angerona.fw.util;
  * methods to add PropertyChangeListeners.
  * @author Tim Janus
  */
-public interface Model extends PropertyObservable {
-
+public interface Model extends PropertyObservable, MapObservable {
+	
 }
