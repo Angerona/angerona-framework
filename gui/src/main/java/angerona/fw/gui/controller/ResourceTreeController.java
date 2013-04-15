@@ -7,6 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import angerona.fw.Angerona;
+import angerona.fw.AngeronaProject;
 import angerona.fw.gui.AngeronaGUIDataStorage;
 import angerona.fw.gui.SortedTreeNode;
 import angerona.fw.listener.FrameworkListener;
@@ -35,7 +36,7 @@ public class ResourceTreeController extends TreeControllerAdapter implements Fra
 	}
 
 	private void readConfig() {
-		Angerona configContainer = Angerona.getInstance();
+		AngeronaProject configContainer = Angerona.getInstance().getProject();
 		
 		root.removeAllChildren();
 

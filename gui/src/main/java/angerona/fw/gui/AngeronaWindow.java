@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -168,12 +169,13 @@ public class AngeronaWindow extends WindowAdapter
 		Angerona angerona = Angerona.getInstance();
 		angerona.addFrameworkListener(this);
 		angerona.addSimulationListener(this);
-		
-		angerona.addAgentConfigFolder("config/agents");
-		angerona.addBeliefbaseConfigFolder("config/beliefbases");
-		angerona.addSimulationFolders("examples");
+
 		angerona.bootstrap();
 		pi.registerPlugin(new DefaultUIPlugin());
+		
+		angerona.getProject().addDirectory(new File("config/agents"));
+		angerona.getProject().addDirectory(new File("config/beliefbases"));
+		angerona.getProject().addDirectory(new File("examples"));
 	}
 	
 	public Dockable openView(ViewComponent view) {
