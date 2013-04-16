@@ -11,18 +11,21 @@ import javax.swing.filechooser.FileFilter;
 import angerona.fw.AngeronaProject;
 import angerona.fw.gui.AngeronaGUIDataStorage;
 import angerona.fw.gui.base.Presenter;
-import angerona.fw.gui.project.ProjectView.ResourceListener;
+import angerona.fw.gui.project.ProjectView.UserObjectFactory;
+import angerona.fw.gui.util.TreeHelper.DefaultUserObjectWrapper;
+import angerona.fw.gui.util.TreeHelper.UserObjectWrapper;
 import angerona.fw.serialize.Resource;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
  * The presenter wires the AngeronaProject with a view and delegates
  * the view events to the project.
+ * 
  * @author Tim Janus
  */
 public class ProjectPresenter 
 	extends Presenter<AngeronaProject, ProjectView> 
-	implements ActionListener, ResourceListener {
+	implements ActionListener {
 
 	/** the file chooser used to load new resources */
 	private JFileChooser fileChooser = new JFileChooser();
@@ -76,18 +79,18 @@ public class ProjectPresenter
 	protected void wireViewEvents() {
 		model.addMapObserver(view);
 		
-		view.getLoadButton().addActionListener(this);
+		view.getAddButton().addActionListener(this);
 		view.getRemoveButton().addActionListener(this);
-		view.setResourceListener(this);
+		view.setUserObjectFactory(new ResourceUserObjectFactory());
 	}
 
 	@Override
 	protected void unwireViewEvents() {
 		model.removeMapObserver(view);
 		
-		view.getLoadButton().removeActionListener(this);
+		view.getAddButton().removeActionListener(this);
 		view.getRemoveButton().removeActionListener(this);
-		view.setResourceListener(null);
+		view.setUserObjectFactory(null);
 	}
 
 	@Override
@@ -95,8 +98,8 @@ public class ProjectPresenter
 		if(e.getSource() == view.getRemoveButton() &&
 				selectedResource != null) {
 			model.removeResource(selectedResource);
-		} else if(e.getSource() == view.getLoadButton()) {
-			fileChooser.showOpenDialog(view.getLoadButton());
+		} else if(e.getSource() == view.getAddButton()) {
+			fileChooser.showOpenDialog(view.getAddButton());
 			
 			File selFile = fileChooser.getSelectedFile();
 			if(selFile != null) {
@@ -109,18 +112,53 @@ public class ProjectPresenter
 			}
 		}
 	}
-
-	@Override
-	public void resourceActivated(Resource resource) {
-		if(resource instanceof SimulationConfiguration) {
-			AngeronaGUIDataStorage.get().getSimulationControl().setSimulation(
-					(SimulationConfiguration) resource);
+	
+	private class ResUserObject<T extends Resource> extends DefaultUserObjectWrapper {
+		public ResUserObject(T uo) {
+			super(uo);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public T getUserObject() {
+			return (T)super.getUserObject();
+		}
+		
+		@Override
+		public String toString() {
+			return getUserObject().getName();
 		}
 	}
+	
+	private class SimUserObject extends ResUserObject<SimulationConfiguration> {
 
-	@Override
-	public void resourceSelected(Resource resource) {
-		selectedResource = resource;
+		public SimUserObject(SimulationConfiguration sc) {
+			super(sc);
+		}
+
+		@Override
+		public void onActivated() {
+			AngeronaGUIDataStorage.get().getSimulationControl().setSimulation(getUserObject());
+		}
+
+		@Override
+		public void onSelected() {
+			selectedResource = getUserObject();
+		}
 	}
+	
+	private class ResourceUserObjectFactory implements UserObjectFactory {
 
+		@Override
+		public UserObjectWrapper createUserObject(Resource res) {
+			if(res instanceof SimulationConfiguration) {
+				return new SimUserObject((SimulationConfiguration)res);
+			} else if(res instanceof Resource) {
+				return new ResUserObject<Resource>((Resource)res);
+			}
+			
+			return null;
+		}
+		
+	}
 }

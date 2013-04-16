@@ -3,6 +3,8 @@ package angerona.fw.gui.project;
 import javax.swing.AbstractButton;
 
 import angerona.fw.AngeronaProject;
+import angerona.fw.gui.util.TreeHelper.DefaultUserObjectWrapper;
+import angerona.fw.gui.util.TreeHelper.UserObjectWrapper;
 import angerona.fw.serialize.Resource;
 import angerona.fw.util.MapObserver;
 import angerona.fw.util.PropertyObserver;
@@ -13,25 +15,11 @@ import angerona.fw.util.PropertyObserver;
  */
 public interface ProjectView extends PropertyObserver, MapObserver {	
 	
-	/**
-	 * This listener is used to inform the observers about
-	 * resource selection changes and about activations of
-	 * resources (for example by double click or when pressing
-	 * enter when selected).
-	 * 
-	 * @author Tim Janus
-	 */
-	public static interface ResourceListener {
-		void resourceActivated(Resource resource);
-		
-		void resourceSelected(Resource resource);
+	public static interface UserObjectFactory {
+		UserObjectWrapper createUserObject(Resource res);
 	}
 	
-	/**
-	 * Sets the ResourceListener of this view.
-	 * @param listener	Reference to the listener
-	 */
-	void setResourceListener(ResourceListener listener);
+	void setUserObjectFactory(UserObjectFactory factory);
 	
 	/**
 	 * @return The button responsible to remove the selected resource
@@ -40,9 +28,9 @@ public interface ProjectView extends PropertyObserver, MapObserver {
 	
 	
 	/**
-	 * @return The button responsible to load new resources.
+	 * @return The button responsible to add/load new resources.
 	 */
-	AbstractButton getLoadButton();
+	AbstractButton getAddButton();
 	
 	
 	/**
@@ -50,4 +38,13 @@ public interface ProjectView extends PropertyObserver, MapObserver {
 	 * @param project
 	 */
 	void onProjectChange(AngeronaProject project);
+	
+	public static class DefaultUserObjectFactory implements UserObjectFactory {
+
+		@Override
+		public UserObjectWrapper createUserObject(Resource res) {
+			return new DefaultUserObjectWrapper(res);
+		}
+		
+	}
 }

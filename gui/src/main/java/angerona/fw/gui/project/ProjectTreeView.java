@@ -24,14 +24,15 @@ import angerona.fw.AngeronaProject;
 import angerona.fw.gui.SortedTreeNode;
 import angerona.fw.gui.base.ObservingPanel;
 import angerona.fw.gui.util.TreeHelper;
+import angerona.fw.gui.util.TreeHelper.UserObjectWrapper;
 import angerona.fw.serialize.Resource;
 import angerona.fw.serialize.SimulationConfiguration;
 
 public class ProjectTreeView extends ObservingPanel implements ProjectView {
 	/** kick warning */
 	private static final long serialVersionUID = -8021405489946274962L;
-
-	private ResourceListener listener;
+	
+	private UserObjectFactory factory = new DefaultUserObjectFactory();
 	
 	private JTree tree;
 	
@@ -41,7 +42,7 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 	
 	private JMenuItem miRemove;
 	
-	private JMenuItem miLoad;
+	private JMenuItem miAdd;
 	
 	private DefaultTreeModel model;
 	
@@ -64,8 +65,8 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 		tree.updateUI();
 		
 		categoryContextMenu = new JPopupMenu();
-		miLoad = new JMenuItem("Load");
-		categoryContextMenu.add(miLoad);
+		miAdd = new JMenuItem("Add...");
+		categoryContextMenu.add(miAdd);
 		
 		leafContextMenu = new JPopupMenu();
 		miRemove = new JMenuItem("Remove");
@@ -81,10 +82,9 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 				if(SwingUtilities.isLeftMouseButton(e)) {
 					if(e.getClickCount() == 2) {
 						DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)path.getLastPathComponent();
-						if(dmtn != null &&
-							dmtn.getUserObject() instanceof ResUserObj) {
-							listener.resourceActivated(
-									((ResUserObj)dmtn.getUserObject()).getResource());
+						if(dmtn != null) {
+							UserObjectWrapper uo = (UserObjectWrapper)dmtn.getUserObject();
+							uo.onActivated();
 						}
 					}
 				} else if(SwingUtilities.isRightMouseButton(e)) {
@@ -103,17 +103,11 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 			@Override
 			public void valueChanged(TreeSelectionEvent ev) {
 				DefaultMutableTreeNode dmtn= (DefaultMutableTreeNode)ev.getPath().getLastPathComponent();
-				if(dmtn == null) {
-					listener.resourceSelected(null);
-				} else if(dmtn.getUserObject() instanceof ResUserObj) {
-					listener.resourceSelected(((ResUserObj)dmtn.getUserObject()).getResource());
+				if(dmtn != null) {
+					((UserObjectWrapper)dmtn.getUserObject()).onSelected();
 				}
 			}
 		});
-	}
-	
-	public void setResourceListener(ResourceListener listener) {
-		this.listener = listener;
 	}
 	
 	@Override
@@ -146,7 +140,7 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 	}
 
 	private void onResourceAdded(Resource res) {
-		DefaultMutableTreeNode mtn = new DefaultMutableTreeNode(new ResUserObj(res));
+		DefaultMutableTreeNode mtn = new DefaultMutableTreeNode(factory.createUserObject(res));
 		DefaultMutableTreeNode actNode = typeNodeMap.get(res.getResourceType());
 		if(actNode==null) {
 			actNode = new SortedTreeNode(res.getResourceType(), comp);
@@ -187,13 +181,13 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 	private boolean remove(String res) {
 		DefaultMutableTreeNode node = leafMap.get(res);
 		if(node != null) {
-			ResUserObj uo = (ResUserObj)node.getUserObject();
+			UserObjectWrapper uo = (UserObjectWrapper)node.getUserObject();
 			MutableTreeNode parent = (MutableTreeNode)node.getParent();
 			model.removeNodeFromParent(node);
 			leafMap.remove(res);
 			if(parent.getChildCount() == 0) {
 				model.removeNodeFromParent(parent);
-				typeNodeMap.remove(uo.getResource().getResourceType());
+				typeNodeMap.remove(((Resource)(uo.getUserObject())).getResourceType());
 			}
 			tree.updateUI();
 			return true;
@@ -232,24 +226,14 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 	}
 
 	@Override
-	public AbstractButton getLoadButton() {
-		return miLoad;
+	public AbstractButton getAddButton() {
+		return miAdd;
 	}
-	
-	private static class ResUserObj {
-		private Resource res;
-		
-		public ResUserObj(Resource res) {
-			this.res = res;
-		}
 
-		public Resource getResource() {
-			return res;
-		}
-		
-		@Override
-		public String toString() {
-			return res.getName();
+	@Override
+	public void setUserObjectFactory(UserObjectFactory factory) {
+		if(factory != null) {
+			this.factory = factory;
 		}
 	}
 }

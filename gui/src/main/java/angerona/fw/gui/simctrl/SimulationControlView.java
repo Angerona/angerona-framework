@@ -1,7 +1,6 @@
 package angerona.fw.gui.simctrl;
 
 import javax.swing.AbstractButton;
-import javax.swing.JButton;
 
 import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
