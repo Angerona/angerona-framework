@@ -36,6 +36,7 @@ import angerona.fw.gui.controller.SimulationTreeController;
 import angerona.fw.gui.project.ProjectPresenter;
 import angerona.fw.gui.project.ProjectTreeView;
 import angerona.fw.gui.simctrl.SimulationControlBar;
+import angerona.fw.gui.simctrl.SimulationControlMenu;
 import angerona.fw.gui.simctrl.SimulationControlPresenter;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
@@ -138,6 +139,11 @@ public class AngeronaWindow extends WindowAdapter
 		});
 		menuFile.add(exit);
 		menuBar.add(menuFile);
+		
+		JMenu simulationMenu = new JMenu("Simulation");
+		SimulationControlMenu view = new SimulationControlMenu(simulationMenu);
+		new SimulationControlPresenter(AngeronaGUIDataStorage.get().getSimulationControl(), view);
+		menuBar.add(simulationMenu);
 		
 		JMenu menuWindow = new JMenu("Windows");
 		JMenuItem miCreate = new JMenuItem("Create...");

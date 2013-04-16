@@ -91,7 +91,7 @@ public class SimulationControlBar extends ObservingPanel implements SimulationCo
 			
 		case SS_FINISHED:
 			btnSimState.setEnabled(true);
-			btnSimState.setText("Restart");
+			btnSimState.setText("Finish");
 			txtSimStatus.setText( pre + "finished.");
 			break;
 		}

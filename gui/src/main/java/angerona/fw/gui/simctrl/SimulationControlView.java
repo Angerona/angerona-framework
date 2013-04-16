@@ -1,5 +1,6 @@
 package angerona.fw.gui.simctrl;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 
 import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
@@ -16,10 +17,10 @@ import angerona.fw.util.PropertyObserver;
  */
 public interface SimulationControlView extends PropertyObserver {
 	/** @return The button responsible for changing the SimulationState. */
-	JButton getSimStateButton();
+	AbstractButton getSimStateButton();
 	
 	/**	@return	The button used to load a SimulationConfiguration from the file system. */
-	JButton getLoadButton();
+	AbstractButton getLoadButton();
 	
 	/**
 	 * This  method is called if the SimulationConfiguration changes
