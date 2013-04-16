@@ -22,7 +22,7 @@ import angerona.fw.asml.CommandSequence;
  * @author Tim Janus
  */
 @Root(name="agent-configuration")
-public class AgentConfigReal implements AgentConfig{
+public class AgentConfigReal implements AgentConfig {
 	
 	/** String with name of this agent configuration */
 	@Element
@@ -38,6 +38,12 @@ public class AgentConfigReal implements AgentConfig{
 	
 	@ElementList(name="components", entry="component", inline=true)
 	protected List<String> componentClasses = new LinkedList<String>();
+	
+	@Element(name="description", required=false)
+	protected String description = "";
+	
+	@Element(name="category", required=false)
+	protected String category = "";
 	
 	@Override
 	public List<OperationSetConfig> getOperations() {
@@ -73,5 +79,20 @@ public class AgentConfigReal implements AgentConfig{
 	
 	public static AgentConfigReal loadXml(File file) throws IOException {
 		return SerializeHelper.loadXml(AgentConfigReal.class, file);
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String getResourceType() {
+		return RESOURCE_TYPE;
+	}
+
+	@Override
+	public String getCategory() {
+		return category;
 	}
 }

@@ -12,7 +12,9 @@ import org.simpleframework.xml.Root;
  * @author Tim Janus
  */
 @Root(name="entry")
-public interface BeliefbaseConfig {
+public interface BeliefbaseConfig extends Resource {
+	public static final String RESOURCE_TYPE = "Beliefbase-Configuration";
+	
 	public OperationSetConfig getReasoners();
 	
 	public OperationSetConfig getChangeOperators();

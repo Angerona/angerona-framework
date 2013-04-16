@@ -22,12 +22,15 @@ public final class MultiMapObservable implements MapObservable, MapObserver {
 	public void registerMap(ObservableMap<?, ?> map) {
 		if(!observableSupport.isEventPropagating()) {
 			maps.add(map);
+			map.addMapObserver(this);
 		}
 	}
 	
 	public void unregisterMap(ObservableMap<?, ?> map) {
 		if(!observableSupport.isEventPropagating()) {
-			maps.remove(map);
+			if(maps.remove(map)) {
+				map.removeMapObserver(this);
+			}
 		}
 	}
 	

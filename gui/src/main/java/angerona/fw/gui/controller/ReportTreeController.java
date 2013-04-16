@@ -160,7 +160,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		else
 			actTickNode.add(newNode);
 
-		ResourceTreeController.expandAll(tree, true);
+		TreeControllerAdapter.expandAll(tree, true);
 		tree.updateUI();
 	}
 

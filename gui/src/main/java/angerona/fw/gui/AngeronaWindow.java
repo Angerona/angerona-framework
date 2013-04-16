@@ -32,8 +32,9 @@ import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.base.ViewComponent;
-import angerona.fw.gui.controller.ResourceTreeController;
 import angerona.fw.gui.controller.SimulationTreeController;
+import angerona.fw.gui.project.ProjectPresenter;
+import angerona.fw.gui.project.ProjectTreeView;
 import angerona.fw.gui.simctrl.SimulationControlBar;
 import angerona.fw.gui.simctrl.SimulationControlPresenter;
 import angerona.fw.gui.view.ReportView;
@@ -78,7 +79,7 @@ public class AngeronaWindow extends WindowAdapter
 	
 	private SplitDockStation parentStation;
 	
-	private ResourcenView resourceView;
+	private ProjectTreeView resourceView;
 	
 	private ReportView reportView;
 	
@@ -305,8 +306,9 @@ public class AngeronaWindow extends WindowAdapter
 		}
 		
 		
-		resourceView = new ResourcenView(new ResourceTreeController(new JTree()));
 		
+		resourceView = new ProjectTreeView();
+		new ProjectPresenter(Angerona.getInstance().getProject(), resourceView);
 		
 		reportView = new ReportView();
 		

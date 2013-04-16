@@ -39,6 +39,12 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Element(name="beliefbase-class")
 	protected String beliefbaseClassName;
 
+	@Element(name="description", required=false)
+	protected String description = "";
+	
+	@Element(name="category", required=false)
+	protected String category = "";
+	
 	protected String viewName;
 	
 	@Commit
@@ -89,5 +95,20 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Override
 	public String getViewOn() {
 		return viewName;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String getResourceType() {
+		return RESOURCE_TYPE;
+	}
+
+	@Override
+	public String getCategory() {
+		return category;
 	}
 }

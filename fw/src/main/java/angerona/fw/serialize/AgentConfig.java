@@ -13,7 +13,9 @@ import angerona.fw.asml.CommandSequence;
  * 
  * @author Tim Janus
  */
-public interface AgentConfig {
+public interface AgentConfig extends Resource {
+	public static final String RESOURCE_TYPE = "Agent-Configuration";
+	
 	/** @return String identifying the GenerateOptions Operator class name */
 	public List<OperationSetConfig> getOperations();
 	

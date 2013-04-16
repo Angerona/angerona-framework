@@ -22,7 +22,8 @@ import angerona.fw.Perception;
  * @author Tim Janus
  */
 @Root(name="simulation-configuration")
-public class SimulationConfiguration {
+public class SimulationConfiguration implements Resource {
+	public static final String RESOURCE_TYPE = "Simulation-Template";
 	
 	/** name of the simulation */
 	@Element(name="name")
@@ -34,6 +35,9 @@ public class SimulationConfiguration {
 	 */
 	@Element(name="category", required=false)
 	protected String category = "";
+
+	@Element(name="description", required=false)
+	protected String description = "";
 	
 	/** used behavior implementation */
 	@Element(name="behavior", required=false)
@@ -129,5 +133,15 @@ public class SimulationConfiguration {
 				ai.realViewMap.put(viewedAgent, conf);
 			}
 		}
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String getResourceType() {
+		return RESOURCE_TYPE;
 	}
 }
