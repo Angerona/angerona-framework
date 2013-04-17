@@ -64,12 +64,6 @@
     </dependency>
     
 	
-	 <dependency>
-    	<!-- UGLY install into maven repository. -->
-	    <groupId>net.sf</groupId>
-	    <artifactId>beenuts</artifactId>
-	    <version>0.1.97</version>
-	</dependency>
 
 	 <dependency>
 	 	<groupId>net.xeoh</groupId>

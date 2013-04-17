@@ -5,12 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.Agent;
-import angerona.fw.AngeronaAgentProcess;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.EnvironmentBehavior;
 import angerona.fw.Perception;
-
-import net.sf.beenuts.ap.AgentProcess;
 
 /**
  * Behavior implementing the default Angerona environment behavior.
@@ -43,21 +40,23 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	}
 	
 	/**
-	 * Helper method: delegates the percetion/action to the local agents.
+	 * Helper method: delegates the perception/action to the local agents.
 	 * @param env
 	 * @param percept
 	 * @param agentName
 	 */
 	protected void localDelegate(AngeronaEnvironment env, Perception percept, String agentName) {
 		if(Action.ALL.equals(agentName)) {
-			for(String name : env.agentMap.keySet()) {
-				env.agentMap.get(name).perceive(percept);
+			for(Agent agent : env.getAgents()) {
+				agent.perceive(percept);
 			}
 		} else {
-			if(!env.agentMap.containsKey(agentName))
+			Agent ag = env.getAgentByName(agentName);
+			if(ag != null) {
+				ag.perceive(percept);
+			} else {
 				LOG.warn("Action/Perception was not send, agent '{}' was not found in environment.", agentName);
-			else
-				env.agentMap.get(agentName).perceive(percept);
+			}
 		}
 	}
 
@@ -74,9 +73,8 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		}
 		
 		boolean somethingHappens = false;
-		for(AgentProcess ap : env.agents) {
-			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
-			if(aap.hasPerceptions()) {
+		for(Agent agent : env.getAgents()) {
+			if(agent.hasPerceptions()) {
 				somethingHappens = true;
 			}
 		}
@@ -86,12 +84,10 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		
 		angeronaReady = false;
 		++tick;
-		for(AgentProcess ap : env.agents) {
-			AngeronaAgentProcess aap = (AngeronaAgentProcess)ap;
-			aap.execCycle();
-			Agent ag = (Agent)aap.getAgentArchitecture();
-			if(ag.getLastAction() != null)
-				sendAction(env, ag.getLastAction());
+		for(Agent agent : env.getAgents()) {
+			agent.cycle();
+			if(agent.getLastAction() != null)
+				sendAction(env, agent.getLastAction());
 		}
 		angeronaReady = true;
 		

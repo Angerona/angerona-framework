@@ -25,7 +25,7 @@ public class FileFormatExample {
 		AgentInstance agent = getTestAgentInstance();
 		conf.agents.add(agent);
 		
-		Agent sender = new Agent("Boss");
+		Agent sender = new Agent("Boss", null);
 		conf.perceptions.add(new Query(sender, "Employee", new Atom(new Predicate("attend_scm"))));
 		
 		try {

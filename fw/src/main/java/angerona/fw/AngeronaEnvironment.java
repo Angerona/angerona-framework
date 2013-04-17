@@ -3,13 +3,12 @@ package angerona.fw;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.beenuts.ap.AgentProcess;
-import net.sf.beenuts.apr.APR;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
@@ -23,12 +22,13 @@ import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.ObservableMap;
 
 /**
  * A simulation environment for Angerona. This is actually only used for some functional tests.
  * @author Tim Janus
  */
-public class AngeronaEnvironment extends APR {
+public class AngeronaEnvironment  {
 
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
@@ -47,6 +47,8 @@ public class AngeronaEnvironment extends APR {
 	
 	/** the root folder of the actual loaded simulation in this environment */
 	private String simDirectory;
+	
+	private ObservableMap<String, Agent> agentMap = new ObservableMap<>("agentMap");
 	
 	/**
 	 * @return a map of ID --> Entity, the map is not modifiable.
@@ -89,22 +91,24 @@ public class AngeronaEnvironment extends APR {
 	
 	/**
 	 * Adds the agents with the given name to the environment
-	 * @param ap		agent process handling low level communication through the environment.
+	 * @param agent	
 	 * @return	true if everything was fine, false if the same agent process was already registered.
 	 * @throws AgentIdException Is thrown if the name of the agent process is not unique (two processes have the same name).
 	 */
-	public boolean addAgent(AngeronaAgentProcess ap) throws AgentIdException {
-		if(agentMap.containsKey(ap.getName())) {
-			if(agentMap.get(ap.getName()) == ap)
+	public boolean addAgent(Agent agent) throws AgentIdException {
+		if(agentMap.containsKey(agent.getName())) {
+			if(agentMap.get(agent.getName()) == agent)
 				return false;
 			
-			throw new AgentIdException("agent with name: " + ap.getName() + " already registered.");
+			throw new AgentIdException("agent with name: '" + agent.getName() + "' already registered.");
 		}
 		
-		agentMap.put(ap.getName(), ap);
-		agents.add(ap);
-		ap.setAPR(this);
+		agentMap.put(agent.getName(), agent);
 		return true;
+	}
+	
+	public Collection<Agent> getAgents() {
+		return Collections.unmodifiableCollection(agentMap.values());
 	}
 	
 	/**
@@ -113,10 +117,7 @@ public class AngeronaEnvironment extends APR {
 	 * @return			Reference to the agent called 'name', if no agent with the given name exists null is returned.
 	 */
 	public Agent getAgentByName(String name) {
-		AgentProcess ap = agentMap.get(name);
-		if(ap == null)
-			return null;
-		return (Agent)ap.getAgentArchitecture();
+		return agentMap.get(name);
 	}
 	
 	/**
@@ -275,8 +276,8 @@ public class AngeronaEnvironment extends APR {
 	private boolean registerAgents(SimulationConfiguration config) {
 		try {
 			for(AgentInstance ai : config.getAgents()) {
-				Agent agent = new Agent(ai.getName());
-				addAgent(agent.getAgentProcess());
+				Agent agent = new Agent(ai.getName(), this);
+				addAgent(agent);
 			}
 		} catch (AgentIdException e) {
 			e.printStackTrace();
@@ -292,7 +293,7 @@ public class AngeronaEnvironment extends APR {
 	 * @param errorOutput	String containing the error message.
 	 */
 	protected void errorDelegation(String errorOutput) {
-		this.cleanupSimulation();
+		this.cleanupEnvironment();
 		LOG.error(errorOutput);
 		Angerona.getInstance().onError("Simulation Initialization", errorOutput);
 	}
@@ -334,14 +335,12 @@ public class AngeronaEnvironment extends APR {
 	/**
 	 * deletes all agents from the environment and removes the information about the last simulation.
 	 */
-	public void cleanupSimulation() {
-		agents.clear();
+	public void cleanupEnvironment() {
 		agentMap.clear();
 		ready = false;
 		Angerona.getInstance().onSimulationDestroyed(this);
 	}
 	
-	@Override
 	public void sendAction(String agentName, Object action) {
 		behavior.sendAction(this, (Action)action);
 	}
