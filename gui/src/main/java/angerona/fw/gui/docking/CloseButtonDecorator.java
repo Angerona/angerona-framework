@@ -22,7 +22,7 @@ public class CloseButtonDecorator implements DockableDecorator {
 		
 		SimpleButtonAction sba = new SimpleButtonAction();
 		sba.setText("Close");
-		sba.setIcon(AngeronaWindow.getInstance().getIcons().get("close"));
+		sba.setIcon(AngeronaWindow.get().getIcons().get("close"));
 		sba.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

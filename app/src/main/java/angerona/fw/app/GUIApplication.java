@@ -13,7 +13,7 @@ import angerona.fw.serialize.SimulationConfiguration;
 public class GUIApplication {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-		AngeronaWindow.getInstance().init();
+		AngeronaWindow.get().init();
 		
 		// load simulation per commandline.
 		for(int k=0; k<args.length; ++k) {

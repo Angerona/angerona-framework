@@ -2,6 +2,9 @@ package angerona.fw.gui.base;
 
 import javax.swing.JPanel;
 
+import bibliothek.gui.dock.DefaultDockable;
+
+import angerona.fw.gui.docking.DecoratorLibrary;
 import angerona.fw.internal.Entity;
 
 public abstract class EntityViewComponent<T extends Entity> extends JPanel implements ViewComponent {
@@ -32,4 +35,12 @@ public abstract class EntityViewComponent<T extends Entity> extends JPanel imple
 	public abstract void cleanup();
 	
 	public abstract Class<? extends T> getObservedType();
+	
+	@Override
+	public void decorate(DefaultDockable dockable) {
+		DecoratorLibrary.closeDecorator.decorate(dockable);
+		if(ref != null) {
+			dockable.setTitleText(ref.toString());
+		}
+	}
 }

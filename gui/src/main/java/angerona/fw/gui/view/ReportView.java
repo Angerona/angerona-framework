@@ -13,7 +13,10 @@ import javax.swing.JTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bibliothek.gui.dock.DefaultDockable;
+
 import angerona.fw.Angerona;
+import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.ReportTreeController;
 import angerona.fw.gui.controller.TreeControllerAdapter;
@@ -70,8 +73,9 @@ public class ReportView extends JPanel implements ViewComponent {
 	}
 
 	@Override
-	public String getDefaultTitle() {
-		return "Report";
+	public void decorate(DefaultDockable dockable) {
+		dockable.setTitleText("Report");
+		dockable.setTitleIcon(AngeronaWindow.get().getIcons().get("report"));
 	}
 
 }

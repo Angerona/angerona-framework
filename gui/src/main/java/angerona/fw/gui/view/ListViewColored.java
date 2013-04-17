@@ -45,9 +45,6 @@ public abstract class ListViewColored<T extends Entity>
 	
 	/** kill warning */
 	private static final long serialVersionUID = 5572343160200460695L;
-
-	/** reference to the original data (which is in the agent) */
-	protected T ref;
 	
 	/** reference to the data instance which is actually shown. */
 	protected T actual;
@@ -307,10 +304,5 @@ public abstract class ListViewColored<T extends Entity>
 	@Override
 	public void setCurrentEntry(ReportEntry entry) {
 		reportReceived(entry);
-	}
-
-	@Override
-	public String getDefaultTitle() {
-		return "ListViewColored";
 	}
 }

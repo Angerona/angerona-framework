@@ -3,6 +3,7 @@ package angerona.fw.gui.base;
 import javax.swing.JPanel;
 
 import angerona.fw.gui.UIPlugin;
+import angerona.fw.gui.docking.DockableDecorator;
 
 /**
  * Base class for Angerona UI Views.
@@ -14,8 +15,6 @@ import angerona.fw.gui.UIPlugin;
  * @see UIPlugin
  * @author Tim Janus
  */
-public interface ViewComponent {
+public interface ViewComponent extends DockableDecorator {
 	JPanel getPanel();
-	
-	String getDefaultTitle();
 }

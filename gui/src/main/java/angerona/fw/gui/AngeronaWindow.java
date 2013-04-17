@@ -33,7 +33,6 @@ import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.SimulationTreeController;
-import angerona.fw.gui.docking.DecoratorLibrary;
 import angerona.fw.gui.project.ProjectTreeMVPComponent;
 import angerona.fw.gui.simctrl.SimulationControlBar;
 import angerona.fw.gui.simctrl.SimulationControlBarMVPComponent;
@@ -53,7 +52,6 @@ import bibliothek.gui.Dockable;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.SplitDockStation;
 import bibliothek.gui.dock.StackDockStation;
-import bibliothek.gui.dock.action.HierarchyDockActionSource;
 import bibliothek.gui.dock.station.split.SplitDockProperty;
 import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import bibliothek.gui.dock.themes.NoStackTheme;
@@ -93,7 +91,7 @@ public class AngeronaWindow extends WindowAdapter
 	private static AngeronaWindow instance;
 	
 	/** @return reference to the unique instance of the AngeronaWindow */
-	public static AngeronaWindow getInstance() {
+	public static AngeronaWindow get() {
 		if(instance == null) {
 			instance = new AngeronaWindow();
 		}
@@ -182,21 +180,15 @@ public class AngeronaWindow extends WindowAdapter
 		angerona.getProject().addDirectory(new File("examples"));
 	}
 	
-	public Dockable openView(ViewComponent view) {
-		return openView(view, view.getDefaultTitle());
-	}
-	
 	/**
 	 * @todo move somewhere else
 	 * @param view
 	 * @param title
 	 * @return
 	 */
-	public Dockable openView(ViewComponent view, String title) {
+	public Dockable openView(ViewComponent view) {
 		DefaultDockable dd = new DefaultDockable(view.getPanel());
-		dd.setTitleText(title);
-		
-		DecoratorLibrary.closeDecorator.decorate(dd);
+		view.decorate(dd);
 		
 		// easy if the center is a stack already, only adding the Dockable to the stack.
 		if(mainStack.getController() != null) {
@@ -352,25 +344,20 @@ public class AngeronaWindow extends WindowAdapter
 		
 		ViewComponent viewComp = ViewComponentFactory.get().createViewComponent(ProjectTreeMVPComponent.class);
 		DefaultDockable dd = new DefaultDockable(viewComp.getPanel());
-		dd.setTitleIcon(control.getIcons().get("resources"));
-		dd.setTitleText(viewComp.getDefaultTitle());
-		DecoratorLibrary.closeDecorator.decorate(dd);
+		viewComp.decorate(dd);
 		parentStation.drop(dd, new SplitDockProperty(0, 0, 0.25, 0.9));
 		
 		dd = new DefaultDockable(reportView);
-		dd.setTitleIcon(control.getIcons().get("report"));
-		dd.setTitleText("Report");
-		DecoratorLibrary.closeDecorator.decorate(dd);
-		
+		reportView.decorate(dd);
 		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
 		
 		viewComp = ViewComponentFactory.get().createViewComponent(SimulationControlBarMVPComponent.class);
 		dd = new DefaultDockable(viewComp.getPanel());
-		dd.setTitleText(viewComp.getDefaultTitle());
-		dd.setTitleIcon(control.getIcons().get("monitor"));
+		/*
 		dd.setActionOffers(null);
 		HierarchyDockActionSource hdas = (HierarchyDockActionSource)dd.getGlobalActionOffers();
 		hdas.unbind();
+		*/
 		parentStation.drop(dd, new SplitDockProperty(0, 0.9, 1, 0.1));		
 	}
 	

@@ -122,7 +122,7 @@ public class TreeControllerAdapter {
 		
 		@Override 
 		public Icon getIcon() {
-			return AngeronaWindow.getInstance().getIcons().get("page_white");
+			return AngeronaWindow.get().getIcons().get("page_white");
 		}
 		
 		@Override

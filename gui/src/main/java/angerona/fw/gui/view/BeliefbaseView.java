@@ -14,6 +14,8 @@ import angerona.fw.gui.component.OperatorConfigController;
 import angerona.fw.gui.component.OperatorConfigPanel;
 import angerona.fw.internal.Entity;
 import angerona.fw.logic.BaseReasoner;
+import angerona.fw.logic.Beliefs;
+import bibliothek.gui.dock.DefaultDockable;
 
 /**
  * Generic ui view to show a belief base. It shows its content in a list
@@ -137,4 +139,21 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 		return BaseBeliefbase.class;
 	}
 
+	@Override
+	public void decorate(DefaultDockable dockable) {
+		super.decorate(dockable);
+		String title = ref.getAgent().getName();
+		Beliefs bel = ref.getAgent().getBeliefs();
+		if(ref == bel.getWorldKnowledge()) {
+			title += " - World";
+		} else {
+			for(String otherName : bel.getViewKnowledge().keySet()) {
+				if(bel.getViewKnowledge().get(otherName) == ref) {
+					title += " - View->" + otherName;
+					break;
+				}
+			}
+		}
+		dockable.setTitleText(title);
+	}
 }

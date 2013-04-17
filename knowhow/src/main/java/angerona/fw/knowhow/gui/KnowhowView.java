@@ -83,9 +83,4 @@ public class KnowhowView extends EntityViewComponent<KnowhowBase>
 	public Class<? extends KnowhowBase> getObservedType() {
 		return KnowhowBase.class;
 	}
-
-	@Override
-	public String getDefaultTitle() {
-		return "Know-how";
-	}
 }

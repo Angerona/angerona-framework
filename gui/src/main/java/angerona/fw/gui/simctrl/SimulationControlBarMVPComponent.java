@@ -2,7 +2,10 @@ package angerona.fw.gui.simctrl;
 
 import javax.swing.JPanel;
 
+import bibliothek.gui.dock.DefaultDockable;
+
 import angerona.fw.gui.AngeronaGUIDataStorage;
+import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.base.ViewComponent;
 
 public class SimulationControlBarMVPComponent implements ViewComponent {
@@ -20,8 +23,10 @@ public class SimulationControlBarMVPComponent implements ViewComponent {
 	}
 
 	@Override
-	public String getDefaultTitle() {
-		return "Simulation-Control Bar";
+	public void decorate(DefaultDockable dockable) {
+		dockable.setTitleText("Simulation-Control-Bar");
+		dockable.setTitleIcon(AngeronaWindow.get().getIcons().get("monitor"));
+		
 	}
 
 }

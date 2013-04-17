@@ -2,8 +2,12 @@ package angerona.fw.gui.project;
 
 import javax.swing.JPanel;
 
+import bibliothek.gui.dock.DefaultDockable;
+
 import angerona.fw.Angerona;
+import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.base.ViewComponent;
+import angerona.fw.gui.docking.DecoratorLibrary;
 
 /**
  * Encapsulates the project tree view as a ViewComponent. The same
@@ -28,8 +32,10 @@ public class ProjectTreeMVPComponent implements ViewComponent{
 	}
 
 	@Override
-	public String getDefaultTitle() {
-		return "Project Explorer";
+	public void decorate(DefaultDockable dockable) {
+		dockable.setTitleIcon(AngeronaWindow.get().getIcons().get("resources"));
+		dockable.setTitleText("Project Explorer");
+		DecoratorLibrary.closeDecorator.decorate(dockable);
 	}
 
 }

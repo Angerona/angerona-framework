@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 
+import bibliothek.gui.dock.DefaultDockable;
+
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.TreeControllerAdapter;
 
@@ -46,7 +48,7 @@ public class ResourcenView extends JPanel implements ViewComponent {
 	}
 
 	@Override
-	public String getDefaultTitle() {
-		return "Resourcen";
+	public void decorate(DefaultDockable dockable) {
+		dockable.setTitleText("Resourcen");
 	}
 }

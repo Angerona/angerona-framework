@@ -118,9 +118,9 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 			@Override
 			public Icon getIcon() {
 				if(entry.getAttachment() == null) {
-					return AngeronaWindow.getInstance().getIcons().get("report");
+					return AngeronaWindow.get().getIcons().get("report");
 				} else {
-					return AngeronaWindow.getInstance().getIcons().get("report_attachment");
+					return AngeronaWindow.get().getIcons().get("report_attachment");
 				}
 				
 			}
@@ -139,7 +139,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 					if(view == null) {
 						view = wnd.createViewForEntityComponent(at);
 					}
-					AngeronaWindow.getInstance().openView(view, "from Report(TODO)");
+					AngeronaWindow.get().openView(view);
 					
 					if(view != null && view instanceof NavigationUser){
 						NavigationUser lvc = (NavigationUser)view;
@@ -206,7 +206,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		
 		@Override
 		public Icon getIcon() {
-			return AngeronaWindow.getInstance().getIcons().get("agent");
+			return AngeronaWindow.get().getIcons().get("agent");
 		}
 		
 		@Override
