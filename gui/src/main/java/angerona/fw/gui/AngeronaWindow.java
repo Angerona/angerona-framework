@@ -33,6 +33,7 @@ import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.SimulationTreeController;
+import angerona.fw.gui.docking.DecoratorLibrary;
 import angerona.fw.gui.project.ProjectTreeMVPComponent;
 import angerona.fw.gui.simctrl.SimulationControlBar;
 import angerona.fw.gui.simctrl.SimulationControlBarMVPComponent;
@@ -52,10 +53,7 @@ import bibliothek.gui.Dockable;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.SplitDockStation;
 import bibliothek.gui.dock.StackDockStation;
-import bibliothek.gui.dock.action.DefaultDockActionSource;
 import bibliothek.gui.dock.action.HierarchyDockActionSource;
-import bibliothek.gui.dock.action.LocationHint;
-import bibliothek.gui.dock.action.actions.SimpleButtonAction;
 import bibliothek.gui.dock.station.split.SplitDockProperty;
 import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import bibliothek.gui.dock.themes.NoStackTheme;
@@ -197,7 +195,9 @@ public class AngeronaWindow extends WindowAdapter
 	public Dockable openView(ViewComponent view, String title) {
 		DefaultDockable dd = new DefaultDockable(view.getPanel());
 		dd.setTitleText(title);
-		createCloseButton(dd);
+		
+		DecoratorLibrary.closeDecorator.decorate(dd);
+		
 		// easy if the center is a stack already, only adding the Dockable to the stack.
 		if(mainStack.getController() != null) {
 			mainStack.drop(dd);
@@ -346,23 +346,6 @@ public class AngeronaWindow extends WindowAdapter
 		}
 		return image;
 	}
-
-	private void createCloseButton(final DefaultDockable dd) {
-		DefaultDockActionSource actionSource = new DefaultDockActionSource(
-				new LocationHint(LocationHint.DOCKABLE, LocationHint.RIGHT_OF_ALL));
-		SimpleButtonAction sba = new SimpleButtonAction();
-		sba.setText("Close");
-		sba.setIcon(control.getIcons().get("close"));
-		sba.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				dd.getDockParent().drag(dd);
-			}
-		});
-		actionSource.add(sba);
-		dd.setActionOffers(actionSource);
-		
-	}
 	
 	private void createDefaultPerspective() {
 		parentStation.removeAllDockables();
@@ -371,11 +354,14 @@ public class AngeronaWindow extends WindowAdapter
 		DefaultDockable dd = new DefaultDockable(viewComp.getPanel());
 		dd.setTitleIcon(control.getIcons().get("resources"));
 		dd.setTitleText(viewComp.getDefaultTitle());
+		DecoratorLibrary.closeDecorator.decorate(dd);
 		parentStation.drop(dd, new SplitDockProperty(0, 0, 0.25, 0.9));
 		
 		dd = new DefaultDockable(reportView);
 		dd.setTitleIcon(control.getIcons().get("report"));
 		dd.setTitleText("Report");
+		DecoratorLibrary.closeDecorator.decorate(dd);
+		
 		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
 		
 		viewComp = ViewComponentFactory.get().createViewComponent(SimulationControlBarMVPComponent.class);
