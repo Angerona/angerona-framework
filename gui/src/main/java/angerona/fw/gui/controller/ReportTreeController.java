@@ -133,7 +133,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 			public void onActivated() {
 				if(entry.getAttachment() != null) {
 					Entity at = entry.getAttachment();
-					ViewComponentFactory wnd = ViewComponentFactory.getInstance();
+					ViewComponentFactory wnd = ViewComponentFactory.get();
 					// find the view
 					ViewComponent view = wnd.getBaseViewObservingEntity(at);
 					if(view == null) {

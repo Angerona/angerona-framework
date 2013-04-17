@@ -46,7 +46,7 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	private void handlerAgentComponent(AgentComponent component) {
 		String agname = component.getAgent().getName();
 		LOG.trace("Handle AgentComponent: '{}' of Agent '{}'.", agname);
-		ViewComponent view = ViewComponentFactory.getInstance().createViewForEntityComponent(component);
+		ViewComponent view = ViewComponentFactory.get().createViewForEntityComponent(component);
 		if(view != null) {
 			Dockable dd = AngeronaWindow.getInstance().openView(view, 
 					component.getClass().getSimpleName() + " - " + agname);
@@ -90,12 +90,12 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 		/** @todo More dynamically... using plugin architecture etc. */
 		Dockable dd = null;
 		if(bb.getFileEnding().toLowerCase().equals("asp")) {
-			ViewComponent view = ViewComponentFactory.getInstance().createViewForEntityComponent(bb);
+			ViewComponent view = ViewComponentFactory.get().createViewForEntityComponent(bb);
 			if(view != null) {
 				dd = AngeronaWindow.getInstance().openView(view, title);
 			}
 		} else {
-			BeliefbaseView bc = ViewComponentFactory.getInstance().createEntityView(
+			BeliefbaseView bc = ViewComponentFactory.get().createEntityView(
 					BeliefbaseView.class, bb);
 			dd = AngeronaWindow.getInstance().openView(bc, title);
 		}

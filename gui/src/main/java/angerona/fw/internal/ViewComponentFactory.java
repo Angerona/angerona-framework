@@ -18,6 +18,17 @@ public class ViewComponentFactory {
 	/** map containing an Entity as key mapping to all the views showing the entity */
 	private Map<Entity, List<ViewComponent>> registeredViewsByEntity = new HashMap<Entity, List<ViewComponent>>();
 	
+	public <T extends ViewComponent> T createViewComponent(Class<T> cls) {
+		try {
+			if(!UIPluginInstatiator.getInstance().getViewMap().values().contains(cls)) {
+				LOG.warn("The class '{}' is not registered as by the UIPluginInstatiator.", cls.getName());
+			}
+			return cls.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			return null;
+		}
+	}
+	
 	/**
 	 * Creates (but not add) a view for the given AgentComponent. 
 	 * @param comp	Reference to the component which should be showed in the new view.
@@ -90,7 +101,7 @@ public class ViewComponentFactory {
 	
 	private static ViewComponentFactory mInstance;
 	
-	public static ViewComponentFactory getInstance() {
+	public static ViewComponentFactory get() {
 		if(mInstance == null) {
 			mInstance = new ViewComponentFactory();
 		}

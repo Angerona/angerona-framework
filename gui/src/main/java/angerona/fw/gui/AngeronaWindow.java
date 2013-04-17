@@ -33,15 +33,16 @@ import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.SimulationTreeController;
-import angerona.fw.gui.project.ProjectPresenter;
-import angerona.fw.gui.project.ProjectTreeView;
+import angerona.fw.gui.project.ProjectTreeMVPComponent;
 import angerona.fw.gui.simctrl.SimulationControlBar;
+import angerona.fw.gui.simctrl.SimulationControlBarMVPComponent;
 import angerona.fw.gui.simctrl.SimulationControlMenu;
 import angerona.fw.gui.simctrl.SimulationControlPresenter;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.internal.UIPluginInstatiator;
+import angerona.fw.internal.ViewComponentFactory;
 import angerona.fw.listener.FrameworkListener;
 import angerona.fw.listener.SimulationListener;
 import bibliothek.extension.gui.dock.theme.SmoothTheme;
@@ -79,8 +80,6 @@ public class AngeronaWindow extends WindowAdapter
 	private StackDockStation mainStack;
 	
 	private SplitDockStation parentStation;
-	
-	private ProjectTreeView resourceView;
 	
 	private ReportView reportView;
 	
@@ -312,10 +311,6 @@ public class AngeronaWindow extends WindowAdapter
 		}
 		
 		
-		
-		resourceView = new ProjectTreeView();
-		new ProjectPresenter(Angerona.getInstance().getProject(), resourceView);
-		
 		reportView = new ReportView();
 		
 		createDefaultPerspective();
@@ -372,9 +367,10 @@ public class AngeronaWindow extends WindowAdapter
 	private void createDefaultPerspective() {
 		parentStation.removeAllDockables();
 		
-		DefaultDockable dd = new DefaultDockable(resourceView);
+		ViewComponent viewComp = ViewComponentFactory.get().createViewComponent(ProjectTreeMVPComponent.class);
+		DefaultDockable dd = new DefaultDockable(viewComp.getPanel());
 		dd.setTitleIcon(control.getIcons().get("resources"));
-		dd.setTitleText("Angerona Resources");
+		dd.setTitleText(viewComp.getDefaultTitle());
 		parentStation.drop(dd, new SplitDockProperty(0, 0, 0.25, 0.9));
 		
 		dd = new DefaultDockable(reportView);
@@ -382,10 +378,9 @@ public class AngeronaWindow extends WindowAdapter
 		dd.setTitleText("Report");
 		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
 		
-		simLoadBar = new SimulationControlBar();
-		new SimulationControlPresenter(AngeronaGUIDataStorage.get().getSimulationControl(), simLoadBar);
-		dd = new DefaultDockable(simLoadBar);
-		dd.setTitleText("Simulation Control Bar");
+		viewComp = ViewComponentFactory.get().createViewComponent(SimulationControlBarMVPComponent.class);
+		dd = new DefaultDockable(viewComp.getPanel());
+		dd.setTitleText(viewComp.getDefaultTitle());
 		dd.setTitleIcon(control.getIcons().get("monitor"));
 		dd.setActionOffers(null);
 		HierarchyDockActionSource hdas = (HierarchyDockActionSource)dd.getGlobalActionOffers();
