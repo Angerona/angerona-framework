@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.nav;
 import angerona.fw.internal.Entity;
 import angerona.fw.report.ReportEntry;
 

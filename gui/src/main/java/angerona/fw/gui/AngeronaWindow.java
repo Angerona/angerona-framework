@@ -397,13 +397,14 @@ public class AngeronaWindow extends WindowAdapter
 	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
 		SimulationTreeController stc = new SimulationTreeController(new JTree());
 		stc.simulationStarted(simulationEnvironment);
+		
 		ResourcenView rv = new ResourcenView(stc);
 		DefaultDockable dd = new DefaultDockable(new JScrollPane(rv));
 		dd.setTitleText("Entities of '" + simulationEnvironment.getName() + "'");
 		dd.setTitleIcon(control.getIcons().get("simulation"));
 		parentStation.drop(dd, SplitDockProperty.WEST);
-		
 		resMap.add(dd);
+		
 	}
 
 	@Override

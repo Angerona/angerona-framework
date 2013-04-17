@@ -2,9 +2,9 @@ package angerona.fw.gui.simctrl;
 
 import javax.swing.AbstractButton;
 
+import angerona.fw.gui.base.View;
 import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
-import angerona.fw.util.PropertyObserver;
 
 /**
  * This interface returns all important controls which form a View for
@@ -14,7 +14,7 @@ import angerona.fw.util.PropertyObserver;
  * 
  * @author Tim Janus
  */
-public interface SimulationControlView extends PropertyObserver {
+public interface SimulationControlView extends View {
 	/** @return The button responsible for changing the SimulationState. */
 	AbstractButton getSimStateButton();
 	

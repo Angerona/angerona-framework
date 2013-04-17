@@ -14,6 +14,8 @@ import angerona.fw.util.ModelAdapter;
  * @author Tim Janus
  *
  * @param <T>
+ * @deprecated
+ * @todo implement as MVP (use the {@link OperatorSet} as model)
  */
 public class OperatorConfig extends ModelAdapter {
 	/** the original parameters of the operator */

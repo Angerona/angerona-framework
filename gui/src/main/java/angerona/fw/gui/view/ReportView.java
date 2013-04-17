@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Angerona;
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.ReportTreeController;
-import angerona.fw.gui.controller.TreeController;
+import angerona.fw.gui.controller.TreeControllerAdapter;
 import angerona.fw.report.ReportWikiGenerator;
 
 /**
@@ -33,7 +33,7 @@ public class ReportView extends JPanel implements ViewComponent {
     
 	private JTree tree;
 
-	private TreeController controller;
+	private TreeControllerAdapter controller;
 	
 	public ReportView() {
     	tree = new JTree();

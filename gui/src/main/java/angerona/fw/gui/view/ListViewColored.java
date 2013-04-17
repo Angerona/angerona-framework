@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
-import angerona.fw.gui.NavigationPanel;
-import angerona.fw.gui.NavigationUser;
 import angerona.fw.gui.base.EntityViewComponent;
+import angerona.fw.gui.nav.NavigationPanel;
+import angerona.fw.gui.nav.NavigationUser;
 import angerona.fw.internal.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;

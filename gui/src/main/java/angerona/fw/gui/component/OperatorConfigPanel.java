@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
@@ -23,6 +21,11 @@ import angerona.fw.gui.base.ObservingPanel;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.util.Pair;
 
+/**
+ * 
+ * @deprecated
+ * @todo implment with MVP
+ */
 public class OperatorConfigPanel extends ObservingPanel {
 
 	/** kill warning */

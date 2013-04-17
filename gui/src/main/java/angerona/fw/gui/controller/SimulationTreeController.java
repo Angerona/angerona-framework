@@ -21,6 +21,9 @@ import angerona.fw.internal.ViewComponentFactory;
 import angerona.fw.listener.SimulationListener;
 import bibliothek.gui.Dockable;
 
+/**
+ * @deprecated
+ */
 public class SimulationTreeController extends TreeControllerAdapter implements SimulationListener {
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(SimulationTreeController.class);

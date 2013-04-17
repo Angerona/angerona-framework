@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.util.tree;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,6 +10,7 @@ import javax.swing.tree.MutableTreeNode;
  * A node in a JTree which sorts its children. The default behavior is an
  * alphabetically ordering but the developer can provide an instance of
  * Comparator<DefaultMutableTreeNode> to override this behavior.
+ * 
  * @author Tim Janus
  */
 public class SortedTreeNode extends DefaultMutableTreeNode {

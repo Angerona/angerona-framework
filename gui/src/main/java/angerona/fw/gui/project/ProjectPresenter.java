@@ -5,15 +5,20 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 
 import angerona.fw.AngeronaProject;
+import angerona.fw.error.AngeronaException;
 import angerona.fw.gui.AngeronaGUIDataStorage;
 import angerona.fw.gui.base.Presenter;
 import angerona.fw.gui.project.ProjectView.UserObjectFactory;
-import angerona.fw.gui.util.TreeHelper.DefaultUserObjectWrapper;
-import angerona.fw.gui.util.TreeHelper.UserObjectWrapper;
+import angerona.fw.gui.util.CollectionMonitor.CollectionMonitorListener;
+import angerona.fw.gui.util.DefaultUserObjectWrapper;
+import angerona.fw.gui.util.UserObjectWrapper;
 import angerona.fw.serialize.Resource;
 import angerona.fw.serialize.SimulationConfiguration;
 
@@ -25,13 +30,10 @@ import angerona.fw.serialize.SimulationConfiguration;
  */
 public class ProjectPresenter 
 	extends Presenter<AngeronaProject, ProjectView> 
-	implements ActionListener {
+	implements ActionListener, CollectionMonitorListener {
 
 	/** the file chooser used to load new resources */
 	private JFileChooser fileChooser = new JFileChooser();
-	
-	/** the currently selected resource */
-	private Resource selectedResource;
 	
 	/**
 	 * Ctor: needs the model and view 
@@ -58,6 +60,7 @@ public class ProjectPresenter
 				return file.getAbsolutePath().endsWith(".xml");
 			}
 		});
+		setCurrentDirectory(new File("."));
 	}
 	
 	/**
@@ -81,7 +84,8 @@ public class ProjectPresenter
 		
 		view.getAddButton().addActionListener(this);
 		view.getRemoveButton().addActionListener(this);
-		view.setUserObjectFactory(new ResourceUserObjectFactory());
+		view.setResourcesUserObjectFactory(new ResourceUserObjectFactory());
+		view.getResourceCollectionController().addListener(this);
 	}
 
 	@Override
@@ -90,14 +94,14 @@ public class ProjectPresenter
 		
 		view.getAddButton().removeActionListener(this);
 		view.getRemoveButton().removeActionListener(this);
-		view.setUserObjectFactory(null);
+		view.setResourcesUserObjectFactory(null);
+		view.getResourceCollectionController().removeListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == view.getRemoveButton() &&
-				selectedResource != null) {
-			model.removeResource(selectedResource);
+		if(e.getSource() == view.getRemoveButton()) {
+			onRemove();
 		} else if(e.getSource() == view.getAddButton()) {
 			fileChooser.showOpenDialog(view.getAddButton());
 			
@@ -105,14 +109,45 @@ public class ProjectPresenter
 			if(selFile != null) {
 				try {
 					model.loadFile(selFile);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (IOException|AngeronaException ex) {
+					String msg = "Cannot load: '" + selFile.getAbsolutePath() + 
+							"' cause: '" + ex.getMessage() + "'.";
+					// TODO: Move in helper class
+					JTextArea txtArea = new JTextArea();
+					txtArea.setColumns(30);
+					txtArea.setLineWrap( true );
+					txtArea.setWrapStyleWord( true );
+					txtArea.append(msg);
+					txtArea.setSize(txtArea.getPreferredSize().width, 1);
+					
+					JOptionPane.showMessageDialog(view.getRootComponent(), txtArea, 
+							"Cannot load!", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
 	}
+
+	@Override
+	public void invokeRemove(JComponent sender) {
+		onRemove();
+	}
 	
+	/**
+	 * Is called if the selected resources of a project shall be removed. 
+	 */
+	private void onRemove() {
+		for(Resource res: view.getResourceCollectionController().getSelectedUserObjectsOfType(Resource.class)) {
+			model.removeResource(res);
+		}
+	}
+	
+	/**
+	 * Base class for Resource user object wrapper. It uses the Resource name
+	 * as name in the UI.
+	 * @author Tim Janus
+	 *
+	 * @param <T>	Type of the Resource
+	 */
 	private class ResUserObject<T extends Resource> extends DefaultUserObjectWrapper {
 		public ResUserObject(T uo) {
 			super(uo);
@@ -130,23 +165,29 @@ public class ProjectPresenter
 		}
 	}
 	
+	/**
+	 * A user object wrapper for simulation configurations, it loads the 
+	 * simulation configuration if it is activated.
+	 * 
+	 * @author Tim Janus
+	 */
 	private class SimUserObject extends ResUserObject<SimulationConfiguration> {
-
 		public SimUserObject(SimulationConfiguration sc) {
 			super(sc);
 		}
-
 		@Override
 		public void onActivated() {
 			AngeronaGUIDataStorage.get().getSimulationControl().setSimulation(getUserObject());
 		}
-
-		@Override
-		public void onSelected() {
-			selectedResource = getUserObject();
-		}
 	}
 	
+	/**
+	 * The ResourceUserObjectFactory returns user object wrappers for the given
+	 * Resources. It determines the type of the user object wrapper by instanceof
+	 * checks of the given Resource.
+	 * 
+	 * @author Tim Janus
+	 */
 	private class ResourceUserObjectFactory implements UserObjectFactory {
 
 		@Override

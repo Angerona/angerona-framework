@@ -1,18 +1,17 @@
 package angerona.fw.gui.base;
 
 import angerona.fw.util.Model;
-import angerona.fw.util.PropertyObserver;
 
 /**
- * An abstract base class defining general methods of a presenter like setModel()
- * and setView(). It wires view as a listener of the model and forces a view update
- * if the model/view is set.
+ * An abstract base class defining general methods of a presenter in the MVP pattern 
+ * like setModel() and setView(). It wires view as a listener of the model and forces 
+ * a view update if the model/view is set.
  * @author Tim Janus
  *
  * @param <M>	Type of the Model
  * @param <V>	Type of the View
  */
-public abstract class Presenter<M extends Model, V extends PropertyObserver> {
+public abstract class Presenter<M extends Model, V extends View> {
 	/** the data model */
 	protected M model;
 	
@@ -27,11 +26,13 @@ public abstract class Presenter<M extends Model, V extends PropertyObserver> {
 	public void setModel(M model) {
 		if(this.model != null && view != null) {
 			this.model.removePropertyObserver(view);
+			this.model.removeMapObserver(view);
 		}
 		this.model = model;
 		if(this.model != null && view != null) {
 			forceUpdate();
 			this.model.addPropertyObserver(view);
+			this.model.addMapObserver(view);
 		}
 	}
 	

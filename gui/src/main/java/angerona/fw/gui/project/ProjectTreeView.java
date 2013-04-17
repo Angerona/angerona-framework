@@ -13,18 +13,18 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import angerona.fw.AngeronaProject;
-import angerona.fw.gui.SortedTreeNode;
 import angerona.fw.gui.base.ObservingPanel;
-import angerona.fw.gui.util.TreeHelper;
-import angerona.fw.gui.util.TreeHelper.UserObjectWrapper;
+import angerona.fw.gui.util.CollectionMonitor;
+import angerona.fw.gui.util.UserObjectWrapper;
+import angerona.fw.gui.util.tree.SortedTreeNode;
+import angerona.fw.gui.util.tree.TreeCollectionMonitor;
+import angerona.fw.gui.util.tree.TreeHelper;
 import angerona.fw.serialize.Resource;
 import angerona.fw.serialize.SimulationConfiguration;
 
@@ -52,6 +52,8 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 	
 	private Map<String, DefaultMutableTreeNode> typeNodeMap = new HashMap<>();
 	
+	private CollectionMonitor<JTree> treeController = new TreeCollectionMonitor();
+	
 	public ProjectTreeView() {
 		this.setLayout(new BorderLayout());
 		
@@ -61,6 +63,7 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 		root = new DefaultMutableTreeNode("root");
 		model = new DefaultTreeModel(root);
 		tree.setModel(model);
+		treeController.setComponent(tree);
 		
 		tree.updateUI();
 		
@@ -79,15 +82,7 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 				int y = e.getY();
 				
 				TreePath path = tree.getPathForLocation(x,y);
-				if(SwingUtilities.isLeftMouseButton(e)) {
-					if(e.getClickCount() == 2) {
-						DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)path.getLastPathComponent();
-						if(dmtn != null) {
-							UserObjectWrapper uo = (UserObjectWrapper)dmtn.getUserObject();
-							uo.onActivated();
-						}
-					}
-				} else if(SwingUtilities.isRightMouseButton(e)) {
+				if(SwingUtilities.isRightMouseButton(e)) {
 					if(path == null) {
 						categoryContextMenu.show(tree, x, y);
 					} else {
@@ -95,17 +90,6 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 						leafContextMenu.show(tree, x, y);
 					}
 				} 
-			}
-		});
-		
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-			
-			@Override
-			public void valueChanged(TreeSelectionEvent ev) {
-				DefaultMutableTreeNode dmtn= (DefaultMutableTreeNode)ev.getPath().getLastPathComponent();
-				if(dmtn != null) {
-					((UserObjectWrapper)dmtn.getUserObject()).onSelected();
-				}
 			}
 		});
 	}
@@ -231,9 +215,14 @@ public class ProjectTreeView extends ObservingPanel implements ProjectView {
 	}
 
 	@Override
-	public void setUserObjectFactory(UserObjectFactory factory) {
+	public void setResourcesUserObjectFactory(UserObjectFactory factory) {
 		if(factory != null) {
 			this.factory = factory;
 		}
+	}
+
+	@Override
+	public CollectionMonitor<?> getResourceCollectionController() {
+		return treeController;
 	}
 }

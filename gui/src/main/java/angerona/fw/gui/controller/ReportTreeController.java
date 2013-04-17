@@ -9,16 +9,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.AngeronaWindow;
-import angerona.fw.gui.NavigationUser;
 import angerona.fw.gui.base.ViewComponent;
+import angerona.fw.gui.nav.NavigationUser;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.ViewComponentFactory;
 import angerona.fw.listener.SimulationAdapter;
@@ -31,11 +28,9 @@ import angerona.fw.report.ReportOutputGenerator;
  * an report entry which contains a attachment are clicked --> opens a
  * view for those attachments.
  * @author Tim Janus
+ * @deprecated
  */
 public class ReportTreeController extends TreeControllerAdapter implements ReportOutputGenerator<JTree> {
-
-	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(ReportTreeController.class);
 	
 	private DefaultMutableTreeNode rootNode;
 	

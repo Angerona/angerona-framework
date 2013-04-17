@@ -1,17 +1,21 @@
 package angerona.fw.gui.simctrl;
 
 import javax.swing.AbstractButton;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import angerona.fw.gui.base.ViewAdapter;
 import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
 
 /**
- * This view extends a JMenu with two buttons to control the simulation
+ * This view extends a JMenu with two buttons to allow the user to control the simulation
+ * using menu items.
+ * 
  * @author Tim Janus
  */
-public class SimulationControlMenu implements SimulationControlView {
+public class SimulationControlMenu extends ViewAdapter implements SimulationControlView {
 
 	/** the menu item used to change the state of the simulation */
 	private JMenuItem miState;
@@ -19,11 +23,14 @@ public class SimulationControlMenu implements SimulationControlView {
 	/** the menu item used to laod another simulation configuration */
 	private JMenuItem miLoad;
 
+	private JMenu parent;
+	
 	/**
 	 * Adds MenuItems to the given parent menu
 	 * @param parent	The menu holding the menu items.
 	 */
 	public SimulationControlMenu(JMenu parent) {
+		this.parent = parent;
 		miState = new JMenuItem("Init");
 		miLoad = new JMenuItem("Load...");
 		parent.add(miState);
@@ -80,19 +87,9 @@ public class SimulationControlMenu implements SimulationControlView {
 	public void onSimulationConfigChanged(SimulationConfiguration config) {
 		// does nothing
 	}
-	
-	@Override
-	public <T> boolean allowPropertyChange(String propertyName, T oldValue,
-			T newValue) {
-		// does nothing
-		return true;
-	}
 
 	@Override
-	public <T> T transformPropertyChange(String propertyName, T oldValue,
-			T newValue) {
-		// does nothing
-		return null;
+	public JComponent getRootComponent() {
+		return parent;
 	}
-
 }

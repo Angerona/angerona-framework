@@ -1,4 +1,4 @@
-package angerona.fw.gui;
+package angerona.fw.gui.nav;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Angerona;
-import angerona.fw.gui.nav.NavigationControl;
 import angerona.fw.report.ReportEntry;
 
 /**

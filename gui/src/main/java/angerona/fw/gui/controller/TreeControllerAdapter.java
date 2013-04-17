@@ -18,9 +18,9 @@ import angerona.fw.gui.AngeronaWindow;
  * which wrap an object with an onActivate method which is indicated if
  * the node is double clicked.
  * @author Tim Janus
- *
+ * @deprecated
  */
-public class TreeControllerAdapter implements TreeController {
+public class TreeControllerAdapter {
 	
 	protected JTree tree;
 	
@@ -38,7 +38,6 @@ public class TreeControllerAdapter implements TreeController {
 	}
 
 	
-	@Override
 	public JTree getTree() {
 		return tree;
 	}

@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.error.AngeronaException;
 import angerona.fw.serialize.AgentConfigReal;
 import angerona.fw.serialize.BeliefbaseConfigReal;
 import angerona.fw.serialize.Resource;
@@ -58,7 +59,7 @@ public class AngeronaProject extends ModelAdapter {
 		}
 	}
 	
-	public void loadFile(File file) throws IOException {
+	public void loadFile(File file) throws IOException, AngeronaException {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line = null;
 		
@@ -83,8 +84,11 @@ public class AngeronaProject extends ModelAdapter {
 		if(cls != null) {
 			loadResource(file, cls);
 		} else {
-			LOG.warn("The file '{}' neither is no Angerona resource, therefore it cannot be " +
-					"loaded by the Angerona Project.", file.getAbsolutePath());
+			String message = String.format("The file '%s' is no Angerona resource, " +
+					"therefore it cannot be loaded by the Angerona Project.", 
+					file.getAbsolutePath());
+			LOG.warn(message);
+			throw new AngeronaException(message);
 		}
 	}
 	
@@ -103,7 +107,12 @@ public class AngeronaProject extends ModelAdapter {
 			return;
 		for(File actFile : files) {
 			if(actFile.isFile() && actFile.getPath().endsWith("xml")) {
-				loadFile(actFile);
+				try {
+					loadFile(actFile);
+				} catch(AngeronaException e) {
+					LOG.info("'{}' is no Angerona project resource and therefore be skipped.", 
+							actFile.getAbsolutePath());
+				}
 			} else if(actFile.isDirectory()) {
 				addDirectory(actFile);
 			}

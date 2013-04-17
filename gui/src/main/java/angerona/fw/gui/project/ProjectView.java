@@ -1,25 +1,32 @@
 package angerona.fw.gui.project;
 
 import javax.swing.AbstractButton;
+import javax.swing.JComponent;
 
 import angerona.fw.AngeronaProject;
-import angerona.fw.gui.util.TreeHelper.DefaultUserObjectWrapper;
-import angerona.fw.gui.util.TreeHelper.UserObjectWrapper;
+import angerona.fw.gui.base.View;
+import angerona.fw.gui.util.CollectionMonitor;
+import angerona.fw.gui.util.DefaultUserObjectWrapper;
+import angerona.fw.gui.util.UserObjectWrapper;
 import angerona.fw.serialize.Resource;
-import angerona.fw.util.MapObserver;
-import angerona.fw.util.PropertyObserver;
 
 /**
  * An interface for views for the Angerona project.
  * @author Tim Janus
  */
-public interface ProjectView extends PropertyObserver, MapObserver {	
+public interface ProjectView extends View {	
 	
 	public static interface UserObjectFactory {
 		UserObjectWrapper createUserObject(Resource res);
 	}
 	
-	void setUserObjectFactory(UserObjectFactory factory);
+	/**
+	 * @return The controller watching the changes of the resource collection 
+	 */
+	CollectionMonitor<? extends JComponent> getResourceCollectionController();
+	
+	/** sets the factory used to create user objects for the resource collection view */
+	void setResourcesUserObjectFactory(UserObjectFactory factory);
 	
 	/**
 	 * @return The button responsible to remove the selected resource
