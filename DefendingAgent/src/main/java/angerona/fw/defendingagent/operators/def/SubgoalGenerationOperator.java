@@ -177,48 +177,85 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		pp.report("Check all possible answers to revision request");
 		
-		// check for each secret whether it might be revealed by this revision operation
-		for(Secret a : conf.getTargets()){
-			if(cexec.skepticalInference(view
-					.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE), a.getInformation())){
-						Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
-						Subgoal answerGoal = new Subgoal(ag, desire);
-						answerGoal.newStack(answer);
-						ag.getPlanComponent().addPlan(answerGoal);
-						pp.report("Answer 'true' would reveal secret " + a + ". reject the revision.");
-						pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
-								"' to the plan", ag.getPlanComponent());
-						return true;
-			}
-		}
-		if(cexec.poss(view
-				.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_FALSE))){
-			if(!cexec.poss(view
-					.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE))){
-					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_FALSE);
+		// check if revision would reveal a secret
+		View refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE);
+		if(cexec.poss(refinedView)) {
+			for(Secret s : conf.getTargets()) {
+				if(cexec.skepticalInference(refinedView, s.getInformation())) {
+					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
 					ag.getPlanComponent().addPlan(answerGoal);
-					pp.report("Attacker already knows that revision is not even possible. Answer 'false'.");
+					pp.report("Revision would reveal secret " + s + ". Reject the revision.");
 					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 							"' to the plan", ag.getPlanComponent());
 					return true;
-			}else{
-				for(Secret a : conf.getTargets()){
-					if(cexec.skepticalInference(view
-							.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_FALSE), a.getInformation())){
-								Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
-								Subgoal answerGoal = new Subgoal(ag, desire);
-								answerGoal.newStack(answer);
-								ag.getPlanComponent().addPlan(answerGoal);
-								pp.report("Answer 'false' would reveal secret " + a + ". reject the revision.");
-								pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
-										"' to the plan", ag.getPlanComponent());
-								return true;
-							}
-					}
+				}
 			}
 		}
+		
+		// check if the failure of the revision would reveal a secret
+		refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_FALSE);
+		if(cexec.poss(refinedView)) {
+			for(Secret s : conf.getTargets()) {
+				if(cexec.skepticalInference(refinedView, s.getInformation())) {
+					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
+					Subgoal answerGoal = new Subgoal(ag, desire);
+					answerGoal.newStack(answer);
+					ag.getPlanComponent().addPlan(answerGoal);
+					pp.report("Revision failure would reveal secret " + s + ". Reject the revision.");
+					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+							"' to the plan", ag.getPlanComponent());
+					return true;
+				}
+			}
+		}
+		
+		//
+		// OLD METHOD
+		//
+		// check for each secret whether it might be revealed by this revision operation
+//		for(Secret a : conf.getTargets()){
+//			if(cexec.skepticalInference(view
+//					.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE), a.getInformation())){
+//						Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
+//						Subgoal answerGoal = new Subgoal(ag, desire);
+//						answerGoal.newStack(answer);
+//						ag.getPlanComponent().addPlan(answerGoal);
+//						pp.report("Answer 'true' would reveal secret " + a + ". reject the revision.");
+//						pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+//								"' to the plan", ag.getPlanComponent());
+//						return true;
+//			}
+//		}
+//		if(cexec.poss(view
+//				.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_FALSE))){
+//			if(!cexec.poss(view
+//					.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_TRUE))){
+//					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_FALSE);
+//					Subgoal answerGoal = new Subgoal(ag, desire);
+//					answerGoal.newStack(answer);
+//					ag.getPlanComponent().addPlan(answerGoal);
+//					pp.report("Attacker already knows that revision is not even possible. Answer 'false'.");
+//					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+//							"' to the plan", ag.getPlanComponent());
+//					return true;
+//			}else{
+//				for(Secret a : conf.getTargets()){
+//					if(cexec.skepticalInference(view
+//							.RefineViewByQuery(revision.getProposition(), AnswerValue.AV_FALSE), a.getInformation())){
+//								Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
+//								Subgoal answerGoal = new Subgoal(ag, desire);
+//								answerGoal.newStack(answer);
+//								ag.getPlanComponent().addPlan(answerGoal);
+//								pp.report("Answer 'false' would reveal secret " + a + ". reject the revision.");
+//								pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+//										"' to the plan", ag.getPlanComponent());
+//								return true;
+//							}
+//					}
+//			}
+//		}
 		pp.report("No answer would reveal a secret. Comence revision.");
 		// revision would not breach confidentiality, continue revising beliefbase
 		AnswerValue answerValue = AnswerValue.AV_FALSE;
