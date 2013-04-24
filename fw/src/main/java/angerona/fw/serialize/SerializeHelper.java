@@ -14,7 +14,6 @@ import org.simpleframework.xml.transform.RegistryMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.comm.SpeechAct;
 import angerona.fw.reflection.BooleanExpression;
 import angerona.fw.reflection.Condition;
 import angerona.fw.reflection.FolFormulaVariable;
@@ -22,7 +21,6 @@ import angerona.fw.reflection.Value;
 import angerona.fw.serialize.transform.ConditionTransform;
 import angerona.fw.serialize.transform.FolAtomTransform;
 import angerona.fw.serialize.transform.FolFormulaTransform;
-import angerona.fw.serialize.transform.SpeechActTransform;
 import angerona.fw.serialize.transform.SpeechActStrategy;
 import angerona.fw.serialize.transform.ValueTransform;
 import angerona.fw.serialize.transform.VariableTransform;
