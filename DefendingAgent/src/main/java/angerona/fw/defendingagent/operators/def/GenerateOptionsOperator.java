@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent.operators.def;
+package angerona.fw.defendingagent.operators.def;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,10 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Desire;
-import angerona.fw.DefendingAgent.comm.Revision;
 import angerona.fw.am.secrecy.operators.BaseGenerateOptionsOperator;
 import angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.comm.Query;
+import angerona.fw.defendingagent.comm.Revision;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.logic.Desires;
 

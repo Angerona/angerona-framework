@@ -1,4 +1,4 @@
-package angerona.fw.DefendingAgent;
+package angerona.fw.defendingagent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.util.LogicTranslator;
 
 /**
  * Represents the defending agents approximation of the attacking agents view

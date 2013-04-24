@@ -1,9 +1,10 @@
-package angerona.fw.DefendingAgent.Prover;
+package angerona.fw.defendingagent.Prover;
 
 import java.util.HashMap;
 
 import se.sics.jasper.Query;
 import se.sics.jasper.SICStus;
+import se.sics.jasper.SPException;
 
 /**
  * This class lets users to ask the theorem prover to find a closed tree for a
@@ -24,13 +25,21 @@ public class Prover {
 	/**
 	 * The following object is used to interact with the SICStus Prolog kernel
 	 * */
-	SICStus sp;
+	private static SICStus sp;
 
 	/**
 	 * C´tor
 	 */
 	public Prover() {
-		sp = null;
+		if (sp == null) {
+			/* Instantiating a SICStus object */
+			try {
+				sp = new SICStus();
+			} catch (SPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -58,30 +67,26 @@ public class Prover {
 
 		/* Initialize the SICStus Prolog engine */
 		try {
-			if (sp == null) {
-				/* Instantiating a SICStus object */
-				sp = new SICStus();
-			}
 			/* Parameter 1 determines the KLM logic to consider */
 			switch (chooseSolver) {
 			case CUMMULATIV: {
-				sp.restore("tct.sav");
+				sp.restore("resources/tct.sav");
 				break;
 			}
 			case LOOP_CUMMULATIV: {
-				sp.restore("tclt.sav");
+				sp.restore("resources/tclt.sav");
 				break;
 			}
 			case PREFERENTIAL: {
-				sp.restore("tpt.sav");
+				sp.restore("resources/tpt.sav");
 				break;
 			}
 			case RATIONAL: {
-				sp.restore("trt.sav");
+				sp.restore("resources/trt.sav");
 				break;
 			}
 			case FREE_RATIONAL: {
-				sp.restore("trtfree.sav");
+				sp.restore("resources/trtfree.sav");
 				break;
 			}
 			}
@@ -95,7 +100,7 @@ public class Prover {
 			 * language
 			 */
 			String kBaseList = new String("[");
-			for (int i = 0; i < 32; i++) {
+			for (int i = 0; i < kFormulas.length; i++) {
 				String currentFormula = this.kFormulas[i];
 				if (currentFormula.length() > 0)
 					kBaseList = kBaseList + currentFormula + ",";
@@ -115,12 +120,12 @@ public class Prover {
 			String toProveList = new String("[" + this.formulaToProve + "]");
 
 			goal = new String("parseinput(" + toProveList + ").");
+			System.out.println("GOAL: "+goal);
 			q = sp.openPrologQuery(goal, map);
 			if (!(q.nextSolution())) {
 				System.err
 						.println("Error in the formula to prove: you cannot use nested conditionals");
 			}
-
 			/*
 			 * Step 3: finding a derivation of the formula from the knowledge
 			 * base by using the calculi for KLM logics
@@ -128,6 +133,7 @@ public class Prover {
 
 			goal = new String("unsatinterface(" + kBaseList + "," + toProveList
 					+ ",Tree).");
+			System.out.println("kbaselist:" + kBaseList);
 			q = sp.openPrologQuery(goal, map);
 			if (q.nextSolution()) {
 				// Success
@@ -141,7 +147,9 @@ public class Prover {
 			}
 
 		} catch (Exception choosingKLM) {
-			System.out.println("\nERROR connecting to SICStus Prolog engine");
+			
+			System.out.println("\nERROR SICStus Prolog engine");
+			choosingKLM.printStackTrace();
 		}
 		return false;
 

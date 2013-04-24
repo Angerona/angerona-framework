@@ -1,13 +1,14 @@
-package angerona.fw.DefendingAgent.operators.def;
+package angerona.fw.defendingagent.operators.def;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.DefendingAgent.ViewComponent;
-import angerona.fw.DefendingAgent.comm.RevisionAnswer;
 import angerona.fw.comm.Answer;
+import angerona.fw.defendingagent.View;
+import angerona.fw.defendingagent.ViewComponent;
+import angerona.fw.defendingagent.comm.RevisionAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
@@ -55,7 +56,9 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				out += "reject";
 			} else {
 				out += value.toString();
-				views.getView(act.getReceiverId()).RefineViewByQuery(ans.getRegarding(), value);
+				View view = views.getView(act.getReceiverId());
+				view = view.RefineViewByQuery(ans.getRegarding(), value);
+				views.setView(act.getReceiverId(), view);
 			}
 			param.report(out);
 		}

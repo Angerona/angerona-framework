@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>DefendingAgent</artifactId>
+  <artifactId>defendingagent</artifactId>
   <packaging>jar</packaging>
 
   <name>DefendingAgent</name>
@@ -11,6 +11,34 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  
+  <build>
+    <plugins>
+  <plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-resources-plugin</artifactId>
+   <version>2.5</version>
+   <executions>
+    <execution>
+            <id>Copy KLM-Files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${basedir}/target/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+    </execution>
+   </executions>
+  </plugin>
+  </plugins>
+  </build>
 
   <dependencies>
     <dependency>

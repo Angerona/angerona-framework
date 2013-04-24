@@ -84,7 +84,7 @@ public class AssignTest {
 	public void testContextInternalAssign() throws ClassNotFoundException {
 		Context context = new Context();
 		
-		AngeronaAnswer aa = new AngeronaAnswer(null, new Atom(new Predicate("attend_scm")), AnswerValue.AV_FALSE);
+		AngeronaAnswer aa = new AngeronaAnswer(new Atom(new Predicate("attend_scm")), AnswerValue.AV_FALSE);
 		context.set("answer", aa);
 		
 		Assign assign = new Assign("reference", new Value("$answer", null));

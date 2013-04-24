@@ -35,15 +35,15 @@ public class Answer extends SpeechAct {
 	}
 	
 	public Answer(Agent sendingAgent, String receiverId, FolFormula regarding, AnswerValue av) {
-		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, av));
+		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(regarding, av));
 	}
 	
 	public Answer(Agent sendingAgent, String receiverId, FolFormula regarding, FolFormula answer) {
-		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, answer));
+		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(regarding, answer));
 	}
 	
 	public Answer(Agent sendingAgent, String receiverId, FolFormula regarding, Set<FolFormula> answers) {
-		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(null, regarding, answers));
+		this(sendingAgent, receiverId, regarding, new AngeronaAnswer(regarding, answers));
 	}
 
 	/** @return the formula representing the question */
