@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import se.sics.jasper.Query;
 import se.sics.jasper.SICStus;
+import se.sics.jasper.SPException;
 
 /**
  * This class lets users to ask the theorem prover to find a closed tree for a
@@ -24,13 +25,21 @@ public class Prover {
 	/**
 	 * The following object is used to interact with the SICStus Prolog kernel
 	 * */
-	SICStus sp;
+	private static SICStus sp;
 
 	/**
 	 * C´tor
 	 */
 	public Prover() {
-		sp = null;
+		if (sp == null) {
+			/* Instantiating a SICStus object */
+			try {
+				sp = new SICStus();
+			} catch (SPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -58,30 +67,26 @@ public class Prover {
 
 		/* Initialize the SICStus Prolog engine */
 		try {
-			if (sp == null) {
-				/* Instantiating a SICStus object */
-					sp = new SICStus();
-			}
 			/* Parameter 1 determines the KLM logic to consider */
 			switch (chooseInferenceSystem) {
 			case CUMMULATIV: {
-				sp.restore("tct.sav");
+				sp.restore("resources/tct.sav");
 				break;
 			}
 			case LOOP_CUMMULATIV: {
-				sp.restore("tclt.sav");
+				sp.restore("resources/tclt.sav");
 				break;
 			}
 			case PREFERENTIAL: {
-				sp.restore("tpt.sav");
+				sp.restore("resources/tpt.sav");
 				break;
 			}
 			case RATIONAL: {
-				sp.restore("trt.sav");
+				sp.restore("resources/trt.sav");
 				break;
 			}
 			case FREE_RATIONAL: {
-				sp.restore("trtfree.sav");
+				sp.restore("resources/trtfree.sav");
 				break;
 			}
 			}

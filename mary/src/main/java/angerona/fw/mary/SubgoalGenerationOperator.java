@@ -213,7 +213,7 @@ public class SubgoalGenerationOperator extends
 		}
 		
 		
-		Query query = (Query) (ag.getActualPerception()); 
+		Query query = (Query) des.getPerception();
 		AngeronaAnswer trueAnswer = 
 				ag.getBeliefs().getWorldKnowledge().reason((FolFormula)query.getQuestion());
 		if(trueAnswer.getAnswerValue() == AnswerValue.AV_COMPLEX) {

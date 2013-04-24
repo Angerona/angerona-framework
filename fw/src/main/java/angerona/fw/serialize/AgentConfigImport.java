@@ -48,4 +48,19 @@ public class AgentConfigImport implements AgentConfig {
 	public CommandSequence getCycleScript() {
 		throw new IllegalStateException("Method not supported.");
 	}
+
+	@Override
+	public String getDescription() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public String getResourceType() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public String getCategory() {
+		throw new IllegalStateException("Method not supported.");
+	}
 }

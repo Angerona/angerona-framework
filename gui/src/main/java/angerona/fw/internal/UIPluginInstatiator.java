@@ -9,7 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.AngeronaPlugin;
 import angerona.fw.gui.UIPlugin;
-import angerona.fw.gui.view.View;
+import angerona.fw.gui.base.EntityViewComponent;
+import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.listener.PluginAdapter;
 
 /**
@@ -28,10 +29,16 @@ public class UIPluginInstatiator extends PluginAdapter {
 	private Logger LOG = LoggerFactory.getLogger(UIPluginInstatiator.class);
 	
 	/** map containing registered views some of them are default other might be provided by plugins */
-	private Map<String, Class<? extends View>> viewMap = new HashMap<String, Class<? extends View>>();
+	private Map<String, Class<? extends ViewComponent>> viewMap = new HashMap<String, Class<? extends ViewComponent>>();
 	
-	public Map<String, Class<? extends View>> getViewMap() {
+	private Map<String, Class<? extends EntityViewComponent<?>>> entityViewMap = new HashMap<>();
+	
+	public Map<String, Class<? extends ViewComponent>> getViewMap() {
 		return Collections.unmodifiableMap(viewMap);
+	}
+	
+	public Map<String, Class<? extends EntityViewComponent<?>>> getEntityViewMap() {
+		return Collections.unmodifiableMap(entityViewMap);
 	}
 	
 	@Override
@@ -40,10 +47,28 @@ public class UIPluginInstatiator extends PluginAdapter {
 			UIPlugin uiPlugin = (UIPlugin) plugin;
 			
 			for(String viewName : uiPlugin.getUIComponents().keySet()) {
-				Class<? extends View> impl = uiPlugin.getUIComponents().get(viewName);
-				viewMap.put(viewName, impl);
-				PluginInstantiator.getInstance().onRegistered(View.class, impl);
-				LOG.info("Registered UI Implementation '{}' for '{}'.", impl.getName(), View.class.getName());
+				Class<? extends ViewComponent> impl = uiPlugin.getUIComponents().get(viewName);
+				
+				boolean isEntityView = false;
+				Class<?> cls = impl;
+				while(cls != null) {
+					if(cls.equals(EntityViewComponent.class)) {
+						isEntityView = true;
+						break;
+					}
+					cls = cls.getSuperclass();
+				}
+				
+				Class<?> base = isEntityView ? EntityViewComponent.class : ViewComponent.class;
+				if(isEntityView) {
+					@SuppressWarnings("unchecked")
+					Class<? extends EntityViewComponent<?>> cImpl = (Class<? extends EntityViewComponent<?>>)impl;
+					entityViewMap.put(viewName, cImpl);
+				}
+				else
+					viewMap.put(viewName, impl);
+				PluginInstantiator.getInstance().onRegistered(base, impl);
+				LOG.info("Registered UI Implementation '{}' for '{}'.", impl.getName(), base.getName());
 			}
 		}
 	}
@@ -54,10 +79,10 @@ public class UIPluginInstatiator extends PluginAdapter {
 			UIPlugin uiPlugin = (UIPlugin) plugin;
 			
 			for(String viewName : uiPlugin.getUIComponents().keySet()) {
-				Class<? extends View> impl = uiPlugin.getUIComponents().get(viewName);
+				Class<? extends ViewComponent> impl = uiPlugin.getUIComponents().get(viewName);
 				viewMap.remove(viewName);
-				PluginInstantiator.getInstance().onUnregistered(View.class, impl);
-				LOG.info("Unregistered UI Implementation '{}' for '{}'.", impl.getName(), View.class.getName());
+				PluginInstantiator.getInstance().onUnregistered(ViewComponent.class, impl);
+				LOG.info("Unregistered UI Implementation '{}' for '{}'.", impl.getName(), ViewComponent.class.getName());
 			}
 		}
 	}

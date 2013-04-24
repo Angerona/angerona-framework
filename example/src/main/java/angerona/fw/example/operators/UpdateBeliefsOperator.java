@@ -32,7 +32,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		
 		Beliefs beliefs = param.getBeliefs();
 		Beliefs oldBeliefs = (Beliefs)param.getBeliefs().clone();
-		String id = param.getAgent().getAgentProcess().getName();
+		String id = param.getAgent().getName();
 		String out = "Update-Beliefs: ";
 		
 		boolean receiver = false;

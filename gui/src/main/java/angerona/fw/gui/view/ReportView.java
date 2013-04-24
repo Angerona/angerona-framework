@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -12,16 +13,20 @@ import javax.swing.JTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bibliothek.gui.dock.DefaultDockable;
+
 import angerona.fw.Angerona;
+import angerona.fw.gui.AngeronaWindow;
+import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.ReportTreeController;
-import angerona.fw.gui.controller.TreeController;
+import angerona.fw.gui.controller.TreeControllerAdapter;
 import angerona.fw.report.ReportWikiGenerator;
 
 /**
  * shows the reports of the actual simulation in a list-view.
  * @author Tim Janus
  */
-public class ReportView extends BaseView {
+public class ReportView extends JPanel implements ViewComponent {
 
 	/** kick warning */
 	private static final long serialVersionUID = 1L;
@@ -31,10 +36,9 @@ public class ReportView extends BaseView {
     
 	private JTree tree;
 
-	private TreeController controller;
+	private TreeControllerAdapter controller;
 	
-    @Override
-	public void init() {
+	public ReportView() {
     	tree = new JTree();
 		JScrollPane pane = new JScrollPane(tree);
 		controller = new ReportTreeController(tree);
@@ -62,13 +66,16 @@ public class ReportView extends BaseView {
 		});
 		Angerona.getInstance().addReportListener(rwg);
 	}
-    
-    @Override
-    public void cleanup() {}
+	
+	@Override
+	public JPanel getPanel() {
+		return this;
+	}
 
 	@Override
-	public Class<?> getObservedType() {
-		return null;
+	public void decorate(DefaultDockable dockable) {
+		dockable.setTitleText("Report");
+		dockable.setTitleIcon(AngeronaWindow.get().getIcons().get("report"));
 	}
 
 }

@@ -15,7 +15,7 @@ import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.UIPlugin;
 import angerona.fw.gui.asp.AspBeliefbaseView;
-import angerona.fw.gui.view.View;
+import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
@@ -24,6 +24,8 @@ import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspRevision;
 import angerona.fw.logic.asp.AspTranslator;
+import angerona.fw.logic.asp.RevisionCredibilityPrograms;
+import angerona.fw.logic.asp.RevisionPreferenceHandling;
 
 /**
  * The ASP plugin implements a belief base plugin which provides an ASP
@@ -55,7 +57,8 @@ public class AspPlugin extends AngeronaPluginAdapter
 	@Override
 	public List<Class<? extends BaseChangeBeliefs>> getChangeImpl() {
 		List<Class<? extends BaseChangeBeliefs>> reval = new LinkedList<Class<? extends BaseChangeBeliefs>>();
-		reval.add(AspRevision.class);
+		reval.add(RevisionPreferenceHandling.class);
+		reval.add(RevisionCredibilityPrograms.class);
 		reval.add(AspExpansion.class);
 		return reval;
 	}
@@ -73,27 +76,27 @@ public class AspPlugin extends AngeronaPluginAdapter
 		Rule r = new Rule();
 		r.addHead(new Atom("excused"));
 		r.addBody(new Atom("attend_burial"));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Atom("excused"));
 		r.addBody(new Atom("is_ill"));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Atom("fired"));
 		r.addBody(new Neg( new Atom("attend_work")));
 		r.addBody(new Not( new Atom("excused")));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Neg(new Atom("fired")));
 		r.addBody(new Atom("excused"));
-		p.addRule(r);
+		p.add(r);
 		
 		r = new Rule();
 		r.addHead(new Neg(new Atom("attend_work")));
-		p.addRule(r);
+		p.add(r);
 		
 		AspBeliefbase bb = new AspBeliefbase();
 		bb.setProgram(p);
@@ -109,7 +112,7 @@ public class AspPlugin extends AngeronaPluginAdapter
 		
 		r = new Rule();
 		r.addHead(new Atom("attend_burial"));
-		p.addRule(r);
+		p.add(r);
 		
 		//reasoner.query(a);
 		
@@ -123,8 +126,8 @@ public class AspPlugin extends AngeronaPluginAdapter
 	}
 
 	@Override
-	public Map<String, Class<? extends View>> getUIComponents() {
-		Map<String, Class<? extends View>> reval = new HashMap<String, Class<? extends View>>();
+	public Map<String, Class<? extends ViewComponent>> getUIComponents() {
+		Map<String, Class<? extends ViewComponent>> reval = new HashMap<String, Class<? extends ViewComponent>>();
 		reval.put("todo", AspBeliefbaseView.class);
 		return reval;
 	}

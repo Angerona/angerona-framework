@@ -32,7 +32,7 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 		
 		bb.addKnowledge(new Atom(new Predicate("test")));
 		Program p = bb.getProgram();
-		assertEquals(1, p.getRules().size());
+		assertEquals(1, p.size());
 		
 		bb.addKnowledge(new Atom(new Predicate("test")));
 		p = bb.getProgram();

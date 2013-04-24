@@ -225,7 +225,6 @@
                <value>${basedir}/target</value>
            </configuration>
        </plugin>
-      
     </plugins>
     
     <pluginManagement>
@@ -310,6 +309,7 @@
     	<groupId>angerona.fw</groupId>
     	<artifactId>defendingagent</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
     </dependency>
   </dependencies>
   <parent>

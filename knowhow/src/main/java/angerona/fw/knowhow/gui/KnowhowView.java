@@ -8,7 +8,7 @@ import javax.swing.JList;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import angerona.fw.gui.view.EntityView;
+import angerona.fw.gui.base.EntityViewComponent;
 import angerona.fw.knowhow.KnowhowBase;
 import angerona.fw.knowhow.KnowhowBuilder;
 import angerona.fw.knowhow.KnowhowStatement;
@@ -22,7 +22,7 @@ import angerona.fw.util.Pair;
  * @author Tim Janus
  *
  */
-public class KnowhowView extends EntityView<KnowhowBase> 
+public class KnowhowView extends EntityViewComponent<KnowhowBase> 
 	implements ReportListener {
 
 	/** kick warning */
@@ -70,7 +70,7 @@ public class KnowhowView extends EntityView<KnowhowBase>
 		stmtListModel.addElement("and ELP");
 		stmtListModel.addElement("---");
 		
-		for(Rule r : pair.first.getRules()) {
+		for(Rule r : pair.first) {
 			stmtListModel.addElement(r.toString());
 		}
 	}

@@ -22,8 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseAgentComponent;
+import angerona.fw.BaseBeliefbase;
+import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.Prover.Prover;
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.logic.conditional.ConditionalBeliefbase;
 
 /**
  * Implementation of the censor component of a defending censor agent.
@@ -46,6 +49,7 @@ public class CensorComponent extends BaseAgentComponent {
 		super();
 	}
 	
+	// for testing purposes only. 
 	public static void main(String[] args) {
 		LogicalSymbols.setContradictionSymbol("!");
 		LogicalSymbols.setClassicalNegationSymbol("-");

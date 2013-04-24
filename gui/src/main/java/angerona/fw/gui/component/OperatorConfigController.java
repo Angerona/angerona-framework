@@ -4,6 +4,11 @@ import java.util.Map;
 
 import angerona.fw.operators.BaseOperator;
 
+/**
+ * 
+ * @deprecated 
+ * @todo implement as MVP
+ */
 public class OperatorConfigController {
 	private OperatorConfig model;
 	

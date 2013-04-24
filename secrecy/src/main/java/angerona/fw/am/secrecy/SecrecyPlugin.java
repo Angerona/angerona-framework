@@ -11,7 +11,7 @@ import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.am.secrecy.gui.SecrecyView;
 import angerona.fw.gui.UIPlugin;
-import angerona.fw.gui.view.View;
+import angerona.fw.gui.base.ViewComponent;
 
 /**
  * Provides AgentComponent implementations like the SecrecyKnowledge and a UI View
@@ -31,8 +31,8 @@ public class SecrecyPlugin extends AngeronaPluginAdapter
 	}
 
 	@Override
-	public Map<String, Class<? extends View>> getUIComponents() {
-		Map<String, Class<? extends View>> reval = new HashMap<String, Class<? extends View>>();
+	public Map<String, Class<? extends ViewComponent>> getUIComponents() {
+		Map<String, Class<? extends ViewComponent>> reval = new HashMap<String, Class<? extends ViewComponent>>();
 		reval.put("Confidential-Knowledge", SecrecyView.class);
 		return reval;
 	}

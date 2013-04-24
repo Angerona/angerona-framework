@@ -64,12 +64,6 @@
     </dependency>
     
 	
-	 <dependency>
-    	<!-- UGLY install into maven repository. -->
-	    <groupId>net.sf</groupId>
-	    <artifactId>beenuts</artifactId>
-	    <version>0.1.97</version>
-	</dependency>
 
 	 <dependency>
 	 	<groupId>net.xeoh</groupId>
@@ -94,6 +88,11 @@
 	 <dependency>
 	 	<groupId>net.sf.tweety.logics</groupId>
 	 	<artifactId>firstorderlogic</artifactId>
+	 	<version>0.2.0-SNAPSHOT</version>
+	 </dependency>
+	 <dependency>
+	 	<groupId>net.sf.tweety.logics</groupId>
+	 	<artifactId>propositionallogic</artifactId>
 	 	<version>0.2.0-SNAPSHOT</version>
 	 </dependency>
   </dependencies>

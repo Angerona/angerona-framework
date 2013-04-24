@@ -1,7 +1,10 @@
 package angerona.fw.logic.asp;
 
-import net.sf.tweety.logicprogramming.asplibrary.revision.PreferenceHandling;
-import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
+import java.util.Collection;
+
+import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +19,13 @@ import angerona.fw.serialize.GlobalConfiguration;
  * ASP Revision using the preference handling concept
  * @author Tim Janus
  */
-public class AspRevision extends BaseChangeBeliefs {
+public abstract class AspRevision extends BaseChangeBeliefs {
 
 	/** The logger used for output in the angerona Framework */
 	static private Logger LOG = LoggerFactory.getLogger(AspRevision.class);
 	
 	/** wrapper for the used ASP solver */
-	private SolverWrapper wrapper;
+	protected SolverWrapper wrapper;
 	
 	public AspRevision() {
 		GlobalConfiguration config = Angerona.getInstance().getConfig();
@@ -38,11 +41,12 @@ public class AspRevision extends BaseChangeBeliefs {
 		return AspBeliefbase.class;
 	}
 
+	protected abstract MultipleBaseRevisionOperator<Rule> createRevisionImpl();
+	
 	@Override
 	protected BaseBeliefbase processInternal(
 			ChangeBeliefbaseParameter param) {
 		LOG.info("Perform ASPRevison as change.");
-		PreferenceHandling pf = new PreferenceHandling();
 		if(! (param.getSourceBeliefBase() instanceof AspBeliefbase))
 			throw new RuntimeException("Error: Beliefbase must be of type asp");
 		AspBeliefbase bb = (AspBeliefbase)param.getSourceBeliefBase();
@@ -52,12 +56,11 @@ public class AspRevision extends BaseChangeBeliefs {
 		
 		AspBeliefbase newK = (AspBeliefbase)param.getNewKnowledge();
 		
-		try {			
-			bb.setProgram(pf.revision(bb.getProgram(), newK.getProgram(), 
-					wrapper.getSolver()));
-		} catch (SolverException e) {
-			e.printStackTrace();
-		} 
+		MultipleBaseRevisionOperator<Rule> impl = createRevisionImpl();
+		Collection<Rule> reval = impl.revise(bb.getProgram(), newK.getProgram());
+		Program p = new Program();
+		p.addAll(reval);
+		bb.setProgram(p);
 		
 		return bb;
 	}

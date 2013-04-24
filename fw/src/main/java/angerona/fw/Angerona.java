@@ -3,11 +3,9 @@ package angerona.fw;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -28,11 +26,7 @@ import angerona.fw.report.Report;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
 import angerona.fw.report.ReportPoster;
-import angerona.fw.serialize.AgentConfigReal;
-import angerona.fw.serialize.BeliefbaseConfigReal;
 import angerona.fw.serialize.GlobalConfiguration;
-import angerona.fw.serialize.SerializeHelper;
-import angerona.fw.serialize.SimulationConfiguration;
 
 /**
  * Main class of Angerona manages all resources.
@@ -60,6 +54,10 @@ public class Angerona {
 	/** the list of registered error listeners */
 	private List<FrameworkListener> frameworkListeners = new LinkedList<FrameworkListener>();
 	
+	/** flag indicating if the bootstrap process is already done. */
+	private boolean bootstrapDone = false;
+	
+	
 	/** 
 	 * A Map containing the Report instances for specific simulations 
 	 * @todo Differentiate between environment and simulation.
@@ -77,6 +75,8 @@ public class Angerona {
 
 	private String configFilePath = "config/configuration.xml";
 	
+	private AngeronaProject currentProject = new AngeronaProject();
+	
 	/**
 	 * 	Implements the singleton pattern.
 	 * 	@return the application wide unique instance of the Angerona class.
@@ -85,6 +85,10 @@ public class Angerona {
 		if(instance == null)
 			instance = new Angerona();
 		return instance;
+	}
+	
+	public AngeronaProject getProject() {
+		return currentProject;
 	}
 	
 	/** @return the path to the config file */
@@ -296,119 +300,7 @@ public class Angerona {
 		}
 	}
 	
-	/**
-	 * Handle different resource file loadings by fileformat.
-	 * @author Tim Janus
-	 */
-	private interface FileLoader {
-		void load(File file, Angerona container) throws ParserConfigurationException, SAXException, IOException;
-	}
-	
-	/**
-	 * Implementation for the Agent-Configuration file format.
-	 * @author Tim Janus
-	 */
-	private class AgentConfigLoader implements FileLoader {
-		@Override
-		public void load(File file, Angerona container) {
-			AgentConfigReal ac = SerializeHelper.loadXml(AgentConfigReal.class, file);
-			container.agentConfigurations.put(ac.getName(), ac);
-		}
-	}
-	
-	/**
-	 * Implementation for the Belief-Base-configuration file format.
-	 * @author Tim Janus
-	 */
-	private class BeliefbaseConfigLoader implements FileLoader {
-		@Override
-		public void load(File file, Angerona container) {
-			BeliefbaseConfigReal bbc = BeliefbaseConfigReal.loadXml(file);
-			container.beliefbaseConfigurations.put(bbc.getName(), bbc);
-		}
-	}
-	
-	/**
-	 * Implementation for the Simulation-Configuration file format.
-	 * @author Tim Janus
-	 *
-	 */
-	private class SimulationConfigLoader implements FileLoader {
-		@Override
-		public void load(File file, Angerona container) throws ParserConfigurationException, SAXException, IOException {
-			SimulationConfiguration sc = SimulationConfiguration.loadXml(file);
-			sc.setFilePath(file.getAbsolutePath());
-			container.simulationConfigurations.put(sc.getName(), sc);
-		}
-	}
-	
-	/** flag indicating if the bootstrap process is already done. */
-	private boolean bootstrapDone = false;
-	
-	/** set containing all folders where agent configuration files are stored. */
-	private Set<String> agentConfigFolders = new HashSet<String>();
-	
-	/** set containing all folders where belief base configuration files are stored. */
-	private Set<String> bbConfigFolders = new HashSet<String>();
-	
-	/** set containing all folders where simulation configuration files are stored. */
-	private Set<String> simulationFolders = new HashSet<String>();
-	
-	/** map containing all loaded Agent Configurations ordered by name */
-	private Map<String, AgentConfigReal> agentConfigurations = new HashMap<String, AgentConfigReal>();
-	
-	/** map containing all loaded Beliefbase Configurations ordered by name */
-	private Map<String, BeliefbaseConfigReal> beliefbaseConfigurations = new HashMap<String, BeliefbaseConfigReal>();
-	
-	/** map containing all loaded Simulation Configurations ordered by name */
-	private Map<String, SimulationConfiguration> simulationConfigurations = new HashMap<String, SimulationConfiguration>();
-	
 	private Angerona() {}
-	
-	/**
-	 * Adds the given folder to the set of AgentConfiguration folders, if bootstrap is already done
-	 * the loading start immediatley otherwise the files in the folder will be load after a call of 
-	 * bootstrap
-	 * @param folder	name of the folder containing AgentConfiguration files.
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	public void addAgentConfigFolder(String folder) throws ParserConfigurationException, SAXException, IOException {
-		if(agentConfigFolders.add(folder) && bootstrapDone) {
-			forAllFilesIn(folder, new AgentConfigLoader());
-		}
-	}
-	
-	/**
-	 * Adds the given folder to the set of BeliefbaseConfiguration folders, if bootstrap is already done
-	 * the loading start immediately otherwise the files in the folder will be load after a call of 
-	 * bootstrap
-	 * @param folder	name of the folder containing BeliefbaseConfiguration files.
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	public void addBeliefbaseConfigFolder(String folder) throws IOException, ParserConfigurationException, SAXException {
-		if(bbConfigFolders.add(folder) && bootstrapDone) {
-			forAllFilesIn(folder, new BeliefbaseConfigLoader());
-		}
-	}
-	
-	/**
-	 * Adds the given folder to the set of Simulation folders, if bootstrap is already done
-	 * the loading start immediately otherwise the files in the folder will be load after a call of 
-	 * bootstrap
-	 * @param folder	name of the folder containing Simulation files.
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	public void addSimulationFolders(String folder) throws IOException, ParserConfigurationException, SAXException {
-		if(simulationFolders.add(folder) && bootstrapDone) {
-			forAllFilesIn(folder, new SimulationConfigLoader());
-		}
-	}
 	
 	/**
 	 * Loads the resources in the folders registered so far. First of all the
@@ -424,21 +316,6 @@ public class Angerona {
 			LogicalSymbols.setClassicalNegationSymbol("-");
 			LogicalSymbols.setContradictionSymbol("!");
 			
-			AgentConfigLoader acl = new AgentConfigLoader();
-			for(String folder : agentConfigFolders) {
-				forAllFilesIn(folder, acl);
-			}
-			
-			BeliefbaseConfigLoader bbcl = new BeliefbaseConfigLoader();
-			for(String folder : bbConfigFolders) {
-				forAllFilesIn(folder, bbcl);
-			}
-			
-			SimulationConfigLoader scl = new SimulationConfigLoader();
-			for(String folder : simulationFolders) {
-				forAllFilesIn(folder, scl);
-			}
-			
 			// create plugin manager classes
 			PluginInstantiator pi = PluginInstantiator.getInstance();
 			pi.addListener(OperatorMap.get());
@@ -452,63 +329,11 @@ public class Angerona {
 		}
 	}
 	
-	public AgentConfigReal getAgentConfiguration(String name) {
-		return agentConfigurations.get(name);
-	}
-	
-	public Set<String> getBeliefbaseConfigurationNames() {
-		return beliefbaseConfigurations.keySet();
-	}
-	
-	public BeliefbaseConfigReal getBeliefbaseConfiguration(String name) {
-		return beliefbaseConfigurations.get(name);
-	}
-	
-	public Set<String> getSimulationConfigurationNames() {
-		return simulationConfigurations.keySet();
-	}
-	
-	public SimulationConfiguration getSimulationConfiguration(String name) {
-		return simulationConfigurations.get(name);
-	}
-	
-	public Set<String> getAgentConfigurationNames() {
-		return agentConfigurations.keySet();
-	}
-	
 	/** @return true if a bootstrap method was called otherwise false. */
 	public boolean isBootstrapDone() {
 		return bootstrapDone;
 	}
 	
-	/**
-	 * Helper method: Recursively tries to load all files in the directory and in
-	 * its sub-directories using the given FileLoader implementation.
-	 * @param folder	root folder to scan for files to load.
-	 * @param loader	Implementation of the used loader.
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 */
-	private void forAllFilesIn(String folder, FileLoader loader) throws IOException, ParserConfigurationException, SAXException {
-		File dir = new File(folder);
-		if(!dir.isDirectory())
-			throw new IOException(folder + " is no directory.");
-		
-		File [] files = dir.listFiles();
-		if(files == null)
-			return;
-		for(File actFile : files) {
-			try {
-				if(actFile.isFile() && actFile.getPath().endsWith("xml"))
-					loader.load(actFile, this);
-				else if(actFile.isDirectory())
-					forAllFilesIn(actFile.getAbsolutePath(), loader);
-			} catch(Exception ex) {
-				LOG.warn("Cannot load file: '"+actFile.getName()+"' " + ex.getMessage());
-			} 
-		}
-	}
 
 	public void onActionPerformed(Agent agent, Action act) {
 		for(SimulationListener listener : simulationListeners) {

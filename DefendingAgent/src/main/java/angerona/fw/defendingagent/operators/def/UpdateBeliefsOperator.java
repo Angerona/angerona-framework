@@ -31,7 +31,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	protected Beliefs processInternal(EvaluateParameter param) {
 		LOG.info("Run Defending-Update-Beliefs-Operator");
 		Beliefs beliefs = param.getBeliefs();
-		String id = param.getAgent().getAgentProcess().getName();
+		String id = param.getAgent().getName();
 		Action act = (Action)param.getAtom();
 		if(act == null) {
 			return beliefs;

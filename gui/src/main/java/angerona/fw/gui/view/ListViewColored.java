@@ -20,8 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.AgentComponent;
 import angerona.fw.Angerona;
-import angerona.fw.gui.NavigationPanel;
-import angerona.fw.gui.NavigationUser;
+import angerona.fw.gui.base.EntityViewComponent;
+import angerona.fw.gui.nav.NavigationPanel;
+import angerona.fw.gui.nav.NavigationUser;
 import angerona.fw.internal.Entity;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportListener;
@@ -34,7 +35,7 @@ import angerona.fw.report.ReportListener;
  * @param <T> the type of the observed object
  */
 public abstract class ListViewColored<T extends Entity> 
-	extends EntityView<T>
+	extends EntityViewComponent<T>
 	implements 
 	ReportListener, 
 	NavigationUser {
@@ -44,9 +45,6 @@ public abstract class ListViewColored<T extends Entity>
 	
 	/** kill warning */
 	private static final long serialVersionUID = 5572343160200460695L;
-
-	/** reference to the original data (which is in the agent) */
-	protected T ref;
 	
 	/** reference to the data instance which is actually shown. */
 	protected T actual;
@@ -307,5 +305,4 @@ public abstract class ListViewColored<T extends Entity>
 	public void setCurrentEntry(ReportEntry entry) {
 		reportReceived(entry);
 	}
-
 }

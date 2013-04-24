@@ -15,7 +15,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.ListTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Number;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.NumberTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.StringTerm;
@@ -121,7 +121,7 @@ public class KnowhowStrategy {
 			e.printStackTrace();
 		}
 		if(r != null) {
-			intentionTree.addRule(r); 
+			intentionTree.add(r); 
 		}
 		
 		action = null;
@@ -236,7 +236,7 @@ public class KnowhowStrategy {
 			// find subgoal index for parameter:
 			Set<Literal> subgoal = as.getLiteralsBySymbol("new_subgoal");
 			if(subgoal.size() == 1) {
-				subgoal_index = ((Number)subgoal.iterator().next().getAtom().getTerm(0)).get();
+				subgoal_index = ((NumberTerm)subgoal.iterator().next().getAtom().getTerm(0)).get();
 			} else {
 				// TODO:
 			}
@@ -284,7 +284,7 @@ public class KnowhowStrategy {
 		Program toOutput = new Program();
 		toOutput.add(intentionTree);
 		// rebuild intention-tree program:
-		intentionTree.clearRules();
+		intentionTree.clear();
 		oldState = new Atom("state", new_state.getTerms());
 		intentionTree.add(oldState);
 		intentionTree.add(new Atom("khstate", new_khstate.getTerms()));

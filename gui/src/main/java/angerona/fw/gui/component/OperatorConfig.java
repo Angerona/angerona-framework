@@ -7,14 +7,17 @@ import java.util.Map;
 
 import angerona.fw.OperatorSet;
 import angerona.fw.operators.BaseOperator;
+import angerona.fw.util.ModelAdapter;
 
 /**
  * 
  * @author Tim Janus
  *
  * @param <T>
+ * @deprecated
+ * @todo implement as MVP (use the {@link OperatorSet} as model)
  */
-public class OperatorConfig extends AbstractModel {
+public class OperatorConfig extends ModelAdapter {
 	/** the original parameters of the operator */
 	private Map<String, String> originalParameters = new HashMap<>();
 	
@@ -42,9 +45,7 @@ public class OperatorConfig extends AbstractModel {
 	}
 	
 	void setSelectedOperator(BaseOperator operator) {
-		firePropertyChange("selectedOperator", this.selectedOperator, 
-				operator);
-		this.selectedOperator = operator;
+		selectedOperator = changeProperty("selectedOperator", selectedOperator, operator);
 	}
 	
 	Map<String, String> getOriginalParameters() {
@@ -56,8 +57,7 @@ public class OperatorConfig extends AbstractModel {
 	}
 	
 	void setParameters(Map<String, String> parameters) {
-		firePropertyChange("parameters", this.parameters, parameters);
-		this.parameters = parameters;
+		this.parameters = changeProperty("parameters", this.parameters, parameters);
 	}
 	
 	Collection<BaseOperator> getSelectableOperators() {

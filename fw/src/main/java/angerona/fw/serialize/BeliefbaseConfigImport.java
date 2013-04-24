@@ -57,4 +57,19 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 	public String getViewOn() {
 		throw new IllegalStateException("Method not supported.");
 	}
+
+	@Override
+	public String getDescription() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public String getResourceType() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public String getCategory() {
+		throw new IllegalStateException("Method not supported.");
+	}
 }

@@ -9,18 +9,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.gui.AngeronaWindow;
-import angerona.fw.gui.NavigationUser;
-import angerona.fw.gui.view.View;
+import angerona.fw.gui.base.ViewComponent;
+import angerona.fw.gui.nav.NavigationUser;
 import angerona.fw.internal.Entity;
-import angerona.fw.internal.ViewFactory;
+import angerona.fw.internal.ViewComponentFactory;
 import angerona.fw.listener.SimulationAdapter;
 import angerona.fw.report.ReportEntry;
 import angerona.fw.report.ReportOutputGenerator;
@@ -31,11 +28,9 @@ import angerona.fw.report.ReportOutputGenerator;
  * an report entry which contains a attachment are clicked --> opens a
  * view for those attachments.
  * @author Tim Janus
+ * @deprecated
  */
 public class ReportTreeController extends TreeControllerAdapter implements ReportOutputGenerator<JTree> {
-
-	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(ReportTreeController.class);
 	
 	private DefaultMutableTreeNode rootNode;
 	
@@ -123,9 +118,9 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 			@Override
 			public Icon getIcon() {
 				if(entry.getAttachment() == null) {
-					return AngeronaWindow.getInstance().getIcons().get("report");
+					return AngeronaWindow.get().getIcons().get("report");
 				} else {
-					return AngeronaWindow.getInstance().getIcons().get("report_attachment");
+					return AngeronaWindow.get().getIcons().get("report_attachment");
 				}
 				
 			}
@@ -138,13 +133,13 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 			public void onActivated() {
 				if(entry.getAttachment() != null) {
 					Entity at = entry.getAttachment();
-					ViewFactory wnd = ViewFactory.getInstance();
+					ViewComponentFactory wnd = ViewComponentFactory.get();
 					// find the view
-					View view = wnd.getBaseViewObservingEntity(at);
+					ViewComponent view = wnd.getBaseViewObservingEntity(at);
 					if(view == null) {
 						view = wnd.createViewForEntityComponent(at);
 					}
-					AngeronaWindow.getInstance().openView(view, "from Report(TODO)");
+					AngeronaWindow.get().openView(view);
 					
 					if(view != null && view instanceof NavigationUser){
 						NavigationUser lvc = (NavigationUser)view;
@@ -160,7 +155,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		else
 			actTickNode.add(newNode);
 
-		ResourceTreeController.expandAll(tree, true);
+		TreeControllerAdapter.expandAll(tree, true);
 		tree.updateUI();
 	}
 
@@ -211,7 +206,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		
 		@Override
 		public Icon getIcon() {
-			return AngeronaWindow.getInstance().getIcons().get("agent");
+			return AngeronaWindow.get().getIcons().get("agent");
 		}
 		
 		@Override

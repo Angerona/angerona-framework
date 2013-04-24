@@ -20,7 +20,7 @@ import angerona.fw.example.operators.SubgoalGenerationOperator;
 import angerona.fw.example.operators.UpdateBeliefsOperator;
 import angerona.fw.example.operators.ViolatesOperator;
 import angerona.fw.gui.UIPlugin;
-import angerona.fw.gui.view.View;
+import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
@@ -92,8 +92,8 @@ public class ExamplePlugin extends AngeronaPluginAdapter
 	}
 	
 	@Override
-	public Map<String, Class<? extends View>> getUIComponents() {
-		Map<String, Class<? extends View>> reval = new HashMap<String, Class<? extends View>>();
+	public Map<String, Class<? extends ViewComponent>> getUIComponents() {
+		Map<String, Class<? extends ViewComponent>> reval = new HashMap<String, Class<? extends ViewComponent>>();
 		reval.put("Example Beliefbase Extension", ExampleBeliefbaseComponent.class);
 		return reval;
 	}

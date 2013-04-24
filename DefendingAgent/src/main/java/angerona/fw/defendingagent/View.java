@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.util.LogicTranslator;
 
 /**
  * Represents the defending agents approximation of the attacking agents view

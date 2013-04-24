@@ -19,7 +19,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,14 +31,18 @@ import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.gui.controller.ResourceTreeController;
+import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.SimulationTreeController;
+import angerona.fw.gui.project.ProjectTreeMVPComponent;
+import angerona.fw.gui.simctrl.SimulationControlBar;
+import angerona.fw.gui.simctrl.SimulationControlBarMVPComponent;
+import angerona.fw.gui.simctrl.SimulationControlMenu;
+import angerona.fw.gui.simctrl.SimulationControlPresenter;
 import angerona.fw.gui.view.ReportView;
 import angerona.fw.gui.view.ResourcenView;
-import angerona.fw.gui.view.View;
-import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.internal.UIPluginInstatiator;
+import angerona.fw.internal.ViewComponentFactory;
 import angerona.fw.listener.FrameworkListener;
 import angerona.fw.listener.SimulationListener;
 import bibliothek.extension.gui.dock.theme.SmoothTheme;
@@ -49,10 +52,6 @@ import bibliothek.gui.Dockable;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.SplitDockStation;
 import bibliothek.gui.dock.StackDockStation;
-import bibliothek.gui.dock.action.DefaultDockActionSource;
-import bibliothek.gui.dock.action.HierarchyDockActionSource;
-import bibliothek.gui.dock.action.LocationHint;
-import bibliothek.gui.dock.action.actions.SimpleButtonAction;
 import bibliothek.gui.dock.station.split.SplitDockProperty;
 import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import bibliothek.gui.dock.themes.NoStackTheme;
@@ -78,8 +77,6 @@ public class AngeronaWindow extends WindowAdapter
 	
 	private SplitDockStation parentStation;
 	
-	private ResourcenView resourceView;
-	
 	private ReportView reportView;
 	
 	private List<Dockable> resMap = new LinkedList<>();
@@ -94,7 +91,7 @@ public class AngeronaWindow extends WindowAdapter
 	private static AngeronaWindow instance;
 	
 	/** @return reference to the unique instance of the AngeronaWindow */
-	public static AngeronaWindow getInstance() {
+	public static AngeronaWindow get() {
 		if(instance == null) {
 			instance = new AngeronaWindow();
 		}
@@ -138,6 +135,11 @@ public class AngeronaWindow extends WindowAdapter
 		menuFile.add(exit);
 		menuBar.add(menuFile);
 		
+		JMenu simulationMenu = new JMenu("Simulation");
+		SimulationControlMenu view = new SimulationControlMenu(simulationMenu);
+		new SimulationControlPresenter(AngeronaGUIDataStorage.get().getSimulationControl(), view);
+		menuBar.add(simulationMenu);
+		
 		JMenu menuWindow = new JMenu("Windows");
 		JMenuItem miCreate = new JMenuItem("Create...");
 		miCreate.addActionListener(new ActionListener() {
@@ -169,12 +171,13 @@ public class AngeronaWindow extends WindowAdapter
 		Angerona angerona = Angerona.getInstance();
 		angerona.addFrameworkListener(this);
 		angerona.addSimulationListener(this);
-		
-		angerona.addAgentConfigFolder("config/agents");
-		angerona.addBeliefbaseConfigFolder("config/beliefbases");
-		angerona.addSimulationFolders("examples");
+
 		angerona.bootstrap();
 		pi.registerPlugin(new DefaultUIPlugin());
+		
+		angerona.getProject().addDirectory(new File("config/agents"));
+		angerona.getProject().addDirectory(new File("config/beliefbases"));
+		angerona.getProject().addDirectory(new File("examples"));
 	}
 	
 	/**
@@ -183,11 +186,10 @@ public class AngeronaWindow extends WindowAdapter
 	 * @param title
 	 * @return
 	 */
-	public Dockable openView(View view, String title) {
-		DefaultDockable dd = new DefaultDockable((JPanel)view);
-		dd.setTitleText(title);
-		view.init();
-		createCloseButton(dd);
+	public Dockable openView(ViewComponent view) {
+		DefaultDockable dd = new DefaultDockable(view.getPanel());
+		view.decorate(dd);
+		
 		// easy if the center is a stack already, only adding the Dockable to the stack.
 		if(mainStack.getController() != null) {
 			mainStack.drop(dd);
@@ -218,22 +220,10 @@ public class AngeronaWindow extends WindowAdapter
 		return dd;
 	}
 	
-	/**
-	 * loads the simulation at the specified path
-	 * @param path	path to the simulation which is loaded.
-	 */
-	public void loadSimulation(String path) {
-		LOG.trace("Load simulation {}", path);
-		File f = new File(path);
-		if(f.exists()) {
-			simLoadBar.loadSimulation(f);
-		}
-	}
-	
 	/** helper method: called if the 'Create Window...' menu item is clicked */
 	private void onCreateWindowClicked() {
 		UIPluginInstatiator uip = UIPluginInstatiator.getInstance();
-		Map<String, Class<? extends View>> viewMap = uip.getViewMap();
+		Map<String, Class<? extends ViewComponent>> viewMap = uip.getViewMap();
 		String str = (String) JOptionPane.showInputDialog(null, 
 				"Select a Window to create...",
 				"Create Window",
@@ -243,52 +233,8 @@ public class AngeronaWindow extends WindowAdapter
 				null);
 		if(viewMap.containsKey(str)) {
 			try {
-				View bc = viewMap.get(str).newInstance();
-				Class<?> type = bc.getObservedType();
-				if(type == null) {
-					bc.init();
-					//window.addWlComponent(bc, BorderLayout.CENTER);
-				} else {
-					AngeronaEnvironment env = simLoadBar.getEnvironment();
-					List<Entity> tempList = new LinkedList<Entity>();
-					for(Long id : env.getEntityMap().keySet()) {
-						Entity possible = env.getEntityMap().get(id);
-						if(possible.getClass().equals(bc.getObservedType())) {
-							tempList.add(possible);
-						}
-					}
-					
-					List<String> names = new LinkedList<String>();
-					for(Entity att : tempList) {
-						names.add("<" + att.getGUID() + ">");
-					}
-					
-					Entity selection = null;
-					if(tempList.size() == 0) {
-						JOptionPane.showMessageDialog(null, "No object for observation found.");
-					} else if(tempList.size() == 1) {
-						selection = tempList.get(0);
-					} else {
-						String str2 = (String) JOptionPane.showInputDialog(null, 
-								"Select a Object for observation...",
-								"Create Window 2",
-								JOptionPane.PLAIN_MESSAGE,
-								null,
-								names.toArray(),
-								null);
-						
-						int index = names.indexOf(str2);
-						if(index != -1) {
-							selection = tempList.get(index);
-						}
-					}
-					
-					if(selection != null) {
-					//	View comp = uip.createEntityView(viewMap.get(str), selection);
-						//AngeronaWindow.getInstance().addComponentToCenter(comp);
-					}
-				}
-				
+				ViewComponent bc = viewMap.get(str).newInstance();
+				openView(bc);
 				
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
@@ -356,12 +302,8 @@ public class AngeronaWindow extends WindowAdapter
 			e.printStackTrace();
 		}
 		
-		resourceView = new ResourcenView();
-		resourceView.setController(new ResourceTreeController(new JTree()));
-		resourceView.init();
 		
 		reportView = new ReportView();
-		reportView.init();
 		
 		createDefaultPerspective();
 	}
@@ -396,45 +338,26 @@ public class AngeronaWindow extends WindowAdapter
 		}
 		return image;
 	}
-
-	private void createCloseButton(final DefaultDockable dd) {
-		DefaultDockActionSource actionSource = new DefaultDockActionSource(
-				new LocationHint(LocationHint.DOCKABLE, LocationHint.RIGHT_OF_ALL));
-		SimpleButtonAction sba = new SimpleButtonAction();
-		sba.setText("Close");
-		sba.setIcon(control.getIcons().get("close"));
-		sba.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				dd.getDockParent().drag(dd);
-			}
-		});
-		actionSource.add(sba);
-		dd.setActionOffers(actionSource);
-		
-	}
 	
 	private void createDefaultPerspective() {
 		parentStation.removeAllDockables();
 		
-		DefaultDockable dd = new DefaultDockable(resourceView);
-		dd.setTitleIcon(control.getIcons().get("resources"));
-		dd.setTitleText("Angerona Resources");
+		ViewComponent viewComp = ViewComponentFactory.get().createViewComponent(ProjectTreeMVPComponent.class);
+		DefaultDockable dd = new DefaultDockable(viewComp.getPanel());
+		viewComp.decorate(dd);
 		parentStation.drop(dd, new SplitDockProperty(0, 0, 0.25, 0.9));
 		
 		dd = new DefaultDockable(reportView);
-		dd.setTitleIcon(control.getIcons().get("report"));
-		dd.setTitleText("Report");
+		reportView.decorate(dd);
 		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
 		
-		simLoadBar = new SimulationControlBar();
-		simLoadBar.init();
-		dd = new DefaultDockable(simLoadBar);
-		dd.setTitleText("Simulation Control Bar");
-		dd.setTitleIcon(control.getIcons().get("monitor"));
+		viewComp = ViewComponentFactory.get().createViewComponent(SimulationControlBarMVPComponent.class);
+		dd = new DefaultDockable(viewComp.getPanel());
+		/*
 		dd.setActionOffers(null);
 		HierarchyDockActionSource hdas = (HierarchyDockActionSource)dd.getGlobalActionOffers();
 		hdas.unbind();
+		*/
 		parentStation.drop(dd, new SplitDockProperty(0, 0.9, 1, 0.1));		
 	}
 	
@@ -442,14 +365,14 @@ public class AngeronaWindow extends WindowAdapter
 	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
 		SimulationTreeController stc = new SimulationTreeController(new JTree());
 		stc.simulationStarted(simulationEnvironment);
+		
 		ResourcenView rv = new ResourcenView(stc);
-		rv.init();
 		DefaultDockable dd = new DefaultDockable(new JScrollPane(rv));
 		dd.setTitleText("Entities of '" + simulationEnvironment.getName() + "'");
 		dd.setTitleIcon(control.getIcons().get("simulation"));
 		parentStation.drop(dd, SplitDockProperty.WEST);
-		
 		resMap.add(dd);
+		
 	}
 
 	@Override

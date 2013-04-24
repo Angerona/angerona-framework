@@ -3,7 +3,7 @@
 	<cycle-script source="config/censor_agent_cycle.xml" />
 	
 	<operation-set operation-type="GenerateOptions">
-      <default-operator-cls>angerona.fw.DefendingAgent.operators.def.GenerateOptionsOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.defendingagent.operators.def.GenerateOptionsOperator</default-operator-cls>
    	</operation-set>
 	
 	<operation-set operation-type="IntentionUpdate">
@@ -11,11 +11,11 @@
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>angerona.fw.DefendingAgent.operators.def.SubgoalGenerationOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.defendingagent.operators.def.SubgoalGenerationOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
-      <default-operator-cls>angerona.fw.DefendingAgent.operators.def.UpdateBeliefsOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.defendingagent.operators.def.UpdateBeliefsOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="Violates">
@@ -23,8 +23,8 @@
    	</operation-set>
 	
 	<component>angerona.fw.logic.Desires</component>
-	<component>angerona.fw.logic.SecrecyKnowledge</component>
+	<component>angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
     <component>angerona.fw.PlanComponent</component>
-    <component>angerona.fw.DefendingAgent.ViewComponent</component>
-    <component>angerona.fw.DefendingAgent.CensorComponent</component>
+    <component>angerona.fw.defendingagent.ViewComponent</component>
+    <component>angerona.fw.defendingagent.CensorComponent</component>
 </agent-configuration>

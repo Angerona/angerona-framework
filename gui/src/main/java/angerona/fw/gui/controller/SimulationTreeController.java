@@ -15,12 +15,15 @@ import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.AngeronaWindow;
+import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.view.BeliefbaseView;
-import angerona.fw.gui.view.View;
-import angerona.fw.internal.ViewFactory;
+import angerona.fw.internal.ViewComponentFactory;
 import angerona.fw.listener.SimulationListener;
 import bibliothek.gui.Dockable;
 
+/**
+ * @deprecated
+ */
 public class SimulationTreeController extends TreeControllerAdapter implements SimulationListener {
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(SimulationTreeController.class);
@@ -43,11 +46,10 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	private void handlerAgentComponent(AgentComponent component) {
 		String agname = component.getAgent().getName();
 		LOG.trace("Handle AgentComponent: '{}' of Agent '{}'.", agname);
-		View view = ViewFactory.getInstance().createViewForEntityComponent(component);
+		ViewComponent view = ViewComponentFactory.get().createViewForEntityComponent(component);
 		if(view != null) {
-			Dockable dd = AngeronaWindow.getInstance().openView(view, 
-					component.getClass().getSimpleName() + " - " + agname);
-			AngeronaWindow.getInstance().registerDockableForCurrentSimulation(dd);
+			Dockable dd = AngeronaWindow.get().openView(view);
+			AngeronaWindow.get().registerDockableForCurrentSimulation(dd);
 		}
 	}
 
@@ -70,35 +72,21 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	private void handlerBeliefbase(BaseBeliefbase bb) {
 		LOG.trace("Handle beliefbase: '{}'", bb.getFileEnding());
 		
-		Agent ag = bb.getAgent();
-		String title = ag.getName() + ": ";
-		if(bb.equals(ag.getBeliefs().getWorldKnowledge())) {
-			title += "World";
-		} else {
-			for(String view : ag.getBeliefs().getViewKnowledge().keySet()) {
-				BaseBeliefbase other = ag.getBeliefs().getViewKnowledge().get(view);
-				if(other.equals(bb)) {
-					title += "View -> " + view;
-					break;
-				}
-			}
-		}
-		
-		/** @todo More dynamically... using plugin architecture etc. */
 		Dockable dd = null;
 		if(bb.getFileEnding().toLowerCase().equals("asp")) {
-			View view = ViewFactory.getInstance().createViewForEntityComponent(bb);
+			ViewComponent view = ViewComponentFactory.get().createViewForEntityComponent(bb);
 			if(view != null) {
-				dd = AngeronaWindow.getInstance().openView(view, title);
+				dd = AngeronaWindow.get().openView(view);
 			}
 		} else {
-			BeliefbaseView bc = ViewFactory.getInstance().createEntityView(
+			BeliefbaseView bc = ViewComponentFactory.get().createEntityView(
 					BeliefbaseView.class, bb);
-			dd = AngeronaWindow.getInstance().openView(bc, title);
+			dd = AngeronaWindow.get().openView(bc);
 		}
-	if(dd != null) {
-		AngeronaWindow.getInstance().registerDockableForCurrentSimulation(dd);
-	}
+	
+		if(dd != null) {
+			AngeronaWindow.get().registerDockableForCurrentSimulation(dd);
+		}
 	}
 	
 	@Override
