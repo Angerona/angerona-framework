@@ -1,6 +1,7 @@
 package angerona.fw.example.operators;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Desire;
+import angerona.fw.Intention;
 import angerona.fw.Subgoal;
 import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
@@ -30,6 +32,7 @@ import angerona.fw.comm.Query;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
+import angerona.fw.logic.ScriptingComponent;
 
 /**
  * Default subgoal generation generates the atomic actions need to react on the
@@ -62,6 +65,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			for(Desire d : currentDesires) {
 				reval = reval || revisionRequest(d, pp, ag);
 			}
+			
+			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareScriptingProcessing);
+			for(Desire d : currentDesires){
+				processSripting(d, pp, ag);
+			}
 		}
 		
 		if(!reval)
@@ -69,6 +77,21 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		return reval;
 	}
 
+	public void processSripting(Desire d, PlanParameter pp, Agent ag){
+		Subgoal sg = new Subgoal(ag, d);
+		ScriptingComponent script = ag.getComponent(ScriptingComponent.class);
+		ArrayList<Intention> intention = script.getIntentions();
+		String text = intention.toString();
+		sg.newStack(intention.remove(0));
+		for(int i = 0 ; i<intention.size(); i++){
+			sg.addToStack(intention.get(i), i);
+		}
+		ag.getPlanComponent().addPlan(sg);
+		pp.report("Add the new  actions '" + text + 
+				"' to the plan, chosen by desire: " + d.toString(), 
+				ag.getPlanComponent());
+	}
+	
 	/**
 	 * This is a helper method: Which searches for desires starting with the prefix 'v_'.
 	 * It creates RevisionRequests for such desires.

@@ -301,15 +301,15 @@
     	<scope>runtime</scope>
     </dependency>
     <dependency>
-    	<groupId>angerona.fw</groupId>
-    	<artifactId>DefendingAgent</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
     	<groupId>angerona.fw.am</groupId>
     	<artifactId>secrecy</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
+    </dependency>
+    <dependency>
+    	<groupId>angerona.fw</groupId>
+    	<artifactId>defendingagent</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <parent>

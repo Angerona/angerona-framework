@@ -21,7 +21,9 @@
 	<operation-set operation-type="Violates">
       <default-operator-cls>angerona.fw.example.operators.ViolatesOperator</default-operator-cls>
    	</operation-set>
-	
+   	
+   	
+	<component>angerona.fw.logics.ScriptingComponent</component>
 	<component>angerona.fw.logic.Desires</component>
 	<component>angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
     <component>angerona.fw.PlanComponent</component>	
