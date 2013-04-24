@@ -2,13 +2,15 @@ package angerona.fw.logic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.Intention;
 
 public class ScriptingComponent extends BaseAgentComponent {
 	/** list of all action */
-	private ArrayList<Intention> actions = new ArrayList<Intention>();
+	private LinkedList<Intention> actions = new LinkedList<Intention>();
 
 	/** default ctor */
 	public ScriptingComponent() {
@@ -47,8 +49,9 @@ public class ScriptingComponent extends BaseAgentComponent {
 		return null;
 	}
 
-	public ArrayList<Intention> getIntentions() {
-		return (ArrayList<Intention>) Collections.unmodifiableList(actions);
+	@SuppressWarnings("unchecked")
+	public List<Intention> getIntentions() {
+		return new LinkedList<Intention>(actions);
 	}
 
 	@Override

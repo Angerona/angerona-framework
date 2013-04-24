@@ -37,7 +37,7 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	
 	public static final Predicate prepareReasonCalculation = new Predicate("reasonProcessing", 1);
 	
-	public static final Predicate prepareScriptingProcessing = new Predicate("scriptingProcessing", 1);
+	public static final Predicate prepareScriptingProcessing = new Predicate("scriptingProcessing", 0);
 	
 	public static final Predicate prepareJustificationReaction = new Predicate("justificationProcessing", 1);
 	

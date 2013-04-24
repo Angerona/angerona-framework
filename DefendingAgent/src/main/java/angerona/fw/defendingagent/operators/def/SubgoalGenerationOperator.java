@@ -3,6 +3,7 @@ package angerona.fw.defendingagent.operators.def;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
@@ -74,7 +75,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareScriptingProcessing);
 			for(Desire d : currentDesires){
-				processSripting(d, pp, ag);
+				reval = reval || processScripting(d, pp, ag);
+				
 			}
 		}
 		return reval;
@@ -257,10 +259,10 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		return true;
 	}
 	
-	public void processSripting(Desire d, PlanParameter pp, Agent ag){
+	public boolean processScripting(Desire d, PlanParameter pp, Agent ag){
 		Subgoal sg = new Subgoal(ag, d);
 		ScriptingComponent script = ag.getComponent(ScriptingComponent.class);
-		ArrayList<Intention> intention = script.getIntentions();
+		List<Intention> intention = script.getIntentions();
 		String text = intention.toString();
 		sg.newStack(intention.remove(0));
 		for(int i = 0 ; i<intention.size(); i++){
@@ -270,6 +272,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		pp.report("Add the new  actions '" + text + 
 				"' to the plan, chosen by desire: " + d.toString(), 
 				ag.getPlanComponent());
+		return true;
 	}
 	
 	/**

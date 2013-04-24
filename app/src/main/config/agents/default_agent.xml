@@ -23,7 +23,7 @@
    	</operation-set>
    	
    	
-	<component>angerona.fw.logics.ScriptingComponent</component>
+	<component>angerona.fw.logic.ScriptingComponent</component>
 	<component>angerona.fw.logic.Desires</component>
 	<component>angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
     <component>angerona.fw.PlanComponent</component>	
