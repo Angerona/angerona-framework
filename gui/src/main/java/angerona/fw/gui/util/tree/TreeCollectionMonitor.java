@@ -46,7 +46,7 @@ public class TreeCollectionMonitor extends CollectionMonitor<JTree> {
 		int y = e.getY();
 		
 		TreePath path = component.getPathForLocation(x,y);
-		if(SwingUtilities.isLeftMouseButton(e)) {
+		if(path != null && SwingUtilities.isLeftMouseButton(e)) {
 			if(e.getClickCount() == 2) {
 				DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)path.getLastPathComponent();
 				if(dmtn != null && dmtn.getUserObject() instanceof UserObjectWrapper) {
