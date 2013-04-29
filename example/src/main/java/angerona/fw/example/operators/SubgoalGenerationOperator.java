@@ -1,7 +1,6 @@
 package angerona.fw.example.operators;
 
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -79,15 +78,21 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	}
 
 	public boolean processScripting(Desire d, PlanParameter pp, Agent ag){
-		Subgoal sg = new Subgoal(ag, d);
+		//Subgoal sg = new Subgoal(ag, d);
 		ScriptingComponent script = ag.getComponent(ScriptingComponent.class);
-		List<Intention> intention = script.getIntentions();
-		String text = intention.toString();
-		sg.newStack(intention.remove(0));
-		for(int i = 0 ; i<intention.size(); i++){
-			sg.addToStack(intention.get(i), 0);
+		List<Intention> intentions = script.getIntentions();
+		String text = intentions.toString();
+		
+		for(Intention i : intentions) {
+			Subgoal sg = new Subgoal(ag, d);
+			sg.newStack(i);
+			ag.getPlanComponent().addPlan(sg);
 		}
-		ag.getPlanComponent().addPlan(sg);
+//		sg.newStack(intention.remove(0));
+//		for(int i = 0 ; i<intention.size(); i++){
+//			sg.addToStack(intention.get(i), 0);
+//		}
+//		ag.getPlanComponent().addPlan(sg);
 		pp.report("Add the new  actions '" + text + 
 				"' to the plan, chosen by desire: " + d.toString(), 
 				ag.getPlanComponent());
