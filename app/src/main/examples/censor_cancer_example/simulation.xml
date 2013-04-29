@@ -48,14 +48,14 @@
         	<SpeechAct type="Revision">
         		<sender>Attacker</sender>
         		<receiver>Defender</receiver>
-        		<proposition>s1 || s2</proposition>
+        		<proposition>s3</proposition>
         	</SpeechAct>
         </script>
         <script>
         	<SpeechAct type="Query">
         		<sender>Attacker</sender>
         		<receiver>Defender</receiver>
-        		<question>c</question>
+        		<question>-s3 || -s2</question>
         	</SpeechAct>
         </script>
 <!--         <desire>q_Defender(s1 && c)</desire> -->
