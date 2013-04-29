@@ -46,7 +46,7 @@ public class Revision extends SpeechAct {
 	
 	@Override 
 	public String toString() {
-		return "< " + getSenderId() + " query " + getReceiverId() + " " + proposition + " >";
+		return "< " + getSenderId() + " revision " + getReceiverId() + " " + proposition + " >";
 	}
 
 	/** @return true if the question is an open question, false if the question is not open.*/
