@@ -260,16 +260,20 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	}
 	
 	public boolean processScripting(Desire d, PlanParameter pp, Agent ag){
-		Subgoal sg = new Subgoal(ag, d);
 		ScriptingComponent script = ag.getComponent(ScriptingComponent.class);
-		List<Intention> intention = script.getIntentions();
-		String text = intention.toString();
-		sg.newStack(intention.remove(0));
-		for(int i = 0 ; i<intention.size(); i++){
-			sg.addToStack(intention.get(i), i);
+		List<Intention> intentions = script.getIntentions();
+		String intentionString = intentions.toString();
+		for(Intention i : intentions) {
+			Subgoal sg = new Subgoal(ag, d);
+			sg.newStack(i);
+			ag.getPlanComponent().addPlan(sg);
 		}
-		ag.getPlanComponent().addPlan(sg);
-		pp.report("Add the new  actions '" + text + 
+		
+//		for(int i = 0 ; i<intentions.size(); i++) {
+//			sg.addToStack(intentions.get(i), i);
+//		}
+//		ag.getPlanComponent().addPlan(sg);
+		pp.report("Add the new  actions '" + intentionString + 
 				"' to the plan, chosen by desire: " + d.toString(), 
 				ag.getPlanComponent());
 		return true;
