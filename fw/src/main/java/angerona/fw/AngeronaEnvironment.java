@@ -214,6 +214,7 @@ public class AngeronaEnvironment  {
 			
 			// and initialize the actions:
 			for(SpeechAct a : ai.getActions()) {
+				a.setAgent(getAgentByName(a.getSenderId()));
 				agent.getComponent(ScriptingComponent.class).add(a);
 			}
 		}

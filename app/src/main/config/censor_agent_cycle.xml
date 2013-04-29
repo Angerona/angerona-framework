@@ -15,6 +15,7 @@
 		
 		<operation type="IntentionUpdate">
 		    <param name="plan" value="$plan" />
+		    <param name="allowUnsafe" value="TRUE" />
 	    	<output>action</output>
 		</operation>
 		  

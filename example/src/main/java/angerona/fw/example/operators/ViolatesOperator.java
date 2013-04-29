@@ -110,6 +110,9 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	
 	@Override
 	public void performAction(Action action, Agent agent, Beliefs beliefs) {
+		if(agent == null) {
+			return;
+		}
 		EvaluateParameter param = new EvaluateParameter(agent,  beliefs, action);
 		violates = violates.combine(process(param));
 	}
