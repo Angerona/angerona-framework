@@ -225,6 +225,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		AnswerValue answerValue = AnswerValue.AV_FALSE;
 		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();
 		
+		
 		// slightly hacked: we need to get the revision result from the revision operator
 		BaseChangeBeliefs changeOp = bbase.getChangeOperator();
 		boolean success = false;
@@ -239,6 +240,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		if(success) {
 			pp.report("Revision successful.");
+			pp.report("New worldview: " + bbase);
 			bbase.addKnowledge(revision.getProposition());
 			answerValue = AnswerValue.AV_TRUE;
 		} else {
@@ -264,7 +266,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		List<Intention> intentions = script.getIntentions();
 		String intentionString = intentions.toString();
 		for(Intention i : intentions) {
-			Subgoal sg = new Subgoal(ag, d);
+			Subgoal sg = new Subgoal(ag,d);
 			sg.newStack(i);
 			ag.getPlanComponent().addPlan(sg);
 		}
