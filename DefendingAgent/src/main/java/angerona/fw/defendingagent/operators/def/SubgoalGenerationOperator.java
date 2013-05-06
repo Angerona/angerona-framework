@@ -28,12 +28,12 @@ import angerona.fw.defendingagent.ViewComponent;
 import angerona.fw.defendingagent.comm.Revision;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.BaseChangeBeliefs;
-import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.Desires;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.conditional.ConditionalBeliefbase;
 import angerona.fw.logic.conditional.ConditionalRevision;
+import angerona.fw.operators.OperatorCallWrapper;
+import angerona.fw.operators.parameter.TranslatorParameter;
 
 /**
  * Censor agents subgoal generation generates the atomic actions need to react on the
@@ -262,14 +262,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();
 		
 		// slightly hacked: we need to get the revision result from the revision operator
-		BaseChangeBeliefs changeOp = bbase.getChangeOperator();
+		OperatorCallWrapper changeOp = bbase.getChangeOperator();
 		boolean success = false;
-		if(changeOp instanceof ConditionalRevision) {
-			ConditionalRevision revisionOp = (ConditionalRevision) changeOp;
-			BaseTranslator translator = bbase.getTranslator();
+		if(changeOp.getImplementation() instanceof ConditionalRevision) {
+			ConditionalRevision revisionOp = (ConditionalRevision) changeOp.getImplementation();
+			OperatorCallWrapper translator = bbase.getTranslator();
 			Set<FolFormula> revisionFormulas = new HashSet<FolFormula>();
 			revisionFormulas.add(revision.getProposition());
-			ConditionalBeliefbase newK = (ConditionalBeliefbase) translator.translateFOL(new ConditionalBeliefbase(), revisionFormulas);
+			ConditionalBeliefbase newK = (ConditionalBeliefbase) translator.process(new TranslatorParameter(bbase, revisionFormulas));
 			success = revisionOp.simulateRevision((ConditionalBeliefbase)bbase, newK);
 		}
 		
