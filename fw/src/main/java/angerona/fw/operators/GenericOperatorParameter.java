@@ -1,5 +1,6 @@
 package angerona.fw.operators;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,12 +22,19 @@ public class GenericOperatorParameter {
 	/** The parameter map */
 	private Map<String, Object> parameters = new HashMap<String, Object>();
 	
+	private Map<String, String> settings = new HashMap<>();
+	
 	/**
-	 * CTor: Requres the caller as parameter
+	 * CTor: Requires the caller as parameter
 	 * @param caller	reference to the caller of an operator.
 	 */
 	public GenericOperatorParameter(OperatorCaller caller) {
+		this(caller, new HashMap<String, String>());
+	}
+	
+	public GenericOperatorParameter(OperatorCaller caller, Map<String, String> settings) {
 		this.caller = caller;
+		this.settings.putAll(settings);
 	}
 	
 	/** @return the caller of an operator */
@@ -41,6 +49,10 @@ public class GenericOperatorParameter {
 	 */
 	public void setParameter(String name, Object value) {
 		parameters.put(name, value);
+	}
+	
+	public void setSetting(String name, String value) {
+		settings.put(name, value);
 	}
 	
 	/**
@@ -69,5 +81,9 @@ public class GenericOperatorParameter {
 			return parameters.get(name);
 		}
 		return null;
+	}
+	
+	public Map<String, String> getSettings() {
+		return settings;
 	}
 }

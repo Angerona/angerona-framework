@@ -182,7 +182,7 @@ public class AspReasoner extends BaseReasoner {
 		
 		// find the right inference method:
 		double dValue = -1;
-		String dParam = getParameters().get("d");
+		String dParam = params.getSetting("d", "1.0");
 		if(dParam != null) {
 			dValue = Double.parseDouble(dParam);
 		}

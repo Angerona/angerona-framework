@@ -24,6 +24,7 @@ import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
@@ -127,10 +128,10 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				}
 				
 				LOG.info("Make Revision for QueryAnswer: '{}'", answers);
-				BaseChangeBeliefs bcb = (BaseChangeBeliefs)view.getOperators().getOperationSetByType(
+				OperatorCallWrapper bcb = view.getOperators().getOperationSetByType(
 						BaseChangeBeliefs.OPERATION_TYPE).getOperator(EXPANSION);
 				if(bcb == null) {
-					bcb = (BaseChangeBeliefs)view.getOperators().getPreferedByType(BaseChangeBeliefs.OPERATION_TYPE);
+					bcb = view.getOperators().getPreferedByType(BaseChangeBeliefs.OPERATION_TYPE);
 					LOG.warn("The Weakening Operator wants to use '{}' " +
 							"for revision. But it was not found and '{}' " +
 							"will be used as default alternative.", EXPANSION, 
@@ -142,7 +143,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				// Check for contradictions. If one is found consider all
 				// secrets totally revealed
 				List<AnswerSet> newAnsSets = null;				
-				AspReasoner ar = (AspReasoner) view.getReasoningOperator();
+				AspReasoner ar = (AspReasoner) view.getReasoningOperator().getImplementation();
 				newAnsSets = ar.processAnswerSets((AspBeliefbase)view);
 
 				if (newAnsSets == null) {

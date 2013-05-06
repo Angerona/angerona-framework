@@ -1,5 +1,8 @@
 package angerona.fw.operators.parameter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.management.AttributeNotFoundException;
 
 import angerona.fw.error.ConversionException;
@@ -22,9 +25,13 @@ public abstract class OperatorParameterAdapter implements
 	Reporter
 	{
 
+	private Map<String, String> settings = new HashMap<String, String>();
+	
 	@Override
-	public abstract void fromGenericParameter(GenericOperatorParameter input) 
-			throws ConversionException, AttributeNotFoundException;
+	public void fromGenericParameter(GenericOperatorParameter input) 
+			throws ConversionException, AttributeNotFoundException {
+		settings = input.getSettings();
+	}
 	
 	@Override
 	public void report(String message) {
@@ -34,6 +41,14 @@ public abstract class OperatorParameterAdapter implements
 	@Override
 	public void report(String message, Entity attachment) {
 		getReporter().report(message, attachment);
+	}
+	
+	public String getSetting(String name, String def) {
+		if(!this.settings.containsKey(name)) {
+			return def;
+		} else {
+			return this.settings.get(name);
+		}
 	}
 	
 	/**

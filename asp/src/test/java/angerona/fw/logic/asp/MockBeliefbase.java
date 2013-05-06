@@ -7,6 +7,7 @@ import angerona.fw.OperatorSet;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.util.OSValidator;
 
 /**
@@ -18,26 +19,26 @@ public class MockBeliefbase extends AspBeliefbase {
 		public SpecialOperatorSet() {
 			OperatorSet rSet = new OperatorSet(BaseReasoner.OPERATION_TYPE);
 			AspReasoner arOp = new AspReasoner();
-			rSet.addOperator(arOp);
+			rSet.addOperator(new OperatorCallWrapper(arOp));
 			rSet.setPrefered(AspReasoner.class.getName());
 			
-			operators.put(AspReasoner.class.getName(), arOp);
+			operators.put(AspReasoner.class.getName(), new OperatorCallWrapper(arOp));
 			operationSetsByType.put(BaseReasoner.OPERATION_TYPE, rSet);
 			
 			OperatorSet tSet = new OperatorSet(BaseTranslator.OPERATION_TYPE);
 			AspTranslator tOp = new AspTranslator();
-			tSet.addOperator(tOp);
+			tSet.addOperator(new OperatorCallWrapper(tOp));
 			tSet.setPrefered(tOp.getClass().getName());
 			
-			operators.put(tOp.getClass().getName(), tOp);
+			operators.put(tOp.getClass().getName(), new OperatorCallWrapper(tOp));
 			operationSetsByType.put(BaseTranslator.OPERATION_TYPE, tSet);
 			
 			OperatorSet cSet = new OperatorSet(BaseChangeBeliefs.OPERATION_TYPE);
 			AspExpansion expan = new AspExpansion();
-			cSet.addOperator(expan);
+			cSet.addOperator(new OperatorCallWrapper(expan));
 			cSet.setPrefered(expan.getClass().getName());
 			
-			operators.put(expan.getClass().getName(), expan);
+			operators.put(expan.getClass().getName(), new OperatorCallWrapper(expan));
 			operationSetsByType.put(BaseChangeBeliefs.OPERATION_TYPE, cSet);
 		}
 	}
@@ -62,13 +63,13 @@ public class MockBeliefbase extends AspBeliefbase {
 		final String path = System.getProperty("user.dir") +
 				"/../app/src/main/tools/" + os + "/solver/asp/dlv/dlv" + ending;
 		
-		((AspReasoner)getReasoningOperator()).setSolverWrapper(new ISolverWrapper() {
+		((AspReasoner)getReasoningOperator().getImplementation()).setSolverWrapper(new ISolverWrapper() {
 			@Override
 			public Solver getSolver() {
 				
 				return new DLV(path);
 			}
 		});
-		getReasoningOperator().infer(this);
+		//getReasoningOperator().infer(this);
 	}
 }

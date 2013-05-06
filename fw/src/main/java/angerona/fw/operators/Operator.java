@@ -1,8 +1,5 @@
 package angerona.fw.operators;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.management.AttributeNotFoundException;
 
 import org.slf4j.Logger;
@@ -37,14 +34,7 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(Operator.class);
-	
-	/** 
-	 * a map containing parameters for the operator in a generic representation 
-	 * @todo Move the these parameters to another place, they must be saved
-	 * on caller side.
-	 */
-	protected Map<String, String> parameters = new HashMap<String, String>();
-	
+
 	/**
 	 * Define as abstract method to fix errors in different jars which does not realize
 	 * that this method is defined in the BaseOperator interface.
@@ -110,32 +100,14 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	 * @param params	The parameters for the operator invocation in specialized version.
 	 * @return	
 	 */
-	public OUT process(IN params) {
+	public OUT process(OperatorParameter params) {
 		params.getStack().pushOperator(this);
-		prepare(params);
-		OUT reval = processInternal(params);
+		@SuppressWarnings("unchecked")
+		IN params2 = (IN)params;
+		prepare(params2);
+		OUT reval = processInternal((IN)params2);
 		params.getStack().popOperator();
 		return reval;
-	}
-	
-	@Override
-	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
-	}
-	
-	@Override
-	public Map<String, String> getParameters() {
-		return this.parameters;
-	}
-	
-	@Override
-	public String getParameter(String name, String def) {
-		if(!this.parameters.containsKey(name)) {
-			this.parameters.put(name, def);
-			return def;
-		} else {
-			return this.parameters.get(name);
-		}
 	}
 	
 	@Override
@@ -146,11 +118,6 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName();
-	}
-	
-	public String getNameAndParameters() {
-		return this.getClass().getSimpleName() + ":"
-				+ this.parameters.toString();
 	}
 	
 	/**

@@ -14,6 +14,8 @@ import angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.logic.Secret;
+import angerona.fw.logic.ViolatesResult;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
@@ -92,7 +94,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		List<PlanElement> atomicIntentions = new LinkedList<PlanElement>();
 		// Loop needs to be changed so that only options from the same plan are
 		// considered
-		BaseViolatesOperator vop = (BaseViolatesOperator) ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
+		OperatorCallWrapper vop = ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
 		for (Subgoal plan : param.getActualPlan().getPlans()) {
 			for (int i = 0; i < plan.getNumberOfStacks(); ++i) {
 				PlanElement pe = plan.peekStack(i);
@@ -106,7 +108,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					} else {
 						EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
 						
-						List<Pair<Secret, Double>> weakenings = vop.process(eparam).getPairs();
+						List<Pair<Secret, Double>> weakenings = ((ViolatesResult)vop.process(eparam)).getPairs();
 						
 						if (weakenings != null) {
 							double cost = secrecyWeakeningCost(weakenings);

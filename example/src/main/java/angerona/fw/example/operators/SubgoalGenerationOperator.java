@@ -150,7 +150,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		BaseBeliefbase bb = ag.getBeliefs().getWorldKnowledge();
 		AngeronaAnswer aa = bb.reason(q.getQuestion());
 		
-		boolean generateLies = Boolean.parseBoolean(getParameter("generateLies", "TRUE"));	
+		boolean generateLies = Boolean.parseBoolean(pp.getSetting("generateLies", String.valueOf(true)));	
 		
 		if(aa.getAnswerValue() == AnswerValue.AV_TRUE ||
 				aa.getAnswerValue() == AnswerValue.AV_FALSE) {

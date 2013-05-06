@@ -1,7 +1,6 @@
 package angerona.fw.operators;
 
-import java.util.Map;
-
+import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.util.Pair;
 
@@ -13,31 +12,7 @@ import angerona.fw.util.Pair;
  * @author Tim Janus
  */
 public interface BaseOperator extends ReportPoster {
-	
-	/**
-	 * Change the user-parameters used by the operator. 
-	 * @todo move to caller side, make operator stateless
-	 * @param parameters
-	 */
-	void setParameters(Map<String, String> parameters);
-	
-	/**
-	 * @todo move to caller side, make operator stateless
-	 * @return 	a map from parameter names to values in a generic string
-	 * 			representation.
-	 */
-	Map<String, String> getParameters();
-	
-	/**
-	 * Gets the parameter with the given name. If the parameter does not
-	 * exists the given def parameter is returned.
-	 * @param name	The name of the parameter to return
-	 * @param def	The default value of the parameter if the parameter does
-	 * 				not exists yet.
-	 * @return		A string representing the value of the parameter
-	 */
-	String getParameter(String name, String def);
-	
+		
 	/**
 	 * 
 	 * @return	The operation type implemented by the operator.
@@ -50,4 +25,6 @@ public interface BaseOperator extends ReportPoster {
 	
 	
 	Object process(GenericOperatorParameter gop);
+	
+	Object process(OperatorParameter castParam);
 }

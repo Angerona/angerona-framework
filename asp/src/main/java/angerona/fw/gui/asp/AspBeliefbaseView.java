@@ -38,14 +38,14 @@ public class AspBeliefbaseView extends BeliefbaseView {
 		
 		// Second: Process Answer sets 
 		AspBeliefbase bAct = (AspBeliefbase)actual;
-		if(! (bAct.getReasoningOperator() instanceof AspReasoner)) {
+		if(! (bAct.getReasoningOperator().getImplementation() instanceof AspReasoner)) {
 			return;
 		}
-		AspReasoner reasoner = (AspReasoner)bAct.getReasoningOperator();
+		AspReasoner reasoner = (AspReasoner) bAct.getReasoningOperator().getImplementation();
 
 		model.addElement(new ListElement(" ", ListElement.ST_NOTCHANGED));
 		model.addElement(new ListElement("--- Answerset Result using: " + 
-		reasoner.getNameAndParameters(), ListElement.ST_RESERVED));
+		reasoner.toString(), ListElement.ST_RESERVED));
 		
 		List<AnswerSet> answerSets = reasoner.processAnswerSets(bAct);
 		

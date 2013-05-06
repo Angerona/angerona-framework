@@ -42,6 +42,8 @@ public class OperatorPluginParameter extends OperatorParameterAdapter {
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter param) 
 			throws ConversionException, AttributeNotFoundException {
+		super.fromGenericParameter(param);
+		
 		if(! (param.getCaller() instanceof Agent) ) {
 			throw conversionException("caller", Agent.class);
 		}

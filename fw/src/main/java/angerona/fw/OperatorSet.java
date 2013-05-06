@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import angerona.fw.operators.BaseOperator;
+import angerona.fw.operators.OperatorCallWrapper;
 
 /**
  * A operator set is a set of operators which implement the same operation type.
@@ -21,10 +21,10 @@ public class OperatorSet {
 	private String operationName;
 	
 	/** maps the full java class name to the operator instance */
-	private Map<String, BaseOperator> operators = new HashMap<>();
+	private Map<String, OperatorCallWrapper> operators = new HashMap<>();
 	
 	/** the preferred operator */
-	private BaseOperator preferredOperator;
+	private OperatorCallWrapper preferredOperator;
 	
 	public OperatorSet(String name) {
 		this.operationName = name;
@@ -49,7 +49,7 @@ public class OperatorSet {
 		return false;
 	}
 	
-	public BaseOperator getOperator(String fullJavaClsName) {
+	public OperatorCallWrapper getOperator(String fullJavaClsName) {
 		if(operators.containsKey(fullJavaClsName)) {
 			return operators.get(fullJavaClsName);
 		} else if(PREFERRED_ID.equals(fullJavaClsName)) {
@@ -61,11 +61,11 @@ public class OperatorSet {
 	/**
 	 * @return the preferred operator
 	 */
-	public BaseOperator getPreferred() {
+	public OperatorCallWrapper getPreferred() {
 		return preferredOperator;
 	}
 	
-	public Collection<BaseOperator> getOperators() {
+	public Collection<OperatorCallWrapper> getOperators() {
 		return Collections.unmodifiableCollection(operators.values());
 	}
 	
@@ -76,9 +76,9 @@ public class OperatorSet {
 	 * @return	true if the operator is successfully added, false if the operation type 
 	 * 			of the set and the given operator mismatches.
 	 */
-	public boolean addOperator(BaseOperator operator) {
+	public boolean addOperator(OperatorCallWrapper operator) {
 		if(operator.getOperationType().first.equals(operationName)) {
-			operators.put(operator.getClass().getName(), operator);
+			operators.put(operator.getImplementation().getClass().getName(), operator);
 			return true;
 		}
 		return false;

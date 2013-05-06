@@ -1,5 +1,7 @@
 package angerona.fw.operators.parameter;
 
+import javax.management.AttributeNotFoundException;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
@@ -16,7 +18,7 @@ import angerona.fw.report.Reporter;
  * 
  * @author Tim Janus
  */
-public class BeliefbasePluginParameter implements OperatorParameter {
+public class BeliefbasePluginParameter extends OperatorParameterAdapter {
 	/** the caller of the operator */
 	private BaseBeliefbase caller;
 
@@ -39,10 +41,13 @@ public class BeliefbasePluginParameter implements OperatorParameter {
 	 * parameters from the generic parameter structure. The override method has to call the super
 	 * method.
 	 * @param input	The input parameters in generic form.
+	 * @throws AttributeNotFoundException 
 	 */
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter input)
-			throws ConversionException {
+			throws ConversionException, AttributeNotFoundException {
+		super.fromGenericParameter(input);
+		
 		if(! (input.getCaller() instanceof BaseBeliefbase) ) {
 			throw new ConversionException(GenericOperatorParameter.class, this.getClass(),
 					new ClassCastException("Cannot cast owner to base beliefbase."));

@@ -9,6 +9,10 @@ public class ReasonerParameter extends BeliefbasePluginParameter {
 	
 	public ReasonerParameter() {}
 	
+	public ReasonerParameter(BaseBeliefbase beliefbase) {
+		this(beliefbase, null);
+	}
+	
 	public ReasonerParameter(BaseBeliefbase beliefbase, FolFormula query) {
 		super(beliefbase);
 		this.query = query;

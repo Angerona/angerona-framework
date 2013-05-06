@@ -29,20 +29,20 @@ import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
-import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
 import angerona.fw.comm.Justification;
 import angerona.fw.comm.Justify;
 import angerona.fw.comm.Query;
+import angerona.fw.example.operators.SubgoalGenerationOperator;
+import angerona.fw.example.operators.ViolatesOperator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.SolverWrapper;
-import angerona.fw.example.operators.SubgoalGenerationOperator;
-import angerona.fw.example.operators.ViolatesOperator;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
@@ -204,12 +204,12 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 			candidate = iterateKnowhow(param, des);
 			if(candidate == null)
 				return null;
-			if(Boolean.parseBoolean(getParameter("allowUnsafe", String.valueOf(false))))
+			if(Boolean.parseBoolean(param.getSetting("allowUnsafe", String.valueOf(false))))
 				return candidate;
 			
-			BaseViolatesOperator vop = (BaseViolatesOperator) param.getAgent().getOperators().getPreferedByType(ViolatesOperator.OPERATION_NAME);
+			OperatorCallWrapper vop = param.getAgent().getOperators().getPreferedByType(ViolatesOperator.OPERATION_NAME);
 			EvaluateParameter eparam = new EvaluateParameter(param.getAgent(), param.getAgent().getBeliefs(), candidate);
-			res = vop.process(eparam);
+			res = (ViolatesResult) vop.process(eparam);
 			if(!res.isAlright())
 				lastUsedStrategy.fallback();
 		}

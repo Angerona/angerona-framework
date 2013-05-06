@@ -13,6 +13,8 @@ import angerona.fw.Subgoal;
 import angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
+import angerona.fw.logic.ViolatesResult;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 
 /**
@@ -42,13 +44,12 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 					Intention intention = pe.getIntention();
 					
 					if(intention.isAtomic()) {
-						boolean select = Boolean.parseBoolean(
-								getParameter("allowUnsafe", String.valueOf(false)));
+						boolean select = Boolean.parseBoolean(param.getSetting("allowUnsafe", String.valueOf(false)));
 						
 						if(!select) {
-							BaseViolatesOperator op = (BaseViolatesOperator) ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
+							OperatorCallWrapper op = ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
 							EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
-							select = op.process(eparam).isAlright();
+							select = ((ViolatesResult)op.process(eparam)).isAlright();
 							if(select) {
 								param.report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.");
 							}

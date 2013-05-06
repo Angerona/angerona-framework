@@ -1,8 +1,12 @@
 package angerona.fw.logic.asp;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.Set;
+
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.junit.Before;
@@ -11,6 +15,8 @@ import org.junit.Test;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BeliefbaseTest;
+import angerona.fw.operators.parameter.ReasonerParameter;
+import angerona.fw.util.Pair;
 
 /**
  * Tests the behavior of the asp belief base the common tests
@@ -43,8 +49,11 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 	@Test
 	public void testQueryForUnknown() {
 		AspBeliefbase bb = new MockBeliefbase();
-		AngeronaAnswer aa = bb.getReasoningOperator().query(bb, new Atom(new Predicate("test"))).second;
+		@SuppressWarnings("unchecked")
+		Pair<Set<FolFormula>, AngeronaAnswer> reval = 
+				(Pair<Set<FolFormula>, AngeronaAnswer>) bb.getReasoningOperator().process(
+				new ReasonerParameter(bb, new Atom(new Predicate("test"))));
 		// Tests for possible bug in ticket #56 but no bug was found.
-		assertEquals(true, aa.getAnswerValue() == AnswerValue.AV_UNKNOWN);
+		assertEquals(true, reval.second.getAnswerValue() == AnswerValue.AV_UNKNOWN);
 	}
 }

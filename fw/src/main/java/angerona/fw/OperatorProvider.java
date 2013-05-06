@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.internal.OperatorMap;
 import angerona.fw.operators.BaseOperator;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
 import angerona.fw.serialize.OperationSetConfig;
@@ -28,7 +29,7 @@ public class OperatorProvider {
 	private Logger LOG = LoggerFactory.getLogger(OperatorProvider.class);
 	
 	/** map from full java-class names to the right operator instances */
-	protected Map<String, BaseOperator> operators = new HashMap<String, BaseOperator>();
+	protected Map<String, OperatorCallWrapper> operators = new HashMap<String, OperatorCallWrapper>();
 	
 	/** map from the unique operation name to the operation set */
 	protected Map<String, OperatorSet> operationSetsByType = new HashMap<>();
@@ -53,8 +54,8 @@ public class OperatorProvider {
 	 * 								the form {d=1.0} as postfix.
 	 * @return 	true if the operator was added and false if an error occurred.
 	 */
-	public Pair<String, BaseOperator> addOperator(String clsNameAndParams) {
-		Pair<String, BaseOperator> p = null;
+	public Pair<String, OperatorCallWrapper> addOperator(String clsNameAndParams) {
+		Pair<String, OperatorCallWrapper> p = null;
 		try {
 			p = fetch(clsNameAndParams);
 		} catch (ClassNotFoundException e) {
@@ -68,12 +69,16 @@ public class OperatorProvider {
 		return p;
 	}
 	
+	public OperatorCallWrapper getOperator(String className) {
+		return operators.get(className);
+	}
+	
 	/**
 	 * adds the given pair to the map of operators and
 	 * sets the owner.
 	 * @param p	the pair to add (null means do nothing)
 	 */
-	private void realAdd(Pair<String, BaseOperator> p) {
+	private void realAdd(Pair<String, OperatorCallWrapper> p) {
 		if(p != null) {
 			operators.put(p.first, p.second);
 			String opName = p.second.getOperationType().first;
@@ -116,7 +121,10 @@ public class OperatorProvider {
 			LOG.warn("The operation-set of type '{}' already exists.", os.getOperationName());
 		}
 		
-		Pair<String, BaseOperator> defPair = addOperator(config.getDefaultClassName());
+		Pair<String, OperatorCallWrapper> defPair = addOperator(config.getDefaultClassName());
+		if(defPair == null)
+			return false;
+		
 		BaseOperator def = defPair.second;
 		if(def == null) {
 			LOG.error("Default operator for '{}' cannot be added.", config.getOperationType());
@@ -162,7 +170,7 @@ public class OperatorProvider {
 	 * @throws ParseException
 	 * @throws ClassNotFoundException
 	 */
-	private Pair<String, BaseOperator> fetch(String clsNameAndParams)
+	private Pair<String, OperatorCallWrapper> fetch(String clsNameAndParams)
 		throws ParseException, ClassNotFoundException {
 		
 		// @todo Use a basic parser for stuff like that...
@@ -178,8 +186,9 @@ public class OperatorProvider {
 		BaseOperator op = OperatorMap.get().getOperator(clsNameAndParams);
 		if(op == null)
 			throw new ClassNotFoundException(clsNameAndParams);
-		op.setParameters(parameters);
-		return new Pair<String, BaseOperator>(clsNameAndParams, op);
+		OperatorCallWrapper ocw = new OperatorCallWrapper(op);
+		ocw.setSettings(parameters);
+		return new Pair<String, OperatorCallWrapper>(clsNameAndParams, ocw);
 	}
 	
 	/**
@@ -201,13 +210,13 @@ public class OperatorProvider {
 	 * @return	Reference to the preferred operator implementing the given operation type or
 	 * 			null if the given operation type does not exists.
 	 */
-	public BaseOperator getPreferedByType(String operationType) {
+	public OperatorCallWrapper getPreferedByType(String operationType) {
 		OperatorSet set = getOperationSetByType(operationType);
 		return set != null ? set.getPreferred() : null;
 	}
 	
 	/** @return An unmodifiable collection of all the operators managed by the OperatorProvider */
-	public Collection<BaseOperator> getOperators() {
+	public Collection<OperatorCallWrapper> getOperators() {
 		return Collections.unmodifiableCollection( operators.values() );
 	}
 }

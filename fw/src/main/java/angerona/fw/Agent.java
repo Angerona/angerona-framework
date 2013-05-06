@@ -34,6 +34,7 @@ import angerona.fw.logic.Desires;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.BaseUpdateBeliefsOperator;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.OperatorStack;
 import angerona.fw.parser.ParseException;
 import angerona.fw.reflection.Context;
@@ -223,7 +224,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 
 		capabilities.addAll(ai.getCapabilities());
 
-		// load cylce script and link supported operators
+		// load cycle script and link supported operators
 		asmlCylce = ai.getConfig().getCycleScript();
 		for (OperationSetConfig osc : ai.getConfig().getOperations()) {
 			if (!operators.addOperationSet(osc)) {
@@ -524,9 +525,8 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 			GenericOperatorParameter param = new GenericOperatorParameter(this);
 			param.setParameter("beliefs", beliefs);
 			param.setParameter("information", perception);
-			BaseUpdateBeliefsOperator bubo = (BaseUpdateBeliefsOperator) operators
-					.getPreferedByType(BaseUpdateBeliefsOperator.OPERATION_NAME);
-			return bubo.process(param);
+			OperatorCallWrapper bubo = operators.getPreferedByType(BaseUpdateBeliefsOperator.OPERATION_NAME);
+			return (Beliefs) bubo.process(param);
 		}
 		return beliefs;
 	}

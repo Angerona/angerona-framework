@@ -2,7 +2,7 @@ package angerona.fw.gui.component;
 
 import java.util.Map;
 
-import angerona.fw.operators.BaseOperator;
+import angerona.fw.operators.OperatorCallWrapper;
 
 /**
  * 
@@ -24,8 +24,8 @@ public class OperatorConfigController {
 	}
 	
 	void selectOperator(String clsName) {
-		for(BaseOperator op : model.getSelectableOperators()) {
-			if(op.getClass().getSimpleName().equals(clsName)) {
+		for(OperatorCallWrapper op : model.getSelectableOperators()) {
+			if(op.getImplementation().getClass().getSimpleName().equals(clsName)) {
 				model.setSelectedOperator(op);
 				break;
 			}

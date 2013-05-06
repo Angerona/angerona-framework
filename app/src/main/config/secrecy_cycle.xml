@@ -13,6 +13,7 @@
 	<while condition="$running==TRUE">
 		
 		<operation type="IntentionUpdate">
+			<setting name="allowUnsafe" value="false" />
 		    <param name="plan" value="$plan" />
 	    	<output>action</output>
 		</operation>

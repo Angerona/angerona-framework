@@ -15,7 +15,9 @@ import angerona.fw.asml.InvokeOperation;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.OperatorStack;
+import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.report.Reporter;
 import angerona.fw.util.Pair;
 
@@ -54,20 +56,6 @@ public class OperationTest {
 	private class MockOperation implements BaseOperator {
 
 		@Override
-		public void setParameters(Map<String, String> parameters) {
-		}
-
-		@Override
-		public Map<String, String> getParameters() {
-			return new HashMap<>();
-		}
-
-		@Override
-		public String getParameter(String name, String def) {
-			return null;
-		}
-
-		@Override
 		public Pair<String, Class<?>> getOperationType() {
 			return new Pair<String, Class<?>>("MockOperation", MockOperation.class);
 		}
@@ -80,6 +68,11 @@ public class OperationTest {
 		@Override
 		public String getPosterName() {
 			return "MockOperation";
+		}
+
+		@Override
+		public Object process(OperatorParameter castParam) {
+			return "";
 		}
 		
 	}
@@ -107,7 +100,7 @@ public class OperationTest {
 		context.set("self", mockVisitor);
 		OperatorProvider s = new OperatorProvider();
 		OperatorSet opSet = new OperatorSet("MockOperation");
-		opSet.addOperator(new MockOperation());
+		opSet.addOperator(new OperatorCallWrapper(new MockOperation()));
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
 		context.set("operators", s);
@@ -124,7 +117,7 @@ public class OperationTest {
 		
 		OperatorProvider s = new OperatorProvider();
 		OperatorSet opSet = new OperatorSet("MockOperation");
-		opSet.addOperator(new MockOperation());
+		opSet.addOperator(new OperatorCallWrapper(new MockOperation()));
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
 		context.set("operators", s);
@@ -143,7 +136,7 @@ public class OperationTest {
 		context.set("self", mockVisitor);
 		OperatorProvider s = new OperatorProvider();
 		OperatorSet opSet = new OperatorSet("MockOperation");
-		opSet.addOperator(new MockOperation());
+		opSet.addOperator(new OperatorCallWrapper(new MockOperation()));
 		opSet.setPrefered(MockOperation.class.getName());
 		s.addOperationSet(opSet);
 		context.set("operators", s);

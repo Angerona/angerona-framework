@@ -79,7 +79,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 		BaseBeliefbase bPrev = (BaseBeliefbase)previous;
 		model.addElement(new ListElement(" ", ListElement.ST_NOTCHANGED));
 		model.addElement(new ListElement("--- Inference Result using: " + 
-		bAct.getReasoningOperator().getNameAndParameters(), ListElement.ST_RESERVED));
+		bAct.getReasoningOperator().toString(), ListElement.ST_RESERVED));
 		
 		// Calculate the inference of the reasoning.
 		Set<FolFormula> inferenceAct = bAct.infere();

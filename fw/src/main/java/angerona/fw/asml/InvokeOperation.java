@@ -11,8 +11,8 @@ import org.simpleframework.xml.Root;
 import angerona.fw.OperatorCaller;
 import angerona.fw.OperatorProvider;
 import angerona.fw.error.InvokeException;
-import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.reflection.Value;
 import angerona.fw.serialize.SerializeHelper;
 
@@ -38,13 +38,16 @@ public class InvokeOperation extends ASMLCommand {
 	/** a map containing name value pairs representing the parameters for the operation invocation */
 	@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false)
 	private Map<String, Value> parameters;
+	
+	@ElementMap(name="setting", attribute=true, entry="setting", inline=true, key="name", value="value", required=false)
+	private Map<String, String> additionalSettings;
 
 	/** the name for the output using context.get(output) returns the variable calculated by the operation */
 	@Element(name="output", required=false)
 	private String output;
 	
 	public InvokeOperation(@Attribute(name="type") String type) {
-		this(type, new HashMap<String, Value>(), null);
+		this(type, new HashMap<String, Value>());
 	}
 	
 	public InvokeOperation(
@@ -59,9 +62,19 @@ public class InvokeOperation extends ASMLCommand {
 			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
 			Map<String, Value> params,
 			@Element(name="output") String output) {
+		this(type, params, output, new HashMap<String, String>());
+	}
+	
+	public InvokeOperation(
+			@Attribute(name="type") String type,
+			@ElementMap(name="param", attribute=true, entry="param", inline=true, key="name", value="value", required=false) 
+			Map<String, Value> params,
+			@Element(name="output") String output,
+			Map<String, String> settings) {
 		this.type = type;
 		this.parameters = params;
 		this.output = output;
+		this.additionalSettings = settings;
 	}
 
 	@Override
@@ -69,8 +82,8 @@ public class InvokeOperation extends ASMLCommand {
 		OperatorProvider operations = getParameter("operators");
 			
 		// Find operator:
-		BaseOperator op = operations.getPreferedByType(type);
-		if(op == null) {
+		OperatorCallWrapper ocw = operations.getPreferedByType(type);
+		if(ocw == null) {
 			throw InvokeException.internalError("Operation type '" + type + "' not found.", 
 					this.getContext());
 		}
@@ -86,8 +99,13 @@ public class InvokeOperation extends ASMLCommand {
 			gop.setParameter(key, value.getValue());
 		}
 		
+		for(String key : additionalSettings.keySet()) {
+			String value = additionalSettings.get(key);
+			gop.setSetting(key, value);
+		}
+		
 		// call operation and save result:
-		Object out = op.process(gop);
+		Object out = ocw.process(gop);
 		if(out != null && output != null) {
 			getContext().set(output, out);
 		}

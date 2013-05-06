@@ -27,11 +27,15 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseOperator;
-import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.OperatorStack;
+import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
+import angerona.fw.operators.parameter.ReasonerParameter;
+import angerona.fw.operators.parameter.TranslatorParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.report.Reporter;
 import angerona.fw.serialize.BeliefbaseConfig;
+import angerona.fw.util.Pair;
 
 /**
  * An BaseBeliefbase implements the agent data component functionality but it is no special
@@ -122,24 +126,30 @@ public abstract class BaseBeliefbase
 	 * @throws IllegalAccessException
 	 */
 	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
-		operators.addOperationSet(bbc.getChangeOperators());
-		operators.addOperationSet(bbc.getReasoners());
-		operators.addOperationSet(bbc.getTranslators());
+		if(!operators.addOperationSet(bbc.getChangeOperators())) {
+			throw new InstantiationException("Cannot create operation set for change operators.");
+		}
+		if(!operators.addOperationSet(bbc.getReasoners())) {
+			throw new InstantiationException("Cannot create operation set for reasoner operators.");
+		}
+		if(!operators.addOperationSet(bbc.getTranslators())) {
+			throw new InstantiationException("Cannot create operation set for translators.");
+		}
 	}
 
 	/** @return the default change operator */
-	public BaseChangeBeliefs getChangeOperator() {
-		return (BaseChangeBeliefs)operators.getPreferedByType(BaseChangeBeliefs.OPERATION_TYPE);
+	public OperatorCallWrapper getChangeOperator() {
+		return operators.getPreferedByType(BaseChangeBeliefs.OPERATION_TYPE);
 	}
 
 	/** @return the default reasoning operator */
-	public BaseReasoner getReasoningOperator() {
-		return (BaseReasoner)operators.getPreferedByType(BaseReasoner.OPERATION_TYPE);
+	public OperatorCallWrapper getReasoningOperator() {
+		return operators.getPreferedByType(BaseReasoner.OPERATION_TYPE);
 	}
 
 	/** @return the default translator */
-	public BaseTranslator getTranslator() {
-		return (BaseTranslator)operators.getPreferedByType(BaseTranslator.OPERATION_TYPE);
+	public OperatorCallWrapper getTranslator() {
+		return operators.getPreferedByType(BaseTranslator.OPERATION_TYPE);
 	}
 
 	/**
@@ -232,12 +242,12 @@ public abstract class BaseBeliefbase
 	 * @param translator		Reference to the translator to use, if null the default translator is used.
 	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
 	 */
-	public void addKnowledge(Perception perception, BaseTranslator translator, 
-			BaseChangeBeliefs changeOperator) {
+	public void addKnowledge(Perception perception, OperatorCallWrapper translator, 
+			OperatorCallWrapper changeOperator) {
 		if(translator == null)
 			translator = getTranslator();
 		
-		BaseBeliefbase newK = translator.translatePerception(this, perception);
+		BaseBeliefbase newK = (BaseBeliefbase) translator.process(new TranslatorParameter(this, perception));
 		addKnowledge(newK, changeOperator);
 	}
 	
@@ -249,12 +259,12 @@ public abstract class BaseBeliefbase
 	 * @param translator		Reference to the translator to use, if null the default translator is used.
 	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
 	 */
-	public void addKnowledge(Set<FolFormula> formulas, BaseTranslator translator, 
-			BaseChangeBeliefs changeOperator) {
+	public void addKnowledge(Set<FolFormula> formulas, OperatorCallWrapper translator, 
+			OperatorCallWrapper changeOperator) {
 		if(translator == null)
 			translator = getTranslator();
 		
-		BaseBeliefbase newK = translator.translateFOL(this, formulas);
+		BaseBeliefbase newK = (BaseBeliefbase) translator.process(new TranslatorParameter(this, formulas));
 		addKnowledge(newK, changeOperator);
 	}
 	
@@ -264,14 +274,12 @@ public abstract class BaseBeliefbase
 	 * @param newKnowledge		A belief base having more information
 	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
 	 */
-	public void addKnowledge(BaseBeliefbase newKnowledge, BaseChangeBeliefs changeOperator) {
+	public void addKnowledge(BaseBeliefbase newKnowledge, OperatorCallWrapper changeOperator) {
 		if(changeOperator == null)
 			changeOperator = getChangeOperator();
 		
-		GenericOperatorParameter opParam = new GenericOperatorParameter(this);
-		opParam.setParameter("sourceBelief", this);
-		opParam.setParameter("newBelief", newKnowledge);
-		changeOperator.process(opParam);
+		ChangeBeliefbaseParameter cbp = new ChangeBeliefbaseParameter(this, newKnowledge);
+		changeOperator.process(cbp);
 		firePropertyChangeListener(BELIEFBASE_CHANGE_PROPERTY_NAME, null, null);
 	}
 	
@@ -283,25 +291,30 @@ public abstract class BaseBeliefbase
 	public AngeronaAnswer reason(FolFormula query) {
 		if(!isFormulaValid(query)) 
 			throw new RuntimeException("Can't reason: " + query + " - because: " + reason);
-		AngeronaAnswer answer = getReasoningOperator().query(this, query).second;
-		return answer;
+		@SuppressWarnings("unchecked")
+		Pair<Set<FolFormula>, AngeronaAnswer> reval = (Pair<Set<FolFormula>, AngeronaAnswer>) getReasoningOperator().process(new ReasonerParameter(this,  query));
+		return reval.second;
 	}
 	
 
 	public Set<FolFormula> infere() {
-		return getReasoningOperator().infer(this);
+		@SuppressWarnings("unchecked")
+		Pair<Set<FolFormula>, AngeronaAnswer> reval = (Pair<Set<FolFormula>, AngeronaAnswer>) getReasoningOperator().process(new ReasonerParameter(this));
+		return reval.first;
 	}
 	
 	public Set<FolFormula> infere(String reasonerCls, Map<String, String> parameters) {
-		Map<String, String> oldParams = null;
-		BaseReasoner reasoner = (BaseReasoner)operators.getOperationSetByType(BaseReasoner.OPERATION_TYPE).getOperator(reasonerCls);
+		Map<String, String> oldSettings = null;
+		OperatorCallWrapper reasoner = operators.getOperationSetByType(BaseReasoner.OPERATION_TYPE).getOperator(reasonerCls);
+		
 		if(parameters == null)
-			parameters = reasoner.getParameters();
-		oldParams = reasoner.getParameters();
-		reasoner.setParameters(parameters);
-		Set<FolFormula> reval = reasoner.infer(this);
-		reasoner.setParameters(oldParams);
-		return reval;
+			parameters = reasoner.getSettings();
+		oldSettings = reasoner.getSettings();
+		reasoner.setSettings(parameters);
+		@SuppressWarnings("unchecked")
+		Pair<Set<FolFormula>, AngeronaAnswer> reval = (Pair<Set<FolFormula>, AngeronaAnswer>) reasoner.process(new ReasonerParameter(this));
+		reasoner.setSettings(oldSettings);
+		return reval.first;
 	}
 	
 	/**

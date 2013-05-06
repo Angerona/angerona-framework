@@ -1,5 +1,7 @@
 package angerona.fw.operators.parameter;
 
+import javax.management.AttributeNotFoundException;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
@@ -29,10 +31,11 @@ public class ChangeBeliefbaseParameter extends BeliefbasePluginParameter {
 	/**
 	 * Calls it super method and receives the newBelief belief base from 
 	 * the generic parameter and encapsulates it for further used by the operator.
+	 * @throws AttributeNotFoundException 
 	 */
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter input)
-			throws ConversionException {
+			throws ConversionException, AttributeNotFoundException {
 		super.fromGenericParameter(input);
 		this.newKnowledge = (BaseBeliefbase)input.getParameter("newBelief");
 	}

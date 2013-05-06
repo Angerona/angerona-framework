@@ -20,6 +20,7 @@ import angerona.fw.listener.AgentAdapter;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
+import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
@@ -303,9 +304,8 @@ public class SecrecyKnowledge extends BaseAgentComponent
 				return;
 			
 			EvaluateParameter param = new EvaluateParameter(getAgent(), oldBeliefs, percept);
-			BaseViolatesOperator op = (BaseViolatesOperator) 
-					getAgent().getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
-			ViolatesResult res = op.process(param);
+			OperatorCallWrapper op = getAgent().getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
+			ViolatesResult res = (ViolatesResult) op.process(param);
 			
 			for(Pair<Secret, Double> p : res.getPairs()) {
 				if(p.second != 0) {
