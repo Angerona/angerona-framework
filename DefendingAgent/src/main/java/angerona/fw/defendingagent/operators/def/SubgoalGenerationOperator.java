@@ -11,6 +11,7 @@ import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import angerona.fw.comm.Query;
 import angerona.fw.defendingagent.CensorComponent;
 import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.ViewComponent;
+import angerona.fw.defendingagent.comm.RevisionAnswer;
 import angerona.fw.comm.Revision;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
@@ -239,43 +241,45 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		if(success) {
-			pp.report("Revision successful.");
-			pp.report("New worldview: " + bbase);
-			bbase.addKnowledge(revision.getProposition());
+			pp.report("Revision successful. New worldview: " + bbase);
+			// will be done in UpdateBeliefsOperator
+//			bbase.addKnowledge(revision.getProposition());
 			answerValue = AnswerValue.AV_TRUE;
 		} else {
 			pp.report("Revision not successful.");
 		}
 		
-		// refine view on the attacking agent
-		ag.getComponent(ViewComponent.class).setView(revision.getSenderId(), view.RefineViewByRevision(revision.getProposition(),answerValue));
+		// refine view on the attacking agent - done in UpdateBeliefsOperator
+//		ag.getComponent(ViewComponent.class).setView(revision.getSenderId(), view.RefineViewByRevision(revision.getProposition(),answerValue));
 		pp.report("Refined view on agent " + revision.getSenderId());
 		
 		// send answer
-		Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), answerValue);
+		RevisionAnswer answer = new RevisionAnswer(ag,revision.getSenderId(), revision.getProposition(), answerValue);
 		Subgoal answerGoal = new Subgoal(ag, desire);
 		answerGoal.newStack(answer);
 		ag.getPlanComponent().addPlan(answerGoal);
-		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+		pp.report("Add the new action '"+ RevisionAnswer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
 		return true;
 	}
 	
 	public boolean processScripting(Desire d, PlanParameter pp, Agent ag){
 		ScriptingComponent script = ag.getComponent(ScriptingComponent.class);
+		Desires desires = ag.getComponent(Desires.class);
+		desires.remove(d);
 		List<Intention> intentions = script.getIntentions();
-		String intentionString = intentions.toString();
-		for(Intention i : intentions) {
-			Subgoal sg = new Subgoal(ag,d);
-			sg.newStack(i);
+		String text = intentions.toString();
+
+		int i = 0;
+		for(Intention intention : intentions) {
+			Desire des = new Desire(new Atom(new Predicate("script"+ i++)));
+			desires.add(des);
+			Subgoal sg = new Subgoal(ag, des);
+			sg.newStack(intention);
 			ag.getPlanComponent().addPlan(sg);
 		}
-		
-//		for(int i = 0 ; i<intentions.size(); i++) {
-//			sg.addToStack(intentions.get(i), i);
-//		}
-//		ag.getPlanComponent().addPlan(sg);
-		pp.report("Add the new  actions '" + intentionString + 
+
+		pp.report("Add the new  actions '" + text + 
 				"' to the plan, chosen by desire: " + d.toString(), 
 				ag.getPlanComponent());
 		return true;

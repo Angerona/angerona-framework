@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
+import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
 import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.ViewComponent;
@@ -31,6 +32,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	protected Beliefs processInternal(EvaluateParameter param) {
 		LOG.info("Run Defending-Update-Beliefs-Operator");
 		Beliefs beliefs = param.getBeliefs();
+		Beliefs oldBeliefs = (Beliefs)param.getBeliefs().clone();
 		String id = param.getAgent().getName();
 		Action act = (Action)param.getAtom();
 		if(act == null) {
@@ -45,24 +47,6 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			param.report(out);
 			return beliefs;
 		}
-		
-		if(act instanceof Answer) {
-			// answer must be a response to a query execution request
-			out += "Sending Answer to query: ";
-			Answer ans = (Answer) act;
-			AnswerValue value = ans.getAnswer().getAnswerValue();
-			if(value == AnswerValue.AV_REJECT) {
-				// do nothing
-				out += "reject";
-			} else {
-				out += value.toString();
-				View view = views.getView(act.getReceiverId());
-				view = view.RefineViewByQuery(ans.getRegarding(), value);
-				views.setView(act.getReceiverId(), view);
-			}
-			param.report(out);
-		}
-		
 		if(act instanceof RevisionAnswer) {
 			// answer is a response to a revision request
 			out += "Sending RevisionAnswer to revision request: ";
@@ -83,8 +67,28 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				}
 				param.report(out, bb);
 			}
+		} else if(act instanceof Answer) {
+			// answer must be a response to a query execution request
+			out += "Sending Answer to query: ";
+			Answer ans = (Answer) act;
+			AnswerValue value = ans.getAnswer().getAnswerValue();
+			if(value == AnswerValue.AV_REJECT) {
+				// do nothing
+				out += "reject";
+			} else {
+				out += value.toString();
+				View view = views.getView(act.getReceiverId());
+				view = view.RefineViewByQuery(ans.getRegarding(), value);
+				views.setView(act.getReceiverId(), view);
+			}
+			param.report(out);
 		}
 		
+		
+		// Inform agent listeners about update invocation
+		if(beliefs.getCopyDepth() == 0) {
+			param.getAgent().onUpdateBeliefs((Perception)param.getAtom(), oldBeliefs);
+		}
 		return beliefs;
 	}
 }

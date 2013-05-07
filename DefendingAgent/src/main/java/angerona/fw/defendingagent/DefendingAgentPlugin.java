@@ -7,7 +7,6 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.defendingagent.operators.def.GenerateOptionsOperator;
-import angerona.fw.defendingagent.operators.def.IntentionUpdateOperator;
 import angerona.fw.defendingagent.operators.def.SubgoalGenerationOperator;
 import angerona.fw.defendingagent.operators.def.UpdateBeliefsOperator;
 import angerona.fw.operators.BaseOperator;
@@ -27,7 +26,6 @@ public class DefendingAgentPlugin extends AngeronaPluginAdapter {
 		reval.add(GenerateOptionsOperator.class);
 		reval.add(UpdateBeliefsOperator.class);
 		reval.add(SubgoalGenerationOperator.class);
-		reval.add(IntentionUpdateOperator.class);
 		return reval;
 	}
 	
