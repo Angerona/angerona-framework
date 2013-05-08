@@ -1,6 +1,7 @@
 package angerona.fw.defendingagent.Prover;
 
 import java.util.HashMap;
+import java.util.List;
 
 import se.sics.jasper.Query;
 import se.sics.jasper.SICStus;
@@ -19,7 +20,7 @@ public class Prover {
 	    RATIONAL, FREE_RATIONAL
 	}
 
-	private String[] kFormulas;
+	private List<String> kFormulas;
 	private String formulaToProve;
 
 	/**
@@ -58,7 +59,7 @@ public class Prover {
 	 *            FREE_RATIONAL - Rational logic with free variables
 	 * @return true if formulaToProve can be inferred from kFormulas, false otherwise
 	 */
-	public boolean prove(String[] kFormulas, String formulaToProve,
+	public boolean prove(List<String> kFormulas, String formulaToProve,
 			InferenceSystem chooseInferenceSystem) {
 		this.kFormulas = kFormulas;
 		this.formulaToProve = formulaToProve;
@@ -100,8 +101,8 @@ public class Prover {
 			 * language
 			 */
 			String kBaseList = new String("[");
-			for (int i = 0; i < kFormulas.length; i++) {
-				String currentFormula = this.kFormulas[i];
+			for (String currentFormula : this.kFormulas) {
+//				String currentFormula = this.kFormulas[i];
 				if (currentFormula.length() > 0)
 					kBaseList = kBaseList + currentFormula + ",";
 			}

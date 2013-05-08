@@ -109,7 +109,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			//ans := true
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE)) && 
-					cexec.skepticalInference(view
+					cexec.skepticalInference(ag, view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
@@ -123,7 +123,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			//ans := false
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_FALSE)) && 
-					cexec.skepticalInference(view
+					cexec.skepticalInference(ag, view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_FALSE), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
@@ -138,7 +138,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			//ans := undef
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_UNKNOWN)) && 
-					cexec.skepticalInference(view
+					cexec.skepticalInference(ag, view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_UNKNOWN), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
@@ -193,7 +193,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE);
 		if(cexec.poss(refinedView)) {
 			for(Secret s : conf.getTargets()) {
-				if(cexec.skepticalInference(refinedView, s.getInformation())) {
+				if(cexec.skepticalInference(ag, refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
@@ -210,7 +210,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_FALSE);
 		if(cexec.poss(refinedView)) {
 			for(Secret s : conf.getTargets()) {
-				if(cexec.skepticalInference(refinedView, s.getInformation())) {
+				if(cexec.skepticalInference(ag, refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
