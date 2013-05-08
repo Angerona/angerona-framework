@@ -171,11 +171,11 @@ public class CensorComponent extends BaseAgentComponent {
 //			i++;
 		}
 		if(!beliefSet.isEmpty()) {
-			String belset = "neg (";
+			String belset = "neg ((";
 			for(PropositionalFormula a: beliefSet){
 				belset += translate(a) + " and ";
 			}
-			belset = belset.substring(0, belset.length()-5) + " => false)";
+			belset = belset.substring(0, belset.length()-5) + ") => false)";
 			result.add(belset);
 		}
 		return result;

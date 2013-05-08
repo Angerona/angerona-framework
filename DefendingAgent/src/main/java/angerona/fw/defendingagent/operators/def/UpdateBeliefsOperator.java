@@ -52,13 +52,18 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			out += "Sending RevisionAnswer to revision request: ";
 			RevisionAnswer ans = (RevisionAnswer) act;
 			AnswerValue value = ans.getAnswer().getAnswerValue();
+			
 			if(value == AnswerValue.AV_REJECT) {
 				// do nothing
 				out += "reject";
 				param.report(out);
 			} else {
+				// refine view
+				View view = views.getView(act.getReceiverId());
+				view = view.RefineViewByRevision(ans.getRegarding(), value);
+				views.setView(act.getReceiverId(), view);
+				
 				out += value.toString();
-				views.getView(act.getReceiverId()).RefineViewByRevision(ans.getRegarding(), value);
 				BaseBeliefbase bb = null;
 				if(value == AnswerValue.AV_TRUE) {
 					// revision successful, add knowledge to beliefbase
@@ -72,15 +77,13 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			out += "Sending Answer to query: ";
 			Answer ans = (Answer) act;
 			AnswerValue value = ans.getAnswer().getAnswerValue();
-			if(value == AnswerValue.AV_REJECT) {
-				// do nothing
-				out += "reject";
-			} else {
-				out += value.toString();
+			// refine view
+			if(value != AnswerValue.AV_REJECT) {
 				View view = views.getView(act.getReceiverId());
 				view = view.RefineViewByQuery(ans.getRegarding(), value);
 				views.setView(act.getReceiverId(), view);
 			}
+			out += value.toString();
 			param.report(out);
 		}
 		

@@ -163,7 +163,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		ag.getPlanComponent().addPlan(answerGoal);
 		
 		// refine view on the attacking agent
-		ag.getComponent(ViewComponent.class).setView(query.getSenderId(), view.RefineViewByQuery(query.getQuestion(),answer.getAnswerValue()));
+//		ag.getComponent(ViewComponent.class).setView(query.getSenderId(), view.RefineViewByQuery(query.getQuestion(),answer.getAnswerValue()));
 		pp.report("Refined view on agent " + query.getSenderId());
 		
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
