@@ -35,9 +35,29 @@
         <agent-config source="config/agents/default_agent.xml" />
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
 
-        <desire>q_Manufacturer(s21)</desire>
-<!--         <desire>q_Manufacturer(-s21 || r)</desire> -->
-<!--         <desire>r_Manufacturer(s21)</desire> -->
+		<desire>scriptingProcessing</desire>
+		<script>
+        	<SpeechAct type="Query">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<question>s21</question>
+        	</SpeechAct>
+        </script>
+        <script>
+        	<SpeechAct type="Query">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<question>(-s21) || r</question>
+        	</SpeechAct>
+        </script>
+        <script>
+        	<SpeechAct type="Revision">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<proposition>s21</proposition>
+        	</SpeechAct>
+        </script>
+        
 
         <capability>Query</capability>
         <capability>Revision</capability>

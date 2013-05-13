@@ -14,6 +14,8 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
+import angerona.fw.comm.SpeechAct;
+
 
 /**
  * This class is responsible for the simple xml serialization of the agent
@@ -54,6 +56,10 @@ public class AgentInstance {
 	@ElementList(entry="desire", inline=true, required=false, empty=false)
 	protected List<FolFormula> desires = new LinkedList<FolFormula>();
 	
+    /** list of speech-acts the agent is said to perform*/
+	@ElementList(entry="script", inline=true, required=false, empty=false)
+	protected List<SpeechAct> actions = new LinkedList<SpeechAct>();
+	
 	@ElementList(entry="capability", inline=true, required=false, empty=false)
 	protected List<String> capabilities = new LinkedList<>();
 	
@@ -92,5 +98,9 @@ public class AgentInstance {
 
 	public String getBeliefbaseName() {
 		return alternativeBBName == null ? getName() : alternativeBBName;
+	}
+	
+	public List<SpeechAct> getActions(){
+		return Collections.unmodifiableList(actions);
 	}
 }

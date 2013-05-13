@@ -36,11 +36,29 @@
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
         
         
-        <desire>q_Defender(s2)</desire>
-<!--         <desire>q_Defender(s1 && c)</desire> -->
-<!--         <desire>q_Defender(-s2)</desire> -->
-<!--         <desire>q_Defender((s1 && c) || s2)</desire> -->
+        <desire>scriptingProcessing</desire>
         
+        <script>
+        	<SpeechAct type="Query">
+        		<sender>Attacker</sender>
+        		<receiver>Defender</receiver>
+        		<question>c</question>
+        	</SpeechAct>
+        </script>
+        <script>
+        	<SpeechAct type="Revision">
+        		<sender>Attacker</sender>
+        		<receiver>Defender</receiver>
+        		<proposition>-s2</proposition>
+        	</SpeechAct>
+        </script>
+                        <script>
+        	<SpeechAct type="Query">
+        		<sender>Attacker</sender>
+        		<receiver>Defender</receiver>
+        		<question>(-s1) || c</question>
+        	</SpeechAct>
+        </script>
         
         <capability>Query</capability>
         <capability>Revision</capability>

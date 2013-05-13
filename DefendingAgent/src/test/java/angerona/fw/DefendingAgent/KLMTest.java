@@ -11,7 +11,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
 import angerona.fw.defendingagent.Prover.Prover;
-import angerona.fw.defendingagent.Prover.Prover.Solver;
+import angerona.fw.defendingagent.Prover.Prover.InferenceSystem;
 import angerona.fw.logic.AnswerValue;
 import junit.framework.Test;
 import junit.framework.TestCase;

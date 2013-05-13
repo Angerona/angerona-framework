@@ -1,6 +1,7 @@
 package angerona.fw.defendingagent.Prover;
 
 import java.util.HashMap;
+import java.util.List;
 
 import se.sics.jasper.Query;
 import se.sics.jasper.SICStus;
@@ -14,12 +15,12 @@ import se.sics.jasper.SPException;
  */
 public class Prover {
 	
-	public enum Solver {
+	public enum InferenceSystem {
 	    CUMMULATIV, LOOP_CUMMULATIV, PREFERENTIAL, 
 	    RATIONAL, FREE_RATIONAL
 	}
 
-	private String[] kFormulas;
+	private List<String> kFormulas;
 	private String formulaToProve;
 
 	/**
@@ -50,16 +51,16 @@ public class Prover {
 	 *            the knowledgebase
 	 * @param formulaToProve
 	 *            the formula to prove
-	 * @param chooseSolver
+	 * @param chooseInferenceSystem
 	 *            CUMMULATIV - Cumulative logic, 
 	 *            LOOP_CUMMULATIV - Loop-Cumulative logic, 
 	 *            PREFERENTIAL - Preferential logic, 
 	 *            RATIONAL - Rational logic, 
 	 *            FREE_RATIONAL - Rational logic with free variables
-	 * @return String with the result or null
+	 * @return true if formulaToProve can be inferred from kFormulas, false otherwise
 	 */
-	public boolean prove(String[] kFormulas, String formulaToProve,
-			Solver chooseSolver) {
+	public boolean prove(List<String> kFormulas, String formulaToProve,
+			InferenceSystem chooseInferenceSystem) {
 		this.kFormulas = kFormulas;
 		this.formulaToProve = formulaToProve;
 		Query q;
@@ -68,7 +69,7 @@ public class Prover {
 		/* Initialize the SICStus Prolog engine */
 		try {
 			/* Parameter 1 determines the KLM logic to consider */
-			switch (chooseSolver) {
+			switch (chooseInferenceSystem) {
 			case CUMMULATIV: {
 				sp.restore("resources/tct.sav");
 				break;
@@ -100,8 +101,8 @@ public class Prover {
 			 * language
 			 */
 			String kBaseList = new String("[");
-			for (int i = 0; i < kFormulas.length; i++) {
-				String currentFormula = this.kFormulas[i];
+			for (String currentFormula : this.kFormulas) {
+//				String currentFormula = this.kFormulas[i];
 				if (currentFormula.length() > 0)
 					kBaseList = kBaseList + currentFormula + ",";
 			}

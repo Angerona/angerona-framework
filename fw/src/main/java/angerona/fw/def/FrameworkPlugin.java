@@ -9,6 +9,7 @@ import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.EnvironmentBehavior;
 import angerona.fw.PlanComponent;
 import angerona.fw.logic.Desires;
+import angerona.fw.logic.ScriptingComponent;
 
 /**
  * The default agent plugin for the Angerona framework defines
@@ -24,6 +25,7 @@ public class FrameworkPlugin extends AngeronaPluginAdapter {
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
 		reval.add(PlanComponent.class);
 		reval.add(Desires.class);
+		reval.add(ScriptingComponent.class);
 		return reval;
 	}
 	

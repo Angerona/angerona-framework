@@ -14,7 +14,7 @@ import angerona.fw.Desire;
 import angerona.fw.am.secrecy.operators.BaseGenerateOptionsOperator;
 import angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import angerona.fw.comm.Query;
-import angerona.fw.defendingagent.comm.Revision;
+import angerona.fw.comm.Revision;
 import angerona.fw.internal.IdGenerator;
 import angerona.fw.logic.Desires;
 
@@ -31,6 +31,8 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	public static final Predicate prepareQueryProcessing = new Predicate("queryProcessing", 1);
 	
 	public static final Predicate prepareRevisionProcessing = new Predicate("revisionProcessing", 1);
+	
+	public static final Predicate prepareScriptingProcessing = new Predicate("scriptingProcessing", 1);
 	
 	public static final IdGenerator desireIds = new IdGenerator();
 	

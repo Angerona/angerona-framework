@@ -51,7 +51,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 							EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
 							select = ((ViolatesResult)op.process(eparam)).isAlright();
 							if(select) {
-								param.report("Mental action successfull, using '" + intention.toString() + "' as next atomic action.");
+								param.report("Mental action successful, using '" + intention.toString() + "' as next atomic action.");
 							}
 						}
 						

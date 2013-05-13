@@ -14,12 +14,14 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.comm.SpeechAct;
 import angerona.fw.error.AgentIdException;
 import angerona.fw.error.AgentInstantiationException;
 import angerona.fw.internal.Entity;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Desires;
+import angerona.fw.logic.ScriptingComponent;
 import angerona.fw.serialize.AgentInstance;
 import angerona.fw.serialize.SimulationConfiguration;
 import angerona.fw.util.ObservableMap;
@@ -208,6 +210,12 @@ public class AngeronaEnvironment  {
 			// and initialize the desires:
 			for(FolFormula a : ai.getDesires()) {
 				agent.getComponent(Desires.class).add(new Desire(a));
+			}
+			
+			// and initialize the actions:
+			for(SpeechAct a : ai.getActions()) {
+				a.setAgent(getAgentByName(a.getSenderId()));
+				agent.getComponent(ScriptingComponent.class).add(a);
 			}
 		}
 		

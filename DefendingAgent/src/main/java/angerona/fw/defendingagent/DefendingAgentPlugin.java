@@ -32,27 +32,10 @@ public class DefendingAgentPlugin extends AngeronaPluginAdapter {
 	@Override
 	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
-		
-		// TJ: the following three class description are already in FrameworkPlugin or SecrecyPlugin
-		/*
-		reval.add(SecrecyKnowledge.class);
-		reval.add(PlanComponent.class);
-		reval.add(Desires.class);
-		*/
+
 		reval.add(ViewComponent.class);
 		reval.add(CensorComponent.class);
 		return reval;
 	}
 
-	/* TJ: DEPRECATED this method is removed now 
-	public List<Class<? extends Action>> getActions() {
-		List<Class<? extends Action>> reval = new LinkedList<>();
-		reval.add(Query.class);
-		reval.add(Answer.class);
-		reval.add(Revision.class);
-//		reval.add(Justify.class);
-//		reval.add(Justification.class);
-		return reval;
-	}
-	*/
 }

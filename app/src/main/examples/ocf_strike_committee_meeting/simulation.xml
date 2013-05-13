@@ -10,8 +10,29 @@
         <agent-config source="config/agents/default_agent.xml" />
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
         
-        <desire>v_Boss(ask_for_excuse)</desire>
         <desire>attend_scm</desire>
+        <desire>scriptingProcessing</desire>
+        <script>
+        	<query type="Query">
+        		<sender>Employee</sender>
+        		<receiver>Boss</receiver>
+        		<question>excuse</question>
+        	</query>
+        </script>
+        <script>
+        	<revision type="Revision">
+        		<sender>Employee</sender>
+        		<receiver>Boss</receiver>
+        		<proposition>medical_appointment</proposition>
+        	</revision>
+        </script>
+        <script>
+        	<query type="Query">
+        		<sender>Employee</sender>
+        		<receiver>Boss</receiver>
+        		<question>excuse</question>
+        	</query>
+        </script>
         
         <capability>Inform</capability>
         <capability>Answer</capability>

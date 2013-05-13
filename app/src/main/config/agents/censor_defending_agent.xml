@@ -7,7 +7,7 @@
    	</operation-set>
 	
 	<operation-set operation-type="IntentionUpdate">
-      <default-operator-cls>angerona.fw.example.operators.IntentionUpdateOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.IntentionUpdateOperator{allowUnsafe=true}</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">

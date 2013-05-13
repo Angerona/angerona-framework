@@ -1,4 +1,4 @@
-package angerona.fw.defendingagent.comm;
+package angerona.fw.comm;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
