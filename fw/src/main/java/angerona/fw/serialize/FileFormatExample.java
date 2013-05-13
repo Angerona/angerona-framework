@@ -3,8 +3,8 @@ package angerona.fw.serialize;
 import java.io.File;
 import java.util.LinkedList;
 
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 
 import org.simpleframework.xml.core.PersistenceException;
 

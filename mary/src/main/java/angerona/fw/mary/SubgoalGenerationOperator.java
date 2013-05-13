@@ -8,16 +8,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Term;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Constant;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.firstorderlogic.syntax.NumberTerm;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Term;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,8 +116,8 @@ public class SubgoalGenerationOperator extends
 					return 1;
 				}
 					
-				Term t1 = ((Atom)f1.getFormula()).getArguments().get(1);
-				Term t2 = ((Atom)f2.getFormula()).getArguments().get(1);
+				Term<?> t1 = ((Atom)f1.getFormula()).getArguments().get(1);
+				Term<?> t2 = ((Atom)f2.getFormula()).getArguments().get(1);
 				
 				if(! (t1 instanceof NumberTerm)) {
 					return -1;
@@ -125,8 +125,8 @@ public class SubgoalGenerationOperator extends
 					return 1;
 				}
 				
-				int i1 = ((NumberTerm)t1).getNumber();
-				int i2 = ((NumberTerm)t2).getNumber();
+				int i1 = ((NumberTerm)t1).get();
+				int i2 = ((NumberTerm)t2).get();
 				
 				return i1-i2;
 			}
@@ -165,10 +165,10 @@ public class SubgoalGenerationOperator extends
 					continue;
 				}
 				if(atom.getArguments().size()>=3) {
-					Term t = atom.getArguments().get(2);
+					Term<?> t = atom.getArguments().get(2);
 					if(t instanceof Constant) {
 						Constant c = (Constant)t;
-						if(c.getName().compareToIgnoreCase("neg") == 0) {
+						if(c.get().compareToIgnoreCase("neg") == 0) {
 							realLiteral = new Negation(realLiteral);
 						}
 					}

@@ -107,7 +107,7 @@ public class AspPlugin extends AngeronaPluginAdapter
 		
 		net.sf.tweety.logics.firstorderlogic.syntax.Atom a =
 			new net.sf.tweety.logics.firstorderlogic.syntax.Atom(
-				new net.sf.tweety.logics.firstorderlogic.syntax.Predicate("fired"));
+				new net.sf.tweety.logics.commons.syntax.Predicate("fired"));
 		reasoner.query(bb, a);
 		
 		r = new Rule();
