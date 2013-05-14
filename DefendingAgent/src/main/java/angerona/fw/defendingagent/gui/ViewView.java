@@ -1,26 +1,28 @@
 package angerona.fw.defendingagent.gui;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.ViewComponent;
 import angerona.fw.gui.view.ListViewColored;
 import angerona.fw.internal.Entity;
-import angerona.fw.logic.Desires;
 
 /**
- * This class extends the default Beliefbase View to an ASP specific belief base
- * view. It outputs the answer sets for a specific reasoner using the ASPReasoner
- * interface specific processAnswerSets method.
- * It outputs the answer sets in the middle between the ELP (belief base) and
- * the set of inferred formulas.
- * @author Tim Janus
+ * This class extends the ListViewColored View to report all extended views
+ * currently held by the agent about other agents.
+ * For each agent that we are currently aware of the list contains the three
+ * components of a view, namely the set of positive conditionals, the set of negative
+ * conditionals and the set of propositions.
+ * Further for each view, the output contains a list of all literals, that may be
+ * infered from this view using the klmlean inference system.
+ * 
+ * @author Sebastian Homann
  */
 public class ViewView extends ListViewColored<ViewComponent> {
+
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {

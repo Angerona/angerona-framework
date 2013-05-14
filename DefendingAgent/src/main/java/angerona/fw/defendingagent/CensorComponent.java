@@ -13,6 +13,7 @@ import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.defendingagent.Prover.Prover;
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.util.LogicTranslator;
 
 /**
  * Implementation of the censor component of a defending censor agent.
@@ -124,16 +126,27 @@ public class CensorComponent extends BaseAgentComponent {
 		return p.prove(knowledgeBase, translate(view.getBeliefSet()) + " => " + translate(formula), inferenceSystem);
 	}
 	
+	/**
+	 * Calculate all possible literals that can be sceptically infered from a given view.
+	 * 
+	 * @param view a view.
+	 * @return a list of positive and negated literals that can be infered from the given view.
+	 */
 	public List<FolFormula> scepticalInferences(View view) {
 		List<FolFormula> result = new LinkedList<FolFormula>();
-		List<FolFormula> toCheck = new LinkedList<FolFormula>();
-		
 		PropositionalSignature signature = view.getSignature();
 		
 		for(Proposition p : signature) {
-
+			if(scepticalInference(view, LogicTranslator.PlToFo(p))) {
+				result.add(LogicTranslator.PlToFo(p));
+			}
 		}
-		
+		for(Proposition p : signature) {
+			Negation n = new Negation(p);
+			if(scepticalInference(view, LogicTranslator.PlToFo(n))) {
+				result.add(LogicTranslator.PlToFo(n));
+			}
+		}
 		return result;
 	}
 	

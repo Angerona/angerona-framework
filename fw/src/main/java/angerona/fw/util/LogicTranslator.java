@@ -3,11 +3,15 @@ package angerona.fw.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.Contradiction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Tautology;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
 
@@ -48,6 +52,10 @@ public class LogicTranslator {
 				result.add(FoToPl(relform));
 			}
 			return result;
+		} else if( formula instanceof Tautology) {
+			return new net.sf.tweety.logics.propositionallogic.syntax.Tautology();
+		} else if( formula instanceof Contradiction) {
+			return new net.sf.tweety.logics.propositionallogic.syntax.Tautology();
 		}
 		return null;
 	}
@@ -64,5 +72,36 @@ public class LogicTranslator {
 			result.add(FoToPl(formula));
 		}
 		return result;
+	}
+	
+	public static FolFormula PlToFo(PropositionalFormula formula) {
+		if( formula instanceof Proposition ) {
+			return new Atom(new Predicate( ((Proposition)formula).getName() ));
+		} else if( formula instanceof net.sf.tweety.logics.propositionallogic.syntax.Negation ) {
+			net.sf.tweety.logics.propositionallogic.syntax.Negation neg;
+			neg = (net.sf.tweety.logics.propositionallogic.syntax.Negation) formula;
+			return new Negation(PlToFo(neg.getFormula()));
+		} else if( formula instanceof net.sf.tweety.logics.propositionallogic.syntax.Conjunction ) {
+			net.sf.tweety.logics.propositionallogic.syntax.Conjunction conj;
+			conj = (net.sf.tweety.logics.propositionallogic.syntax.Conjunction) formula;
+			Conjunction result = new Conjunction();
+			for(PropositionalFormula inner : conj) {
+				result.add(PlToFo(inner));
+			}
+			return result;
+		} else if( formula instanceof net.sf.tweety.logics.propositionallogic.syntax.Disjunction ) {
+			net.sf.tweety.logics.propositionallogic.syntax.Disjunction disj;
+			disj = (net.sf.tweety.logics.propositionallogic.syntax.Disjunction) formula;
+			Disjunction result = new Disjunction();
+			for(PropositionalFormula inner : disj) {
+				result.add(PlToFo(inner));
+			}
+			return result;
+		} else if( formula instanceof net.sf.tweety.logics.propositionallogic.syntax.Tautology ) {
+			return new Tautology();
+		} else if( formula instanceof net.sf.tweety.logics.propositionallogic.syntax.Contradiction ) {
+			return new Contradiction();
+		}
+		return null;
 	}
 }
