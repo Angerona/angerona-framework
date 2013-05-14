@@ -5,12 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Constant;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.StringTerm;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.StringTerm;
+import net.sf.tweety.logics.commons.syntax.Term;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

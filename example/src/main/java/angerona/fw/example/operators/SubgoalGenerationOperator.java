@@ -13,7 +13,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

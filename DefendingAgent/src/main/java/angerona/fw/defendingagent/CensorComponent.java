@@ -8,29 +8,21 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
-import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
-import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
-import net.sf.tweety.logics.propositionallogic.syntax.Disjunction;
-import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.logics.propositionallogic.syntax.Tautology;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Agent;
 import angerona.fw.BaseAgentComponent;
-import angerona.fw.BaseBeliefbase;
-import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.Prover.Prover;
 import angerona.fw.logic.AnswerValue;
-import angerona.fw.logic.conditional.ConditionalBeliefbase;
 
 /**
  * Implementation of the censor component of a defending censor agent.
@@ -124,12 +116,25 @@ public class CensorComponent extends BaseAgentComponent {
 	 * @param formula
 	 * @return
 	 */
-	public boolean skepticalInference(Agent ag, View view, FolFormula formula) {
+	public boolean scepticalInference(View view, FolFormula formula) {
 		List<String> knowledgeBase = this.makeBeliefBase(view);
-		ag.report("Calculate sceptical inference of '" + translate(formula) + "' using bbase: " + knowledgeBase);
+		report("Calculate sceptical inference of '" + translate(formula) + "' using bbase: " + knowledgeBase);
 		
 		Prover p = new Prover();
 		return p.prove(knowledgeBase, translate(view.getBeliefSet()) + " => " + translate(formula), inferenceSystem);
+	}
+	
+	public List<FolFormula> scepticalInferences(View view) {
+		List<FolFormula> result = new LinkedList<FolFormula>();
+		List<FolFormula> toCheck = new LinkedList<FolFormula>();
+		
+		PropositionalSignature signature = view.getSignature();
+		
+		for(Proposition p : signature) {
+
+		}
+		
+		return result;
 	}
 	
 	/**

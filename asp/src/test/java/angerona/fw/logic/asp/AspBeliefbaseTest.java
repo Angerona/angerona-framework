@@ -3,7 +3,7 @@ package angerona.fw.logic.asp;
 import static org.junit.Assert.assertEquals;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 
 import org.junit.Before;
 import org.junit.Test;

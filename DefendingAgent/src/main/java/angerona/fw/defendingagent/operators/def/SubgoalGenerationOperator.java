@@ -1,7 +1,6 @@
 package angerona.fw.defendingagent.operators.def;
 
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,7 @@ import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +25,11 @@ import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Query;
+import angerona.fw.comm.Revision;
 import angerona.fw.defendingagent.CensorComponent;
 import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.ViewComponent;
 import angerona.fw.defendingagent.comm.RevisionAnswer;
-import angerona.fw.comm.Revision;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseChangeBeliefs;
@@ -109,7 +108,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			//ans := true
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE)) && 
-					cexec.skepticalInference(ag, view
+					cexec.scepticalInference(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
@@ -123,7 +122,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			//ans := false
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_FALSE)) && 
-					cexec.skepticalInference(ag, view
+					cexec.scepticalInference(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_FALSE), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
@@ -138,7 +137,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			//ans := undef
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_UNKNOWN)) && 
-					cexec.skepticalInference(ag, view
+					cexec.scepticalInference(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_UNKNOWN), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
@@ -193,7 +192,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE);
 		if(cexec.poss(refinedView)) {
 			for(Secret s : conf.getTargets()) {
-				if(cexec.skepticalInference(ag, refinedView, s.getInformation())) {
+				if(cexec.scepticalInference(refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
@@ -210,7 +209,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_FALSE);
 		if(cexec.poss(refinedView)) {
 			for(Secret s : conf.getTargets()) {
-				if(cexec.skepticalInference(ag, refinedView, s.getInformation())) {
+				if(cexec.scepticalInference(refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);

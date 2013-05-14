@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 
 import org.junit.Test;
 import org.slf4j.Logger;
