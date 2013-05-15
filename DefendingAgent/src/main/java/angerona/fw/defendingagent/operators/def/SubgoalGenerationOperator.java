@@ -100,7 +100,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View view = ag.getComponent(ViewComponent.class).getView(query.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		
-		pp.report("Check all possible answers to query request");
+		pp.report("Invoke censor to check all possible answers for meta inferences");
 		
 		// check for all possible answers to the query, whether this answer would
 		// potentially reveal a secret and in that case, refuse to answer.
@@ -129,7 +129,6 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
 				pp.report("Answer 'false' would reveal secret " + a + ". reject the query.");
-				
 				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
@@ -155,16 +154,12 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		// no secret will be revealed by any possible answer to the query.
 		// handle the query and create an appropriate answer action.
 		AngeronaAnswer answer = ag.getBeliefs().getWorldKnowledge().reason(query.getQuestion());
-		pp.report("Answer to query: " + answer.getAnswerValue());
+		pp.report("Actual answer to query: " + answer.getAnswerValue());
 		Answer answerSpeechAct = new Answer(ag,query.getSenderId(), query.getQuestion(), answer.getAnswerValue());
 		Subgoal answerGoal = new Subgoal(ag, desire);
 		answerGoal.newStack(answerSpeechAct);
 		ag.getPlanComponent().addPlan(answerGoal);
-		
-		// refine view on the attacking agent
-//		ag.getComponent(ViewComponent.class).setView(query.getSenderId(), view.RefineViewByQuery(query.getQuestion(),answer.getAnswerValue()));
-		pp.report("Refined view on agent " + query.getSenderId());
-		
+				
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
 		return true;
@@ -186,7 +181,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View view = ag.getComponent(ViewComponent.class).getView(revision.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		
-		pp.report("Check all possible answers to revision request");
+		pp.report("Invoke censor to check all possible answers for meta inferences");
 		
 		// check if revision would reveal a secret
 		View refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE);
@@ -223,9 +218,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		// revision would not breach confidentiality, continue revising beliefbase
-		AnswerValue answerValue = AnswerValue.AV_FALSE;
 		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();
-		
 		
 		// slightly hacked: we need to get the revision result from the revision operator
 		BaseChangeBeliefs changeOp = bbase.getChangeOperator();
@@ -239,18 +232,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			success = revisionOp.simulateRevision((ConditionalBeliefbase)bbase, newK);
 		}
 		
+		AnswerValue answerValue = AnswerValue.AV_FALSE;
 		if(success) {
-			pp.report("Revision successful. New worldview: " + bbase);
-			// will be done in UpdateBeliefsOperator
-//			bbase.addKnowledge(revision.getProposition());
+			pp.report("Revision will be successful. Send answer 'true' and add '" + revision.getProposition().toString() + "' to belief base");
 			answerValue = AnswerValue.AV_TRUE;
 		} else {
-			pp.report("Revision not successful.");
+			pp.report("Revision will be not be successful. Send answer 'false'.");
+			answerValue = AnswerValue.AV_FALSE;
 		}
-		
-		// refine view on the attacking agent - done in UpdateBeliefsOperator
-//		ag.getComponent(ViewComponent.class).setView(revision.getSenderId(), view.RefineViewByRevision(revision.getProposition(),answerValue));
-		pp.report("Refined view on agent " + revision.getSenderId());
 		
 		// send answer
 		RevisionAnswer answer = new RevisionAnswer(ag,revision.getSenderId(), revision.getProposition(), answerValue);

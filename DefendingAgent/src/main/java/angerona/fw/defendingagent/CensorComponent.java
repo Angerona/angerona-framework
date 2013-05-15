@@ -120,10 +120,10 @@ public class CensorComponent extends BaseAgentComponent {
 	 */
 	public boolean scepticalInference(View view, FolFormula formula) {
 		List<String> knowledgeBase = this.makeBeliefBase(view);
-		report("Calculate sceptical inference of '" + translate(formula) + "' using bbase: " + knowledgeBase);
-		
 		Prover p = new Prover();
-		return p.prove(knowledgeBase, translate(view.getBeliefSet()) + " => " + translate(formula), inferenceSystem);
+		boolean reval= p.prove(knowledgeBase, translate(view.getBeliefSet()) + " => " + translate(formula), inferenceSystem);
+		report("Calculate sceptical inference of '" + translate(formula) + "' using bbase: " + knowledgeBase + ". Result: " + Boolean.toString(reval));
+		return reval;
 	}
 	
 	/**
