@@ -60,7 +60,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				View view = views.getView(act.getReceiverId());
 				view = view.RefineViewByRevision(ans.getRegarding(), value);
 				views.setView(act.getReceiverId(), view);
-				param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
+//				param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
 				
 				BaseBeliefbase bb = null;
 				if(value == AnswerValue.AV_TRUE) {
@@ -81,7 +81,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				View view = views.getView(act.getReceiverId());
 				view = view.RefineViewByQuery(ans.getRegarding(), value);
 				views.setView(act.getReceiverId(), view);
-				param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
+//				param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
 			}
 			param.report("Sending Answer to query: " + act.toString());
 		}
