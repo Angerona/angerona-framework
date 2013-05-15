@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
+import angerona.fw.defendingagent.CensorComponent;
 import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.ViewComponent;
 import angerona.fw.gui.view.ListViewColored;
@@ -26,24 +29,26 @@ public class ViewView extends ListViewColored<ViewComponent> {
 
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
+		List<String> reval = new LinkedList<>();
 		if(obj instanceof ViewComponent) {
-			List<String> reval = new LinkedList<>();
+			CensorComponent cexec = new CensorComponent();
+			
 			ViewComponent viewComponent = (ViewComponent)obj;
 			Map<String, View> views = viewComponent.getViews();
 			for(String agent : views.keySet()) {
 				View currentView = views.get(agent);
 				reval.add("View on agent " + agent + ": <B+, B-, C> with");
-				reval.add(" B+ = " + currentView.getPositiveConditionalBeliefs());
-				reval.add(" B- = " + currentView.getNegativeConditionalBeliefs());
-				reval.add(" C  = " + currentView.getBeliefSet());
-				reval.add("sceptical inferences: ");
-				
+				reval.add("   B+ = " + currentView.getPositiveConditionalBeliefs());
+				reval.add("   B- = " + currentView.getNegativeConditionalBeliefs());
+				reval.add("   C  = " + currentView.getBeliefSet());
+				reval.add("   sceptical inferences: ");
+				List<FolFormula> inf = cexec.scepticalInferences(currentView);
+				for(FolFormula fol : inf) {
+					reval.add("    " + fol.toString());					
+				}
 			}
-			
-//			List<String> reval = Arrays.asList(views.toString().split("\n"));
-//			return reval;
 		}
-		return null;
+		return reval;
 	}
 
 	@Override
