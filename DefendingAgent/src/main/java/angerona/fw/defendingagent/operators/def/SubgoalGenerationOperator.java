@@ -93,6 +93,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag
 	 */
 	public boolean processQuery(Desire desire, PlanParameter pp, Agent ag) {
+		pp.report("Generate new subgoal to process query request");
+		
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Query query = (Query) desire.getPerception();
@@ -114,8 +116,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
-				pp.report("Answer 'true' would reveal secret " + a + ". reject the query.");
-				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+				cexec.report("Answer 'true' would reveal secret " + a + ". reject the query.");
+				cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
 			}
@@ -128,8 +130,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
-				pp.report("Answer 'false' would reveal secret " + a + ". reject the query.");
-				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+				cexec.report("Answer 'false' would reveal secret " + a + ". reject the query.");
+				cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
 			}
@@ -142,19 +144,19 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
-				pp.report("Answer 'unknown' would reveal secret " + a + ". reject the query.");
+				cexec.report("Answer 'unknown' would reveal secret " + a + ". reject the query.");
 				
-				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+				cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
 			}
 		}
-		pp.report("No answer to query '"+ query.getQuestion() + " would reveal a secret. Start actual handling.");
+		cexec.report("No answer to query '"+ query.getQuestion() + " would reveal a secret. Start actual handling.");
 		
 		// no secret will be revealed by any possible answer to the query.
 		// handle the query and create an appropriate answer action.
 		AngeronaAnswer answer = ag.getBeliefs().getWorldKnowledge().reason(query.getQuestion());
-		pp.report("Actual answer to query: " + answer.getAnswerValue());
+		ag.getBeliefs().getWorldKnowledge().report("Actual answer to query: " + answer.getAnswerValue());
 		Answer answerSpeechAct = new Answer(ag,query.getSenderId(), query.getQuestion(), answer.getAnswerValue());
 		Subgoal answerGoal = new Subgoal(ag, desire);
 		answerGoal.newStack(answerSpeechAct);
@@ -175,6 +177,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag
 	 */
 	public boolean processRevision(Desire desire, PlanParameter pp, Agent ag) {
+		pp.report("Generate new subgoal to process revision request");
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Revision revision = (Revision) desire.getPerception();
@@ -192,8 +195,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
 					ag.getPlanComponent().addPlan(answerGoal);
-					pp.report("Revision would reveal secret " + s + ". Reject the revision.");
-					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+					cexec.report("Revision would reveal secret " + s + ". Reject the revision.");
+					cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 							"' to the plan", ag.getPlanComponent());
 					return true;
 				}
@@ -209,8 +212,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
 					ag.getPlanComponent().addPlan(answerGoal);
-					pp.report("Revision failure would reveal secret " + s + ". Reject the revision.");
-					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+					cexec.report("Revision failure would reveal secret " + s + ". Reject the revision.");
+					cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 							"' to the plan", ag.getPlanComponent());
 					return true;
 				}
