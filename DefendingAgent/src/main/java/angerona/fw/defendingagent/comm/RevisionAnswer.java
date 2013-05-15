@@ -38,5 +38,10 @@ public class RevisionAnswer extends Answer {
 	public RevisionAnswer(Agent sendingAgent, String receiverId, FolFormula regarding, Set<FolFormula> answers) {
 		super(sendingAgent, receiverId, regarding, new AngeronaAnswer(regarding, answers));
 	}
+	
+	@Override
+	public String toString() {
+		return "< " + getSenderId() + " answers " + getReceiverId() + "'s revision request " + getRegarding().toString() + "=" + getAnswer().toString() + " >";
+	}
 
 }

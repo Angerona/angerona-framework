@@ -7,6 +7,7 @@ import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
+import angerona.fw.comm.Query;
 import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.ViewComponent;
 import angerona.fw.defendingagent.comm.RevisionAnswer;
@@ -38,43 +39,41 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		if(act == null) {
 			return beliefs;
 		}
+		String out = "Received perception: " + act.toString();
 		ViewComponent views = param.getAgent().getComponent(ViewComponent.class);
-		String out = "Update-Beliefs: ";
-		
+				
 		// ignore incoming actions
 		if(!id.equals(act.getSenderId())) {
-			out += "ignoring incoming perception for now: " + act.toString();
 			param.report(out);
 			return beliefs;
 		}
 		if(act instanceof RevisionAnswer) {
 			// answer is a response to a revision request
-			out += "Sending RevisionAnswer to revision request: ";
 			RevisionAnswer ans = (RevisionAnswer) act;
 			AnswerValue value = ans.getAnswer().getAnswerValue();
 			
 			if(value == AnswerValue.AV_REJECT) {
 				// do nothing
-				out += "reject";
 				param.report(out);
 			} else {
 				// refine view
 				View view = views.getView(act.getReceiverId());
 				view = view.RefineViewByRevision(ans.getRegarding(), value);
 				views.setView(act.getReceiverId(), view);
+//				param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
 				
-				out += value.toString();
 				BaseBeliefbase bb = null;
 				if(value == AnswerValue.AV_TRUE) {
 					// revision successful, add knowledge to beliefbase
 					bb = beliefs.getWorldKnowledge();
 					bb.addKnowledge(ans.getRegarding());
+					param.report("Add new information '" + ans.getRegarding() + "' to belief base");
+					
 				}
-				param.report(out, bb);
+				param.report("Send RevisionAnswer to revision request: " + act.toString(), bb);
 			}
 		} else if(act instanceof Answer) {
 			// answer must be a response to a query execution request
-			out += "Sending Answer to query: ";
 			Answer ans = (Answer) act;
 			AnswerValue value = ans.getAnswer().getAnswerValue();
 			// refine view
@@ -82,9 +81,9 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				View view = views.getView(act.getReceiverId());
 				view = view.RefineViewByQuery(ans.getRegarding(), value);
 				views.setView(act.getReceiverId(), view);
+//				param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
 			}
-			out += value.toString();
-			param.report(out);
+			param.report("Send Answer to query: " + act.toString());
 		}
 		
 		

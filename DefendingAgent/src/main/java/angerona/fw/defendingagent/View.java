@@ -10,6 +10,7 @@ import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
 import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
 import net.sf.tweety.logics.propositionallogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,6 +136,17 @@ public class View {
 
 	public Set<Conditional> getNegativeConditionalBeliefs() {
 		return negativeConditionalBeliefs;
+	}
+	
+	public PropositionalSignature getSignature() {
+		PropositionalSignature sig = (PropositionalSignature)beliefSet.getSignature();
+		for(Conditional c : positiveConditionalBeliefs) {
+			sig.add((PropositionalSignature)c.getSignature());
+		}
+		for(Conditional c : negativeConditionalBeliefs) {
+			sig.add((PropositionalSignature)c.getSignature());
+		}
+		return sig;
 	}
 	
 }

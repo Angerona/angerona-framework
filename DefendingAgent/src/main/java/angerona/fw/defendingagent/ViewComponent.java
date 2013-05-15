@@ -64,8 +64,13 @@ public class ViewComponent extends BaseAgentComponent {
 		return views.get(agent);
 	}
 	
+	public Map<String, View> getViews() {
+		return new HashMap<>(views);
+	}
+	
 	public void setView(String agent, View view) {
 		this.views.put(agent, view);
+		report("Updated view of agent '" + agent +"': " + view.toString());
 	}
 	
 	@Override
@@ -76,7 +81,9 @@ public class ViewComponent extends BaseAgentComponent {
 			PlBeliefSet beliefset;
 			if(bbase instanceof ConditionalBeliefbase) {
 				beliefset = new PlBeliefSet(((ConditionalBeliefbase)bbase).getPropositions());
-				this.views.put(agent, new View(beliefset));
+				View view = new View(beliefset);
+				this.views.put(agent, view);
+				report("Added view for new agent '" + agent +"': " + view.toString());
 			}
 		}
 	}

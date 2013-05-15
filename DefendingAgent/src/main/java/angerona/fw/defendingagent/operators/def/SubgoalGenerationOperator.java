@@ -93,6 +93,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag
 	 */
 	public boolean processQuery(Desire desire, PlanParameter pp, Agent ag) {
+		pp.report("Generate new subgoal to process query request");
+		
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Query query = (Query) desire.getPerception();
@@ -100,7 +102,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		View view = ag.getComponent(ViewComponent.class).getView(query.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		
-		pp.report("Check all possible answers to query request");
+		pp.report("Invoke censor to check all possible answers for meta inferences");
 		
 		// check for all possible answers to the query, whether this answer would
 		// potentially reveal a secret and in that case, refuse to answer.
@@ -108,63 +110,58 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			//ans := true
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE)) && 
-					cexec.skepticalInference(ag, view
+					cexec.scepticalInference(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
-				pp.report("Answer 'true' would reveal secret " + a + ". reject the query.");
-				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+				cexec.report("Answer 'true' would reveal secret " + a + ". reject the query.");
+				cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
 			}
 			//ans := false
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_FALSE)) && 
-					cexec.skepticalInference(ag, view
+					cexec.scepticalInference(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_FALSE), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
-				pp.report("Answer 'false' would reveal secret " + a + ". reject the query.");
-				
-				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+				cexec.report("Answer 'false' would reveal secret " + a + ". reject the query.");
+				cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
 			}
 			//ans := undef
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_UNKNOWN)) && 
-					cexec.skepticalInference(ag, view
+					cexec.scepticalInference(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_UNKNOWN), a.getInformation())){
 				Answer answer = new Answer(ag,query.getSenderId(), query.getQuestion(), AnswerValue.AV_REJECT);
 				Subgoal answerGoal = new Subgoal(ag, desire);
 				answerGoal.newStack(answer);
 				ag.getPlanComponent().addPlan(answerGoal);
-				pp.report("Answer 'unknown' would reveal secret " + a + ". reject the query.");
+				cexec.report("Answer 'unknown' would reveal secret " + a + ". reject the query.");
 				
-				pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+				cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 						"' to the plan", ag.getPlanComponent());
 				return true;
 			}
 		}
-		pp.report("No answer to query '"+ query.getQuestion() + " would reveal a secret. Start actual handling.");
+		cexec.report("No answer to query '"+ query.getQuestion() + " would reveal a secret. Start actual handling.");
 		
 		// no secret will be revealed by any possible answer to the query.
 		// handle the query and create an appropriate answer action.
 		AngeronaAnswer answer = ag.getBeliefs().getWorldKnowledge().reason(query.getQuestion());
-		pp.report("Answer to query: " + answer.getAnswerValue());
+		ag.getBeliefs().getWorldKnowledge().report("Actual answer to query: " + answer.getAnswerValue());
 		Answer answerSpeechAct = new Answer(ag,query.getSenderId(), query.getQuestion(), answer.getAnswerValue());
 		Subgoal answerGoal = new Subgoal(ag, desire);
 		answerGoal.newStack(answerSpeechAct);
 		ag.getPlanComponent().addPlan(answerGoal);
-		
-		// refine view on the attacking agent
-//		ag.getComponent(ViewComponent.class).setView(query.getSenderId(), view.RefineViewByQuery(query.getQuestion(),answer.getAnswerValue()));
-		pp.report("Refined view on agent " + query.getSenderId());
-		
+				
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
 				"' to the plan", ag.getPlanComponent());
 		return true;
@@ -180,25 +177,26 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag
 	 */
 	public boolean processRevision(Desire desire, PlanParameter pp, Agent ag) {
+		pp.report("Generate new subgoal to process revision request");
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Revision revision = (Revision) desire.getPerception();
 		View view = ag.getComponent(ViewComponent.class).getView(revision.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		
-		pp.report("Check all possible answers to revision request");
+		pp.report("Invoke censor to check all possible answers for meta inferences");
 		
 		// check if revision would reveal a secret
 		View refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE);
 		if(cexec.poss(refinedView)) {
 			for(Secret s : conf.getTargets()) {
-				if(cexec.skepticalInference(ag, refinedView, s.getInformation())) {
+				if(cexec.scepticalInference(refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
 					ag.getPlanComponent().addPlan(answerGoal);
-					pp.report("Revision would reveal secret " + s + ". Reject the revision.");
-					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+					cexec.report("Revision would reveal secret " + s + ". Reject the revision.");
+					cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 							"' to the plan", ag.getPlanComponent());
 					return true;
 				}
@@ -209,13 +207,13 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_FALSE);
 		if(cexec.poss(refinedView)) {
 			for(Secret s : conf.getTargets()) {
-				if(cexec.skepticalInference(ag, refinedView, s.getInformation())) {
+				if(cexec.scepticalInference(refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
 					answerGoal.newStack(answer);
 					ag.getPlanComponent().addPlan(answerGoal);
-					pp.report("Revision failure would reveal secret " + s + ". Reject the revision.");
-					pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
+					cexec.report("Revision failure would reveal secret " + s + ". Reject the revision.");
+					cexec.report("Add the new action '"+ Answer.class.getSimpleName() + 
 							"' to the plan", ag.getPlanComponent());
 					return true;
 				}
@@ -223,9 +221,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 		
 		// revision would not breach confidentiality, continue revising beliefbase
-		AnswerValue answerValue = AnswerValue.AV_FALSE;
 		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();
-		
 		
 		// slightly hacked: we need to get the revision result from the revision operator
 		OperatorCallWrapper changeOp = bbase.getChangeOperator();
@@ -239,18 +235,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			success = revisionOp.simulateRevision((ConditionalBeliefbase)bbase, newK);
 		}
 		
+		AnswerValue answerValue = AnswerValue.AV_FALSE;
 		if(success) {
-			pp.report("Revision successful. New worldview: " + bbase);
-			// will be done in UpdateBeliefsOperator
-//			bbase.addKnowledge(revision.getProposition());
+			pp.report("Revision will be successful. Send answer 'true' and add '" + revision.getProposition().toString() + "' to belief base");
 			answerValue = AnswerValue.AV_TRUE;
 		} else {
-			pp.report("Revision not successful.");
+			pp.report("Revision will be not be successful. Send answer 'false'.");
+			answerValue = AnswerValue.AV_FALSE;
 		}
-		
-		// refine view on the attacking agent - done in UpdateBeliefsOperator
-//		ag.getComponent(ViewComponent.class).setView(revision.getSenderId(), view.RefineViewByRevision(revision.getProposition(),answerValue));
-		pp.report("Refined view on agent " + revision.getSenderId());
 		
 		// send answer
 		RevisionAnswer answer = new RevisionAnswer(ag,revision.getSenderId(), revision.getProposition(), answerValue);
