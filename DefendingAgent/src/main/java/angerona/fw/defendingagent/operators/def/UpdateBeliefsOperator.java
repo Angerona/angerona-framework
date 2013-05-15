@@ -67,10 +67,10 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 					// revision successful, add knowledge to beliefbase
 					bb = beliefs.getWorldKnowledge();
 					bb.addKnowledge(ans.getRegarding());
-					param.report("Added new information '" + ans.getRegarding() + "' to belief base");
+					param.report("Add new information '" + ans.getRegarding() + "' to belief base");
 					
 				}
-				param.report("Sending RevisionAnswer to revision request: " + act.toString(), bb);
+				param.report("Send RevisionAnswer to revision request: " + act.toString(), bb);
 			}
 		} else if(act instanceof Answer) {
 			// answer must be a response to a query execution request
@@ -83,7 +83,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				views.setView(act.getReceiverId(), view);
 //				param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
 			}
-			param.report("Sending Answer to query: " + act.toString());
+			param.report("Send Answer to query: " + act.toString());
 		}
 		
 		
