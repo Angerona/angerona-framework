@@ -1,7 +1,7 @@
 package angerona.fw.DefendingAgent;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
 import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;

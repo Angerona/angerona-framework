@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 
 import org.simpleframework.xml.core.PersistenceException;
 
@@ -26,7 +26,7 @@ public class FileFormatExample {
 		conf.agents.add(agent);
 		
 		Agent sender = new Agent("Boss", null);
-		conf.perceptions.add(new Query(sender, "Employee", new Atom(new Predicate("attend_scm"))));
+		conf.perceptions.add(new Query(sender, "Employee", new FOLAtom(new Predicate("attend_scm"))));
 		
 		try {
 			conf.validate();
@@ -83,7 +83,7 @@ public class FileFormatExample {
 		test.config = getAgentConfig();
 		test.beliefbaseConfig = getBeliefbaseConfig();
 		test.fileViewMap.put("Bob", new File("config/beliefbases/asp_beliefbase.xml"));
-		test.desires.add(new Atom(new Predicate("attend_scm")));
+		test.desires.add(new FOLAtom(new Predicate("attend_scm")));
 		test.capabilities.add("fully.qualified.class.name");
 		
 		return test;

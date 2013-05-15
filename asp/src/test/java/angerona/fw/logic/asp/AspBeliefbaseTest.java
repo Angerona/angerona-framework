@@ -6,7 +6,7 @@ import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.junit.Before;
@@ -36,11 +36,11 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 	public void testDoubleInject() {
 		AspBeliefbase bb = new MockBeliefbase();
 		
-		bb.addKnowledge(new Atom(new Predicate("test")));
+		bb.addKnowledge(new FOLAtom(new Predicate("test")));
 		Program p = bb.getProgram();
 		assertEquals(1, p.size());
 		
-		bb.addKnowledge(new Atom(new Predicate("test")));
+		bb.addKnowledge(new FOLAtom(new Predicate("test")));
 		p = bb.getProgram();
 		// bug report by Daniel: ticket #68 
 		assertEquals(1, p.size());
@@ -52,7 +52,7 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 		@SuppressWarnings("unchecked")
 		Pair<Set<FolFormula>, AngeronaAnswer> reval = 
 				(Pair<Set<FolFormula>, AngeronaAnswer>) bb.getReasoningOperator().process(
-				new ReasonerParameter(bb, new Atom(new Predicate("test"))));
+				new ReasonerParameter(bb, new FOLAtom(new Predicate("test"))));
 		// Tests for possible bug in ticket #56 but no bug was found.
 		assertEquals(true, reval.second.getAnswerValue() == AnswerValue.AV_UNKNOWN);
 	}

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +40,12 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	protected Integer processInternal(GenerateOptionsParameter param) {
 		LOG.info("Run Censor-Generate-Options-operator");
 		
-		Atom ad = null;
+		FOLAtom ad = null;
 		Set<Desire> reval = new HashSet<Desire>();
 		if(param.getPerception() instanceof Query) {
-			ad = new Atom(prepareQueryProcessing);
+			ad = new FOLAtom(prepareQueryProcessing);
 		} else if(param.getPerception() instanceof Revision) {
-			ad = new Atom(prepareRevisionProcessing);
+			ad = new FOLAtom(prepareRevisionProcessing);
 		}
 		if(ad != null) {
 			ad.addArgument(new Constant(desireIds.getNextId().toString()));

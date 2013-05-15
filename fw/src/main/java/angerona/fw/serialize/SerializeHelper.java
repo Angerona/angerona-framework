@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.simpleframework.xml.Serializer;
@@ -43,7 +43,7 @@ public class SerializeHelper {
 		if(serializer == null) {
 			RegistryMatcher matcher = new RegistryMatcher();
 			matcher.bind(FolFormula.class, FolFormulaTransform.class);
-			matcher.bind(Atom.class, FolAtomTransform.class);			
+			matcher.bind(FOLAtom.class, FolAtomTransform.class);			
 			
 			matcher.bind(FolFormulaVariable.class, 
 					new VariableTransform<FolFormulaVariable>() {

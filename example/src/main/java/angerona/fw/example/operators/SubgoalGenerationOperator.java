@@ -10,7 +10,7 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
@@ -86,7 +86,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 		int i = 0;
 		for(Intention intention : intentions) {
-			Desire des = new Desire(new Atom(new Predicate("script"+ i++)));
+			Desire des = new Desire(new FOLAtom(new Predicate("script"+ i++)));
 			desires.add(des);
 			Subgoal sg = new Subgoal(ag, des);
 			sg.newStack(intention);
@@ -119,10 +119,10 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				continue;
 			
 			FolFormula f = desire.getFormula();
-			if(!(f instanceof Atom)) 
+			if(!(f instanceof FOLAtom)) 
 				continue;
 			
-			Atom atom = (Atom)f;
+			FOLAtom atom = (FOLAtom)f;
 			String predicateName = atom.getPredicate().getName();
 			boolean informDesire = predicateName.startsWith("v_");
 			boolean queryDesire = predicateName.startsWith("q_");
@@ -141,7 +141,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 				Subgoal sg = new Subgoal(ag, desire);
 				FolParserB parser = new FolParserB(new StringReader(content));
-				Atom a = null;
+				FOLAtom a = null;
 				try {
 					a = parser.atom(new FolSignature());
 				} catch (ParseException e) {
@@ -290,9 +290,9 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		Inform rr = (Inform) des.getPerception();
 		if(rr.getSentences().size() == 1) {
 			FolFormula ff = rr.getSentences().iterator().next();
-			if(	ff instanceof Atom && 
-				((Atom)ff).getPredicate().getName().equalsIgnoreCase("ask_for_excuse")) {
-				Atom reasonToFire = new Atom(new Predicate("attend_scm"));
+			if(	ff instanceof FOLAtom && 
+				((FOLAtom)ff).getPredicate().getName().equalsIgnoreCase("ask_for_excuse")) {
+				FOLAtom reasonToFire = new FOLAtom(new Predicate("attend_scm"));
 				AngeronaAnswer aa = ag.getBeliefs().getWorldKnowledge().reason(reasonToFire);
 				if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
 					Subgoal sg = new Subgoal(ag, des);

@@ -10,7 +10,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
 import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
 import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
@@ -83,7 +83,7 @@ public class ConditionalReasoner extends BaseReasoner {
 		if( ocf.rank(conjunction) == RankingFunction.INFINITY ) {
 			// premise is considered impossible, everything can be concluded
 			for(Proposition prop : sig) {
-				retval.add(new Atom(new Predicate(prop.getName())));
+				retval.add(new FOLAtom(new Predicate(prop.getName())));
 			}
 			return retval;
 		}
@@ -98,9 +98,9 @@ public class ConditionalReasoner extends BaseReasoner {
 			Integer rankAandB = ocf.rank(AandB);
 			Integer rankAandNotB = ocf.rank(AandNotB);
 			if(rankAandB < rankAandNotB) {
-				retval.add(new Atom(new Predicate(prop.getName())));
+				retval.add(new FOLAtom(new Predicate(prop.getName())));
 			} else if(rankAandNotB < rankAandB) {
-				retval.add(new Negation(new Atom(new Predicate(prop.getName()))));
+				retval.add(new Negation(new FOLAtom(new Predicate(prop.getName()))));
 			}
 		}
 

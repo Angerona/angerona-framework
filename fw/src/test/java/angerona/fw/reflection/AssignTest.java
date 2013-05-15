@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ public class AssignTest {
 		lst.add(new Triple(Query.class, 
 				"<query><sender>Boss</sender><receiver>Employee</receiver><question>attend_scm</question></query>", 
 				new Query("Boss", "Employee", 
-					new FolFormulaVariable(new Atom(new Predicate("attend_scm"))))));
+					new FolFormulaVariable(new FOLAtom(new Predicate("attend_scm"))))));
 		
 		// perform the test:
 		Context context = new Context();
@@ -84,7 +84,7 @@ public class AssignTest {
 	public void testContextInternalAssign() throws ClassNotFoundException {
 		Context context = new Context();
 		
-		AngeronaAnswer aa = new AngeronaAnswer(new Atom(new Predicate("attend_scm")), AnswerValue.AV_FALSE);
+		AngeronaAnswer aa = new AngeronaAnswer(new FOLAtom(new Predicate("attend_scm")), AnswerValue.AV_FALSE);
 		context.set("answer", aa);
 		
 		Assign assign = new Assign("reference", new Value("$answer", null));

@@ -66,7 +66,7 @@ public class BeliefbasePluginParameter extends OperatorParameterAdapter {
 	 */
 	@Override
 	public Reporter getReporter() {
-		return caller.getAgent();
+		return caller.getReporter();
 	}
 
 	/**
@@ -74,6 +74,6 @@ public class BeliefbasePluginParameter extends OperatorParameterAdapter {
 	 */
 	@Override
 	public OperatorStack getStack() {
-		return caller.getAgent();
+		return caller.getStack();
 	}
 }

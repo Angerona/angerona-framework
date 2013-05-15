@@ -13,10 +13,10 @@ import java.util.Set;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
@@ -147,10 +147,10 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		Iterator<FolFormula> itFormulas = rr.getSentences().iterator();
 		while(itFormulas.hasNext()) {
 			FolFormula ff = itFormulas.next();
-			if(	ff instanceof Atom ) {
+			if(	ff instanceof FOLAtom ) {
 				if(infered.contains(ff))
 					continue;
-				Atom atom = (Atom)ff;
+				FOLAtom atom = (FOLAtom)ff;
 				PlanElement next = nextSafeAction("not_sure("+atom.toString() + ")", pp, des);
 				if(next == null) {
 					continue;
@@ -249,7 +249,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		for(FolFormula f : infered) {
 			if(f instanceof Negation) {
 				worldKB.add("NEG_"+f.toString().substring(1));
-			} else if (f instanceof Atom ){
+			} else if (f instanceof FOLAtom ){
 				worldKB.add(f.toString());
 			}
 		}
@@ -499,7 +499,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		if(variableWithPrefix.startsWith("a_")) {
 			return (T) this.getAgent(variableWithPrefix.substring(2), pp);
 		} else {
-			Atom temp =  createAtom(variableWithPrefix);
+			FOLAtom temp =  createAtom(variableWithPrefix);
 			List<Term<?>> terms = new LinkedList<>();
 			for(Term<?> t : temp.getArguments()) {
 				// TODO: Test if that works:
@@ -511,7 +511,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 					terms.add(t);
 				}
 			}
-			return (T) new Atom(temp.getPredicate(), terms);
+			return (T) new FOLAtom(temp.getPredicate(), terms);
 		}
 	}
 	
@@ -520,10 +520,10 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param formula	String which will be parsed to a FolFormula (Atom).
 	 * @return			The FOL-Atom of the given String
 	 */
-	private Atom createAtom(String formula) {
+	private FOLAtom createAtom(String formula) {
 		FolParserB parser = new FolParserB(new StringReader(formula));
 		try {
-			Atom reval = parser.atom(new FolSignature());
+			FOLAtom reval = parser.atom(new FolSignature());
 			return reval;
 		} catch (ParseException e) {
 			e.printStackTrace();

@@ -87,7 +87,7 @@ public class AspTranslator extends BaseTranslator {
 		for(FolFormula ff : formulas) {
 			Rule r = new Rule();
 			
-			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.Atom) {
+			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom) {
 				Literal newAtom = createLiteral(ff, true);
 				r.addHead(newAtom);
 			} else if(ff instanceof Negation) {

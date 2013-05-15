@@ -20,26 +20,20 @@ public class MockBeliefbase extends AspBeliefbase {
 			OperatorSet rSet = new OperatorSet(BaseReasoner.OPERATION_TYPE);
 			AspReasoner arOp = new AspReasoner();
 			rSet.addOperator(new OperatorCallWrapper(arOp));
-			rSet.setPrefered(AspReasoner.class.getName());
-			
-			operators.put(AspReasoner.class.getName(), new OperatorCallWrapper(arOp));
-			operationSetsByType.put(BaseReasoner.OPERATION_TYPE, rSet);
+			rSet.setPrefered(AspReasoner.class.getName());			
+			this.addOperationSet(rSet);
 			
 			OperatorSet tSet = new OperatorSet(BaseTranslator.OPERATION_TYPE);
 			AspTranslator tOp = new AspTranslator();
 			tSet.addOperator(new OperatorCallWrapper(tOp));
 			tSet.setPrefered(tOp.getClass().getName());
-			
-			operators.put(tOp.getClass().getName(), new OperatorCallWrapper(tOp));
-			operationSetsByType.put(BaseTranslator.OPERATION_TYPE, tSet);
+			this.addOperationSet(tSet);
 			
 			OperatorSet cSet = new OperatorSet(BaseChangeBeliefs.OPERATION_TYPE);
 			AspExpansion expan = new AspExpansion();
 			cSet.addOperator(new OperatorCallWrapper(expan));
 			cSet.setPrefered(expan.getClass().getName());
-			
-			operators.put(expan.getClass().getName(), new OperatorCallWrapper(expan));
-			operationSetsByType.put(BaseChangeBeliefs.OPERATION_TYPE, cSet);
+			this.addOperationSet(cSet);
 		}
 	}
 	

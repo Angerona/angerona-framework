@@ -10,7 +10,7 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import angerona.fw.BaseBeliefbase;
 
@@ -74,14 +74,14 @@ public class AspBeliefbase extends BaseBeliefbase {
 		
 		String atoms_and_negations = "ASP only supports atoms and negations of atoms yet.";
 		
-		if(!(query instanceof Atom) && !(query instanceof Negation)) {
+		if(!(query instanceof FOLAtom) && !(query instanceof Negation)) {
 			this.reason = atoms_and_negations;
 			return false;
 		}
 		
 		if(query instanceof Negation) {
 			Negation n = (Negation)query;
-			if(!(n.getFormula() instanceof Atom)) {
+			if(!(n.getFormula() instanceof FOLAtom)) {
 				this.reason = atoms_and_negations;
 				return false;
 			}

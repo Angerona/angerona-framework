@@ -6,7 +6,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
@@ -72,15 +72,15 @@ public class ConditionalTranslator extends BaseTranslator {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
 		
 		for(FolFormula formula : formulas) {
-			if(formula instanceof Atom) {
-				Atom atom = (Atom) formula;
+			if(formula instanceof FOLAtom) {
+				FOLAtom atom = (FOLAtom) formula;
 				Proposition p = new Proposition(atom.getPredicate().getName());
 				reval.getPropositions().add(p);
 			} else if( formula instanceof Negation) {
 				Negation neg = (Negation) formula;
 				FolFormula negatedFormula = neg.getFormula();
-				if(negatedFormula instanceof Atom) {
-					Atom atom = (Atom) negatedFormula;
+				if(negatedFormula instanceof FOLAtom) {
+					FOLAtom atom = (FOLAtom) negatedFormula;
 					Proposition p = new Proposition(atom.getPredicate().getName());
 					reval.getPropositions().add(new net.sf.tweety.logics.propositionallogic.syntax.Negation(p));
 				} else {

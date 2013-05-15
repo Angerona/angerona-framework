@@ -14,7 +14,7 @@ import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.StringTerm;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 
@@ -102,21 +102,21 @@ public class AspReasoner extends BaseReasoner {
 		} else {
 			// Find all answers with the same predicate like the query.
 			Predicate queryPred = null;
-			if(query instanceof Atom) {
-				queryPred = ((Atom)query).getPredicate();
+			if(query instanceof FOLAtom) {
+				queryPred = ((FOLAtom)query).getPredicate();
 			} else if(query instanceof Negation) {
-				if(((Negation)query).getFormula() instanceof Atom) {
-					queryPred = ((Atom)((Negation)query).getFormula()).getPredicate();
+				if(((Negation)query).getFormula() instanceof FOLAtom) {
+					queryPred = ((FOLAtom)((Negation)query).getFormula()).getPredicate();
 				}
 			}
 			Set<FolFormula> realAnswers = new HashSet<>();
 			for(FolFormula answer : answers) {
-				Atom a = null;
-				if(answer instanceof Atom) {
-					a = (Atom)answer;
+				FOLAtom a = null;
+				if(answer instanceof FOLAtom) {
+					a = (FOLAtom)answer;
 				} else if(answer instanceof Negation) {
-					if(((Negation)answer).getFormula() instanceof Atom) {
-						a = (Atom)((Negation)answer).getFormula();
+					if(((Negation)answer).getFormula() instanceof FOLAtom) {
+						a = (FOLAtom)((Negation)answer).getFormula();
 					}
 				}
 				
@@ -164,7 +164,7 @@ public class AspReasoner extends BaseReasoner {
 				//TODO: The code in this loop is mostly conversion. Logic conversion module?
 				for(Literal l : literals) {
 					int arity = l.getAtom().getArity();
-					Atom a = new Atom(new Predicate(l.getAtom().getName(), arity));
+					FOLAtom a = new FOLAtom(new Predicate(l.getAtom().getName(), arity));
 					for(int i=0; i<arity; ++i) {
 						String str = ((StringTerm)l.getAtom().getTerm(i)).get();
 						a.addArgument(new Constant(str));

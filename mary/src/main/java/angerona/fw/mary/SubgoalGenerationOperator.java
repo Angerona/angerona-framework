@@ -11,10 +11,10 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Term;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
@@ -104,20 +104,20 @@ public class SubgoalGenerationOperator extends
 			
 			public int compare(Desire f1, Desire f2)
 			{
-				if(! (f1.getFormula() instanceof Atom) ) {
+				if(! (f1.getFormula() instanceof FOLAtom) ) {
 					return -1;
 				}
-				if(! (f2.getFormula() instanceof Atom) ) {
+				if(! (f2.getFormula() instanceof FOLAtom) ) {
 					return -1;
 				}
-				if(	((Atom)f1.getFormula()).getArguments().size() < 2) {
+				if(	((FOLAtom)f1.getFormula()).getArguments().size() < 2) {
 					return -1;
-				} else if( ((Atom)f2.getFormula()).getArguments().size() < 2 ) {
+				} else if( ((FOLAtom)f2.getFormula()).getArguments().size() < 2 ) {
 					return 1;
 				}
 					
-				Term<?> t1 = ((Atom)f1.getFormula()).getArguments().get(1);
-				Term<?> t2 = ((Atom)f2.getFormula()).getArguments().get(1);
+				Term<?> t1 = ((FOLAtom)f1.getFormula()).getArguments().get(1);
+				Term<?> t2 = ((FOLAtom)f2.getFormula()).getArguments().get(1);
 				
 				if(! (t1 instanceof NumberTerm)) {
 					return -1;
@@ -140,10 +140,10 @@ public class SubgoalGenerationOperator extends
 		for(int i=numDesires-1;i>=0;i--)
 		{
 			Desire des = desires[i];
-			if(! (des.getFormula() instanceof Atom) ) {
+			if(! (des.getFormula() instanceof FOLAtom) ) {
 				continue;
 			}
-			Atom atom = (Atom) desires[i].getFormula();
+			FOLAtom atom = (FOLAtom) desires[i].getFormula();
 			if(atom.getPredicate().getName().startsWith("q_"))
 			{
 				if(!ag.hasCapability("Query")) {
@@ -199,7 +199,7 @@ public class SubgoalGenerationOperator extends
 	 */
 	public FolFormula expressionOfIgnorance(Query query) {
 		FolFormula question = (FolFormula)query.getQuestion();
-		FolFormula expr = new Atom(new Predicate("dontKnow("+question.toString()+")")); 
+		FolFormula expr = new FOLAtom(new Predicate("dontKnow("+question.toString()+")")); 
 		return expr;
 		
 	}

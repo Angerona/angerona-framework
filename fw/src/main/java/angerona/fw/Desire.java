@@ -1,6 +1,6 @@
 package angerona.fw;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
@@ -84,8 +84,8 @@ public class Desire {
 	public boolean equals(Object other) {
 		if(other == null)	return false;
 		
-		if(other instanceof Atom) {
-			return this.formula.equals((Atom)other);
+		if(other instanceof FOLAtom) {
+			return this.formula.equals((FOLAtom)other);
 		}
 		
 		if(other instanceof Desire) {

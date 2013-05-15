@@ -3,9 +3,9 @@ package angerona.fw.example.operators;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,19 +47,19 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	protected Integer processInternal(GenerateOptionsParameter param) {
 		LOG.info("Run Default-Generate-Options-operator");
 		
-		Atom ad = null;
+		FOLAtom ad = null;
 		Set<Desire> reval = new HashSet<Desire>();
 		if(param.getPerception() instanceof Query) {
-			ad = new Atom(prepareQueryProcessing);
+			ad = new FOLAtom(prepareQueryProcessing);
 		} else if(param.getPerception() instanceof Inform) {
-			ad = new Atom(prepareRevisionRequestProcessing);
+			ad = new FOLAtom(prepareRevisionRequestProcessing);
 		} else if(param.getPerception() instanceof Justify) {
-			ad = new Atom(prepareReasonCalculation);
+			ad = new FOLAtom(prepareReasonCalculation);
 		} else if(param.getPerception() instanceof Justification) {
-			ad = new Atom(prepareJustificationReaction);
+			ad = new FOLAtom(prepareJustificationReaction);
 		}
 		if(ad != null) {
-			ad.addArgument(new Constant(desireIds.getNextId().toString()));
+			ad.addArgument(new NumberTerm(desireIds.getNextId().intValue()));
 			reval.add(new Desire(ad, param.getPerception()));
 		}
 		for(Desire des : reval) {

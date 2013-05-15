@@ -8,7 +8,7 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 
@@ -271,7 +271,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 		int i = 0;
 		for(Intention intention : intentions) {
-			Desire des = new Desire(new Atom(new Predicate("script"+ i++)));
+			Desire des = new Desire(new FOLAtom(new Predicate("script"+ i++)));
 			desires.add(des);
 			Subgoal sg = new Subgoal(ag, des);
 			sg.newStack(intention);
@@ -325,7 +325,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 				Subgoal sg = new Subgoal(ag, desire);
 				FolParserB parser = new FolParserB(new StringReader(content));
-				Atom a = null;
+				FOLAtom a = null;
 				try {
 					a = parser.atom(new FolSignature());
 				} catch (ParseException e) {

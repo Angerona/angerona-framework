@@ -3,7 +3,7 @@ package angerona.fw.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.Conjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Disjunction;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
@@ -27,8 +27,8 @@ public class LogicTranslator {
 	 */
 	public static PropositionalFormula FoToPl(RelationalFormula formula) {
 		
-		if(formula instanceof Atom) {
-			Atom atom = (Atom) formula;
+		if(formula instanceof FOLAtom) {
+			FOLAtom atom = (FOLAtom) formula;
 			return new Proposition(atom.getPredicate().getName());
 		} else if( formula instanceof Negation) {
 			Negation neg = (Negation) formula;

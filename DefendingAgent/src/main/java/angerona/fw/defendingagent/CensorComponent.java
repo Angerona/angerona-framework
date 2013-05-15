@@ -10,7 +10,7 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
-import net.sf.tweety.logics.firstorderlogic.syntax.Atom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
 import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
@@ -76,10 +76,10 @@ public class CensorComponent extends BaseAgentComponent {
 		// Build View
 		View v = new View(beliefs);
 		
-		FolFormula s22 = new Atom(new Predicate("s22"));
-		FolFormula s21 = new Atom(new Predicate("s21"));
+		FolFormula s22 = new FOLAtom(new Predicate("s22"));
+		FolFormula s21 = new FOLAtom(new Predicate("s21"));
 		FolFormula not_s21 = new net.sf.tweety.logics.firstorderlogic.syntax.Negation(s21);
-		FolFormula r = new Atom(new Predicate("r"));
+		FolFormula r = new FOLAtom(new Predicate("r"));
 		FolFormula s21_r = new net.sf.tweety.logics.firstorderlogic.syntax.Disjunction(not_s21, r); 
 		
 		v = v.RefineViewByQuery(s21, AnswerValue.AV_UNKNOWN);
