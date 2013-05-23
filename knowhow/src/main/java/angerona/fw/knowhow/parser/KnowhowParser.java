@@ -72,17 +72,17 @@ public class KnowhowParser implements KnowhowParserConstants {
   final public KnowhowStatement statement() throws ParseException {
   KnowhowStatement stmt = null;
   String elpStr = null;
-  Atom target = null;
+  ELPAtom target = null;
   List<String > strings = null;
-  Vector<Atom> subtargets = new Vector<Atom >();
-  Vector<Atom> conditions = new Vector<Atom >();
+  Vector<ELPAtom> subtargets = new Vector<ELPAtom >();
+  Vector<ELPAtom> conditions = new Vector<ELPAtom >();
     elpStr = elpString();
-    target = new Atom(elpStr + ".");
+    target = new ELPAtom(elpStr + ".");
     LOG.debug("Target: " + elpStr);
     jj_consume_token(COMMA);
     strings = elpStringList();
       for(String str : strings) {
-        subtargets.add(new Atom(str + "."));
+        subtargets.add(new ELPAtom(str + "."));
       }
       LOG.debug("Subtargets: " + subtargets);
     jj_consume_token(COMMA);
@@ -93,7 +93,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     case TEXT:
       strings = elpStringList();
       for(String str : strings) {
-        conditions.add(new Atom(str + "."));
+        conditions.add(new ELPAtom(str + "."));
       }
       LOG.debug("Condition: " + conditions);
       break;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.gui.view.BeliefbaseView;
@@ -56,7 +56,7 @@ public class AspBeliefbaseView extends BeliefbaseView {
 				ListElement.ST_NOTCHANGED));
 			
 			String output = "";
-			for(Literal l : as.getLiterals()) {
+			for(ELPLiteral l : as.getLiterals()) {
 				output += ", " + l;
 				if(output.length() > 100) {
 					output = output.substring(2);

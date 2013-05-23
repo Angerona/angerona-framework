@@ -8,7 +8,7 @@ import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -159,10 +159,10 @@ public class AspReasoner extends BaseReasoner {
 		for(AnswerSet as : answerSets) {
 			Set<FolFormula> temp = new HashSet<FolFormula>();
 			for(String name : as.literals.keySet()) {
-				Set<Literal> literals = as.literals.get(name);
+				Set<ELPLiteral> literals = as.literals.get(name);
 				
 				//TODO: The code in this loop is mostly conversion. Logic conversion module?
-				for(Literal l : literals) {
+				for(ELPLiteral l : literals) {
 					int arity = l.getAtom().getArity();
 					FOLAtom a = new FOLAtom(new Predicate(l.getAtom().getName(), arity));
 					for(int i=0; i<arity; ++i) {

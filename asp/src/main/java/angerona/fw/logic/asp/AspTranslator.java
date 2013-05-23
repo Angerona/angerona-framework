@@ -3,8 +3,8 @@ package angerona.fw.logic.asp;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
@@ -70,13 +70,13 @@ public class AspTranslator extends BaseTranslator {
 		return reval;
 	}
 
-	private Literal createLiteral(FolFormula ff, boolean truth)
+	private ELPLiteral createLiteral(FolFormula ff, boolean truth)
 	{
-		Literal a = null;
+		ELPLiteral a = null;
 		if(truth)
-			a = new Atom(ff.toString());
+			a = new ELPAtom(ff.toString());
 		else
-			a = new Neg(new Atom(ff.toString().substring(1)));
+			a = new Neg(new ELPAtom(ff.toString().substring(1)));
 			
 		return a;
 	}
@@ -88,10 +88,10 @@ public class AspTranslator extends BaseTranslator {
 			Rule r = new Rule();
 			
 			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom) {
-				Literal newAtom = createLiteral(ff, true);
+				ELPLiteral newAtom = createLiteral(ff, true);
 				r.addHead(newAtom);
 			} else if(ff instanceof Negation) {
-				Literal newAtom = createLiteral(ff, false);
+				ELPLiteral newAtom = createLiteral(ff, false);
 				r.addHead(newAtom);
 				
 			} else {

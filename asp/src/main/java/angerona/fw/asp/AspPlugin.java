@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
@@ -74,28 +74,28 @@ public class AspPlugin extends AngeronaPluginAdapter
 		Program p = new Program();
 		
 		Rule r = new Rule();
-		r.addHead(new Atom("excused"));
-		r.addBody(new Atom("attend_burial"));
+		r.addHead(new ELPAtom("excused"));
+		r.addBody(new ELPAtom("attend_burial"));
 		p.add(r);
 		
 		r = new Rule();
-		r.addHead(new Atom("excused"));
-		r.addBody(new Atom("is_ill"));
+		r.addHead(new ELPAtom("excused"));
+		r.addBody(new ELPAtom("is_ill"));
 		p.add(r);
 		
 		r = new Rule();
-		r.addHead(new Atom("fired"));
-		r.addBody(new Neg( new Atom("attend_work")));
-		r.addBody(new Not( new Atom("excused")));
+		r.addHead(new ELPAtom("fired"));
+		r.addBody(new Neg( new ELPAtom("attend_work")));
+		r.addBody(new Not( new ELPAtom("excused")));
 		p.add(r);
 		
 		r = new Rule();
-		r.addHead(new Neg(new Atom("fired")));
-		r.addBody(new Atom("excused"));
+		r.addHead(new Neg(new ELPAtom("fired")));
+		r.addBody(new ELPAtom("excused"));
 		p.add(r);
 		
 		r = new Rule();
-		r.addHead(new Neg(new Atom("attend_work")));
+		r.addHead(new Neg(new ELPAtom("attend_work")));
 		p.add(r);
 		
 		AspBeliefbase bb = new AspBeliefbase();
@@ -111,7 +111,7 @@ public class AspPlugin extends AngeronaPluginAdapter
 		reasoner.query(bb, a);
 		
 		r = new Rule();
-		r.addHead(new Atom("attend_burial"));
+		r.addHead(new ELPAtom("attend_burial"));
 		p.add(r);
 		
 		//reasoner.query(a);

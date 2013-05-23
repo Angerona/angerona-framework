@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Atom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -86,13 +86,13 @@ public class KnowhowBuilder {
 		List<SkillParameter> params = new LinkedList<>();
 		// Knowhow Statement
 		Rule r = new Rule();
-		r.addHead(new Atom("khstatement", new Constant(ks.name), 
+		r.addHead(new ELPAtom("khstatement", new Constant(ks.name), 
 				new Constant(ks.getTarget().toString())));
 		p.add(r);
 		
 		// Subtargets
 		int i = 1;
-		for(Atom a : ks.getSubTargets()) {
+		for(ELPAtom a : ks.getSubTargets()) {
 			r = new Rule();
 			
 			// if the subgoal is an skill then we have to find the parameter mappings
@@ -114,18 +114,18 @@ public class KnowhowBuilder {
 					}
 				}
 				
-				a = new Atom(a.getName());
+				a = new ELPAtom(a.getName());
 			}
-			r.addHead(new Atom("khsubgoal", new Constant(ks.name), new NumberTerm(i), 
+			r.addHead(new ELPAtom("khsubgoal", new Constant(ks.name), new NumberTerm(i), 
 					new Constant(a.toString())));
 			p.add(r);
 			i++;
 		}
 		
 		// Conditions
-		for(Atom a : ks.getConditions()) {
+		for(ELPAtom a : ks.getConditions()) {
 			r = new Rule();
-			r.addHead(new Atom("khcondition", new Constant(ks.name), 
+			r.addHead(new ELPAtom("khcondition", new Constant(ks.name), 
 					new Constant(a.toString())));
 			p.add(r);
 		}
@@ -137,9 +137,9 @@ public class KnowhowBuilder {
 		Program p = new Program();
 		for(String atom : literals) {
 			if(atom.startsWith("NEG_")) {
-				p.add(new Atom("nholds", new Constant(atom.substring(4))));
+				p.add(new ELPAtom("nholds", new Constant(atom.substring(4))));
 			} else {
-				p.add(new Atom("holds", new Constant(atom)));
+				p.add(new ELPAtom("holds", new Constant(atom)));
 			}
 			
 		}
@@ -155,7 +155,7 @@ public class KnowhowBuilder {
 		Program p = new Program();
 		
 		for(String action : atomic_actions) {
-			p.add(new Atom("is_atomic", new Constant("s_"+action)));
+			p.add(new ELPAtom("is_atomic", new Constant("s_"+action)));
 		}
 		
 		return p;
