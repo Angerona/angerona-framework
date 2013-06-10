@@ -310,7 +310,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 */
 	private PlanElement createAtomicAction(PlanParameter param, Desire des) {
 		// iterate over all actions found by the Knowhow (at the moment this is only one)
-		Pair<String, HashMap<Integer, String>> action = lastUsedStrategy.getAction();
+		Pair<String, HashMap<Integer, Term<?>>> action = lastUsedStrategy.getAction();
 		
 		// test if the skill exists
 		Agent ag = param.getAgent();
@@ -355,7 +355,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Justification which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Justification createJustification(Map<Integer, String> paramMap, Justify reason, PlanParameter pp) {
+	protected Justification createJustification(Map<Integer, Term<?>> paramMap, Justify reason, PlanParameter pp) {
 		if(paramMap.size() != 1) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
 					"Justification", paramMap.size());
@@ -376,7 +376,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Justify which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Justify createJustify(Map<Integer, String> paramMap, Inform reason, PlanParameter pp) {
+	protected Justify createJustify(Map<Integer, Term<?>> paramMap, Inform reason, PlanParameter pp) {
 		if(paramMap.size() != 2) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", 
 					"Justify", paramMap.size());
@@ -399,7 +399,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Inform which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Inform createInform(Map<Integer, String> paramMap, PlanParameter pp) {
+	protected Inform createInform(Map<Integer, Term<?>> paramMap, PlanParameter pp) {
 		if(paramMap.size() != 2) {
 			LOG.error("Knowhow found Skill '{}' but there are '{}' parameters instead of 2", "Inform", paramMap.size());
 			return null;
@@ -421,7 +421,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type Query which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Query createQuery(Map<Integer, String> paramMap, PlanParameter pp) {
+	protected Query createQuery(Map<Integer, Term<?>> paramMap, PlanParameter pp) {
 		String var = getVarWithPrefix(0, paramMap);
 		Agent receiver = processVariable(var, pp);
 		
@@ -439,7 +439,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @return				An object of type QueryAnswer which represents the Angerona version of the
 	 * 						action found by the knowhow.
 	 */
-	protected Answer createQueryAnswer(Map<Integer, String> paramMap, Query reason, PlanParameter pp) {
+	protected Answer createQueryAnswer(Map<Integer, Term<?>> paramMap, Query reason, PlanParameter pp) {
 		String var = getVarWithPrefix(0, paramMap);
 		boolean honest = false;
 		if(var.equals("p_honest")) {
@@ -481,8 +481,8 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 * @param paramMap	the parameter-map 
 	 * @return			A String representing the value of the parameter.
 	 */
-	protected String getVarWithPrefix(int index, Map<Integer, String> paramMap) {
-		String var = paramMap.get(index);
+	protected String getVarWithPrefix(int index, Map<Integer, Term<?>> paramMap) {
+		String var = paramMap.get(index).toString();
 		if(var == null) {
 			LOG.error("The mapping of the variables is wrong. We assume index 0-x are used to represent the x variables of the used Skill.");
 		}

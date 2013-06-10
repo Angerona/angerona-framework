@@ -5,11 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Not;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.BaseBeliefbase;
@@ -22,7 +17,6 @@ import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
-import angerona.fw.logic.asp.AspRevision;
 import angerona.fw.logic.asp.AspTranslator;
 import angerona.fw.logic.asp.RevisionCredibilityPrograms;
 import angerona.fw.logic.asp.RevisionPreferenceHandling;
@@ -70,60 +64,6 @@ public class AspPlugin extends AngeronaPluginAdapter
 		return reval;
 	}
 
-	public static void main(String [] args) {
-		Program p = new Program();
-		
-		Rule r = new Rule();
-		r.addHead(new ELPAtom("excused"));
-		r.addBody(new ELPAtom("attend_burial"));
-		p.add(r);
-		
-		r = new Rule();
-		r.addHead(new ELPAtom("excused"));
-		r.addBody(new ELPAtom("is_ill"));
-		p.add(r);
-		
-		r = new Rule();
-		r.addHead(new ELPAtom("fired"));
-		r.addBody(new Neg( new ELPAtom("attend_work")));
-		r.addBody(new Not( new ELPAtom("excused")));
-		p.add(r);
-		
-		r = new Rule();
-		r.addHead(new Neg(new ELPAtom("fired")));
-		r.addBody(new ELPAtom("excused"));
-		p.add(r);
-		
-		r = new Rule();
-		r.addHead(new Neg(new ELPAtom("attend_work")));
-		p.add(r);
-		
-		AspBeliefbase bb = new AspBeliefbase();
-		bb.setProgram(p);
-		AspReasoner reasoner = new AspReasoner();
-		
-		System.out.println(p.toStringFlat());
-		System.out.println();
-		
-		net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom a =
-			new net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom(
-				new net.sf.tweety.logics.commons.syntax.Predicate("fired"));
-		reasoner.query(bb, a);
-		
-		r = new Rule();
-		r.addHead(new ELPAtom("attend_burial"));
-		p.add(r);
-		
-		//reasoner.query(a);
-		
-		// Tutorial:
-		/*
-		number(1..4).
-		orderedLists([X]) :- number(X).
-		orderedLists([X|[Y|L]]) :- orderedLists([Y|L]), number(X), X < Y.
-		*/
-		
-	}
 
 	@Override
 	public Map<String, Class<? extends ViewComponent>> getUIComponents() {

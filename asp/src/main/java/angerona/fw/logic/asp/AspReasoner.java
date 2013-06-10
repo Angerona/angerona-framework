@@ -8,8 +8,8 @@ import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Neg;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -157,23 +157,20 @@ public class AspReasoner extends BaseReasoner {
 		
 		// Translate the elp to fol:
 		for(AnswerSet as : answerSets) {
-			Set<FolFormula> temp = new HashSet<FolFormula>();
-			for(String name : as.literals.keySet()) {
-				Set<ELPLiteral> literals = as.literals.get(name);
-				
-				//TODO: The code in this loop is mostly conversion. Logic conversion module?
-				for(ELPLiteral l : literals) {
-					int arity = l.getAtom().getArity();
-					FOLAtom a = new FOLAtom(new Predicate(l.getAtom().getName(), arity));
-					for(int i=0; i<arity; ++i) {
-						String str = ((StringTerm)l.getAtom().getTerm(i)).get();
-						a.addArgument(new Constant(str));
-					}
-					if(!(l instanceof Neg)) {
-						temp.add(a);
-					} else {
-						temp.add(new Negation(a));
-					}
+			
+			//TODO: The code in this loop is mostly conversion. Logic conversion module?
+			Set<FolFormula> temp = new HashSet<>();
+			for(DLPLiteral l : as) {
+				int arity = l.getAtom().getArity();
+				FOLAtom a = new FOLAtom(new Predicate(l.getAtom().getName(), arity));
+				for(int i=0; i<arity; ++i) {
+					String str = ((StringTerm)l.getAtom().getTerm(i)).get();
+					a.addArgument(new Constant(str));
+				}
+				if(!(l instanceof DLPNeg)) {
+					temp.add(a);
+				} else {
+					temp.add(new Negation(a));
 				}
 			}
 			

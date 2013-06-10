@@ -1,5 +1,7 @@
 package angerona.fw.knowhow;
 
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+
 /**
  * The class SkillParameter is responsible
  * @author Tim Janus
@@ -17,8 +19,8 @@ public class SkillParameter {
 	/** the index of the parameter in context of the skill */
 	protected Integer paramIndex;
 	
-	/** the value of the parameter represent by a string */
-	protected String paramValue;
+	/** the value of the parameter represent by a term */
+	protected Term<?> paramValue;
 	
 	/** @return the id (index of the responsible knowhow-statement */
 	public Integer getNumKnowhowStatement() {
@@ -41,7 +43,7 @@ public class SkillParameter {
 	}
 	
 	/** @return the value of the parameter represent by a string */
-	public String getParamValue() {
+	public Term<?> getParamValue() {
 		return paramValue;
 	}
 	

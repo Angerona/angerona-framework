@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
@@ -73,7 +74,12 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		double numAnsSets = ansSets.size();
 		double setsWithSecret = 0.0;
 		for (AnswerSet as : ansSets) {
-			Program p = as.toProgram();
+			//Program p = as.toProgram();
+			Program p = new Program();
+			for(DLPLiteral lit : as) {
+				p.addFact(lit);
+			}
+			//TODO: FIX
 			Rule secretRule = convertToRule(secretInfo);
 			if (p.hasRule(secretRule)) {
 				setsWithSecret += 1;

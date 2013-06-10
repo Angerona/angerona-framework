@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
+import net.sf.tweety.logicprogramming.asplibrary.parser.*;
 
 @SuppressWarnings("all")
 public class KnowhowParser implements KnowhowParserConstants {
@@ -18,6 +19,19 @@ public class KnowhowParser implements KnowhowParserConstants {
   public KnowhowParser(String expr)
   {
     this(new StringReader(expr));
+  }
+
+  public DLPAtom parseELPAtom(String elpString) throws ParseException
+  {
+    ASPParser parser = new ASPParser(new StringReader(elpString));
+    InstantiateVisitor visitor = new InstantiateVisitor();
+     try {
+        DLPLiteral lit = visitor.visit(parser.Atom(), null);
+                return (DLPAtom)lit;
+        } catch (net.sf.tweety.logicprogramming.asplibrary.parser.ParseException e) {
+                LOG.error(e.getMessage());
+                throw new ParseException();
+        }
   }
 
   public static void main(String args []) throws ParseException
@@ -72,17 +86,17 @@ public class KnowhowParser implements KnowhowParserConstants {
   final public KnowhowStatement statement() throws ParseException {
   KnowhowStatement stmt = null;
   String elpStr = null;
-  ELPAtom target = null;
+  DLPAtom target = null;
   List<String > strings = null;
-  Vector<ELPAtom> subtargets = new Vector<ELPAtom >();
-  Vector<ELPAtom> conditions = new Vector<ELPAtom >();
+  Vector<DLPAtom> subtargets = new Vector<DLPAtom >();
+  Vector<DLPAtom> conditions = new Vector<DLPAtom >();
     elpStr = elpString();
-    target = new ELPAtom(elpStr + ".");
+    target = parseELPAtom(elpStr);
     LOG.debug("Target: " + elpStr);
     jj_consume_token(COMMA);
     strings = elpStringList();
       for(String str : strings) {
-        subtargets.add(new ELPAtom(str + "."));
+        subtargets.add(parseELPAtom(str));
       }
       LOG.debug("Subtargets: " + subtargets);
     jj_consume_token(COMMA);
@@ -93,7 +107,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     case TEXT:
       strings = elpStringList();
       for(String str : strings) {
-        conditions.add(new ELPAtom(str + "."));
+        conditions.add(parseELPAtom(str));
       }
       LOG.debug("Condition: " + conditions);
       break;

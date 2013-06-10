@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
+import net.sf.tweety.logicprogramming.asplibrary.parser.*;
 
 @SuppressWarnings("all")
 public class KnowhowParser
@@ -28,6 +29,17 @@ public class KnowhowParser
   public KnowhowParser(String expr)  {
     this(new StringReader(expr));
   }
+
+  public DLPAtom parseELPAtom(String elpString) throws ParseException  {
+    ASPParser parser = new ASPParser(new StringReader(elpString));
+    InstantiateVisitor visitor = new InstantiateVisitor();
+     try {
+        DLPLiteral lit = visitor.visit(parser.Atom(), null);
+		return (DLPAtom)lit;
+	} catch (net.sf.tweety.logicprogramming.asplibrary.parser.ParseException e) {
+		LOG.error(e.getMessage());
+		throw new ParseException();
+	}  }
   
   public static void main(String args []) throws ParseException
   {
@@ -103,15 +115,15 @@ KnowhowStatement statement() :
 {
   KnowhowStatement stmt = null;
   String elpStr = null;
-  Atom target = null;
+  DLPAtom target = null;
   List<String > strings = null;
-  Vector<Atom> subtargets = new Vector<Atom >();
-  Vector<Atom> conditions = new Vector<Atom >();
+  Vector<DLPAtom> subtargets = new Vector<DLPAtom >();
+  Vector<DLPAtom> conditions = new Vector<DLPAtom >();
 }
 {
   elpStr = elpString()
   {
-    target = new Atom(elpStr + ".");
+    target = parseELPAtom(elpStr);
     LOG.debug("Target: " + elpStr);
   }
 
@@ -120,7 +132,7 @@ KnowhowStatement statement() :
     strings = elpStringList()
     {
       for(String str : strings) {
-        subtargets.add(new Atom(str + "."));
+        subtargets.add(parseELPAtom(str));
       }
       LOG.debug("Subtargets: " + subtargets);
     }
@@ -131,7 +143,7 @@ KnowhowStatement statement() :
     strings = elpStringList()
     {
       for(String str : strings) {
-        conditions.add(new Atom(str + "."));      }      LOG.debug("Condition: " + conditions);    }
+        conditions.add(parseELPAtom(str));      }      LOG.debug("Condition: " + conditions);    }
   )?
   
   {    return new KnowhowStatement(target, subtargets, conditions);  }  

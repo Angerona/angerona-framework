@@ -1,26 +1,25 @@
 package angerona.fw.knowhow;
 
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ELPParser;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.ListTerm;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPLiteral;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.ListTermValue;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.StringTerm;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,10 +63,10 @@ public class KnowhowStrategy {
 	private DLVComplex solver;
 	
 	/** the actions in the correct odering to fullfil the plan */
-	private Pair<String, HashMap<Integer, String>> action;
+	private Pair<String, HashMap<Integer, Term<?>>> action;
 	
 	/** saving the last state used for processing */
-	private ELPAtom oldState;
+	private DLPAtom oldState;
 	
 	/** a stack of answerset-lists which represents the options for backtracking */
 	private Stack<AnswerSetList> alternatives = new Stack<>();
@@ -88,11 +87,11 @@ public class KnowhowStrategy {
 	}
 	
 	/** @return an unmodifiable version of the action found by the planning yet */
-	public Pair<String, HashMap<Integer, String>> getAction() {
+	public Pair<String, HashMap<Integer, Term<?>>> getAction() {
 		if(action == null)
 			return null;
 		
-		Pair<String, HashMap<Integer, String>> reval = new Pair<>();
+		Pair<String, HashMap<Integer, Term<?>>> reval = new Pair<>();
 		reval.first = action.first;
 		reval.second = new HashMap<>(action.second);
 		return reval;
@@ -112,22 +111,15 @@ public class KnowhowStrategy {
 		intentionTree = new Program();
 		this.initialIntention = initialIntention;
 
-		ELPParser parser = new ELPParser(new StringReader("istack(["+initialIntention+"])."));
-		Rule r = null;
-		try {
-			r = parser.rule();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(r != null) {
-			intentionTree.add(r); 
-		}
+		List<Term<?>> terms = new LinkedList<>();
+		terms.add(new Constant(initialIntention));
+		ListTerm term = new ListTerm(new ListTermValue(terms));
+		intentionTree.addFact(new DLPAtom("istack", term)); 
 		
 		action = null;
-		oldState = new ELPAtom("khstate", new ListTerm());
-		intentionTree.add(oldState);
-		intentionTree.add(new ELPAtom("state", new Constant(stateStr)));
+		oldState = new DLPAtom("khstate", new ListTerm());
+		intentionTree.addFact(oldState);
+		intentionTree.addFact(new DLPAtom("state", new Constant(stateStr)));
 		Pair<Program, LinkedList<SkillParameter>> reval = null;
 		reval = KnowhowBuilder.buildKnowhowbaseProgram(kb);
 		knowhow = reval.first;
@@ -215,17 +207,17 @@ public class KnowhowStrategy {
 	 * @return		true if an action was found and mapped successful, false otherwise.
 	 */
 	private boolean mapAction(AnswerSet as) {
-		Set<ELPLiteral> act = as.getLiteralsBySymbol("new_act");
+		Set<DLPLiteral> act = as.getLiteralsWithName("new_act");
 		
-		for(ELPLiteral action : act) {
+		for(DLPLiteral action : act) {
 			int kh_index = -1;
 			int subgoal_index = -1;
 			
 			// find knowhow index:
-			Set<ELPLiteral> khstatements = as.getLiteralsBySymbol("khstate");
+			Set<DLPLiteral> khstatements = as.getLiteralsWithName("khstate");
 			if(khstatements.size() == 1) {
 				ListTerm lst = (ListTerm) khstatements.iterator().next().getAtom().getTerm(0);
-				Constant constant = (Constant)lst.head().get(0);
+				Constant constant = (Constant)lst.get().head();
 				int start = constant.get().lastIndexOf('_') + 1;
 				String toParse = constant.get().substring(start);
 				kh_index = Integer.parseInt(toParse);
@@ -234,16 +226,16 @@ public class KnowhowStrategy {
 			}
 			
 			// find subgoal index for parameter:
-			Set<ELPLiteral> subgoal = as.getLiteralsBySymbol("new_subgoal");
+			Set<DLPLiteral> subgoal = as.getLiteralsWithName("new_subgoal");
 			if(subgoal.size() == 1) {
 				subgoal_index = ((NumberTerm)subgoal.iterator().next().getAtom().getTerm(0)).get();
 			} else {
 				// TODO:
 			}
 			
-			ELPAtom a = (ELPAtom)action;
-			Pair<String, HashMap<Integer, String>> pair = new Pair<>(((StringTerm)a.getTerm(0)).get(), 
-					new HashMap<Integer, String>());
+			DLPAtom a = (DLPAtom)action;
+			Pair<String, HashMap<Integer, Term<?>>> pair = new Pair<>(((StringTerm)a.getTerm(0)).get(), 
+					new HashMap<Integer, Term<?>>());
 			Set<SkillParameter> parameters = knowhowBase.findParameters(kh_index, subgoal_index);
 			for(SkillParameter param : parameters) {
 				pair.second.put(param.paramIndex, param.paramValue);
@@ -262,16 +254,16 @@ public class KnowhowStrategy {
 	 */
 	private boolean updateIntentionTree(AnswerSet as) {
 		// find new literals for the new intention-tree program:
-		ELPAtom new_state = updateAtom(as, "state");
-		ELPAtom new_khstate = updateAtom(as, "khstate");
-		ELPAtom new_istack = null;
+		DLPAtom new_state = updateAtom(as, "state");
+		DLPAtom new_khstate = updateAtom(as, "khstate");
+		DLPAtom new_istack = null;
 		if(	stateStr.equals("actionPerformed") ||
 			stateStr.equals("khAdded")	) {
 			new_istack = updateAtom(as, "istack");
 		} else {
-			Set<ELPLiteral> newLits = as.getLiteralsBySymbol("istack");
+			Set<DLPLiteral> newLits = as.getLiteralsWithName("istack");
 			if(newLits.size() == 1) {
-				new_istack = (ELPAtom)newLits.iterator().next();
+				new_istack = (DLPAtom)newLits.iterator().next();
 			} else {
 				return false;
 			}
@@ -285,10 +277,10 @@ public class KnowhowStrategy {
 		toOutput.add(intentionTree);
 		// rebuild intention-tree program:
 		intentionTree.clear();
-		oldState = new ELPAtom("state", new_state.getTerms());
-		intentionTree.add(oldState);
-		intentionTree.add(new ELPAtom("khstate", new_khstate.getTerms()));
-		intentionTree.add(new ELPAtom("istack", new_istack.getTerms()));
+		oldState = new DLPAtom("state", new_state.getTerms());
+		intentionTree.addFact(oldState);
+		intentionTree.addFact(new DLPAtom("khstate", new_khstate.getTerms()));
+		intentionTree.addFact(new DLPAtom("istack", new_istack.getTerms()));
 		
 		LOG.info("\n'{}'\nbecomes\n'{}'", toOutput, intentionTree);
 		
@@ -297,7 +289,7 @@ public class KnowhowStrategy {
 			stateStr = ((StringTerm)new_state.getTerm(0)).get();
 		
 		// proof if a change occurred
-		Set<ELPLiteral> act = as.getLiteralsBySymbol("new_act");
+		Set<DLPLiteral> act = as.getLiteralsWithName("new_act");
 		return  new_state != null ||
 				new_istack != null ||
 				new_khstate != null ||
@@ -310,15 +302,15 @@ public class KnowhowStrategy {
 	 * @param name	The name of the atom like 'state'
 	 * @return	the new atom or null if no new atom exists.
 	 */
-	private ELPAtom updateAtom(AnswerSet asl, String name) {
+	private DLPAtom updateAtom(AnswerSet asl, String name) {
 		// get new state...
 		String error = null;
-		Set<ELPLiteral> lits = asl.getLiteralsBySymbol("new_" + name);
+		Set<DLPLiteral> lits = asl.getLiteralsWithName("new_" + name);
 		if(lits.size() == 1) {
-			ELPLiteral new_literal = lits.iterator().next();
-			if(new_literal instanceof ELPAtom) {
-				ELPAtom a = (ELPAtom)new_literal;
-				ELPAtom state = new ELPAtom(name, a.getTerms());
+			DLPLiteral new_literal = lits.iterator().next();
+			if(new_literal instanceof DLPAtom) {
+				DLPAtom a = (DLPAtom)new_literal;
+				DLPAtom state = new DLPAtom(name, a.getTerms());
 				return state; 
 			} else {
 				error = "'" + new_literal.toString() + "' is no atom. new_ literals must be facts.";
@@ -329,11 +321,11 @@ public class KnowhowStrategy {
 		if(error != null)
 			LOG.error(error);
 		
-		Set<ELPLiteral> newLits = asl.getLiteralsBySymbol(name);
+		Set<DLPLiteral> newLits = asl.getLiteralsWithName(name);
 		if(newLits.size() == 0) {
 			return null;
 		}
-		return (ELPAtom)newLits.iterator().next();
+		return (DLPAtom)newLits.iterator().next();
 	}
 	
 	public String getInitialIntention() {

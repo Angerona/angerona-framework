@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
-import net.sf.tweety.logics.commons.syntax.StringTerm;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 import org.slf4j.Logger;
@@ -45,9 +45,8 @@ public class KnowhowBuilder {
 		for(KnowhowStatement ks : kb.getStatements()) {
 			boolean closed = true;
 			for(int i=0; i<ks.getTarget().getArity(); ++i) {
-				Constant t = (Constant)ks.getTarget().getTerm(i);
-				
-				if(t.get().startsWith("v_")) {
+				if(ks.getTarget().getTerm(i) instanceof Variable)
+				{
 					closed = false;
 					break;
 				}
@@ -86,13 +85,13 @@ public class KnowhowBuilder {
 		List<SkillParameter> params = new LinkedList<>();
 		// Knowhow Statement
 		Rule r = new Rule();
-		r.addHead(new ELPAtom("khstatement", new Constant(ks.name), 
+		r.setConclusion(new DLPAtom("khstatement", new Constant(ks.name), 
 				new Constant(ks.getTarget().toString())));
 		p.add(r);
 		
 		// Subtargets
 		int i = 1;
-		for(ELPAtom a : ks.getSubTargets()) {
+		for(DLPAtom a : ks.getSubTargets()) {
 			r = new Rule();
 			
 			// if the subgoal is an skill then we have to find the parameter mappings
@@ -100,32 +99,27 @@ public class KnowhowBuilder {
 			if(a.toString().startsWith("s_")) {
 				// search parameters:
 				int c = 0;
-				if(a.getTerms() != null) {
-					for(Term<?> t : a.getTerms()) {
-						SkillParameter sp = new SkillParameter();
-						sp.skillName = a.getName().substring(2);
-						sp.numKnowhowStatement = ks.getId();
-						sp.numSubgoal = i;
-						sp.paramIndex = c++;
-						if(t instanceof StringTerm) {
-							sp.paramValue = ((StringTerm)t).get();
-						}
-						params.add(sp);
-					}
+				for(Term<?> t : a.getArguments()) {
+					SkillParameter sp = new SkillParameter();
+					sp.skillName = a.getName().substring(2);
+					sp.numKnowhowStatement = ks.getId();
+					sp.numSubgoal = i;
+					sp.paramIndex = c++;
+					sp.paramValue = t;
+					params.add(sp);
 				}
-				
-				a = new ELPAtom(a.getName());
+				a = new DLPAtom(a.getName());
 			}
-			r.addHead(new ELPAtom("khsubgoal", new Constant(ks.name), new NumberTerm(i), 
+			r.setConclusion(new DLPAtom("khsubgoal", new Constant(ks.name), new NumberTerm(i), 
 					new Constant(a.toString())));
 			p.add(r);
 			i++;
 		}
 		
 		// Conditions
-		for(ELPAtom a : ks.getConditions()) {
+		for(DLPAtom a : ks.getConditions()) {
 			r = new Rule();
-			r.addHead(new ELPAtom("khcondition", new Constant(ks.name), 
+			r.setConclusion(new DLPAtom("khcondition", new Constant(ks.name), 
 					new Constant(a.toString())));
 			p.add(r);
 		}
@@ -137,9 +131,9 @@ public class KnowhowBuilder {
 		Program p = new Program();
 		for(String atom : literals) {
 			if(atom.startsWith("NEG_")) {
-				p.add(new ELPAtom("nholds", new Constant(atom.substring(4))));
+				p.addFact(new DLPAtom("nholds", new Constant(atom.substring(4))));
 			} else {
-				p.add(new ELPAtom("holds", new Constant(atom)));
+				p.addFact(new DLPAtom("holds", new Constant(atom)));
 			}
 			
 		}
@@ -155,7 +149,7 @@ public class KnowhowBuilder {
 		Program p = new Program();
 		
 		for(String action : atomic_actions) {
-			p.add(new ELPAtom("is_atomic", new Constant("s_"+action)));
+			p.addFact(new DLPAtom("is_atomic", new Constant("s_"+action)));
 		}
 		
 		return p;

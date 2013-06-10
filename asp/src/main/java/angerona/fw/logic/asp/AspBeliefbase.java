@@ -8,6 +8,9 @@ import java.util.List;
 import net.sf.tweety.Formula;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
+import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
+import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
@@ -28,7 +31,13 @@ public class AspBeliefbase extends BaseBeliefbase {
 		return program;
 	}
 	
+	/**
+	 * Changes the ASP program hold by the belief base
+	 * @param pr	Reference to the new program, this MUST not be null.
+	 */
 	public void setProgram(Program pr) {
+		if(pr == null)
+			throw new IllegalArgumentException();
 		program = pr;
 	}
 	
@@ -54,7 +63,13 @@ public class AspBeliefbase extends BaseBeliefbase {
 
 	@Override
 	protected void parseInt(BufferedReader br) throws ParserException, IOException {
-		program = Program.loadFrom(br);
+		ASPParser parser = new ASPParser(br);
+		InstantiateVisitor visitor = new InstantiateVisitor();
+		try {
+			this.program = visitor.visit(parser.Program(), null);
+		} catch (ParseException e) {
+			throw new ParserException(e);
+		}
 	}
 
 	@Override

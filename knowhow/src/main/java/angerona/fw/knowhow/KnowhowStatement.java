@@ -2,7 +2,7 @@ package angerona.fw.knowhow;
 
 import java.util.Vector;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ELPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 
 /**
  * Class represents a KnowhowStatement like the one defined in Thimm, Krümpelmann 2009.
@@ -15,13 +15,13 @@ public class KnowhowStatement {
 	private int id;
 	
 	/** the target of the knowhow represent as an elp atom. */
-	private ELPAtom target;
+	private DLPAtom target;
 	
 	/** sub targets of the knowhow-statement, this might be skills or other knowhow statements */
-	private Vector<ELPAtom> subTargets = new Vector<ELPAtom>();
+	private Vector<DLPAtom> subTargets = new Vector<DLPAtom>();
 	
 	/** conditions which have to be true in the beliefbase of the agent */
-	private Vector<ELPAtom> conditions = new Vector<ELPAtom>();
+	private Vector<DLPAtom> conditions = new Vector<DLPAtom>();
 	
 	/** internal name of the knowhow statement */
 	String name;
@@ -29,7 +29,7 @@ public class KnowhowStatement {
 	/** counter used for automatic name generation */
 	private static int counter = 1;
 	
-	public KnowhowStatement(ELPAtom target, Vector<ELPAtom> subTargets, Vector<ELPAtom> conditions) {
+	public KnowhowStatement(DLPAtom target, Vector<DLPAtom> subTargets, Vector<DLPAtom> conditions) {
 		id = counter;
 		name = "kh_stmt_"+id;
 		++counter;
@@ -44,15 +44,15 @@ public class KnowhowStatement {
 		return id;
 	}
 	
-	public ELPAtom getTarget() {
+	public DLPAtom getTarget() {
 		return target;
 	}
 	
-	public Vector<ELPAtom> getSubTargets() {
+	public Vector<DLPAtom> getSubTargets() {
 		return subTargets;
 	}
 	
-	public Vector<ELPAtom> getConditions() {
+	public Vector<DLPAtom> getConditions() {
 		return conditions;
 	}
 	

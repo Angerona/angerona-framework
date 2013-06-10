@@ -1,6 +1,7 @@
 package angerona.fw.knowhow;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 
@@ -40,13 +42,28 @@ public class KnowhowBase extends BaseAgentComponent {
 	/** a list of skill-parameters helping to map atomic actions in knowhow to map to the correct Action in Angerona */
 	private List<SkillParameter> parameters = new LinkedList<>();
 	
-	/** Default Ctor: Generates the NextActiono program */
+	/** Default Ctor: Generates the NextAction program */
 	public KnowhowBase() {
 		super();
 		
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("programs/NextAction.asp");
-		if(is != null)
-			nextAction = Program.loadFrom(new InputStreamReader(is));
+		String programPath = "programs/NextAction.asp";
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(programPath);
+		if(is != null) {
+			try {
+				nextAction = ASPParser.parseProgram(new InputStreamReader(is));
+			} catch (net.sf.tweety.logicprogramming.asplibrary.parser.ParseException e) {
+				nextAction = null;
+				LOG.error("Cannot load the 'nextAction' program: '{}'", e.getMessage());
+			}
+		} else {
+			LOG.error("Cannot found resource: '{}'", programPath);
+		}
+		try {
+			is.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -55,7 +72,7 @@ public class KnowhowBase extends BaseAgentComponent {
 	 */
 	public KnowhowBase(KnowhowBase other) {
 		super(other);
-		nextAction = (Program)other.nextAction.clone();
+		nextAction = other.nextAction.clone();
 		this.statements = new LinkedList<KnowhowStatement>(other.statements);
 	}
 
