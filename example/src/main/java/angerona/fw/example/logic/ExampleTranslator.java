@@ -1,9 +1,9 @@
 package angerona.fw.example.logic;
 
-import java.util.Set;
-
+import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.translate.aspnlp.AspNlpTranslator;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
@@ -18,6 +18,8 @@ import angerona.fw.logic.BaseTranslator;
  */
 public class ExampleTranslator extends BaseTranslator {
 
+	private static AspNlpTranslator translator = new AspNlpTranslator();
+	
 	@Override
 	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
 		// Translate the knowledge encoded in the answer into a dummy belief base.
@@ -31,7 +33,7 @@ public class ExampleTranslator extends BaseTranslator {
 			} else {
 				return new ExampleBeliefbase();
 			}
-			return translateFOLInt(caller, formula);
+			return translateFOL(caller, formula);
 		}
 		
 		// nothing but answer implemented yet.
@@ -39,9 +41,9 @@ public class ExampleTranslator extends BaseTranslator {
 	}
 
 	@Override
-	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas) {
+	protected BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
 		ExampleBeliefbase reval = new ExampleBeliefbase();
-		reval.fbs.addAll(formulas);
+		reval.fbs.addAll(program.getFacts());
 		return reval;
 	}
 }

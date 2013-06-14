@@ -96,7 +96,8 @@ public abstract class BaseVariable<T> implements Variable<T> {
 	 * an instance of type T. The subclass can indicate errors by throwing 
 	 * the Angerona Exception.
 	 * @param content		The string acting as source for conversion.
-	 * @return				An instance of type T which is also represent by the given string.
+	 * @return				An instance of type T which is represented 
+	 * 						by the given string.
 	 * @throws AngeronaException
 	 */
 	protected abstract T createInstanceFromString(String content) throws AngeronaException;

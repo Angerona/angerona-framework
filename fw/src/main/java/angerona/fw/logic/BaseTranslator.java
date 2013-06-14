@@ -1,8 +1,9 @@
 package angerona.fw.logic;
 
-import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
+import net.sf.tweety.logicprogramming.nlp.syntax.NLPRule;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
@@ -33,7 +34,7 @@ public abstract class BaseTranslator
 			return translatePerceptionInt(preprocessedParameters.getBeliefBase(), 
 					preprocessedParameters.getPerception());
 		} else if(preprocessedParameters.getInformation() != null) {
-			return translateFOLInt(preprocessedParameters.getBeliefBase(), 
+			return translateNLPInt(preprocessedParameters.getBeliefBase(), 
 					preprocessedParameters.getInformation());
 		}
 		return null;
@@ -46,26 +47,6 @@ public abstract class BaseTranslator
 		reval.second = BaseTranslator.class;
 		return reval;
 	}
-	
-	@Override
-	protected TranslatorParameter getEmptyParameter() {
-		return new TranslatorParameter();
-	}
-
-	@Override
-	protected BaseBeliefbase defaultReturnValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	/**
-	 * Sub classes implement this method to translate a Perception into a sub class of
-	 * BaseBeliefbase.
-	 * @param caller	The BaseBeliefbase which acts as caller.
-	 * @param p			The Perception which shall be translated into a BaseBeliefbase.
-	 * @return			A BaseBeliefbase instance containing the knowledge encapsulated in p.
-	 */
-	protected abstract BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p);
 	
 	/**
 	 * Translates the given perception in a belief base only containing the knowledge 
@@ -83,38 +64,87 @@ public abstract class BaseTranslator
 	}
 	
 	/**
-	 * Helper method: Extends the interface to easily handle one FOL-
-	 * Formula instead a set of formulas.
+	 * Sub classes implement this method to translate a Perception into a sub class of
+	 * BaseBeliefbase.
 	 * @param caller	The BaseBeliefbase which acts as caller.
-	 * @param formula	The FolFormula containing the information which shall be translated
-	 * @return	A belief base containing the knowledge encoded in the FOLFormula
+	 * @param p			The Perception which shall be translated into a BaseBeliefbase.
+	 * @return			A BaseBeliefbase instance containing the knowledge encapsulated in p.
 	 */
-	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, FolFormula formula) {
-		Set<FolFormula> set = new HashSet<>();
-		set.add(formula);
-		return translateFOLInt(caller, set);
+	protected abstract BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p);
+	
+	/**
+	 * Translates the given FOL formula in a BaseBeliefbase that only contains the knowledge
+	 * encoded in the formula. 
+	 * @param caller		The BaseBeliefbase which acts as caller.
+	 * @param formula		A FOL formula representing the knowledge
+	 * @return				A belief base containing the knowledge encoded in the formula.
+	 */
+	public BaseBeliefbase translateFOL(BaseBeliefbase caller, FolFormula formula) {
+		NLPProgram program = new NLPProgram();
+		program.add(new NLPRule(formula));
+		return translateNLP(caller, program);
 	}
 	
 	/**
-	 * Sub classes implement this method to translate a set of formulas into the
-	 * belief base type represented by the translator.
-	 * @param caller	The BaseBeliefbase which acts as caller.
-	 * @param formulas	A set of FolFormula containing the information which shall be translated.
-	 * @return A BaseBeliefbase containing the knowledge encoded in the set of FolFormula.
-	 */
-	protected abstract BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas);
-	
-	/**
-	 * Translates the given set of FOL-Formulas in a BaseBeliefbase only containing the knowledge
-	 * encoded in the set of FolFormula.
-	 * @param 	caller		The BaseBeliefbase which acts as caller.
-	 * @param 	formulas	Reference to the set of formulas
-	 * @return	A BaseBeliefbase containing the information encoded in the set of FolFormula.
+	 * Translates the given set of FOL formula in a BaseBeliefbase that only contains the knowledge
+	 * encoded in the set.
+	 * @param caller		The BaseBeliefbase which acts as caller.
+	 * @param formulas		A set of FOL formulas representing the knowledge
+	 * @return				A belief base containing the knowledge encoded in the set.
 	 */
 	public BaseBeliefbase translateFOL(BaseBeliefbase caller, Set<FolFormula> formulas) {
+		NLPProgram program = new NLPProgram();
+		for(FolFormula f : formulas) {
+			program.add(new NLPRule(f));
+		}
+		return translateNLP(caller, program);
+	}
+	
+	/**
+	 * Translates the given NLP-rule in a BaseBeliefbase that only contains the knowledge
+	 * encoded in the rule.
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @param rule		A NLP rule containing the information which shall be translated
+	 * @return	A belief base containing the knowledge encoded in the rule.
+	 */
+	public BaseBeliefbase translateNLP(BaseBeliefbase caller, NLPRule rule) {
+		NLPProgram program = new NLPProgram();
+		program.add(rule);
+		return translateNLP(caller, program);
+	}
+	
+	/**
+	 * Translates the given NLP-program in a BaseBeliefbase that only contains the knowledge
+	 * encoded in the Program.
+	 * @param 	caller		The BaseBeliefbase which acts as caller.
+	 * @param 	formulas	Reference to the set of formulas
+	 * @return	A BaseBeliefbase containing the information encoded in the NLP-program.
+	 */
+	public BaseBeliefbase translateNLP(BaseBeliefbase caller, NLPProgram program) {
 		caller.getStack().pushOperator(this);
-		BaseBeliefbase reval = translateFOLInt(caller, formulas);
+		BaseBeliefbase reval = translateNLPInt(caller, program);
 		caller.getStack().popOperator();
 		return reval;
+	}
+	
+	/**
+	 * Sub classes have to implement this method to translate a NLP program into the
+	 * belief base type represented by the translator.
+	 * @param caller	The BaseBeliefbase which acts as caller.
+	 * @param program	A NLP-program containing the information which shall be translated.
+	 * @return A BaseBeliefbase containing the knowledge encoded in the set of FolFormula.
+	 */
+	protected abstract BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program);
+	
+	
+	@Override
+	protected TranslatorParameter getEmptyParameter() {
+		return new TranslatorParameter();
+	}
+
+	@Override
+	protected BaseBeliefbase defaultReturnValue() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

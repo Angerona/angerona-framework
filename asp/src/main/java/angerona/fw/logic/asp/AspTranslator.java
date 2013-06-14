@@ -3,13 +3,10 @@ package angerona.fw.logic.asp;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.translate.aspnlp.AspNlpTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +30,8 @@ public class AspTranslator extends BaseTranslator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(AspTranslator.class);
 	
+	private static AspNlpTranslator translator = new AspNlpTranslator();
+	
 	@Override
 	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
@@ -42,7 +41,7 @@ public class AspTranslator extends BaseTranslator {
 			Answer answer = (Answer)p;
 			AngeronaAnswer aa = answer.getAnswer();
 			if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
-				return translateFOLInt(caller, aa.getAnswers());
+				return translateFOL(caller, aa.getAnswers());
 			} else {
 				FolFormula knowledge = answer.getRegarding();
 				if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
@@ -60,49 +59,13 @@ public class AspTranslator extends BaseTranslator {
 			formulas.add(q.getQuestion());
 		}
 
-		return translateFOLInt(caller, formulas);
+		return translateFOL(caller, formulas);
 	}
 
 	@Override
-	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas) {
+	protected BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
 		AspBeliefbase reval = new AspBeliefbase();
-		reval.setProgram(translate(formulas));
+		reval.setProgram(translator.toASP(program));
 		return reval;
-	}
-
-	private DLPLiteral createLiteral(FolFormula ff, boolean truth)
-	{
-		DLPLiteral a = null;
-		if(truth)
-			a = new DLPAtom(ff.toString());
-		else
-			a = new DLPNeg(new DLPAtom(ff.toString().substring(1)));
-			
-		return a;
-	}
-	
-
-	private Program translate(Set<FolFormula> formulas) {
-		Program newInfo = new Program();
-		for(FolFormula ff : formulas) {
-			Rule r = new Rule();
-			
-			if(ff instanceof net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom) {
-				DLPLiteral newAtom = createLiteral(ff, true);
-				r.setConclusion(newAtom);
-			} else if(ff instanceof Negation) {
-				DLPLiteral newAtom = createLiteral(ff, false);
-				r.setConclusion(newAtom);
-				
-			} else {
-				continue;
-			}
-			if(r.isSafe())
-				newInfo.add(r);
-			else
-				LOG.warn("Translate skips the unsafe rule: '{}', might produce strange behavior.", r.toString());
-				
-		}
-		return newInfo;
 	}
 }

@@ -3,13 +3,15 @@ package angerona.fw.logic.conditional;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
@@ -21,7 +23,7 @@ import angerona.fw.logic.BaseTranslator;
 
 /**
  * Default translator for conditional belief bases
- * @author Sebastian Homann, Pia Wierzoch
+ * @author Sebastian Homann, Pia Wierzoch, Tim Janus (modifications)
  */
 public class ConditionalTranslator extends BaseTranslator {
 	
@@ -60,7 +62,7 @@ public class ConditionalTranslator extends BaseTranslator {
 			formulas.add(q.getQuestion());
 		}
 
-		return translateFOLInt(caller, formulas);
+		return translateFOL(caller, formulas);
 	}
 
 	/**
@@ -68,10 +70,11 @@ public class ConditionalTranslator extends BaseTranslator {
 	 * Each formula is interpreted as one propositional literal.
 	 */
 	@Override
-	protected BaseBeliefbase translateFOLInt(BaseBeliefbase caller, Set<FolFormula> formulas) {
+	protected BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
 		
-		for(FolFormula formula : formulas) {
+		
+		for(FolFormula formula : program.getFacts()) {
 			if(formula instanceof FOLAtom) {
 				FOLAtom atom = (FOLAtom) formula;
 				Proposition p = new Proposition(atom.getPredicate().getName());
@@ -88,6 +91,7 @@ public class ConditionalTranslator extends BaseTranslator {
 				}
 			}
 		}
+		
 		return reval;
 	}
 
