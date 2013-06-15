@@ -187,7 +187,7 @@ public class OperatorProvider {
 		if(op == null)
 			throw new ClassNotFoundException(clsNameAndParams);
 		OperatorCallWrapper ocw = new OperatorCallWrapper(op);
-		ocw.setSettings(parameters);
+		ocw.addSettings(parameters);
 		return new Pair<String, OperatorCallWrapper>(clsNameAndParams, ocw);
 	}
 	

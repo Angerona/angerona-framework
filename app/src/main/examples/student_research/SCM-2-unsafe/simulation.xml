@@ -34,7 +34,7 @@
       	
       	
       	
-        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <agent-config source="config/agents/knowhow_agent_unsafe.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
       	<capability>Inform</capability>

@@ -1,7 +1,5 @@
 package angerona.fw.logic;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,7 +47,6 @@ public class ScriptingComponent extends BaseAgentComponent {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Intention> getIntentions() {
 		return new LinkedList<Intention>(actions);
 	}

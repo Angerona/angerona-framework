@@ -1,10 +1,12 @@
 package angerona.fw.operators.parameter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.AttributeNotFoundException;
 
+import angerona.fw.Agent;
 import angerona.fw.error.ConversionException;
 import angerona.fw.internal.Entity;
 import angerona.fw.operators.GenericOperatorParameter;
@@ -43,12 +45,39 @@ public abstract class OperatorParameterAdapter implements
 		getReporter().report(message, attachment);
 	}
 	
+	@Override
+	public void addSettings(Map<String, String> settings)
+	{
+		this.settings.putAll(settings);
+	}
+	
+	@Override
 	public String getSetting(String name, String def) {
 		if(!this.settings.containsKey(name)) {
 			return def;
 		} else {
 			return this.settings.get(name);
 		}
+	}
+	
+	@Override
+	public void setSettings(Map<String, String> settings) {
+		this.settings = settings;
+	}
+
+	@Override
+	public Map<String, String> getSettings() {
+		return Collections.unmodifiableMap(settings);
+	}
+
+	@Override
+	public String putSetting(String name, String value) {
+		return this.settings.put(name, value);
+	}
+
+	@Override
+	public String removeSetting(String name) {
+		return this.settings.remove(name);
 	}
 	
 	/**

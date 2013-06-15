@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import angerona.fw.SettingsStorage;
 import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.util.Pair;
 
@@ -13,7 +14,8 @@ import angerona.fw.util.Pair;
  *
  * @param <T>	The type of the wrapped Operator
  */
-public class OperatorCallWrapper implements BaseOperator {
+public class OperatorCallWrapper 
+	implements BaseOperator, SettingsStorage {
 	private BaseOperator operator;
 	
 	private Map<String, String> settings = new HashMap<>();
@@ -35,24 +37,19 @@ public class OperatorCallWrapper implements BaseOperator {
 	/**
 	 * @return An unmodifiable map of settings for the operator.
 	 */
+	@Override
 	public Map<String, String> getSettings() {
 		return Collections.unmodifiableMap(settings);
 	}
 	
-	public void setSettings(Map<String, String> settings) {
-		this.settings = settings;
+	@Override
+	public String putSetting(String name, String value) {
+		return settings.put(name, value);
 	}
 	
-	public String putSetting(String name, String setting) {
-		return settings.put(name, setting);
-	}
-	
+	@Override
 	public String removeSetting(String name) {
 		return settings.remove(name);
-	}
-	
-	public void clearSettings() {
-		settings.clear();
 	}
 
 	@Override
@@ -68,14 +65,32 @@ public class OperatorCallWrapper implements BaseOperator {
 	@Override
 	public Object process(GenericOperatorParameter gop) {
 		for(String key : settings.keySet()) {
-			gop.setParameter("s_"+key, settings.get(key));
+			gop.setSetting(key, settings.get(key));
 		}
 		return operator.process(gop);
 	}
 	
 	public Object process(OperatorParameter castParam) {
-		//castParam.setSettings(settings);
+		for(String key : settings.keySet()) {
+			castParam.putSetting(key, settings.get(key));
+		}
 		return operator.process(castParam);
+	}
+
+	@Override
+	public void addSettings(Map<String, String> settings) {
+		this.settings.putAll(settings);
+	}
+
+	@Override
+	public String getSetting(String name, String def) {
+		String reval = settings.get(name);
+		return reval == null ? def : reval;
+	}
+
+	@Override
+	public void setSettings(Map<String, String> settings) {
+		this.settings = settings;
 	}
 	
 }

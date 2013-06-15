@@ -3,6 +3,7 @@ package angerona.fw.operators.parameter;
 import javax.management.AttributeNotFoundException;
 
 import angerona.fw.OperatorCaller;
+import angerona.fw.SettingsStorage;
 import angerona.fw.error.ConversionException;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.Operator;
@@ -17,7 +18,8 @@ import angerona.fw.operators.Operator;
  * @see Operator
  * @author Tim Janus
  */
-public interface OperatorParameter extends OperatorCaller {
+public interface OperatorParameter extends OperatorCaller, SettingsStorage {
+	
 	/** 
 	 * This method converts the given GenericOperatorParameter into a more
 	 * user friendly version which has type information.
