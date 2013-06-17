@@ -7,6 +7,7 @@ import angerona.fw.AngeronaAtom;
 import angerona.fw.error.ConversionException;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.util.Utility;
 
 /**
  * This class represents input-parameter for operators which evaluate 
@@ -87,9 +88,9 @@ public class EvaluateParameter extends OperatorPluginParameter {
 		
 		EvaluateParameter co = (EvaluateParameter)other;
 		
-		if(!super.equals(co))							return false;
-		if(!this.information.equals(co.information))	return false;
-		if(!this.beliefs.equals(co.beliefs))			return false;
+		if(!super.equals(co))								return false;
+		if(!Utility.equals(information, co.information))	return false;
+		if(!Utility.equals(beliefs, co.beliefs))			return false;
 		
 		return true;
 	}

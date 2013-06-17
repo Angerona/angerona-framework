@@ -1,5 +1,6 @@
 package angerona.fw.example.operators;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -115,5 +116,34 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		}
 		EvaluateParameter param = new EvaluateParameter(agent,  beliefs, action);
 		violates = violates.combine(process(param));
+	}
+
+	@Override
+	protected ViolatesResult onCheck(Agent agent, Beliefs beliefs) {
+		// only apply violates if secrecy knowledge is saved in agent.
+		SecrecyKnowledge conf = agent.getComponent(SecrecyKnowledge.class);
+		if(conf == null)
+			return new ViolatesResult();
+
+		List<Pair<Secret, Double>> pairs = new LinkedList<>();
+		Map<String, Set<FolFormula>> viewInferences = new HashMap<>();
+		for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
+			for (Secret s : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
+				Set<FolFormula> infere = null;
+				if(viewInferences.containsKey(s.getSubjectName())) {
+					infere = viewInferences.get(s.getSubjectName());
+				} else {
+					infere = beliefs.getViewKnowledge().get(s.getSubjectName()).infere(reasoningOperator.first, 
+							reasoningOperator.second);
+					viewInferences.put(s.getSubjectName(), infere);
+				}
+				
+				if(infere.contains(s.getInformation())) {
+					pairs.add(new Pair<>(s, new Double(1.0)));
+				}
+			}
+		}
+		
+		return new ViolatesResult(pairs);
 	}
 }

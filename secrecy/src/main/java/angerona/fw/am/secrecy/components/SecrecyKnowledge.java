@@ -53,7 +53,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	 * This map is used for optimization purposes. It contains Sets of secrets
 	 * as values and it keys are pairs describing the used Reasoner (ClassName,
 	 * ParamterMap). This map made it easy to use a minimal amount of infer
-	 * calls to because it defines a sort on the secrets based on the used
+	 * calls because it defines a sort on the secrets based on the used
 	 * reasoner.
 	 */
 	private Map<Pair<String, Map<String, String>>, Set<Secret>> optimizationMap = 
@@ -191,16 +191,9 @@ public class SecrecyKnowledge extends BaseAgentComponent
 				addSecret(s);
 			}
 
-			/* 
-			 *  Check for startup inconsistency:
-			beliefbaseChanged(getAgent().getBeliefs().getWorldKnowledge(),
-					AgentListener.WORLD);
-			for (String agName : getAgent().getBeliefs().getViewKnowledge()
-					.keySet()) {
-				beliefbaseChanged(getAgent().getBeliefs().getViewKnowledge()
-						.get(agName), agName);
-			}
-			*/
+			
+			//  Check for startup inconsistency:
+			this.eventHandler.updateBeliefs(null, getAgent().getBeliefs(), getAgent().getBeliefs());
 		}
 	}
 
@@ -245,13 +238,21 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	}
 
 	/**
-	 * Helper method:
+	 * Removes the given secret from the optimization map. If this is the last
+	 * secret using the given belief operator the key containing belief operator
+	 * and secrets is also removed.
 	 * 
 	 * @param secret
 	 * @param key
+	 * 
+	 * @throw {@link RuntimeException} if something went wrong internally causing
+	 * 			the OptimizationMap to lost it sychronism.
 	 */
 	private void removeFromMap(Secret secret, Pair<String, Map<String, String>> key) {
 		Set<Secret> secrets = optimizationMap.get(key);
+		
+		// Check if the set of secrets exists, if not something went wrong in
+		// the internals of this class instance
 		if (secrets == null) {
 			String error = "Something went wrong in event hierarchy. The searched secret key is not found in keyset of targetsByReasoningOperator map.\n";
 			error += "\nKey: " + key.toString() + " - " + key.hashCode();
@@ -261,13 +262,17 @@ public class SecrecyKnowledge extends BaseAgentComponent
 						+ p.equals(key) + "\n";
 			throw new RuntimeException(error);
 		}
+		
+		// remove the secret from the the value set of the optimization map
 		secrets.remove(secret);
-		LOG.info("Removed secret '{}' from Confidential Knowledge of '{}'", secret,
+		LOG.info("Removed secret '{}' from SecrecyKnowledge of '{}'", secret,
 				getAgent().getName());
+		
+		// Remove key from optimization map if the linked set of secrets is empty now
 		if (secrets.size() == 0) {
 			optimizationMap.remove(key);
-			LOG.info(
-					"Removed Key Pair '{}' from targetsByReasoningOperatorsMap of Agent '{}'",
+			LOG.trace(
+					"Removed Key Pair '{}' from optimization map of SecrecyKnowlege of Agent '{}'",
 					secret, getAgent().getName());
 		}
 	}
@@ -300,10 +305,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	public class DefaultHandler extends AgentAdapter {
 		@Override
 		public void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs) {
-			if(percept == null)
-				return;
-			
-			EvaluateParameter param = new EvaluateParameter(getAgent(), oldBeliefs, percept);
+			EvaluateParameter param = new EvaluateParameter(getAgent(), newBeliefs, percept);
 			OperatorCallWrapper op = getAgent().getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
 			ViolatesResult res = (ViolatesResult) op.process(param);
 			

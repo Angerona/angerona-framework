@@ -58,7 +58,7 @@ public class Beliefs implements Cloneable
 	}
 	
 	@Override
-	public Object clone() {
+	public Beliefs clone() {
 		return new Beliefs(this);
 	}
 	

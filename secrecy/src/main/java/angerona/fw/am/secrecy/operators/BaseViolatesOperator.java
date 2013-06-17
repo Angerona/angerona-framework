@@ -77,6 +77,8 @@ public abstract class BaseViolatesOperator
 			reval = onPerception(p, param);
 		} else if(atom instanceof PlanElement) {
 			reval = onPlan((PlanElement)atom, param);
+		} else if(atom == null) {
+			reval = onCheck(param.getAgent(), param.getBeliefs());
 		}
 		
 		// return it and save it for later use in a cache:
@@ -102,6 +104,14 @@ public abstract class BaseViolatesOperator
 	 * @return			A ViolatesResult structure containing information about secrecy violation 
 	 */
 	protected abstract ViolatesResult onPlan(PlanElement plan, EvaluateParameter param);
+	
+	/**
+	 * TODO
+	 * @param agent
+	 * @param beliefs
+	 * @return
+	 */
+	protected abstract ViolatesResult onCheck(Agent agent, Beliefs beliefs);
 	
 	/**
 	 * Is called if the given agent wants to perform the given action in its mental state.

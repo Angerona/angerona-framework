@@ -149,7 +149,9 @@ public abstract class ListViewColored<T extends Entity>
 			public void mouseClicked(MouseEvent evt) {
 				if(evt.getClickCount() >= 2) {
 					int index = actualLiterals.locationToIndex(evt.getPoint());
-					onElementClicked(index, actualLiterals.getModel().getElementAt(index).status);
+					if(index != -1) {
+						onElementClicked(index, actualLiterals.getModel().getElementAt(index).status);
+					}
 				}
 			}
 		});

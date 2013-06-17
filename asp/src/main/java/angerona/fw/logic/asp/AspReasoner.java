@@ -231,7 +231,7 @@ public class AspReasoner extends BaseReasoner {
 		// Step Two: Filter out formulas without proper frequency
 		Set<FolFormula> toRemove = new HashSet<>();
 		for(FolFormula a : reval) {
-			if((frequencies.get(a) / (double) answerSetsTrans.size() ) < dValue)
+			if((frequencies.get(a) / (double) answerSetsTrans.size() ) <= dValue)
 			{
 				toRemove.add(a);
 			}
