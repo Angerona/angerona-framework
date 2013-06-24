@@ -196,12 +196,31 @@
             <goals>
               <goal>exec</goal>
             </goals>
+            <configuration>
+                <executable>${permission.script}</executable>
+                <workingDirectory>${basedir}/target</workingDirectory>
+            </configuration>
+          </execution>
+          
+          <execution>
+              <id>Start Application</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+             <configuration>
+                <executable>java</executable>
+                <workingDirectory>${basedir}/target</workingDirectory>
+                <arguments>
+                <argument>-classpath</argument>
+                <!-- automatically creates the classpath using all project dependencies,
+                     also adding the project build directory -->
+                <classpath/>
+                <argument>angerona.fw.app.GUIApplication</argument>
+                </arguments>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <executable>${permission.script}</executable>
-          <workingDirectory>${basedir}/target</workingDirectory>
-        </configuration>
+        
       </plugin>
       
       <plugin>
