@@ -32,7 +32,7 @@ public class PluginInstantiatorTest {
 		
 	}
 	
-	private class MockPluginA extends AngeronaPluginAdapter {
+	private static class MockPluginA extends AngeronaPluginAdapter {
 		@Override
 		public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
 			List<Class<? extends AgentComponent>> reval = new LinkedList<>();

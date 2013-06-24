@@ -7,6 +7,7 @@ import org.simpleframework.xml.Element;
 import angerona.fw.Agent;
 import angerona.fw.comm.SpeechAct;
 import angerona.fw.reflection.FolFormulaVariable;
+import angerona.fw.util.Utility;
 
 /**
  * Implementation of the Speech-Act: Revision.
@@ -42,6 +43,24 @@ public class Revision extends SpeechAct {
 	/** @return formula representing the question of the query */
 	public FolFormula getProposition() {
 		return proposition.getInstance(getAgent() == null ? null : getAgent().getContext());
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Revision)) {
+			return false;
+		}
+		
+		if(!super.equals(other)) 
+			return false;
+		
+		Revision or = (Revision)other;
+		return Utility.equals(proposition, or.proposition);
+	}
+	
+	@Override
+	public int hashCode() {
+		return (super.hashCode() + proposition.hashCode()) * 17;
 	}
 	
 	@Override 

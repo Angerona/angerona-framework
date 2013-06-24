@@ -403,7 +403,7 @@ public abstract class BaseBeliefbase
 	 * This implementation does nothing it can be used as mock object for tests etc.
 	 * @author Tim Janus
 	 */
-	private class EmptyStackImplementation implements OperatorStack {
+	private static class EmptyStackImplementation implements OperatorStack {
 
 		@Override
 		public void pushOperator(BaseOperator op) {

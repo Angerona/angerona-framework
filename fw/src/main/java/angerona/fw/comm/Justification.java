@@ -11,6 +11,7 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.util.Utility;
 
 /**
  * Implementation of speech act "Justification". Agent A tells another agent the reason why he
@@ -88,6 +89,28 @@ public class Justification extends SpeechAct {
 	
 	public AnswerValue getAnswerValue() {
 		return answerValue;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(! (obj instanceof Justification))
+			return false;
+		
+		if(! super.equals(obj)) 
+			return false;
+		
+		Justification oj = (Justification)obj;
+		
+		return 	answerValue == oj.answerValue &&
+				Utility.equals(proposition, oj.proposition) &&
+				Utility.equals(justifications, oj.justifications);
+				
+	}
+	
+	@Override
+	public int hashCode() {
+		return ( super.hashCode() + answerValue.hashCode() + 
+				proposition.hashCode() + justifications.hashCode()) * 7;
 	}
 	
 	@Override

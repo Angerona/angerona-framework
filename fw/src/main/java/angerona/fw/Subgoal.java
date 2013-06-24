@@ -162,4 +162,9 @@ public class Subgoal extends Intention implements Cloneable {
 				fulfillsDesire.equals(sg.fulfillsDesire) &&
 				stacks.equals(sg.stacks);
 	}
+	
+	@Override
+	public int hashCode() {
+		return (name.hashCode() + fulfillsDesire.hashCode() + stacks.hashCode()) * 3;
+	}
 }

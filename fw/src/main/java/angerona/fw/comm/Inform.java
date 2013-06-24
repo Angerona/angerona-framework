@@ -4,11 +4,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
+import angerona.fw.util.Utility;
 
 /**
  * Implementation of the speech act "Inform"
@@ -65,5 +67,21 @@ public class Inform extends SpeechAct
 	@Override 
 	public String toString() {
 		return "< " + this.getSenderId() + " inform " + this.getReceiverId() + " " + sentences + " >";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(! (obj instanceof Inform))
+			return false;
+		
+		if(!super.equals(obj))
+			return false;
+		
+		return Utility.equals(sentences, ((Inform)obj).sentences);
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() + sentences.hashCode() * 5;
 	}
 }

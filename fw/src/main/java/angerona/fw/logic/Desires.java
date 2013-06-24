@@ -97,7 +97,7 @@ public class Desires extends BaseAgentComponent {
 	}
 
 	@Override
-	public Object clone() {
+	public Desires clone() {
 		return new Desires(this);
 	}
 }

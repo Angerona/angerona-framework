@@ -116,6 +116,12 @@ public class AngeronaAnswer {
 	}
 	
 	@Override
+	public int hashCode() {
+		return (answerValue.hashCode() + 
+				(answers == null ? 0 : answers.hashCode())) * 5;
+	}
+	
+	@Override
 	public String toString() {
 		if(answerValue == AnswerValue.AV_COMPLEX) {
 			return answers.toString();

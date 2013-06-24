@@ -65,6 +65,7 @@ public class Action
 		return ContextFactory.createContext(this);
 	}
 	//************Begin Daniel's changes*************//
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(!(obj instanceof Action)) 
@@ -82,6 +83,11 @@ public class Action
 	}
 	//************End Daniel's changes*************//
 
+	@Override
+	public int hashCode() {
+		return (sender.hashCode() + receiver.hashCode()) * 29;
+	}
+	
 	@Override
 	public void onSubgoalFinished(Intention subgoal) {
 		super.parent.onSubgoalFinished(this);

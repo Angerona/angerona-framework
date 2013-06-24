@@ -22,7 +22,7 @@ import angerona.fw.report.Reporter;
 import angerona.fw.util.Pair;
 
 public class OperationTest {
-	private class MockVisitor implements OperatorStack, OperatorCaller {
+	private static class MockVisitor implements OperatorStack, OperatorCaller {
 
 		private Stack<BaseOperator> stack = new Stack<>();
 		

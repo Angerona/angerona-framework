@@ -152,7 +152,13 @@ public class ReportEntry implements Cloneable {
 		return false;
 	}
 	
-	public class Scope {
+	@Override
+	public int hashCode() {
+		return simulationTick + realTime.hashCode() + 
+				(attachment == null ? 0 : attachment.hashCode()) * 53;
+	}
+	
+	public static class Scope {
 		private OperatorStack visitor;
 		
 		private Agent agent;

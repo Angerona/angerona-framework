@@ -32,8 +32,10 @@ public class ConditionalTest {
 		
 		String jarPath = "/angerona/fw/reflection/ConditionalTest.xml";
 		InputStream stream = getClass().getResourceAsStream(jarPath);
-		if(stream == null)
+		if(stream == null) {
 			LOG.warn("Cannot find: '{}'", jarPath);
+			return;
+		}
 		conditional = SerializeHelper.loadXml(Conditional.class, new InputStreamReader(stream));
 	}
 	

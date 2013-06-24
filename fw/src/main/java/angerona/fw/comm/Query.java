@@ -6,6 +6,7 @@ import org.simpleframework.xml.Element;
 
 import angerona.fw.Agent;
 import angerona.fw.reflection.FolFormulaVariable;
+import angerona.fw.util.Utility;
 
 /**
  * Implementation of the Speech-Act: Query. 
@@ -44,6 +45,23 @@ public class Query extends SpeechAct {
 	/** @return formula representing the question of the query */
 	public FolFormula getQuestion() {
 		return question.getInstance(getAgent() == null ? null : getAgent().getContext());
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Query)) 
+			return false;
+		
+		if(!super.equals(other))
+			return false;
+		
+		Query oq = (Query)other;
+		return Utility.equals(question, oq.question);
+	}
+	
+	@Override
+	public int hashCode() {
+		return (super.hashCode() + question.hashCode()) * 11;
 	}
 	
 	@Override 

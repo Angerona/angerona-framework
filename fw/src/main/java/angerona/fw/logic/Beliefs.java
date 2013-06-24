@@ -64,12 +64,13 @@ public class Beliefs implements Cloneable
 	
 	@Override
 	public String toString() {
-		String reval = "World:\n" + worldKnowledge.toString() + "\n\n";
-		reval += "Views:\n";
+		StringBuffer buf = new StringBuffer();
+		buf.append("World:\n" + worldKnowledge.toString() + "\n\n");
+		buf.append("Views:\n");
 		for(String name : viewKnowledge.keySet()) {
-			reval += name + "\n" + viewKnowledge.get(name).toString() +"\n";
+			buf.append(name + "\n" + viewKnowledge.get(name).toString() +"\n");
 		}
-		return reval;
+		return buf.toString();
 	}
 	
 	@Override

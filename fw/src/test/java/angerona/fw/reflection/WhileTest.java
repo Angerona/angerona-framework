@@ -29,8 +29,10 @@ public class WhileTest {
 		
 		String jarPath = "/angerona/fw/reflection/WhileTest.xml";
 		InputStream stream = getClass().getResourceAsStream(jarPath);
-		if(stream == null)
+		if(stream == null) {
 			LOG.warn("Cannot find: '{}'", jarPath);
+			return ;
+		}
 		loop = SerializeHelper.loadXml(While.class, new InputStreamReader(stream));
 	}
 	

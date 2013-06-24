@@ -34,8 +34,10 @@ public class AssignTest {
 	public void testDeserialize() {
 		String jarPath = "/angerona/fw/reflection/AssignTest.xml";
 		InputStream stream = getClass().getResourceAsStream(jarPath);
-		if(stream == null)
+		if(stream == null) {
 			LOG.warn("Cannot find: '{}'", jarPath);
+			return;
+		}
 		Assign assign = SerializeHelper.loadXml(Assign.class, new InputStreamReader(stream));
 		
 		doStringTest(assign, new Context());
@@ -60,10 +62,10 @@ public class AssignTest {
 		
 		// creation of a list of triples for different types, start with build in types:
 		List<Triple> lst = new LinkedList<>();
-		lst.add(new Triple(Integer.class, "10", new Integer(10)));
+		lst.add(new Triple(Integer.class, "10", Integer.valueOf(10)));
 		lst.add(new Triple(Float.class, "2.25f", new Float(2.25f)));
 		lst.add(new Triple(Double.class, "1.5", new Double(1.5)));
-		lst.add(new Triple(Boolean.class, "TRUE", new Boolean(true)));
+		lst.add(new Triple(Boolean.class, "TRUE", Boolean.valueOf(true)));
 		
 		// test the query as complex type:
 		lst.add(new Triple(Query.class, 

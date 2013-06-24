@@ -7,6 +7,7 @@ import angerona.fw.Agent;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.reflection.Context;
+import angerona.fw.util.Utility;
 
 /**
  * Implementation of the speech act "Answer".
@@ -68,21 +69,24 @@ public class Answer extends SpeechAct {
 	@Override 
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof Answer)
-		{
-			Answer ans = (Answer) obj;
-			if(!super.equals(obj)) {
-				return false;
-			}
-			if(!this.regarding.equals(ans.getRegarding())) {
-				return false;
-			}
-			if(!this.answer.equals(ans.getAnswer())) {
-				return false;
-			}
-			return true;
+		if(! (obj instanceof Answer))	return false;
+	
+		Answer ans = (Answer) obj;
+		if(!super.equals(obj)) 	return false;
+		
+		if(!Utility.equals(regarding, ans.regarding)) {
+			return false;
 		}
-		return false;
+		if(!Utility.equals(answer, ans.answer)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return (super.hashCode() + regarding.hashCode() + answer.hashCode()) * 3;
 	}
 	
 	@Override 

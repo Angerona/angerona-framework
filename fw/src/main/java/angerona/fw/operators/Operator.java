@@ -84,7 +84,6 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 			prepare(preparedParams);
 			reval = processInternal(preparedParams);
 		} catch(AttributeNotFoundException | ConversionException ex) {
-			reval = defaultReturnValue();
 			LOG.error("Operator '{}' is not able to fetch the parameters: '{}'",
 					this.getClass().getName(), ex.getMessage());
 			throw new RuntimeException();

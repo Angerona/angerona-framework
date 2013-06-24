@@ -33,7 +33,8 @@ public abstract class BaseAgentComponent
 implements 	AgentComponent,
 			Reporter,
 			AgentListener,
-			ReportPoster {
+			ReportPoster,
+			Cloneable{
 	
 	/** the unique id of the parent of the component (the agent) */
 	private Long parentId;
@@ -61,8 +62,8 @@ implements 	AgentComponent,
 	
 	/** Copy Ctor: Creates the component by copying the component from the given other component */
 	public BaseAgentComponent(BaseAgentComponent other) {
-		this.id = new Long(other.id);
-		this.parentId = other.parentId != null ? new Long(other.parentId) : null;
+		this.id = other.id;
+		this.parentId = other.parentId != null ? other.parentId : null;
 		copyDepth = other.copyDepth + 1;
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}

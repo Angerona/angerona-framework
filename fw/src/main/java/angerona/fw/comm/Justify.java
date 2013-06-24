@@ -5,6 +5,7 @@ import org.simpleframework.xml.Element;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import angerona.fw.Agent;
 import angerona.fw.logic.AnswerValue;
+import angerona.fw.util.Utility;
 
 /**
  * Implementation of the SpeechAct "Justify". An agent A asks another agent B
@@ -68,6 +69,24 @@ public class Justify extends SpeechAct {
 	
 	public AnswerValue getAnswerValue() {
 		return answerValue;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Justify))
+			return false;
+		
+		if(!super.equals(other)) 
+			return false;
+		
+		Justify oj = (Justify)other;
+		return	answerValue == oj.answerValue &&
+				Utility.equals(propositon, oj.propositon);
+	}
+	
+	@Override
+	public int hashCode() {
+		return (super.hashCode() + answerValue.hashCode() + propositon.hashCode())*19;
 	}
 	
 	@Override

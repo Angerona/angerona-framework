@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -194,8 +195,8 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		childrenIds.add(world.getGUID());
 		world.setParent(id);
 		world.addPropertyChangeListener(this);
-		for (String name : views.keySet()) {
-			BaseBeliefbase bb = views.get(name);
+		for (Entry<String, BaseBeliefbase> ent : views.entrySet()) {
+			BaseBeliefbase bb = ent.getValue();
 			childrenIds.add(bb.getGUID());
 			bb.setParent(id);
 			bb.addPropertyChangeListener(this);
@@ -218,7 +219,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 */
 	public void create(AgentInstance ai, SimulationConfiguration config)
 			throws AgentInstantiationException {
-		this.id = new Long(IdGenerator.generate(this));
+		this.id = Long.valueOf(IdGenerator.generate(this));
 		context = new Context();
 		this.reporter = new AngeronaReporter(this, this);
 
@@ -279,16 +280,16 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 			}
 			// parse the content of every view belief base:
 			Map<String, BaseBeliefbase> views = getBeliefs().getViewKnowledge();
-			for (String key : views.keySet()) {
-				BaseBeliefbase actView = views.get(key);
+			for (Entry<String, BaseBeliefbase> ent : views.entrySet()) {
+				BaseBeliefbase actView = ent.getValue();
 				File viewFile = new File(workingPath
-						+ ai.getBeliefbaseName() + "_" + key + "."
+						+ ai.getBeliefbaseName() + "_" + ent.getKey() + "."
 						+ actView.getFileEnding());
 				if (viewFile.exists()) {
 					actView.parse(new BufferedReader(new FileReader(viewFile)));
 				} else {
 					LOG.warn("No belief base file for view of '{}'->'{}'.",
-							ai.getName(), key);
+							ai.getName(), ent.getKey());
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -414,7 +415,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 
 		boolean reval = true;
 		for (AgentComponent loopEa : customComponents) {
-			if (component.getClass().equals(loopEa)) {
+			if (component.getClass().equals(loopEa.getClass())) {
 				reval = false;
 				break;
 			}
@@ -579,8 +580,8 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 			Map<String, BaseBeliefbase> views = beliefs.getViewKnowledge();
 			Context vc = new Context();
 			context.attachContext("views", vc);
-			for (String key : views.keySet()) {
-				vc.set(key, views.get(key));
+			for (Entry<String, BaseBeliefbase> ent : views.entrySet()) {
+				vc.set(ent.getKey(), ent.getValue());
 			}
 		}
 	}
@@ -693,9 +694,9 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 				b.getWorldKnowledge());
 
 		Map<String, BaseBeliefbase> views = b.getViewKnowledge();
-		for (String name : views.keySet()) {
-			BaseBeliefbase actView = views.get(name);
-			report("View->'" + name + "' Beliefbase of '" + getName()
+		for (Entry<String, BaseBeliefbase> ent : views.entrySet()) {
+			BaseBeliefbase actView = ent.getValue();
+			report("View->'" + name + "' Beliefbase of '" + ent.getKey()
 					+ "' created.", actView);
 		}
 

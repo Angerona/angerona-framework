@@ -171,10 +171,12 @@ public class AngeronaEnvironment  {
 		SimulationConfiguration config = null;
 		
 		config = SimulationConfiguration.loadXml(new File(filename));	
-		name = config.getName();
-		
-		if(config != null && startImmediately) {
-			return initSimulation(config) ? config : null;
+		if(config != null) {
+			name = config.getName();
+			
+			if(startImmediately) {
+				return initSimulation(config) ? config : null;
+			}
 		}
 		return config;
 	}

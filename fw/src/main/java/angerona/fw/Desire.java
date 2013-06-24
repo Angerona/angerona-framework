@@ -6,6 +6,8 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.util.Utility;
+
 /**
  * This class represents a desire as complex object.
  * In Angerona a desire might be linked to a plan, this object is responsible of
@@ -82,24 +84,21 @@ public class Desire {
 	
 	@Override 
 	public boolean equals(Object other) {
-		if(other == null)	return false;
+		if(! (other instanceof Desire))	
+			return false;
 		
-		if(other instanceof FOLAtom) {
-			return this.formula.equals((FOLAtom)other);
-		}
+		Desire od = (Desire)other;
+		if(!Utility.equals(this.formula, od.formula))	
+			return false;
 		
-		if(other instanceof Desire) {
-			Desire od = (Desire)other;
-			
-			try {
-				boolean reval = od.formula.equals(this.formula);
-				return reval;
-			} catch(IllegalArgumentException e) {
-				LOG.warn("'{}' or '{}' not well formed.", od.formula, this.formula);
-				throw e;
-			}
-		}
-		
-		return false;
+		if(!Utility.equals(this.perception, od.perception))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.formula.hashCode() +
+				(this.perception == null ? 0 : this.perception.hashCode());
 	}
 }

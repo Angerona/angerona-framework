@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.xeoh.plugins.base.PluginManager;
@@ -163,9 +164,9 @@ public class PluginInstantiator {
 			
 			Map<Class<?>, Set<Class<?>>> temp = createImplementationMap(plugin);
 
-			for(Class<?> base : temp.keySet()) {
-				for(Class<?> impl : temp.get(base)) {
-					register(base, impl);
+			for(Entry<Class<?>, Set<Class<?>>> ent : temp.entrySet()) {
+				for(Class<?> impl : ent.getValue()) {
+					register(ent.getKey(), impl);
 				}
 			}
 			
@@ -192,9 +193,9 @@ public class PluginInstantiator {
 			}
 			
 			Map<Class<?>, Set<Class<?>>> temp = createImplementationMap(plugin);
-			for(Class<?> base : temp.keySet()) {
-				for(Class<?> impl : temp.get(base)) {
-					unregister(base, impl);
+			for(Entry<Class<?>, Set<Class<?>>> ent : temp.entrySet()) {
+				for(Class<?> impl : ent.getValue()) {
+					unregister(ent.getKey(), impl);
 				}
 			}
 			

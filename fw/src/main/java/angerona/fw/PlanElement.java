@@ -2,6 +2,7 @@ package angerona.fw;
 
 import angerona.fw.listener.ActionProcessor;
 import angerona.fw.logic.Beliefs;
+import angerona.fw.util.Utility;
 
 /**
  * A PlanElement is the data structure storing a step in a plan. It decouples the behavior of the plan
@@ -155,9 +156,14 @@ public class PlanElement implements AngeronaAtom, Runnable {
 		if(! (other instanceof PlanElement)) return false;
 		
 		PlanElement pe = (PlanElement)other;
-		return intention.equals(pe.intention);
+		return Utility.equals(intention, pe.intention);
 	}
 
+	@Override
+	public int hashCode() {
+		return intention.hashCode() * 13;
+	}
+	
 	@Override
 	public void run() {
 		if(prepared) {

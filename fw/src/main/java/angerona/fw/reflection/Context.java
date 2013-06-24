@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Tim Janus
@@ -71,15 +72,14 @@ public class Context {
 	}
 	
 	/**
-	 * Detachs the context with the given name from this context.
+	 * Detaches the context with the given name from this context.
 	 * @param name	The name of the context to detach.
 	 * @return	true if the context was detached false if the context was not found.
 	 */
 	public boolean detachContext(String name) {
 		Object obj = get(name);
-		if(obj == null)					return false;
 		if(!(obj instanceof Context))	return false;
-		objects.remove(obj);
+		objects.remove(name);
 		return true;
 	}
 	
@@ -104,27 +104,26 @@ public class Context {
 	private String toString(List<Context> visited, int depth) {
 		visited.add(this);
 		
-		String pre = "";
+		StringBuffer pre = new StringBuffer();
 		for(int i=0;i<depth;++i)
-			pre += "-";
+			pre.append("-");
 		
-		String reval = "";
+		StringBuffer reval = new StringBuffer();
 		for(String str : objects.keySet()) {
 			Object obj = objects.get(str);
 			if(obj instanceof Context && !visited.contains(obj)) {
 				Context next = (Context)obj;
-				reval += pre+str+"\n";
-				reval += next.toString(visited, depth+1);
+				reval.append(pre.toString()+str+"\n");
+				reval.append(next.toString(visited, depth+1));
 			}
 		}
 		
-		for(String str : objects.keySet()) {
-			Object obj = objects.get(str);
-			if(!(obj instanceof Context)) {
-				reval += pre + str + "\n";
+		for(Entry<String, Object> entry : objects.entrySet()) {
+			if(!(entry.getValue() instanceof Context)) {
+				reval.append(pre + entry.getKey() + "\n");
 			}
 		}
 		
-		return reval;
+		return reval.toString();
 	}
 }
