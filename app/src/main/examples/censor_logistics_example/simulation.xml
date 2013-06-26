@@ -47,14 +47,14 @@
         	<SpeechAct type="Query">
         		<sender>Supplier</sender>
         		<receiver>Manufacturer</receiver>
-        		<question>(-s21) || r</question>
+        		<question>(-s11) || (-s22)</question>
         	</SpeechAct>
         </script>
         <script>
         	<SpeechAct type="Revision">
         		<sender>Supplier</sender>
         		<receiver>Manufacturer</receiver>
-        		<proposition>s21</proposition>
+        		<proposition>s22</proposition>
         	</SpeechAct>
         </script>
         
