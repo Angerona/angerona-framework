@@ -22,6 +22,8 @@ import angerona.fw.util.Pair;
  *
  *	@author Tim Janus, 
  *  @author Daniel Dilger
+ *  
+ *  @todo Use Map instead a list of pairs.
  */
 public class ViolatesResult implements Cloneable {
 	/** a list of pairs of secrets mapped to their degree of weaking */
