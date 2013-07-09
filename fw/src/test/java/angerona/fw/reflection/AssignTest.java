@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
@@ -43,43 +41,52 @@ public class AssignTest {
 		doStringTest(assign, new Context());
 	}
 	
-	@Test
-	public void testTypeSupport() throws ClassNotFoundException {
+	// The Helper class triple contains a triple with all information to
+	// peform an assign and to test the result.
+	static class Triple {
+		public Class<?> type;
+		public String strValue;
+		public Object realValue;
 		
-		// The Helper class triple contains a triple with all information to
-		// peform an assign and to test the result.
-		class Triple {
-			public Class<?> type;
-			public String strValue;
-			public Object realValue;
-			
-			public Triple(Class<?> type, String strValue, Object realValue) {
-				this.type = type;
-				this.strValue = strValue;
-				this.realValue = realValue;
-			}
+		public Triple(Class<?> type, String strValue, Object realValue) {
+			this.type = type;
+			this.strValue = strValue;
+			this.realValue = realValue;
 		}
-		
-		// creation of a list of triples for different types, start with build in types:
-		List<Triple> lst = new LinkedList<>();
-		lst.add(new Triple(Integer.class, "10", Integer.valueOf(10)));
-		lst.add(new Triple(Float.class, "2.25f", new Float(2.25f)));
-		lst.add(new Triple(Double.class, "1.5", new Double(1.5)));
-		lst.add(new Triple(Boolean.class, "TRUE", Boolean.valueOf(true)));
-		
-		// test the query as complex type:
-		lst.add(new Triple(Query.class, 
+	}
+	
+	private void testTypeSupport(Triple t) throws ClassNotFoundException {
+		Context context = new Context();
+		Assign assign = new Assign("Test", new Value(t.strValue, t.type.getName()));
+		assign.execute(context);
+		assertEquals(t.realValue, context.get("Test"));
+	}
+	
+	@Test
+	public void testTypeInteger() throws ClassNotFoundException {
+		testTypeSupport(new Triple(Integer.class, "10", Integer.valueOf(10)));
+	}
+	
+	@Test
+	public void testTypeFloat() throws ClassNotFoundException {
+		testTypeSupport(new Triple(Float.class, "2.25f", new Float(2.25f)));
+	}
+	
+	@Test
+	public void testTypeDouble() throws ClassNotFoundException {
+		testTypeSupport(new Triple(Double.class, "1.5", new Double(1.5)));
+	}
+	
+	public void testTypeBoolean() throws ClassNotFoundException {
+		testTypeSupport(new Triple(Boolean.class, "TRUE", Boolean.valueOf(true)));
+	}
+	
+	@Test
+	public void testTypeComplexQuery() throws ClassNotFoundException {
+		testTypeSupport(new Triple(Query.class, 
 				"<query><sender>Boss</sender><receiver>Employee</receiver><question>attend_scm</question></query>", 
 				new Query("Boss", "Employee", 
 					new FolFormulaVariable(new FOLAtom(new Predicate("attend_scm"))))));
-		
-		// perform the test:
-		Context context = new Context();
-		for(Triple t : lst) {
-			Assign assign = new Assign("Test", new Value(t.strValue, t.type.getName()));
-			assign.execute(context);
-			assertEquals(t.realValue, context.get("Test"));
-		}
 	}
 	
 	@Test

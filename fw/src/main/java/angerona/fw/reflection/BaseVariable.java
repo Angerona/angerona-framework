@@ -2,6 +2,7 @@ package angerona.fw.reflection;
 
 import angerona.fw.error.AngeronaException;
 import angerona.fw.error.InvokeException;
+import angerona.fw.util.Utility;
 
 /**
  * A BaseVariable is an abstract implementation of Variable. 
@@ -101,4 +102,24 @@ public abstract class BaseVariable<T> implements Variable<T> {
 	 * @throws AngeronaException
 	 */
 	protected abstract T createInstanceFromString(String content) throws AngeronaException;
+	
+	@Override 
+	public int hashCode() {
+		return 7 + (instance != null 
+				? instance.hashCode()
+				: content.hashCode());
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof BaseVariable<?>)) {
+			return false;
+		}
+		
+		BaseVariable<?> ov = (BaseVariable<?>)other;
+		return instance != null 
+				? Utility.equals(instance, ov.instance) 
+				: Utility.equals(content, ov.content);
+		
+	}
 }
