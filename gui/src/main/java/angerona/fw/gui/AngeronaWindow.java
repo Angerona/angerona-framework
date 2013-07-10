@@ -378,8 +378,8 @@ public class AngeronaWindow extends WindowAdapter
 		
 		//check if the scenario has an interactive agent and open the interactive View if needed
 		for(Agent a : simulationEnvironment.getAgents()){
-			if (a.getType().equals("User")){
-				openView(new InteractiveBarMVPComponent(simulationEnvironment));
+			if (a.getType().equals("User")){			
+				resMap.add(openView(new InteractiveBarMVPComponent(simulationEnvironment)));
 				break;
 			}
 		}
