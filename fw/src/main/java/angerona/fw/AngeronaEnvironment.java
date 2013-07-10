@@ -219,6 +219,9 @@ public class AngeronaEnvironment  {
 				a.setAgent(getAgentByName(a.getSenderId()));
 				agent.getComponent(ScriptingComponent.class).add(a);
 			}
+			
+			//set type
+			agent.setType(ai.getType());
 		}
 		
 		// post the initial perceptions defined in the simulation configuration
@@ -286,7 +289,12 @@ public class AngeronaEnvironment  {
 	private boolean registerAgents(SimulationConfiguration config) {
 		try {
 			for(AgentInstance ai : config.getAgents()) {
-				Agent agent = new Agent(ai.getName(), this);
+				Agent agent;
+				if(ai.getType() != null){
+					agent = new Agent(ai.getName(), this, ai.getType());
+				}else{
+					agent = new Agent(ai.getName(), this);
+				}
 				addAgent(agent);
 			}
 		} catch (AgentIdException e) {

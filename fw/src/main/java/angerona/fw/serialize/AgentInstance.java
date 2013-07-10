@@ -34,6 +34,10 @@ public class AgentInstance {
 	@Element(name="name")
 	protected String name;
 	
+	/** the type of the agent (AI or User) */
+	@Element(name="type", required=false)
+	protected String type;
+	
 	/** a data structure with type information of the agents operators */
 	@Element(name="agent-config", type=AgentConfigImport.class)
 	protected AgentConfig config;
@@ -102,5 +106,9 @@ public class AgentInstance {
 	
 	public List<SpeechAct> getActions(){
 		return Collections.unmodifiableList(actions);
+	}
+	
+	public String getType(){
+		return type;
 	}
 }

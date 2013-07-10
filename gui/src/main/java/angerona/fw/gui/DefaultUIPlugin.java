@@ -1,5 +1,7 @@
 package angerona.fw.gui;
 
+import interactive.InteractiveBarMVPComponent;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,9 @@ public class DefaultUIPlugin extends AngeronaPluginAdapter implements UIPlugin {
 		reval.put("Simulation-Control-Bar", SimulationControlBarMVPComponent.class);
 		//reval.put("Resourcen", ResourcenView.class);
 		reval.put("Plan", PlanView.class);
+		
 		reval.put("Desires", DesiresView.class);
+		reval.put("Interactive Agent", InteractiveBarMVPComponent.class);
 		return reval;
 	}
 

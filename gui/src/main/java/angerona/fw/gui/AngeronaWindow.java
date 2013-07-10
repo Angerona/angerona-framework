@@ -1,5 +1,8 @@
 package angerona.fw.gui;
 
+import interactive.InteractiveBar;
+import interactive.InteractiveBarMVPComponent;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -373,6 +376,13 @@ public class AngeronaWindow extends WindowAdapter
 		parentStation.drop(dd, SplitDockProperty.WEST);
 		resMap.add(dd);
 		
+		//check if the scenario has an interactive agent and open the interactive View if needed
+		for(Agent a : simulationEnvironment.getAgents()){
+			if (a.getType().equals("User")){
+				openView(new InteractiveBarMVPComponent(simulationEnvironment));
+				break;
+			}
+		}
 	}
 
 	@Override

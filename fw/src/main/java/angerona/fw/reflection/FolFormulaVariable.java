@@ -24,7 +24,7 @@ public class FolFormulaVariable extends BaseVariable<FolFormula> {
 	}
 
 	@Override
-	protected FolFormula createInstanceFromString(String content) throws AngeronaException {
+	public FolFormula createInstanceFromString(String content) throws AngeronaException {
 		FolParserB parser = new FolParserB(new StringReader(content));
 		try {
 			FolFormula reval = parser.formula(new FolSignature());

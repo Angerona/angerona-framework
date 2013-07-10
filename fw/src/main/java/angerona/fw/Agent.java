@@ -85,6 +85,9 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	private Long id;
 
 	private String name;
+	
+	/** Type of the Agent (AI or User) for interactive Examples */
+	private String type;
 
 	/**
 	 * this instance is responsible to communicate with the Angerona report
@@ -149,6 +152,13 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	public Agent(String name, AngeronaEnvironment env) {
 		this.name = name;
 		this.env = env;
+		this.type = "AI";
+	}
+	
+	public Agent(String name, AngeronaEnvironment env, String type) {
+		this.name = name;
+		this.env = env;
+		this.type = type;
 	}
 
 	/** @return a list containing all actions peformed by the agent. */
@@ -728,5 +738,13 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getType(){
+		return type;
+	}
+	
+	public void setType(String type){
+		this.type = type;
 	}
 }
