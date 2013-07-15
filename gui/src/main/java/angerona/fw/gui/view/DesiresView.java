@@ -12,7 +12,10 @@ import angerona.fw.logic.Desires;
  * @author Tim Janus
  *
  */
-public class DesiresView extends ListViewColored<Desires> {
+public class DesiresView extends ListViewColored {
+
+	/** kill warning */
+	private static final long serialVersionUID = 1628457822916960917L;
 
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {

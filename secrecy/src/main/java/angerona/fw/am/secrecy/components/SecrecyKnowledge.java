@@ -83,10 +83,10 @@ public class SecrecyKnowledge extends BaseAgentComponent
 
 	@Override
 	public String toString() {
-		String reval = "";
+		StringBuffer buf = new StringBuffer();
 		for (Secret ct : secrets)
-			reval += ct.toString() + "\n";
-		return reval;
+			buf.append(ct.toString() + "\n");
+		return buf.toString();
 	}
 
 	/**
@@ -186,9 +186,11 @@ public class SecrecyKnowledge extends BaseAgentComponent
 						getAgent().getName(), e.getMessage());
 			}
 
-			// and add them to the secrecy knowledge
-			for (Secret s : secrets) {	
-				addSecret(s);
+			if(secrets != null) {
+				// and add them to the secrecy knowledge
+				for (Secret s : secrets) {	
+					addSecret(s);
+				}
 			}
 
 			
@@ -257,9 +259,16 @@ public class SecrecyKnowledge extends BaseAgentComponent
 			String error = "Something went wrong in event hierarchy. The searched secret key is not found in keyset of targetsByReasoningOperator map.\n";
 			error += "\nKey: " + key.toString() + " - " + key.hashCode();
 			error += "\nMap-Key-Set:\n";
-			for (Pair<String, Map<String, String>> p : optimizationMap.keySet())
-				error += p.toString() + " - " + p.hashCode() + " - "
-						+ p.equals(key) + "\n";
+			StringBuffer buf = new StringBuffer();
+			for (Pair<String, Map<String, String>> p : optimizationMap.keySet()) {
+				buf.append(p.toString());
+				buf.append(" - ");
+				buf.append(p.hashCode());
+				buf.append(" - ");
+				buf.append(p.equals(key));
+				buf.append("\n");
+			}
+			error += buf.toString();
 			throw new RuntimeException(error);
 		}
 		

@@ -54,15 +54,16 @@ public class KnowhowBase extends BaseAgentComponent {
 			} catch (net.sf.tweety.logicprogramming.asplibrary.parser.ParseException e) {
 				nextAction = null;
 				LOG.error("Cannot load the 'nextAction' program: '{}'", e.getMessage());
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		} else {
 			LOG.error("Cannot found resource: '{}'", programPath);
-		}
-		try {
-			is.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	

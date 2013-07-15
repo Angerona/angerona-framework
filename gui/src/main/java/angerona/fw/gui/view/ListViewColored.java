@@ -34,8 +34,8 @@ import angerona.fw.report.ReportListener;
  *
  * @param <T> the type of the observed object
  */
-public abstract class ListViewColored<T extends Entity> 
-	extends EntityViewComponent<T>
+public abstract class ListViewColored 
+	extends EntityViewComponent
 	implements 
 	ReportListener, 
 	NavigationUser {
@@ -47,10 +47,10 @@ public abstract class ListViewColored<T extends Entity>
 	private static final long serialVersionUID = 5572343160200460695L;
 	
 	/** reference to the data instance which is actually shown. */
-	protected T actual;
+	protected Entity actual;
 	
 	/** reference to the predecessor data instance of the actual data instance, this will be null if actual is the first */
-	protected T previous;
+	protected Entity previous;
 	
 	/** JList containing the literals of the actual belief base and the literals which were removed in the last step (removed and new literals are highlighted) */
 	private JList<ListElement> actualLiterals;
@@ -109,8 +109,8 @@ public abstract class ListViewColored<T extends Entity>
 		}
 		
 		@Override
-		public Component getListCellRendererComponent(JList<? extends ListViewColored<T>.ListElement> list, 
-				ListViewColored<T>.ListElement le, int index2, boolean isSelected, boolean cellHasFocus) {
+		public Component getListCellRendererComponent(JList<? extends ListViewColored.ListElement> list, 
+				ListViewColored.ListElement le, int index2, boolean isSelected, boolean cellHasFocus) {
 			setText(le.toString());
 			setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
 			setForeground(le.status == ListElement.ST_NEW ? new Color(0,128,0) : (le.status == ListElement.ST_DELETED ? Color.red : Color.BLACK));
@@ -241,7 +241,7 @@ public abstract class ListViewColored<T extends Entity>
 	}
 
 	private void updateView() {
-		actual = (T)actEntry.getAttachment();
+		actual = actEntry.getAttachment();
 		defaultUpdatePrevious();
 		update(model);
 		fillTreeWithCallstack();
@@ -262,7 +262,7 @@ public abstract class ListViewColored<T extends Entity>
 			// current one as the 'real' previous entry.
 			if(temp.getCopyDepth() < actAtomic.getCopyDepth() || 
 					(temp.getCopyDepth() == 1 && actAtomic.getCopyDepth() == 1)) {
-				previous = (T) temp;
+				previous = temp;
 				break;
 			}
 			
@@ -277,20 +277,15 @@ public abstract class ListViewColored<T extends Entity>
 	 * is correct.
 	 */
 	@Override
-	public void setObservedEntity(T ent) {
+	public void setObservedEntity(Entity ent) {
 		this.ref = ent;
 		this.actual = ent;
 		this.previous = null;
 	}
-	
+
 	@Override
-	public void setObservedEntity(Object entity) {
-		setObservedEntity((T) entity);
-	}	
-	
-	@Override
-	public T getObservedEntity() {
-		return (T)ref;
+	public Entity getObservedEntity() {
+		return ref;
 	}
 	
 	@Override

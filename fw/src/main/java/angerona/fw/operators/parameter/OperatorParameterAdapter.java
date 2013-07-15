@@ -11,6 +11,7 @@ import angerona.fw.error.ConversionException;
 import angerona.fw.internal.Entity;
 import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.report.Reporter;
+import angerona.fw.util.Utility;
 
 /**
  * Abstract base class for all input-parameter implementations 
@@ -95,5 +96,13 @@ public abstract class OperatorParameterAdapter implements
 				name + "' to '" + castType.getName() + "'.");
 		return new ConversionException(GenericOperatorParameter.class, 
 				this.getClass(), inner);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(! (other instanceof OperatorParameterAdapter))
+			return false;
+		OperatorParameterAdapter opa = (OperatorParameterAdapter)other;
+		return Utility.equals(this.settings, opa.settings);
 	}
 }

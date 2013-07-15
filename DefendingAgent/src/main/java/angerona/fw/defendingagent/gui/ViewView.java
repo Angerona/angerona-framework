@@ -23,7 +23,7 @@ import angerona.fw.internal.Entity;
  * 
  * @author Sebastian Homann
  */
-public class ViewView extends ListViewColored<ViewComponent> {
+public class ViewView extends ListViewColored {
 
 	private static final long serialVersionUID = 1L;
 

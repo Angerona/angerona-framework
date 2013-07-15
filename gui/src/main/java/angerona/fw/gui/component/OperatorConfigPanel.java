@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import angerona.fw.gui.base.ObservingPanel;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.util.Pair;
+import angerona.fw.util.Utility;
 
 /**
  * 
@@ -158,11 +159,11 @@ public class OperatorConfigPanel extends ObservingPanel {
 	
 	@Override
 	public <T> void propertyChange(String propertyName, T oldValue, T newValue) {
-		if(propertyName == "parameters") {
+		if(Utility.equals(propertyName, "parameters")) {
 			Map<String, String> params = (Map<String, String>)newValue;
 			refillParameterList(params);
 			
-		} else if(propertyName == "selectedOperator") {
+		} else if(Utility.equals(propertyName, "selectedOperator")) {
 			
 		}
 	}

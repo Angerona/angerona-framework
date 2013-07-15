@@ -22,7 +22,7 @@ import angerona.fw.util.Pair;
  * @author Tim Janus
  *
  */
-public class KnowhowView extends EntityViewComponent<KnowhowBase> 
+public class KnowhowView extends EntityViewComponent 
 	implements ReportListener {
 
 	/** kick warning */
@@ -39,7 +39,7 @@ public class KnowhowView extends EntityViewComponent<KnowhowBase>
 		statementList.setModel(stmtListModel);
 		this.add(statementList, BorderLayout.CENTER);
 		
-		actual = ref;
+		actual = (KnowhowBase)ref;
 		updateView();
 	}
 	

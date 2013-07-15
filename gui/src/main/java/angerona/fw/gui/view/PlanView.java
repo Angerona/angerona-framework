@@ -7,7 +7,7 @@ import angerona.fw.PlanComponent;
 import angerona.fw.Subgoal;
 import angerona.fw.internal.Entity;
 
-public class PlanView extends ListViewColored<PlanComponent> {
+public class PlanView extends ListViewColored {
 	
 	/** kick warning */
 	private static final long serialVersionUID = 7901339015161976585L;

@@ -14,7 +14,7 @@ import angerona.fw.logic.Secret;
  * 
  * @author Tim Janus
  */
-public class SecrecyView extends ListViewColored<SecrecyKnowledge> {
+public class SecrecyView extends ListViewColored {
 	
 	/**
 	 * 
@@ -23,14 +23,17 @@ public class SecrecyView extends ListViewColored<SecrecyKnowledge> {
 
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
-		SecrecyKnowledge ck = (SecrecyKnowledge)obj;
-		
-		List<String> reval = new LinkedList<String>();
-		for(Secret ct : ck.getTargets()) {
-			reval.add(ct.toString());
+		if(obj instanceof SecrecyKnowledge) {
+			SecrecyKnowledge ck = (SecrecyKnowledge)obj;
+			
+			List<String> reval = new LinkedList<String>();
+			for(Secret ct : ck.getTargets()) {
+				reval.add(ct.toString());
+			}
+			
+			return reval;
 		}
-		
-		return reval;
+		return new LinkedList<>();
 	}
 
 	@Override

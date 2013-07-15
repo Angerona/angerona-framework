@@ -67,6 +67,11 @@ public class KnowhowStatement {
 	}
 	
 	@Override
+	public int hashCode() {
+		return (target.hashCode() + subTargets.hashCode() + conditions.hashCode()) * 13;
+	}
+	
+	@Override
 	public String toString() {
 		return "(" + target.toString() + ", " + subTargets.toString() + ", " + conditions.toString() + ")";
 	}

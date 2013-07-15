@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 import angerona.fw.gui.base.ViewAdapter;
 import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.Utility;
 
 /**
  * This view extends a JMenu with two buttons to allow the user to control the simulation
@@ -49,10 +50,10 @@ public class SimulationControlMenu extends ViewAdapter implements SimulationCont
 	
 	@Override
 	public <T> void propertyChange(String propertyName, T oldValue, T newValue) {
-		if(propertyName  == "simulationState") {
+		if(Utility.equals(propertyName, "simulationState")) {
 			SimulationState newState = (SimulationState)newValue;
 			onSimulationStateChanged(newState);
-		} else if(propertyName == "simulationConfig") {
+		} else if(Utility.equals(propertyName, "simulationConfig")) {
 			SimulationConfiguration config = (SimulationConfiguration)newValue;
 			onSimulationConfigChanged(config);
 		}

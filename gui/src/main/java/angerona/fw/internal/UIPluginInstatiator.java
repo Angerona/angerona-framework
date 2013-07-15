@@ -31,13 +31,13 @@ public class UIPluginInstatiator extends PluginAdapter {
 	/** map containing registered views some of them are default other might be provided by plugins */
 	private Map<String, Class<? extends ViewComponent>> viewMap = new HashMap<String, Class<? extends ViewComponent>>();
 	
-	private Map<String, Class<? extends EntityViewComponent<?>>> entityViewMap = new HashMap<>();
+	private Map<String, Class<? extends EntityViewComponent>> entityViewMap = new HashMap<>();
 	
 	public Map<String, Class<? extends ViewComponent>> getViewMap() {
 		return Collections.unmodifiableMap(viewMap);
 	}
 	
-	public Map<String, Class<? extends EntityViewComponent<?>>> getEntityViewMap() {
+	public Map<String, Class<? extends EntityViewComponent>> getEntityViewMap() {
 		return Collections.unmodifiableMap(entityViewMap);
 	}
 	
@@ -62,7 +62,7 @@ public class UIPluginInstatiator extends PluginAdapter {
 				Class<?> base = isEntityView ? EntityViewComponent.class : ViewComponent.class;
 				if(isEntityView) {
 					@SuppressWarnings("unchecked")
-					Class<? extends EntityViewComponent<?>> cImpl = (Class<? extends EntityViewComponent<?>>)impl;
+					Class<? extends EntityViewComponent> cImpl = (Class<? extends EntityViewComponent>)impl;
 					entityViewMap.put(viewName, cImpl);
 				}
 				else

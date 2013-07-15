@@ -23,7 +23,7 @@ import bibliothek.gui.dock.DefaultDockable;
  * 
  * @author Tim Janus
  */
-public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
+public class BeliefbaseView extends ListViewColored {
 	
 	private OperatorConfig opConfig;
 	
@@ -37,23 +37,6 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 					+ ref.getClass().getName());
 		BaseBeliefbase refBeliefBase = (BaseBeliefbase)ref;
 		opConfig = new OperatorConfig(refBeliefBase.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE));
-
-		/*
-		Agent ag = (Agent)IdGenerator.getEntityWithId(this.ref.getParent());
-		
-		String postfix = "";
-		if(ag.getBeliefs().getWorldKnowledge() == ref) {
-			postfix = "World";
-		} else {
-			for(String key : ag.getBeliefs().getViewKnowledge().keySet()) {
-				BaseBeliefbase bb = ag.getBeliefs().getViewKnowledge().get(key);
-				if(bb == ref) {
-					postfix = "View->"+key;
-					break;
-				}
-			}
-		}
-		*/
 	}
 	
 	@Override
@@ -128,7 +111,7 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	}
 
 	@Override
-	public void setObservedEntity(BaseBeliefbase bb) {
+	public void setObservedEntity(Entity bb) {
 		this.ref = bb;
 		this.actual = bb;
 		this.previous = null;
@@ -142,8 +125,9 @@ public class BeliefbaseView extends ListViewColored<BaseBeliefbase> {
 	@Override
 	public void decorate(DefaultDockable dockable) {
 		super.decorate(dockable);
-		String title = ref.getAgent().getName();
-		Beliefs bel = ref.getAgent().getBeliefs();
+		BaseBeliefbase bb = (BaseBeliefbase)ref;
+		String title = bb.getAgent().getName();
+		Beliefs bel = bb.getAgent().getBeliefs();
 		if(ref == bel.getWorldKnowledge()) {
 			title += " - World";
 		} else {

@@ -56,7 +56,7 @@ public class OperatorPluginParameter extends OperatorParameterAdapter {
 			return false;
 		
 		OperatorPluginParameter co = (OperatorPluginParameter)other;
-		return co.caller == this.caller;
+		return super.equals(this) && co.caller == this.caller;
 	}
 	
 	@Override

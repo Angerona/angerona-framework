@@ -7,7 +7,6 @@ import angerona.fw.Action;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.comm.Answer;
-import angerona.fw.comm.Query;
 import angerona.fw.defendingagent.View;
 import angerona.fw.defendingagent.ViewComponent;
 import angerona.fw.defendingagent.comm.RevisionAnswer;

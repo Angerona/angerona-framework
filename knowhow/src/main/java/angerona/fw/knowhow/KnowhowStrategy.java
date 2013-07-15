@@ -269,6 +269,11 @@ public class KnowhowStrategy {
 			}
 		}
 		
+		if(new_state == null || oldState == null) {
+			LOG.error("new_state or old_state must not be null...");
+			return false;
+		}
+		
 		if(	new_state.getTerm(0).equals(oldState.getTerm(0))) {
 			LOG.error("Old-State and new State are the same: " + new_state.getTerm(0));
 			return false;

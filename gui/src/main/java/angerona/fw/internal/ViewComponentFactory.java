@@ -35,9 +35,9 @@ public class ViewComponentFactory {
 	 * @return	reference to the created view. null if no view for the AgentComponent is
 	 * 			registered or an error occured.
 	 */
-	public EntityViewComponent<?> createViewForEntityComponent(Entity comp) {
-		for (Class<? extends EntityViewComponent<?>> cls : UIPluginInstatiator.getInstance().getEntityViewMap().values()) {
-			EntityViewComponent<?> view = null;
+	public EntityViewComponent createViewForEntityComponent(Entity comp) {
+		for (Class<? extends EntityViewComponent> cls : UIPluginInstatiator.getInstance().getEntityViewMap().values()) {
+			EntityViewComponent view = null;
 			try {
 				view = cls.newInstance();
 			} catch (InstantiationException e1) {
@@ -52,7 +52,7 @@ public class ViewComponentFactory {
 				return null;
 			
 			if (comp.getClass().equals(view.getObservedType())) {
-				EntityViewComponent<?> newly = createEntityView(cls, comp);
+				EntityViewComponent newly = createEntityView(cls, comp);
 				return newly;
 			}
 		}
@@ -68,12 +68,14 @@ public class ViewComponentFactory {
 	 * @param toObserve	reference to the object the UI component should observe (might be null if no direct mapping between observed object and UI component can be given)
 	 * @return a new instance of UIComponent which is ready to use.
 	 */
-	public <E extends Entity, T extends EntityViewComponent<?>> T createEntityView(Class<? extends T> cls, E toObserve) {
+	public <E extends Entity, T extends EntityViewComponent> 
+	T createEntityView(Class<? extends T> cls, E toObserve) {
 		T reval;
 		try {
 			reval = cls.newInstance();
 			if(toObserve != null) {
-				reval.setObservedEntity(toObserve);
+				Entity ent = (Entity) toObserve;
+				reval.setObservedEntity(ent);
 				if(!registeredViewsByEntity.containsKey(toObserve)) {
 					registeredViewsByEntity.put(toObserve, new LinkedList<ViewComponent>());
 				}

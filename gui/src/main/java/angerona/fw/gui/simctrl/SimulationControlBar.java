@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import angerona.fw.gui.base.ObservingPanel;
 import angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import angerona.fw.serialize.SimulationConfiguration;
+import angerona.fw.util.Utility;
 
 /**
  * Implementation of the SimulatioonControlView as a Bar using all the horizontal space
@@ -109,10 +110,10 @@ public class SimulationControlBar extends ObservingPanel implements SimulationCo
 
 	@Override
 	public <T> void propertyChange(String propertyName, T oldValue, T newValue) {
-		if(propertyName  == "simulationState") {
+		if(Utility.equals(propertyName, "simulationState")) {
 			SimulationState newState = (SimulationState)newValue;
 			onSimulationStateChanged(newState);
-		} else if(propertyName == "simulationConfig") {
+		} else if(Utility.equals(propertyName, "simulationConfig")) {
 			SimulationConfiguration config = (SimulationConfiguration)newValue;
 			onSimulationConfigChanged(config);
 		}

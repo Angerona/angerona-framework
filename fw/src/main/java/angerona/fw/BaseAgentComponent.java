@@ -14,6 +14,7 @@ import angerona.fw.logic.Beliefs;
 import angerona.fw.report.FullReporter;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.report.Reporter;
+import angerona.fw.util.Utility;
 
 /**
  * Base class for special extensions of the agent model. Every subclass
@@ -99,7 +100,7 @@ implements 	AgentComponent,
 	
 	@Override
 	public void setParent(Long id) {
-		if(parentId != id) {
+		if(!Utility.equals(parentId, id)) {
 			parentId = id;
 			getAgent().addListener(this);
 			reporter.setDefaultPoster(this);

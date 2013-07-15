@@ -76,11 +76,11 @@ public class AspReasoner extends BaseReasoner {
 		
 		try {
 			reval = runSolver(bb);
+			LOG.info(reval.toString());
 		} catch(SolverException ex) {
 			LOG.error("Error occured: " + ex.getMessage());
 		}
 		
-		LOG.info(reval.toString());
 		return reval;
 	}
 	

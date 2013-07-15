@@ -28,6 +28,7 @@ import angerona.fw.logic.BaseReasoner;
 import angerona.fw.operators.parameter.ReasonerParameter;
 import angerona.fw.util.LogicTranslator;
 import angerona.fw.util.Pair;
+import angerona.fw.util.Utility;
 
 /**
  * A Reasoner for conditional belief bases using c-representations
@@ -129,7 +130,7 @@ public class ConditionalReasoner extends BaseReasoner {
 			Integer rankAandNotB = ocf.rank(AandNotB);
 			if(rankAandB < rankAandNotB) {
 				answer = AnswerValue.AV_TRUE;
-			} else if(rankAandB == rankAandNotB) {
+			} else if(Utility.equals(rankAandB, rankAandNotB)) {
 				answer = AnswerValue.AV_UNKNOWN;
 			}
 		}
