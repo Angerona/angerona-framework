@@ -1,0 +1,14 @@
+grammar {
+	start = element asml-script { 
+			attribute name {text} & 
+			cmd+ 
+		} | 
+		cmd+
+	
+	cmd = {
+		external "assign.rnc" |
+		external "invoke-operation.rnc" |
+		external "conditional.rnc" |
+		external "while.rnc"
+	}
+}

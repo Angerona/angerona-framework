@@ -1,0 +1,13 @@
+grammar {
+	start = cond
+	cond = element conditional {
+		element if { cs },
+		element elseif { cs }*
+		element else { cs }?
+	}
+	
+	cs = {
+		attribute condition {text} & 
+		external "command_sequence.rnc"
+	}
+}

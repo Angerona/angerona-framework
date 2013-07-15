@@ -1,0 +1,4 @@
+element assign {
+	attribute name {text} &
+	attribute value {text}
+}

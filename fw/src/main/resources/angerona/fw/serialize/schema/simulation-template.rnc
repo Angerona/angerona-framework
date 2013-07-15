@@ -8,13 +8,17 @@ grammar {
 	
 	ai = element agent-instance {
 		element name {text} &
-		element beliefbase-name {text} &
-		element config {
+		element beliefbase-name {text} ?
+		element agent-config {
 			external "xml_ref.rnc"
 		} &
 		element beliefbase-config {
 			external "xml_ref.rnc"
 		} &
+		element view-config {
+			attribute name {text} &
+			external "xml_ref.rnc"
+		}*
 		element data {
 		  attribute key {text},
 		  text

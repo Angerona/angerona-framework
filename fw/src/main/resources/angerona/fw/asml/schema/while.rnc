@@ -1,0 +1,4 @@
+element while {
+	attribute condition {text},
+	external "command_sequence.rnc"
+}

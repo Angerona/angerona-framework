@@ -1,0 +1,12 @@
+element operation {
+	attribute type {text} &
+	element param {
+		attribute name {text} &
+		attribute value {text} 
+	}*
+	element setting {
+		attribute name { text } &
+		attribute value { text }
+	}*
+	element output { text } ?
+}
