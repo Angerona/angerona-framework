@@ -271,7 +271,7 @@ public class CensorComponent extends BaseAgentComponent {
 	}
 	
 	@Override
-	public Object clone() {
+	public CensorComponent clone() {
 		return new CensorComponent(this.inferenceSystem);
 	}
 }

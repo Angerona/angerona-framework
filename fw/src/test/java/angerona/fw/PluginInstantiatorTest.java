@@ -26,7 +26,7 @@ public class PluginInstantiatorTest {
 	private class MockComponent extends BaseAgentComponent {
 
 		@Override
-		public Object clone() {
+		public MockComponent clone() {
 			return new MockComponent();
 		}
 		

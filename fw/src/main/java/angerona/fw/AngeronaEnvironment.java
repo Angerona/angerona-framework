@@ -263,7 +263,7 @@ public class AngeronaEnvironment  {
 					entities.put(actView.getGUID(), actView);
 				}
 				
-				for(AgentComponent comp : agent.getComponents()) {
+				for(AgentComponent comp : agent.getBeliefs().getComponents()) {
 					entities.put(comp.getGUID(), comp);
 				}
 				

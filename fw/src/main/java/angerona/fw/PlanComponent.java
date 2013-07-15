@@ -61,7 +61,7 @@ public class PlanComponent extends BaseAgentComponent implements SubgoalListener
 	}
 
 	@Override
-	public Object clone() {
+	public PlanComponent clone() {
 		return new PlanComponent(this);
 	}
 

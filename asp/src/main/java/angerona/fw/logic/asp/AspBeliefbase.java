@@ -57,7 +57,7 @@ public class AspBeliefbase extends BaseBeliefbase {
 	}
 
 	@Override
-	public Object clone() {
+	public AspBeliefbase clone() {
 		return new AspBeliefbase(this);
 	}
 

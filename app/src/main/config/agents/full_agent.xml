@@ -26,5 +26,6 @@
 	<component>angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
 	<component>angerona.fw.knowhow.KnowhowBase</component>
 	<component>angerona.fw.PlanComponent</component>
+	<component>angerona.fw.ActionHistory</component>
 	
 </agent-configuration>

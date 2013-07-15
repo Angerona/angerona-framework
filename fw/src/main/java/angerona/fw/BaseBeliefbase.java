@@ -371,7 +371,7 @@ public abstract class BaseBeliefbase
 	/**
 	 * @return a deep copy of this belief-base.
 	 */
-	public abstract Object clone();
+	public abstract BaseBeliefbase clone();
 	
 	/** @return  a signature containing the atomic language constructs used by this beliefbase. */
 	public abstract Signature getSignature();

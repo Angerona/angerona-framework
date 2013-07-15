@@ -15,7 +15,7 @@ import net.sf.tweety.logics.translate.aspfol.AspFolTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.Action;
+import angerona.fw.ActionHistory;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
@@ -98,10 +98,10 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		Answer a = (Answer) param.getAtom();
 
 		// Consider self-repeating answers (and only answers) as bad as
-		// revealing all secrets			
-		List<Action> actionsHistory = param.getAgent().getActionHistory();
-		for (Action act : actionsHistory) {
-			if (a.equals(act)) {
+		// revealing all secrets	
+		ActionHistory history = param.getBeliefs().getComponent(ActionHistory.class);
+		if(history != null) {
+			if(history.didAction(param.getAgent().getName(), a)) {
 				param.report(param.getAgent().getName()
 						+ "' <b> self-repeats </b> with: '"
 						+ param.getAtom() + "'");

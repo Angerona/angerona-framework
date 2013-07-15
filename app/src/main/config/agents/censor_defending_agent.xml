@@ -27,4 +27,5 @@
     <component>angerona.fw.PlanComponent</component>
     <component>angerona.fw.defendingagent.ViewComponent</component>
     <component>angerona.fw.defendingagent.CensorComponent</component>
+    <component>angerona.fw.ActionHistory</component>
 </agent-configuration>

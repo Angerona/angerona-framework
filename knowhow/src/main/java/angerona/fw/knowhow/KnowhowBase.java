@@ -146,7 +146,7 @@ public class KnowhowBase extends BaseAgentComponent {
 	}
 	
 	@Override
-	public Object clone() {
+	public KnowhowBase clone() {
 		return new KnowhowBase(this);
 	}
 	

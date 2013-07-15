@@ -63,12 +63,15 @@ public abstract class BaseViolatesOperator
 	protected ViolatesResult processInternal(EvaluateParameter param) {
 		ViolatesResult reval = null;
 		
-		// try to find calculation in cache:
+		/* try to find calculation in cache:
+		 * (not working cause of missing hashCode and equals 
+		 * methods in some classes
 		reval = cache.getCacheValue(param);
 		if(reval != null) {
 			LOG.debug("Using Cache for: '{}'", param);
 			return reval;
 		}
+		*/
 		
 		// otherwise calculate the violates result:
 		AngeronaAtom atom = param.getAtom();

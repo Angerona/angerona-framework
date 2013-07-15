@@ -45,7 +45,7 @@ public class ViewComponent extends BaseAgentComponent {
 	}
 
 	@Override
-	public Object clone() {
+	public ViewComponent clone() {
 		return new ViewComponent(this);
 	}
 

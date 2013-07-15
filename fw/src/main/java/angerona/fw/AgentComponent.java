@@ -25,7 +25,7 @@ public interface AgentComponent extends Entity{
 	 * The id and parent id are the same for every clone.  
 	 * @return	A deep copy of this object holding the same id like the sourc.
 	 */
-	public Object clone();
+	public AgentComponent clone();
 	
 	/**
 	 * Defines how often the component was cloned. Is it a copy (1),

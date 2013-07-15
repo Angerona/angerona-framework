@@ -52,7 +52,7 @@ public class ScriptingComponent extends BaseAgentComponent {
 	}
 
 	@Override
-	public Object clone() {
+	public ScriptingComponent clone() {
 		return new ScriptingComponent(this);
 	}
 }

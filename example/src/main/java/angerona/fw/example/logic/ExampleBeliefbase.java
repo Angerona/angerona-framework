@@ -57,7 +57,7 @@ public class ExampleBeliefbase extends BaseBeliefbase {
 	}
 
 	@Override
-	public Object clone() {
+	public ExampleBeliefbase clone() {
 		return new ExampleBeliefbase(this);
 	}
 

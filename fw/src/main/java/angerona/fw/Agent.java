@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Stack;
 
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
@@ -84,6 +85,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	/** id in the report-attachment hierarchy. */
 	private Long id;
 
+	/** the name of the agent, has to be unique in the simulation scope */
 	private String name;
 	
 	/** Type of the Agent (AI or User) for interactive Examples */
@@ -101,9 +103,6 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 */
 	private List<Long> childrenIds = new LinkedList<Long>();
 
-	/** The list of all registered AgentComponent instances */
-	private List<AgentComponent> customComponents = new LinkedList<AgentComponent>();
-
 	private List<SubgoalListener> subgoalListeners = new LinkedList<SubgoalListener>();
 
 	private List<AgentListener> listeners = new LinkedList<AgentListener>();
@@ -113,13 +112,6 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 * (intentions)
 	 */
 	private Context context;
-
-	/**
-	 * History of actions performed by the agent
-	 * 
-	 * @todo Implement this as an AgentComponent
-	 */
-	private List<Action> actionsHistory = new LinkedList<Action>();
 
 	/** a list of capabilities which describe actions the agent can perform */
 	private List<String> capabilities = new LinkedList<>();
@@ -137,9 +129,6 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 
 	/** the last perception used in the updateBeliefs Method */
 	private Perception lastUpdateBeliefsPercept;
-
-	/** object represents the last action performed by the agent. */
-	private Action lastAction;
 
 	private CommandSequence asmlCylce;
 	
@@ -159,11 +148,6 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		this.name = name;
 		this.env = env;
 		this.type = type;
-	}
-
-	/** @return a list containing all actions peformed by the agent. */
-	public List<Action> getActionHistory() {
-		return actionsHistory;
 	}
 
 	public List<String> getCapabilities() {
@@ -245,8 +229,8 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 			}
 		}
 
-		createAgentComponents(ai);
 		createBeliefbases(ai, config);
+		createAgentComponents(ai);
 		parseBeliefbases(ai, config.getFile().getParentFile());
 
 		// add desire component if necessary.
@@ -256,11 +240,11 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 					"No desire-component added to agent '{}' but desires, auto-add the desire component.",
 					getName());
 			desires = new Desires();
-			addComponent(desires);
+			beliefs.addComponent(desires);
 		}
 
 		// init the custom components
-		for (AgentComponent ac : customComponents) {
+		for (AgentComponent ac : beliefs.getComponents()) {
 			ac.init(ai.getAdditionalData());
 		}
 	}
@@ -400,7 +384,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 			for (String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
 				comp.setParent(id);
-				addComponent(comp);
+				beliefs.addComponent(comp);
 				LOG.info("Add custom Component '{}' to agent '{}'", compName,
 						getName());
 			}
@@ -411,50 +395,19 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		}
 	}
 
-	/**
-	 * adds the given component to the agent.
-	 * 
-	 * @param component
-	 *            Reference to the component.
-	 * @return true if the component was successfully added, false if a
-	 *         component of the type already exists.
-	 */
-	public boolean addComponent(AgentComponent component) {
-		if (component == null)
-			throw new IllegalArgumentException();
-
-		boolean reval = true;
-		for (AgentComponent loopEa : customComponents) {
-			if (component.getClass().equals(loopEa.getClass())) {
-				reval = false;
-				break;
-			}
-		}
-
-		if (reval) {
-			customComponents.add(component);
-			component.setParent(id);
-		}
-		return reval;
-	}
-
+	
 	@SuppressWarnings("unchecked")
 	public <T extends AgentComponent> T getComponent(Class<? extends T> cls) {
-		for (AgentComponent ea : customComponents) {
+		for (AgentComponent ea : beliefs.getComponents()) {
 			if (ea.getClass().equals(cls))
 				return (T) ea;
 		}
 		return null;
 	}
 
-	/** @return the last action performed by the agent */
-	public Action getLastAction() {
-		return lastAction;
-	}
-
 	/** @return an unmodifiable list of components of this agent */
-	public List<AgentComponent> getComponents() {
-		return Collections.unmodifiableList(customComponents);
+	public Set<AgentComponent> getComponents() {
+		return Collections.unmodifiableSet(beliefs.getComponents());
 	}
 
 	public boolean addListener(AgentListener listener) {
@@ -603,7 +556,6 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		LOG.info("Action performed: " + act.toString());
 		reporter.report("Action: '" + act.toString() + "' performed.");
 		Angerona.getInstance().onActionPerformed(this, act);
-		actionsHistory.add(act);
 	}
 
 	@Override

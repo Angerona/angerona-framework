@@ -99,10 +99,12 @@ implements 	AgentComponent,
 	
 	@Override
 	public void setParent(Long id) {
-		parentId = id;
-		getAgent().addListener(this);
-		reporter.setDefaultPoster(this);
-		reporter.setOperatorStack(getAgent());
+		if(parentId != id) {
+			parentId = id;
+			getAgent().addListener(this);
+			reporter.setDefaultPoster(this);
+			reporter.setOperatorStack(getAgent());
+		}
 	}
 
 	@Override
@@ -148,7 +150,7 @@ implements 	AgentComponent,
 	}
 	
 	@Override
-	public abstract Object clone();
+	public abstract BaseAgentComponent clone();
 	
 	@Override
 	public void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs) {

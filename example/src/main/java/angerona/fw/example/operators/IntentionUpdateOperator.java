@@ -23,7 +23,7 @@ import angerona.fw.operators.parameter.EvaluateParameter;
  * 	containing an action on top provides the action which is performed.
  * 	Therefore this implementation is order dependent.
  * 
- * 	The caller of the operator can use the parameter 'allowUnsafe' to turn 
+ * 	The caller of the operator can use the setting 'allowUnsafe' to turn 
  * 	violation checking on/off.
  * 
  * 	@author Tim Janus

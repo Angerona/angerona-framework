@@ -52,7 +52,7 @@ public class AgentInstance {
 
 	protected Map<String, BeliefbaseConfig> realViewMap = new HashMap<>();
 	
-	/** the file suffix identifying the belief base */
+	/** the file prefix identifying the belief base */
 	@Element(name="beliefbase-name", required=false)
 	protected String alternativeBBName;
 	

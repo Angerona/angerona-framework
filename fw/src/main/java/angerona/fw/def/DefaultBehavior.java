@@ -85,9 +85,9 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		angeronaReady = false;
 		++tick;
 		for(Agent agent : env.getAgents()) {
+			// cycle internally sends the selected action
+			// to the environment using sendAction() method.
 			agent.cycle();
-			if(agent.getLastAction() != null)
-				sendAction(env, agent.getLastAction());
 		}
 		angeronaReady = true;
 		

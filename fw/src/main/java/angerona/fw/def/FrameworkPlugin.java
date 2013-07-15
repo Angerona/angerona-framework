@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import angerona.fw.ActionHistory;
 import angerona.fw.AgentComponent;
 import angerona.fw.AngeronaPluginAdapter;
 import angerona.fw.EnvironmentBehavior;
@@ -26,6 +27,7 @@ public class FrameworkPlugin extends AngeronaPluginAdapter {
 		reval.add(PlanComponent.class);
 		reval.add(Desires.class);
 		reval.add(ScriptingComponent.class);
+		reval.add(ActionHistory.class);
 		return reval;
 	}
 	

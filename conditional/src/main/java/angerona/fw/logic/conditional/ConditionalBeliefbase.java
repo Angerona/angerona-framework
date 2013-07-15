@@ -150,7 +150,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	}
 
 	@Override
-	public Object clone() {
+	public ConditionalBeliefbase clone() {
 		return new ConditionalBeliefbase(this);
 	}
 
