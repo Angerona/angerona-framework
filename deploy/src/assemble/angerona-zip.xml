@@ -14,20 +14,33 @@
       
       <!-- Now, select which projects to include in this module-set. -->
       <includes>
-        <include>angerona:fw</include>
-        <include>angerona.fw.am:secrecy</include>
-        <include>angerona.fw:asp</include>
-        <include>angerona.fw:conditional</include>
-        <include>angerona.fw:example</include>
-        <include>angerona.fw:gui</include>
-        <include>angerona.fw:knowhow</include>
-        <include>angerona.fw:mary</include>
         <include>angerona.fw:app</include>
 	  </includes>
       <binaries>
-        <outputDirectory>modules/</outputDirectory>
+        <outputDirectory>.</outputDirectory>
         <unpack>false</unpack>
       </binaries>
     </moduleSet>
   </moduleSets>
+  
+  <fileSets>
+  	<fileSet>
+  		<outputDirectory>.</outputDirectory>
+  		<directory>../app/target/</directory>
+  		<includes>
+  			<include>config/**</include>
+  			<include>examples/**</include>
+  			<include>plugins/**</include>
+  			<include>resources/**</include>
+  		</includes>
+  	</fileSet>
+  	
+  	<fileSet>
+  		<outputDirectory>.</outputDirectory>
+  		<directory>../app/target/classes/</directory>
+  		<includes>
+  			<include>logback.xml</include>
+  		</includes>
+  	</fileSet>
+  </fileSets>
 </assembly>
