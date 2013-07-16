@@ -17,8 +17,9 @@
         <include>angerona.fw:app</include>
 	  </includes>
       <binaries>
-        <outputDirectory>.</outputDirectory>
+        <outputDirectory>./lib</outputDirectory>
         <unpack>false</unpack>
+        <outputFileNameMapping>Angerona.jar</outputFileNameMapping>
       </binaries>
     </moduleSet>
   </moduleSets>
@@ -40,6 +41,14 @@
   		<directory>../app/target/classes/</directory>
   		<includes>
   			<include>logback.xml</include>
+  		</includes>
+  	</fileSet>
+  	
+  	<fileSet>
+  		<outputDirectory>.</outputDirectory>
+  		<directory>src/start-script/</directory>
+  		<includes>
+  			<include>**</include>
   		</includes>
   	</fileSet>
   </fileSets>
