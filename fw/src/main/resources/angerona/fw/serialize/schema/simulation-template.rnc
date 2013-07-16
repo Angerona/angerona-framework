@@ -3,6 +3,8 @@ grammar {
 	sc = element simulation-configuration {
 		element name {text} &
 		element behavior {text} &
+		element category {text} ?
+		element description {text} ?
 		ai+
 	}
 	
