@@ -2,11 +2,16 @@
 	<name>SCM simple</name>
     <category>scm/knowhow</category>   
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
+	<description>
+	This scenario does the same as the scm/asp/Strike Committee Meeting (ASP) but uses other
+	operators, namely know-how driven plan generation operators. The communication is:
+	- Employee informs boss that he needs an excuse
+	- Boss asks Employee if he attend the strike committee meeting.
+	- Employee lies and therefore answers with no
+	</description>
 
     <agent-instance>
 		<name>employee</name>
-        
-         
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          

@@ -2,10 +2,17 @@
 	<name>Strike Committee Meeting (OCF)</name>
 	<category>scm/ocf</category>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
-	
+	<description>
+	The communication is more sophisticated as in the ASP and Example
+	strike committee meeting scenario because it uses the revision speech act:
+    - The employee asks if he is excused if he takes the next day off
+	- The boss answers no
+	- The employee tells the boss using revision that he has a medical appointment
+	- The employee asks if he is excused if he takes the next day off
+	- The boss answer yes.
+	</description>
 	<agent-instance>
 		<name>Employee</name>
-        
         
         <agent-config source="config/agents/default_agent.xml" />
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />

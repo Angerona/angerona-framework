@@ -2,10 +2,18 @@
 	<name>Strike Committee Meeting (Simple)</name>
 	<category>scm</category>
 	<behavior>angerona.fw.def.DefaultBehavior</behavior>
+	<description>
+		This scenario uses the simple knowledge representation mechanism
+		and shows that the agent using this mechanism is capable to lie
+		if it is directly asked for an agent.
+		- The employee informs the boss that he needs the next day off
+		- The boss ask the employee if he attends to the strike committee
+		  meeting
+		- The employee lies and therefore answers with no.
+	</description>
 	
 	<agent-instance>
 		<name>Employee</name>
-			
 		
         <agent-config source="config/agents/default_agent.xml" />         
         <beliefbase-config source="config/beliefbases/example_beliefbase.xml" />

@@ -2,11 +2,14 @@
 	<name>Courtroom Scenario - No Witness</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
     <category>mary</category>
+    <description>
+    In this scenario the secrets are weaken by the three possible answers by an different amount:
+	said(youLied) - said(youOwe) - said(husbandWifeScandal). Therefore this is the order Mary answers
+	the three queries of the coroner.
+    </description>
     
 	<agent-instance>
 		<name>Mary</name>
-       	
-        
        	
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />

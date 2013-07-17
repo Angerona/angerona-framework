@@ -2,11 +2,16 @@
 	<name>Courtroom Scenario - 2 Secrets</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<category>mary</category>
+	<description>
+	This scenario uses two secrets and therefore shows that the answer is selected that has the lowest sum 
+	of secret weakening. Alice answers said(youLied) first because it weakens no secret but then she has to 
+	decide between said(husbandWifeScandal) that only weakens on secret and said(YouOwe) that weakens both
+	secrets, such that the sum of secret weakening is greater. Therefore Alice chooses said(husbandWifeScandal)
+	instead of said(husbandWifeScandal) as in the 'No Witness version'.
+	</description>
 	
 	<agent-instance>
 		<name>Mary</name>
-      	
-       
       	
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />

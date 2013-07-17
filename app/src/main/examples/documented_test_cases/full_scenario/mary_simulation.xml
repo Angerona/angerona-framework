@@ -3,6 +3,15 @@
 	<name>Courtroom Scenario</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<category>mary</category>
+    <description>
+    Because the Coroner already asked the witness the secret of Mary is not weakened whatever answer
+	is given by Alice. Because the Coroner asks two times what was said in the argument this scenario
+	shows that Alice does not self repeats. The communication is the following:
+	- Coroner queries Alice for said(X)
+	- Alice answers said(husbandWifeScandal)
+	- Coroner queries Alice for said(X)
+	- Alice answers said(youLied)
+    </description>
     
 	<agent-instance>
 		<name>Mary</name>

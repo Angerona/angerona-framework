@@ -3,11 +3,12 @@
 	<name>Courtroom Scenario - 5 Questions</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
     <category>mary</category>
+    <description>
+    This scenario shows that dontKnow is used if every answer to an open query is given.
+    </description>
      
 	<agent-instance>
 		<name>Mary</name>
-       	
-        
        	
         <agent-config source="config/agents/mary.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
