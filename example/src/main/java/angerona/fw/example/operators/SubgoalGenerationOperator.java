@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
@@ -100,8 +101,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	}
 	
 	/**
-	 * This is a helper method: Which searches for desires starting with the prefix 'v_'.
-	 * It creates RevisionRequests for such desires.
+	 * This is a helper method: Which searches for desires starting with the prefix 'v_' or 'q_'.
+	 * It creates simple Inform or Query plans for such desires.
 	 * @param pp		The data-structure containing parameters for the operator.
 	 * @param ag		The agent.
 	 * @return			true if a new subgoal was created and added to the master-plan, false otherwise.
@@ -131,17 +132,34 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				int si = predicateName.indexOf("_")+1;
 				if(si == -1)
 					continue;
+				
 				String recvName = predicateName.substring(si);
+				// check if the receiving agent exists in the simulation:
+				if(pp.getAgent().getEnvironment().getAgentByName(recvName) == null) {
+					LOG.warn("The agent '{}' referred in desire: '{}' does not exist",
+							recvName, desire.toString());
+					continue;
+				}
 				
 				if(atom.getArguments().size() < 1)
 					continue;
 				String content = atom.getArguments().get(0).toString();
 				
-				LOG.info("'{}' wants '"+recvName+"' to believe: '{}'",  ag.getName(), content);
+				// generate information log message:
+				StringBuffer buf = new StringBuffer();
+				buf.append("'{}' ");
+				if(informDesire) {
+					buf.append("wants '" + recvName + "' to believe: ");
+				} else if(queryDesire) {
+					buf.append("asks '" + recvName + "' for: ");
+				}
+				buf.append("'{}'");
+				LOG.info(buf.toString(),  ag.getName(), content);
 		
+				// create plan...
 				Subgoal sg = new Subgoal(ag, desire);
 				FolParserB parser = new FolParserB(new StringReader(content));
-				FOLAtom a = null;
+				FolFormula a = null;
 				try {
 					a = parser.atom(new FolSignature());
 				} catch (ParseException e) {
@@ -149,12 +167,22 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					e.printStackTrace();
 				}
 				
+				// check if the negation shall be used:
+				if(atom.getArguments().size() >= 3) {
+					if(atom.getArguments().get(2).equals(new Constant("neg"))) {
+						a = new Negation(a);
+					}
+				}
+				
+				// and add action (Inform or Query) to the plan stack:
 				if(informDesire) {
 					sg.newStack( new Inform(ag, recvName, a));
 				} else {
 					sg.newStack( new Query(ag, recvName, a));
 				}
 				ag.getPlanComponent().addPlan(sg);
+				
+				// add a report to the simulation about the new plan:
 				pp.report("Add the new atomic action '" + Inform.class.getSimpleName() + 
 						"' to the plan, choosed by desire: " + desire.toString(), 
 						ag.getPlanComponent());

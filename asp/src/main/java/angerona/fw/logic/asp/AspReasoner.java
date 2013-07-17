@@ -95,7 +95,7 @@ public class AspReasoner extends BaseReasoner {
 			// negation and adapt the AnswerValue:
 			if(answers.contains(query)) {
 				av = AnswerValue.AV_TRUE;
-			} else if (answers.contains(new Negation(query))) {
+			} else if (answers.contains(query.complement())) {
 				av = AnswerValue.AV_FALSE;
 			}
 			return new Pair<>(answers, new AngeronaAnswer(query, av));
@@ -154,6 +154,11 @@ public class AspReasoner extends BaseReasoner {
 	protected Set<FolFormula> inferInt(ReasonerParameter params) {
 		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)params.getBeliefBase());
 		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
+		
+		if(answerSets == null) {
+			LOG.warn("Something went wrong during ASP-Solver invocation.");
+			return new HashSet<>();
+		}
 		
 		// Translate the elp to fol:
 		for(AnswerSet as : answerSets) {
