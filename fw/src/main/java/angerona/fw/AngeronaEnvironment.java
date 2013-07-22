@@ -1,8 +1,5 @@
 package angerona.fw;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -148,46 +145,13 @@ public class AngeronaEnvironment  {
 	}
 	
 	/**
-	 * Loads a simulation from the given filename
-	 * @param filename	name of the xml file containing the configuration of the simulation.
-	 * @return the loaded simulation configuration if no error occurred, null otherwise.
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public SimulationConfiguration loadSimulation(String filename) throws FileNotFoundException, IOException {
-		return loadSimulation(filename, true);
-	}
-	
-	/**
-	 * Loads a simulation from the given filename
-	 * @param filename	name of the xml file containing the configuration of the simulation.
-	 * @param startImmediately	flag indicating if the simulation defined in the file should be started
-	 * 							Immediately after loading the file.
-	 * @return the loaded simulation configuration if no error occurred, null otherwise.
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 */
-	public SimulationConfiguration loadSimulation(String filename, boolean startImmediately) throws FileNotFoundException, IOException {
-		SimulationConfiguration config = null;
-		
-		config = SimulationConfiguration.loadXml(new File(filename));	
-		if(config != null) {
-			name = config.getName();
-			
-			if(startImmediately) {
-				return initSimulation(config) ? config : null;
-			}
-		}
-		return config;
-	}
-	
-	/**
 	 * Initializes an Angerona simulation, with the given config. The root directory of the simulation is determined from the configuration file.
 	 * @param config	reference to the data-structure containing the configuration of the simulation.
 	 * @return	true if everything was fine, false if an error occurred.
 	 */
 	public boolean initSimulation(SimulationConfiguration config) {
 		LOG.info("Starting simulation: " + config.getName());
+		this.name = config.getName();
 		this.simDirectory = config.getFile().getParent();
 
 		// inform listener of start of simulation creation:
