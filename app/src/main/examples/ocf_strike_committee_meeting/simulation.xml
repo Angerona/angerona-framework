@@ -27,11 +27,11 @@
         	</query>
         </script>
         <script>
-        	<revision type="Revision">
+        	<inform type="Inform">
         		<sender>Employee</sender>
         		<receiver>Boss</receiver>
-        		<proposition>medical_appointment</proposition>
-        	</revision>
+        		<sentences><sentence>medical_appointment</sentence></sentences>
+        	</inform>
         </script>
         <script>
         	<query type="Query">
