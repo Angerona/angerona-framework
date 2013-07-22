@@ -235,7 +235,6 @@ public class AngeronaEnvironment  {
 			} catch (AgentInstantiationException e) {
 				errorDelegation("Cannot init simulation, something went wrong during agent instatiation: " + 
 						e.getMessage());
-				e.printStackTrace();
 				return false;
 			}
 		} 

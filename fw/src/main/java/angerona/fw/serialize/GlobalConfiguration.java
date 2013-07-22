@@ -30,7 +30,7 @@ public class GlobalConfiguration {
 	@ElementList(name="plugins", inline=true, entry="plugin")
 	private List<String>	pluginPaths = new LinkedList<String>();
 	
-	@ElementMap(entry="parameter", key="name", value="value", attribute=true, inline=true)
+	@ElementMap(entry="parameter", key="name", value="value", attribute=true, inline=true, required=false)
 	private Map<String, String>	parameters = new HashMap<>();
 	
 	public List<String> getPluginPaths() {
@@ -43,17 +43,21 @@ public class GlobalConfiguration {
 	
 	/**
 	 * Adds to the parameter with the given name a postfix for representing the 
-	 * executables on different OSes.
+	 * executables on different OSes if the name is no file.
 	 * @param name	The name of the parameter
 	 * @return		A string representing the path to the exeutable inclusive os-dependent postfix.
 	 */
 	public String getAsExecutable(String name) {
 		String reval = null;
 		if(parameters.containsKey(name)) {
-			String postfix = "";
-			postfix += System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ".exe" : "";
-			postfix += System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0 ? ".bin" : "";
-			reval = parameters.get(name) + postfix;
+			reval = parameters.get(name);
+			if(!new File(reval).exists()) {
+				reval += System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ".exe" : "";
+				reval += System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0 ? ".bin" : "";
+				if(! new File(reval).exists()) {
+					reval = null;
+				}
+			} 
 		}
 		return reval;
 	}

@@ -16,7 +16,7 @@ import angerona.fw.util.OSValidator;
  */
 public class MockBeliefbase extends AspBeliefbase {
 	private class SpecialOperatorSet extends OperatorProvider {
-		public SpecialOperatorSet() {
+		public SpecialOperatorSet() throws InstantiationException {
 			OperatorSet rSet = new OperatorSet(BaseReasoner.OPERATION_TYPE);
 			AspReasoner arOp = new AspReasoner();
 			rSet.addOperator(new OperatorCallWrapper(arOp));
@@ -37,7 +37,7 @@ public class MockBeliefbase extends AspBeliefbase {
 		}
 	}
 	
-	public MockBeliefbase() {
+	public MockBeliefbase() throws InstantiationException {
 		
 		this.operators = new SpecialOperatorSet();
 		
@@ -62,6 +62,11 @@ public class MockBeliefbase extends AspBeliefbase {
 			public Solver getSolver() {
 				
 				return new DLV(path);
+			}
+
+			@Override
+			public InstantiationException getError() {
+				return path == null ? new InstantiationException() : null;
 			}
 		});
 		//getReasoningOperator().infer(this);

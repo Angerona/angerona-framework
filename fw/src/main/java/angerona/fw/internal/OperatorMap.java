@@ -31,13 +31,18 @@ public class OperatorMap extends PluginAdapter {
 	/** map from operator class names to an instance of the implementation */
 	private Map<String, BaseOperator> mOperatorMap = new HashMap<String, BaseOperator>();
 	
+	private Map<String, InstantiationException> mErrorMap = new HashMap<>();
+	
 	/**
 	 * @param fullJavaClsName The full java class name of the operator class which shall be returned
 	 * @return	The operator with the given class name or null if it does not exists.
+	 * @throws InstantiationException 
 	 */
-	public BaseOperator getOperator(String fullJavaClsName) {
+	public BaseOperator getOperator(String fullJavaClsName) throws InstantiationException {
 		if(mOperatorMap.containsKey(fullJavaClsName)) {
 			return mOperatorMap.get(fullJavaClsName);
+		} else if(mErrorMap.containsKey(fullJavaClsName)) {
+			throw mErrorMap.get(fullJavaClsName);
 		}
 		return null;
 	}
@@ -65,6 +70,8 @@ public class OperatorMap extends PluginAdapter {
 			} catch (InstantiationException|IllegalAccessException e) {
 				e.printStackTrace();
 				LOG.error("Cannot instantiate '{}': '{}'", cls.getName(), e.getMessage());
+				if(e instanceof InstantiationException)
+					mErrorMap.put(cls.getName(), (InstantiationException)e);
 			}
 		}
 	}

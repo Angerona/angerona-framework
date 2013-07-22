@@ -27,13 +27,20 @@ public abstract class AspRevision extends BaseChangeBeliefs {
 	/** wrapper for the used ASP solver */
 	protected SolverWrapper wrapper;
 	
-	public AspRevision() {
+	public AspRevision() throws InstantiationException {
 		GlobalConfiguration config = Angerona.getInstance().getConfig();
+		if(!config.getParameters().containsKey("asp-solver")) {
+			throw new InstantiationException("Configuration 'asp-solver' not set in configuration.xml");
+		}
 		String solverStr = config.getParameters().get("asp-solver");
 		if(solverStr != null)
 			this.wrapper = SolverWrapper.valueOf(solverStr);
 		else
 			this.wrapper = SolverWrapper.DLV;
+		
+		if(this.wrapper.getError() != null) {
+			throw this.wrapper.getError();
+		}
 	}
 	
 	@Override

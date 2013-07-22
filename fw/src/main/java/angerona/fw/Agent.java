@@ -222,10 +222,12 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		// load cycle script and link supported operators
 		asmlCylce = ai.getConfig().getCycleScript();
 		for (OperationSetConfig osc : ai.getConfig().getOperations()) {
-			if (!operators.addOperationSet(osc)) {
+			try{
+				operators.addOperationSet(osc);
+			} catch (Exception e) {
 				throw new AgentInstantiationException(
-						"Cannot create operation-set: '"
-								+ osc.getOperationType() + "'");
+						"Cannot create operation-set of type '"
+								+ osc.getOperationType() + "': " + e.getMessage());
 			}
 		}
 
@@ -350,16 +352,11 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 				views.put(otherInstance.getName(), actView);
 			}
 			setBeliefs(world, views);
-		} catch (InstantiationException e) {
+		} catch (InstantiationException|IllegalAccessException|
+				ClassNotFoundException|ParseException e) {
 			errorOutput = "Cannot create agent '" + getName()
 					+ "' something went wrong during dynamic instantiation: "
 					+ e.getMessage();
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			errorOutput = "Cannot create agent '" + getName()
-					+ "' something went wrong during dynamic instantiation: "
-					+ e.getMessage();
-			e.printStackTrace();
 		} finally {
 			if (errorOutput != null) {
 				throw new AgentInstantiationException(errorOutput);

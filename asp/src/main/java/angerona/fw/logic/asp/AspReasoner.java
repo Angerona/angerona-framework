@@ -46,14 +46,21 @@ public class AspReasoner extends BaseReasoner {
 	/** the solver type used by this class instance */
 	private ISolverWrapper solver;
 	
-	public AspReasoner() {
+	public AspReasoner() throws InstantiationException {
 		GlobalConfiguration config = Angerona.getInstance().getConfig();
 		if(config != null) {
+			if(!config.getParameters().containsKey("asp-solver")) {
+				throw new InstantiationException("Configuration 'asp-solver' not set in configuration.xml");
+			}
 			String solverStr = config.getParameters().get("asp-solver");
 			if(solverStr != null)
 				this.solver = SolverWrapper.valueOf(solverStr);
 			else
 				this.solver = SolverWrapper.DLV;
+			
+			if(this.solver.getError() != null) {
+				throw this.solver.getError();
+			}
 		}
 	}
 	
