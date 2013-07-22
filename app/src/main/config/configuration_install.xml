@@ -1,0 +1,28 @@
+<!-- 
+	This file is deployed as configuration file for public builds
+	as content of a zip file for example.
+ -->
+<config>
+    <!-- Use this file as a template for your own configuration -->   
+	<plugin>plugins/example-0.0.1-SNAPSHOT.jar</plugin>
+	<plugin>plugins/asp-0.0.1-SNAPSHOT.jar</plugin>
+	<plugin>plugins/knowhow-0.0.1-SNAPSHOT.jar</plugin>
+	<plugin>plugins/mary-0.0.1-SNAPSHOT.jar</plugin>
+	<plugin>plugins/conditional-0.0.1-SNAPSHOT.jar</plugin>
+	<plugin>plugins/secrecy-0.0.1-SNAPSHOT.jar</plugin>
+	<plugin>plugins/defendingagent-0.0.1-SNAPSHOT.jar</plugin>
+   
+	<!-- possible values are: CLINGO, DLV and DLV_COMPLEX -->
+	<parameter name="asp-solver" value="DLV"/>
+	
+	<!--  
+	<parameter name="path-dlv-complex" 
+		value="asp/dlv/dlv-complex"/>
+   
+	<parameter name="path-dlv"
+		value="asp/dlv/dlv"/>
+   
+	<parameter name="path-clingo"
+		value="asp/clingo/clingo"/>
+	-->
+</config>
