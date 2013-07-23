@@ -5,13 +5,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import angerona.fw.Agent;
+import angerona.fw.InteractiveAgent;
+import angerona.fw.Observer;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.Revision;
 import angerona.fw.comm.SpeechAct;
 import angerona.fw.error.AngeronaException;
 import angerona.fw.gui.base.Presenter;
-import angerona.fw.logic.ScriptingComponent;
 import angerona.fw.reflection.FolFormulaVariable;
 
 /**
@@ -22,13 +22,12 @@ import angerona.fw.reflection.FolFormulaVariable;
  */
 public class InteractivePresenter 
 	extends Presenter<InteractiveModelAdapter, InteractiveBar>
-	implements ActionListener {
+	implements ActionListener, Observer {
 	
 	/** Default Ctor: The user has to call setModel() and setView(). */
 	public InteractivePresenter() {}
 	
-	
-	private Agent a;
+	private InteractiveAgent a;
 	/** 
 	 * Ctor: Invokes setModel() and setView()
 	 * @param model	The used model.
@@ -38,36 +37,43 @@ public class InteractivePresenter
 		setModel(model);
 		setView(view);
 		this.a = model.getAgent();
+		a.register(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		String action = view.getActionType().getSelectedItem().toString();
-		String receiver = view.getReceiver().getSelectedItem().toString();
-		String text = view.getTextField().getText();
 		
-		
-		SpeechAct act = null;
-		
-		
-		if(action.equals("Query")){
-			try {
-				act = new Query(a.getName(), receiver, new FolFormulaVariable((new FolFormulaVariable()).createInstanceFromString(text)));
-			} catch (AngeronaException e) {
-				JOptionPane.showMessageDialog(view.getActionButton(), "Could not parse action, please check for syntax errors.", "Parser error", JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
+		if(ev.getSource() == view.getActionButton()) {
+			String action = view.getActionType().getSelectedItem().toString();
+			String receiver = view.getReceiver().getSelectedItem().toString();
+			String text = view.getTextField().getText();
+			
+			
+			SpeechAct act = null;
+			
+			
+			if(action.equals("Query")){
+				try {
+					act = new Query(a.getName(), receiver, new FolFormulaVariable((new FolFormulaVariable()).createInstanceFromString(text)));
+				} catch (AngeronaException e) {
+					JOptionPane.showMessageDialog(view.getActionButton(), "Could not parse action, please check for syntax errors.", "Parser error", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+				}
+			}else{
+				try {
+					act = new Revision(a.getName(), receiver, new FolFormulaVariable((new FolFormulaVariable()).createInstanceFromString(text)));
+				} catch (AngeronaException e) {
+					JOptionPane.showMessageDialog(view.getActionButton(), "Could not parse action, please check for syntax errors.", "Parser error", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+				}
 			}
-		}else{
-			try {
-				act = new Revision(a.getName(), receiver, new FolFormulaVariable((new FolFormulaVariable()).createInstanceFromString(text)));
-			} catch (AngeronaException e) {
-				JOptionPane.showMessageDialog(view.getActionButton(), "Could not parse action, please check for syntax errors.", "Parser error", JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
+			if(act != null){
+				a.performAction(act);
+				a.setAction(true);
 			}
-		}
-		if(act != null){
-			//TODO desire scriptingProcessing must be create
-			a.getComponent(ScriptingComponent.class).add(act);
+		}else{// FinischButton was pressed
+			a.setHasPerception(false);
+			a.setAction(true);
 		}
 	}
 
@@ -78,10 +84,17 @@ public class InteractivePresenter
 	@Override
 	protected void wireViewEvents() {
 		view.getActionButton().addActionListener(this);
+		view.getFinButton().addActionListener(this);
 	}
 
 	@Override
 	protected void unwireViewEvents() {
 		view.getActionButton().removeActionListener(this);
+		view.getFinButton().removeActionListener(this);
+	}
+
+	@Override
+	public void update() {
+		JOptionPane.showMessageDialog(view, "Please insert an Action or press the Finish Button!");
 	}
 }

@@ -1,0 +1,9 @@
+<asml-script name="interactiveAgentCycle">
+    	
+	<operation type="UpdateBeliefs">
+        <param name="information" value="$perception" />
+        <param name="beliefs" value="$beliefs" />
+    </operation>
+
+	<execute action="$action" />
+</asml-script>

@@ -6,9 +6,6 @@
     <agent-instance>
       	<name>Defender</name>
       	
-      	<!-- This marks the Agent who is not "controlled" by the user -->
-		<type>AI</type>
-      	
       	<beliefbase-name>defender</beliefbase-name>
       	
       	<agent-config source="config/agents/censor_defending_agent.xml" />
@@ -35,12 +32,11 @@
 	<agent-instance>
 		<name>Attacker</name>
 		
-		<!-- This marks the Agent who is "controlled" by the user -->
-		<type>User</type>
+		<type>InteractiveAgent</type>
 		
         <beliefbase-name>attacker</beliefbase-name>
          
-        <agent-config source="config/agents/default_agent.xml" />
+        <agent-config source="config/agents/interactive_agent.xml" />
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
         
         

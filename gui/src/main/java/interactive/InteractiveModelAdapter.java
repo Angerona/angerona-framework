@@ -2,6 +2,7 @@ package interactive;
 
 import angerona.fw.Agent;
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.InteractiveAgent;
 import angerona.fw.util.ModelAdapter;
 
 /**
@@ -10,15 +11,15 @@ import angerona.fw.util.ModelAdapter;
  */
 public class InteractiveModelAdapter extends ModelAdapter {
 	private String[] receiver, actionTypes = { "Query", "Revision" };
-	private Agent a;
+	private InteractiveAgent a;
 	
 	public InteractiveModelAdapter(AngeronaEnvironment environment){
 		this.receiver = environment.getAgentNames().toArray(new String[environment.getAgentNames().size()]);
 		
 		//find the agent controlled by the user
 		for(String agent : this.receiver){
-			if(environment.getAgentByName(agent).getType().equals("User")){
-				a = environment.getAgentByName(agent);
+			if(environment.getAgentByName(agent) instanceof InteractiveAgent){
+				a = (InteractiveAgent) environment.getAgentByName(agent);
 				break;
 			}
 		}
@@ -42,7 +43,7 @@ public class InteractiveModelAdapter extends ModelAdapter {
 		return this.actionTypes;
 	}
 	
-	public Agent getAgent(){
+	public InteractiveAgent getAgent(){
 		return a;
 	}
 }

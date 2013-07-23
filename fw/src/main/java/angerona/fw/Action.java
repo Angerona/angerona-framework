@@ -90,7 +90,9 @@ public class Action
 	
 	@Override
 	public void onSubgoalFinished(Intention subgoal) {
-		super.parent.onSubgoalFinished(this);
+		if(super.parent != null) {
+			super.parent.onSubgoalFinished(this);
+		}
 	}
 
 	@Override

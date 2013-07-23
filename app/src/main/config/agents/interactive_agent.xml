@@ -1,0 +1,11 @@
+<agent-configuration>
+	<name>Defending Censor Agent Implementation</name>
+	<cycle-script source="config/interactive_agent_cycle.xml" />
+   	
+	<operation-set operation-type="UpdateBeliefs">
+      <default-operator-cls>angerona.fw.defendingagent.operators.def.UpdateBeliefsOperator</default-operator-cls>
+   	</operation-set>
+
+    <component>angerona.fw.defendingagent.ViewComponent</component>
+    <component>angerona.fw.ActionHistory</component>
+</agent-configuration>

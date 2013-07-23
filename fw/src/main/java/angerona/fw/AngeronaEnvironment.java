@@ -106,6 +106,7 @@ public class AngeronaEnvironment  {
 		}
 		
 		agentMap.put(agent.getName(), agent);
+		Angerona.getInstance().onAgentAdded(this, agent);
 		return true;
 	}
 	
@@ -220,8 +221,6 @@ public class AngeronaEnvironment  {
 				agent.getComponent(ScriptingComponent.class).add(a);
 			}
 			
-			//set type
-			agent.setType(ai.getType());
 		}
 		
 		// post the initial perceptions defined in the simulation configuration
@@ -289,13 +288,11 @@ public class AngeronaEnvironment  {
 	private boolean registerAgents(SimulationConfiguration config) {
 		try {
 			for(AgentInstance ai : config.getAgents()) {
-				Agent agent;
-				if(ai.getType() != null){
-					agent = new Agent(ai.getName(), this, ai.getType());
+				if(ai.getType() != null && ai.getType().equals("InteractiveAgent")){
+					addAgent(new InteractiveAgent(ai.getName(), this));
 				}else{
-					agent = new Agent(ai.getName(), this);
+					addAgent(new Agent(ai.getName(), this));
 				}
-				addAgent(agent);
 			}
 		} catch (AgentIdException e) {
 			e.printStackTrace();

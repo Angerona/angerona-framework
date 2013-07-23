@@ -80,59 +80,56 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	private static Logger LOG = LoggerFactory.getLogger(Agent.class);
 
 	/** The belief base of the agent */
-	private Beliefs beliefs;
+	protected Beliefs beliefs;
 
 	/** id in the report-attachment hierarchy. */
-	private Long id;
+	protected Long id;
 
 	/** the name of the agent, has to be unique in the simulation scope */
-	private String name;
-	
-	/** Type of the Agent (AI or User) for interactive Examples */
-	private String type;
+	protected String name;
 
 	/**
 	 * this instance is responsible to communicate with the Angerona report
 	 * system
 	 */
-	private AngeronaReporter reporter;
+	protected AngeronaReporter reporter;
 
 	/**
 	 * A list of children Ids which identify the AgentComponent instances linked
 	 * to the agent
 	 */
-	private List<Long> childrenIds = new LinkedList<Long>();
+	protected List<Long> childrenIds = new LinkedList<Long>();
 
-	private List<SubgoalListener> subgoalListeners = new LinkedList<SubgoalListener>();
+	protected List<SubgoalListener> subgoalListeners = new LinkedList<SubgoalListener>();
 
-	private List<AgentListener> listeners = new LinkedList<AgentListener>();
+	protected List<AgentListener> listeners = new LinkedList<AgentListener>();
 
 	/**
 	 * The context of the agents used for dynamic code defined in xml files
 	 * (intentions)
 	 */
-	private Context context;
+	protected Context context;
 
 	/** a list of capabilities which describe actions the agent can perform */
-	private List<String> capabilities = new LinkedList<>();
+	protected List<String> capabilities = new LinkedList<>();
 	
-	private List<Perception> perceptions = new LinkedList<>();
+	protected List<Perception> perceptions = new LinkedList<>();
 
 	/**
 	 * The OperatorProvider instance responsible to manage the different
 	 * operators of the agent
 	 */
-	private OperatorProvider operators = new OperatorProvider();
+	protected OperatorProvider operators = new OperatorProvider();
 
 	/** The call stack of operators */
-	private Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
+	protected Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
 
 	/** the last perception used in the updateBeliefs Method */
-	private Perception lastUpdateBeliefsPercept;
+	protected Perception lastUpdateBeliefsPercept;
 
-	private CommandSequence asmlCylce;
+	protected CommandSequence asmlCylce;
 	
-	private AngeronaEnvironment env;
+	protected AngeronaEnvironment env;
 
 	public OperatorProvider getOperators() {
 		return operators;
@@ -141,13 +138,6 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	public Agent(String name, AngeronaEnvironment env) {
 		this.name = name;
 		this.env = env;
-		this.type = "AI";
-	}
-	
-	public Agent(String name, AngeronaEnvironment env, String type) {
-		this.name = name;
-		this.env = env;
-		this.type = type;
 	}
 
 	public List<String> getCapabilities() {
@@ -257,7 +247,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 * @param ai
 	 * @throws AgentInstantiationException
 	 */
-	private void parseBeliefbases(AgentInstance ai, File workingDirectory)
+	protected void parseBeliefbases(AgentInstance ai, File workingDirectory)
 			throws AgentInstantiationException {
 		String errorOutput = null;
 
@@ -318,7 +308,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 * @param config
 	 * @throws AgentInstantiationException
 	 */
-	private void createBeliefbases(AgentInstance ai,
+	protected void createBeliefbases(AgentInstance ai,
 			SimulationConfiguration config) throws AgentInstantiationException {
 		// local variable used to save the output of exceptions...
 		String errorOutput = null;
@@ -376,7 +366,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 *            operators / components used by the agent.
 	 * @throws AgentInstantiationException
 	 */
-	private void createAgentComponents(AgentInstance ai)
+	protected void createAgentComponents(AgentInstance ai)
 			throws AgentInstantiationException {
 		AgentConfig ac = ai.getConfig();
 		PluginInstantiator pi = PluginInstantiator.getInstance();
@@ -533,7 +523,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 * world and confidential directly to the agent context. We also add a view
 	 * context which holds all the view belief bases of the agent.
 	 */
-	private void regenContext() {
+	protected void regenContext() {
 		context = ContextFactory.createContext(this);
 		context.set("operators", this.operators);
 		context.set("plan", this.getComponent(PlanComponent.class));
@@ -623,7 +613,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		}
 	}
 
-	private void onBeliefBaseChange(BaseBeliefbase bb) {
+	protected void onBeliefBaseChange(BaseBeliefbase bb) {
 		// TODO: Document the flow of the messaging system for update-beliefs
 		// more technically.
 		if (bb == beliefs.getWorldKnowledge()) {
@@ -638,7 +628,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		}
 	}
 
-	private void onBBChanged(BaseBeliefbase bb, Perception percept, String space) {
+	protected void onBBChanged(BaseBeliefbase bb, Perception percept, String space) {
 		for (AgentListener l : listeners) {
 			l.beliefbaseChanged(bb, percept, space);
 		}
@@ -690,13 +680,5 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 
 	public String getName() {
 		return name;
-	}
-	
-	public String getType(){
-		return type;
-	}
-	
-	public void setType(String type){
-		this.type = type;
 	}
 }

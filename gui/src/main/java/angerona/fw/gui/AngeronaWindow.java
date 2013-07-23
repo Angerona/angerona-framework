@@ -2,6 +2,8 @@ package angerona.fw.gui;
 
 import interactive.InteractiveBar;
 import interactive.InteractiveBarMVPComponent;
+import interactive.InteractiveModelAdapter;
+import interactive.InteractivePresenter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +36,7 @@ import angerona.fw.Action;
 import angerona.fw.Agent;
 import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.InteractiveAgent;
 import angerona.fw.gui.base.ViewComponent;
 import angerona.fw.gui.controller.SimulationTreeController;
 import angerona.fw.gui.project.ProjectTreeMVPComponent;
@@ -378,7 +381,7 @@ public class AngeronaWindow extends WindowAdapter
 		
 		//check if the scenario has an interactive agent and open the interactive View if needed
 		for(Agent a : simulationEnvironment.getAgents()){
-			if (a.getType().equals("User")){			
+			if (a instanceof InteractiveAgent){		
 				resMap.add(openView(new InteractiveBarMVPComponent(simulationEnvironment)));
 				break;
 			}
@@ -401,7 +404,7 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void agentAdded(AngeronaEnvironment simulationEnvironment,
+	public void agentAdded(final AngeronaEnvironment simulationEnvironment,
 			Agent added) {
 	}
 

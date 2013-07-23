@@ -254,6 +254,12 @@ public class Angerona {
 		reports.put(ev, actualReport);
 	}
 	
+	protected void onAgentAdded(AngeronaEnvironment env, Agent added) {
+		for(SimulationListener l : simulationListeners) {
+			l.agentAdded(env, added);
+		}
+	}
+	
 	/**
 	 * Informs the simulation listeners about the finished initialization
 	 * of the given simulation

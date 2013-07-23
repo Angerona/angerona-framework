@@ -24,7 +24,7 @@ public class InteractiveBar extends ObservingPanel {
 	/** kill warning */
 	private static final long serialVersionUID = -5662460862082002346L;
 
-	private JButton btnAction;	
+	private JButton btnAction, btnFin;	
 	private JSplitPane spnSplitPane;
 	private JComboBox<String> actionType, receiver;
 	private JTextField field;
@@ -44,9 +44,14 @@ public class InteractiveBar extends ObservingPanel {
 		btnAction = new JButton();
 		btnAction.setText("Action");
 		btnAction.setMinimumSize(new Dimension(100, 30));
+		btnFin = new JButton();
+		btnFin.setText("Finish");
+		btnFin.setMinimumSize(new Dimension(100, 30));
 		buttonPanel.add(btnAction);
+		buttonPanel.add(btnFin);
 		
 		pnLeft.add(btnAction);
+		pnLeft.add(btnFin);
 		
 		spnSplitPane.setLeftComponent(pnLeft);
 		
@@ -139,6 +144,10 @@ public class InteractiveBar extends ObservingPanel {
 
 	public JButton getActionButton() {
 		return btnAction;
+	}
+	
+	public JButton getFinButton() {
+		return btnFin;
 	}
 	
 	public JTextField getTextField() {
