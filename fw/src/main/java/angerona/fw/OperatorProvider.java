@@ -53,18 +53,14 @@ public class OperatorProvider {
 	 * 								of the operator and having an optional map as parameter in 
 	 * 								the form {d=1.0} as postfix.
 	 * @return 	true if the operator was added and false if an error occurred.
+	 * @throws InstantiationException 
+	 * @throws ParseException 
+	 * @throws ClassNotFoundException 
 	 */
-	public Pair<String, OperatorCallWrapper> addOperator(String clsNameAndParams) {
+	public Pair<String, OperatorCallWrapper> addOperator(String clsNameAndParams) 
+			throws InstantiationException, ClassNotFoundException, ParseException {
 		Pair<String, OperatorCallWrapper> p = null;
-		try {
-			p = fetch(clsNameAndParams);
-		} catch (ClassNotFoundException e) {
-			LOG.error("Cannot add operator '{}' because it cannot be found: '{}'", clsNameAndParams, e.getMessage());
-			return null;
-		} catch (ParseException e) {
-			LOG.error("Cannot add operator '{}' because of Parser error: '{}'", clsNameAndParams, e.getMessage());
-			return null;
-		}
+		p = fetch(clsNameAndParams);
 		realAdd(p);
 		return p;
 	}
@@ -113,9 +109,13 @@ public class OperatorProvider {
 	 * 					which are strings of java-class-names.
 	 * @return			True if the operators in the config are successfully added, false if
 	 * 					an error occurred. 
+	 * @throws InstantiationException 
+	 * @throws ParseException 
+	 * @throws ClassNotFoundException 
 	 * 
 	 */
-	public boolean addOperationSet(OperationSetConfig config) {
+	public boolean addOperationSet(OperationSetConfig config) 
+			throws InstantiationException, ClassNotFoundException, ParseException {
 		OperatorSet os = getOperationSetByType(config.getOperationType());
 		if(os != null) {
 			LOG.warn("The operation-set of type '{}' already exists.", os.getOperationName());
@@ -169,9 +169,10 @@ public class OperatorProvider {
 	 * 			operator or null if the operator type is already registered.
 	 * @throws ParseException
 	 * @throws ClassNotFoundException
+	 * @throws InstantiationException 
 	 */
 	private Pair<String, OperatorCallWrapper> fetch(String clsNameAndParams)
-		throws ParseException, ClassNotFoundException {
+		throws ParseException, ClassNotFoundException, InstantiationException {
 		
 		// @todo Use a basic parser for stuff like that...
 		SecretParser parser = new SecretParser(new StringReader(clsNameAndParams));

@@ -2,7 +2,6 @@
 	<name>Answer Behavior Test</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
     <category>feature-test</category>
-    <!--
 	<description>
 	This scenario tests the answer behavior of the default subgoal-generation
 	operator. The following list describes the questions:
@@ -15,7 +14,6 @@
 	   is replaced. If a belief change operator is used which can create contradictory belief bases
 	   then at this place the view on Bob becomes contradictory.
 	</description>
-	!-->
 	
 	<agent-instance>
 		<name>Alice</name>

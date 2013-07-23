@@ -46,14 +46,21 @@ public class AspReasoner extends BaseReasoner {
 	/** the solver type used by this class instance */
 	private ISolverWrapper solver;
 	
-	public AspReasoner() {
+	public AspReasoner() throws InstantiationException {
 		GlobalConfiguration config = Angerona.getInstance().getConfig();
 		if(config != null) {
+			if(!config.getParameters().containsKey("asp-solver")) {
+				throw new InstantiationException("Configuration 'asp-solver' not set in configuration.xml");
+			}
 			String solverStr = config.getParameters().get("asp-solver");
 			if(solverStr != null)
 				this.solver = SolverWrapper.valueOf(solverStr);
 			else
 				this.solver = SolverWrapper.DLV;
+			
+			if(this.solver.getError() != null) {
+				throw this.solver.getError();
+			}
 		}
 	}
 	
@@ -95,7 +102,7 @@ public class AspReasoner extends BaseReasoner {
 			// negation and adapt the AnswerValue:
 			if(answers.contains(query)) {
 				av = AnswerValue.AV_TRUE;
-			} else if (answers.contains(new Negation(query))) {
+			} else if (answers.contains(query.complement())) {
 				av = AnswerValue.AV_FALSE;
 			}
 			return new Pair<>(answers, new AngeronaAnswer(query, av));
@@ -154,6 +161,11 @@ public class AspReasoner extends BaseReasoner {
 	protected Set<FolFormula> inferInt(ReasonerParameter params) {
 		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)params.getBeliefBase());
 		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
+		
+		if(answerSets == null) {
+			LOG.warn("Something went wrong during ASP-Solver invocation.");
+			return new HashSet<>();
+		}
 		
 		// Translate the elp to fol:
 		for(AnswerSet as : answerSets) {

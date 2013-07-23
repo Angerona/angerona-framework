@@ -34,6 +34,18 @@
   			<include>plugins/**</include>
   			<include>resources/**</include>
   		</includes>
+  		<!-- Dont use the configuration files that are used by dev team: -->
+  		<excludes>
+  			<exclude>config/configuration*.xml</exclude>
+  		</excludes>
+  	</fileSet>
+  	
+  	<fileSet>
+  		<outputDirectory>.</outputDirectory>
+  		<directory>../app/target/classes/</directory>
+  		<includes>
+  			<include>logback.xml</include>
+  		</includes>
   	</fileSet>
   	
   	<fileSet>
@@ -52,4 +64,13 @@
   		</includes>
   	</fileSet>
   </fileSets>
+  
+  <files>
+  	<!-- Use the configuration file that is created for public installs -->
+  	<file>
+  		<source>../app/src/main/config/configuration_install.xml</source>
+  		<outputDirectory>./config</outputDirectory>
+  		<destName>configuration.xml</destName>
+  	</file>
+  </files>
 </assembly>

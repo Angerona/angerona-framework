@@ -2,11 +2,18 @@
 	<name>SCM extended</name>
     <category>scm/knowhow</category>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
+	<description>
+	In this scenario the communication between the agents is more native. The boss
+	asks for a justification for the day off and at the end of the communication the boss
+	informs the employee that he is excused:
+	- The employee tells the boss that he has to be excused for the next day
+	- The boss asks the employee why he needs the excuse
+	- The employee answers that he attends a burial
+	- The boss tells the employee that he is excused for the next day
+	</description>
 	
 	<agent-instance>
 		<name>employee</name>
-        
-        
         
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />

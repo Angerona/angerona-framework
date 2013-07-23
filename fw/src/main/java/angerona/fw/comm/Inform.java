@@ -31,7 +31,7 @@ public class Inform extends SpeechAct
 	public Inform(
 			@Element(name="sender") String sender, 
 			@Element(name="receiver") String receiver, 
-			@Element(name="sentences") Set<FolFormula> sentences) {
+			@ElementList(name="sentences") Set<FolFormula> sentences) {
 		super(sender, receiver);
 		this.sentences = sentences; 
 	}

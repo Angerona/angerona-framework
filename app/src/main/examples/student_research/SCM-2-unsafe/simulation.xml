@@ -2,11 +2,19 @@
 	<name>SCM extended - unsafe</name>
 	<category>scm/knowhow</category>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
-
+	<description>
+	This scenario uses the unsafe version of the know-how plan generation. Therefore the employee gives answers
+	that reveal his secrets.
+	- The employee tells the boss that he has to be excused for the next day
+	- The boss asks the employee why he needs the excuse
+	- The employee answers that he attends a sport event
+	- The boss knows that this employee is in no sport club and therefore identifies the 
+	  lie and tells the employee that he is on the blacklist.
+	</description>
+    
     <agent-instance>
 		<name>employee</name>
-        
-        
+
         <agent-config source="config/agents/knowhow_agent_unsafe.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          

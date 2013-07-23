@@ -20,13 +20,15 @@ public enum SolverWrapper implements ISolverWrapper {
 	DLV_COMPLEX;
 	
 	/** the string representing the path to the solver */
-	private String path;
+	private String path = "";
+
+	private String paramName = null;
 	
-	/** Default-Ctor: Calculates the solver-path depending on the enum-value*/
+	/** Default-Ctor: Calculates the solver-path depending on the enum-value
+	 * @throws InstantiationException */
 	private SolverWrapper() {
 		GlobalConfiguration config = Angerona.getInstance().getConfig();
-		String paramName = null;
-		
+
 		if(ordinal() == 0) { // if Clingo:
 			paramName = ("path-clingo");
 		} else if(ordinal() == 1) { // if dlv:
@@ -48,7 +50,18 @@ public enum SolverWrapper implements ISolverWrapper {
 		return path;
 	}
 	
-	/** @return an object which can invoke the solver */
+	public InstantiationException getError() {
+		if(path == null) {
+			GlobalConfiguration config = Angerona.getInstance().getConfig();
+			
+			return new InstantiationException("The path '" + config.getParameters().get(paramName) + 
+					"' is not the path to the '" + this.toString() + "' ASP solver.");
+		}
+		return null;
+	}
+	
+	/** @return an object which can invoke the solver 
+	 * @throws InstantiationException */
 	public Solver getSolver() {
 		Solver solver = null;
 		if(this == SolverWrapper.CLINGO)

@@ -123,18 +123,15 @@ public abstract class BaseBeliefbase
 	 * @param bbc	Data-structure with information about the classes which will be used for the different
 	 * 				operations.
 	 * @throws InstantiationException
+	 * @throws ParseException 
+	 * @throws ClassNotFoundException 
 	 * @throws IllegalAccessException
 	 */
-	public void generateOperators(BeliefbaseConfig bbc) throws InstantiationException, IllegalAccessException {		
-		if(!operators.addOperationSet(bbc.getChangeOperators())) {
-			throw new InstantiationException("Cannot create operation set for change operators.");
-		}
-		if(!operators.addOperationSet(bbc.getReasoners())) {
-			throw new InstantiationException("Cannot create operation set for reasoner operators.");
-		}
-		if(!operators.addOperationSet(bbc.getTranslators())) {
-			throw new InstantiationException("Cannot create operation set for translators.");
-		}
+	public void generateOperators(BeliefbaseConfig bbc) 
+			throws InstantiationException, ClassNotFoundException, ParseException {		
+		operators.addOperationSet(bbc.getChangeOperators());
+		operators.addOperationSet(bbc.getReasoners());
+		operators.addOperationSet(bbc.getTranslators());
 	}
 
 	/** @return the default change operator */

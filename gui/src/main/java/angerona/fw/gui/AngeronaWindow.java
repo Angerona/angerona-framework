@@ -1,6 +1,5 @@
 package angerona.fw.gui;
 
-import interactive.InteractiveBar;
 import interactive.InteractiveBarMVPComponent;
 import interactive.InteractiveModelAdapter;
 import interactive.InteractivePresenter;
@@ -25,6 +24,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -77,6 +77,12 @@ public class AngeronaWindow extends WindowAdapter
 	/** the root window of the application */
 	private JFrame mainWindow;
 	
+	/** text are used to show error messages */
+	private JTextArea txtErrorMsg;
+	
+	/** scroll pane that embeds the text are to show error messages */
+	private JScrollPane errorMsgScroll;
+	
 	private DockController control;
 	
 	private StackDockStation mainStack;
@@ -122,6 +128,14 @@ public class AngeronaWindow extends WindowAdapter
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setExtendedState(mainWindow.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		mainWindow.setIconImage(readImage("/angerona/fw/gui/icons/font.png"));
+		
+		// create the text area and the scroll pane for the error message dialog:
+		txtErrorMsg = new JTextArea();
+		txtErrorMsg.setLineWrap(true);
+		txtErrorMsg.setWrapStyleWord(true);
+		txtErrorMsg.setRows(5);
+		txtErrorMsg.setColumns(40);
+		errorMsgScroll = new JScrollPane(txtErrorMsg);
 		
 		// create the menu.
 		createMenu();
@@ -257,7 +271,8 @@ public class AngeronaWindow extends WindowAdapter
 	 */
 	@Override
 	public void onError(String errorTitle, String errorMessage) {
-		JOptionPane.showMessageDialog(null, errorMessage, 
+		txtErrorMsg.setText(errorMessage);
+		JOptionPane.showMessageDialog(null, errorMsgScroll, 
 				errorTitle, JOptionPane.ERROR_MESSAGE);
 	}
 	

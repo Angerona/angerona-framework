@@ -3,6 +3,10 @@
 	<name>Test Different Belief Base Types</name>
     <behavior>angerona.fw.def.DefaultBehavior</behavior>
 	<category>feature-test</category>
+    <description>
+    This example shows how the configuration file can be written to allow an agent
+	to have different belief base type for its world belief base and its views.
+    </description>
     
 	<agent-instance>
 		<name>Alice</name>

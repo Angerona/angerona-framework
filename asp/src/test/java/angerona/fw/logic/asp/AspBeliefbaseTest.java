@@ -33,7 +33,7 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 	}
 	
 	@Test
-	public void testDoubleInject() {
+	public void testDoubleInject() throws InstantiationException {
 		AspBeliefbase bb = new MockBeliefbase();
 		
 		bb.addKnowledge(new FOLAtom(new Predicate("test")));
@@ -47,7 +47,7 @@ public class AspBeliefbaseTest extends BeliefbaseTest<AspBeliefbase> {
 	}
 	
 	@Test
-	public void testQueryForUnknown() {
+	public void testQueryForUnknown() throws InstantiationException {
 		AspBeliefbase bb = new MockBeliefbase();
 		@SuppressWarnings("unchecked")
 		Pair<Set<FolFormula>, AngeronaAnswer> reval = 

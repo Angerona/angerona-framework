@@ -27,6 +27,7 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseOperator;
+import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
 
 /**
@@ -295,8 +296,11 @@ public class PluginInstantiator {
 	 * @return reference to the newly created instance.
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
+	 * @throws ParseException 
+	 * @throws ClassNotFoundException 
 	 */
-	public BaseBeliefbase createBeliefbase(BeliefbaseConfig config) throws InstantiationException, IllegalAccessException {
+	public BaseBeliefbase createBeliefbase(BeliefbaseConfig config) 
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException, ParseException {
 		if(config == null)
 			throw new IllegalArgumentException("Beliefbase configuration must not null");
 		
