@@ -1,5 +1,5 @@
 <agent-configuration>
-	<name>Defending Censor Agent Implementation</name>
+	<name>Interactive Agent Implementation</name>
 	<cycle-script source="config/interactive_agent_cycle.xml" />
    	
 	<operation-set operation-type="UpdateBeliefs">

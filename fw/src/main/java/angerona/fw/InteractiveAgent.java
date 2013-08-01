@@ -37,12 +37,11 @@ public class InteractiveAgent extends Agent implements Observable{
 	 * returns always true, except the User pressed the Finish Button
 	 */
 	public boolean hasPerceptions() {
-		this.informAll();
+		if(!action)this.informAll();
 		while(!action){}
 		action = false;
 		return hasPerception;
 	}
-	
 
 	@Override
 	public boolean register(Observer o){

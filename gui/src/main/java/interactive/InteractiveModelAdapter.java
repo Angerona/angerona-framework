@@ -1,6 +1,5 @@
 package interactive;
 
-import angerona.fw.Agent;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.InteractiveAgent;
 import angerona.fw.util.ModelAdapter;
