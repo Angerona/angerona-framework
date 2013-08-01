@@ -8,6 +8,10 @@
   <name>Angerona (Functional Test)</name>
   <url>http://maven.apache.org</url>
   
+  <properties>
+  	<tools.home>${basedir}/src/main/tools</tools.home>
+  </properties>
+  
   <profiles>
     <profile>
       <id>win</id>
@@ -17,7 +21,6 @@
         </os>
       </activation>
       <properties>
-        <tools.home>${basedir}/src/main/tools/win</tools.home>
         <permission.script>${basedir}/src/main/permission.bat</permission.script>
       </properties>
     </profile>
@@ -30,7 +33,6 @@
         </os>
       </activation>
       <properties>
-        <tools.home>${basedir}/src/main/tools/unix</tools.home>
         <permission.script>${basedir}/src/main/permission.sh</permission.script>
       </properties>
     </profile>
@@ -48,7 +50,6 @@
         </os>
       </activation>
       <properties>
-        <tools.home>${basedir}/src/main/tools/mac</tools.home>
         <permission.script>${basedir}/src/main/permission.sh</permission.script>
       </properties>
     </profile>
@@ -256,6 +257,7 @@
 	              <goal>shade</goal>
 	            </goals>
 	            <configuration>
+	              <createDependencyReducedPom>false</createDependencyReducedPom>
 	              <!-- 
 	              		Minimizes the size of the jar, but can lead to problems
 	              		with dynamic code loading
