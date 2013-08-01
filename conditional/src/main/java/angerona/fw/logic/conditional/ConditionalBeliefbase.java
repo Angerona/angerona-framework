@@ -134,9 +134,12 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	@Override
 	public List<String> getAtoms() {
 		List<String> retval = new LinkedList<String>();
+		retval.add("propositions: ");
 		for(PropositionalFormula proposition : propositions) {
 			retval.add(proposition.toString());
 		}
+		retval.add("");
+		retval.add("conditionals: ");
 		for(Conditional conditional : conditionals) {
 			retval.add(conditional.toString());
 		}
