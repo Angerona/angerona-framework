@@ -57,14 +57,14 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	@Override
 	public SimulationState runSimulation() {
 		if(simulationState == SimulationState.SS_INITALIZED) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
+			//new Thread(new Runnable() {
+			//	@Override
+			//	public void run() {
 					if(!environment.runOneTick()) {
 						setSimulationState(SimulationState.SS_FINISHED);
 					}
-				}
-			}).start();
+			//	}
+			//}).start();
 			
 		}
 		return simulationState;
