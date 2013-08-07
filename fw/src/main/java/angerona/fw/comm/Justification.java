@@ -49,11 +49,12 @@ public class Justification extends SpeechAct {
 			@Element(name="receiver") String receiver,
 			@Element(name="proposition") FolFormula proposition,
 			@Element(name="answerValue") AnswerValue answerValue,
-			@Element(name="justification") FolFormula justification) {
+			@ElementList(name="justifications") Set<FolFormula> justification) {
 		super(sender,receiver);
 		this.proposition = proposition;
 		this.answerValue = answerValue;
-		this.justifications.add(justification);		
+		if(this.justifications == null) this.justifications = new HashSet<>();
+		this.justifications.addAll(justification);		
 	}
 	
 	public Justification(Agent sender, String receiver, FolFormula proposition, 

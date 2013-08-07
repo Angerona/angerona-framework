@@ -27,11 +27,13 @@
         	</query>
         </script>
         <script>
-        	<inform type="Inform">
+        	<justify type="Justification">
         		<sender>Employee</sender>
         		<receiver>Boss</receiver>
-        		<sentences><sentence>medical_appointment</sentence></sentences>
-        	</inform>
+        		<proposition>scm_meeting</proposition>
+        		<answerValue>AV_FALSE</answerValue>
+        		<justifications><justification>medical_appointment</justification></justifications>
+        	</justify>
         </script>
         <script>
         	<query type="Query">
@@ -41,8 +43,8 @@
         	</query>
         </script>
         
-        <capability>Inform</capability>
-        <capability>Answer</capability>
+        <capability>Justification</capability>
+        <capability>Query</capability>
         
         <data key="Confidential">
             (Boss, __DEFAULT__, attend_scm)
