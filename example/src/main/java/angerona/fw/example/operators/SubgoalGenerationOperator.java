@@ -213,6 +213,9 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		boolean generateLies = Boolean.parseBoolean(pp.getSetting("generateLies", String.valueOf(true)));	
 		
+		Answer honest = null;
+		Answer lie = null;
+		
 		if(aa.getAnswerValue() == AnswerValue.AV_TRUE ||
 				aa.getAnswerValue() == AnswerValue.AV_FALSE) {
 			// the default behavior on an query is to answer the query
@@ -225,19 +228,20 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				invert = AnswerValue.AV_FALSE;
 			}
 			
-			answer.newStack(new Answer(ag, q.getSenderId(), 
-					q.getQuestion(), real));
+			honest = new Answer(ag, q.getSenderId(), q.getQuestion(), real);
+			answer.newStack(honest);
+			
 			
 			if(generateLies) {
-				answer.newStack(new Answer(ag, q.getSenderId(), 
-						q.getQuestion(), invert));
+				lie = new Answer(ag, q.getSenderId(), q.getQuestion(), invert);
+				answer.newStack(lie);
 			}
 			
 		} else if(	aa.getAnswerValue() == AnswerValue.AV_UNKNOWN || 
 					aa.getAnswerValue() == AnswerValue.AV_REJECT) {
 			// use the answer value returned by reasoner (unknown or rejected).
-			answer.newStack(new Answer(ag, q.getSenderId(), 
-					q.getQuestion(), aa.getAnswerValue()));
+			honest = new Answer(ag, q.getSenderId(), q.getQuestion(), aa.getAnswerValue());
+			answer.newStack(honest);
 			
 			if(generateLies) {
 				// generate alternative plans if a secret is not safe with the
@@ -278,8 +282,9 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			return true;
 		}
 		
-		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
-				"' to the plan");
+		pp.report("Add the honest answer '"+ honest.toString() + "' as alternative plan");
+		if(lie != null)
+			pp.report("Add the lie '"+ lie.toString() + "' as alternative plan");
 		ag.getPlanComponent().addPlan(answer);
 		
 		return true;
