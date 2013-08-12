@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.management.AttributeNotFoundException;
 
-import angerona.fw.Agent;
 import angerona.fw.error.ConversionException;
 import angerona.fw.internal.Entity;
 import angerona.fw.operators.GenericOperatorParameter;

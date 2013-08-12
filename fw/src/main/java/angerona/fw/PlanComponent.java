@@ -21,6 +21,10 @@ public class PlanComponent extends BaseAgentComponent implements SubgoalListener
 	
 	public PlanComponent(PlanComponent plan) {
 		super(plan);
+		for(Subgoal sg : plan.plans) {
+			Subgoal copy = new Subgoal(sg);
+			plans.add(copy);
+		}
 	}
 	
 	/**
@@ -79,5 +83,10 @@ public class PlanComponent extends BaseAgentComponent implements SubgoalListener
 				getAgent().getComponent(Desires.class).remove(sg.getFulfillsDesire());
 			}
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Plan Data-Structure";
 	}
 }

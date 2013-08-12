@@ -43,6 +43,11 @@ public class Desire {
 		this.perception = reason;
 	}
 	
+	public Desire(Desire other) {
+		this.formula = other.formula.clone();
+		this.perception = other.perception;
+	}
+	
 	/**
 	 * Sets the given plan as actual linked plan of the desire
 	 * @param plan reference to a plan

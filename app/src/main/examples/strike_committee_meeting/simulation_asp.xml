@@ -11,7 +11,6 @@
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
         
         <desire>v_Boss(ask_for_excuse)</desire>
-        <desire>attend_scm</desire>
         
         <capability>Inform</capability>
         <capability>Answer</capability>

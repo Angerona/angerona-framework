@@ -315,6 +315,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 		@Override
 		public void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs) {
 			EvaluateParameter param = new EvaluateParameter(getAgent(), oldBeliefs, percept);
+			param.report("Check the Secrecy Consistence");
 			OperatorCallWrapper op = getAgent().getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
 			ViolatesResult res = (ViolatesResult) op.process(param);
 			

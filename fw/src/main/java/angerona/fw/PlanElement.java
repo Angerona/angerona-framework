@@ -172,4 +172,9 @@ public class PlanElement implements AngeronaAtom, Runnable {
 			throw new RuntimeException("Plan-Element was not prepared");
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return intention.toString();
+	}
 }

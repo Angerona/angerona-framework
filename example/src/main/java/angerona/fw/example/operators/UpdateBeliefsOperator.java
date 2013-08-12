@@ -35,6 +35,8 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		String id = param.getAgent().getName();
 		String out = "Update-Beliefs: ";
 		
+		boolean update = true;
+		
 		boolean receiver = false;
 		if(param.getAtom() instanceof Action) {
 			Action act = (Action)param.getAtom();
@@ -103,9 +105,12 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			}
 		} else if(param.getAtom() != null){
 			param.report("Update-Operator: Cant handle perception of type: " + param.getAtom().getClass().getName());
+		} else {
+			param.report("No Speech-Act for updating the Beliefs");
+			update = false;
 		}
 			
-		if(beliefs.getCopyDepth() == 0) {
+		if(update && beliefs.getCopyDepth() == 0) {
 			param.getAgent().onUpdateBeliefs((Perception)param.getAtom(), oldBeliefs);
 		}
 		return beliefs;

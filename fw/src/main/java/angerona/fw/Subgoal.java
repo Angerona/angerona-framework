@@ -12,13 +12,13 @@ import java.util.Stack;
  */
 public class Subgoal extends Intention implements Cloneable {
 
-	private String name = "NO-NAME";
+	private String name = "SG";
 	
 	/** a collection of desires which will be fulfilled if this Intention was processed */
 	private Desire	fulfillsDesire;
 	
 	/** a collection of stacks with sub-intentions defining the subgoals of this intention */
-	protected List<Stack<PlanElement>> stacks;
+	protected List<Stack<PlanElement>> stacks = new LinkedList<>();
 	
 	public Subgoal(Agent agent) {
 		this(agent, null);
@@ -26,12 +26,12 @@ public class Subgoal extends Intention implements Cloneable {
 	
 	public Subgoal(Agent agent, Desire desire) {
 		super(agent);
-		this.stacks = new LinkedList<>();
 		this.fulfillsDesire = desire;
 	}
 	
 	protected Subgoal(Subgoal other) {
 		super(other);
+		this.fulfillsDesire = new Desire(other.fulfillsDesire);
 		for(Stack<PlanElement> stack : other.stacks) {
 			Stack<PlanElement> newOne = new Stack<PlanElement>();
 			for(int i=0; i<stack.size(); ++i) {
@@ -148,7 +148,17 @@ public class Subgoal extends Intention implements Cloneable {
 	
 	@Override
 	public String toString() {
-		return name;
+		String reval = this.fulfillsDesire + " <-- " + name + "(";
+		
+		for(Stack<PlanElement> stack : stacks) {
+			reval += stack.toString();
+			reval += ",";
+		}
+		if(!stacks.isEmpty())
+			reval = reval.substring(0, reval.length()-1);
+		reval +=  ")";
+		
+		return reval;
 	}
 	
 	@Override

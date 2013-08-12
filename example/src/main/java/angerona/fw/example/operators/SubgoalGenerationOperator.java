@@ -175,17 +175,20 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				}
 				
 				// and add action (Inform or Query) to the plan stack:
+				Class<?> actionCls = null;
 				if(informDesire) {
 					sg.newStack( new Inform(ag, recvName, a));
+					actionCls = Inform.class;
 				} else {
 					sg.newStack( new Query(ag, recvName, a));
+					actionCls = Query.class;
 				}
+				// add a report to the simulation about the new plan:
+				pp.report("Add the new atomic action '" + actionCls.getSimpleName() + 
+						"' to the plan, choosed by desire: " + desire.toString());
 				ag.getPlanComponent().addPlan(sg);
 				
-				// add a report to the simulation about the new plan:
-				pp.report("Add the new atomic action '" + Inform.class.getSimpleName() + 
-						"' to the plan, choosed by desire: " + desire.toString(), 
-						ag.getPlanComponent());
+				
 				reval = true;
 			}
 		}
@@ -275,9 +278,10 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			return true;
 		}
 		
-		ag.getPlanComponent().addPlan(answer);
 		pp.report("Add the new action '"+ Answer.class.getSimpleName() + 
-				"' to the plan", ag.getPlanComponent());
+				"' to the plan");
+		ag.getPlanComponent().addPlan(answer);
+		
 		return true;
 	}
 	
@@ -325,8 +329,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
 					Subgoal sg = new Subgoal(ag, des);
 					sg.newStack(new Query(ag, rr.getSenderId(), reasonToFire));
+					pp.report("Add the new action '" + Query.class.getSimpleName() + "' to the plan.");
 					ag.getPlanComponent().addPlan(sg);
-					pp.report("Add the new action '" + Query.class.getSimpleName() + "' to the plan.", ag.getPlanComponent());
 				} else if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
 					return false;
 				}

@@ -100,4 +100,9 @@ public class Desires extends BaseAgentComponent {
 	public Desires clone() {
 		return new Desires(this);
 	}
+	
+	@Override
+	public String toString() {
+		return "Desires";
+	}
 }
