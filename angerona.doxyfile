@@ -1030,7 +1030,7 @@ DOCSET_PUBLISHER_NAME = Publisher
 # Microsoft HTML help workshop to generate a compiled HTML help file (.chm)
 # of the generated HTML documentation.
 
-GENERATE_HTMLHELP = YES
+GENERATE_HTMLHELP = NO
 
 # If the GENERATE_HTMLHELP tag is set to YES, the CHM_FILE tag can
 # be used to specify the file name of the resulting .chm file. You
@@ -1234,7 +1234,7 @@ MATHJAX_EXTENSIONS =
 # typically be disabled. For large projects the javascript based search engine
 # can be slow, then enabling SERVER_BASED_SEARCH may provide a better solution.
 
-SEARCHENGINE = NO
+SEARCHENGINE = YES
 
 # When the SERVER_BASED_SEARCH tag is enabled the search engine will be
 # implemented using a web server instead of a web client using Javascript.
