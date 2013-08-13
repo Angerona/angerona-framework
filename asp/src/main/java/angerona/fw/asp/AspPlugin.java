@@ -15,8 +15,10 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.asp.AspBeliefbase;
+import angerona.fw.logic.asp.AspCredulousReasoner;
 import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
+import angerona.fw.logic.asp.AspSkepticalReasoner;
 import angerona.fw.logic.asp.AspTranslator;
 import angerona.fw.logic.asp.RevisionCredibilityPrograms;
 import angerona.fw.logic.asp.RevisionPreferenceHandling;
@@ -45,6 +47,8 @@ public class AspPlugin extends AngeronaPluginAdapter
 	public List<Class<? extends BaseReasoner>> getReasonerImpl() {
 		List<Class<? extends BaseReasoner>> reval = new LinkedList<Class<? extends BaseReasoner>>();
 		reval.add(AspReasoner.class);
+		reval.add(AspSkepticalReasoner.class);
+		reval.add(AspCredulousReasoner.class);
 		return reval;
 	}
 
