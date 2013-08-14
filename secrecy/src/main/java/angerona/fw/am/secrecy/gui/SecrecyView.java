@@ -25,7 +25,7 @@ public class SecrecyView extends ListViewColored {
 			SecrecyKnowledge ck = (SecrecyKnowledge)obj;
 			
 			List<String> reval = new LinkedList<String>();
-			for(Secret ct : ck.getTargets()) {
+			for(Secret ct : ck.getSecrets()) {
 				reval.add(ct.toString());
 			}
 			

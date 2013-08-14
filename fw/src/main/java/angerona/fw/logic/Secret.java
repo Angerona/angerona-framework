@@ -127,7 +127,7 @@ public class Secret implements Cloneable {
 	 * @return  a copy of the map containing the reasoner parameters because its a copy changes did not affect
 	 * 			the event system.
 	 */
-	public Map<String, String> getReasonerParameters() {
+	public Map<String, String> getReasonerSettings() {
 		return new HashMap<>(reasonerParameters);
 	}
 	
@@ -150,6 +150,14 @@ public class Secret implements Cloneable {
 		invokePropertyListener("reasonerParameters", 
 				old, 
 				parameters);
+	}
+	
+	public void setReasonerClassName(String clsName) {
+		if(clsName.hashCode() != reasonerClass.hashCode()) {
+			String old = reasonerClass;
+			reasonerClass = clsName;
+			invokePropertyListener("reasonerClass", old, reasonerClass);
+		}
 	}
 	
 	/**

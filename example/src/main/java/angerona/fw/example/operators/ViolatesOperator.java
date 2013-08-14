@@ -62,12 +62,12 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		List<Pair<Secret, Double>> pairs = new LinkedList<>();
 		if(views.containsKey(p.getReceiverId())) {
-			for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
+			for(Pair<String, Map<String, String>> reasoningOperator : conf.getSecretsByReasoningOperator().keySet()) {
 				
 				// Infer only once with the ReasoningOperator defined by the pair.
 				Set<FolFormula> origInfere = origView.infere(reasoningOperator.first, reasoningOperator.second);
 				Set<FolFormula> cloneInfere = view.infere(reasoningOperator.first, reasoningOperator.second);
-				for(Secret secret : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
+				for(Secret secret : conf.getSecretsByReasoningOperator().get(reasoningOperator)) {
 					if(secret.getSubjectName().equals(p.getReceiverId())) {
 						// Check for false positives first, output an warning, because secret weakening was not applied correctly then
 						boolean inOrig = origInfere.contains(secret.getInformation());
@@ -127,8 +127,8 @@ public class ViolatesOperator extends BaseViolatesOperator {
 
 		List<Pair<Secret, Double>> pairs = new LinkedList<>();
 		Map<String, Set<FolFormula>> viewInferences = new HashMap<>();
-		for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
-			for (Secret s : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
+		for(Pair<String, Map<String, String>> reasoningOperator : conf.getSecretsByReasoningOperator().keySet()) {
+			for (Secret s : conf.getSecretsByReasoningOperator().get(reasoningOperator)) {
 				Set<FolFormula> infere = null;
 				if(viewInferences.containsKey(s.getSubjectName())) {
 					infere = viewInferences.get(s.getSubjectName());

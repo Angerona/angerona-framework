@@ -51,7 +51,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 	private List<Pair<Secret, Double>> representTotalExposure(
 			SecrecyKnowledge conf) {
 		List<Pair<Secret, Double>> reval = new LinkedList<>();
-		for (Secret secret : conf.getTargets()) {
+		for (Secret secret : conf.getSecrets()) {
 			reval.add(new Pair<>(secret, INFINITY));
 		}
 		return reval;
@@ -150,7 +150,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 			}
 
 			// Now the secrecy strengths get added
-			for (Secret secret : conf.getTargets()) {
+			for (Secret secret : conf.getSecrets()) {
 				FolFormula secretInfo = secret.getInformation();
 
 				boolean secretContained = false;
@@ -170,7 +170,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 					double newStrength = calculateSecrecyStrength(secretInfo, newAnsSets);
 
 					/** @todo Find default policy like a default parameter value if not set yet. */
-					String d = secret.getReasonerParameters().get("d");
+					String d = secret.getReasonerSettings().get("d");
 					double curStrength = 0;
 					if (d == null) {
 						curStrength = 1;

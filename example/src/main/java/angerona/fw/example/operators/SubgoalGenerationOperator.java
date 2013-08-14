@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
 import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
@@ -114,83 +115,104 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		if(desComp == null)
 			return false;
 
-		for(Desire desire : desComp.getDesires()) {
-			// only add a plan if no plan for the desire exists.
+		List<Desire> desires = new LinkedList<>();
+		for(Desire des : desComp.getDesires()) {
+			String predicateName = ((FOLAtom)des.getFormula()).getPredicate().getName();
+			if(predicateName.startsWith("v_") || predicateName.startsWith("q_")) {
+				desires.add(des);
+			}
+		}
+		Collections.sort(desires, new Comparator<Desire>() {
+
+			@Override
+			public int compare(Desire o1, Desire o2) {
+				FOLAtom a1 = (FOLAtom)o1.getFormula();
+				FOLAtom a2 = (FOLAtom)o2.getFormula();
+				
+				if(a1.getArguments().size() < 2) {
+					return -1;
+				} else if(a2.getArguments().size() < 2) {
+					return 1;
+				} else {
+					NumberTerm nt1 = (NumberTerm)a1.getArguments().get(1);
+					NumberTerm nt2 = (NumberTerm)a2.getArguments().get(1);
+					return nt1.get().intValue() - nt2.get().intValue();
+				}
+			}
+			
+		});
+
+		for(Desire desire : desires) {
 			if(ag.getPlanComponent().countPlansFor(desire) > 0)
 				continue;
-			
-			FolFormula f = desire.getFormula();
-			if(!(f instanceof FOLAtom)) 
-				continue;
-			
-			FOLAtom atom = (FOLAtom)f;
+	
+			FOLAtom atom = ((FOLAtom)desire.getFormula());
 			String predicateName = atom.getPredicate().getName();
+			// only add a plan if no plan for the desire exists.
+			
 			boolean informDesire = predicateName.startsWith("v_");
 			boolean queryDesire = predicateName.startsWith("q_");
+			int si = predicateName.indexOf("_")+1;
+			if(si == -1)
+				continue;
 			
-			if(informDesire || queryDesire) {
-				int si = predicateName.indexOf("_")+1;
-				if(si == -1)
-					continue;
-				
-				String recvName = predicateName.substring(si);
-				// check if the receiving agent exists in the simulation:
-				if(pp.getAgent().getEnvironment().getAgentByName(recvName) == null) {
-					LOG.warn("The agent '{}' referred in desire: '{}' does not exist",
-							recvName, desire.toString());
-					continue;
-				}
-				
-				if(atom.getArguments().size() < 1)
-					continue;
-				String content = atom.getArguments().get(0).toString();
-				
-				// generate information log message:
-				StringBuffer buf = new StringBuffer();
-				buf.append("'{}' ");
-				if(informDesire) {
-					buf.append("wants '" + recvName + "' to believe: ");
-				} else if(queryDesire) {
-					buf.append("asks '" + recvName + "' for: ");
-				}
-				buf.append("'{}'");
-				LOG.info(buf.toString(),  ag.getName(), content);
-		
-				// create plan...
-				Subgoal sg = new Subgoal(ag, desire);
-				FolParserB parser = new FolParserB(new StringReader(content));
-				FolFormula a = null;
-				try {
-					a = parser.atom(new FolSignature());
-				} catch (ParseException e) {
-					System.err.println("parsing: " + content);
-					e.printStackTrace();
-				}
-				
-				// check if the negation shall be used:
-				if(atom.getArguments().size() >= 3) {
-					if(atom.getArguments().get(2).equals(new Constant("neg"))) {
-						a = new Negation(a);
-					}
-				}
-				
-				// and add action (Inform or Query) to the plan stack:
-				Class<?> actionCls = null;
-				if(informDesire) {
-					sg.newStack( new Inform(ag, recvName, a));
-					actionCls = Inform.class;
-				} else {
-					sg.newStack( new Query(ag, recvName, a));
-					actionCls = Query.class;
-				}
-				// add a report to the simulation about the new plan:
-				pp.report("Add the new atomic action '" + actionCls.getSimpleName() + 
-						"' to the plan, choosed by desire: " + desire.toString());
-				ag.getPlanComponent().addPlan(sg);
-				
-				
-				reval = true;
+			String recvName = predicateName.substring(si);
+			// check if the receiving agent exists in the simulation:
+			if(pp.getAgent().getEnvironment().getAgentByName(recvName) == null) {
+				LOG.warn("The agent '{}' referred in desire: '{}' does not exist",
+						recvName, desire.toString());
+				continue;
 			}
+			
+			if(atom.getArguments().size() < 1)
+				continue;
+			String content = atom.getArguments().get(0).toString();
+			
+			// generate information log message:
+			StringBuffer buf = new StringBuffer();
+			buf.append("'{}' ");
+			if(informDesire) {
+				buf.append("wants '" + recvName + "' to believe: ");
+			} else if(queryDesire) {
+				buf.append("asks '" + recvName + "' for: ");
+			}
+			buf.append("'{}'");
+			LOG.info(buf.toString(),  ag.getName(), content);
+	
+			// create plan...
+			Subgoal sg = new Subgoal(ag, desire);
+			FolParserB parser = new FolParserB(new StringReader(content));
+			FolFormula a = null;
+			try {
+				a = parser.atom(new FolSignature());
+			} catch (ParseException e) {
+				System.err.println("parsing: " + content);
+				e.printStackTrace();
+			}
+			
+			// check if the negation shall be used:
+			if(atom.getArguments().size() >= 3) {
+				if(atom.getArguments().get(2).equals(new Constant("neg"))) {
+					a = new Negation(a);
+				}
+			}
+			
+			// and add action (Inform or Query) to the plan stack:
+			Class<?> actionCls = null;
+			if(informDesire) {
+				sg.newStack( new Inform(ag, recvName, a));
+				actionCls = Inform.class;
+			} else {
+				sg.newStack( new Query(ag, recvName, a));
+				actionCls = Query.class;
+			}
+			// add a report to the simulation about the new plan:
+			pp.report("Add the new atomic action '" + actionCls.getSimpleName() + 
+					"' to the plan, choosed by desire: " + desire.toString());
+			ag.getPlanComponent().addPlan(sg);
+			reval = true;
+			break;
+			
 		}
 		return reval;
 	}
@@ -215,6 +237,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		Answer honest = null;
 		Answer lie = null;
+		Answer lie2 = null;
 		
 		if(aa.getAnswerValue() == AnswerValue.AV_TRUE ||
 				aa.getAnswerValue() == AnswerValue.AV_FALSE) {
@@ -246,13 +269,16 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			if(generateLies) {
 				// generate alternative plans if a secret is not safe with the
 				// real answer (lie by answering the query with true or false).
-				answer.newStack(new Answer(ag, q.getSenderId(), 
-						q.getQuestion(), AnswerValue.AV_TRUE));
+				lie = new Answer(ag, q.getSenderId(), q.getQuestion(), AnswerValue.AV_TRUE);
+				answer.newStack(lie);
 			
-				answer.newStack(new Answer(ag, q.getSenderId(), 
-						q.getQuestion(), AnswerValue.AV_FALSE));
+				lie2 = new Answer(ag, q.getSenderId(), q.getQuestion(), AnswerValue.AV_FALSE);
+				answer.newStack(lie2);
 			}
 			
+		} else if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX && aa.getAnswers().isEmpty()) {
+			honest = new Answer(ag, q.getSenderId(), q.getQuestion(), AnswerValue.AV_UNKNOWN);
+			answer.newStack(honest);
 		} else if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
 			List<FolFormula> answers = new LinkedList<>(aa.getAnswers());
 			
@@ -261,6 +287,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					return a1.toString().compareTo(a2.toString());
 				}
 			}); 
+			
 			
 			List<FolFormula> lies = new LinkedList<>();
 			if(generateLies) {
@@ -285,6 +312,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		pp.report("Add the honest answer '"+ honest.toString() + "' as alternative plan");
 		if(lie != null)
 			pp.report("Add the lie '"+ lie.toString() + "' as alternative plan");
+		if(lie2 != null)
+			pp.report("Add the lie '"+ lie2.toString() + "' as alternative plan");
 		ag.getPlanComponent().addPlan(answer);
 		
 		return true;

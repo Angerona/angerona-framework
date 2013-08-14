@@ -27,6 +27,8 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseOperator;
+import angerona.fw.operators.BeliefOperatorFamily;
+import angerona.fw.operators.BeliefOperatorFamilyFactory;
 import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.OperatorStack;
 import angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
@@ -78,6 +80,8 @@ public abstract class BaseBeliefbase
 	/** flag indicating if this type of beliefbase supports formulas containing variables */
 	private boolean supportsVariables;
 	
+	private BeliefOperatorFamily family;
+	
 	/** 
 	 *	Empty until isQueryValid returns false the first time. Then it contains the reason why the last
 	 * 	query was rejected.
@@ -115,6 +119,7 @@ public abstract class BaseBeliefbase
 		super(other);
 		
 		operators = new OperatorProvider(other.operators);
+		family = other.family;
 	}
 	
 	/**
@@ -132,6 +137,12 @@ public abstract class BaseBeliefbase
 		operators.addOperationSet(bbc.getChangeOperators());
 		operators.addOperationSet(bbc.getReasoners());
 		operators.addOperationSet(bbc.getTranslators());
+		family = BeliefOperatorFamilyFactory.create(bbc.getBeliefOperatorFamily(), 
+				operators.getOperationSetByType(BaseReasoner.OPERATION_TYPE));
+	}
+	
+	public BeliefOperatorFamily getBeliefOperatorFamily() {
+		return family;
 	}
 
 	/** @return the default change operator */

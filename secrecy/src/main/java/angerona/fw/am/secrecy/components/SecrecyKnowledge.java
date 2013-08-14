@@ -6,20 +6,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseAgentComponent;
+import angerona.fw.BaseBeliefbase;
+import angerona.fw.OperatorSet;
 import angerona.fw.Perception;
-import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
 import angerona.fw.listener.AgentAdapter;
+import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Secret;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.parser.ParseException;
@@ -142,16 +145,26 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	}
 
 	/** @return an unmodifiable set of secrets of the confidential knowledge */
-	public Set<Secret> getTargets() {
+	public Set<Secret> getSecrets() {
 		return Collections.unmodifiableSet(secrets);
 	}
 
+	public Set<Secret> getSecretsBySubject(String agentId) {
+		Set<Secret> reval = new HashSet<>();
+		for(Secret s : secrets) {
+			if(s.getSubjectName().equals(agentId)) {
+				reval.add(s);
+			}
+		}
+		return reval;
+	}
+	
 	/**
 	 * @return an unmodifiable map. The key is a Pair describing the secrets
 	 *         reasoner (class and parameters) and the values are sets of
 	 *         secrets
 	 */
-	public Map<Pair<String, Map<String, String>>, Set<Secret>> getTargetsByReasoningOperator() {
+	public Map<Pair<String, Map<String, String>>, Set<Secret>> getSecretsByReasoningOperator() {
 		return Collections.unmodifiableMap(optimizationMap);
 	}
 
@@ -202,7 +215,20 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	@SuppressWarnings("unchecked")
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals("reasonerParameters")) {
+		if (evt.getPropertyName().equals("reasonerClass")) {
+			String old = (String) evt.getOldValue();
+			String newValue = (String) evt.getNewValue();
+			Secret secret = (Secret) evt.getSource();
+
+			Pair<String, Map<String, String>> key = new Pair<String, Map<String, String>>(
+					old, secret.getReasonerSettings());
+			removeFromMap(secret, key);
+			
+			key.first = newValue;
+			addToMap(secret, key);
+			
+			report("Secrecy knowledge adapted, Reasoner-Class changed from '" + old + "' to '" + newValue + "'." );
+		} else if (evt.getPropertyName().equals("reasonerParameters")) {
 
 			Map<String, String> oldValue = (Map<String, String>) evt
 					.getOldValue();
@@ -222,7 +248,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 		} else {
 			// only one observed property...
 			throw new RuntimeException(
-					"Did you forgot to rename 'reasonerParameters' anywhere?");
+					"Did you forgot to rename 'reasonerParameters' anywhere? Current Name: '" + evt.getPropertyName() + "'.");
 		}
 	}
 
@@ -314,8 +340,64 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	public class DefaultHandler extends AgentAdapter {
 		@Override
 		public void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs) {
+			// Get Parameters and Components
 			EvaluateParameter param = new EvaluateParameter(getAgent(), oldBeliefs, percept);
 			param.report("Check the Secrecy Consistence");
+			SecrecyKnowledge sk = getAgent().getComponent(SecrecyKnowledge.class);
+			
+			// Iterate over each view belief base.
+			for(Entry<String, BaseBeliefbase> entry : newBeliefs.getViewKnowledge().entrySet()) {
+				// get the old and new version of the belief base and create a inference cache:
+				BaseBeliefbase newer = entry.getValue();
+				BaseBeliefbase older = oldBeliefs.getViewKnowledge().get(entry.getKey());
+				Map<Pair<String, Map<String, String>>, Set<FolFormula>> cache = new HashMap<>();
+				
+				// only operate if the hash code of the old and new version are different
+				if(newer.hashCode() != older.hashCode()) {
+					
+					// iterate over every secret corresponding the view:
+					Set<Secret> secrets = sk.getSecretsBySubject(entry.getKey());
+					for(Secret s : secrets) {
+						boolean furtherTests = true;
+						boolean changed = false;
+						String clsName = s.getReasonerClassName();
+						Map<String, String> settings = s.getReasonerSettings();
+						
+						// find next operator that keeps the secret safe:
+						while(furtherTests) {
+							Set<FolFormula> beliefSet;
+							Pair<String, Map<String, String>> p = new Pair<>(clsName, settings);
+							
+							// calculate or use cache version of belief set
+							if(cache.containsKey(p)) {
+								beliefSet = cache.get(p);
+							} else {
+								beliefSet = newer.infere(p.first, p.second);
+								cache.put(p, beliefSet);
+							}
+							
+							// update variables for next step
+							furtherTests = beliefSet.contains(s.getInformation());
+							if(furtherTests) {
+								changed = true;
+								OperatorSet os = newer.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE);
+								OperatorCallWrapper current = os.getOperator(clsName);
+								OperatorCallWrapper ocw = older.getBeliefOperatorFamily().getPredecessor(current);
+								clsName = ocw.getImplementation().getClass().getName();
+								settings = ocw.getSettings();
+							}
+						}
+						
+						// update the belief operator of the secret:
+						if(changed) {
+							s.setReasonerClassName(clsName);
+							s.setReasonerParameters(settings);
+						}
+					}
+				}
+			}
+			
+			/*
 			OperatorCallWrapper op = getAgent().getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
 			ViolatesResult res = (ViolatesResult) op.process(param);
 			
@@ -332,6 +414,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 					}
 				}
 			}
+			*/
 		}
 	}
 }

@@ -11,6 +11,9 @@
    <translators>
       <default-operator-cls>angerona.fw.logic.asp.AspTranslator</default-operator-cls>
    </translators>
-   
+   <discrete-family>
+     <operator>angerona.fw.logic.asp.AspSkepticalReasoner</operator>
+     <operator>angerona.fw.logic.asp.AspCredulousReasoner</operator>
+   </discrete-family>
    <beliefbase-class>angerona.fw.logic.asp.AspBeliefbase</beliefbase-class>
 </beliefbase-configuration>
