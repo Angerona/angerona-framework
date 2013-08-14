@@ -27,6 +27,7 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseOperator;
+import angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 import angerona.fw.parser.ParseException;
 import angerona.fw.serialize.BeliefbaseConfig;
 
@@ -274,6 +275,7 @@ public class PluginInstantiator {
 		temp.put(BaseOperator.class, new HashSet<Class<?>>());
 		
 		temp.put(EnvironmentBehavior.class, new HashSet<Class<?>>());
+		temp.put(ContinuousBeliefOperatorFamilyIteratorStrategy.class, new HashSet<Class<?>>());
 		
 		if(plugin != null) {
 			temp.get(AgentComponent.class).addAll(plugin.getAgentComponentImpl());
@@ -286,6 +288,7 @@ public class PluginInstantiator {
 			temp.get(BaseOperator.class).addAll(plugin.getOperators());
 			
 			temp.get(EnvironmentBehavior.class).addAll(plugin.getEnvironmentBehaviors());
+			temp.get(ContinuousBeliefOperatorFamilyIteratorStrategy.class).addAll(plugin.getBeliefOperatorFamilyIteratorStrategies());
 		}
 		return temp;
 	}
@@ -319,6 +322,11 @@ public class PluginInstantiator {
 	 */
 	protected BaseBeliefbase createBeliefbase(String className) throws InstantiationException, IllegalAccessException {
 		return createInstance(className, BaseBeliefbase.class);
+	}
+	
+	public ContinuousBeliefOperatorFamilyIteratorStrategy createIteratorStrategy(String classname) 
+			throws InstantiationException, IllegalAccessException {
+		return createInstance(classname, ContinuousBeliefOperatorFamilyIteratorStrategy.class);
 	}
 	
 	/**

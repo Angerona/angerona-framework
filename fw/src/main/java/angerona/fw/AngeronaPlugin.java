@@ -3,11 +3,11 @@ package angerona.fw;
 import java.util.List;
 
 import net.xeoh.plugins.base.Plugin;
-
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseOperator;
+import angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 
 
 /**
@@ -48,4 +48,7 @@ public interface AngeronaPlugin extends Plugin {
 	
 	/** @return all the environment behavior implementations of the plugin */
 	List<Class<? extends EnvironmentBehavior>> getEnvironmentBehaviors();
+	
+	/** @return all the iterator strategies, that can be used to iterate over continuous belief operator families */
+	List<Class<? extends ContinuousBeliefOperatorFamilyIteratorStrategy>> getBeliefOperatorFamilyIteratorStrategies();
 }

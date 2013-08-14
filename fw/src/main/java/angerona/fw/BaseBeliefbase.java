@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -323,6 +324,13 @@ public abstract class BaseBeliefbase
 		Pair<Set<FolFormula>, AngeronaAnswer> reval = (Pair<Set<FolFormula>, AngeronaAnswer>) reasoner.process(new ReasonerParameter(this));
 		reasoner.setSettings(oldSettings);
 		return reval.first;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<FolFormula> infere(OperatorCallWrapper ocw) {
+		ReasonerParameter param = new ReasonerParameter(this);
+		param.setSettings(new HashMap<String, String>(ocw.getSettings()));
+		return ((Pair<Set<FolFormula>, AngeronaAnswer>) ocw.process(param)).first;
 	}
 	
 	/**

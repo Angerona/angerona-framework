@@ -2,6 +2,7 @@ package angerona.fw.operators;
 
 import angerona.fw.OperatorSet;
 import angerona.fw.serialize.BeliefOperatorFamilyConfig;
+import angerona.fw.serialize.ContinuousBeliefOperatorFamilyConfig;
 import angerona.fw.serialize.DiscreteBeliefFamilyConfig;
 
 /**
@@ -23,11 +24,22 @@ public class BeliefOperatorFamilyFactory {
 	public static BeliefOperatorFamily create(BeliefOperatorFamilyConfig config, OperatorSet opSet) throws InstantiationException {
 		if(config instanceof DiscreteBeliefFamilyConfig) {
 			return createDiscrete((DiscreteBeliefFamilyConfig)config, opSet);
+		} else if(config instanceof ContinuousBeliefOperatorFamilyConfig) {
+			return createContiniuous((ContinuousBeliefOperatorFamilyConfig)config, opSet);
 		}
 	
 		return null;
 	}
 
+	private static BeliefOperatorFamily createContiniuous(ContinuousBeliefOperatorFamilyConfig config, OperatorSet opSet) 
+			throws InstantiationException {
+		try {
+			return new ContinuousBeliefOperatorFamily(config, opSet);
+		} catch(IllegalAccessException|InstantiationException e) {
+			throw new InstantiationException(e.getMessage());
+		}
+	}
+	
 	/**
 	 * Creates a discrete belief operator family, that means the family is fully defined by giving an ordered
 	 * set of belief-operators (reasoners) in the config parameter.

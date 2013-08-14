@@ -50,7 +50,7 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	
 	@ElementUnion({
 		@Element(name="discrete-family", type=DiscreteBeliefFamilyConfig.class, required=false),
-		@Element(name="continious-family", required=false)
+		@Element(name="continuous-family", type=ContinuousBeliefOperatorFamilyConfig.class, required=false)
 		})
 	protected BeliefOperatorFamilyConfig beliefOperatorFamily;
 	

@@ -9,23 +9,7 @@ package angerona.fw.operators;
  * @author Tim Janus
  *
  */
-public interface BeliefOperatorFamily {
-	/**
-	 * Searches the predecessor of the given operator
-	 * @param current	A operator that has to be part of this operator family
-	 * @return	The predecessor of the given operator or null if the operator
-	 * 			is not part of the family.
-	 */
-	OperatorCallWrapper getPredecessor(OperatorCallWrapper current);
-	
-	/**
-	 * Searches the successor of the given operator
-	 * @param current	A operator that has to be part of this operator family
-	 * @return	The successor of the given operator or null if the operator
-	 * 			is not part of the family.
-	 */
-	OperatorCallWrapper getSuccessor(OperatorCallWrapper current);
-	
+public interface BeliefOperatorFamily extends BeliefOperatorFamilyIterator {
 	/**
 	 * Adds the given operator toAdd behind the operator predecessor, if predecessor
 	 * is null the operator toAdd is added at the end of the family.

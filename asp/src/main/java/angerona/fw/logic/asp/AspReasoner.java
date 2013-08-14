@@ -240,7 +240,7 @@ public class AspReasoner extends BaseReasoner {
 		// Step Two: Filter out formulas without proper frequency
 		Set<DLPLiteral> toRemove = new HashSet<>();
 		for(DLPLiteral a : reval) {
-			if((frequencies.get(a) / (double) answerSets.size() ) <= dValue) {
+			if((frequencies.get(a) / (double) answerSets.size() ) >= dValue) {
 				toRemove.add(a);
 			}
 		}

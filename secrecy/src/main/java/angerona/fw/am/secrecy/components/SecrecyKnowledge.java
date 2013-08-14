@@ -363,16 +363,21 @@ public class SecrecyKnowledge extends BaseAgentComponent
 						String clsName = s.getReasonerClassName();
 						Map<String, String> settings = s.getReasonerSettings();
 						
+						OperatorSet os = newer.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE);
+						OperatorCallWrapper current = os.getOperator(clsName);
+						current.setSettings(settings);
+						
 						// find next operator that keeps the secret safe:
 						while(furtherTests) {
 							Set<FolFormula> beliefSet;
 							Pair<String, Map<String, String>> p = new Pair<>(clsName, settings);
-							
+
+							LOG.info("Test Secrets with d='{}'.", settings.get("d") );
 							// calculate or use cache version of belief set
 							if(cache.containsKey(p)) {
 								beliefSet = cache.get(p);
 							} else {
-								beliefSet = newer.infere(p.first, p.second);
+								beliefSet = newer.infere(current);
 								cache.put(p, beliefSet);
 							}
 							
@@ -380,11 +385,13 @@ public class SecrecyKnowledge extends BaseAgentComponent
 							furtherTests = beliefSet.contains(s.getInformation());
 							if(furtherTests) {
 								changed = true;
-								OperatorSet os = newer.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE);
-								OperatorCallWrapper current = os.getOperator(clsName);
-								OperatorCallWrapper ocw = older.getBeliefOperatorFamily().getPredecessor(current);
-								clsName = ocw.getImplementation().getClass().getName();
-								settings = ocw.getSettings();
+								current = older.getBeliefOperatorFamily().getPredecessor(current);
+								if(current == null) {
+									changed = false;
+									break;
+								}
+								clsName = current.getImplementation().getClass().getName();
+								settings = current.getSettings();
 							}
 						}
 						
@@ -396,25 +403,6 @@ public class SecrecyKnowledge extends BaseAgentComponent
 					}
 				}
 			}
-			
-			/*
-			OperatorCallWrapper op = getAgent().getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
-			ViolatesResult res = (ViolatesResult) op.process(param);
-			
-			for(Pair<Secret, Double> p : res.getPairs()) {
-				if(p.second != 0) {
-					for(Secret s : secrets) {
-						if(s.alike(p.first)) {
-							Map<String, String> map = s.getReasonerParameters();
-							double oldD = Double.parseDouble(map.get("d"));
-							double newD = oldD - p.second;
-							map.put("d", new Double(newD).toString());
-							s.setReasonerParameters(map);
-						}
-					}
-				}
-			}
-			*/
 		}
 	}
 }

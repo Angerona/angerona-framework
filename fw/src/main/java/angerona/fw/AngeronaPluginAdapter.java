@@ -7,6 +7,7 @@ import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.BaseOperator;
+import angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 
 /**
  * This class implements empty methods for the AngeronaPlugin interface
@@ -52,4 +53,8 @@ public class AngeronaPluginAdapter implements AngeronaPlugin {
 		return new LinkedList<>();
 	}
 
+	@Override
+	public List<Class<? extends ContinuousBeliefOperatorFamilyIteratorStrategy>> getBeliefOperatorFamilyIteratorStrategies() {
+		return new LinkedList<>();
+	}
 }

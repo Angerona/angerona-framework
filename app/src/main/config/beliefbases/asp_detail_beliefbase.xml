@@ -11,5 +11,10 @@
       <default-operator-cls>angerona.fw.logic.asp.AspTranslator</default-operator-cls>
    </translators>
    
+   <continuous-family min-value="0" max-value="1.0">
+      <operator>angerona.fw.logic.asp.AspReasoner</operator>
+      <parameter>d</parameter>
+   </continuous-family>
+   
    <beliefbase-class>angerona.fw.logic.asp.AspBeliefbase</beliefbase-class>
 </beliefbase-configuration>
