@@ -94,6 +94,7 @@ TOKEN :
 | < CHAR : ["a"-"z"]>
 | < UCHAR : ["A"-"Z"] >
 | < BLANK : "_" >
+| < NUMBER : (< DIGIT >)+ >
 | < TEXT : ( < UCHAR > | < CHAR > ) (< UCHAR > | < CHAR > | < BLANK > | < DIGIT > )* >
 }
 
@@ -119,6 +120,7 @@ KnowhowStatement statement() :
   List<String > strings = null;
   Vector<DLPAtom> subtargets = new Vector<DLPAtom >();
   Vector<DLPAtom> conditions = new Vector<DLPAtom >();
+  Token weight = null, irrelevance = null;
 }
 {
   elpStr = elpString()
@@ -145,8 +147,17 @@ KnowhowStatement statement() :
       for(String str : strings) {
         conditions.add(parseELPAtom(str));      }      LOG.debug("Condition: " + conditions);    }
   )?
+
+  (
+    < COMMA >
+    weight = < NUMBER >
+	(
+      < COMMA >
+      irrelevance = < NUMBER >    )  )?
   
-  {    return new KnowhowStatement(target, subtargets, conditions);  }  
+  {    return new KnowhowStatement(target, subtargets, conditions,
+    	weight == null ? 0 : Integer.parseInt(weight.image),
+    	irrelevance == null ? 0 : Integer.parseInt(irrelevance.image));  }  
 }
 
 List<String > elpStringList() :
