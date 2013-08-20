@@ -39,7 +39,6 @@ public class ContinuousBeliefOperatorFamily implements BeliefOperatorFamily {
 			throw new InstantiationException("Cannot find reasoner '" + config.getOperatorCls() + "'.");
 		operator = ocw.getImplementation();
 		String iteratorCls = this.config.getIteratorCls();
-		iteratorCls = iteratorCls == null ? "angerona.fw.operators.StepIteratorStrategy" : iteratorCls;
 		iteratorImplementation = PluginInstantiator.getInstance().createIteratorStrategy(iteratorCls);
 		iteratorImplementation.setConfig(this.config);
 	}

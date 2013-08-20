@@ -13,6 +13,7 @@
    
    <continuous-family min-value="0" max-value="1.0">
       <operator>angerona.fw.logic.asp.AspReasoner</operator>
+      <iterator>angerona.fw.logic.asp.AspIteratorStrategy</iterator>
       <parameter>d</parameter>
    </continuous-family>
    

@@ -16,12 +16,14 @@ import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspCredulousReasoner;
+import angerona.fw.logic.asp.AspIteratorStrategy;
 import angerona.fw.logic.asp.AspExpansion;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.logic.asp.AspSkepticalReasoner;
 import angerona.fw.logic.asp.AspTranslator;
 import angerona.fw.logic.asp.RevisionCredibilityPrograms;
 import angerona.fw.logic.asp.RevisionPreferenceHandling;
+import angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 
 /**
  * The ASP plugin implements a belief base plugin which provides an ASP
@@ -73,6 +75,13 @@ public class AspPlugin extends AngeronaPluginAdapter
 	public Map<String, Class<? extends ViewComponent>> getUIComponents() {
 		Map<String, Class<? extends ViewComponent>> reval = new HashMap<String, Class<? extends ViewComponent>>();
 		reval.put("todo", AspBeliefbaseView.class);
+		return reval;
+	}
+	
+	@Override
+	public List<Class<? extends ContinuousBeliefOperatorFamilyIteratorStrategy>> getBeliefOperatorFamilyIteratorStrategies() {
+		List<Class<? extends ContinuousBeliefOperatorFamilyIteratorStrategy>> reval = new LinkedList<>();
+		reval.add(AspIteratorStrategy.class);
 		return reval;
 	}
 }
