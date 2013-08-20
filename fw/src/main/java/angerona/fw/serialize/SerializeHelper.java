@@ -26,7 +26,7 @@ import angerona.fw.serialize.transform.ValueTransform;
 import angerona.fw.serialize.transform.VariableTransform;
 
 /**
- * Helper class encapsulates the exception handling during xml serialization.
+ * Helper class encapsulates the exception handling during XML serialization.
  * @author Tim Janus
  */
 public class SerializeHelper {
@@ -64,53 +64,91 @@ public class SerializeHelper {
 	}
 	
 	/**
-	 * loads the xml in the given file assuming that the given class is anotated by simplexml library
-	 * @param cls		class information about the object to deserialize.
-	 * @param source	the name of the file where the xml is located.
-	 * @return			An instance of type T containing the xml data.
+	 * Loads XML in the given file assuming that the given class is annotated by simple-xml library,
+	 * if the XML in the file cannot be parsed the method throws an exception. For an exception
+	 * free version of this method see loadXmlTry().
+	 * @param cls		Class information about the object to de-serialize
+	 * @param source	The file object that contains the XML expressions that shall be loaded
+	 * @return			An instance of type T containing the data stored in the XML file.
+	 * @throws Exception	If an error occured during the parsing of the XML file.
 	 */
-	public static <T> T loadXml(Class<T> cls, File source) {
+	public static <T> T loadXml(Class<T> cls, File source) throws Exception {
 		init();
-		T obj = createObject(cls);
+		return serializer.read(cls, source);
+	}
+	
+	/**
+	 * Loads the XML in the given file assuming that the given class is annotated by simplexml library
+	 * @param cls		class information about the object to de-serialize.
+	 * @param source	the name of the file where the XML is located.
+	 * @return			An instance of type T containing the XML data or null if an error occured during
+	 * 					parsing the XML file.
+	 */
+	public static <T> T loadXmlTry(Class<T> cls, File source) {
 		try {
-			obj = serializer.read(cls, source);
+			return loadXml(cls, source);
 		} catch (Exception e) {
 			LOG.error("Something went wrong during loading of '{}': {}", source.getPath(), e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
-		return obj;
 	}
 	
-	public static <T>T loadXml(Class<T> cls, Reader source) {
+	/**
+	 * Loads the XML expressions provided by the given Reader source, therefore it uses the given class that must
+	 * be annotated by simple-xml library annotations. This method throws exceptions, for a exception-free version
+	 * that return null in a failure case see loadXmlTry().
+	 * @param cls		A class containing simple-xml annotations that allow de/serialization
+	 * @param source	A Java Reader object thats acts as source for the XML expressions
+	 * @return			A instance of type T that contains the data stored in the XML expressions
+	 * @throws Exception	If an error occurred during parsing the XML expressions
+	 */
+	public static <T> T loadXml(Class<T> cls, Reader source) throws Exception {
 		init();
-		T obj = createObject(cls);
+		return serializer.read(cls, source);
+	}
+		
+	
+	/**
+	 * Loads the XML expressions provided by the given Reader source, therefore it uses the given class that must
+	 * be annoteated by simple-xml library annotations. This methods returns null in a failure case, for a version
+	 * that throws exceptions containing more error information see loadXml().
+	 * @param cls		A class containing simple-xml annotations that allow de/serialization
+	 * @param source	A Java Reader object thats acts as source for the XML expressions
+	 * @return			A instance of type T that contains the data stored in the XML expressions
+	 */
+	public static <T> T loadXmlTry(Class<T> cls, Reader source) {
 		try {
-			obj = serializer.read(cls, source);
+			return loadXml(cls, source);
 		} catch (Exception e) {
 			LOG.error("Something went wrong during XML loading: '{}'", e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
-		return obj;
 	}
 
-	public static <T> T loadXml(Class<T> cls, String xml) {
+	/**
+	 * Loads the given data-class from the given XML string, this method throws exceptions,
+	 * for a exception-free version that returns null in a failure case see loadXmlTry().
+	 * @param cls	A class containing simple-xml annotations that allow de/serialization
+	 * @param xml	A string containing XML expressions that shall be loaded
+	 * @return		An object of type cls that contains the data saved in the XML expressions
+	 * @throws Exception	If an error occurs when parsing the XML.
+	 */
+	public static <T> T loadXml(Class<T> cls, String xml) throws Exception {
 		return loadXml(cls, new StringReader(xml));
 	}
 	
-	private static <T> T createObject(Class<T> cls) {
-		T obj = null;
-		try {
-			obj = cls.newInstance();
-		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return obj;
+	/**
+	 * Loads the given data-class from the given XML strings, this method returns null if
+	 * an error occurs for an exception version of this method see loadXml()
+	 * @param cls	A class containing the simple-xml annotations that allow de/serializoations
+	 * @param xml	A string containing XML expressions that shall be loaded
+	 * @return		An object of type cls that contains the data saved in the XML expressions or
+	 * 				null if an error occured during parsing the XML.
+	 */
+	public static <T> T loadXmlTry(Class<T> cls, String xml) {
+		return loadXmlTry(cls, new StringReader(xml));
 	}
 	
 	/**

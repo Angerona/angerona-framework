@@ -23,10 +23,10 @@ import angerona.fw.operators.StepIteratorStrategy;
  */
 public class ContinuousBeliefOperatorFamilyConfig extends
 		BeliefOperatorFamilyConfig {
-	@Attribute(name="min-value", required=true)
+	@Attribute(name="min-value", required=false)
 	private double minValue = 0;
 	
-	@Attribute(name="max-value", required=true)
+	@Attribute(name="max-value", required=false)
 	private double maxValue = 1.0;
 	
 	@Element(name="operator", required=true)
@@ -36,7 +36,7 @@ public class ContinuousBeliefOperatorFamilyConfig extends
 	private String parameterName;
 	
 	@Element(name="iterator", required=false)
-	private String iteratorCls;
+	private String iteratorCls = "angerona.fw.operators.StepIteratorStrategy";
 	
 	public double getMin() {
 		return minValue;

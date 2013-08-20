@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.boolex.OnErrorEvaluator;
 import angerona.fw.error.AngeronaException;
 import angerona.fw.serialize.AgentConfigReal;
 import angerona.fw.serialize.BeliefbaseConfigReal;
@@ -48,14 +49,18 @@ public class AngeronaProject extends ModelAdapter {
 	}
 	
 	private <T extends Resource> void loadResource(File file, Class<T> cls) {
-		T res = SerializeHelper.loadXml(cls, file);
-		resourceMap.put(res.getName(), res);
-		LOG.info("'{}' '"+res.getName()+"' in '{}' added to Angerona project.", 
-				res.getResourceType(), file.getAbsolutePath());
-		
-		// hack:
-		if(res instanceof SimulationConfiguration) {
-			((SimulationConfiguration)res).setFile(file);
+		try {
+			T res = SerializeHelper.loadXml(cls, file);
+			resourceMap.put(res.getName(), res);
+			LOG.info("'{}' '"+res.getName()+"' in '{}' added to Angerona project.", 
+					res.getResourceType(), file.getAbsolutePath());
+			
+			// hack:
+			if(res instanceof SimulationConfiguration) {
+				((SimulationConfiguration)res).setFile(file);
+			}
+		} catch(Exception e) {
+			Angerona.getInstance().onError("Cannot parse file!", "Cannot parse: '" + file.getPath() + "': " + e.getMessage());
 		}
 	}
 	
