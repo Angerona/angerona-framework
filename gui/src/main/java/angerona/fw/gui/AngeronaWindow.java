@@ -1,5 +1,6 @@
 package angerona.fw.gui;
 
+import interactive.InteractiveAgentNextActionRequester;
 import interactive.InteractiveBarMVPComponent;
 import interactive.InteractiveModelAdapter;
 import interactive.InteractivePresenter;
@@ -396,9 +397,8 @@ public class AngeronaWindow extends WindowAdapter
 		
 		//check if the scenario has an interactive agent and open the interactive View if needed
 		for(Agent a : simulationEnvironment.getAgents()){
-			if (a instanceof InteractiveAgent){		
-				resMap.add(openView(new InteractiveBarMVPComponent(simulationEnvironment)));
-				break;
+			if (a instanceof InteractiveAgent){
+				((InteractiveAgent) a).setNextActionRequester(new InteractiveAgentNextActionRequester(simulationEnvironment));
 			}
 		}
 	}

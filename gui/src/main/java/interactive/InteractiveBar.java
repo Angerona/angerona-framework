@@ -8,6 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -24,6 +25,8 @@ public class InteractiveBar extends ObservingPanel {
 	/** kill warning */
 	private static final long serialVersionUID = -5662460862082002346L;
 
+	
+	private JFrame frame;
 	private JButton btnAction, btnFin;	
 	private JSplitPane spnSplitPane;
 	private JComboBox<String> actionType, receiver;
@@ -140,6 +143,10 @@ public class InteractiveBar extends ObservingPanel {
 		
 		spnSplitPane.setRightComponent(pnRight);
 		
+		frame = new JFrame("Interactive Agent");
+	    frame.setSize(500, 300);
+		frame.add(spnSplitPane);
+		
 	}
 
 	public JButton getActionButton() {
@@ -160,6 +167,10 @@ public class InteractiveBar extends ObservingPanel {
 	
 	public JComboBox<String> getActionType() {
 		return actionType;
+	}
+	
+	public JFrame getFrame(){
+		return frame;
 	}
 
 }

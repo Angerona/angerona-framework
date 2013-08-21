@@ -3,6 +3,7 @@ package interactive;
 import javax.swing.JPanel;
 
 import angerona.fw.AngeronaEnvironment;
+import angerona.fw.NextActionRequester;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.base.ViewComponent;
 import bibliothek.gui.dock.DefaultDockable;
@@ -14,12 +15,13 @@ import bibliothek.gui.dock.DefaultDockable;
 public class InteractiveBarMVPComponent implements ViewComponent {
 
 	private InteractiveBar view;
+	private InteractivePresenter presenter;
 
 	
 	public InteractiveBarMVPComponent(AngeronaEnvironment simulationEnvironment) {
 		InteractiveModelAdapter modelAdapter = new InteractiveModelAdapter(simulationEnvironment);
 		view = new InteractiveBar(modelAdapter.getReceiver(), modelAdapter.getActionTypes());
-		new InteractivePresenter(modelAdapter, view);
+		presenter = new InteractivePresenter(modelAdapter, view);
 	}
 	
 	@Override
@@ -32,6 +34,10 @@ public class InteractiveBarMVPComponent implements ViewComponent {
 		dockable.setTitleText("Interactive View");
 		dockable.setTitleIcon(AngeronaWindow.get().getIcons().get("monitor"));
 		
+	}
+	
+	public boolean getHasAction(){
+		return presenter.getHasAction();
 	}
 
 }

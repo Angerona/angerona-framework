@@ -2,11 +2,12 @@ package interactive;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import angerona.fw.InteractiveAgent;
-import angerona.fw.Observer;
 import angerona.fw.comm.Query;
 import angerona.fw.comm.Revision;
 import angerona.fw.comm.SpeechAct;
@@ -22,10 +23,12 @@ import angerona.fw.reflection.FolFormulaVariable;
  */
 public class InteractivePresenter 
 	extends Presenter<InteractiveModelAdapter, InteractiveBar>
-	implements ActionListener, Observer {
+	implements ActionListener{
 	
 	/** Default Ctor: The user has to call setModel() and setView(). */
 	public InteractivePresenter() {}
+	
+	private boolean hasAction;
 	
 	private InteractiveAgent a;
 	/** 
@@ -37,7 +40,6 @@ public class InteractivePresenter
 		setModel(model);
 		setView(view);
 		this.a = model.getAgent();
-		a.register(this);
 	}
 
 	@Override
@@ -69,11 +71,14 @@ public class InteractivePresenter
 			}
 			if(act != null){
 				a.performAction(act);
-				a.setAction(true);
+				this.hasAction = true;
+				JFrame frame = ((InteractiveBar) view).getFrame();
+				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 			}
 		}else{// FinischButton was pressed
-			a.setHasPerception(false);
-			a.setAction(true);
+			this.hasAction = false;
+			JFrame frame = ((InteractiveBar) view).getFrame();
+			frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 		}
 	}
 
@@ -92,9 +97,8 @@ public class InteractivePresenter
 		view.getActionButton().removeActionListener(this);
 		view.getFinButton().removeActionListener(this);
 	}
-
-	@Override
-	public void update() {
-		JOptionPane.showMessageDialog(view, "Please insert an Action or press the Finish Button!");
+	
+	public boolean getHasAction(){
+		return hasAction;
 	}
 }
