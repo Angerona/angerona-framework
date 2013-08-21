@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.defendingagent.Prover.Prover;
+import angerona.fw.defendingagent.Prover.SICStusException;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.util.LogicTranslator;
 
@@ -86,7 +87,7 @@ public class CensorComponent extends BaseAgentComponent {
 		String toProve = cexec.translate(r);
 //		toProve = "(true => false)";
 		
-		Prover prover = new Prover();
+		Prover prover = Prover.getInstance();
 		
 		List<String> manual = new LinkedList<String>();
 		manual.add("i11_22 => neg s21 or r ");
@@ -95,7 +96,12 @@ public class CensorComponent extends BaseAgentComponent {
 		manual.add("neg ( i11_22 => s21 )");
 		manual.add("neg ( i11_22 and s21  => false)");
 		
-		System.out.println("Prover: "+prover.prove(manual, "i11_22 and s21 => r", Prover.InferenceSystem.RATIONAL));
+		try {
+			System.out.println("Prover: "+prover.prove(manual, "i11_22 and s21 => r", Prover.InferenceSystem.RATIONAL));
+		} catch (SICStusException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public CensorComponent(Prover.InferenceSystem inferenceSystem) {
@@ -120,8 +126,13 @@ public class CensorComponent extends BaseAgentComponent {
 	 */
 	public boolean scepticalInference(View view, FolFormula formula) {
 		List<String> knowledgeBase = this.makeBeliefBase(view);
-		Prover p = new Prover();
-		boolean reval= p.prove(knowledgeBase, translate(view.getBeliefSet()) + " => " + translate(formula), inferenceSystem);
+		Prover p = Prover.getInstance();
+		boolean reval = false;
+		try {
+			reval = p.prove(knowledgeBase, translate(view.getBeliefSet()) + " => " + translate(formula), inferenceSystem);
+		} catch (SICStusException e) {
+			LOG.error("error on invocation of SICStus prolog engine");
+		}
 		report("Calculate sceptical inference of '" + translate(formula) + "' using bbase: " + knowledgeBase + ". Result: " + Boolean.toString(reval));
 		return reval;
 	}
@@ -159,8 +170,13 @@ public class CensorComponent extends BaseAgentComponent {
 		// follow from CL(V)
 		List<String> knowledgeBase = this.makeBeliefBase(view);
 //		PropositionalFormula contradiction = new Disjunction(new Negation(new Tautology()), new Contradiction());
-		Prover p = new Prover();
-		return ! p.prove(knowledgeBase, "(true => false)", inferenceSystem);
+		Prover p = Prover.getInstance();
+		try {
+			return ! p.prove(knowledgeBase, "(true => false)", inferenceSystem);
+		} catch (SICStusException e) {
+			LOG.error("error on invocation of SICStus engine");
+			return false;
+		}
 	}
 	
 	/**

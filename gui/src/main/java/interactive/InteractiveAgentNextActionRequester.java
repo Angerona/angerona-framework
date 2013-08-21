@@ -15,10 +15,9 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 		this.environment = environment;
 	}
 	@Override
-	public boolean request() {
-		final InteractiveBarMVPComponent barMVPComponent= new InteractiveBarMVPComponent(environment);
-		try {
-			javax.swing.SwingUtilities.invokeAndWait(new Runnable(){
+	public synchronized boolean request() {
+		final InteractiveBarMVPComponent barMVPComponent= new InteractiveBarMVPComponent(environment, Thread.currentThread());
+			javax.swing.SwingUtilities.invokeLater(new Runnable(){
 
 				@Override
 				public void run() {
@@ -26,10 +25,12 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 					frame.setVisible(true);
 				}
 			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			// expected interupt, do nothing
 		}
+		
 		return barMVPComponent.getHasAction();
 	}
 

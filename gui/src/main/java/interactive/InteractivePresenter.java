@@ -29,6 +29,7 @@ public class InteractivePresenter
 	public InteractivePresenter() {}
 	
 	private boolean hasAction;
+	private Thread caller;
 	
 	private InteractiveAgent a;
 	/** 
@@ -36,10 +37,11 @@ public class InteractivePresenter
 	 * @param model	The used model.
 	 * @param view	The used view.
 	 */
-	public InteractivePresenter(InteractiveModelAdapter model, InteractiveBar view) {
+	public InteractivePresenter(InteractiveModelAdapter model, InteractiveBar view, Thread caller) {
 		setModel(model);
 		setView(view);
 		this.a = model.getAgent();
+		this.caller = caller;
 	}
 
 	@Override
@@ -74,11 +76,13 @@ public class InteractivePresenter
 				this.hasAction = true;
 				JFrame frame = ((InteractiveBar) view).getFrame();
 				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+				caller.interrupt();
 			}
 		}else{// FinischButton was pressed
 			this.hasAction = false;
 			JFrame frame = ((InteractiveBar) view).getFrame();
 			frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+			caller.interrupt();
 		}
 	}
 

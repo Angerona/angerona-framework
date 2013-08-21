@@ -2,6 +2,8 @@ package angerona.fw.defendingagent.Prover;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.SynchronousQueue;
+
 
 import se.sics.jasper.Query;
 import se.sics.jasper.SICStus;
@@ -15,31 +17,108 @@ import se.sics.jasper.SPException;
  */
 public class Prover {
 	
+	private static Prover instance = new Prover();
+	
 	public enum InferenceSystem {
 	    CUMMULATIV, LOOP_CUMMULATIV, PREFERENTIAL, 
 	    RATIONAL, FREE_RATIONAL
 	}
-
-	private List<String> kFormulas;
-	private String formulaToProve;
+	
+	private static SynchronousQueue<ProverInput> inputQueue = new SynchronousQueue<ProverInput>();
+	private static SynchronousQueue<Boolean> outputQueue = new SynchronousQueue<Boolean>();
+	private static boolean run = true;
 
 	/**
 	 * The following object is used to interact with the SICStus Prolog kernel
 	 * */
 	private static SICStus sp;
 
+	
+	
+	public static Prover getInstance() {
+		return instance;
+	}
+	
 	/**
 	 * C´tor
 	 */
-	public Prover() {
-		if (sp == null) {
-			/* Instantiating a SICStus object */
-			try {
-				sp = new SICStus();
-			} catch (SPException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	private Prover() {
+		new Thread( new Runnable() {
+			
+			@Override
+			public void run() {
+				if (sp == null) {
+					/* Instantiating a SICStus object */
+					try {
+						sp = new SICStus();
+					} catch (SPException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				workerThread();
 			}
+		}).start();
+	}
+	
+	public void stopSICStusThread() {
+		run = false;
+	}
+	
+	private void workerThread() {
+		while(run) {
+			ProverInput input;
+				try {
+					input = inputQueue.take();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					continue;
+				}
+				System.out.println("sicstus worker: invoked sicstus worker thread");
+			
+			boolean result = runProver(input.kFormulas, input.formulaToProve, input.chooseInferenceSystem);
+			System.out.println("sicstus worker: prover result " + result);
+			try {
+				outputQueue.put(result);
+			} catch (InterruptedException e) {
+				continue;
+			}
+		}
+	}
+	
+	/**
+	 * Read the knowledgebase and the formula to prove and give it the prolog
+	 * solver to prove
+	 * 
+	 * @param kFormulas
+	 *            the knowledgebase
+	 * @param formulaToProve
+	 *            the formula to prove
+	 * @param chooseInferenceSystem
+	 *            CUMMULATIV - Cumulative logic, 
+	 *            LOOP_CUMMULATIV - Loop-Cumulative logic, 
+	 *            PREFERENTIAL - Preferential logic, 
+	 *            RATIONAL - Rational logic, 
+	 *            FREE_RATIONAL - Rational logic with free variables
+	 * @return true if formulaToProve can be inferred from kFormulas, false otherwise
+	 */
+	public boolean prove(List<String> kFormulas, String formulaToProve,
+			InferenceSystem chooseInferenceSystem) throws SICStusException {
+		
+		ProverInput input = new ProverInput(kFormulas, formulaToProve, chooseInferenceSystem);
+		try {
+			inputQueue.put(input);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			throw new SICStusException();
+		}
+		
+		try {
+			System.out.println("waiting for sicstus result");
+			return outputQueue.take();
+		} catch (InterruptedException e) {
+			throw new SICStusException();
 		}
 	}
 
@@ -59,10 +138,9 @@ public class Prover {
 	 *            FREE_RATIONAL - Rational logic with free variables
 	 * @return true if formulaToProve can be inferred from kFormulas, false otherwise
 	 */
-	public boolean prove(List<String> kFormulas, String formulaToProve,
+	public static boolean runProver(List<String> kFormulas, String formulaToProve,
 			InferenceSystem chooseInferenceSystem) {
-		this.kFormulas = kFormulas;
-		this.formulaToProve = formulaToProve;
+		
 		Query q;
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 
@@ -101,7 +179,7 @@ public class Prover {
 			 * language
 			 */
 			String kBaseList = new String("[");
-			for (String currentFormula : this.kFormulas) {
+			for (String currentFormula : kFormulas) {
 //				String currentFormula = this.kFormulas[i];
 				if (currentFormula.length() > 0)
 					kBaseList = kBaseList + currentFormula + ",";
@@ -118,7 +196,7 @@ public class Prover {
 			}
 
 			/* Step 2: formulas to prove base must be in the KLM language */
-			String toProveList = new String("[" + this.formulaToProve + "]");
+			String toProveList = new String("[" + formulaToProve + "]");
 
 			goal = new String("parseinput(" + toProveList + ").");
 			System.out.println("GOAL: "+goal);
@@ -137,12 +215,10 @@ public class Prover {
 			System.out.println("kbaselist:" + kBaseList);
 			q = sp.openPrologQuery(goal, map);
 			if (q.nextSolution()) {
-				// Success
 				//return new String(map.toString());
 				return true;
 
 			} else {
-				// Failure
 				//return null;
 				return false;
 			}

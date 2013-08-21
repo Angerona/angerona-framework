@@ -18,10 +18,10 @@ public class InteractiveBarMVPComponent implements ViewComponent {
 	private InteractivePresenter presenter;
 
 	
-	public InteractiveBarMVPComponent(AngeronaEnvironment simulationEnvironment) {
+	public InteractiveBarMVPComponent(AngeronaEnvironment simulationEnvironment, Thread caller) {
 		InteractiveModelAdapter modelAdapter = new InteractiveModelAdapter(simulationEnvironment);
 		view = new InteractiveBar(modelAdapter.getReceiver(), modelAdapter.getActionTypes());
-		presenter = new InteractivePresenter(modelAdapter, view);
+		presenter = new InteractivePresenter(modelAdapter, view, caller);
 	}
 	
 	@Override
