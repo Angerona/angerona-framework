@@ -14,6 +14,12 @@ import se.sics.jasper.SPException;
  * set of formulas; public method prove interacts with SICStus Prolog
  * implementation of SeqS using package se.sics.jasper's classes; these
  * implementations consist of files with 'sav' extension
+ * 
+ * SICStus only allows calls from the first thread that calls it. To make
+ * this interface to the prover engine thread-safe, A seperate worker thread is
+ * created that handles all calls to the SICStus prolog engine. The data
+ * is handed over via a rendezvouz channel using two SynchronousQueues that
+ * links the prover-method with the workerThread method. 
  */
 public class Prover {
 	
@@ -34,13 +40,16 @@ public class Prover {
 	private static SICStus sp;
 
 	
-	
+	/**
+	 * Returns the singleton instance of this prover class.
+	 * @return the singleton instance of this prover class.
+	 */
 	public static Prover getInstance() {
 		return instance;
 	}
 	
 	/**
-	 * C´tor
+	 * C´tor, starting the seperate worker thread (see above for an explanation)
 	 */
 	private Prover() {
 		new Thread( new Runnable() {
@@ -61,6 +70,10 @@ public class Prover {
 		}).start();
 	}
 	
+	/**
+	 * Stops the current worker thread rendering this Singleton-class unusable.
+	 * Use with care!
+	 */
 	public void stopSICStusThread() {
 		run = false;
 	}
