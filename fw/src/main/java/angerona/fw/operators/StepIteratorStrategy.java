@@ -49,5 +49,4 @@ public class StepIteratorStrategy extends
 			return null;
 		}
 	}
-
 }

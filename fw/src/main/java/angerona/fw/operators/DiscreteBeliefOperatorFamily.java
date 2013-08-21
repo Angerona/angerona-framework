@@ -2,6 +2,7 @@ package angerona.fw.operators;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -42,5 +43,22 @@ public class DiscreteBeliefOperatorFamily implements BeliefOperatorFamily {
 		else
 			return false;
 		return true;
+	}
+
+	@Override
+	public double distance(OperatorCallWrapper from, OperatorCallWrapper to) {
+		return Math.abs(operators.indexOf(from) - operators.indexOf(to));
+	}
+
+	@Override
+	public OperatorCallWrapper getOperator(String operatorCls,
+			Map<String, String> settings) {
+		for(OperatorCallWrapper operator : operators) {
+			if(	operator.getClass().getName().equals(operatorCls) &&
+				operator.getSettings().equals(settings)	) {
+				return operator;
+			}
+		}
+		return null;
 	}
 }

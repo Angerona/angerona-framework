@@ -45,10 +45,11 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
 		
+		ViolatesResult reval = new ViolatesResult();
 		// only apply violates if secrecy knowledge is saved in agent.
 		SecrecyKnowledge conf = param.getAgent().getComponent(SecrecyKnowledge.class);
 		if(conf == null)
-			return new ViolatesResult();
+			return reval;
 		
 		Agent ag = param.getAgent();
 		Beliefs beliefs = param.getBeliefs();
@@ -56,6 +57,8 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		// use cloned beliefs to generate new beliefs:
 		Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAtom(), (Beliefs)beliefs.clone());
+		reval.setBeliefs(newBeliefs);
+		
 		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 		BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());
 		BaseBeliefbase view = newBeliefs.getViewKnowledge().get(p.getReceiverId()); 
@@ -85,7 +88,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				}
 			}
 		}
-		ViolatesResult reval = new ViolatesResult(pairs);
+		reval.setSecretPairs(pairs);
 	
 		if(reval.isAlright())
 			param.report("No violation applying the perception/action: '" + percept + "'");
@@ -99,6 +102,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		if(pe.isAtomic()) {
 			// clear ViolatesResult state:
 			violates = new ViolatesResult();
+			violates.setBeliefs(param.getBeliefs());
 			
 			// prepare and run the plan-element:
 			pe.prepare(this, param.getBeliefs());

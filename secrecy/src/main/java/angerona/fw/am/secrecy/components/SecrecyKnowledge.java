@@ -19,12 +19,14 @@ import angerona.fw.BaseAgentComponent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.OperatorSet;
 import angerona.fw.Perception;
+import angerona.fw.am.secrecy.SecrecyChangeProposal;
+import angerona.fw.am.secrecy.SecretChangeProposal;
 import angerona.fw.listener.AgentAdapter;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Secret;
+import angerona.fw.operators.BeliefOperatorFamily;
 import angerona.fw.operators.OperatorCallWrapper;
-import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.parser.ParseException;
 import angerona.fw.parser.SecretParser;
 import angerona.fw.util.Pair;
@@ -332,6 +334,86 @@ public class SecrecyKnowledge extends BaseAgentComponent
 	}
 	
 	/**
+	 * Processes the changes that the {@link SecrecyKnowledge} needs to be safe again refering
+	 * to the Beliefs saved in newBeliefs. It stores its result in a {@link SecrecyChangeProposal}
+	 * structure. 
+	 * To process the new belief operators of the secrets the {@link BeliefOperatorFamily} is used.
+	 * It is queried for a predecessor until a belief operator is found that keeps the secret safe.
+	 * @param newBeliefs	The beliefs used to test if the SecrecyKnowledge is safe
+	 * @param oldBeliefs	The previous version of the beliefs, this is mainly used to decide what
+	 * 						secrets need to be proofed. If the view on an attacking agent has not
+	 * 						changed its secrets need no update.
+	 * @return
+	 */
+	public SecrecyChangeProposal processNeededChanges(Beliefs newBeliefs, Beliefs oldBeliefs) {
+		SecrecyChangeProposal reval = new SecrecyChangeProposal();
+		
+		// Iterate over each view belief base.
+		for(Entry<String, BaseBeliefbase> entry : newBeliefs.getViewKnowledge().entrySet()) {
+			// get the old and new version of the belief base and create a inference cache:
+			BaseBeliefbase newer = entry.getValue();
+			BaseBeliefbase older = oldBeliefs.getViewKnowledge().get(entry.getKey());
+			Map<Pair<String, Map<String, String>>, Set<FolFormula>> cache = new HashMap<>();
+			
+			// only operate if the hash code of the old and new version are different
+			if(newer.hashCode() != older.hashCode()) {
+				
+				// iterate over every secret corresponding the view:
+				Set<Secret> secrets = this.getSecretsBySubject(entry.getKey());
+				for(Secret s : secrets) {
+					boolean furtherTests = true;
+					boolean changed = false;
+					String clsName = s.getReasonerClassName();
+					Map<String, String> settings = s.getReasonerSettings();
+					
+					OperatorSet os = newer.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE);
+					OperatorCallWrapper current = os.getOperator(clsName);
+					current.setSettings(settings);
+					
+					// find next operator that keeps the secret safe:
+					while(furtherTests) {
+						Set<FolFormula> beliefSet;
+						Pair<String, Map<String, String>> p = new Pair<>(clsName, settings);
+
+						LOG.trace("Test Secrets with d='{}'.", settings.get("d") );
+						// calculate or use cache version of belief set
+						if(cache.containsKey(p)) {
+							beliefSet = cache.get(p);
+						} else {
+							beliefSet = newer.infere(current);
+							cache.put(p, beliefSet);
+						}
+						
+						// update variables for next step
+						furtherTests = beliefSet.contains(s.getInformation());
+						if(furtherTests) {
+							changed = true;
+							current = older.getBeliefOperatorFamily().getPredecessor(current);
+							if(current == null) {
+								changed = false;
+								break;
+							}
+							clsName = current.getImplementation().getClass().getName();
+							settings = current.getSettings();
+						}
+					}
+					
+					// update the belief operator of the secret in the change proposal:
+					if(changed) {
+						if(s.getReasonerClassName().equals(clsName)) {
+							reval.add(new SecretChangeProposal(s, settings));
+						} else {
+							reval.add(new SecretChangeProposal(s, clsName));
+						}
+					}
+				}
+			}
+		}
+		
+		return reval;
+	}
+	
+	/**
 	 * An agent event handling strategy which reacts on changes of the belief base. It
 	 * adapts the reasoner parameter d for the secrets.
 	 * 
@@ -341,68 +423,9 @@ public class SecrecyKnowledge extends BaseAgentComponent
 		@Override
 		public void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs) {
 			// Get Parameters and Components
-			EvaluateParameter param = new EvaluateParameter(getAgent(), oldBeliefs, percept);
-			param.report("Check the Secrecy Consistence");
 			SecrecyKnowledge sk = getAgent().getComponent(SecrecyKnowledge.class);
-			
-			// Iterate over each view belief base.
-			for(Entry<String, BaseBeliefbase> entry : newBeliefs.getViewKnowledge().entrySet()) {
-				// get the old and new version of the belief base and create a inference cache:
-				BaseBeliefbase newer = entry.getValue();
-				BaseBeliefbase older = oldBeliefs.getViewKnowledge().get(entry.getKey());
-				Map<Pair<String, Map<String, String>>, Set<FolFormula>> cache = new HashMap<>();
-				
-				// only operate if the hash code of the old and new version are different
-				if(newer.hashCode() != older.hashCode()) {
-					
-					// iterate over every secret corresponding the view:
-					Set<Secret> secrets = sk.getSecretsBySubject(entry.getKey());
-					for(Secret s : secrets) {
-						boolean furtherTests = true;
-						boolean changed = false;
-						String clsName = s.getReasonerClassName();
-						Map<String, String> settings = s.getReasonerSettings();
-						
-						OperatorSet os = newer.getOperators().getOperationSetByType(BaseReasoner.OPERATION_TYPE);
-						OperatorCallWrapper current = os.getOperator(clsName);
-						current.setSettings(settings);
-						
-						// find next operator that keeps the secret safe:
-						while(furtherTests) {
-							Set<FolFormula> beliefSet;
-							Pair<String, Map<String, String>> p = new Pair<>(clsName, settings);
-
-							LOG.info("Test Secrets with d='{}'.", settings.get("d") );
-							// calculate or use cache version of belief set
-							if(cache.containsKey(p)) {
-								beliefSet = cache.get(p);
-							} else {
-								beliefSet = newer.infere(current);
-								cache.put(p, beliefSet);
-							}
-							
-							// update variables for next step
-							furtherTests = beliefSet.contains(s.getInformation());
-							if(furtherTests) {
-								changed = true;
-								current = older.getBeliefOperatorFamily().getPredecessor(current);
-								if(current == null) {
-									changed = false;
-									break;
-								}
-								clsName = current.getImplementation().getClass().getName();
-								settings = current.getSettings();
-							}
-						}
-						
-						// update the belief operator of the secret:
-						if(changed) {
-							s.setReasonerClassName(clsName);
-							s.setReasonerParameters(settings);
-						}
-					}
-				}
-			}
+			sk.report("Check the Secrecy Consistence");
+			sk.processNeededChanges(oldBeliefs, newBeliefs).realize();			
 		}
 	}
 }

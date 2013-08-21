@@ -6,13 +6,18 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import angerona.fw.ActionHistory;
 import angerona.fw.Agent;
 import angerona.fw.Intention;
 import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
+import angerona.fw.am.secrecy.SecrecyChangeProposal;
+import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
+import angerona.fw.comm.Answer;
+import angerona.fw.logic.Beliefs;
 import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.OperatorCallWrapper;
@@ -84,6 +89,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 				minIntent = intent;
 			}
 		}
+		
 		return minIntent;
 	}
 
@@ -97,8 +103,17 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 		OperatorCallWrapper vop = ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
 		for (Subgoal plan : param.getActualPlan().getPlans()) {
 			for (int i = 0; i < plan.getNumberOfStacks(); ++i) {
+				
 				PlanElement pe = plan.peekStack(i);
 				if (pe.isAtomic()) {
+					
+					// do not self repeat:
+					ActionHistory history = param.getAgent().getBeliefs().getComponent(ActionHistory.class);
+					if(history != null && pe.getIntention() instanceof Answer) {
+						if(history.didAction(param.getAgent().getName(), (Answer)pe.getIntention())) {
+							continue;
+						}
+					}
 					
 					if (isLie(pe)) {
 						// add return value of lyingCost(intention) to intention
@@ -106,6 +121,17 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 						pe.setCosts(cost + pe.getCosts());
 						atomicIntentions.add(pe);
 					} else {
+						EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
+						Beliefs newBeliefs = ((ViolatesResult)vop.process(eparam)).getBeliefs();
+						if(newBeliefs != null) {
+							SecrecyKnowledge sk = ag.getComponent(SecrecyKnowledge.class);
+							SecrecyChangeProposal scp = sk.processNeededChanges(ag.getBeliefs(), newBeliefs);
+							
+							// todo distribute belief operator families to secrets....
+							pe.setCosts(scp.distance(ag.getBeliefs().getWorldKnowledge().getBeliefOperatorFamily()));
+							atomicIntentions.add(pe);
+						}
+						/*
 						EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
 						
 						List<Pair<Secret, Double>> weakenings = ((ViolatesResult)vop.process(eparam)).getPairs();
@@ -115,6 +141,7 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 							pe.setCosts(cost);
 							atomicIntentions.add(pe);
 						}
+						*/
 					}
 
 				}

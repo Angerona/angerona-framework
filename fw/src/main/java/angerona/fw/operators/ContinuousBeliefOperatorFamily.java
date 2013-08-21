@@ -1,5 +1,7 @@
 package angerona.fw.operators;
 
+import java.util.Map;
+
 import angerona.fw.AngeronaPlugin;
 import angerona.fw.OperatorSet;
 import angerona.fw.internal.PluginInstantiator;
@@ -57,5 +59,23 @@ public class ContinuousBeliefOperatorFamily implements BeliefOperatorFamily {
 	public boolean addOperator(OperatorCallWrapper toAdd,
 			OperatorCallWrapper predecessor) {
 		throw new IllegalStateException();
+	}
+
+	@Override
+	public double distance(OperatorCallWrapper from, OperatorCallWrapper to) {
+		String f = from.getSetting(config.getParameterName(), String.valueOf(config.getMax()));
+		String t = to.getSetting(config.getParameterName(), String.valueOf(config.getMin()));
+		return Math.abs(Double.parseDouble(f) - Double.parseDouble(t));
+	}
+
+	@Override
+	public OperatorCallWrapper getOperator(String operatorCls,
+			Map<String, String> settings) {
+		if(!operator.getClass().getName().equals(operatorCls))
+			return null;
+		
+		OperatorCallWrapper reval = new OperatorCallWrapper(operator);
+		reval.setSettings(settings);
+		return reval;
 	}
 }

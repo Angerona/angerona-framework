@@ -32,6 +32,8 @@ public class ViolatesResult implements Cloneable {
 	/** flag indicating if everything is alright (no secret weakend) */
 	private boolean alright;
 	
+	private Beliefs beliefs;
+	
 	/** Default Ctor: Assumes that everything is alright (no violation occurs) */
 	public ViolatesResult() {
 		this(true);
@@ -69,6 +71,10 @@ public class ViolatesResult implements Cloneable {
 	 */
 	public ViolatesResult(List<Pair<Secret, Double>> pairs) {
 		alright = true;
+		setSecretPairs(pairs);
+	}
+	
+	public void setSecretPairs(List<Pair<Secret, Double>> pairs) {
 		for(Pair<Secret, Double> p : pairs) {
 			if(p.second > 0) {
 				alright = false;
@@ -116,7 +122,17 @@ public class ViolatesResult implements Cloneable {
 			}
 		}
 		
-		return new ViolatesResult(l1);
+		ViolatesResult reval = new ViolatesResult(l1);
+		reval.setBeliefs(other.beliefs);
+		return reval;
+	}
+	
+	public void setBeliefs(Beliefs beliefs) {
+		this.beliefs = beliefs;
+	}
+	
+	public Beliefs getBeliefs() {
+		return beliefs;
 	}
 	
 	@Override

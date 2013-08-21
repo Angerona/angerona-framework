@@ -144,7 +144,7 @@ public class Secret implements Cloneable {
 	 * ConfidentialKnowledge for example.
 	 * @param parameters	A map containing the parameters for the reasoner.
 	 */
-	public void setReasonerParameters(Map<String, String> parameters) {
+	public void setReasonerSettings(Map<String, String> parameters) {
 		Map<String, String> old = new HashMap<>(reasonerParameters);
 		reasonerParameters = parameters;
 		invokePropertyListener("reasonerParameters", 

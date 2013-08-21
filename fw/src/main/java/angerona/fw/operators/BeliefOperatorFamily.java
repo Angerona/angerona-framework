@@ -1,5 +1,7 @@
 package angerona.fw.operators;
 
+import java.util.Map;
+
 /**
  * This interface represents a belief operator family. Such a family defines
  * an order on reasoners, so that they can be used in a preference relation
@@ -22,4 +24,25 @@ public interface BeliefOperatorFamily extends BeliefOperatorFamilyIterator {
 	 * 						add operation does not completed.
 	 */
 	boolean addOperator(OperatorCallWrapper toAdd, OperatorCallWrapper predecessor);
+	
+	/**
+	 * Processes the distance between from and to as a numerical value.
+	 * @param from	One operator of this belief operator family
+	 * @param to	Another operator of this belief operator family
+	 * @return		A double representing the distance between from and to
+	 */
+	double distance(OperatorCallWrapper from, OperatorCallWrapper to);
+	
+	/**
+	 * returns an operator that is member of this belief operator family and that 
+	 * fulfills the following properties:
+	 * - The full java class name is operatorCls
+	 * - The settings of the operator are represented by the map given in the settings parameter
+	 * @param operatorCls
+	 * @param settings
+	 * @return	An operator instances if the belief operator family contains an operator described
+	 * 			by the properties given as parameter and null if such a operator does not exists
+	 * 			in the belief-operator-family.
+	 */
+	OperatorCallWrapper getOperator(String operatorCls, Map<String, String> settings);
 }

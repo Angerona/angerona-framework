@@ -83,13 +83,14 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		Logger LOG = LoggerFactory.getLogger(WeakeningViolatesOperator.class);
 		List<Pair<Secret, Double>> secretList = new LinkedList<>();
+		ViolatesResult reval = new ViolatesResult();
 
 		// Check if any confidential knowledge present. If none then no secrecy
 		//weakening possible
 		SecrecyKnowledge conf = param.getAgent().getComponent(
 				SecrecyKnowledge.class);
 		if (conf == null)
-			return new ViolatesResult();
+			return reval;
 
 		// Remaining operations depend on whether the action in question is an answer
 		if (! (param.getAtom() instanceof Answer)) {
@@ -97,6 +98,8 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		}
 		Answer a = (Answer) param.getAtom();
 
+		Beliefs newBeliefs = param.getBeliefs().clone();
+		reval.setBeliefs(newBeliefs);
 		// Consider self-repeating answers (and only answers) as bad as
 		// revealing all secrets	
 		ActionHistory history = param.getBeliefs().getComponent(ActionHistory.class);
@@ -106,11 +109,12 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 						+ "' <b> self-repeats </b> with: '"
 						+ param.getAtom() + "'");
 				secretList = representTotalExposure(conf);
-				return new ViolatesResult(secretList);
+				reval.setSecretPairs(secretList);
+				return reval;
 			}
 		}
 
-		Beliefs newBeliefs = param.getBeliefs().clone();
+		
 		Map<String, BaseBeliefbase> views = newBeliefs.getViewKnowledge();
 		if (views.containsKey(a.getReceiverId())
 				&& a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) {
@@ -119,7 +123,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 			Set<FolFormula> answers = a.getAnswer().getAnswers();
 			if (answers.size() == 0) {
 				LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
-				return new ViolatesResult();
+				return reval;
 			}
 			
 			LOG.info("Make Revision for QueryAnswer: '{}'", answers);
@@ -146,7 +150,8 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				param.report(param.getAgent().getName() + "' <b> creates contradiction </b> by: '"
 						+ actString.substring(0, actString.length() - 1) + "'", view);
 				secretList = representTotalExposure(conf);
-				return new ViolatesResult(secretList);
+				reval.setSecretPairs(secretList);
+				return reval;
 			}
 
 			// Now the secrecy strengths get added
@@ -208,6 +213,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 			}
 		}
 
-		return new ViolatesResult(secretList);
+		reval.setSecretPairs(secretList);
+		return reval;
 	}
 }
