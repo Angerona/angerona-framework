@@ -16,9 +16,7 @@
 	<agent-instance>
 		<name>Mary</name>
        	
-        
-       	
-        <agent-config source="config/agents/mary.xml" />         
+        <agent-config source="config/agents/courtroom.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
        	
        	<capability>QueryAnswer</capability>
@@ -29,10 +27,8 @@
       
 	<agent-instance>
   		<name>Coroner</name>
-  		
-  	
-  		
-        <agent-config source="config/agents/mary.xml" />         
+
+        <agent-config source="config/agents/courtroom.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
         
   		<capability>Query</capability>	

@@ -1,4 +1,4 @@
-package angerona.fw.example.operators;
+package angerona.fw.example.operators.courtroom;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,11 +33,11 @@ import angerona.fw.operators.parameter.EvaluateParameter;
  * 
  * @author Daniel Dilger, Tim Janus
  */
-public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
+public class CourtroomIntentionUpdate extends BaseIntentionUpdateOperator {
 
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory
-			.getLogger(IntentionUpdateOperator.class);
+			.getLogger(CourtroomIntentionUpdate.class);
 
 	/** 
 	 * Checks if the given plan element represents a lie. It assumes that the 
@@ -98,9 +98,9 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 				if (pe.isAtomic()) {
 					
 					// do not self repeat:
-					ActionHistory history = param.getAgent().getBeliefs().getComponent(ActionHistory.class);
+					ActionHistory history = param.getAgent().getBeliefs().getComponentOrSub(ActionHistory.class);
 					if(history != null && pe.getIntention() instanceof Answer) {
-						if(history.didAction(param.getAgent().getName(), (Answer)pe.getIntention())) {
+						if(history.didAction((Answer)pe.getIntention())) {
 							continue;
 						}
 					}

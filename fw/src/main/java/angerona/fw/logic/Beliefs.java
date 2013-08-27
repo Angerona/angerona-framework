@@ -105,11 +105,44 @@ public class Beliefs implements Cloneable
 		return reval;
 	}
 	
+	/**
+	 * Searches a component thats type equals the given type parameter, that means
+	 * components that are sub-classes of the given type parameter are not found by
+	 * this method.
+	 * @param cls	The type of the component hat the method shall return
+	 * @return	An instance of the agent component or null if such a component is not
+	 * 			registered.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends AgentComponent> T getComponent(Class<? extends T> cls) {
 		for (AgentComponent ea : customComponents) {
 			if (ea.getClass().equals(cls))
 				return (T) ea;
+		}
+		return null;
+	}
+	
+	/**
+	 * Searches a component of the given class or a sub class of the given component class.
+	 * This method assumes that there is only one component of the given type or one of its
+	 * sub-types registered as agent-component.
+	 * If there are multiple components that are of the given type or a sub-type the behavior
+	 * of this method is undefined, but it shall return that component that has been registered
+	 * first.
+	 * @param cls	The type of the component that the method shall return
+	 * @return		An instance of the agent component or null if such a component is not
+	 * 				registered.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends AgentComponent> T getComponentOrSub(Class<? extends T> cls) {
+		for(AgentComponent ea : customComponents) {
+			Class<?> cur = ea.getClass();
+			while(cur != null && !cur.equals(cls)) {
+				cur = cur.getSuperclass();
+			}
+			if(cur != null) {
+				return (T) ea;
+			}
 		}
 		return null;
 	}

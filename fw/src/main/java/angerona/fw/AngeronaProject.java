@@ -10,7 +10,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.boolex.OnErrorEvaluator;
 import angerona.fw.error.AngeronaException;
 import angerona.fw.serialize.AgentConfigReal;
 import angerona.fw.serialize.BeliefbaseConfigReal;
@@ -19,6 +18,7 @@ import angerona.fw.serialize.SerializeHelper;
 import angerona.fw.serialize.SimulationConfiguration;
 import angerona.fw.util.ModelAdapter;
 import angerona.fw.util.ObservableMap;
+import angerona.fw.util.Utility;
 
 /**
  * Represents a project in the Angerona workspace.
@@ -60,7 +60,8 @@ public class AngeronaProject extends ModelAdapter {
 				((SimulationConfiguration)res).setFile(file);
 			}
 		} catch(Exception e) {
-			Angerona.getInstance().onError("Cannot parse file!", "Cannot parse: '" + file.getPath() + "': " + e.getMessage());
+			Angerona.getInstance().onError("Cannot parse file!", "Cannot parse: '" + file.getPath() + "':\n" +
+					Utility.format(e));
 		}
 	}
 	

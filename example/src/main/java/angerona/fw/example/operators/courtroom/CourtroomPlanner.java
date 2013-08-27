@@ -1,4 +1,4 @@
-package angerona.fw.mary;
+package angerona.fw.example.operators.courtroom;
 
 import java.io.StringReader;
 import java.util.Arrays;
@@ -33,6 +33,7 @@ import angerona.fw.example.operators.GenerateOptionsOperator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
+import angerona.fw.util.Utility;
 
 /**
 * This implementation of a subgoal generation operator allows for the asking of multiple, detail query-type questions. 
@@ -42,9 +43,9 @@ import angerona.fw.logic.Desires;
 * The expression of ignorance "I don't know" is always marked as a lie by this operator. 
 * @author Daniel Dilger, Tim Janus
 */
-public class SubgoalGenerationOperator extends
+public class CourtroomPlanner extends
 		angerona.fw.example.operators.SubgoalGenerationOperator {
-	private static Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
+	private static Logger LOG = LoggerFactory.getLogger(CourtroomPlanner.class);
 	
 	/** flag indicating if the lies should be generated. */
 	private boolean generateLies = false;
@@ -226,7 +227,7 @@ public class SubgoalGenerationOperator extends
 				for(int i=0; i<answers.size(); i++) {
 					//if(isClosedQuery(answers.get(i))) {
 					if(answers.get(i).isGround()) {
-						FolFormula simpleLie = new LyingOperator().lie(answers.get(i));
+						FolFormula simpleLie = Utility.lie(answers.get(i));
 						lies.add(simpleLie);
 					}
 				}

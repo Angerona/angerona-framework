@@ -1,8 +1,5 @@
 package angerona.fw.example.operators;
 
-
-//import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

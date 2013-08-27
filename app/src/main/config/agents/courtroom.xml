@@ -1,20 +1,17 @@
 <agent-configuration>
-<!-- This file should be added to the git register so I don't have to change it when switching branches -->
-	<name>Mary Agent Implementation</name>
+	<name>Courtroom Agent Implementation</name>
 	<cycle-script source="config/secrecy_cycle.xml" />
-	<!-- I've never actually looked at the Generate Options Operator. I should sometime. -->
-	
+
 	<operation-set operation-type="GenerateOptions">
       <default-operator-cls>angerona.fw.example.operators.GenerateOptionsOperator</default-operator-cls>
    	</operation-set>
 	
 	<operation-set operation-type="IntentionUpdate">
-      <default-operator-cls>angerona.fw.example.operators.MaryIntentionUpdateOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.courtroom.CourtroomIntentionUpdate</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>angerona.fw.mary.SubgoalGenerationOperator</default-operator-cls>
-	  <operator-cls>angerona.fw.example.operators.SubgoalGenerationOperator</operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.courtroom.CourtroomPlanner</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
@@ -22,11 +19,11 @@
    	</operation-set>
    	
 	<operation-set operation-type="Violates">
-      <default-operator-cls>angerona.fw.example.operators.WeakeningViolatesOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.courtroom.CourtroomViolates</default-operator-cls>
    	</operation-set>
 	
 	<component>angerona.fw.logic.Desires</component>
 	<component>angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
 	<component>angerona.fw.PlanComponent</component>	
-	<component>angerona.fw.ActionHistory</component>
+	<component>angerona.fw.example.components.CommunicationHistory</component>
 </agent-configuration>

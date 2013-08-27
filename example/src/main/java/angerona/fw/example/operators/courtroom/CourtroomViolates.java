@@ -1,4 +1,4 @@
-package angerona.fw.example.operators;
+package angerona.fw.example.operators.courtroom;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +18,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.comm.Answer;
+import angerona.fw.example.operators.ViolatesOperator;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.Beliefs;
@@ -38,7 +39,7 @@ import angerona.fw.util.Pair;
  * @author Daniel Dilger, Tim Janus
  * 
  */
-public class WeakeningViolatesOperator extends ViolatesOperator {
+public class CourtroomViolates extends ViolatesOperator {
 	static final double INFINITY = 1000.0;
 
 	private static final String EXPANSION = "angerona.fw.logic.asp.AspExpansion";
@@ -49,7 +50,6 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		double numAnsSets = ansSets.size();
 		double setsWithSecret = 0.0;
 		for (AnswerSet as : ansSets) {
-			//Program p = as.toProgram();
 			Program p = new Program();
 			for(DLPLiteral lit : as) {
 				p.addFact(lit);
@@ -62,13 +62,12 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 			}
 		}
 		double quotient = setsWithSecret / numAnsSets;
-		double strength = 1.0 - quotient;
 		return quotient;
 	}
 
 	@Override
 	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
-		Logger LOG = LoggerFactory.getLogger(WeakeningViolatesOperator.class);
+		Logger LOG = LoggerFactory.getLogger(CourtroomViolates.class);
 		
 		// Check if any confidential knowledge present. If none then no secrecy
 		//weakening possible

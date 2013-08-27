@@ -1,5 +1,10 @@
 package angerona.fw.util;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import angerona.fw.logic.AngeronaAnswer;
+import angerona.fw.logic.AnswerValue;
+
 /**
  * A class containing utility methods.
  * 
@@ -71,5 +76,41 @@ public class Utility {
 	 */
 	public static double fractionToDecimal(Pair<Integer, Integer> fraction) {
 		return fraction.first.intValue() / (double) fraction.second.intValue();
+	}
+	
+	/**
+	 * Returns the AnswerValue version of a lie, given the AngeronaAnswer containing the truth. Simply negates it. 
+	 * @param truth
+	 * @return	the opposite answer given as parameter (lie)
+	 */
+	public static AnswerValue lie(AngeronaAnswer truth)
+	{
+		if(truth.getAnswerValue() == AnswerValue.AV_TRUE)
+			return AnswerValue.AV_FALSE;
+		else if(truth.getAnswerValue() == AnswerValue.AV_FALSE)
+			return AnswerValue.AV_TRUE;
+		return AnswerValue.AV_UNKNOWN;
+	}
+	
+	/**
+	 * Returns the FolFormula version of a lie, wrapped in its own AngeronaAnswer. Not sure yet if it should just return the FolFormula.
+	 * Simply negates it for now. Later there should be an option for lying by choosing an alternative possibility. 
+	 * Lying operates on parsing the string version of the FolFormula, which is admittedly crude. 
+	 * @param truth
+	 * @return	The given formula is negated to create a lie from a true expression.
+	 */
+	public static FolFormula lie(FolFormula truth)
+	{
+		return (FolFormula)truth.complement();
+	}
+	
+	public static String format(Throwable ex) {
+		String reval = ex + " - " + ex.getMessage();
+		while(ex.getCause() != null) {
+			ex = ex.getCause();
+			reval += " caused by:\n";
+			reval += format(ex);
+		}
+		return reval;
 	}
 }

@@ -210,7 +210,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 
 			
 			//  Check for startup inconsistency:
-			this.eventHandler.updateBeliefs(null, getAgent().getBeliefs(), getAgent().getBeliefs());
+			this.eventHandler.updateBeliefs(null, null, getAgent().getBeliefs());
 		}
 	}
 
@@ -352,11 +352,11 @@ public class SecrecyKnowledge extends BaseAgentComponent
 		for(Entry<String, BaseBeliefbase> entry : newBeliefs.getViewKnowledge().entrySet()) {
 			// get the old and new version of the belief base and create a inference cache:
 			BaseBeliefbase newer = entry.getValue();
-			BaseBeliefbase older = oldBeliefs.getViewKnowledge().get(entry.getKey());
+			BaseBeliefbase older = oldBeliefs == null ? null : oldBeliefs.getViewKnowledge().get(entry.getKey());
 			Map<Pair<String, Map<String, String>>, Set<FolFormula>> cache = new HashMap<>();
 			
 			// only operate if the hash code of the old and new version are different
-			if(newer.hashCode() != older.hashCode()) {
+			if(oldBeliefs == null || newer.hashCode() != older.hashCode()) {
 				
 				// iterate over every secret corresponding the view:
 				Set<Secret> secrets = this.getSecretsBySubject(entry.getKey());
@@ -388,7 +388,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 						furtherTests = beliefSet.contains(s.getInformation());
 						if(furtherTests) {
 							changed = true;
-							current = older.getBeliefOperatorFamily().getPredecessor(current);
+							current = newer.getBeliefOperatorFamily().getPredecessor(current);
 							if(current == null) {
 								changed = false;
 								break;

@@ -14,6 +14,13 @@ import angerona.fw.logic.Beliefs;
  * performed in the application and therefore provides a history
  * of actions.
  * 
+ * The default implementation forbids to repeat an action. Sub-classes
+ * might implement versions of an Action-History that allows that an
+ * action can be performed multiple times by an agent.
+ * 
+ * In the communication scenario an agent might answer unknown or reject
+ * multiple times to a query.
+ * 
  * @author Tim Janus
  */
 public class ActionHistory extends BaseAgentComponent {
@@ -37,27 +44,25 @@ public class ActionHistory extends BaseAgentComponent {
 	/**
 	 * Puts the given action to list of historical action of the given
 	 * agent.
-	 * @param agent		Name of the agent that did the action
 	 * @param action	The action that was performed by the agent
 	 */
-	public void putAction(String agent, Action action) {
-		List<Action> temp = history.get(agent);
+	public void putAction(Action action) {
+		List<Action> temp = history.get(action.getSenderId());
 		if(temp == null) {
 			temp = new LinkedList<Action>();
-			history.put(agent, temp);
+			history.put(action.getSenderId(), temp);
 		}
 		temp.add(action);
 	}
 	
 	/**
 	 * Checks if the specified agent did the given action.
-	 * @param agent		The name of the agent
-	 * @param action	The action that might be performed by the agent
+	 * @param action	The action that might be performed by an agent
 	 * @return			True if the action was performed by the agent, 
 	 * 					false otherwise
 	 */
-	public boolean didAction(String agent, Action action) {
-		List<Action> temp = history.get(agent);
+	public boolean didAction(Action action) {
+		List<Action> temp = history.get(action.getSenderId());
 		if(temp != null) {
 			return temp.contains(action);
 		}
@@ -86,7 +91,7 @@ public class ActionHistory extends BaseAgentComponent {
 	public void updateBeliefs(Perception percept, Beliefs oldBeliefs, Beliefs newBeliefs) {
 		if(percept instanceof Action) {
 			Action act = (Action)percept;
-			putAction(act.getSenderId(), act);
+			putAction(act);
 		}
 	}
 	

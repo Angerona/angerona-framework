@@ -25,7 +25,7 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 
 	@Resolve
 	public BeliefbaseConfig substitute() throws Exception {
-		return SerializeHelper.loadXmlTry(BeliefbaseConfigReal.class, source);
+		return SerializeHelper.loadXml(BeliefbaseConfigReal.class, source);
 	}
 	
 	@Override

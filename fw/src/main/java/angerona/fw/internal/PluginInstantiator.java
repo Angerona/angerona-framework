@@ -258,9 +258,9 @@ public class PluginInstantiator {
 	/**
 	 * Helper method: creates a temporary map from base classes to implementation for use in
 	 * the registerPlugin() and unregisterPlugin() methods.
-	 * @param plugin	The plugin acting as data basis for the map, might be null then the returned
+	 * @param plugin	The plug-in acting as data basis for the map, might be null then the returned
 	 * 					map only contains empty sets for the implementations.
-	 * @return			A map containg a mapping between base classes to implementations.
+	 * @return			A map containing a mapping between base classes to implementations.
 	 */
 	private Map<Class<?>, Set<Class<?>>> createImplementationMap(
 			AngeronaPlugin plugin) {

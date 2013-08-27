@@ -26,7 +26,7 @@ public class AgentConfigImport implements AgentConfig {
 
 	@Resolve
 	public AgentConfig substitute() throws Exception {
-		return SerializeHelper.loadXmlTry(AgentConfigReal.class, source);
+		return SerializeHelper.loadXml(AgentConfigReal.class, source);
 	}
 
 	@Override
