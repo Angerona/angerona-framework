@@ -6,8 +6,7 @@
 	<agent-instance>
 		<name>Employee</name>
         
-        
-        <agent-config source="config/agents/default_agent.xml" />         
+        <agent-config source="config/agents/scm_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
         
         <desire>v_Boss(ask_for_excuse)</desire>
@@ -23,7 +22,7 @@
 	<agent-instance>
       	<name>Boss</name>
       	
-        <agent-config source="config/agents/default_agent.xml" />         
+        <agent-config source="config/agents/scm_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
       	
       	<capability>Query</capability>

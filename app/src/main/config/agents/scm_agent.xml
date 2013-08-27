@@ -11,7 +11,7 @@
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>angerona.fw.example.operators.SubgoalGenerationOperator</default-operator-cls>
+      <default-operator-cls>angerona.fw.example.operators.scm.StrikeCommitteePlanner</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
@@ -25,8 +25,7 @@
 	<component>angerona.fw.logic.ScriptingComponent</component>
 	<component>angerona.fw.logic.Desires</component>
 	<component>angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
-	<component>angerona.fw.knowhow.KnowhowBase</component>
 	<component>angerona.fw.PlanComponent</component>
-	<component>angerona.fw.ActionHistory</component>
+	<component>angerona.fw.example.components.CommunicationHistory</component>
 	
 </agent-configuration>

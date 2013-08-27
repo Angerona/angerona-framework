@@ -64,7 +64,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			
 			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareRevisionRequestProcessing);
 			for(Desire d : currentDesires) {
-				reval = reval || revisionRequest(d, pp, ag);
+				reval = reval || informProcessing(d, pp, ag);
 			}
 			
 			currentDesires = des.getDesiresByPredicate(GenerateOptionsOperator.prepareScriptingProcessing);
@@ -336,7 +336,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	}
 	
 	/**
-	 * Helper method for handling desires which are created by a revision-request of an other agent.
+	 * Helper method for handling desires which are created by a inform speech act other agents.
 	 * The default implementation does nothing generic and subclasses are free to implement their own
 	 * behavior. Nevertheless the method 'implements' the default behavior for the simple SCM 
 	 * scenario: It queries the sender of the revision-request 'excused' for 'attend_scm'.
@@ -345,33 +345,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag	The agent.
 	 * @return		true if a new subgoal was created and added to the master-plan, false otherwise.
 	 */
-	protected Boolean revisionRequest(Desire des, PlanParameter pp, Agent ag) {
-		// three cases: accept, query (to ensure about something) or deny.
-		// in general we will accept all Revision queries but for the scm example
-		// it is proofed if the given atom is 'excused' and if this is the case
-		// first of all attend_scm is queried.
-		if(!(des.getPerception() instanceof Inform))
-			return false;
-		
-		Inform rr = (Inform) des.getPerception();
-		if(rr.getSentences().size() == 1) {
-			FolFormula ff = rr.getSentences().iterator().next();
-			if(	ff instanceof FOLAtom && 
-				((FOLAtom)ff).getPredicate().getName().equalsIgnoreCase("ask_for_excuse")) {
-				FOLAtom reasonToFire = new FOLAtom(new Predicate("attend_scm"));
-				AngeronaAnswer aa = ag.getBeliefs().getWorldKnowledge().reason(reasonToFire);
-				if(aa.getAnswerValue() == AnswerValue.AV_UNKNOWN) {
-					Subgoal sg = new Subgoal(ag, des);
-					sg.newStack(new Query(ag, rr.getSenderId(), reasonToFire));
-					pp.report("Add the new action '" + Query.class.getSimpleName() + "' to the plan.");
-					ag.getPlanComponent().addPlan(sg);
-				} else if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
-					return false;
-				}
-				return true;
-			}
-		}
-			
+	protected Boolean informProcessing(Desire des, PlanParameter pp, Agent ag) {
 		return false;
 	}
 }

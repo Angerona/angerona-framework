@@ -82,7 +82,7 @@ public class CourtroomPlanner extends
 						exists = true;
 				if(exists)
 					continue;
-				reval = reval || revisionRequest(d, pp, ag);
+				reval = reval || informProcessing(d, pp, ag);
 			}
 		}
 		

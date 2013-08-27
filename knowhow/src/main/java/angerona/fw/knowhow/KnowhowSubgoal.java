@@ -81,7 +81,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				}
 			}	
 
-			gen = gen || revisionRequest(des, param, param.getActualPlan().getAgent());
+			gen = gen || informProcessing(des, param, param.getActualPlan().getAgent());
 			gen = gen || answerQuery(des, param, param.getActualPlan().getAgent());
 			gen = gen || onJustify(des, param);
 			gen = gen || onJustification(des, param);
@@ -133,7 +133,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 *  method.
 	 */
 	@Override
-	protected Boolean revisionRequest(Desire des, PlanParameter pp, Agent ag) {
+	protected Boolean informProcessing(Desire des, PlanParameter pp, Agent ag) {
 		if(! (des.getPerception() instanceof Inform))
 			return false;
 		

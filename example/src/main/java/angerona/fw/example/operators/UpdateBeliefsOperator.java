@@ -65,29 +65,24 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			
 			param.report(out);
 		} else if(param.getAtom() instanceof Inform) {
-			// When we get informed about something we believe the sender of the Inform
-			// himself believes it... but we do not update the own belief base yet.
 			Inform i = (Inform) param.getAtom();
 			BaseBeliefbase bb = null;
 			
-			out = "Inform ";
-			// only allow literals with prefix "ask_":
-			if(	i.getSentences().size() == 1 && 
-				i.getSentences().iterator().next().toString().startsWith("ask_")) {
-				if(receiver)
-					bb = beliefs.getWorldKnowledge();
-				else
-					bb = beliefs.getViewKnowledge().get(i.getReceiverId());
+			out = "Inform as ";
+			if(receiver) {
+				bb = beliefs.getWorldKnowledge();
 				bb.addKnowledge(i);
-				out += (!receiver) ? "as sender (add '" + i.getSentences().iterator().next().toString() + "' literal to view)" : 
-					"as receiver (add '" + i.getSentences().iterator().next().toString() + "' literal to world)";
-			} else if (receiver) {
+				param.report(out + "receiver adapt world knowledge", bb);
+				
 				bb = beliefs.getViewKnowledge().get(i.getSenderId());
 				bb.addKnowledge(i);
-				out += receiver ? ("as receiver (view->" + i.getSenderId() + ")") : " as sender (no changes)";
+				param.report(out + "receiver adapt view on '" + i.getSenderId() + "'", bb);
+			} else {
+				bb = beliefs.getViewKnowledge().get(i.getReceiverId());
+				bb.addKnowledge(i);
+				param.report(out + "sender adapt view on '" + i.getReceiverId() + "'", bb);
 			}
 			
-			param.report(out, bb == null ? null : bb);
 		} else if (param.getAtom() instanceof Justification) {
 			Justification j = (Justification) param.getAtom();
 			BaseBeliefbase bb = null;
