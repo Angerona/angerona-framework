@@ -65,10 +65,14 @@ public abstract class AspRevision extends BaseChangeBeliefs {
 		
 		MultipleBaseRevisionOperator<Rule> impl = createRevisionImpl();
 		Collection<Rule> reval = impl.revise(bb.getProgram(), newK.getProgram());
-		Program p = new Program();
-		p.addAll(reval);
-		bb.setProgram(p);
-		
+		if(reval != null) {
+			Program p = new Program();
+			p.addAll(reval);
+			bb.setProgram(p);
+		} else {
+			LOG.warn("Cannot revise:\n{}\nwith:\n{}", bb.getProgram().toString(), 
+					newK.getProgram().toString());
+		}
 		return bb;
 	}
 

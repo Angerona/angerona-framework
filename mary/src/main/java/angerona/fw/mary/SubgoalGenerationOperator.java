@@ -232,14 +232,17 @@ public class SubgoalGenerationOperator extends
 				}
 			}
 		
-			// create ignorance alternative:
-			FolFormula ignorance = expressionOfIgnorance(query);
-			lies.add(ignorance);
-			
+		
 			Query q = (Query) des.getPerception();
 			Subgoal sg = new Subgoal(ag, des);
+		
 			createSubgoals(answers, sg, q, new Boolean(false), ag);
 			createSubgoals(lies, sg, q, new Boolean(true), ag);
+			
+			Answer dontKnow = new Answer(ag, q.getSenderId(), q.getQuestion(), AnswerValue.AV_UNKNOWN);
+			sg.newStack(dontKnow);
+			sg.peekStack(sg.getNumberOfStacks()-1).setUserData(new Boolean(true));
+			
 			ag.getPlanComponent().addPlan(sg);
 			return true;
 		}

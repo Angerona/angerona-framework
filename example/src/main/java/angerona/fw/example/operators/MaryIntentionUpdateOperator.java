@@ -18,11 +18,9 @@ import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.Secret;
 import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
-import angerona.fw.util.Pair;
 
 /**
  * The intention update operator suitable for the "Mary Courtroom Scenario" The
@@ -62,14 +60,6 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 				+ " <b> 'dontKnow' is a lie </b>. Estimated cost equal to weakening secret by "
 				+ estimate);
 		return estimate;
-	}
-
-	private double secrecyWeakeningCost(List<Pair<Secret, Double>> weakenings) {
-		double total = 0.0;
-		for (Pair<Secret, Double> pair : weakenings) {
-			total = total + pair.second;
-		}
-		return total;
 	}
 
 	/**
@@ -122,28 +112,21 @@ public class MaryIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 						atomicIntentions.add(pe);
 					} else {
 						EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
-						Beliefs newBeliefs = ((ViolatesResult)vop.process(eparam)).getBeliefs();
+						ViolatesResult vRes = ((ViolatesResult)vop.process(eparam));
+						Beliefs newBeliefs = vRes.getBeliefs();
+						
 						if(newBeliefs != null) {
 							SecrecyKnowledge sk = ag.getComponent(SecrecyKnowledge.class);
-							SecrecyChangeProposal scp = sk.processNeededChanges(ag.getBeliefs(), newBeliefs);
+							SecrecyChangeProposal scp = sk.processNeededChanges(newBeliefs, ag.getBeliefs());
 							
 							// todo distribute belief operator families to secrets....
-							pe.setCosts(scp.distance(ag.getBeliefs().getWorldKnowledge().getBeliefOperatorFamily()));
+							double costs = scp.distance(ag.getBeliefs().getWorldKnowledge().getBeliefOperatorFamily());
+							
+							//param.report(String.format("Cost for Action: '%s' is '%f'", pe.toString(), costs));
+							pe.setCosts(costs);
 							atomicIntentions.add(pe);
 						}
-						/*
-						EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
-						
-						List<Pair<Secret, Double>> weakenings = ((ViolatesResult)vop.process(eparam)).getPairs();
-						
-						if (weakenings != null) {
-							double cost = secrecyWeakeningCost(weakenings);
-							pe.setCosts(cost);
-							atomicIntentions.add(pe);
-						}
-						*/
 					}
-
 				}
 			}
 		}

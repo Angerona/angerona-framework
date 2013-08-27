@@ -22,7 +22,7 @@ import angerona.fw.util.Pair;
  * violates operations for: perceptions/actions (Query, Answer), 
  * actions (which are atomic intentions) and Plans (Subgoals) which are in fact a 
  * collection of actions and other Subgoals.
- * Nevertheless by overriding processInt the subclass can suport more types for violation test.
+ * Nevertheless by overriding processInt the subclass can support more types for violation test.
  * But normally subclasses only implement their version of:
  * - onPerception
  * - onPlan

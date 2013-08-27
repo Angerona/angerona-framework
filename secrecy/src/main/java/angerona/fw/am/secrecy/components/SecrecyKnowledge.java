@@ -425,7 +425,7 @@ public class SecrecyKnowledge extends BaseAgentComponent
 			// Get Parameters and Components
 			SecrecyKnowledge sk = getAgent().getComponent(SecrecyKnowledge.class);
 			sk.report("Check the Secrecy Consistence");
-			sk.processNeededChanges(oldBeliefs, newBeliefs).realize();			
+			sk.processNeededChanges(newBeliefs, oldBeliefs).realize();			
 		}
 	}
 }

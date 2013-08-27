@@ -29,7 +29,7 @@ public class AspIteratorStrategy extends
 	@Override
 	public OperatorCallWrapper getPredecessor(OperatorCallWrapper current) {
 		Pair<Integer, Integer> frac = getParameterAsFraction(current);
-		frac.first -= 1;
+		frac.first += 1;
 		OperatorCallWrapper reval = new OperatorCallWrapper(current.getImplementation());
 		reval.putSetting("d", String.valueOf(Utility.fractionToDecimal(frac)));
 		return reval;
@@ -38,7 +38,7 @@ public class AspIteratorStrategy extends
 	@Override
 	public OperatorCallWrapper getSuccessor(OperatorCallWrapper current) {
 		Pair<Integer, Integer> frac = getParameterAsFraction(current);
-		frac.first += 1;
+		frac.first -= 1;
 		OperatorCallWrapper reval = new OperatorCallWrapper(current.getImplementation());
 		reval.putSetting("d", String.valueOf(Utility.fractionToDecimal(frac)));
 		return reval;

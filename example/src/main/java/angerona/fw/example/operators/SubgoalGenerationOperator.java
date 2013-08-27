@@ -108,7 +108,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @param ag		The agent.
 	 * @return			true if a new subgoal was created and added to the master-plan, false otherwise.
 	 */
-	protected boolean processPersuadeOtherAgentsDesires(
+	protected boolean processPersuadeOtherAgentsDesires (
 			PlanParameter pp, Agent ag) {
 		boolean reval = false;
 		Desires desComp = ag.getComponent(Desires.class);

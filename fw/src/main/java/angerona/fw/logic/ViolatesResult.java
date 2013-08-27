@@ -1,37 +1,22 @@
 package angerona.fw.logic;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import angerona.fw.util.Pair;
 
 /** 
  *	A data-structure containing information about the result of a violation processing.
- *	The base idea was given by Daniel Dilger's SecrecyStrength-Pair.
  *	The flag alright is used to determine if a secret has to be weaken or if no secrecy violation occurs.
- *	List of Pairs is used to save the needed weakening for the secrets to perform the action which was
- *	checked for violating secrecy. Every Pair consists of an Secret and a Double where the Secret references
- *	the Secret to be weaken and the double the amount of weakening. We assume that 1.0 is the strongest secret
- *	and 0.0 the weakest secret (no secret at all anymore). 
- *	This parameter between 0 and 1 can directly be mapped to the reasoner-parameter d. Which is defined for 
- *	AnswerSets for example.
+ *	The attribute beliefs is used to store the beliefs that were used to process the violates result.
  *
- *	The ViolatesResult data-structure can be combined with each other to support saving the ViolatesResult
- *	for performing multiple actions.
+ *	The ViolatesResult data-structure can be combined with each other to bind violates result togehter that
+ *	reflect multiple steps in a plan etc.
  *
  *	@author Tim Janus, 
  *  @author Daniel Dilger
- *  
- *  @todo Use Map instead a list of pairs.
  */
 public class ViolatesResult implements Cloneable {
-	/** a list of pairs of secrets mapped to their degree of weaking */
-	private List<Pair<Secret, Double>> pairs;
-	
-	/** flag indicating if everything is alright (no secret weakend) */
+	/** flag indicating if everything is alright (no secret is violated) */
 	private boolean alright;
 	
+	/** the beliefs used that generated this ViolatesResult */
 	private Beliefs beliefs;
 	
 	/** Default Ctor: Assumes that everything is alright (no violation occurs) */
@@ -42,7 +27,6 @@ public class ViolatesResult implements Cloneable {
 	/** Copy-Ctor */
 	public ViolatesResult(ViolatesResult other) {
 		this.alright = other.alright;
-		this.pairs = new LinkedList<>(other.pairs);
 	}
 	
 	/**
@@ -51,37 +35,6 @@ public class ViolatesResult implements Cloneable {
 	 */
 	public ViolatesResult(boolean alright) {
 		this.alright = alright;
-		pairs = new LinkedList<>();
-	}
-	
-	/**
-	 * CTor: Fill the ViolatesResult with the given Secret Pair, will also set the alright flag.
-	 * @param pair	Secret-Weakening-Pair
-	 */
-	public ViolatesResult(Pair<Secret, Double> pair) {
-		alright = pair.second == 0;
-		pairs = new LinkedList<>();
-		pairs.add(pair);
-	}
-	
-	/** 
-	 * CTor: getting a list of secret-degreeOfWeakening Pairs.
-	 * Alright might be true if all the pairs have 0.0 as their second component.
-	 * @param pairs		list of pairs.
-	 */
-	public ViolatesResult(List<Pair<Secret, Double>> pairs) {
-		alright = true;
-		setSecretPairs(pairs);
-	}
-	
-	public void setSecretPairs(List<Pair<Secret, Double>> pairs) {
-		for(Pair<Secret, Double> p : pairs) {
-			if(p.second > 0) {
-				alright = false;
-				break;
-			}
-		}
-		this.pairs = new LinkedList<>(pairs);
 	}
 	
 	/** @return true if no secret was weaken */
@@ -89,48 +42,34 @@ public class ViolatesResult implements Cloneable {
 		return alright;
 	}
 	
-	/** @return unmodifiable list of pairs */
-	public List<Pair<Secret, Double>> getPairs() {
-		return Collections.unmodifiableList(pairs);
-	}
-	
 	/**
-	 * combines two ViolatesResult to one. If a Pair is only
-	 * in one ViolatesResult it will also be in the combined Result. 
-	 * If a pair is in both ViolatesResults the degreeOfWeaking will be added and 
-	 * the modified pair will be saved in the
-	 * combined ViolatesResult.
-	 * Two pairs will be combined if the secrets are alike.
+	 * combines two ViolatesResult to form one the beliefs of the violates result given
+	 * as parameter are used because this method assumes the parameter is newer than this.
+	 * 
+	 * Internally the boolean flag of both violates results are combined with the logical
+	 * and operator.
+	 * 
 	 * @see angerona.fw.logic.Secret
-	 * @param other		Reference to the other ViolatesResult to combine.
+	 * @param newer		Reference to the other ViolatesResult to combine.
 	 * @return	The combination of this ViolatesResult with one given as parameter.
 	 */
-	public ViolatesResult combine(ViolatesResult other) {
-		List<Pair<Secret, Double>> l1 = new LinkedList<>();
-		l1.addAll(this.pairs);
-		for(Pair<Secret, Double> p1 : other.pairs) {
-			boolean combined = false;
-			for(Pair<Secret, Double> p2 : l1) {
-				if(p1.first.alike(p2.first)) {
-					p2.second += p1.second;
-					combined = true;
-					break;
-				}
-			}
-			if(!combined) {
-				l1.add(p1);
-			}
-		}
-		
-		ViolatesResult reval = new ViolatesResult(l1);
-		reval.setBeliefs(other.beliefs);
+	public ViolatesResult combine(ViolatesResult newer) {
+		ViolatesResult reval = new ViolatesResult(alright && newer.alright);
+		reval.beliefs = newer.beliefs;
 		return reval;
 	}
 	
+	/**
+	 * Changes the beliefs saved in this violates result structure
+	 * @param beliefs	Reference to the new beliefs saved in this violates result structure
+	 */
 	public void setBeliefs(Beliefs beliefs) {
 		this.beliefs = beliefs;
 	}
 	
+	/**
+	 * @return The beliefs that were used to process this violates result structure.
+	 */
 	public Beliefs getBeliefs() {
 		return beliefs;
 	}

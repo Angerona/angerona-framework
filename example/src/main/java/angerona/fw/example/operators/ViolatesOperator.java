@@ -1,8 +1,6 @@
 package angerona.fw.example.operators;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,11 +43,10 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		LOG.info("Run Default-ViolatesOperator");
 		
-		ViolatesResult reval = new ViolatesResult();
 		// only apply violates if secrecy knowledge is saved in agent.
 		SecrecyKnowledge conf = param.getAgent().getComponent(SecrecyKnowledge.class);
 		if(conf == null)
-			return reval;
+			return new ViolatesResult();
 		
 		Agent ag = param.getAgent();
 		Beliefs beliefs = param.getBeliefs();
@@ -57,13 +54,13 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		// use cloned beliefs to generate new beliefs:
 		Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAtom(), (Beliefs)beliefs.clone());
-		reval.setBeliefs(newBeliefs);
+
 		
 		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 		BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());
 		BaseBeliefbase view = newBeliefs.getViewKnowledge().get(p.getReceiverId()); 
 		
-		List<Pair<Secret, Double>> pairs = new LinkedList<>();
+		boolean alright = true;
 		if(views.containsKey(p.getReceiverId())) {
 			for(Pair<String, Map<String, String>> reasoningOperator : conf.getSecretsByReasoningOperator().keySet()) {
 				
@@ -81,16 +78,18 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						
 						boolean inClone = cloneInfere.contains(secret.getInformation());
 						if(	inClone )  {
-							param.report("Secret: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'");
-							pairs.add(new Pair<>(secret, 1.0));
+							param.report("Secret: '" + secret + "' of '" + param.getAgent().getName() + 
+									"' injured by: '" + param.getAtom() + "'");
+							alright = false;
 						}
 					}
 				}
 			}
 		}
-		reval.setSecretPairs(pairs);
-	
-		if(reval.isAlright())
+		ViolatesResult reval = new ViolatesResult(alright);
+		reval.setBeliefs(newBeliefs);
+		
+		if(alright)
 			param.report("No violation applying the perception/action: '" + percept + "'");
 		else
 			param.report("Violation by appling the perception/action: '" + percept + "'");
@@ -129,7 +128,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		if(conf == null)
 			return new ViolatesResult();
 
-		List<Pair<Secret, Double>> pairs = new LinkedList<>();
+		boolean alright = true;
 		Map<String, Set<FolFormula>> viewInferences = new HashMap<>();
 		for(Pair<String, Map<String, String>> reasoningOperator : conf.getSecretsByReasoningOperator().keySet()) {
 			for (Secret s : conf.getSecretsByReasoningOperator().get(reasoningOperator)) {
@@ -143,11 +142,11 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				}
 				
 				if(infere.contains(s.getInformation())) {
-					pairs.add(new Pair<>(s, new Double(1.0)));
+					alright = false;
 				}
 			}
 		}
 		
-		return new ViolatesResult(pairs);
+		return new ViolatesResult(alright);
 	}
 }

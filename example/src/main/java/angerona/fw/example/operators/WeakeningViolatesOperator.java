@@ -1,6 +1,5 @@
 package angerona.fw.example.operators;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +14,6 @@ import net.sf.tweety.logics.translate.aspfol.AspFolTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.ActionHistory;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
@@ -45,17 +43,6 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 
 	private static final String EXPANSION = "angerona.fw.logic.asp.AspExpansion";
 
-	/**
-	 * 
-	 */
-	private List<Pair<Secret, Double>> representTotalExposure(
-			SecrecyKnowledge conf) {
-		List<Pair<Secret, Double>> reval = new LinkedList<>();
-		for (Secret secret : conf.getSecrets()) {
-			reval.add(new Pair<>(secret, INFINITY));
-		}
-		return reval;
-	}
 
 	private double calculateSecrecyStrength(FolFormula secretInfo,
 			List<AnswerSet> ansSets) {
@@ -76,46 +63,29 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 		}
 		double quotient = setsWithSecret / numAnsSets;
 		double strength = 1.0 - quotient;
-		return strength;
+		return quotient;
 	}
 
 	@Override
 	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		Logger LOG = LoggerFactory.getLogger(WeakeningViolatesOperator.class);
-		List<Pair<Secret, Double>> secretList = new LinkedList<>();
-		ViolatesResult reval = new ViolatesResult();
-
+		
 		// Check if any confidential knowledge present. If none then no secrecy
 		//weakening possible
 		SecrecyKnowledge conf = param.getAgent().getComponent(
 				SecrecyKnowledge.class);
 		if (conf == null)
-			return reval;
+			return new ViolatesResult();
 
 		// Remaining operations depend on whether the action in question is an answer
 		if (! (param.getAtom() instanceof Answer)) {
 			return super.onPerception(percept, param);
 		}
-		Answer a = (Answer) param.getAtom();
-
-		Beliefs newBeliefs = param.getBeliefs().clone();
-		reval.setBeliefs(newBeliefs);
-		// Consider self-repeating answers (and only answers) as bad as
-		// revealing all secrets	
-		ActionHistory history = param.getBeliefs().getComponent(ActionHistory.class);
-		if(history != null) {
-			if(history.didAction(param.getAgent().getName(), a)) {
-				param.report(param.getAgent().getName()
-						+ "' <b> self-repeats </b> with: '"
-						+ param.getAtom() + "'");
-				secretList = representTotalExposure(conf);
-				reval.setSecretPairs(secretList);
-				return reval;
-			}
-		}
-
 		
+		Answer a = (Answer) param.getAtom();
+		Beliefs newBeliefs = param.getBeliefs().clone();
 		Map<String, BaseBeliefbase> views = newBeliefs.getViewKnowledge();
+		
 		if (views.containsKey(a.getReceiverId())
 				&& a.getAnswer().getAnswerValue() == AnswerValue.AV_COMPLEX) {
 			BaseBeliefbase view = views.get(a.getReceiverId());
@@ -123,7 +93,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 			Set<FolFormula> answers = a.getAnswer().getAnswers();
 			if (answers.size() == 0) {
 				LOG.warn("No answers given. Might be an error... violates operator doing nothing!");
-				return reval;
+				return new ViolatesResult();
 			}
 			
 			LOG.info("Make Revision for QueryAnswer: '{}'", answers);
@@ -149,9 +119,7 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 				String actString = param.getAtom().toString();
 				param.report(param.getAgent().getName() + "' <b> creates contradiction </b> by: '"
 						+ actString.substring(0, actString.length() - 1) + "'", view);
-				secretList = representTotalExposure(conf);
-				reval.setSecretPairs(secretList);
-				return reval;
+				return new ViolatesResult(false);
 			}
 
 			// Now the secrecy strengths get added
@@ -183,10 +151,9 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 						curStrength = Double.parseDouble(d);
 					}
 					
-					double degreeOfWeakening = curStrength - newStrength;
+					double degreeOfWeakening = newStrength - curStrength;
 					sPair.second = degreeOfWeakening;
 
-					secretList.add(sPair);
 					String actString = param.getAtom().toString();
 					if (degreeOfWeakening > 0) {
 						param.report(param.getAgent().getName()
@@ -199,21 +166,24 @@ public class WeakeningViolatesOperator extends ViolatesOperator {
 										actString.length() - 1) + "'", view);
 					} else {
 						param.report(param.getAgent().getName()
-								+ "' <b> weakens no secrets </b> ' with: '"
+								+ "' <b> not weakens secret: </b>" +
+								" '" + secretInfo.toString() + "' with: '"
 								+ actString.substring(0,
 										actString.length() - 1) + "'", view);
 					}
 				} else {
 					String actString = param.getAtom().toString();
 					param.report(param.getAgent().getName()
-							+ "' <b> weakens no secrets: </b> ' with: '"
+							+ "' <b> not weakens secrets </b>" +
+							" '" + secretInfo.toString() + "' with: '"
 							+ actString.substring(0, actString.length() - 1)
 							+ "'", view);
 				}
 			}
 		}
 
-		reval.setSecretPairs(secretList);
+		
+		ViolatesResult reval = super.onPerception(percept, param);
 		return reval;
 	}
 }
