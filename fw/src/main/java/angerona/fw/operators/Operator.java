@@ -17,6 +17,8 @@ import angerona.fw.util.Pair;
  * defaultReturnValue() methods. Thus classes define the operation type but give no
  * implementation for the operation type yet.
  * 
+ * For a more high level explanation see @ref conceptoperators
+ * 
  * @remark 	Every instance of an operator is stateless this means the developer subclassing
  * 			the Operator is not allowed to use member variables. To save data between the
  * 			prepare(), proccessInternal() and finish() method one can use the input parameter data
@@ -128,18 +130,6 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	 * @param params	The input parameter data structure.
 	 */
 	protected void prepare(IN params) {
-		
-	}
-	
-	/**
-	 * This method can be overridden by sub classes to do further
-	 * processing after the processInternal method is finished.
-	 * @remark 	The operator instances are stateless this means if this
-	 * 			method shall use something processed earlier in prepare() or
-	 * 			processInternal it has to use the params parameter.
-	 * @param params	The input parameter data structure.
-	 */
-	protected void finish(IN params) {
 		
 	}
 }
