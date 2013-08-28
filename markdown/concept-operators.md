@@ -26,8 +26,8 @@ Operator hierarchy. This class provides the following type parameters:
 
 The most important implemented method is process(). There are two overloads:
 1. Using *IN* as argument type, such that this overload is called from code
-2. Using @ref GenericOperatorParameter as argument type to call the overload from the @ref ASML scope. 
-   Every operator invocation in @ref ASML generates a @ref angerona.fw.operators.GenericOperatorParameter instance
+2. Using @ref angerona.fw.operators.parameter.GenericOperatorParameter as argument type to call the overload from the @ref ASML scope. 
+   Every operator invocation in @ref ASML generates a @ref angerona.fw.operators.parameter.GenericOperatorParameter instance
    that has to be transformed into the type given by *IN*. Therefore the interface @ref angerona.fw.operators.parameter.OperatorParameter,
    that is defined implemented by *IN* defines a method @ref angerona.fw.operators.parameter.OperatorParameter.fromGenericParameter().
 process() is defined in the abstract base-class and calls processInternal() that shall be overridden
@@ -53,8 +53,8 @@ The update beliefs operator is responsible to translate speech-acts, which are p
 with a specified semantic, into the correct update-requests on the agents data-components (belief bases). 
 Its input parameter is the data-structure @angerona.fw.operators.parameter.EvaluateParameter, that contains
 a piece of information like a perception or a speech-act and the agent beliefs. It also contains a reference to the agent who
-is the @ref OperatorCaller for the operator. The output-parameter is a data-structure called @ref Beliefs that
-contains all the agent's data-components.
+is the @ref angerona.fw.operators.OperatorCaller for the operator. The output-parameter is a data-structure called 
+@ref angerona.fw.logic.Beliefs that contains all the agent's data-components.
 
 The BaseUpdateBeliefsOperator.getEmptyParameter() and the BaseUpdateBeliefsOperator.defaultReturnValue() methods
 are implemented, such that the operation-type knows its standard return value and can generate an empty input parameter
@@ -65,8 +65,8 @@ The Implementation Layer
 
 
 To define a concrete update beliefs operation the BaseUpdateBeliefsOperator class must be inherited. If this
-inherited class is not abstract it is on the implementation layer. The @ref UpdateBeliefsOperator in the *example
-project* shows a nice example implementation of an update beliefs operator.
+inherited class is not abstract it is on the implementation layer. The @ref angerona.fw.example.operators.UpdateBeliefsOperator 
+in the *example project* shows a nice example implementation of an update beliefs operator.
 
 
 Conclusion

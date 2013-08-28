@@ -2,7 +2,6 @@ package angerona.fw.am.secrecy;
 
 import java.util.Map;
 
-import angerona.fw.logic.Secret;
 import angerona.fw.operators.BeliefOperatorFamily;
 import angerona.fw.operators.OperatorCallWrapper;
 

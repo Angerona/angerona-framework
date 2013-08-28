@@ -1,4 +1,4 @@
-package angerona.fw.logic;
+package angerona.fw.am.secrecy;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

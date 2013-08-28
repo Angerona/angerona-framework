@@ -6,7 +6,6 @@ import angerona.fw.Agent;
 import angerona.fw.AngeronaAtom;
 import angerona.fw.error.ConversionException;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.util.Utility;
 
 /**

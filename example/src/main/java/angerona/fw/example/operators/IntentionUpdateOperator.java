@@ -9,8 +9,8 @@ import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
 import angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
+import angerona.fw.am.secrecy.operators.ViolatesResult;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 

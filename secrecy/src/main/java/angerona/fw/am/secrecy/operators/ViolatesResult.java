@@ -1,4 +1,6 @@
-package angerona.fw.logic;
+package angerona.fw.am.secrecy.operators;
+
+import angerona.fw.logic.Beliefs;
 
 
 /** 
@@ -49,7 +51,7 @@ public class ViolatesResult implements Cloneable {
 	 * Internally the boolean flag of both violates results are combined with the logical
 	 * and operator.
 	 * 
-	 * @see angerona.fw.logic.Secret
+	 * @see angerona.fw.am.secrecy.Secret
 	 * @param newer		Reference to the other ViolatesResult to combine.
 	 * @return	The combination of this ViolatesResult with one given as parameter.
 	 */

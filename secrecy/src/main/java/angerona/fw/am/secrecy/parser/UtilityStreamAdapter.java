@@ -1,28 +1,13 @@
-package angerona.fw.parser;
+package angerona.fw.am.secrecy.parser;
 
 import java.io.Reader;
-import angerona.fw.parser.SimpleCharStream;
 
-/**
- *	The adapter is used to delegate the parsing to another javacc grammar.
- *	The idea is to work on the same input stream by providing an adapter
- *	class.
- *	The solution has some work overhead and will generate duplo (duplicated code)
- *	but it is the most clean solution we know at the moment.
- *	If JavaCC would provide basic interfaces for those classes the duplo
- *	would disappear. 
- *	Also c++ template code would generate a valid generic solution.
- *	Did someone know a generic solution in java-scope?	
- *
- *	http://www.iandickinson.me.uk/articles/javacc-embedding.html
- * 	@author Tim Janus
- */
-public class SecretStreamAdapter extends
-		net.sf.tweety.logics.firstorderlogic.parser.SimpleCharStream {
+import angerona.fw.am.secrecy.parser.SimpleCharStream;
 
+public class UtilityStreamAdapter extends angerona.fw.parser.SimpleCharStream {
 	private SimpleCharStream source;
 
-	public SecretStreamAdapter(SimpleCharStream source) {
+	public UtilityStreamAdapter(SimpleCharStream source) {
 		super((Reader) null);
 		this.source = source;
 	}

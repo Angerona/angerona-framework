@@ -12,7 +12,6 @@ import angerona.fw.PlanElement;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.listener.ActionProcessor;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.Operator;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;

@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
+import angerona.fw.am.secrecy.Secret;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
+import angerona.fw.am.secrecy.operators.ViolatesResult;
 import angerona.fw.comm.Answer;
 import angerona.fw.example.operators.ViolatesOperator;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.Secret;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.AspBeliefbase;
 import angerona.fw.logic.asp.AspReasoner;
 import angerona.fw.operators.OperatorCallWrapper;

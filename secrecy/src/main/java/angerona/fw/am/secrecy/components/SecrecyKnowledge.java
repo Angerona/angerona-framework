@@ -17,18 +17,18 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.BaseAgentComponent;
 import angerona.fw.BaseBeliefbase;
-import angerona.fw.OperatorSet;
 import angerona.fw.Perception;
 import angerona.fw.am.secrecy.SecrecyChangeProposal;
+import angerona.fw.am.secrecy.Secret;
 import angerona.fw.am.secrecy.SecretChangeProposal;
+import angerona.fw.am.secrecy.parser.ParseException;
+import angerona.fw.am.secrecy.parser.SecretParser;
 import angerona.fw.listener.AgentAdapter;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.Secret;
 import angerona.fw.operators.BeliefOperatorFamily;
 import angerona.fw.operators.OperatorCallWrapper;
-import angerona.fw.parser.ParseException;
-import angerona.fw.parser.SecretParser;
+import angerona.fw.operators.OperatorSet;
 import angerona.fw.util.Pair;
 
 /**

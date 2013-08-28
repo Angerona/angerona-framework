@@ -1,11 +1,9 @@
-package angerona.fw;
+package angerona.fw.operators;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import angerona.fw.operators.OperatorCallWrapper;
 
 /**
  * A operator set is a set of operators which implement the same operation type.

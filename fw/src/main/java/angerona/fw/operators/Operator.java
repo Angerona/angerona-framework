@@ -5,8 +5,8 @@ import javax.management.AttributeNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import angerona.fw.OperatorCaller;
 import angerona.fw.error.ConversionException;
+import angerona.fw.operators.parameter.GenericOperatorParameter;
 import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.util.Pair;
 

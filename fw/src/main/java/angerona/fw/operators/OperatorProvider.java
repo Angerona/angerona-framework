@@ -1,4 +1,4 @@
-package angerona.fw;
+package angerona.fw.operators;
 
 import java.io.StringReader;
 import java.util.Collection;
@@ -10,10 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import angerona.fw.internal.OperatorMap;
-import angerona.fw.operators.BaseOperator;
-import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.parser.ParseException;
-import angerona.fw.parser.SecretParser;
+import angerona.fw.parser.UtilityParser;
 import angerona.fw.serialize.OperationSetConfig;
 import angerona.fw.util.Pair;
 
@@ -175,7 +173,7 @@ public class OperatorProvider {
 		throws ParseException, ClassNotFoundException, InstantiationException {
 		
 		// @todo Use a basic parser for stuff like that...
-		SecretParser parser = new SecretParser(new StringReader(clsNameAndParams));
+		UtilityParser parser = new UtilityParser(new StringReader(clsNameAndParams));
 		Map<String, String> parameters = new HashMap<String, String>();
 		clsNameAndParams = parser.java_cls(parameters);
 		

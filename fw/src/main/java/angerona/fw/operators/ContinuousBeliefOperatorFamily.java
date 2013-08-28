@@ -3,7 +3,6 @@ package angerona.fw.operators;
 import java.util.Map;
 
 import angerona.fw.AngeronaPlugin;
-import angerona.fw.OperatorSet;
 import angerona.fw.internal.PluginInstantiator;
 import angerona.fw.serialize.ContinuousBeliefOperatorFamilyConfig;
 

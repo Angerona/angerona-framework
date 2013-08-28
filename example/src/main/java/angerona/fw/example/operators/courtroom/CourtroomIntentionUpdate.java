@@ -15,10 +15,10 @@ import angerona.fw.am.secrecy.SecrecyChangeProposal;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
+import angerona.fw.am.secrecy.operators.ViolatesResult;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 

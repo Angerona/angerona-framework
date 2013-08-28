@@ -1,6 +1,5 @@
 package angerona.fw.operators;
 
-import angerona.fw.OperatorSet;
 import angerona.fw.serialize.BeliefOperatorFamilyConfig;
 import angerona.fw.serialize.ContinuousBeliefOperatorFamilyConfig;
 import angerona.fw.serialize.DiscreteBeliefFamilyConfig;

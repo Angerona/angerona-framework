@@ -1,11 +1,11 @@
-package angerona.fw.operators;
+package angerona.fw.operators.parameter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.AttributeNotFoundException;
 
-import angerona.fw.OperatorCaller;
+import angerona.fw.operators.OperatorCaller;
 
 /**
  * Implements a generic operator parameter wrapper by using a String to Object

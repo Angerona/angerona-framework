@@ -14,12 +14,12 @@ import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.PlanElement;
+import angerona.fw.am.secrecy.Secret;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
+import angerona.fw.am.secrecy.operators.ViolatesResult;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.Secret;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 

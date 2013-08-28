@@ -4,7 +4,6 @@ import javax.management.AttributeNotFoundException;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.ConversionException;
-import angerona.fw.operators.GenericOperatorParameter;
 
 /**
  * Input-parameter class for change operations on a belief bases.

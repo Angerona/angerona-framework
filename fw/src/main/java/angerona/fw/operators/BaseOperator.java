@@ -1,5 +1,6 @@
 package angerona.fw.operators;
 
+import angerona.fw.operators.parameter.GenericOperatorParameter;
 import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.report.ReportPoster;
 import angerona.fw.util.Pair;

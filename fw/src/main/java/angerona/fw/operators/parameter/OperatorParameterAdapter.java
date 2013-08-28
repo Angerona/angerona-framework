@@ -8,7 +8,6 @@ import javax.management.AttributeNotFoundException;
 
 import angerona.fw.error.ConversionException;
 import angerona.fw.internal.Entity;
-import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.report.Reporter;
 import angerona.fw.util.Utility;
 

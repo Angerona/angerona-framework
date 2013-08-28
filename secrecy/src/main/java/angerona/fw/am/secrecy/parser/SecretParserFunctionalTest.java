@@ -1,6 +1,7 @@
-package angerona.fw.parser;
+package angerona.fw.am.secrecy.parser;
 
-import angerona.fw.logic.Secret;
+import angerona.fw.am.secrecy.Secret;
+import angerona.fw.parser.ParseException;
 
 /**
  * A functional test class for the Secret parser.

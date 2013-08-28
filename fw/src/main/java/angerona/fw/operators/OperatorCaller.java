@@ -1,6 +1,5 @@
-package angerona.fw;
+package angerona.fw.operators;
 
-import angerona.fw.operators.OperatorStack;
 import angerona.fw.report.Reporter;
 
 /**

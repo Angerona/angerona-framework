@@ -5,7 +5,7 @@ import javax.management.AttributeNotFoundException;
 import angerona.fw.Agent;
 import angerona.fw.Perception;
 import angerona.fw.error.ConversionException;
-import angerona.fw.operators.GenericOperatorParameter;
+import angerona.fw.operators.parameter.GenericOperatorParameter;
 import angerona.fw.operators.parameter.OperatorPluginParameter;
 
 /**
