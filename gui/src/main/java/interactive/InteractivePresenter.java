@@ -3,6 +3,7 @@ package interactive;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -23,7 +24,7 @@ import angerona.fw.reflection.FolFormulaVariable;
  */
 public class InteractivePresenter 
 	extends Presenter<InteractiveModelAdapter, InteractiveBar>
-	implements ActionListener{
+	implements ActionListener, WindowListener{
 	
 	/** Default Ctor: The user has to call setModel() and setView(). */
 	public InteractivePresenter() {}
@@ -42,6 +43,7 @@ public class InteractivePresenter
 		setView(view);
 		this.a = model.getAgent();
 		this.caller = caller;
+		view.getFrame().addWindowListener(this);
 	}
 
 	@Override
@@ -76,13 +78,11 @@ public class InteractivePresenter
 				this.hasAction = true;
 				JFrame frame = ((InteractiveBar) view).getFrame();
 				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-				caller.interrupt();
 			}
 		}else{// FinischButton was pressed
 			this.hasAction = false;
 			JFrame frame = ((InteractiveBar) view).getFrame();
 			frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-			caller.interrupt();
 		}
 	}
 
@@ -104,5 +104,46 @@ public class InteractivePresenter
 	
 	public boolean getHasAction(){
 		return hasAction;
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		caller.interrupt();
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

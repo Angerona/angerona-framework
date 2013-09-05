@@ -1,9 +1,6 @@
 package angerona.fw.gui;
 
 import interactive.InteractiveAgentNextActionRequester;
-import interactive.InteractiveBarMVPComponent;
-import interactive.InteractiveModelAdapter;
-import interactive.InteractivePresenter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -429,11 +426,14 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void tickDone(AngeronaEnvironment simulationEnvironment,
-			boolean finished) {
+	public void tickDone(AngeronaEnvironment simulationEnvironment) {
 	}
 
 	@Override
 	public void actionPerformed(Agent agent, Action act) {
+	}
+	
+	public JFrame getMainWindow(){
+		return mainWindow;
 	}
 }

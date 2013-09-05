@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import angerona.fw.Action;
 import angerona.fw.Agent;
+import angerona.fw.Angerona;
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.EnvironmentBehavior;
 import angerona.fw.Perception;
@@ -92,6 +93,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		angeronaReady = true;
 		
 		doingTick = false;
+		Angerona.getInstance().onTickDone(env);
 		return true;
 	}
 

@@ -1,21 +1,22 @@
 package interactive;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.swing.JFrame;
 
 import angerona.fw.AngeronaEnvironment;
 import angerona.fw.NextActionRequester;
+import angerona.fw.gui.AngeronaWindow;
 
 public class InteractiveAgentNextActionRequester implements NextActionRequester {
 
 	private AngeronaEnvironment environment;
+
 	
 	public InteractiveAgentNextActionRequester(AngeronaEnvironment environment){
 		this.environment = environment;
 	}
 	@Override
 	public synchronized boolean request() {
+		AngeronaWindow.get().getMainWindow().setEnabled(false);
 		final InteractiveBarMVPComponent barMVPComponent= new InteractiveBarMVPComponent(environment, Thread.currentThread());
 			javax.swing.SwingUtilities.invokeLater(new Runnable(){
 
@@ -30,7 +31,7 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 		} catch (InterruptedException e) {
 			// expected interupt, do nothing
 		}
-		
+		AngeronaWindow.get().getMainWindow().setEnabled(true);
 		return barMVPComponent.getHasAction();
 	}
 

@@ -174,7 +174,7 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	}
 
 	@Override
-	public void tickDone(AngeronaEnvironment simulationEnvironment, boolean finished) {
+	public void tickDone(AngeronaEnvironment simulationEnvironment) {
 		// do nothing.
 	}
 

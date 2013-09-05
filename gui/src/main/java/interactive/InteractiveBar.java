@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import angerona.fw.gui.base.ObservingPanel;
 
@@ -147,6 +148,7 @@ public class InteractiveBar extends ObservingPanel {
 	    frame.setSize(500, 300);
 		frame.add(spnSplitPane);
 		
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	public JButton getActionButton() {

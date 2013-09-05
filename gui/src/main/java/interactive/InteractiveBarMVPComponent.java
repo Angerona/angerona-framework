@@ -3,7 +3,6 @@ package interactive;
 import javax.swing.JPanel;
 
 import angerona.fw.AngeronaEnvironment;
-import angerona.fw.NextActionRequester;
 import angerona.fw.gui.AngeronaWindow;
 import angerona.fw.gui.base.ViewComponent;
 import bibliothek.gui.dock.DefaultDockable;

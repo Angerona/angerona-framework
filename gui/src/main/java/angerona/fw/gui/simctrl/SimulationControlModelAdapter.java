@@ -31,7 +31,14 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 		if(simulationConfig != null) {
 			if(	simulationState == SimulationState.SS_INITALIZED ||
 				simulationState == SimulationState.SS_FINISHED) {
-				environment.cleanupEnvironment();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						environment.cleanupEnvironment();
+						
+					}
+				}).start();
 			}
 		}
 		simulationConfig = changeProperty("simulationConfig", simulationConfig, config);

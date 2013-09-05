@@ -83,14 +83,16 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 	    	public void actionPerformed(Agent agent, Action act) {
 				AgentUserObjectWrapper uo = (AgentUserObjectWrapper)actAgentNode.getUserObject();
 	    		uo.action = act;
-	    		tree.updateUI();
+	    		model.reload(actAgentNode);
 	    	}
 	    	
 	    	@Override
 	    	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
-	    		DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)model.getRoot();
-	    		dmtn.removeAllChildren();
-	    		tree.updateUI();
+	    		rootNode = new DefaultMutableTreeNode("Report");
+	    		model = new DefaultTreeModel(rootNode);
+	    		tree.setModel(model);
+	    		model.reload();
+	    		
 	    	}
 		};
 		
@@ -100,7 +102,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
     }
 
 	@Override
-	public void reportReceived(final ReportEntry entry) {
+	public synchronized void reportReceived(final ReportEntry entry) {
 		Integer tick = new Integer(entry.getSimulationTick());
 		updateTickNode(tick);
 		boolean useAgentNode = updateAgentNode(entry.getScope().getAgent());
@@ -151,12 +153,11 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(wrapper);
 		if(useAgentNode)
-			actAgentNode.add(newNode);
+			model.insertNodeInto(newNode, actAgentNode, actAgentNode.getChildCount());
 		else
-			actTickNode.add(newNode);
+		    model.insertNodeInto(newNode, actTickNode, actTickNode.getChildCount());
 
 		TreeControllerAdapter.expandAll(tree, true);
-		tree.updateUI();
 	}
 
 	@Override
@@ -168,7 +169,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		if(	actTickNode == null || 
 			!tick.equals(actTickNode.getUserObject())) {
 			actTickNode = new DefaultMutableTreeNode(tick);
-			rootNode.add(actTickNode);
+			model.insertNodeInto(actTickNode, rootNode, rootNode.getChildCount());
 		}
 	}
 
@@ -184,7 +185,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 			}
 		}
 		actAgentNode = new DefaultMutableTreeNode(new AgentUserObjectWrapper(ag));
-		actTickNode.add(actAgentNode);
+		model.insertNodeInto(actAgentNode, actTickNode, actTickNode.getChildCount());
 		return true;
 	}
 	

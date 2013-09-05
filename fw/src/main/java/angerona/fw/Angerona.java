@@ -289,9 +289,9 @@ public class Angerona {
 	 * @param ev		Reference to the simulation
 	 * @param finished	Flag indicating if the simulation is finished now.
 	 */
-	protected void onTickDone(AngeronaEnvironment ev, boolean finished) {
+	public void onTickDone(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
-			l.tickDone(ev, finished);
+			l.tickDone(ev);
 		}
 	}
 	
