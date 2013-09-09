@@ -2,9 +2,9 @@ package interactive;
 
 import javax.swing.JFrame;
 
-import angerona.fw.AngeronaEnvironment;
-import angerona.fw.NextActionRequester;
-import angerona.fw.gui.AngeronaWindow;
+import com.github.angerona.fw.AngeronaEnvironment;
+import com.github.angerona.fw.NextActionRequester;
+import com.github.angerona.fw.gui.AngeronaWindow;
 
 public class InteractiveAgentNextActionRequester implements NextActionRequester {
 

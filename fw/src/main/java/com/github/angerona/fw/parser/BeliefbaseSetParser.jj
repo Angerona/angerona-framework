@@ -1,0 +1,82 @@
+options {
+STATIC = false ;
+}
+
+PARSER_BEGIN(BeliefbaseSetParser)
+package com.github.angerona.fw.parser;
+import java.util.*;
+@SuppressWarnings("all")
+
+/** Simple brace matcher. */
+public class BeliefbaseSetParser {
+
+  public String worldContent;
+
+  public Map<String, String > viewContent = new HashMap<String, String >();
+  
+  /** Main entry point. */
+  public static void main(String args[]) throws ParseException {
+    BeliefbaseSetParser parser = new BeliefbaseSetParser(System.in);
+    parser.Input();
+    System.out.println("World:\n" + parser.worldContent);
+    System.out.println("View:\n" + parser.viewContent);
+  }
+
+  
+}
+
+PARSER_END(BeliefbaseSetParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+  <POINTER: "->" >
+| <KW_WORLD: "world" >
+| <KW_VIEW: "view" >
+| <TEXT_CHAR: ["A"-"Z", "a"-"z", "0"-"9"] >
+}
+
+< IN_LOGIC > TOKEN :{
+  <LBRACE: "{">
+| <RBRACE: "}">}
+< IN_LOGIC > MORE:
+{
+  < ~["{", "}"] >}
+
+/** Root production. */
+void Input() :
+{
+  String agent = "";
+  Token token;
+}
+{
+  < KW_WORLD >
+  {token_source.SwitchTo(this.IN_LOGIC);}
+  < LBRACE >
+  token = < RBRACE >
+  {
+    worldContent = token.image.substring(0, token.image.length()-1).trim();
+    token_source.SwitchTo(this.DEFAULT);
+  }
+  
+  (
+    < KW_VIEW >< POINTER >
+	{token_source.SwitchTo(this.IN_LOGIC);}
+    token = < LBRACE >
+    {
+      agent = token.image.substring(0, token.image.length()-1).trim();    }
+    token = < RBRACE >
+    {
+      token_source.SwitchTo(this.DEFAULT);
+      viewContent.put(agent, token.image.substring(0, token.image.length()-1).trim());
+    }
+  )*
+  
+}

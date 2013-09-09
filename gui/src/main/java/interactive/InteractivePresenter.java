@@ -8,13 +8,13 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import angerona.fw.InteractiveAgent;
-import angerona.fw.comm.Query;
-import angerona.fw.comm.Revision;
-import angerona.fw.comm.SpeechAct;
-import angerona.fw.error.AngeronaException;
-import angerona.fw.gui.base.Presenter;
-import angerona.fw.reflection.FolFormulaVariable;
+import com.github.angerona.fw.InteractiveAgent;
+import com.github.angerona.fw.comm.Query;
+import com.github.angerona.fw.comm.Revision;
+import com.github.angerona.fw.comm.SpeechAct;
+import com.github.angerona.fw.error.AngeronaException;
+import com.github.angerona.fw.gui.base.Presenter;
+import com.github.angerona.fw.reflection.FolFormulaVariable;
 
 /**
  * This class is responsible to wire a InteractiveModelAdapter with a

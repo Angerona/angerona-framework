@@ -49,7 +49,7 @@
     </dependency>
   </dependencies>
   <parent>
-  	<groupId>angerona.fw</groupId>
+  	<groupId>com.github.angerona</groupId>
   	<artifactId>maven-build-all</artifactId>
   	<version>0.0.1-SNAPSHOT</version>
   	<relativePath>..</relativePath>

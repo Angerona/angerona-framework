@@ -15,7 +15,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import angerona.fw.gui.base.ObservingPanel;
+import com.github.angerona.fw.gui.base.ObservingPanel;
 
 /**
  * An interactive View where the user can type actions for the agents. 

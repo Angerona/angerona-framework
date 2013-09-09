@@ -2,10 +2,11 @@ package interactive;
 
 import javax.swing.JPanel;
 
-import angerona.fw.AngeronaEnvironment;
-import angerona.fw.gui.AngeronaWindow;
-import angerona.fw.gui.base.ViewComponent;
 import bibliothek.gui.dock.DefaultDockable;
+
+import com.github.angerona.fw.AngeronaEnvironment;
+import com.github.angerona.fw.gui.AngeronaWindow;
+import com.github.angerona.fw.gui.base.ViewComponent;
 
 /**
  * 

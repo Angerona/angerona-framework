@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>Interactive Example</name>
 	<category>censor</category>
-    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
     
     <agent-instance>
       	<name>Defender</name>

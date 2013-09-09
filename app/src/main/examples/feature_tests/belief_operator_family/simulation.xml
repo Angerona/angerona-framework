@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>Belief-Operator-Family</name>
     <category>feature-test</category>
-    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	
 	<agent-instance>
 		<name>Alice</name>
@@ -25,7 +25,7 @@
       	<capability>Answer</capability>
       	
 		<data key="Confidential">
-            (Alice, angerona.fw.logic.asp.AspCredulousReasoner, affair_with_claire)
+            (Alice, com.github.angerona.fw.logic.asp.AspCredulousReasoner, affair_with_claire)
         </data>
 		
 	</agent-instance>

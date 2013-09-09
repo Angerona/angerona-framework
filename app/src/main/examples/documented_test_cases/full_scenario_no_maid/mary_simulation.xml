@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>Courtroom Scenario - No Witness</name>
-    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
     <category>mary</category>
     <description>
     In this scenario the secrets are weaken by the three possible answers by an different amount:
@@ -16,7 +16,7 @@
        	
 		<capability>QueryAnswer</capability>
 		
-		<data key="Confidential">(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.3}, argued(john))
+		<data key="Confidential">(Coroner, com.github.angerona.fw.logic.asp.AspReasoner{d=0.3}, argued(john))
 		</data>
 	</agent-instance>
       

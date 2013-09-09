@@ -1,21 +1,21 @@
 <beliefbase-configuration>
    <name>Answer-Set Belief Base (detail)</name>
    <reasoners>
-      <default-operator-cls>angerona.fw.logic.asp.AspReasoner{d=1.0}</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.AspReasoner{d=1.0}</default-operator-cls>
    </reasoners>
    <change-operators>
-      <default-operator-cls>angerona.fw.logic.asp.RevisionPreferenceHandling</default-operator-cls>
-      <operator-cls>angerona.fw.logic.asp.AspExpansion</operator-cls>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.RevisionPreferenceHandling</default-operator-cls>
+      <operator-cls>com.github.angerona.fw.logic.asp.AspExpansion</operator-cls>
    </change-operators>
    <translators>
-      <default-operator-cls>angerona.fw.logic.asp.AspTranslator</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.AspTranslator</default-operator-cls>
    </translators>
    
    <continuous-family min-value="0" max-value="1.0">
-      <operator>angerona.fw.logic.asp.AspReasoner</operator>
-      <iterator>angerona.fw.logic.asp.AspIteratorStrategy</iterator>
+      <operator>com.github.angerona.fw.logic.asp.AspReasoner</operator>
+      <iterator>com.github.angerona.fw.logic.asp.AspIteratorStrategy</iterator>
       <parameter>d</parameter>
    </continuous-family>
    
-   <beliefbase-class>angerona.fw.logic.asp.AspBeliefbase</beliefbase-class>
+   <beliefbase-class>com.github.angerona.fw.logic.asp.AspBeliefbase</beliefbase-class>
 </beliefbase-configuration>

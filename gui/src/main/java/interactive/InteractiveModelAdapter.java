@@ -1,8 +1,8 @@
 package interactive;
 
-import angerona.fw.AngeronaEnvironment;
-import angerona.fw.InteractiveAgent;
-import angerona.fw.util.ModelAdapter;
+import com.github.angerona.fw.AngeronaEnvironment;
+import com.github.angerona.fw.InteractiveAgent;
+import com.github.angerona.fw.util.ModelAdapter;
 
 /**
  * 
