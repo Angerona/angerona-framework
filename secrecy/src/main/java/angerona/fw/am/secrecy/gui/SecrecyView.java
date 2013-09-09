@@ -3,10 +3,10 @@ package angerona.fw.am.secrecy.gui;
 import java.util.LinkedList;
 import java.util.List;
 
+import angerona.fw.am.secrecy.Secret;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.gui.view.ListViewColored;
 import angerona.fw.internal.Entity;
-import angerona.fw.logic.Secret;
 
 /**
  * View for the confidential knowledge of the agents. It shows the confidential targets
@@ -25,7 +25,7 @@ public class SecrecyView extends ListViewColored {
 			SecrecyKnowledge ck = (SecrecyKnowledge)obj;
 			
 			List<String> reval = new LinkedList<String>();
-			for(Secret ct : ck.getTargets()) {
+			for(Secret ct : ck.getSecrets()) {
 				reval.add(ct.toString());
 			}
 			

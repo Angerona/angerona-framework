@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import angerona.fw.OperatorSet;
 import angerona.fw.operators.BaseOperator;
 import angerona.fw.operators.OperatorCallWrapper;
+import angerona.fw.operators.OperatorSet;
 import angerona.fw.util.ModelAdapter;
 
 /**

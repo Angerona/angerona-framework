@@ -23,6 +23,8 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	
 	protected boolean angeronaReady = true;
 	
+	protected boolean somethingHappens = false;
+	
 	/** the actual simulation tick */
 	protected int tick = 0;
 	
@@ -30,6 +32,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	@Override
 	public void sendAction(AngeronaEnvironment env, Action act) {
 		// The action send by one agent is the perception of the other one.
+		somethingHappens = true;
 		String agentName = act.getReceiverId();
 		localDelegate(env, act, agentName);
 	}
@@ -73,16 +76,10 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 			}
 		}
 		
-		boolean somethingHappens = false;
-		for(Agent agent : env.getAgents()) {
-			if(agent.hasPerceptions()) {
-				somethingHappens = true;
-			}
-		}
-		
 		if(!somethingHappens && tick != 0)
 			return false;
 		
+		somethingHappens = false;
 		angeronaReady = false;
 		++tick;
 		for(Agent agent : env.getAgents()) {

@@ -1,7 +1,8 @@
 <beliefbase-configuration>
    <name>Answer-Set Belief base</name>
    <reasoners>
-      <default-operator-cls>angerona.fw.logic.asp.AspReasoner{d=1.0}</default-operator-cls>
+      <default-operator-cls>angerona.fw.logic.asp.AspSkepticalReasoner</default-operator-cls>
+      <operator-cls>angerona.fw.logic.asp.AspCredulousReasoner</operator-cls>
    </reasoners>
    <change-operators>
       <default-operator-cls>angerona.fw.logic.asp.RevisionPreferenceHandling</default-operator-cls>
@@ -10,6 +11,9 @@
    <translators>
       <default-operator-cls>angerona.fw.logic.asp.AspTranslator</default-operator-cls>
    </translators>
-   
+   <discrete-family>
+     <operator>angerona.fw.logic.asp.AspSkepticalReasoner</operator>
+     <operator>angerona.fw.logic.asp.AspCredulousReasoner</operator>
+   </discrete-family>
    <beliefbase-class>angerona.fw.logic.asp.AspBeliefbase</beliefbase-class>
 </beliefbase-configuration>

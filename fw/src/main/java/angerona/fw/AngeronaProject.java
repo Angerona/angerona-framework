@@ -18,6 +18,7 @@ import angerona.fw.serialize.SerializeHelper;
 import angerona.fw.serialize.SimulationConfiguration;
 import angerona.fw.util.ModelAdapter;
 import angerona.fw.util.ObservableMap;
+import angerona.fw.util.Utility;
 
 /**
  * Represents a project in the Angerona workspace.
@@ -48,14 +49,19 @@ public class AngeronaProject extends ModelAdapter {
 	}
 	
 	private <T extends Resource> void loadResource(File file, Class<T> cls) {
-		T res = SerializeHelper.loadXml(cls, file);
-		resourceMap.put(res.getName(), res);
-		LOG.info("'{}' '"+res.getName()+"' in '{}' added to Angerona project.", 
-				res.getResourceType(), file.getAbsolutePath());
-		
-		// hack:
-		if(res instanceof SimulationConfiguration) {
-			((SimulationConfiguration)res).setFile(file);
+		try {
+			T res = SerializeHelper.loadXml(cls, file);
+			resourceMap.put(res.getName(), res);
+			LOG.info("'{}' '"+res.getName()+"' in '{}' added to Angerona project.", 
+					res.getResourceType(), file.getAbsolutePath());
+			
+			// hack:
+			if(res instanceof SimulationConfiguration) {
+				((SimulationConfiguration)res).setFile(file);
+			}
+		} catch(Exception e) {
+			Angerona.getInstance().onError("Cannot parse file!", "Cannot parse: '" + file.getPath() + "':\n" +
+					Utility.format(e));
 		}
 	}
 	

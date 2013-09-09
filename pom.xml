@@ -83,7 +83,7 @@
   	<module>example</module>
   	<module>gui</module>
   	<module>knowhow</module>
-  	<module>mary</module>
+  	
   	<module>secrecy</module>
   	<module>deploy</module>
   	<module>conditional</module>

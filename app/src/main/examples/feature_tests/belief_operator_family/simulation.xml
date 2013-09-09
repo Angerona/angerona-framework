@@ -1,0 +1,32 @@
+<simulation-configuration>
+	<name>Belief-Operator-Family</name>
+    <category>feature-test</category>
+    <behavior>angerona.fw.def.DefaultBehavior</behavior>
+	
+	<agent-instance>
+		<name>Alice</name>
+        
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+        
+        <desire>q_Bob(at(bob, X), 2)</desire>
+        <desire>v_Bob(meet(bob, claire), 1)</desire>
+		
+        <capability>Inform</capability>
+        <capability>Query</capability>
+	</agent-instance>
+      
+	<agent-instance>
+      	<name>Bob</name>
+      	
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+      	
+      	<capability>Answer</capability>
+      	
+		<data key="Confidential">
+            (Alice, angerona.fw.logic.asp.AspCredulousReasoner, affair_with_claire)
+        </data>
+		
+	</agent-instance>
+</simulation-configuration>

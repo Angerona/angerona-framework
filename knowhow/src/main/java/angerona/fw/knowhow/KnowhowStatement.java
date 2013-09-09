@@ -23,6 +23,10 @@ public class KnowhowStatement {
 	/** conditions which have to be true in the beliefbase of the agent */
 	private Vector<DLPAtom> conditions = new Vector<DLPAtom>();
 	
+	private int weight;
+	
+	private int irrelevance;
+	
 	/** internal name of the knowhow statement */
 	String name;
 	
@@ -30,6 +34,10 @@ public class KnowhowStatement {
 	private static int counter = 1;
 	
 	public KnowhowStatement(DLPAtom target, Vector<DLPAtom> subTargets, Vector<DLPAtom> conditions) {
+		this(target, subTargets, conditions, 0, 0);
+	}
+		
+	public KnowhowStatement(DLPAtom target, Vector<DLPAtom> subTargets, Vector<DLPAtom> conditions, int weight, int irrelevance) {
 		id = counter;
 		name = "kh_stmt_"+id;
 		++counter;
@@ -37,6 +45,8 @@ public class KnowhowStatement {
 		this.target = target;
 		this.subTargets.addAll(subTargets);
 		this.conditions.addAll(conditions);
+		this.weight = 0;
+		this.irrelevance = 0;
 	}
 	
 	/** @return	the id of the knowhow-statement (useable as index) */
@@ -73,6 +83,12 @@ public class KnowhowStatement {
 	
 	@Override
 	public String toString() {
-		return "(" + target.toString() + ", " + subTargets.toString() + ", " + conditions.toString() + ")";
+		String reval = "(" + target.toString() + ", " + subTargets.toString() + ", " + conditions.toString();
+		if(weight != 0)
+			reval += ", " + String.valueOf(weight);
+		if(irrelevance != 0) 
+			reval += ", " + String.valueOf(irrelevance);
+		reval += ")";
+		return reval;
 	}
 }

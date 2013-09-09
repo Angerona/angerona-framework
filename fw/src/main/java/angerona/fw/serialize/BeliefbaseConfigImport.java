@@ -72,4 +72,9 @@ public class BeliefbaseConfigImport implements BeliefbaseConfig {
 	public String getCategory() {
 		throw new IllegalStateException("Method not supported.");
 	}
+
+	@Override
+	public BeliefOperatorFamilyConfig getBeliefOperatorFamily() {
+		throw new IllegalStateException("Method not supported.");
+	}
 }

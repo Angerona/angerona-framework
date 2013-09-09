@@ -96,7 +96,7 @@ public class SimulationConfiguration implements Resource {
 	 * @return an object containing the simulation-configuration saved in the given file.
 	 */
 	public static SimulationConfiguration loadXml(File source) {
-		return SerializeHelper.loadXml(SimulationConfiguration.class, source);
+		return SerializeHelper.loadXmlTry(SimulationConfiguration.class, source);
 	}
 	
 	@Validate
@@ -128,7 +128,7 @@ public class SimulationConfiguration implements Resource {
 		for(AgentInstance ai : agents) {
 			for(String viewedAgent : ai.fileViewMap.keySet()) {
 				File f = ai.fileViewMap.get(viewedAgent);
-				BeliefbaseConfigReal conf = SerializeHelper.loadXml(
+				BeliefbaseConfigReal conf = SerializeHelper.loadXmlTry(
 						BeliefbaseConfigReal.class, f);
 				ai.realViewMap.put(viewedAgent, conf);
 			}

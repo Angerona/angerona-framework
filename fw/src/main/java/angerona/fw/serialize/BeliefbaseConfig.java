@@ -15,22 +15,24 @@ import org.simpleframework.xml.Root;
 public interface BeliefbaseConfig extends Resource {
 	public static final String RESOURCE_TYPE = "Beliefbase-Configuration";
 	
-	public OperationSetConfig getReasoners();
+	OperationSetConfig getReasoners();
 	
-	public OperationSetConfig getChangeOperators();
+	OperationSetConfig getChangeOperators();
 	
-	public OperationSetConfig getTranslators();
+	OperationSetConfig getTranslators();
+	
+	BeliefOperatorFamilyConfig getBeliefOperatorFamily();
 	
 	/** @return the class name of the beliefbase */
-	public String getBeliefbaseClassName();
+	String getBeliefbaseClassName();
 	
 	/** @return the name of the configuration */
-	public String getName();
+	String getName();
 	
 	/** 
 	 * @return 	null if the config is for a world belief base or if it
 	 * 			is the view onto another agent then the name of the
 	 * 			viewed agent is returned.
 	 */
-	public String getViewOn();
+	String getViewOn();
 }

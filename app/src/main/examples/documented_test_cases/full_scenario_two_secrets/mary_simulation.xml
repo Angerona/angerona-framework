@@ -13,14 +13,14 @@
 	<agent-instance>
 		<name>Mary</name>
       	
-        <agent-config source="config/agents/mary.xml" />         
+        <agent-config source="config/agents/courtroom.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
         
      	<capability>QueryAnswer</capability>
 		
 		<data key="Confidential">
-		    (Coroner, angerona.fw.logic.asp.AspReasoner{d=0.7}, argued(john))
-			(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.3}, eavesdropped_on_argument)
+		    (Coroner, angerona.fw.logic.asp.AspReasoner{d=0.3}, argued(john))
+			(Coroner, angerona.fw.logic.asp.AspReasoner{d=0.8}, eavesdropped_on_argument)
 		</data>
 		
 	</agent-instance>
@@ -30,7 +30,7 @@
  		
  	
  		
-        <agent-config source="config/agents/mary.xml" />         
+        <agent-config source="config/agents/courtroom.xml" />         
         <beliefbase-config source="config/beliefbases/asp_detail_beliefbase.xml" />
  		    
  		<capability>Query</capability>	

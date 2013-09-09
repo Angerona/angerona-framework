@@ -1,6 +1,5 @@
 package angerona.fw;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.slf4j.Logger;

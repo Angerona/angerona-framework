@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import angerona.fw.SettingsStorage;
+import angerona.fw.operators.parameter.GenericOperatorParameter;
 import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.util.Pair;
 

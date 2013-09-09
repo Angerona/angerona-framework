@@ -20,6 +20,7 @@ import angerona.fw.BaseBeliefbase;
 import angerona.fw.Desire;
 import angerona.fw.Intention;
 import angerona.fw.Subgoal;
+import angerona.fw.am.secrecy.Secret;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
@@ -34,7 +35,6 @@ import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
 import angerona.fw.logic.ScriptingComponent;
-import angerona.fw.logic.Secret;
 import angerona.fw.logic.conditional.ConditionalBeliefbase;
 import angerona.fw.logic.conditional.ConditionalRevision;
 import angerona.fw.operators.OperatorCallWrapper;
@@ -106,7 +106,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		// check for all possible answers to the query, whether this answer would
 		// potentially reveal a secret and in that case, refuse to answer.
-		for(Secret a : conf.getTargets()){
+		for(Secret a : conf.getSecrets()){
 			//ans := true
 			if(cexec.poss(view
 					.RefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE)) && 
@@ -189,7 +189,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		// check if revision would reveal a secret
 		View refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_TRUE);
 		if(cexec.poss(refinedView)) {
-			for(Secret s : conf.getTargets()) {
+			for(Secret s : conf.getSecrets()) {
 				if(cexec.scepticalInference(refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);
@@ -206,7 +206,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		// check if the failure of the revision would reveal a secret
 		refinedView = view.RefineViewByRevision(revision.getProposition(), AnswerValue.AV_FALSE);
 		if(cexec.poss(refinedView)) {
-			for(Secret s : conf.getTargets()) {
+			for(Secret s : conf.getSecrets()) {
 				if(cexec.scepticalInference(refinedView, s.getInformation())) {
 					Answer answer = new Answer(ag,revision.getSenderId(), revision.getProposition(), AnswerValue.AV_REJECT);
 					Subgoal answerGoal = new Subgoal(ag, desire);

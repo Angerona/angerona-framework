@@ -29,6 +29,7 @@ import angerona.fw.Agent;
 import angerona.fw.Desire;
 import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
+import angerona.fw.am.secrecy.operators.ViolatesResult;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import angerona.fw.comm.Answer;
 import angerona.fw.comm.Inform;
@@ -40,7 +41,6 @@ import angerona.fw.example.operators.ViolatesOperator;
 import angerona.fw.logic.AngeronaAnswer;
 import angerona.fw.logic.AnswerValue;
 import angerona.fw.logic.Desires;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.logic.asp.SolverWrapper;
 import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
@@ -81,7 +81,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 				}
 			}	
 
-			gen = gen || revisionRequest(des, param, param.getActualPlan().getAgent());
+			gen = gen || informProcessing(des, param, param.getActualPlan().getAgent());
 			gen = gen || answerQuery(des, param, param.getActualPlan().getAgent());
 			gen = gen || onJustify(des, param);
 			gen = gen || onJustification(des, param);
@@ -133,7 +133,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 	 *  method.
 	 */
 	@Override
-	protected Boolean revisionRequest(Desire des, PlanParameter pp, Agent ag) {
+	protected Boolean informProcessing(Desire des, PlanParameter pp, Agent ag) {
 		if(! (des.getPerception() instanceof Inform))
 			return false;
 		

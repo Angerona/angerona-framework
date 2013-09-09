@@ -22,7 +22,7 @@
         <desire>attend_scm</desire>
          
         <data key="Confidential">
-            (boss, angerona.fw.logic.asp.AspReasoner{d=1.0}, attend_scm(employee))
+            (boss, __DEFAULT__, attend_scm(employee))
         </data>
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
@@ -36,8 +36,6 @@
       
 	<agent-instance>
       	<name>boss</name>
-      	
-      	
       	
         <agent-config source="config/agents/knowhow_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />

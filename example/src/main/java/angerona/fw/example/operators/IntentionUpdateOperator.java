@@ -1,8 +1,5 @@
 package angerona.fw.example.operators;
 
-
-//import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +9,8 @@ import angerona.fw.PlanElement;
 import angerona.fw.Subgoal;
 import angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
+import angerona.fw.am.secrecy.operators.ViolatesResult;
 import angerona.fw.am.secrecy.operators.parameter.PlanParameter;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.OperatorCallWrapper;
 import angerona.fw.operators.parameter.EvaluateParameter;
 

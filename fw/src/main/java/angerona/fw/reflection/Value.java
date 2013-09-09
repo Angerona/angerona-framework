@@ -108,7 +108,7 @@ public class Value  {
 		} else if(type == Double.class) {
 			valueObject = Double.parseDouble(value);
 		} else {
-			valueObject = SerializeHelper.loadXml(type, value);
+			valueObject = SerializeHelper.loadXmlTry(type, value);
 		}
 		return valueObject;
 	}

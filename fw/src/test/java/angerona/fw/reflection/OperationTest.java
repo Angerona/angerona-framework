@@ -8,15 +8,15 @@ import java.util.Stack;
 
 import org.junit.Test;
 
-import angerona.fw.OperatorCaller;
-import angerona.fw.OperatorProvider;
-import angerona.fw.OperatorSet;
 import angerona.fw.asml.InvokeOperation;
 import angerona.fw.error.InvokeException;
 import angerona.fw.operators.BaseOperator;
-import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorCallWrapper;
+import angerona.fw.operators.OperatorCaller;
+import angerona.fw.operators.OperatorProvider;
+import angerona.fw.operators.OperatorSet;
 import angerona.fw.operators.OperatorStack;
+import angerona.fw.operators.parameter.GenericOperatorParameter;
 import angerona.fw.operators.parameter.OperatorParameter;
 import angerona.fw.report.Reporter;
 import angerona.fw.util.Pair;

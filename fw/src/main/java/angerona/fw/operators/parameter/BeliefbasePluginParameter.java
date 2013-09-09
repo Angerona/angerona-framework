@@ -4,7 +4,6 @@ import javax.management.AttributeNotFoundException;
 
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.error.ConversionException;
-import angerona.fw.operators.GenericOperatorParameter;
 import angerona.fw.operators.OperatorStack;
 import angerona.fw.report.Reporter;
 

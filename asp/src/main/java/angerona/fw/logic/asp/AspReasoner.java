@@ -9,14 +9,12 @@ import java.util.Set;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.StringTerm;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.translate.aspfol.AspFolTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,35 +158,31 @@ public class AspReasoner extends BaseReasoner {
 	@Override
 	protected Set<FolFormula> inferInt(ReasonerParameter params) {
 		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)params.getBeliefBase());
-		List<Set<FolFormula>> answerSetsTrans = new LinkedList<Set<FolFormula>>();
 		
 		if(answerSets == null) {
 			LOG.warn("Something went wrong during ASP-Solver invocation.");
 			return new HashSet<>();
 		}
 		
-		// Translate the elp to fol:
-		for(AnswerSet as : answerSets) {
-			
-			//TODO: The code in this loop is mostly conversion. Logic conversion module?
-			Set<FolFormula> temp = new HashSet<>();
-			for(DLPLiteral l : as) {
-				int arity = l.getAtom().getArity();
-				FOLAtom a = new FOLAtom(new Predicate(l.getAtom().getName(), arity));
-				for(int i=0; i<arity; ++i) {
-					String str = ((StringTerm)l.getAtom().getTerm(i)).get();
-					a.addArgument(new Constant(str));
-				}
-				if(!(l instanceof DLPNeg)) {
-					temp.add(a);
-				} else {
-					temp.add(new Negation(a));
-				}
-			}
-			
-			answerSetsTrans.add(temp);
+		Set<DLPLiteral> literals = selectAnswerSet(params, answerSets);
+		Set<FolFormula> reval = new HashSet<>();
+		AspFolTranslator translator = new AspFolTranslator();
+		for(DLPLiteral l : literals) {
+			reval.add(translator.toFOL(l));
+
 		}
 		
+		return reval;
+	}
+
+	/**
+	 * 
+	 * @param params
+	 * @param answerSets
+	 * @return
+	 */
+	protected Set<DLPLiteral> selectAnswerSet(ReasonerParameter params,
+			List<AnswerSet> answerSets) {
 		// find the right inference method:
 		double dValue = -1;
 		String dParam = params.getSetting("d", "1.0");
@@ -201,34 +195,37 @@ public class AspReasoner extends BaseReasoner {
 		if(dValue == -1) {
 			LOG.warn("No Parameter d given: Use skeptical inference");
 		}
+		
+		Set<DLPLiteral> literals = null;
 		if(dValue == 0) {
-			return credulousSelection(answerSetsTrans);
+			literals = credulousSelection(answerSets);
 		} else if(dValue == 1 || dValue == -1) {
-			return skepticalSelection(answerSetsTrans);
+			literals = skepticalSelection(answerSets);
 		} else {
-			return dSelection(answerSetsTrans, dValue);
+			literals = dSelection(answerSets, dValue);
 		}
+		return literals;
 	}
 
 	/**
 	 * Helper method: Performs a d base inference selection on the given answersets.
 	 * The parameter d is a factor between 0 and 1 which defines in how many percent
 	 * of answer-sets a literal must occur to be inferred.
-	 * @param answerSetsTrans	The answersets
+	 * @param answerSets	The answersets
 	 * @param dValue			The value of the parameter d.
 	 * @return					A list of FOL formulas representing the result of the d-
 	 * 							inference-selection.
 	 * @todo 	Step Three: resolve contradictions,
 	 *			requires identifying contradictions first.
 	 */
-	private Set<FolFormula> dSelection(List<Set<FolFormula>> answerSetsTrans,
+	protected Set<DLPLiteral> dSelection(List<AnswerSet> answerSets,
 			double dValue) {
-		Set<FolFormula> reval = new HashSet<FolFormula>();
-		HashMap<FolFormula, Integer> frequencies = new HashMap<FolFormula, Integer>();
+		Set<DLPLiteral> reval = new HashSet<DLPLiteral>();
+		HashMap<DLPLiteral, Integer> frequencies = new HashMap<DLPLiteral, Integer>();
 		
 		// Step One: Associate each formula with a frequency
-		for(Set<FolFormula> as : answerSetsTrans) {
-			for(FolFormula a : as) {
+		for(AnswerSet as : answerSets) {
+			for(DLPLiteral a : as) {
 				if(frequencies.containsKey(a)) {
 					Integer newFreq = frequencies.get(a) + 1;
 					frequencies.put(a, newFreq); //Hopefully these maps can be mutated...
@@ -241,10 +238,9 @@ public class AspReasoner extends BaseReasoner {
 		
 		
 		// Step Two: Filter out formulas without proper frequency
-		Set<FolFormula> toRemove = new HashSet<>();
-		for(FolFormula a : reval) {
-			if((frequencies.get(a) / (double) answerSetsTrans.size() ) <= dValue)
-			{
+		Set<DLPLiteral> toRemove = new HashSet<>();
+		for(DLPLiteral a : reval) {
+			if((frequencies.get(a) / (double) answerSets.size() ) <= dValue) {
 				toRemove.add(a);
 			}
 		}
@@ -260,20 +256,21 @@ public class AspReasoner extends BaseReasoner {
 	/**
 	 * Helper method: Performs a skeptical selection. Only literals are
 	 * taken whick are in every answerset
-	 * @param answerSetsTrans	The answersets in FOL
+	 * @param answerSets	The answersets in FOL
 	 * @return	A list of FOL formulas representing the result of the septical
 	 * 			inference-selection.
 	 */
-	private Set<FolFormula> skepticalSelection(
-			List<Set<FolFormula>> answerSetsTrans) {
-		Set<FolFormula> reval = new HashSet<>();
-		if(answerSetsTrans.size() > 0) {
-			reval.addAll(answerSetsTrans.get(0));
-			answerSetsTrans.remove(0); 
+	protected Set<DLPLiteral> skepticalSelection(
+			List<AnswerSet> answerSets) {
+		Set<DLPLiteral> reval = new HashSet<>();
+		if(answerSets.size() > 0) {
+			reval.addAll(answerSets.get(0));
+			answerSets.remove(0); 
 		}
-		Set<FolFormula> toRemove = new HashSet<FolFormula>();
-		for(Set<FolFormula> as : answerSetsTrans) {
-			for(FolFormula a : reval) {
+		
+		Set<DLPLiteral> toRemove = new HashSet<DLPLiteral>();
+		for(AnswerSet as : answerSets) {
+			for(DLPLiteral a : reval) {
 				if(!as.contains(a)) {
 					toRemove.add(a);
 				}
@@ -287,18 +284,18 @@ public class AspReasoner extends BaseReasoner {
 	 * Helper method: Performs a credulous selecton. Every literal which is in at
 	 * least one answer-set will be returned.
 	 * BEWARE: This might generate contradictions...
-	 * @param answerSetsTrans	The answersets
+	 * @param answerSets	The answersets
 	 * @return	A list of FOL formulas representing the result of the credulous
 	 * 			inference-selection.
 	 */
-	private Set<FolFormula> credulousSelection(
-			List<Set<FolFormula>> answerSetsTrans) {
-		Set<FolFormula> reval = new HashSet<>();
-		reval.addAll(answerSetsTrans.get(0)); 
-		answerSetsTrans.remove(0);
+	protected Set<DLPLiteral> credulousSelection(
+			List<AnswerSet> answerSets) {
+		Set<DLPLiteral> reval = new HashSet<>();
+		reval.addAll(answerSets.get(0)); 
+		answerSets.remove(0);
 		
-		for(Set<FolFormula> as : answerSetsTrans) {
-			for(FolFormula a : as) {
+		for(AnswerSet as : answerSets) {
+			for(DLPLiteral a : as) {
 				if(!reval.contains(a)) {
 					reval.add(a);
 				}

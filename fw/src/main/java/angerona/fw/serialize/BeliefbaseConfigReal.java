@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementUnion;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Commit;
 import org.xml.sax.SAXException;
@@ -47,6 +48,12 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	
 	protected String viewName;
 	
+	@ElementUnion({
+		@Element(name="discrete-family", type=DiscreteBeliefFamilyConfig.class, required=false),
+		@Element(name="continuous-family", type=ContinuousBeliefOperatorFamilyConfig.class, required=false)
+		})
+	protected BeliefOperatorFamilyConfig beliefOperatorFamily;
+	
 	@Commit
 	protected void createOperationTypes() {
 		// extract operation type from element name...
@@ -64,7 +71,7 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	 * @throws IOException
 	 */
 	public static BeliefbaseConfigReal loadXml(File source) {
-		return SerializeHelper.loadXml(BeliefbaseConfigReal.class, source);
+		return SerializeHelper.loadXmlTry(BeliefbaseConfigReal.class, source);
 	}
 			
 	@Override
@@ -110,5 +117,10 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	@Override
 	public String getCategory() {
 		return category;
+	}
+
+	@Override
+	public BeliefOperatorFamilyConfig getBeliefOperatorFamily() {
+		return beliefOperatorFamily;
 	}
 }

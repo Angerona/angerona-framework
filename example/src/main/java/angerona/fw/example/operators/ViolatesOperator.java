@@ -1,8 +1,6 @@
 package angerona.fw.example.operators;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,12 +14,12 @@ import angerona.fw.Agent;
 import angerona.fw.BaseBeliefbase;
 import angerona.fw.Perception;
 import angerona.fw.PlanElement;
+import angerona.fw.am.secrecy.Secret;
 import angerona.fw.am.secrecy.components.SecrecyKnowledge;
 import angerona.fw.am.secrecy.operators.BaseViolatesOperator;
+import angerona.fw.am.secrecy.operators.ViolatesResult;
 import angerona.fw.error.NotImplementedException;
 import angerona.fw.logic.Beliefs;
-import angerona.fw.logic.Secret;
-import angerona.fw.logic.ViolatesResult;
 import angerona.fw.operators.parameter.EvaluateParameter;
 import angerona.fw.util.Pair;
 
@@ -56,18 +54,20 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		// use cloned beliefs to generate new beliefs:
 		Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAtom(), (Beliefs)beliefs.clone());
+
+		
 		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
 		BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());
 		BaseBeliefbase view = newBeliefs.getViewKnowledge().get(p.getReceiverId()); 
 		
-		List<Pair<Secret, Double>> pairs = new LinkedList<>();
+		boolean alright = true;
 		if(views.containsKey(p.getReceiverId())) {
-			for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
+			for(Pair<String, Map<String, String>> reasoningOperator : conf.getSecretsByReasoningOperator().keySet()) {
 				
 				// Infer only once with the ReasoningOperator defined by the pair.
 				Set<FolFormula> origInfere = origView.infere(reasoningOperator.first, reasoningOperator.second);
 				Set<FolFormula> cloneInfere = view.infere(reasoningOperator.first, reasoningOperator.second);
-				for(Secret secret : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
+				for(Secret secret : conf.getSecretsByReasoningOperator().get(reasoningOperator)) {
 					if(secret.getSubjectName().equals(p.getReceiverId())) {
 						// Check for false positives first, output an warning, because secret weakening was not applied correctly then
 						boolean inOrig = origInfere.contains(secret.getInformation());
@@ -78,16 +78,18 @@ public class ViolatesOperator extends BaseViolatesOperator {
 						
 						boolean inClone = cloneInfere.contains(secret.getInformation());
 						if(	inClone )  {
-							param.report("Secret: '" + secret + "' of '" + param.getAgent().getName() + "' injured by: '" + param.getAtom() + "'");
-							pairs.add(new Pair<>(secret, 1.0));
+							param.report("Secret: '" + secret + "' of '" + param.getAgent().getName() + 
+									"' injured by: '" + param.getAtom() + "'");
+							alright = false;
 						}
 					}
 				}
 			}
 		}
-		ViolatesResult reval = new ViolatesResult(pairs);
-	
-		if(reval.isAlright())
+		ViolatesResult reval = new ViolatesResult(alright);
+		reval.setBeliefs(newBeliefs);
+		
+		if(alright)
 			param.report("No violation applying the perception/action: '" + percept + "'");
 		else
 			param.report("Violation by appling the perception/action: '" + percept + "'");
@@ -99,6 +101,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		if(pe.isAtomic()) {
 			// clear ViolatesResult state:
 			violates = new ViolatesResult();
+			violates.setBeliefs(param.getBeliefs());
 			
 			// prepare and run the plan-element:
 			pe.prepare(this, param.getBeliefs());
@@ -125,10 +128,10 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		if(conf == null)
 			return new ViolatesResult();
 
-		List<Pair<Secret, Double>> pairs = new LinkedList<>();
+		boolean alright = true;
 		Map<String, Set<FolFormula>> viewInferences = new HashMap<>();
-		for(Pair<String, Map<String, String>> reasoningOperator : conf.getTargetsByReasoningOperator().keySet()) {
-			for (Secret s : conf.getTargetsByReasoningOperator().get(reasoningOperator)) {
+		for(Pair<String, Map<String, String>> reasoningOperator : conf.getSecretsByReasoningOperator().keySet()) {
+			for (Secret s : conf.getSecretsByReasoningOperator().get(reasoningOperator)) {
 				Set<FolFormula> infere = null;
 				if(viewInferences.containsKey(s.getSubjectName())) {
 					infere = viewInferences.get(s.getSubjectName());
@@ -139,11 +142,11 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				}
 				
 				if(infere.contains(s.getInformation())) {
-					pairs.add(new Pair<>(s, new Double(1.0)));
+					alright = false;
 				}
 			}
 		}
 		
-		return new ViolatesResult(pairs);
+		return new ViolatesResult(alright);
 	}
 }

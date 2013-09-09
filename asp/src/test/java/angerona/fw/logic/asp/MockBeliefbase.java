@@ -2,12 +2,12 @@ package angerona.fw.logic.asp;
 
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
-import angerona.fw.OperatorProvider;
-import angerona.fw.OperatorSet;
 import angerona.fw.logic.BaseChangeBeliefs;
 import angerona.fw.logic.BaseReasoner;
 import angerona.fw.logic.BaseTranslator;
 import angerona.fw.operators.OperatorCallWrapper;
+import angerona.fw.operators.OperatorProvider;
+import angerona.fw.operators.OperatorSet;
 import angerona.fw.util.OSValidator;
 
 /**

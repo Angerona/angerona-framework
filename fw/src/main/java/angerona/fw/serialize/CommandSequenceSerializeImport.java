@@ -18,7 +18,7 @@ public class CommandSequenceSerializeImport implements CommandSequenceSerialize{
 
 	@Resolve
 	public CommandSequenceSerialize substitute() throws Exception {
-		return SerializeHelper.loadXml(CommandSequence.class, source);
+		return SerializeHelper.loadXmlTry(CommandSequence.class, source);
 	}
 	
 	@Override
