@@ -166,15 +166,7 @@ public class KnowhowBase extends BaseAgentComponent {
 
 		KnowhowBase kb = new KnowhowBase();
 		Map<String, String> data = new HashMap<String, String>();
-		/*
-		 * data.put("KnowHow",
-		 * "cleaned_all, (cleaned_hallway, cleaned_lounge), battery_full\n" +
-		 * "cleaned_hallway, (at_hallway, vacuumed_hallway), bag_empty\n" +
-		 * "cleaned_lounge, ordered_robotxy_to_clean_lounge, robotxy_available\n"
-		 * +
-		 * "cleaned_lounge, (at_lounge, free_lounge, vacuumed_lounge), bag_empty\n"
-		 * + "free_lounge, people_sent_away, at_lounge" );
-		 */
+
 		data.put("KnowHow", "win, bluff, \nbluff, s_smile, \nbluff, s_laugth, ");
 		// data.put("KnowHow", "win, bluff, \nbluff, (s_smile, s_laugth), ");
 		kb.init(data);

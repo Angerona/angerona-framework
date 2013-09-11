@@ -61,7 +61,8 @@ public class SecretParser implements SecretParserConstants {
     try
     {
       reval = parser.java_cls(parameters);
-      //jj_input_stream.backup(1);
+          if(parameters.isEmpty())
+        jj_input_stream.backup(1);
       LOG.info("Utility parser parsed: '" + reval + parameters + "'.");
     }
     catch(com.github.angerona.fw.parser.ParseException e0)

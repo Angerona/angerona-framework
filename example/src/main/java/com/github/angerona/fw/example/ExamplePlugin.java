@@ -16,6 +16,7 @@ import com.github.angerona.fw.example.logic.ExampleBeliefbase;
 import com.github.angerona.fw.example.logic.ExampleExpansion;
 import com.github.angerona.fw.example.logic.ExampleReasoner;
 import com.github.angerona.fw.example.logic.ExampleTranslator;
+import com.github.angerona.fw.example.operators.CautiousUpdateBeliefs;
 import com.github.angerona.fw.example.operators.GenerateOptionsOperator;
 import com.github.angerona.fw.example.operators.IntentionUpdateOperator;
 import com.github.angerona.fw.example.operators.SubgoalGenerationOperator;
@@ -88,6 +89,7 @@ public class ExamplePlugin extends AngeronaPluginAdapter
 		reval.add(IntentionUpdateOperator.class);
 		reval.add(ViolatesOperator.class);
 		reval.add(UpdateBeliefsOperator.class);
+		reval.add(CautiousUpdateBeliefs.class);
 		
 		// courtroom scenario operators:
 		reval.add(CourtroomPlanner.class);

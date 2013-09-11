@@ -12,7 +12,8 @@ public class SecretParserFunctionalTest {
 	public static void main(String args []) throws ParseException
 	  {
 	   	String expr = "(Boss, java.class.irgendwas{d=0.25}, -who_argued(husband_of(mary)))";
-	    System.out.println("Using expresion :" + expr);
+//	    String expr = "(boss, __DEFAULT__, attend_scm(employee))";
+	   	System.out.println("Using expresion :" + expr);
 
 		SecretParser parser = new SecretParser(expr);
 	    try
