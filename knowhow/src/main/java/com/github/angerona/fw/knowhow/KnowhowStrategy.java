@@ -1,5 +1,8 @@
 package com.github.angerona.fw.knowhow;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -7,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
@@ -44,6 +48,12 @@ public class KnowhowStrategy {
 	/** the used knowhow-base */
 	private KnowhowBase knowhowBase;
 	
+	/**
+	 * the program responsible to calculate the next action, nextAction4 of
+	 * Regina Fritsch was used as basic
+	 */
+	private Program nextAction;
+	
 	/** program contains the world-knowledge of the agent */
 	private Program worldKnowledge;
 	
@@ -77,6 +87,28 @@ public class KnowhowStrategy {
 	 */
 	public KnowhowStrategy(String solverpath) {
 		solver = new DLVComplex(solverpath);
+		
+		String programPath = "programs/NextAction.asp";
+		InputStream is = this.getClass().getClassLoader()
+				.getResourceAsStream(programPath);
+		if (is != null) {
+			try {
+				nextAction = ASPParser.parseProgram(new InputStreamReader(is));
+			} catch (net.sf.tweety.logicprogramming.asplibrary.parser.ParseException e) {
+				nextAction = null;
+				LOG.error("Cannot load the 'nextAction' program: '{}'",
+						e.getMessage());
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} else {
+			LOG.error("Cannot found resource: '{}'", programPath);
+		}
 	}
 	
 	/**
@@ -123,7 +155,7 @@ public class KnowhowStrategy {
 		Pair<Program, LinkedList<SkillParameter>> reval = null;
 		reval = KnowhowBuilder.buildKnowhowbaseProgram(kb);
 		knowhow = reval.first;
-		knowhow.add(kb.getNextActionProgram());
+		knowhow.add(nextAction);
 		knowhowBase.setParameters(reval.second);
 		this.atomicActions = KnowhowBuilder.buildAtomicProgram(atomicActions);
 		// TODO: Find a way to handle negations as holds... perhaps a new atom hold_neg?
