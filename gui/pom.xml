@@ -16,7 +16,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>angerona</groupId>
+    	<groupId>com.github.angerona</groupId>
     	<artifactId>fw</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
