@@ -1,4 +1,4 @@
-package com.github.angerona.fw.knowhow;
+package com.github.angerona.knowhow;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 

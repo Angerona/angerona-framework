@@ -1,4 +1,4 @@
-package com.github.angerona.fw.knowhow;
+package com.github.angerona.knowhow;
 
 import java.io.IOException;
 import java.io.InputStream;

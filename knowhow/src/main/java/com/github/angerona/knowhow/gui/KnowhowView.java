@@ -1,4 +1,4 @@
-package com.github.angerona.fw.knowhow.gui;
+package com.github.angerona.knowhow.gui;
 
 import java.awt.BorderLayout;
 import java.util.LinkedList;
@@ -10,13 +10,13 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
 import com.github.angerona.fw.gui.base.EntityViewComponent;
-import com.github.angerona.fw.knowhow.KnowhowBase;
-import com.github.angerona.fw.knowhow.KnowhowBuilder;
-import com.github.angerona.fw.knowhow.KnowhowStatement;
-import com.github.angerona.fw.knowhow.SkillParameter;
 import com.github.angerona.fw.report.ReportEntry;
 import com.github.angerona.fw.report.ReportListener;
 import com.github.angerona.fw.util.Pair;
+import com.github.angerona.knowhow.KnowhowBase;
+import com.github.angerona.knowhow.KnowhowBuilder;
+import com.github.angerona.knowhow.KnowhowStatement;
+import com.github.angerona.knowhow.SkillParameter;
 
 /**
  * A UI-Component responsible to show the KnowhowBase of an agent.

@@ -1,4 +1,4 @@
-package com.github.angerona.fw.knowhow;
+package com.github.angerona.knowhow;
 
 import java.io.File;
 import java.util.Collections;
@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.BaseAgentComponent;
-import com.github.angerona.fw.knowhow.parser.KnowhowParser;
-import com.github.angerona.fw.knowhow.parser.ParseException;
+import com.github.angerona.knowhow.parser.KnowhowParser;
+import com.github.angerona.knowhow.parser.ParseException;
 
 /**
  * A KnowhowBase is an AgentComponent adding the concept of knowhow to an
