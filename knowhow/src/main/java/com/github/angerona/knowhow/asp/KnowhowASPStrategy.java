@@ -1,4 +1,4 @@
-package com.github.angerona.knowhow;
+package com.github.angerona.knowhow.asp;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +29,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.util.Pair;
+import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.parameter.SkillParameter;
 
 /**
  * The default knowhow strategy.
  * @author Tim Janus
  */
-public class KnowhowStrategy {
+public class KnowhowASPStrategy {
 	
 	/** reference to the logback logger instance */
 	static private Logger LOG = LoggerFactory.getLogger(KnowhowBase.class);
@@ -86,7 +87,7 @@ public class KnowhowStrategy {
 	 * Ctor: Creates the default Knowhow-Strategy
 	 * @param solverpath	String with path to the dlv-complex solver
 	 */
-	public KnowhowStrategy(String solverpath) {
+	public KnowhowASPStrategy(String solverpath) {
 		solver = new DLVComplex(solverpath);
 		
 		String programPath = "programs/NextAction.asp";
@@ -154,13 +155,13 @@ public class KnowhowStrategy {
 		intentionTree.addFact(oldState);
 		intentionTree.addFact(new DLPAtom("state", new Constant(stateStr)));
 		Pair<Program, LinkedList<SkillParameter>> reval = null;
-		reval = KnowhowBuilder.buildKnowhowbaseProgram(kb);
+		reval = DLPBuilder.buildKnowhowbaseProgram(kb);
 		knowhow = reval.first;
 		knowhow.add(nextAction);
 		knowhowBase.setParameters(reval.second);
-		this.atomicActions = KnowhowBuilder.buildAtomicProgram(atomicActions);
+		this.atomicActions = DLPBuilder.buildAtomicProgram(atomicActions);
 		// TODO: Find a way to handle negations as holds... perhaps a new atom hold_neg?
-		this.worldKnowledge = KnowhowBuilder.buildHoldsProgram(worldKnowledge);
+		this.worldKnowledge = DLPBuilder.buildHoldsProgram(worldKnowledge);
 		//this.worldKnowledge = new Program();
 		
 		step = 0;

@@ -20,8 +20,8 @@ import com.github.angerona.fw.report.ReportEntry;
 import com.github.angerona.fw.report.ReportListener;
 import com.github.angerona.fw.util.Pair;
 import com.github.angerona.knowhow.KnowhowBase;
-import com.github.angerona.knowhow.KnowhowBuilder;
 import com.github.angerona.knowhow.KnowhowStatement;
+import com.github.angerona.knowhow.asp.DLPBuilder;
 import com.github.angerona.knowhow.graph.GraphBuilder;
 import com.github.angerona.knowhow.graph.GraphNode;
 import com.github.angerona.knowhow.graph.ext.JGraphXAdapter;
@@ -77,7 +77,7 @@ public class KnowhowView extends EntityViewComponent
 		}
 		
 		Pair<Program, LinkedList<SkillParameter>> pair = 
-				KnowhowBuilder.buildKnowhowbaseProgram(actual);
+				DLPBuilder.buildKnowhowbaseProgram(actual);
 		stmtListModel.addElement("---");
 		stmtListModel.addElement("parameters");
 		stmtListModel.addElement("---");

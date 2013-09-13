@@ -1,0 +1,72 @@
+<simulation-configuration>
+	<name>Basis Scenario</name>
+    <category>business</category>   
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+	<description>
+	In this scenario the CEO Alice representing Antronic wants to acquire the company
+	Brenton. Therefore she has to make a suitable offer to Bob the CEO of Brenton. To make a
+	suitable offer Alice has to gather information. There are three pieces of information in
+	the scenario: capital and investors (cai), receivables and payables (rap) and the order 
+	situation (os). To make a suitable offer Alice has to know either cai and rap or cai and os.
+	If she knows all three pieces of information she can make the optimal offer, that is the offer
+	that is as low as possible and will be accepted. During the information gathering Alices has
+	to be cautious because her information sources: claire and the detective will inform Bob if
+	they learn about the acquisition because Bob offers a millon dollars to everbody who informs
+	him about an acquisition. Claire and the Detective conclude that Alice wants to acquire
+	the company if they learn that Alice wants to know about either the cai and rap or the cai
+	and os, that means she has to asks one of them for the cai and the other for both of the
+	other pieces of information.
+	</description>
+
+    <agent-instance>
+		<name>alice</name>
+        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+         
+        <capability>QueryAnswer</capability>
+		<capability>Inform</capability>
+		
+        <desire>make_optimal_offer</desire>
+        
+        <data key="Confidential">
+            (bob, __DEFAULT__, antronic_wants_to_acquire_brenton)
+            (claire, __DEFAULT__, antronic_wants_to_acquire_brenton)
+            (detective, __DEFAULT__, antronic_wants_to_acquire_brenton)
+        </data>
+		<data key="KnowHow">
+			
+		</data>
+	</agent-instance>
+      
+	<agent-instance>
+      	<name>bob</name>
+      	
+        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+         
+      	<capability>QueryAnswer</capability>
+        
+        <data key="KnowHow">
+			answer_query(offer), s_QueryAnswer(NO), antronic_wants_to_acquire_brenton
+			answer_query(offer), s_QueryAnswer(Yes), , 1
+		</data> 
+	</agent-instance>
+	
+	<agent-instance>
+		<name>claire</name>
+		<agent-config source="config/agents/knowhow_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+         
+        <capability>QueryAnswer</capability>
+		<capability>Inform</capability>
+	</agent-instance>
+	
+	<agent-instance>
+		<name>detective</name>
+		<agent-config source="config/agents/knowhow_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+         
+        <capability>QueryAnswer</capability>
+		<capability>Inform</capability>
+	</agent-instance>
+</simulation-configuration>

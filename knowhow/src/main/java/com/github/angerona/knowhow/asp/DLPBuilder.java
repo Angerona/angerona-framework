@@ -1,4 +1,4 @@
-package com.github.angerona.knowhow;
+package com.github.angerona.knowhow.asp;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.fw.util.Pair;
+import com.github.angerona.knowhow.KnowhowBase;
+import com.github.angerona.knowhow.KnowhowStatement;
 import com.github.angerona.knowhow.parameter.SkillParameter;
 
 /**
@@ -25,10 +27,10 @@ import com.github.angerona.knowhow.parameter.SkillParameter;
  * 
  * @author Tim Janus
  */
-public class KnowhowBuilder {
+public class DLPBuilder {
 	
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(KnowhowBuilder.class);
+	private static Logger LOG = LoggerFactory.getLogger(DLPBuilder.class);
 	
 	/**
 	 * Creates an extended Logic program from the given KnowhowBase.
@@ -86,7 +88,7 @@ public class KnowhowBuilder {
 		List<SkillParameter> params = new LinkedList<>();
 		// Knowhow Statement
 		Rule r = new Rule();
-		r.setConclusion(new DLPAtom("khstatement", new Constant(ks.name), 
+		r.setConclusion(new DLPAtom("khstatement", new Constant(ks.getName()), 
 				new Constant(ks.getTarget().toString())));
 		p.add(r);
 		
@@ -111,7 +113,7 @@ public class KnowhowBuilder {
 				}
 				a = new DLPAtom(a.getName());
 			}
-			r.setConclusion(new DLPAtom("khsubgoal", new Constant(ks.name), new NumberTerm(i), 
+			r.setConclusion(new DLPAtom("khsubgoal", new Constant(ks.getName()), new NumberTerm(i), 
 					new Constant(a.toString())));
 			p.add(r);
 			i++;
@@ -120,7 +122,7 @@ public class KnowhowBuilder {
 		// Conditions
 		for(DLPAtom a : ks.getConditions()) {
 			r = new Rule();
-			r.setConclusion(new DLPAtom("khcondition", new Constant(ks.name), 
+			r.setConclusion(new DLPAtom("khcondition", new Constant(ks.getName()), 
 					new Constant(a.toString())));
 			p.add(r);
 		}

@@ -12,6 +12,7 @@ import com.github.angerona.fw.AngeronaPluginAdapter;
 import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.operators.BaseOperator;
+import com.github.angerona.knowhow.asp.KnowhowASP;
 import com.github.angerona.knowhow.gui.KnowhowView;
 
 @PluginImplementation
@@ -35,7 +36,7 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 	@Override
 	public List<Class<? extends BaseOperator>> getOperators() {
 		List<Class<? extends BaseOperator>> reval = new LinkedList<>();
-		reval.add(KnowhowSubgoal.class);
+		reval.add(KnowhowASP.class);
 		return reval;
 	}
 

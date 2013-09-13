@@ -1,4 +1,4 @@
-package com.github.angerona.knowhow;
+package com.github.angerona.knowhow.asp;
 
 import java.io.StringReader;
 import java.util.Collection;
@@ -45,18 +45,19 @@ import com.github.angerona.fw.logic.asp.SolverWrapper;
 import com.github.angerona.fw.operators.OperatorCallWrapper;
 import com.github.angerona.fw.operators.parameter.EvaluateParameter;
 import com.github.angerona.fw.util.Pair;
+import com.github.angerona.knowhow.KnowhowBase;
 
 /**
  * Subgoal Generation using Knowhow as basic.
  * @author Tim Janus
  */
-public class KnowhowSubgoal extends SubgoalGenerationOperator {
+public class KnowhowASP extends SubgoalGenerationOperator {
 
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(KnowhowSubgoal.class);
+	private static Logger LOG = LoggerFactory.getLogger(KnowhowASP.class);
 	
 	/** reference to the knowhow-strategy which was used at last */
-	private KnowhowStrategy lastUsedStrategy;
+	private KnowhowASPStrategy lastUsedStrategy;
 	
 	@Override
 	protected Boolean processInternal(PlanParameter param) {
@@ -261,7 +262,7 @@ public class KnowhowSubgoal extends SubgoalGenerationOperator {
 		}
 		
 		// create and initialize the knowhow strategy
-		lastUsedStrategy = new KnowhowStrategy(SolverWrapper.DLV_COMPLEX.getSolverPath());
+		lastUsedStrategy = new KnowhowASPStrategy(SolverWrapper.DLV_COMPLEX.getSolverPath());
 		lastUsedStrategy.init(kb, intention, actions, worldKB);
 	}
 

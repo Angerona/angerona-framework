@@ -26,7 +26,7 @@
         </data>
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
-		 	excused(a_SELF), s_Inform(a_boss, excused(a_SELF)),
+		 	excused(X), s_Inform(a_boss, excused(X)),
 		 	answer_query, honest_answer, 
 		 	answer_query, lie,
 		 	honest_answer, s_QueryAnswer(p_honest),  

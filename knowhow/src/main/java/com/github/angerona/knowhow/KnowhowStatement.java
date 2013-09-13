@@ -37,7 +37,7 @@ public class KnowhowStatement {
 	private double irrelevance;
 	
 	/** internal name of the knowhow statement */
-	String name;
+	private String name;
 	
 	/** counter used for automatic name generation */
 	private static int counter = 1;
@@ -64,9 +64,14 @@ public class KnowhowStatement {
 		return id;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public DLPAtom getTarget() {
 		return target;
 	}
+	
 	
 	public List<DLPAtom> getSubTargets() {
 		return Collections.unmodifiableList(subTargets);

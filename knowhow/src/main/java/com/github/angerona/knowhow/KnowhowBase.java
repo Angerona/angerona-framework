@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.knowhow.asp.KnowhowASPStrategy;
 import com.github.angerona.knowhow.parameter.SkillParameter;
 import com.github.angerona.knowhow.parser.KnowhowParser;
 import com.github.angerona.knowhow.parser.ParseException;
@@ -172,7 +173,7 @@ public class KnowhowBase extends BaseAgentComponent {
 		// data.put("KnowHow", "win, bluff, \nbluff, (s_smile, s_laugth), ");
 		kb.init(data);
 
-		KnowhowStrategy ks = new KnowhowStrategy(args[0]);
+		KnowhowASPStrategy ks = new KnowhowASPStrategy(args[0]);
 		Set<String> actions = new HashSet<>();
 		actions.add("smile");
 		actions.add("laugth");

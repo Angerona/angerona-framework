@@ -11,7 +11,7 @@
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>com.github.angerona.knowhow.KnowhowSubgoal{allowUnsafe=false}</default-operator-cls>
+      <default-operator-cls>com.github.angerona.knowhow.asp.KnowhowASP{allowUnsafe=false}</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
