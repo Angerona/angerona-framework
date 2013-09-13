@@ -1,4 +1,4 @@
-package com.github.angerona.knowhow;
+package com.github.angerona.knowhow.parameter;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
@@ -8,10 +8,10 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  */
 public class SkillParameter {
 	/** the id (index of the responsible knowhow-statement */
-	protected Integer numKnowhowStatement;
+	protected Integer statementId;
 
 	/** the index of the subgoal the parameter belongs to */
-	protected Integer numSubgoal;
+	protected Integer subgoalIndex;
 	
 	/** the name of the skill the parameter belongs to */
 	protected String skillName;
@@ -22,14 +22,25 @@ public class SkillParameter {
 	/** the value of the parameter represent by a term */
 	protected Term<?> paramValue;
 	
+	public SkillParameter() {}
+	
+	public SkillParameter(int statementId, int subgoalIndex, String skillName, 
+			int paramIndex, Term<?> paramValue) {
+		this.statementId = statementId;
+		this.subgoalIndex = subgoalIndex;
+		this.skillName = skillName;
+		this.paramIndex = paramIndex;
+		this.paramValue = paramValue;
+	}
+	
 	/** @return the id (index of the responsible knowhow-statement */
-	public Integer getNumKnowhowStatement() {
-		return numKnowhowStatement;
+	public Integer getKnowhowStatementId() {
+		return statementId;
 	}
 
 	/** @return the index of the subgoal the parameter belongs to */
-	public Integer getNumSubgoal() {
-		return numSubgoal;
+	public Integer getSubgoalIndex() {
+		return subgoalIndex;
 	}
 	
 	/** @return the name of the skill the parameter belongs to */
@@ -49,6 +60,6 @@ public class SkillParameter {
 	
 	@Override
 	public String toString() {
-		return "("+numKnowhowStatement+", " + numSubgoal + ", " + skillName + ", " + paramIndex + ", " + paramValue + ")";
+		return "("+statementId+", " + subgoalIndex + ", " + skillName + ", " + paramIndex + ", " + paramValue + ")";
 	}
 }

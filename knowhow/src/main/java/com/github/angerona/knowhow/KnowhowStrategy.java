@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.util.Pair;
+import com.github.angerona.knowhow.parameter.SkillParameter;
 
 /**
  * The default knowhow strategy.
@@ -270,7 +271,7 @@ public class KnowhowStrategy {
 					new HashMap<Integer, Term<?>>());
 			Set<SkillParameter> parameters = knowhowBase.findParameters(kh_index, subgoal_index);
 			for(SkillParameter param : parameters) {
-				pair.second.put(param.paramIndex, param.paramValue);
+				pair.second.put(param.getParamIndex(), param.getParamValue());
 			}
 			this.action = pair;
 		}

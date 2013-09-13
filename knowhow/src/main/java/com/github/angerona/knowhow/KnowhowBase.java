@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.knowhow.parameter.SkillParameter;
 import com.github.angerona.knowhow.parser.KnowhowParser;
 import com.github.angerona.knowhow.parser.ParseException;
 
@@ -32,7 +33,7 @@ public class KnowhowBase extends BaseAgentComponent {
 
 	/** the KnowhowStatements which define this KnowhowBase */
 	private List<KnowhowStatement> statements = new LinkedList<KnowhowStatement>();
-
+	
 	/**
 	 * a list of skill-parameters helping to map atomic actions in knowhow to
 	 * map to the correct Action in Angerona
@@ -108,8 +109,8 @@ public class KnowhowBase extends BaseAgentComponent {
 	public Set<SkillParameter> findParameters(int kh_index, int subgoal_index) {
 		Set<SkillParameter> reval = new HashSet<>();
 		for (SkillParameter sp : parameters) {
-			if (sp.numKnowhowStatement == kh_index
-					&& sp.numSubgoal == subgoal_index) {
+			if (sp.getKnowhowStatementId() == kh_index
+					&& sp.getSubgoalIndex() == subgoal_index) {
 				reval.add(sp);
 			}
 		}

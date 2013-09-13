@@ -1,11 +1,15 @@
 package com.github.angerona.knowhow;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 
 /**
  * Class represents a KnowhowStatement like the one defined in Thimm, Krümpelmann 2009.
+ * 
  * @author Tim Janus
  *
  */
@@ -18,13 +22,18 @@ public class KnowhowStatement {
 	private DLPAtom target;
 	
 	/** sub targets of the knowhow-statement, this might be skills or other knowhow statements */
-	private Vector<DLPAtom> subTargets = new Vector<DLPAtom>();
+	private List<DLPAtom> subTargets = new ArrayList<>();
 	
 	/** conditions which have to be true in the beliefbase of the agent */
-	private Vector<DLPAtom> conditions = new Vector<DLPAtom>();
+	private List<DLPAtom> conditions = new ArrayList<>();
 	
+	/** the weight of this know-how statement */
 	private double weight;
 	
+	/** 
+	 * the irrelevance value of the know-how statement giving the subjective importance 
+	 * of the sub-step encoded in the know-how statement
+	 */
 	private double irrelevance;
 	
 	/** internal name of the knowhow statement */
@@ -33,11 +42,11 @@ public class KnowhowStatement {
 	/** counter used for automatic name generation */
 	private static int counter = 1;
 	
-	public KnowhowStatement(DLPAtom target, Vector<DLPAtom> subTargets, Vector<DLPAtom> conditions) {
+	public KnowhowStatement(DLPAtom target, Collection<DLPAtom> subTargets, Collection<DLPAtom> conditions) {
 		this(target, subTargets, conditions, 0, 0);
 	}
 		
-	public KnowhowStatement(DLPAtom target, Vector<DLPAtom> subTargets, Vector<DLPAtom> conditions, 
+	public KnowhowStatement(DLPAtom target, Collection<DLPAtom> subTargets, Collection<DLPAtom> conditions, 
 			double weight, double irrelevance) {
 		id = counter;
 		name = "kh_stmt_"+id;
@@ -59,12 +68,12 @@ public class KnowhowStatement {
 		return target;
 	}
 	
-	public Vector<DLPAtom> getSubTargets() {
-		return subTargets;
+	public List<DLPAtom> getSubTargets() {
+		return Collections.unmodifiableList(subTargets);
 	}
 	
-	public Vector<DLPAtom> getConditions() {
-		return conditions;
+	public List<DLPAtom> getConditions() {
+		return Collections.unmodifiableList(conditions);
 	}
 	
 	@Override 

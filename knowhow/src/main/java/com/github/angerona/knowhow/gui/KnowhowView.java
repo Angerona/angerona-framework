@@ -22,10 +22,10 @@ import com.github.angerona.fw.util.Pair;
 import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowBuilder;
 import com.github.angerona.knowhow.KnowhowStatement;
-import com.github.angerona.knowhow.SkillParameter;
 import com.github.angerona.knowhow.graph.GraphBuilder;
 import com.github.angerona.knowhow.graph.GraphNode;
 import com.github.angerona.knowhow.graph.ext.JGraphXAdapter;
+import com.github.angerona.knowhow.parameter.SkillParameter;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 

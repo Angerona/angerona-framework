@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.fw.util.Pair;
+import com.github.angerona.knowhow.parameter.SkillParameter;
 
 /**
  * Helper class responsible for translating the know-how base into other data-structures like
@@ -100,12 +101,12 @@ public class KnowhowBuilder {
 				// search parameters:
 				int c = 0;
 				for(Term<?> t : a.getArguments()) {
-					SkillParameter sp = new SkillParameter();
-					sp.skillName = a.getName().substring(2);
-					sp.numKnowhowStatement = ks.getId();
-					sp.numSubgoal = i;
-					sp.paramIndex = c++;
-					sp.paramValue = t;
+					SkillParameter sp = new SkillParameter(
+							ks.getId(), 				// statement id
+							i, 							// subgoal index
+							a.getName().substring(2),	// skill name
+							c++,						// param index
+							t); 						// param value
 					params.add(sp);
 				}
 				a = new DLPAtom(a.getName());
