@@ -23,9 +23,9 @@ public class KnowhowStatement {
 	/** conditions which have to be true in the beliefbase of the agent */
 	private Vector<DLPAtom> conditions = new Vector<DLPAtom>();
 	
-	private int weight;
+	private double weight;
 	
-	private int irrelevance;
+	private double irrelevance;
 	
 	/** internal name of the knowhow statement */
 	String name;
@@ -37,7 +37,8 @@ public class KnowhowStatement {
 		this(target, subTargets, conditions, 0, 0);
 	}
 		
-	public KnowhowStatement(DLPAtom target, Vector<DLPAtom> subTargets, Vector<DLPAtom> conditions, int weight, int irrelevance) {
+	public KnowhowStatement(DLPAtom target, Vector<DLPAtom> subTargets, Vector<DLPAtom> conditions, 
+			double weight, double irrelevance) {
 		id = counter;
 		name = "kh_stmt_"+id;
 		++counter;

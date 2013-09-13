@@ -8,12 +8,12 @@ options
 }
 
 PARSER_BEGIN(KnowhowParser)
-package com.github.angerona.fw.knowhow.parser;
+package com.github.angerona.knowhow.parser;
 
 import java.io.StringReader;
 import java.util.*;
 
-import com.github.angerona.fw.knowhow.KnowhowStatement;
+import com.github.angerona.knowhow.KnowhowStatement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +83,7 @@ SKIP :
 TOKEN : /* OPERATORS */
 {
   < COMMA : "," >
+| < DOT : "." >
 | < SEMICOLON : ";" >
 | < LBRACE : "(" >
 | < RBRACE : ")" >
@@ -94,7 +95,6 @@ TOKEN :
 | < CHAR : ["a"-"z"]>
 | < UCHAR : ["A"-"Z"] >
 | < BLANK : "_" >
-| < NUMBER : (< DIGIT >)+ >
 | < TEXT : ( < UCHAR > | < CHAR > ) (< UCHAR > | < CHAR > | < BLANK > | < DIGIT > )* >
 }
 
@@ -120,7 +120,7 @@ KnowhowStatement statement() :
   List<String > strings = null;
   Vector<DLPAtom> subtargets = new Vector<DLPAtom >();
   Vector<DLPAtom> conditions = new Vector<DLPAtom >();
-  Token weight = null, irrelevance = null;
+  double weight = 0, irrelevance = 0;
 }
 {
   elpStr = elpString()
@@ -150,14 +150,13 @@ KnowhowStatement statement() :
 
   (
     < COMMA >
-    weight = < NUMBER >
+    weight = number()
 	(
       < COMMA >
-      irrelevance = < NUMBER >    )  )?
+      irrelevance = number()    )?  )?
   
   {    return new KnowhowStatement(target, subtargets, conditions,
-    	weight == null ? 0 : Integer.parseInt(weight.image),
-    	irrelevance == null ? 0 : Integer.parseInt(irrelevance.image));  }  
+    	weight, irrelevance);  }  
 }
 
 List<String > elpStringList() :
@@ -220,3 +219,17 @@ String elpString() :
     
   {
     return reval;   }  }
+
+double number() :
+{
+  String str = "";
+  Token token = null;
+}
+{
+  ( token = < DIGIT > {str += token.image;} )+
+  (
+    < DOT > {str += ".";}
+    ( token = < DIGIT > {str += token.image;} )*  )?
+  {
+    return Double.parseDouble(str);  }
+}
