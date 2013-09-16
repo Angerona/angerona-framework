@@ -1,5 +1,7 @@
 package com.github.angerona.fw.logic.asp;
 
+import java.io.File;
+
 import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
 import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
@@ -58,6 +60,12 @@ public enum SolverWrapper implements ISolverWrapper {
 			return new InstantiationException("The path '" + config.getParameters().get(paramName) + 
 					"' is not the path to the '" + this.toString() + "' ASP solver.");
 		}
+		
+		File testFile = new File(path);
+		if(!testFile.canExecute()) {
+			return new InstantiationException("The Solver on path '" + path + "' has no execute permission.");
+		}
+		
 		return null;
 	}
 	
