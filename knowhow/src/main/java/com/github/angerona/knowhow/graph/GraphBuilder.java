@@ -14,7 +14,7 @@ import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowStatement;
 
 /**
- * 
+ * Builds the planning graph from a given know-how base.
  * @author Tim Janus
  */
 public class GraphBuilder {

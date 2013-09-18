@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -46,10 +48,7 @@ public class KnowhowASPStrategy {
 	
 	/** the name of the initial intention */
 	private String initialIntention;
-	
-	/** the used knowhow-base */
-	private KnowhowBase knowhowBase;
-	
+
 	/**
 	 * the program responsible to calculate the next action, nextAction4 of
 	 * Regina Fritsch was used as basic
@@ -82,6 +81,20 @@ public class KnowhowASPStrategy {
 	
 	/** a stack of answerset-lists which represents the options for backtracking */
 	private Stack<AnswerSetList> alternatives = new Stack<>();
+	
+	/**
+	 * a list of skill-parameters helping to map atomic actions in knowhow to
+	 * map to the correct Action in Angerona
+	 */
+	private List<SkillParameter> parameters = new LinkedList<>();
+	
+	/**
+	 * @return unmodifiable list of all SkillParameters used for mapping between
+	 *         Knowhow and Angerona
+	 */
+	public List<SkillParameter> getParameters() {
+		return Collections.unmodifiableList(parameters);
+	}
 	
 	/**
 	 * Ctor: Creates the default Knowhow-Strategy
@@ -140,7 +153,6 @@ public class KnowhowASPStrategy {
 	 * @param worldKnowledge	collection of strings identifying the world knowledge of the agent.
 	 */
 	public void init(KnowhowBase kb, String initialIntention, Collection<String> atomicActions, Collection<String> worldKnowledge) {
-		this.knowhowBase = kb;
 		stateStr = "intentionAdded";
 		intentionTree = new Program();
 		this.initialIntention = initialIntention;
@@ -158,7 +170,7 @@ public class KnowhowASPStrategy {
 		reval = DLPBuilder.buildKnowhowbaseProgram(kb);
 		knowhow = reval.first;
 		knowhow.add(nextAction);
-		knowhowBase.setParameters(reval.second);
+		setParameters(reval.second);
 		this.atomicActions = DLPBuilder.buildAtomicProgram(atomicActions);
 		// TODO: Find a way to handle negations as holds... perhaps a new atom hold_neg?
 		this.worldKnowledge = DLPBuilder.buildHoldsProgram(worldKnowledge);
@@ -270,7 +282,7 @@ public class KnowhowASPStrategy {
 			DLPAtom a = (DLPAtom)action;
 			Pair<String, HashMap<Integer, Term<?>>> pair = new Pair<>(((StringTerm)a.getTerm(0)).get(), 
 					new HashMap<Integer, Term<?>>());
-			Set<SkillParameter> parameters = knowhowBase.findParameters(kh_index, subgoal_index);
+			Set<SkillParameter> parameters = findParameters(kh_index, subgoal_index);
 			for(SkillParameter param : parameters) {
 				pair.second.put(param.getParamIndex(), param.getParamValue());
 			}
@@ -334,6 +346,38 @@ public class KnowhowASPStrategy {
 				new_khstate != null ||
 				act.size() > 0;
 	}
+	
+	/**
+	 * changes the skill-parameters (by reference).
+	 * 
+	 * @param parameters
+	 *            the new list of SkillParameter
+	 */
+	public void setParameters(List<SkillParameter> parameters) {
+		this.parameters = parameters;
+	}
+
+	/**
+	 * finds the Skill-parameter for a specific knowhow-statements subgoal.
+	 * 
+	 * @param kh_index
+	 *            the index (id) of the knowhow-statement
+	 * @param subgoal_index
+	 *            the index of the subgoal.
+	 * @return All Skill-Parameters for subtargets of the knowhow-statement and
+	 *         subgoal index.
+	 */
+	public Set<SkillParameter> findParameters(int kh_index, int subgoal_index) {
+		Set<SkillParameter> reval = new HashSet<>();
+		for (SkillParameter sp : parameters) {
+			if (sp.getKnowhowStatementId() == kh_index
+					&& sp.getSubgoalIndex() == subgoal_index) {
+				reval.add(sp);
+			}
+		}
+		return reval;
+	}
+
 	
 	/**
 	 * Helper method: finds the new version of the atom in the answer set list.

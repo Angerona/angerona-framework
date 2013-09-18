@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.knowhow.asp.KnowhowASPStrategy;
-import com.github.angerona.knowhow.parameter.SkillParameter;
 import com.github.angerona.knowhow.parser.KnowhowParser;
 import com.github.angerona.knowhow.parser.ParseException;
 
@@ -34,12 +33,6 @@ public class KnowhowBase extends BaseAgentComponent {
 
 	/** the KnowhowStatements which define this KnowhowBase */
 	private List<KnowhowStatement> statements = new LinkedList<KnowhowStatement>();
-	
-	/**
-	 * a list of skill-parameters helping to map atomic actions in knowhow to
-	 * map to the correct Action in Angerona
-	 */
-	private List<SkillParameter> parameters = new LinkedList<>();
 
 	/** Default Ctor: Generates the NextAction program */
 	public KnowhowBase() {
@@ -86,52 +79,13 @@ public class KnowhowBase extends BaseAgentComponent {
 			}
 		}
 	}
-
-	/**
-	 * changes the skill-parameters (by reference).
-	 * 
-	 * @param parameters
-	 *            the new list of SkillParameter
-	 */
-	public void setParameters(List<SkillParameter> parameters) {
-		this.parameters = parameters;
-	}
-
-	/**
-	 * finds the Skill-parameter for a specific knowhow-statements subgoal.
-	 * 
-	 * @param kh_index
-	 *            the index (id) of the knowhow-statement
-	 * @param subgoal_index
-	 *            the index of the subgoal.
-	 * @return All Skill-Parameters for subtargets of the knowhow-statement and
-	 *         subgoal index.
-	 */
-	public Set<SkillParameter> findParameters(int kh_index, int subgoal_index) {
-		Set<SkillParameter> reval = new HashSet<>();
-		for (SkillParameter sp : parameters) {
-			if (sp.getKnowhowStatementId() == kh_index
-					&& sp.getSubgoalIndex() == subgoal_index) {
-				reval.add(sp);
-			}
-		}
-		return reval;
-	}
-
+	
 	/**
 	 * @return unmodifiable list of all KnowhowStatements saved in this
 	 *         KnowhowBase
 	 */
 	public List<KnowhowStatement> getStatements() {
 		return Collections.unmodifiableList(statements);
-	}
-
-	/**
-	 * @return unmodifiable list of all SkillParameters used for mapping between
-	 *         Knowhow and Angerona
-	 */
-	public List<SkillParameter> getParameters() {
-		return Collections.unmodifiableList(parameters);
 	}
 
 	@Override
