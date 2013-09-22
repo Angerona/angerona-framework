@@ -89,9 +89,11 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 			if(intentions.isEmpty())
 				continue;
 			
+			// reverse add the intentions to the stack (the list of intentions is ordered in the way that the first 
+			// intention has to be done first and the stack of the angerona planning is ordered the other way round.
 			int index = sg.newStack();
-			for(Intention i : intentions) {
-				sg.addToStack(new PlanElement(i), index);
+			for(int i=intentions.size()-1; i>=0; --i) {
+				sg.addToStack(new PlanElement(intentions.get(i)), index);
 			}
 			pc.addPlan(sg);
 			gen = true;

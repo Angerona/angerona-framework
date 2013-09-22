@@ -138,7 +138,7 @@ public class Subgoal extends Intention implements Cloneable {
 		
 		if(parent != null && stacks.isEmpty())
 			parent.onSubgoalFinished(this);
-		else
+		else if(stacks.isEmpty())
 			getAgent().onSubgoalFinished(this);
 	}
 	
