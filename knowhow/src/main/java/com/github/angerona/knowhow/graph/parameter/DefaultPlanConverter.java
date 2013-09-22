@@ -19,6 +19,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.Perception;
@@ -29,10 +30,12 @@ import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
 import com.github.angerona.fw.util.Utility;
+import com.github.angerona.knowhow.PlanGeneration;
 import com.github.angerona.knowhow.graph.GraphIntention;
 import com.github.angerona.knowhow.graph.GraphNode;
 import com.github.angerona.knowhow.graph.Processor;
 import com.github.angerona.knowhow.graph.Selector;
+import com.github.angerona.knowhow.graph.parameter.Parameter.TYPE;
 
 public class DefaultPlanConverter implements PlanConverter {
 
@@ -76,7 +79,7 @@ public class DefaultPlanConverter implements PlanConverter {
 				int index = 0;
 				for(Parameter param : current) {
 					if(param.isVariable() && !mapping.values().contains(param) && parent.size() > index) {
-						mapping.put(param, interpretParameter(parent.get(index)));
+						mapping.put(param, parent.get(index));
 						LOG.info("Added parameter mapping: '" + parent.get(index) + "' --> '" + param + "'");
 						index += 1;
 					}
@@ -86,8 +89,8 @@ public class DefaultPlanConverter implements PlanConverter {
 				for(int i=0; i<reval.size(); ++i) {
 					
 					// check for mapping:
-					if(parent.size() < i) {
-						Parameter old = parent.get(i);
+					if(i < parent.size()) {
+						Parameter old = reval.get(i);
 						Parameter alternative = mapping.get(old);
 						if(alternative != null) {
 							reval.set(i, alternative);
@@ -98,7 +101,7 @@ public class DefaultPlanConverter implements PlanConverter {
 						for(Entry<Parameter, Parameter> entry: mapping.entrySet()) {
 							if(curPar.getIdentifier().contains(entry.getKey().getIdentifier())) {
 								Parameter alternative = new Parameter(curPar.getIdentifier().replace(
-										entry.getKey().getIdentifier(), entry.getValue().getIdentifier()));
+										entry.getKey().getIdentifier(), interpretParameter(entry.getValue())));
 								reval.set(i, alternative);								
 								LOG.info("Replaced inline-parameter '" + curPar + "' with '" + alternative + "'" );
 								curPar = alternative;
@@ -106,10 +109,14 @@ public class DefaultPlanConverter implements PlanConverter {
 						}
 					}
 				}
+				
+				LOG.debug("Parameter Mapping: '{}'", mapping);
 			}
 			
 			parent = current;
 		}
+		
+		LOG.debug("Returning Parameters: '{}'", reval);
 		return reval;
 	}
 	
@@ -122,17 +129,30 @@ public class DefaultPlanConverter implements PlanConverter {
 			List<Parameter> parameters = mapParameters(graphIntention.getNode().getGraph(), edges);
 			
 			String action = graphIntention.getNode().getName();
+			Action toAdd = null;
 			if(action.equals("Inform")) {
-				reval.add(createInform(parameters));
+				toAdd = createInform(parameters);
 			} else if(action.equals("Query")) {
-				reval.add(createQuery(parameters));
+				toAdd = createQuery(parameters);
 			} else if(action.equals("QueryAnswer")) {
 				if(! (context instanceof Query))
 					throw new IllegalStateException("Context of Answer is no 'Query' but '" + context.getClass().getSimpleName() + "'");
-				reval.add(createAnswer(parameters, (Query)context));
+				toAdd = createAnswer(parameters, (Query)context);
+			} else if(action.equals("PlanGenerate")) {
+				if(parameters.size() != 2) {
+					throw new IllegalStateException("A PlanGenerate has '2' Parameters not '" + parameters.size() + "'");
+				}
+				Parameter fileP = parameters.get(0);
+				Parameter goalNameP = parameters.get(1);
+				
+				toAdd = new PlanGeneration(this.agent, mapFilename(fileP), goalNameP.getIdentifier());
 			} else {
 				throw new NotImplementedException("Generation of Action '" + action + "' not implemented yet");
 			}
+			
+			
+			LOG.info("Created Action: '{}'", toAdd.toString());
+			reval.add(toAdd);
 		} else {
 			for(GraphIntention gi : graphIntention.getSubIntentions()) {
 				reval.addAll(this.convert(gi, context));
@@ -143,7 +163,7 @@ public class DefaultPlanConverter implements PlanConverter {
 
 	private Answer createAnswer(List<Parameter> parameters, Query context) {
 		if(parameters.size() != 1) {
-			throw new IllegalStateException("The parameter count for an answer must be '1' not '" + parameters.size() + "'");
+			throw new IllegalStateException("The parameter count for an Answer must be '1' not '" + parameters.size() + "'");
 		}
 		
 		// TODO this bunch of code is duplo, create a factory somewhere:
@@ -167,19 +187,20 @@ public class DefaultPlanConverter implements PlanConverter {
 	
 	private Query createQuery(List<Parameter> parameters) {
 		if(parameters.size() != 2) {
-			// TODO: error
+			throw new IllegalStateException("A Query has '2' Parameters not '" + parameters.size() + "'");
 		}
 		
 		Parameter recvP = parameters.get(0);
 		Parameter questionP = parameters.get(1);
 		
-		Query query = new Query(agent, interpretParameter(recvP).getIdentifier(), createFormula(questionP));
+		Query query = new Query(agent, mapAgent(recvP), mapFormula(questionP));
+		LOG.info("Created Action: '" + query.toString() + "'");
 		return query;
 	}
 	
 	private Inform createInform(List<Parameter> parameters) {
 		if(parameters.size() != 2) {
-			// TODO Error:
+			throw new IllegalStateException("An Inform has '2' Parameters not '" + parameters.size() + "'");
 		}
 		
 		Parameter recvP = parameters.get(0);
@@ -190,7 +211,17 @@ public class DefaultPlanConverter implements PlanConverter {
 		Inform inform = new Inform(agent.getName(), 
 				mapAgent(recvP), formulas);
 		
+
 		return inform;
+	}
+	
+	
+	private String interpretParameter(Parameter param) {
+		if(param.getType() == TYPE.T_AGENT) {
+			return mapAgent(param);
+		} 
+		
+		return param.getIdentifier();
 	}
 	
 	private FolFormula createFormula(Parameter param) {
@@ -205,10 +236,29 @@ public class DefaultPlanConverter implements PlanConverter {
 		return reval;
 	}
 	
-	private Parameter interpretParameter(Parameter param) {
-		if(param.getIdentifier().startsWith("a_"))
-			return new Parameter(mapAgent(param));
-		return param;
+	private FolFormula mapFormula(Parameter param) {
+		if(param.getIdentifier().startsWith("q_")) {
+			FolFormula question = createFormula(new Parameter(param.getIdentifier().substring(2)));
+			if(question.isClosed()) {
+				throw new IllegalStateException("The query prefix 'q_' for formulas only allows open queries but" +
+						" '" + question.toString() + "' is not open.");
+			}
+			
+			AngeronaAnswer answer = this.agent.getBeliefs().getWorldKnowledge().reason(question);
+			if(!answer.getAnswers().isEmpty()) {
+				FolFormula reval = answer.getAnswers().iterator().next();
+				return reval;
+			}
+			
+			LOG.warn("There was no match found for the query '" + question.toString() + "' using question for query");
+			return question;
+		} else {
+			return createFormula(param);
+		}
+	}
+	
+	private String mapFilename(Parameter param) {
+		return param.getIdentifier().substring(2);
 	}
 	
 	private String mapAgent(Parameter param) {

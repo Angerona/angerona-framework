@@ -23,10 +23,12 @@
         <agent-config source="config/agents/knowhow_agent_graph.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
+        <capability>Query</capability>
         <capability>QueryAnswer</capability>
 		<capability>Inform</capability>
+		<capability>PlanGenerate</capability>
 		
-        <desire>make_optimal_offer</desire>
+        <desire>acquire_brenton</desire>
         
         <data key="Confidential">
             (bob, __DEFAULT__, antronic_wants_to_acquire_brenton)
@@ -34,7 +36,9 @@
             (detective, __DEFAULT__, antronic_wants_to_acquire_brenton)
         </data>
 		<data key="KnowHow">
-			
+			acquire_brenton, (investigate, make_offer(q_offer(N))), 
+			investigate, s_PlanGenerate(f_basis_investigation_situation, investigate),
+			make_offer, s_Query(a_boss, q_Offer(N)), 
 		</data>
 	</agent-instance>
       

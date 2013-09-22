@@ -115,18 +115,14 @@ public class WorkingPlan
 		return visited.contains(node);
 	}
 	
-	public GraphNode moveToPrecessorOfPrecessor() {
-		if(history.size() < 2)
-			return null;
+	public void moveToPrecessorOfPrecessor() {
+		if(history.size() < 3)
+			throw new IllegalStateException("Shall not be called yet");
 		history.pop();
-		return history.pop();
-	}
-	
-	public GraphNode getPrecessorOfPrecessor() {
-		if(history.size() < 2)
-			return null;
+		history.pop();
+		setNextNode(history.pop());
 		
-		return history.get(history.size()-2);
+		curIntention = curIntention.getParent();
 	}
 	
 	void visited(GraphNode node) {

@@ -144,7 +144,6 @@ public abstract class GraphPlannerAdapter
 			for(int i=0; i<subPlans.size(); ++i) {
 				Processor cur = children.get(i);
 				subPlans.get(i).setNextNode(cur);
-				subPlans.get(i).setWorkingNodeIndex(i);
 			}
 			
 			subPlans.remove(curPlan);
@@ -155,28 +154,33 @@ public abstract class GraphPlannerAdapter
 			
 			// replace the sub intention of the current intention
 			// to the intention formed by this processor:
-			GraphIntention newIntention = new GraphIntention(pro, (Selector)curPlan.getPredecessor(), curPlan.getCurrentIntention());
-			if(curPlan.getWorkingNodeIndex() != -1) {
-				curPlan.getCurrentIntention().replaceSubIntention(
-						curPlan.getWorkingNodeIndex(), newIntention);
+			if(!curPlan.hasVisit(pro)) {
+				GraphIntention newIntention = new GraphIntention(pro, (Selector)curPlan.getPredecessor(), 
+						curPlan.getCurrentIntention());
+				if(curPlan.getWorkingNodeIndex() != -1) {
+					curPlan.getCurrentIntention().replaceSubIntention(
+							curPlan.getWorkingNodeIndex(), newIntention);
+				}
+				
+				// update the current intention of the plan
+				curPlan.setCurrentIntention(newIntention);
+				curPlan.setWorkingNodeIndex(-1);
+				
+				if(children.size() == 0) {
+					List<Intention> actionInList = getPlanConverter().convert(newIntention, des.getPerception());
+					if(actionInList.size() != 1) {
+						throw new IllegalStateException();
+					}
+					
+					if(! (actionInList.get(0) instanceof Action)) {
+						throw new IllegalStateException();
+					}
+					
+					curPlan.incrementPenalty((Action)actionInList.get(0));
+				}
 			}
 			
-			// update the current intention of the plan
-			curPlan.setCurrentIntention(newIntention);
-			curPlan.setWorkingNodeIndex(-1);
-			
-			if(children.size() == 0) {
-				List<Intention> actionInList = getPlanConverter().convert(newIntention, des.getPerception());
-				if(actionInList.size() != 1) {
-					throw new IllegalStateException();
-				}
-				
-				if(! (actionInList.get(0) instanceof Action)) {
-					throw new IllegalStateException();
-				}
-				
-				curPlan.incrementPenalty((Action)actionInList.get(0));
-			} else {
+			if(children.size() > 0) {
 				// sort children by irrelevance: (if atomic nothing happens anymore
 				// TODO Overwork irrelevance concept
 				Collections.sort(children, new Comparator<Selector>() {
@@ -188,21 +192,23 @@ public abstract class GraphPlannerAdapter
 				});
 				
 				// work on the next best relevant selector:
-				for(Selector sel : children) {
+				for(int i=0; i<children.size(); ++i) {
+					Selector sel = (Selector)children.get(i);
 					if(!curPlan.hasVisit(sel)) {
 						curPlan.setNextNode(sel);
+						curPlan.setWorkingNodeIndex(i);
 						break;
 					}
 				}
 			}
 		}
 		
-		if(curPlan.getNextNode() == node) {
-			curPlan.setNextNode(curPlan.moveToPrecessorOfPrecessor());
-		}
-		
 		// TODO: Intention update
 		curPlan.updateLOD();
 		curPlan.visited(node);
+		
+		if(curPlan.getNextNode() == node) {
+			curPlan.moveToPrecessorOfPrecessor();
+		}
 	}
 }

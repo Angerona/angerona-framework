@@ -9,7 +9,8 @@ public class Parameter {
 	public static enum TYPE {
 		T_AGENT,
 		T_HONESTY,
-		T_FORMULA
+		T_FORMULA,
+		T_FILE
 	}
 	
 	private TYPE type;
@@ -22,6 +23,8 @@ public class Parameter {
 			type = TYPE.T_AGENT;
 		} else if(identifier.startsWith("p_") || identifier.startsWith("T_HONESTY")) {
 			type = TYPE.T_HONESTY;
+		} else if(identifier.startsWith("f_") || identifier.startsWith("T_FILE")) {
+			type = TYPE.T_FILE;
 		} else {
 			type = TYPE.T_FORMULA;
 		}
