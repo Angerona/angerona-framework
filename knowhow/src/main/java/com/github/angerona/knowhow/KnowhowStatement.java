@@ -1,5 +1,6 @@
 package com.github.angerona.knowhow;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,8 +14,11 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
  * @author Tim Janus
  *
  */
-public class KnowhowStatement {
+public class KnowhowStatement implements Serializable {
 	
+	/** serial version id */
+	private static final long serialVersionUID = -6842116356054584387L;
+
 	/** the id of the knowhow-statement (useable as index) */
 	private int id;
 	
@@ -79,6 +83,14 @@ public class KnowhowStatement {
 	
 	public List<DLPAtom> getConditions() {
 		return Collections.unmodifiableList(conditions);
+	}
+	
+	public double getWeight() {
+		return weight;
+	}
+	
+	public double getIrrelevance() {
+		return irrelevance;
 	}
 	
 	@Override 

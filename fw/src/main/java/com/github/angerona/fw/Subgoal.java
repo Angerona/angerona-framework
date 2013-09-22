@@ -46,12 +46,17 @@ public class Subgoal extends Intention implements Cloneable {
 		return stacks.size();
 	}
 	
+	public int newStack() {
+		stacks.add(new Stack<PlanElement>());
+		return stacks.size()-1;
+	}
+	
 	/**
 	 * create a new stack for the given complex intention. Is used for creating a stack with a complex intention.
 	 * @param intention	will be put ontop of the newly create stack.
 	 * @return true
 	 */
-	public boolean newStack(Intention intention) {
+	public int newStack(Intention intention) {
 		return newStack(intention, null);
 	}
 	
@@ -64,17 +69,18 @@ public class Subgoal extends Intention implements Cloneable {
 	 * 					like the query which the intention wants to answer and so on.
 	 * @return			true
 	 */
-	public boolean newStack(Intention intention, Object context) {
+	public int newStack(Intention intention, Object context) {
 		return newStack(new PlanElement(intention, context));
 	}
 	
-	public boolean newStack(PlanElement pe) {
+	public int newStack(PlanElement pe) {
 		if(pe == null)
 			throw new IllegalArgumentException("PlanElement parameter must not be null.");
 		
 		Stack<PlanElement> newStack = new Stack<PlanElement>();
 		newStack.add(pe);
-		return stacks.add(newStack);
+		stacks.add(newStack);
+		return stacks.size()-1;
 	}
 	
 	public boolean addToStack(Intention intention, int index) {

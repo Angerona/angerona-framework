@@ -1,6 +1,7 @@
 package com.github.angerona.knowhow;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -78,6 +79,8 @@ public class KnowhowBase extends BaseAgentComponent {
 				e.printStackTrace();
 			}
 		}
+		
+		firePropertyChangeListener("statements", new ArrayList<>(), statements);
 	}
 	
 	/**

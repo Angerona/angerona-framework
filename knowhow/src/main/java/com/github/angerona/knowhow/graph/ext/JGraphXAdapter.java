@@ -263,14 +263,14 @@ public class JGraphXAdapter<V extends GraphNode, E>
 
 	public static void main(String[] args) {
 		// create a JGraphT graph
-		ListenableGraph<GraphNode, DefaultEdge> g = new ListenableDirectedGraph<GraphNode, DefaultEdge>(
+		ListenableDirectedGraph<GraphNode, DefaultEdge> g = new ListenableDirectedGraph<GraphNode, DefaultEdge>(
 				DefaultEdge.class);
 
 		// add some sample data (graph manipulated via JGraphT)
-		Processor v1 = new Processor("Node");
-		Processor v2 = new Processor("Information");
-		Processor v3 = new Processor("Guess");
-		Processor v4 = new Processor("Vertex");
+		Processor v1 = new Processor("Node", g);
+		Processor v2 = new Processor("Information", g);
+		Processor v3 = new Processor("Guess", g);
+		Processor v4 = new Processor("Vertex", g);
 
 		
 		g.addVertex(v1);
@@ -291,10 +291,10 @@ public class JGraphXAdapter<V extends GraphNode, E>
 		frame.setSize(400, 320);
 		frame.setVisible(true);
 
-		g.addVertex(new Processor("v5"));
-		g.addVertex(new Processor("v6"));
-		g.addVertex(new Processor("v7"));
-		g.addVertex(new Processor("v8"));
+		g.addVertex(new Processor("v5", g));
+		g.addVertex(new Processor("v6", g));
+		g.addVertex(new Processor("v7", g));
+		g.addVertex(new Processor("v8", g));
 
 		/*
 		graph.getModel().beginUpdate();

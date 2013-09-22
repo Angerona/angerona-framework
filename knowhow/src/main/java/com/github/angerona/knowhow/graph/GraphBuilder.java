@@ -1,6 +1,8 @@
 package com.github.angerona.knowhow.graph;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
@@ -12,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowStatement;
+import com.github.angerona.knowhow.graph.complexity.ComplexityCalculator;
+import com.github.angerona.knowhow.graph.complexity.MaxSelectorSumProcessorComplexity;
+import com.github.angerona.knowhow.graph.parameter.DefaultParameterCheck;
 
 /**
  * Builds the planning graph from a given know-how base.
@@ -27,20 +32,20 @@ public class GraphBuilder {
 		
 		// generate processor nodes:
 		for(String cap : knowhow.getAgent().getCapabilities()) {
-			Processor atomicProcessor = new Processor(cap);
+			Processor atomicProcessor = new Processor(cap, graph);
 			graph.addVertex(atomicProcessor);
 			candidates.add(atomicProcessor);
 		}
 		
 		for(KnowhowStatement ks : knowhow.getStatements()) {
-			Processor processor = new Processor(ks);
+			Processor processor = new Processor(ks, graph);
 			graph.addVertex(processor);
 			candidates.add(processor);
 		}
 		
 		// generate selector nodes:
 		for(KnowhowStatement ks : knowhow.getStatements()) {
-			Processor target = new Processor(ks);
+			Processor target = new Processor(ks, graph);
 			for(DLPAtom sub : ks.getSubTargets()) {
 				String str = sub.toString();
 				if(str.contains("(")) {
@@ -50,7 +55,7 @@ public class GraphBuilder {
 					}
 				}
 				
-				Selector selector = new Selector(str);
+				Selector selector = new Selector(str, graph);
 				graph.addVertex(selector);
 				addEdge(graph, target, selector);
 				
@@ -60,13 +65,31 @@ public class GraphBuilder {
 			}
 		}
 		
+		// find graph nodes that have no incoming edges
+		List<GraphNode> nodesWithoutParent = new ArrayList<>(graph.vertexSet());
+		for(DefaultEdge edge : graph.edgeSet()) {
+			nodesWithoutParent.remove(graph.getEdgeTarget(edge));
+		}
+		
+		// calculate the complexity of those nodes that have no parent (will traverse the graph)
+		boolean validMapping = true;
+		ComplexityCalculator cc = new MaxSelectorSumProcessorComplexity();
+		DefaultParameterCheck check = new DefaultParameterCheck();
+		for(GraphNode node : nodesWithoutParent) {
+			node.visitComplexityCalculation(cc);
+			validMapping = validMapping && node.visitParameterCheck(check);
+		}
+		
+		if(!validMapping) {
+			LOG.error(check.getError());
+		}
 	}
 	
 	private static boolean addEdge(DirectedGraph<GraphNode, DefaultEdge> graph, GraphNode source, GraphNode target) {
+		LOG.info("Generating Edge: '{}' --> '{}'",
+				source.toString(), target.toString());
 		DefaultEdge res = graph.addEdge(source, target);
 		if(res != null) {
-			LOG.info("Generate Edge: '{}' --> '{}'",
-					source.toString(), target.toString());
 			return true;
 		} else {
 			LOG.warn("Edge: '{}' --> '{}' already exists.",

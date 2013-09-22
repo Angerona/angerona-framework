@@ -83,13 +83,20 @@ public class Utility {
 	 * @param truth
 	 * @return	the opposite answer given as parameter (lie)
 	 */
-	public static AnswerValue lie(AngeronaAnswer truth)
+	public static AnswerValue lie(AnswerValue truth)
 	{
-		if(truth.getAnswerValue() == AnswerValue.AV_TRUE)
+		if(truth == AnswerValue.AV_TRUE)
 			return AnswerValue.AV_FALSE;
-		else if(truth.getAnswerValue() == AnswerValue.AV_FALSE)
+		else if(truth == AnswerValue.AV_FALSE)
 			return AnswerValue.AV_TRUE;
 		return AnswerValue.AV_UNKNOWN;
+	}
+	
+	
+	public static AngeronaAnswer lie(AngeronaAnswer truth) {
+		AngeronaAnswer reval = new AngeronaAnswer(truth.getQueryFOL());
+		reval.setAnswer(lie(reval.getAnswerValue()));
+		return reval;
 	}
 	
 	/**

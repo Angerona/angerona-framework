@@ -1,6 +1,6 @@
 <simulation-configuration>
-	<name>SCM simple</name>
-    <category>scm/knowhow</category>   
+	<name>Graph-Test SCM</name>
+    <category>business</category>   
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	<description>
 	This scenario does the same as the scm/asp/Strike Committee Meeting (ASP) but uses other
@@ -8,11 +8,12 @@
 	- Employee informs boss that he needs an excuse
 	- Boss asks Employee if he attend the strike committee meeting.
 	- Employee lies and therefore answers with no
+	This scenario uses the graph driven plan generation.
 	</description>
 
     <agent-instance>
 		<name>employee</name>
-        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <agent-config source="config/agents/knowhow_agent_graph.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
         <capability>QueryAnswer</capability>
@@ -26,7 +27,7 @@
         </data>
 		<data key="KnowHow">
 			attend_scm, excused(a_SELF), 
-		 	excused(a_SELF), s_Inform(a_boss, excused(a_SELF)),
+		 	excused(T_AGENT), s_Inform(a_boss, excused(T_AGENT)),
 		 	answer_query, honest_answer, 
 		 	answer_query, lie,
 		 	honest_answer, s_QueryAnswer(p_honest),  
@@ -37,7 +38,7 @@
 	<agent-instance>
       	<name>boss</name>
       	
-        <agent-config source="config/agents/knowhow_agent.xml" />         
+        <agent-config source="config/agents/knowhow_agent_graph.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
       	<capability>Query</capability>

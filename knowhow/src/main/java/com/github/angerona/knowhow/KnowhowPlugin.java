@@ -13,6 +13,8 @@ import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.operators.BaseOperator;
 import com.github.angerona.knowhow.asp.KnowhowASP;
+import com.github.angerona.knowhow.graph.KnowhowGraph;
+import com.github.angerona.knowhow.graph.KnowhowGraphSubgoal;
 import com.github.angerona.knowhow.gui.KnowhowView;
 
 @PluginImplementation
@@ -30,6 +32,7 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
 		reval.add(KnowhowBase.class);
+		reval.add(KnowhowGraph.class);
 		return reval;
 	}
 	
@@ -37,6 +40,7 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 	public List<Class<? extends BaseOperator>> getOperators() {
 		List<Class<? extends BaseOperator>> reval = new LinkedList<>();
 		reval.add(KnowhowASP.class);
+		reval.add(KnowhowGraphSubgoal.class);
 		return reval;
 	}
 

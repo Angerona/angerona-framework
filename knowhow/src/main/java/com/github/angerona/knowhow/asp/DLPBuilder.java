@@ -15,7 +15,6 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.fw.util.Pair;
 import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowStatement;
@@ -57,7 +56,7 @@ public class DLPBuilder {
 
 			if(!closed) {
 				reconsider.add(ks);
-				throw new NotImplementedException("variables are not supported by Knowhow yet");
+			//	throw new NotImplementedException("variables are not supported by Knowhow yet");
 			} else {
 				reval.second.addAll(createFactsForKnowstatement(p, ks));
 			}
