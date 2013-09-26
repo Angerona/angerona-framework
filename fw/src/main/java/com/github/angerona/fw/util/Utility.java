@@ -1,6 +1,14 @@
 package com.github.angerona.fw.util;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
@@ -11,6 +19,9 @@ import com.github.angerona.fw.logic.AnswerValue;
  * @author Tim Janus
  */
 public class Utility {
+	/** reference to the logback instance used for logging */
+	private static Logger LOG = LoggerFactory.getLogger(Utility.class);
+	
 	/**
 	 * Checks if the both object o1 and o2 are equal.
 	 * @param o1	The first object
@@ -22,6 +33,26 @@ public class Utility {
 			return o2 == null;
 		}
 		return o1.equals(o2);
+	}
+	
+	public static <T> List<T> cloneList(List<T> src, Class<T> cls) {
+		List<T> reval = new ArrayList<>();
+		Method clone; 
+		for(T obj : src) {
+			try {
+				clone = cls.getMethod("clone");
+				@SuppressWarnings("unchecked")
+				T cloned = (T)clone.invoke(obj);
+				reval.add(cloned);
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | 
+					IllegalArgumentException | InvocationTargetException e) {
+				LOG.error("There was an error calling the clone method in a list of objects," + 
+					" the error occured at class: '{}'", obj.getClass().getSimpleName());
+				e.printStackTrace();
+			}
+			
+		}
+		return reval;
 	}
 	
 	/**

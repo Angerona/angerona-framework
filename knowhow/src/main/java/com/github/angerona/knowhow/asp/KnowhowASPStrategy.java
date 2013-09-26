@@ -328,10 +328,10 @@ public class KnowhowASPStrategy {
 		toOutput.add(intentionTree);
 		// rebuild intention-tree program:
 		intentionTree.clear();
-		oldState = new DLPAtom("state", new_state.getTerms());
+		oldState = new DLPAtom("state", new_state.getArguments());
 		intentionTree.addFact(oldState);
-		intentionTree.addFact(new DLPAtom("khstate", new_khstate.getTerms()));
-		intentionTree.addFact(new DLPAtom("istack", new_istack.getTerms()));
+		intentionTree.addFact(new DLPAtom("khstate", new_khstate.getArguments()));
+		intentionTree.addFact(new DLPAtom("istack", new_istack.getArguments()));
 		
 		LOG.info("\n'{}'\nbecomes\n'{}'", toOutput, intentionTree);
 		
@@ -393,7 +393,7 @@ public class KnowhowASPStrategy {
 			DLPLiteral new_literal = lits.iterator().next();
 			if(new_literal instanceof DLPAtom) {
 				DLPAtom a = (DLPAtom)new_literal;
-				DLPAtom state = new DLPAtom(name, a.getTerms());
+				DLPAtom state = new DLPAtom(name, a.getArguments());
 				return state; 
 			} else {
 				error = "'" + new_literal.toString() + "' is no atom. new_ literals must be facts.";

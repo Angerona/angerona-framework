@@ -11,7 +11,7 @@ import com.github.angerona.knowhow.graph.parameter.Parameter;
 import com.github.angerona.knowhow.graph.parameter.ParameterCheckVisitor;
 
 
-public interface GraphNode extends Serializable{
+public interface GraphNode extends Serializable, Cloneable {
 	public static enum NodeType {
 		NT_PROCESSOR,
 		NT_SELECTOR
@@ -51,4 +51,8 @@ public interface GraphNode extends Serializable{
 	void removeAllListener();
 
 	Graph<GraphNode, DefaultEdge> getGraph();
+	
+	void setGraph(Graph<GraphNode, DefaultEdge> graph);
+	
+	GraphNode clone();
 }

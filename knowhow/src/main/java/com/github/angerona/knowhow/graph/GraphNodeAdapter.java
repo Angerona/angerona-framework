@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ public abstract class GraphNodeAdapter
 	private List<NodeListener> listeners = new ArrayList<>();
 	
 	/** the graph the node belongs to */
-	private DirectedGraph<GraphNode, DefaultEdge> graph;
+	private Graph<GraphNode, DefaultEdge> graph;
 	
 	/** the complexity of the node */
 	protected int complexity;
@@ -44,12 +43,19 @@ public abstract class GraphNodeAdapter
 	/** the name of the node */
 	protected String name;
 	
+	public GraphNodeAdapter(GraphNodeAdapter other) {
+		graph = other.graph;
+		complexity = other.complexity;
+		parameters = new ArrayList<>(other.parameters);
+		name = other.name;
+	}
+	
 	/** 
 	 * Default Ctor
 	 * @param name	The name of the node
 	 * @param graph	The parent graph of the node
 	 */
-	public GraphNodeAdapter(String name, DirectedGraph<GraphNode, DefaultEdge> graph) {
+	public GraphNodeAdapter(String name, Graph<GraphNode, DefaultEdge> graph) {
 		this.graph = graph;		
 		parseName(name);
 	}
@@ -113,7 +119,7 @@ public abstract class GraphNodeAdapter
 		List<GraphNode> reval = new ArrayList<>();
 		for(DefaultEdge edge : graph.edgesOf(this)) {
 			GraphNode node = graph.getEdgeTarget(edge);
-			if(node != this) {
+			if(!node.equals(this)) {
 				reval.add(node);
 			}
 		}
@@ -122,7 +128,10 @@ public abstract class GraphNodeAdapter
 	
 	@Override
 	public int visitComplexityCalculation(ComplexityCalculator calculator) {
-		return complexity = calculator.getComplexity(this);
+		LOG.debug("Entering visitComplexityCalculation({})", calculator.getClass().getSimpleName());
+		complexity = calculator.getComplexity(this);
+		LOG.debug("Leaving visitComplexityCalculation() = {}", complexity);
+		return complexity;
 	}
 	
 	@Override
@@ -165,6 +174,11 @@ public abstract class GraphNodeAdapter
 	}
 	
 	@Override
+	public void setGraph(Graph<GraphNode, DefaultEdge> graph) {
+		this.graph = graph;
+	}
+	
+	@Override
 	public List<Parameter> getParameters() {
 		return Collections.unmodifiableList(parameters);
 	}
@@ -183,4 +197,7 @@ public abstract class GraphNodeAdapter
 	public void removeAllListener() {
 		listeners.clear();
 	}
+	
+	@Override
+	public abstract GraphNode clone();
 }

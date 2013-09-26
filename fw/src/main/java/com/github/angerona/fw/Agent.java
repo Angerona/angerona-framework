@@ -76,7 +76,7 @@ import com.github.angerona.fw.serialize.SimulationConfiguration;
  */
 public class Agent implements ContextProvider, Entity, OperatorStack,
 		ReportPoster, Reporter, OperatorCaller, ActionProcessor,
-		PropertyChangeListener {
+		PropertyChangeListener, SubgoalListener {
 
 	/** reference to the logback logger instance */
 	private static Logger LOG = LoggerFactory.getLogger(Agent.class);
@@ -240,6 +240,11 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		// init the custom components
 		for (AgentComponent ac : beliefs.getComponents()) {
 			ac.init(ai.getAdditionalData());
+			for(AgentComponent listener : beliefs.getComponents()) {
+				if(listener != ac) {
+					listener.componentInitialized(ac);
+				}
+			}
 		}
 	}
 
@@ -419,7 +424,8 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		return Collections.unmodifiableList(subgoalListeners);
 	}
 
-	public void onSubgoalFinished(Subgoal sg) {
+	@Override
+	public void onSubgoalFinished(Intention sg) {
 		for (SubgoalListener sl : subgoalListeners) {
 			sl.onSubgoalFinished(sg);
 		}

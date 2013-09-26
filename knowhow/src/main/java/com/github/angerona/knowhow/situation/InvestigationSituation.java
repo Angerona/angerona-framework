@@ -1,5 +1,6 @@
 package com.github.angerona.knowhow.situation;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,8 @@ public class InvestigationSituation extends Situation {
 	
 	public static void main(String [] args) {
 		InvestigationSituation sit = new InvestigationSituation();
+		sit.goal = "investigate";
+		
 		sit.queries.add(new FOLAtom(new Predicate("os")));
 		sit.queries.add(new FOLAtom(new Predicate("rap")));
 		sit.queries.add(new FOLAtom(new Predicate("cai")));
@@ -37,7 +40,7 @@ public class InvestigationSituation extends Situation {
 		sit.sources.add("claire");
 		sit.sources.add("detective");
 		
-		sit.filenameBackgroundProgram = "basis_background.dlp";
+		sit.filenameBackgroundProgram = new File("basis_background.dlp");
 		
 		SerializeHelper.outputXml(sit, System.out);
 	}

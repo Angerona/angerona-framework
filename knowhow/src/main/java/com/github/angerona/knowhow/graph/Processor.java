@@ -2,15 +2,11 @@ package com.github.angerona.knowhow.graph;
 
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import com.github.angerona.fw.util.Utility;
 import com.github.angerona.knowhow.KnowhowStatement;
-import com.github.angerona.knowhow.graph.parameter.Parameter;
 
 /**
  * 
@@ -23,24 +19,20 @@ public class Processor extends GraphNodeAdapter {
 	
 	private KnowhowStatement statement;
 	
-	public Processor(String name, DirectedGraph<GraphNode, DefaultEdge> graph) {
+	public Processor(Processor other) {
+		super(other);
+		this.statement = other.statement == null ? null : other.statement.clone();
+	}
+	
+	public Processor(String name, Graph<GraphNode, DefaultEdge> graph) {
 		super(name, graph);
 	}
 	
-	public Processor(KnowhowStatement stmt, DirectedGraph<GraphNode, DefaultEdge> graph) {
+	public Processor(KnowhowStatement stmt, Graph<GraphNode, DefaultEdge> graph) {
 		super(stmt.getTarget().toString(), graph);
 		this.statement = stmt;
-	//	parseSubgoals();
 	}
-	
-	public void parseSubgoals() {
-		for(DLPAtom subtarget : statement.getSubTargets()) {
-			for(Term<?> t : subtarget.getArguments()) {
-				parameters.add(new Parameter(t.toString()));
-			}
-		}
-	}
-	
+
 	public boolean isAtomic() {
 		return statement == null;
 	}
@@ -71,7 +63,7 @@ public class Processor extends GraphNodeAdapter {
 		if(statement == null)
 			return super.toString();
 		else 
-			return "P(" + complexity + ") #"+statement.getId() + name + parameters + 
+			return "P(" + complexity + ") " + name + parameters + 
 					" - (" + statement.getConditions().toString() + ")";
 	}
 	
@@ -86,5 +78,10 @@ public class Processor extends GraphNodeAdapter {
 					Utility.equals(this.parameters, processor.parameters);
 		}
 		return true;
+	}
+
+	@Override
+	public Processor clone() {
+		return new Processor(this);
 	}
 }

@@ -24,6 +24,20 @@ public class GraphIntention {
 	/** Default Ctor: Generates the TBD GraphIntention */
 	private GraphIntention() {}
 	
+	public GraphIntention(GraphIntention other) {
+		this.selector = other.selector;
+		this.intention = other.intention;
+		
+		for(GraphIntention gi : other.subIntentions) {
+			if(gi == TBD) {
+				this.subIntentions.add(TBD);
+			} else {
+				GraphIntention copy = new GraphIntention(gi);
+				this.subIntentions.add(copy);
+			}
+		}
+	}
+	
 	public GraphIntention(Processor processor, Selector precessor, GraphIntention parent) {
 		this.intention = processor;
 		this.selector = precessor;
@@ -32,6 +46,41 @@ public class GraphIntention {
 		for(int i=0; i<this.intention.getChildren().size(); ++i) {
 			subIntentions.add(TBD);
 		}
+	}
+	
+	public List<Integer> getPathToSubIntention(GraphIntention search) {
+		List<Integer> reval = new ArrayList<>();
+		if(search == this) {
+			return reval;
+		}
+		
+		int curIndex = 0;
+		GraphIntention cur = this;
+		while(cur != search) {
+			if(curIndex <= cur.subIntentions.size() )
+			{
+				if(cur == this)
+					break;
+				cur = cur.getParent();
+				curIndex = reval.remove(reval.size()-1) + 1;
+				continue;
+			}
+			
+			GraphIntention candidate = cur.subIntentions.get(curIndex);
+			if(candidate == TBD) {
+				curIndex +=1;
+			} else {
+				cur = candidate;
+				reval.add(curIndex);
+				curIndex = 0;
+			}
+		}
+		
+		if(cur == null)
+			return null;
+		
+		reval.add(curIndex);
+		return reval;
 	}
 	
 	public GraphIntention getParent() {
@@ -122,5 +171,13 @@ public class GraphIntention {
 		if(intention == null)
 			return "TBD";
 		return intention.toString() + subIntentions.toString();
+	}
+	
+	@Override
+	public GraphIntention clone() {
+		if(this == TBD || this.parent != null) {
+			throw new IllegalStateException("Only root intentions are cloneable");
+		}
+		return new GraphIntention(this);
 	}
 }

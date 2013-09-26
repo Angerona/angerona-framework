@@ -17,7 +17,6 @@ import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.Subgoal;
-import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.knowhow.graph.parameter.DefaultPlanConverter;
 import com.github.angerona.knowhow.graph.parameter.PlanConverter;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
@@ -137,7 +136,6 @@ public abstract class GraphPlannerAdapter
 			// copy plans:
 			for(int i=1; i<children.size(); ++i) {
 				subPlans.add(new WorkingPlan(curPlan));
-				throw new NotImplementedException("No deep copy of WorkingPlan yet.");
 			}
 			
 			// adapt pointer to children

@@ -30,7 +30,6 @@ import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
 import com.github.angerona.fw.util.Utility;
-import com.github.angerona.knowhow.PlanGeneration;
 import com.github.angerona.knowhow.graph.GraphIntention;
 import com.github.angerona.knowhow.graph.GraphNode;
 import com.github.angerona.knowhow.graph.Processor;
@@ -138,14 +137,6 @@ public class DefaultPlanConverter implements PlanConverter {
 				if(! (context instanceof Query))
 					throw new IllegalStateException("Context of Answer is no 'Query' but '" + context.getClass().getSimpleName() + "'");
 				toAdd = createAnswer(parameters, (Query)context);
-			} else if(action.equals("PlanGenerate")) {
-				if(parameters.size() != 2) {
-					throw new IllegalStateException("A PlanGenerate has '2' Parameters not '" + parameters.size() + "'");
-				}
-				Parameter fileP = parameters.get(0);
-				Parameter goalNameP = parameters.get(1);
-				
-				toAdd = new PlanGeneration(this.agent, mapFilename(fileP), goalNameP.getIdentifier());
 			} else {
 				throw new NotImplementedException("Generation of Action '" + action + "' not implemented yet");
 			}

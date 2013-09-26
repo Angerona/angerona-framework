@@ -1,6 +1,6 @@
 package com.github.angerona.fw.listener;
 
-import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.logic.Beliefs;
@@ -22,8 +22,11 @@ public abstract class AgentAdapter implements AgentListener {
 			String space) {}
 
 	@Override
-	public void componentAdded(BaseAgentComponent comp) {}
+	public void componentAdded(AgentComponent comp) {}
 
 	@Override
-	public void componentRemoved(BaseAgentComponent comp) {}
+	public void componentRemoved(AgentComponent comp) {}
+	
+	@Override
+	public void componentInitialized(AgentComponent comp) {}
 }

@@ -13,11 +13,33 @@ import org.simpleframework.xml.core.Commit;
 import org.simpleframework.xml.core.PersistenceException;
 import org.simpleframework.xml.core.Validate;
 
+import com.github.angerona.fw.Angerona;
+
+/**
+ * Base class for different situations that are used to generate plans.
+ * They all contain a program that represents the background knowledge.
+ * In the XML file the filename of the background program is given and
+ * during the validate() method a check occurs that tests if the given
+ * file is an existing file. In the commit() method the ASPParser is used
+ * to parse the content of the file containing the background knowledge.
+ * 
+ * @author Tim Janus
+ */
 public class Situation {
-	@Element(name="background", required=false)
-	protected String filenameBackgroundProgram;
+	/** the goal this situation fulfills */
+	@Element(name="goal")
+	protected String goal;
 	
+	/** the name of the file containing the background knowledge */
+	@Element(name="background", required=false)
+	protected File filenameBackgroundProgram;
+	
+	/** the background knowledge about the situation as an ASP program */
 	private Program backgroundKnowledge;
+	
+	public String getGoal() {
+		return goal;
+	}
 	
 	public Program getBackground() {
 		return backgroundKnowledge;
@@ -25,15 +47,19 @@ public class Situation {
 	
 	@Validate
 	public void validate() throws PersistenceException {
-		if(!new File(filenameBackgroundProgram).exists()) {
-			throw new PersistenceException("Cannot find background program in '" + filenameBackgroundProgram + "'");
+		
+		if(!filenameBackgroundProgram.exists()) {
+			String dir = Angerona.getInstance().getActualSimulation().getDirectory();
+			filenameBackgroundProgram = new File(dir + "/" + filenameBackgroundProgram.getName());
+			if(!filenameBackgroundProgram.exists())
+				throw new PersistenceException("Cannot find background program in '" + filenameBackgroundProgram + "'");
 		}
 	}
 	
 	@Commit
 	public void build() throws PersistenceException {
 		try {
-			backgroundKnowledge = ASPParser.parseProgram(new FileReader(new File(filenameBackgroundProgram)));
+			backgroundKnowledge = ASPParser.parseProgram(new FileReader(filenameBackgroundProgram));
 		} catch (FileNotFoundException | ParseException e) {
 			throw new PersistenceException("Cannot parse background program in '" + filenameBackgroundProgram + "' - " + e.getMessage());
 		}

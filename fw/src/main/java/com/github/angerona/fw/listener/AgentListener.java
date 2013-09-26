@@ -1,6 +1,6 @@
 package com.github.angerona.fw.listener;
 
-import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.logic.Beliefs;
@@ -40,11 +40,13 @@ public interface AgentListener {
 	 * is called when the given component is added to list of components of the agent
 	 * @param comp	the added component.
 	 */
-	void componentAdded(BaseAgentComponent comp);
+	void componentAdded(AgentComponent comp);
 	
 	/**
 	 * is called when the given component is removed from the the agent
 	 * @param comp	the removed component.
 	 */
-	void componentRemoved(BaseAgentComponent comp);
+	void componentRemoved(AgentComponent comp);
+	
+	void componentInitialized(AgentComponent comp);
 }

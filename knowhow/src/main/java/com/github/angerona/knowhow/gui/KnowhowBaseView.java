@@ -10,8 +10,6 @@ import javax.swing.JScrollPane;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.ListenableDirectedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,23 +20,18 @@ import com.github.angerona.fw.util.Pair;
 import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowStatement;
 import com.github.angerona.knowhow.asp.DLPBuilder;
-import com.github.angerona.knowhow.graph.GraphBuilder;
-import com.github.angerona.knowhow.graph.GraphNode;
-import com.github.angerona.knowhow.graph.ext.JGraphXAdapter;
 import com.github.angerona.knowhow.parameter.SkillParameter;
-import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.swing.mxGraphComponent;
 
 /**
  * A UI-Component responsible to show the KnowhowBase of an agent.
  * @author Tim Janus
  *
  */
-public class KnowhowView extends EntityViewComponent 
+public class KnowhowBaseView extends EntityViewComponent 
 	implements ReportListener {
 
 	/** reference to the logback logger instance */
-	static private Logger LOG = LoggerFactory.getLogger(KnowhowView.class);
+	static private Logger LOG = LoggerFactory.getLogger(KnowhowBaseView.class);
 	
 	/** kick warning */
 	private static final long serialVersionUID = -6905217402039226493L;
@@ -47,17 +40,13 @@ public class KnowhowView extends EntityViewComponent
 
 	private KnowhowBase actual;
 	
-	private JGraphXAdapter<GraphNode, DefaultEdge> graphX = new JGraphXAdapter<>();
-	
 	@Override
 	public void init() {
 		this.setLayout(new BorderLayout());
 		JList<String> statementList = new JList<String>();
 		statementList.setModel(stmtListModel);
 		this.add(new JScrollPane(statementList), BorderLayout.NORTH);
-		
-		this.add(new JScrollPane(graphX.generateDefaultGraphComponent()), 
-				BorderLayout.CENTER);
+
 		actual = (KnowhowBase)ref;
 		updateView();
 	}
@@ -92,19 +81,6 @@ public class KnowhowView extends EntityViewComponent
 		for(Rule r : pair.first) {
 			stmtListModel.addElement(r.toString());
 		}
-		
-		ListenableDirectedGraph<GraphNode, DefaultEdge> graph = new ListenableDirectedGraph<>(DefaultEdge.class);
-		GraphBuilder.build(actual, graph);
-		graphX.setDataSource(graph);
-
-		
-		if(graphX.getDefaultParent() != null) {
-			mxHierarchicalLayout layout = new mxHierarchicalLayout(graphX);
-			layout.execute(graphX.getDefaultParent());
-		} else {
-			LOG.warn("Graph representation has no default parent cannot apply hierachical layout.");
-		}
-		
 	}
 
 	@Override

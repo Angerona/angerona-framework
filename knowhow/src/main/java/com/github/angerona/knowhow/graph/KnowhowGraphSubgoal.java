@@ -82,13 +82,14 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 		boolean gen = false;
 		for(WorkingPlan plan : plans) {
 			PlanConverter converter = getPlanConverter(param);
-			
-			LOG.info("Converting WorkingPlan into Angerona format");
 			List<Intention> intentions = converter.convert(plan.getRootIntention(), des.getPerception());
+						
 			
 			if(intentions.isEmpty())
 				continue;
 			
+			LOG.info("Converting WorkingPlan into Angerona format");
+					
 			// reverse add the intentions to the stack (the list of intentions is ordered in the way that the first 
 			// intention has to be done first and the stack of the angerona planning is ordered the other way round.
 			int index = sg.newStack();
@@ -123,6 +124,7 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 				}
 			}
 		}
+		
 		return plans;
 	}
 	

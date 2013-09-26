@@ -26,7 +26,6 @@
         <capability>Query</capability>
         <capability>QueryAnswer</capability>
 		<capability>Inform</capability>
-		<capability>PlanGenerate</capability>
 		
         <desire>acquire_brenton</desire>
         
@@ -35,10 +34,13 @@
             (claire, __DEFAULT__, antronic_wants_to_acquire_brenton)
             (detective, __DEFAULT__, antronic_wants_to_acquire_brenton)
         </data>
+        <!-- investigate, s_PlanGenerate(f_basis_investigation_situation, investigate), -->
 		<data key="KnowHow">
 			acquire_brenton, (investigate, make_offer(q_offer(N))), 
-			investigate, s_PlanGenerate(f_basis_investigation_situation, investigate),
 			make_offer, s_Query(a_boss, q_Offer(N)), 
+		</data>
+		<data key="situationFiles">
+			basis_investigation_situation.xml, InvestigationSituation
 		</data>
 	</agent-instance>
       

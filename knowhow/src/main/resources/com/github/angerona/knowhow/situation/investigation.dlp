@@ -1,0 +1,18 @@
+% Init step
+step(0).
+
+% Generate Query
+query(X,Y,Z) :- search_info(X), source_info(Y), step(Z), 
+				not nquery(X,Y,Z), not query_prior(X,Y,Z), not queried_prior(X, Z).
+
+% Allow only one query at a time:
+nquery(X,Y,Z) :- 	query(A,_,Z), search_info(A), 
+					search_info(X), source_info(Y), A!=X.
+nquery(X,Y,Z) :- 	query(_,A,Z), source_info(A), 
+					search_info(X), source_info(Y), A!=Y.
+
+queried_prior(X,Z) :- step(V), query(X,Y,V), Z=V+1, source_info(Y).
+queried_prior(X,Z) :- step(V), queried_prior(X,V), Z=V+1.
+
+% increase step count:
+step(X) :- step(Y), query(_,_,Y), X=Y+1.

@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import com.github.angerona.fw.listener.SubgoalListener;
+
 /**
  * A subgoal is a complex intention. It can realize sub plans by using stacks. 
  * It gives the user the possibility of using more than one sub-plan, this allows the implementation of
@@ -12,6 +14,8 @@ import java.util.Stack;
  */
 public class Subgoal extends Intention implements Cloneable {
 
+	boolean multipleStacksAlternative = true;
+	
 	private String name = "SG";
 	
 	/** a collection of desires which will be fulfilled if this Intention was processed */
@@ -136,10 +140,10 @@ public class Subgoal extends Intention implements Cloneable {
 			stacks.remove(toDel);
 		}
 		
-		if(parent != null && stacks.isEmpty())
+		SubgoalListener parent = this.parent == null ? getAgent() : this.parent;
+		
+		if(stacks.isEmpty() || (toDel != null && multipleStacksAlternative))
 			parent.onSubgoalFinished(this);
-		else if(stacks.isEmpty())
-			getAgent().onSubgoalFinished(this);
 	}
 	
 	/** @return collection of desires which will be fullfiled after the Intention was followed */

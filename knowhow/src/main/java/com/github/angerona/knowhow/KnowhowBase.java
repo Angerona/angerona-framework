@@ -80,7 +80,13 @@ public class KnowhowBase extends BaseAgentComponent {
 			}
 		}
 		
-		firePropertyChangeListener("statements", new ArrayList<>(), statements);
+		if(statements.size() != 0)
+			firePropertyChangeListener("statements", new ArrayList<>(), statements);
+	}
+	
+	public void addStatement(KnowhowStatement statement) {
+		this.statements.add(statement);
+		firePropertyChangeListener("statements", statements, statements);
 	}
 	
 	/**

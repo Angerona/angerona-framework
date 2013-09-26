@@ -1,11 +1,16 @@
 package com.github.angerona.knowhow.graph.parameter;
 
+import java.io.Serializable;
+
 import com.github.angerona.fw.util.Utility;
 
-import ch.qos.logback.classic.pattern.Util;
 
+public class Parameter implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 100849364453010345L;
 
-public class Parameter {
 	public static enum TYPE {
 		T_AGENT,
 		T_HONESTY,

@@ -9,7 +9,6 @@ import java.util.Map;
 import com.github.angerona.fw.internal.AngeronaReporter;
 import com.github.angerona.fw.internal.Entity;
 import com.github.angerona.fw.internal.IdGenerator;
-import com.github.angerona.fw.listener.AgentListener;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.report.FullReporter;
 import com.github.angerona.fw.report.ReportPoster;
@@ -33,7 +32,6 @@ import com.github.angerona.fw.util.Utility;
 public abstract class BaseAgentComponent 
 implements 	AgentComponent,
 			Reporter,
-			AgentListener,
 			ReportPoster,
 			Cloneable{
 	
@@ -44,6 +42,8 @@ implements 	AgentComponent,
 	private Long id;
 	
 	private FullReporter reporter = new AngeronaReporter();
+	
+	protected boolean initalized = false;
 	
 	/** 
 	 * 	how deep is this instance in the copy hierachy. 0 means its original, 1 its 
@@ -69,18 +69,16 @@ implements 	AgentComponent,
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 	
-	/**
-	 * Adds the given listener to the registered listeners
-	 * @param listener	Reference to the listener to add
-	 */
+	public boolean isInitialized() {
+		return initalized;
+	}
+	
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
 	
-	/**
-	 * Removes the given listener from the list of registered listeners
-	 * @param listener	Reference to the listener to remove
-	 */
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
@@ -128,7 +126,9 @@ implements 	AgentComponent,
 	}
 		
 	@Override
-	public void init(Map<String, String> additionalData) { }
+	public void init(Map<String, String> additionalData) { 
+		initalized = true;
+	}
 	
 	@Override
 	public Long getGUID() {
@@ -164,12 +164,17 @@ implements 	AgentComponent,
 	}
 	
 	@Override
-	public void componentAdded(BaseAgentComponent comp) {
+	public void componentAdded(AgentComponent comp) {
 		// does nothing
 	}
 
 	@Override
-	public void componentRemoved(BaseAgentComponent comp) {
+	public void componentRemoved(AgentComponent comp) {
+		// does nothing
+	}
+	
+	@Override
+	public void componentInitialized(AgentComponent comp) {
 		// does nothing
 	}
 	

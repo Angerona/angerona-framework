@@ -15,7 +15,9 @@ import com.github.angerona.fw.operators.BaseOperator;
 import com.github.angerona.knowhow.asp.KnowhowASP;
 import com.github.angerona.knowhow.graph.KnowhowGraph;
 import com.github.angerona.knowhow.graph.KnowhowGraphSubgoal;
-import com.github.angerona.knowhow.gui.KnowhowView;
+import com.github.angerona.knowhow.gui.KnowhowBaseView;
+import com.github.angerona.knowhow.gui.KnowhowGraphView;
+import com.github.angerona.knowhow.situation.SituationStorage;
 
 @PluginImplementation
 public class KnowhowPlugin extends AngeronaPluginAdapter 
@@ -24,7 +26,8 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 	@Override
 	public Map<String, Class<? extends ViewComponent>> getUIComponents() {
 		Map<String, Class<? extends ViewComponent>> reval = new HashMap<String, Class<? extends ViewComponent>>();
-		reval.put("Knowhow", KnowhowView.class);
+		reval.put("Knowhow-Base", KnowhowBaseView.class);
+		reval.put("Knowhow-Graph", KnowhowGraphView.class);
 		return reval;
 	}
 	
@@ -33,6 +36,7 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 		List<Class<? extends AgentComponent>> reval = new LinkedList<Class<? extends AgentComponent>>();
 		reval.add(KnowhowBase.class);
 		reval.add(KnowhowGraph.class);
+		reval.add(SituationStorage.class);
 		return reval;
 	}
 	

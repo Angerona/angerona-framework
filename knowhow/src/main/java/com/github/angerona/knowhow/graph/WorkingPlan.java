@@ -1,11 +1,11 @@
 package com.github.angerona.knowhow.graph;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
 import com.github.angerona.fw.Action;
-import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
 
 /**
@@ -49,8 +49,22 @@ public class WorkingPlan
 	}
 	
 	public WorkingPlan(WorkingPlan wp) {
+		this.visited = new HashSet<>(wp.visited);
+		this.history = new Stack<GraphNode>();
+		this.history.addAll(wp.history);
+		this.penalty = wp.penalty;
+		this.lod = wp.lod;
+		this.penaltyFunction = wp.penaltyFunction.clone();
 		
-		throw new NotImplementedException();
+		this.nextIndex = wp.nextIndex;
+		this.nextNode = wp.nextNode;
+		
+		this.rootIntention = new GraphIntention(wp.rootIntention);
+		List<Integer> path = wp.rootIntention.getPathToSubIntention(wp.curIntention);
+		this.curIntention = this.rootIntention;
+		for(Integer way : path) {
+			this.curIntention = curIntention.getSubIntentions().get(way);
+		}
 	}
 	
 	public GraphIntention getCurrentIntention() {

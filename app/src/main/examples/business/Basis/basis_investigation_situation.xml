@@ -1,4 +1,5 @@
 <investigation-situation>
+   <goal>investigate</goal>
    <background>basis_background.dlp</background>
    <query>rap</query>
    <query>os</query>

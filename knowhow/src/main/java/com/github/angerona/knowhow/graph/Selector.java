@@ -1,11 +1,8 @@
 package com.github.angerona.knowhow.graph;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import com.github.angerona.fw.util.Utility;
@@ -19,20 +16,12 @@ public class Selector extends GraphNodeAdapter  {
 	/** serial version id */
 	private static final long serialVersionUID = -6949598700368734085L;
 
-	public Selector(String name, DirectedGraph<GraphNode, DefaultEdge> graph) {
-		super(name, graph);
+	public Selector(Selector other) {
+		super(other);
 	}
 	
-	public Collection<Processor> getProcessors(Collection<Processor> candidates) {
-		Set<Processor> reval = new HashSet<>();
-		
-		String toCompare = name.startsWith("s_") ? name.substring(2) : name;
-		for(Processor cur : candidates) {
-			if(cur.getName().equals(toCompare)) {
-				reval.add(cur);
-			}
-		}
-		return reval;
+	public Selector(String name, Graph<GraphNode, DefaultEdge> graph) {
+		super(name, graph);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,11 +42,16 @@ public class Selector extends GraphNodeAdapter  {
 		if(other == null || getClass() != other.getClass())	return false;
 		
 		Selector pn = (Selector)other;
-		return Utility.equals(name, pn.name);
+		return Utility.equals(name, pn.name) && Utility.equals(parameters, pn.parameters);
 	}
 	
 	@Override
 	public int hashCode() {
 		return	super.hashCode() * 13;
+	}
+	
+	@Override
+	public Selector clone() {
+		return new Selector(this);
 	}
 }
