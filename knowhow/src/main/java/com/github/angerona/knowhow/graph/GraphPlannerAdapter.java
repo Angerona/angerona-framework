@@ -124,8 +124,8 @@ public abstract class GraphPlannerAdapter
 	protected void planOneStep(WorkingPlan curPlan, List<WorkingPlan> plans,
 			DirectedGraph<GraphNode, DefaultEdge> graph, Desire des) {
 		GraphNode node = curPlan.getNextNode();
-		LOG.info("Working on node: '{}'" + node.toString());
-		
+		LOG.debug("Entering planOneStep(curPlan={}, curNode={})", curPlan.toString(), node);
+
 		if(node instanceof Selector) {
 			List<WorkingPlan> subPlans = new ArrayList<>();
 			Selector sel = (Selector)node;
@@ -208,5 +208,7 @@ public abstract class GraphPlannerAdapter
 		if(curPlan.getNextNode() == node) {
 			curPlan.moveToPrecessorOfPrecessor();
 		}
+		
+		LOG.debug("Leaving planOneStep(curPlan={}) = void", curPlan.toString());
 	}
 }

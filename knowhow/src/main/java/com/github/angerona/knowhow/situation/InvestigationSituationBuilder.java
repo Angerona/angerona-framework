@@ -17,6 +17,7 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
@@ -150,7 +151,8 @@ public class InvestigationSituationBuilder extends SituationBuilderAdapter {
 				List<DLPAtom> subTargets = new ArrayList<>();
 				for(DLPAtom atom : queryAtom) {
 					List<Term<?>> args = new ArrayList<>();
-					args.add(atom.getArguments().get(1)); // add receiver
+					String recvWithPrefix = "a_"+atom.getArguments().get(1).toString();
+					args.add(new Constant(recvWithPrefix)); // add receiver
 					args.add(atom.getArguments().get(0)); // add info
 					DLPAtom converted = new DLPAtom("s_Query", args);
 					subTargets.add(converted);

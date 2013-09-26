@@ -150,7 +150,8 @@ public class WorkingPlan
 
 	@Override
 	public String toString() {
-		String reval = "Plan - LOD: " + lod + " - Penalty: " + penalty + "\n";
+		String reval = "Plan - LOD: " + lod + " - Penalty: " + penalty + 
+				" - curNode: " + getNextNode().toString() + " - rootIntention:";
 		if(rootIntention != null) {
 			reval += rootIntention.toString();
 		}
