@@ -16,6 +16,7 @@ import com.github.angerona.knowhow.asp.KnowhowASP;
 import com.github.angerona.knowhow.graph.KnowhowGraph;
 import com.github.angerona.knowhow.graph.KnowhowGraphSubgoal;
 import com.github.angerona.knowhow.graph.KnowhowIntentionUpdate;
+import com.github.angerona.knowhow.graph.KnowhowViolates;
 import com.github.angerona.knowhow.gui.KnowhowBaseView;
 import com.github.angerona.knowhow.gui.KnowhowGraphView;
 import com.github.angerona.knowhow.situation.SituationStorage;
@@ -47,6 +48,7 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 		reval.add(KnowhowASP.class);
 		reval.add(KnowhowGraphSubgoal.class);
 		reval.add(KnowhowIntentionUpdate.class);
+		reval.add(KnowhowViolates.class);
 		return reval;
 	}
 

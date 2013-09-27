@@ -36,8 +36,8 @@
         </data>
         <!-- investigate, s_PlanGenerate(f_basis_investigation_situation, investigate), -->
 		<data key="KnowHow">
-			acquire_brenton, (investigate, make_offer(q_offer(f_min(N)))), 
-			make_offer, s_Query(a_boss, q_offer(N)), 
+			acquire_brenton, (investigate, make_offer), 
+			make_offer, s_Query(a_bob, q_offer(N)), 
 		</data>
 		<data key="situationFiles">
 			basis_investigation_situation.xml, InvestigationSituation
@@ -53,8 +53,8 @@
       	<capability>QueryAnswer</capability>
         
         <data key="KnowHow">
-			answer_query(offer), s_QueryAnswer(NO), antronic_wants_to_acquire_brenton
-			answer_query(offer), s_QueryAnswer(Yes), , 1
+			answer_query, s_QueryAnswer(c_No), wants_to_acquire
+			answer_query, s_QueryAnswer(c_Yes), , 1
 		</data> 
 	</agent-instance>
 	

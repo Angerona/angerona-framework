@@ -19,7 +19,7 @@
    	</operation-set>
    	
 	<operation-set operation-type="Violates">
-      <default-operator-cls>com.github.angerona.fw.example.operators.ViolatesOperator</default-operator-cls>
+      <default-operator-cls>com.github.angerona.knowhow.graph.KnowhowViolates</default-operator-cls>
    	</operation-set>
 	
 	<component>com.github.angerona.fw.logic.Desires</component>

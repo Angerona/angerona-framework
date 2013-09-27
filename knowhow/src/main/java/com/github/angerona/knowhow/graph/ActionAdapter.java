@@ -22,8 +22,10 @@ import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
+import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.util.Utility;
 import com.github.angerona.knowhow.graph.parameter.Parameter;
+import com.github.angerona.knowhow.graph.parameter.Parameter.TYPE;
 
 public class ActionAdapter extends Action {
 
@@ -35,14 +37,21 @@ public class ActionAdapter extends Action {
 	
 	private Perception context;
 	
+	private Beliefs curBeliefs;
+	
 	public ActionAdapter(Agent sender, String actionName, List<Parameter> parameters, Perception context) {
 		super(sender, Action.ALL);
 		this.actionName = actionName;
 		this.parameters = parameters;
 		this.context = context;
 	}
-
+	
 	public Action evaluateAction() {
+		return evaluateAction(this.agent.getBeliefs());
+	}
+
+	public Action evaluateAction(Beliefs beliefs) {
+		curBeliefs = beliefs;
 		Action reval = null;
 		if(actionName.equals("Inform")) {
 			reval = createInform(parameters);
@@ -69,23 +78,43 @@ public class ActionAdapter extends Action {
 			throw new IllegalStateException("The parameter count for an Answer must be '1' not '" + parameters.size() + "'");
 		}
 		
-		// TODO this bunch of code is duplo, create a factory somewhere:
-		if(context.getQuestion().isGround()) {
-			AnswerValue simpleAnswer = agent.getBeliefs().getWorldKnowledge().reason(context.getQuestion()).getAnswerValue();		
-			Parameter param = parameters.get(0);
-			if(param.getIdentifier().equals("p_honest")) {
-				// do nothing
-			} else if(param.getIdentifier().equals("p_lie")) {
-				simpleAnswer = Utility.lie(simpleAnswer);
-			} else {
-				throw new NotImplementedException("The honesty type: '" + param.getIdentifier().substring(2) + "' is not implemented yet.");
+		Parameter param = parameters.get(0);
+		if(param.getType() == TYPE.T_HONESTY) {
+			
+			// TODO this bunch of code is duplo, create a factory somewhere:
+			if(context.getQuestion().isGround()) {
+				AnswerValue simpleAnswer = curBeliefs.getWorldKnowledge().reason(context.getQuestion()).getAnswerValue();		
+				if(param.getIdentifier().equals("p_honest")) {
+					// do nothing
+				} else if(param.getIdentifier().equals("p_lie")) {
+					simpleAnswer = Utility.lie(simpleAnswer);
+				} else {
+					throw new NotImplementedException("The honesty type: '" + param.getIdentifier().substring(2) + "' is not implemented yet.");
+				}
+				
+				return new Answer(this.agent, context.getSenderId(), context.getQuestion(), 
+						new AngeronaAnswer(context.getQuestion(), simpleAnswer));
 			}
 			
-			return new Answer(this.agent, context.getSenderId(), context.getQuestion(), 
-					new AngeronaAnswer(context.getQuestion(), simpleAnswer));
+			throw new NotImplementedException("Cannot handle the answer on open queries yet.");
+		} else if(param.getType() == TYPE.T_CONSTANT) {
+			String constant = param.getIdentifier().substring(2);
+			AnswerValue av = null;
+			if(constant.equalsIgnoreCase("YES")) {
+				av = AnswerValue.AV_TRUE;
+			} else if(constant.equalsIgnoreCase("NO")) {
+				av = AnswerValue.AV_FALSE;
+			} else if(constant.equalsIgnoreCase("UNKNOWN")) {
+				av = AnswerValue.AV_UNKNOWN;
+			} else if(constant.equalsIgnoreCase("REJECT")) {
+				av = AnswerValue.AV_REJECT;
+			} else {
+				throw new IllegalArgumentException("The constant '" + constant + "' is not allowed as argument for an answer.");
+			}
+			return new Answer(this.agent, context.getSenderId(), context.getQuestion(), av);
+		} else {
+			throw new IllegalArgumentException("The parameter type '" + param.getType() + "' is not supported for an Answer");
 		}
-		
-		throw new NotImplementedException("Cannot handle the answer on open queries yet.");
 	}
 	
 	private Query createQuery(List<Parameter> parameters) {

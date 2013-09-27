@@ -15,7 +15,7 @@ public class Parameter implements Serializable {
 		T_AGENT,
 		T_HONESTY,
 		T_FORMULA,
-		T_FILE
+		T_CONSTANT
 	}
 	
 	private TYPE type;
@@ -28,8 +28,8 @@ public class Parameter implements Serializable {
 			type = TYPE.T_AGENT;
 		} else if(identifier.startsWith("p_") || identifier.startsWith("T_HONESTY")) {
 			type = TYPE.T_HONESTY;
-		} else if(identifier.startsWith("f_") || identifier.startsWith("T_FILE")) {
-			type = TYPE.T_FILE;
+		} else if(identifier.startsWith("c_") || identifier.startsWith("T_FILE")) {
+			type = TYPE.T_CONSTANT;
 		} else {
 			type = TYPE.T_FORMULA;
 		}

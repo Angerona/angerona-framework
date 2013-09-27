@@ -24,6 +24,7 @@ import com.github.angerona.fw.PlanElement;
 import com.github.angerona.fw.Subgoal;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import com.github.angerona.fw.comm.Inform;
+import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.example.operators.GenerateOptionsOperator;
 import com.github.angerona.fw.example.operators.SubgoalGenerationOperator;
 import com.github.angerona.fw.logic.Desires;
@@ -61,8 +62,25 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 			if(des.getFormula().toString().startsWith("revisionRequestProcessing")) {	
 				plans = handleInform(param, des, graph);
 			} else if(des.getFormula().toString().startsWith(GenerateOptionsOperator.prepareQueryProcessing.getName())) {
-				Desire defDes = new Desire(new FOLAtom(new Predicate("answer_query")), des.getPerception());
-				plans = handeDefaultDesire(param, defDes, graph);
+				Query context = (Query)des.getPerception();
+				String desAsStr = "answer_query(" + context.getQuestion().toString() +")";
+				FolParserB parser = new FolParserB(new StringReader(desAsStr));
+				FolFormula formula = null;
+				try {
+					formula = parser.formula(new FolSignature());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(formula != null) {
+					Desire extDes = new Desire(formula, context);
+					plans = handeDefaultDesire(param, extDes, graph);
+				}
+				
+				if(plans.isEmpty()) {
+					Desire defDes = new Desire(new FOLAtom(new Predicate("answer_query")), des.getPerception());
+					plans = handeDefaultDesire(param, defDes, graph);
+				}
 			} else {
 				plans = handeDefaultDesire(param, des, graph);
 			}
