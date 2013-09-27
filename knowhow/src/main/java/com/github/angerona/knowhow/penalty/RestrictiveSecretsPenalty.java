@@ -1,5 +1,10 @@
 package com.github.angerona.knowhow.penalty;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.am.secrecy.operators.ViolatesResult;
@@ -26,17 +31,24 @@ public class RestrictiveSecretsPenalty implements PenaltyFunction {
 	
 	private int iterations = 0;
 	
+	private Set<FolFormula> inferedKnowledge;
+	
 	public RestrictiveSecretsPenalty() {}
 	
 	public RestrictiveSecretsPenalty(RestrictiveSecretsPenalty rsp) {
 		this.agent = rsp.agent;
 		this.beliefs = new Beliefs(rsp.beliefs);
+		this.inferedKnowledge = new HashSet<>();
+		for(FolFormula formula : rsp.inferedKnowledge) {
+			inferedKnowledge.add(formula.clone());
+		}
 	}
 	
 	@Override
 	public void init(Agent agent) {
 		this.agent = agent;
 		this.beliefs = agent.getBeliefs().clone();
+		inferedKnowledge = this.beliefs.getWorldKnowledge().infere();
 	}
 	
 	@Override
@@ -56,5 +68,10 @@ public class RestrictiveSecretsPenalty implements PenaltyFunction {
 	@Override
 	public RestrictiveSecretsPenalty clone() {
 		return new RestrictiveSecretsPenalty(this);
+	}
+
+	@Override
+	public boolean validCondition(FolFormula formula) {
+		return inferedKnowledge.contains(formula);
 	}
 }

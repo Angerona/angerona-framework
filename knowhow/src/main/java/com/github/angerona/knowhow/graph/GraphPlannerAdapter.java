@@ -7,6 +7,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.translate.aspfol.AspFolTranslator;
+
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
@@ -14,9 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Action;
+import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.Subgoal;
+import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.knowhow.graph.parameter.DefaultPlanConverter;
 import com.github.angerona.knowhow.graph.parameter.PlanConverter;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
@@ -55,6 +61,22 @@ public abstract class GraphPlannerAdapter
 	
 	private PlanConverter converter;
 	
+	private Set<FolFormula> knowledge;
+	
+	private Beliefs beliefs;
+	
+	private static AspFolTranslator translator = new AspFolTranslator();
+	
+	@Override
+	public Beliefs getBeliefs() {
+		return beliefs;
+	}
+	
+	@Override
+	public void setBeliefs(Beliefs beliefs) {
+		this.beliefs = beliefs;
+	}
+	
 	@Override
 	public PenaltyFunction createPenaltyFunction() {
 		return template.clone();
@@ -63,6 +85,11 @@ public abstract class GraphPlannerAdapter
 	@Override
 	public void setPenaltyTemplate(PenaltyFunction template) {
 		this.template = template;
+	}
+	
+	@Override
+	public void setKnowledge(Set<FolFormula> knowlege) {
+		this.knowledge = knowlege;
 	}
 	
 	@Override
@@ -85,6 +112,10 @@ public abstract class GraphPlannerAdapter
 	@Override
 	public void setPlanConverter(PlanConverter converter) {
 		this.converter = converter;
+	}
+	
+	protected void calculateKnowledge(Agent agent) {
+		knowledge = agent.getBeliefs().getWorldKnowledge().infere();
 	}
 	
 	/**
@@ -187,6 +218,13 @@ public abstract class GraphPlannerAdapter
 			}
 			
 			if(children.size() > 0) {
+				// First check if condition is true:
+				List<DLPAtom> conditions = pro.getStatement().getConditions();
+				for(DLPAtom atom : conditions) {
+					FolFormula formula = translator.toFOL(atom);
+					curPlan.checkCondition(formula);
+				}
+				
 				// sort children by irrelevance: (if atomic nothing happens anymore
 				// TODO Overwork irrelevance concept
 				Collections.sort(children, new Comparator<Selector>() {

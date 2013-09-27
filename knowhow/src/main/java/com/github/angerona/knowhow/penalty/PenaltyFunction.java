@@ -1,5 +1,7 @@
 package com.github.angerona.knowhow.penalty;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
 
@@ -32,6 +34,8 @@ public interface PenaltyFunction {
 	 * 									read the documentation of the implementing class
 	 */
 	double penalty(Action action) throws IllegalStateException;
+	
+	boolean validCondition(FolFormula formula);
 	
 	PenaltyFunction clone();
 }

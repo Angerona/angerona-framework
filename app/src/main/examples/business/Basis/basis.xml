@@ -70,7 +70,7 @@
 		
 		<data key="KnowHow">
 			answer_query, s_QueryAnswer(p_honest),
-			bonus, s_Inform(a_bob, want_acquire), 
+			bonus, s_Inform(a_bob, want_acquire), want_acquire
 		</data>
 	</agent-instance>
 	

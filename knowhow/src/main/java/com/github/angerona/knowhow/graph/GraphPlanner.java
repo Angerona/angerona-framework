@@ -68,12 +68,21 @@ public class GraphPlanner extends GraphPlannerAdapter {
 			++iterations;
 			//LOG.info("The current plans after '{}' iterations:\n{}", iterations, plans);
 			
-			if(current.getLOD() >= targetLOD) {
+			if(current.getLOD() >= targetLOD || current.isFailed()) {
 				complete_plans += 1;
 			}
 		}
 		
+		// filter plans at the end
 		Collections.sort(plans);
-		return alternatives != 0 ? plans.subList(0, alternatives) : plans;
+		plans = alternatives != 0 ? plans.subList(0, alternatives) : plans;
+		List<WorkingPlan> toDel = new ArrayList<>();
+		for(WorkingPlan wp : plans) {
+			if(wp.isFailed()) {
+				toDel.add(wp);
+			}
+		}
+		plans.removeAll(toDel);
+		return plans;
 	}
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
 import com.github.angerona.fw.Action;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
 
@@ -71,6 +73,10 @@ public class WorkingPlan
 		}
 	}
 	
+	boolean isFailed() {
+		return penalty == Double.MAX_VALUE;
+	}
+	
 	public GraphIntention getCurrentIntention() {
 		return curIntention;
 	}
@@ -116,12 +122,28 @@ public class WorkingPlan
 		return penalty;
 	}
 	
+	public void fail() {
+		penalty = Double.MAX_VALUE;
+	}
+	
 	/**
-	 * Increments the penalty of the plan by the given parameter
+	 * Increments the penalty by mentaly performing the action
 	 * @param penalty	The amount of increment
 	 */
 	public void incrementPenalty(Action action) {
-		penalty += penaltyFunction.penalty(action);
+		double reval = penaltyFunction.penalty(action);
+		penalty = reval == Double.MAX_VALUE ? Double.MAX_VALUE : penalty + reval;
+	}
+	
+	/** 
+	 * checks the condition given as parameter and adapt penalty to infinity if
+	 * the condition is not valid
+	 * @param condition
+	 */
+	public void checkCondition(FolFormula condition) {
+		if(!penaltyFunction.validCondition(condition)) {
+			penalty = Double.MAX_VALUE;
+		}
 	}
 	
 	void setNextNode(GraphNode nextNode) {
