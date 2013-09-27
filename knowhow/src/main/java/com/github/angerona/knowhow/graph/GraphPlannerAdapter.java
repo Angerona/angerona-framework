@@ -18,11 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Action;
-import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.Subgoal;
-import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.knowhow.graph.parameter.DefaultPlanConverter;
 import com.github.angerona.knowhow.graph.parameter.PlanConverter;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
@@ -61,21 +59,7 @@ public abstract class GraphPlannerAdapter
 	
 	private PlanConverter converter;
 	
-	private Set<FolFormula> knowledge;
-	
-	private Beliefs beliefs;
-	
 	private static AspFolTranslator translator = new AspFolTranslator();
-	
-	@Override
-	public Beliefs getBeliefs() {
-		return beliefs;
-	}
-	
-	@Override
-	public void setBeliefs(Beliefs beliefs) {
-		this.beliefs = beliefs;
-	}
 	
 	@Override
 	public PenaltyFunction createPenaltyFunction() {
@@ -85,11 +69,6 @@ public abstract class GraphPlannerAdapter
 	@Override
 	public void setPenaltyTemplate(PenaltyFunction template) {
 		this.template = template;
-	}
-	
-	@Override
-	public void setKnowledge(Set<FolFormula> knowlege) {
-		this.knowledge = knowlege;
 	}
 	
 	@Override
@@ -112,10 +91,6 @@ public abstract class GraphPlannerAdapter
 	@Override
 	public void setPlanConverter(PlanConverter converter) {
 		this.converter = converter;
-	}
-	
-	protected void calculateKnowledge(Agent agent) {
-		knowledge = agent.getBeliefs().getWorldKnowledge().infere();
 	}
 	
 	/**

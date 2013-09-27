@@ -110,6 +110,10 @@ public class PlanElement implements AngeronaAtom, Runnable {
 		return intention;
 	}
 	
+	public void setIntention(Intention intention) {
+		this.intention = intention;
+	}
+	
 	/**
 	 * Prepares the intention for execution. Therefore the intention has to be an Action.
 	 * The parameters and the executionData object will be given to the action to prepare it.

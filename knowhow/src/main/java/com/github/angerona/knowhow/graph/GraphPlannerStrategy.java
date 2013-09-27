@@ -1,16 +1,12 @@
 package com.github.angerona.knowhow.graph;
 
 import java.util.List;
-import java.util.Set;
-
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.Intention;
-import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.knowhow.graph.parameter.PlanConverter;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
 
@@ -36,12 +32,6 @@ public interface GraphPlannerStrategy {
 	PlanConverter getPlanConverter();
 	
 	void setPlanConverter(PlanConverter converter);
-	
-	void setKnowledge(Set<FolFormula> knowledge);
-	
-	Beliefs getBeliefs();
-	
-	void setBeliefs(Beliefs beliefs);
 	
 	List<WorkingPlan> controlPlan(DirectedGraph<GraphNode, DefaultEdge> graph, Desire goal);
 

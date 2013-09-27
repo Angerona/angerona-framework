@@ -15,6 +15,7 @@ import com.github.angerona.fw.operators.BaseOperator;
 import com.github.angerona.knowhow.asp.KnowhowASP;
 import com.github.angerona.knowhow.graph.KnowhowGraph;
 import com.github.angerona.knowhow.graph.KnowhowGraphSubgoal;
+import com.github.angerona.knowhow.graph.KnowhowIntentionUpdate;
 import com.github.angerona.knowhow.gui.KnowhowBaseView;
 import com.github.angerona.knowhow.gui.KnowhowGraphView;
 import com.github.angerona.knowhow.situation.SituationStorage;
@@ -45,6 +46,7 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 		List<Class<? extends BaseOperator>> reval = new LinkedList<>();
 		reval.add(KnowhowASP.class);
 		reval.add(KnowhowGraphSubgoal.class);
+		reval.add(KnowhowIntentionUpdate.class);
 		return reval;
 	}
 

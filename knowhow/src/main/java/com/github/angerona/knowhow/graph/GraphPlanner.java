@@ -25,6 +25,7 @@ public class GraphPlanner extends GraphPlannerAdapter {
 	public List<WorkingPlan> controlPlan(
 			DirectedGraph<GraphNode, DefaultEdge> graph, Desire goal, 
 			final int alternatives, final double targetLOD) {
+		LOG.debug("Entering controlPlan(desire={}, alternatives={}, targetLod="+targetLOD+")", goal.toString(), alternatives);
 		
 		// generate temporary start node in planning graph:
 		Selector startNode = generateTemporaryGraph(graph, goal);
@@ -83,6 +84,8 @@ public class GraphPlanner extends GraphPlannerAdapter {
 			}
 		}
 		plans.removeAll(toDel);
+		
+		LOG.debug("Leaving controlPlan() used '{}' iterations" + iterations);
 		return plans;
 	}
 }

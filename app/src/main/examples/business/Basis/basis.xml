@@ -37,7 +37,7 @@
         <!-- investigate, s_PlanGenerate(f_basis_investigation_situation, investigate), -->
 		<data key="KnowHow">
 			acquire_brenton, (investigate, make_offer(q_offer(f_min(N)))), 
-			make_offer, s_Query(a_boss, q_Offer(N)), 
+			make_offer, s_Query(a_boss, q_offer(N)), 
 		</data>
 		<data key="situationFiles">
 			basis_investigation_situation.xml, InvestigationSituation

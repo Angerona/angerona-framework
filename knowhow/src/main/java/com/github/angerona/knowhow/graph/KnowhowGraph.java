@@ -26,6 +26,12 @@ import com.github.angerona.knowhow.situation.SituationGraphBuilder;
 import com.github.angerona.knowhow.situation.SituationGraphBuilderFactory;
 import com.github.angerona.knowhow.situation.SituationStorage;
 
+/**
+ * 
+ * 
+ *
+ * @author Tim Janus
+ */
 public class KnowhowGraph extends BaseAgentComponent implements PropertyChangeListener {
 	/** reference to the logback logger instance */
 	static private Logger LOG = LoggerFactory.getLogger(KnowhowGraph.class);

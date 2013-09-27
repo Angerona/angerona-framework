@@ -83,7 +83,7 @@ public abstract class GraphNodeAdapter
 			case ')':
 				paranthessStack -= 1;
 				if(paranthessStack == 0) {
-					parameters.add(new Parameter(parameter));
+					parameters.add(new Parameter(parameter.trim()));
 					parameter = "";
 					closed = true;
 				} else {
@@ -92,7 +92,7 @@ public abstract class GraphNodeAdapter
 				break;
 				
 			case ',':
-				parameters.add(new Parameter(parameter));
+				parameters.add(new Parameter(parameter.trim()));
 				parameter = "";
 				break;
 				
@@ -106,6 +106,8 @@ public abstract class GraphNodeAdapter
 				}
 			}
 		}
+		
+		this.name = this.name.trim();
 		
 		if(!end.isEmpty())
 			LOG.warn("The name's '{}' end: '{}' is skipped by the parsing", name, end);
