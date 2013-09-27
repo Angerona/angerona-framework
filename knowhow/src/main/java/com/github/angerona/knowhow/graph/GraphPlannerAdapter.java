@@ -145,6 +145,14 @@ public abstract class GraphPlannerAdapter
 			}
 			
 			subPlans.remove(curPlan);
+			
+			// also update the copied plans with the information that will
+			// be processed during this step plan
+			for(WorkingPlan wp : subPlans) {
+				wp.visited(node);
+				curPlan.updateLOD();
+			}
+			
 			plans.addAll(subPlans);
 		} else if(node instanceof Processor) {
 			Processor pro = (Processor)node;
@@ -152,7 +160,7 @@ public abstract class GraphPlannerAdapter
 			
 			// replace the sub intention of the current intention
 			// to the intention formed by this processor:
-			if(!curPlan.hasVisit(pro)) {
+			if(children.size() == 0 || !curPlan.hasVisit(node)) {
 				GraphIntention newIntention = new GraphIntention(pro, (Selector)curPlan.getPredecessor(), 
 						curPlan.getCurrentIntention());
 				if(curPlan.getWorkingNodeIndex() != -1) {

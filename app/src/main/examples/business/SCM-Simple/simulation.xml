@@ -42,9 +42,10 @@
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
       	<capability>Query</capability>
-        
+        <!-- not_sure(excused(employee)), (s_Query(a_employee, medical_appointment) ,s_Query(a_employee, attend_scm(employee))),  -->
+        <!-- not_sure(excused(employee)), (s_Query(a_employee, attend_scm(employee))),  -->
         <data key="KnowHow">
-			not_sure(excused(employee)), s_Query(a_employee, attend_scm(employee)), 
+			not_sure(excused(employee)), (s_Query(a_employee, medical_appointment) ,s_Query(a_employee, attend_scm(employee))),
 		</data> 
 		
 	</agent-instance>

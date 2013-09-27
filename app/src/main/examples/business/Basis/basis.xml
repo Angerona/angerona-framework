@@ -36,7 +36,7 @@
         </data>
         <!-- investigate, s_PlanGenerate(f_basis_investigation_situation, investigate), -->
 		<data key="KnowHow">
-			acquire_brenton, (investigate, make_offer(q_offer(N))), 
+			acquire_brenton, (investigate, make_offer(q_offer(f_min(N)))), 
 			make_offer, s_Query(a_boss, q_Offer(N)), 
 		</data>
 		<data key="situationFiles">
@@ -60,19 +60,33 @@
 	
 	<agent-instance>
 		<name>claire</name>
-		<agent-config source="config/agents/knowhow_agent.xml" />         
+		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
         <capability>QueryAnswer</capability>
 		<capability>Inform</capability>
+		
+		<desire>bonus</desire>
+		
+		<data key="KnowHow">
+			answer_query, s_QueryAnswer(p_honest),
+			bonus, s_Inform(a_bob, want_acquire), 
+		</data>
 	</agent-instance>
 	
 	<agent-instance>
 		<name>detective</name>
-		<agent-config source="config/agents/knowhow_agent.xml" />         
+		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
         <capability>QueryAnswer</capability>
-		<capability>Inform</capability>
+        <capability>Inform</capability>
+		
+		<desire>bonus</desire>
+		
+		<data key="KnowHow">
+			answer_query, s_QueryAnswer(p_honest), 
+			bonus, s_Inform(a_bob, want_acquire), want_acquire
+		</data>
 	</agent-instance>
 </simulation-configuration>

@@ -52,26 +52,28 @@ public class AspBeliefbaseView extends BeliefbaseView {
 		
 		// Output the answer sets to the JList.
 		int counter = 1;
-		for(AnswerSet as : answerSets) {
-			model.addElement(new ListElement("Answer Set " + counter + "/" + answerSets.size(), 
-				ListElement.ST_NOTCHANGED));
-			
-			String output = "";
-			for(DLPLiteral l : as) {
-				output += ", " + l;
-				if(output.length() > 100) {
+		if(answerSets != null) {
+			for(AnswerSet as : answerSets) {
+				model.addElement(new ListElement("Answer Set " + counter + "/" + answerSets.size(), 
+					ListElement.ST_NOTCHANGED));
+				
+				String output = "";
+				for(DLPLiteral l : as) {
+					output += ", " + l;
+					if(output.length() > 100) {
+						output = output.substring(2);
+						model.addElement(new ListElement(output, ListElement.ST_NOTCHANGED));
+					}
+				}
+				if(output.length() != 0) {
 					output = output.substring(2);
 					model.addElement(new ListElement(output, ListElement.ST_NOTCHANGED));
 				}
-			}
-			if(output.length() != 0) {
-				output = output.substring(2);
-				model.addElement(new ListElement(output, ListElement.ST_NOTCHANGED));
-			}
-			
-			counter += 1;
-			if(counter <= answerSets.size()) {
-				model.addElement(new ListElement(" ", ListElement.ST_NOTCHANGED));
+				
+				counter += 1;
+				if(counter <= answerSets.size()) {
+					model.addElement(new ListElement(" ", ListElement.ST_NOTCHANGED));
+				}
 			}
 		}
 		

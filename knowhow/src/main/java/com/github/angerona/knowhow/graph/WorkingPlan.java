@@ -52,6 +52,10 @@ public class WorkingPlan
 		this.visited = new HashSet<>(wp.visited);
 		this.history = new Stack<GraphNode>();
 		this.history.addAll(wp.history);
+		if(!this.history.equals(wp.history)) {
+			throw new IllegalStateException();
+		}
+		
 		this.penalty = wp.penalty;
 		this.lod = wp.lod;
 		this.penaltyFunction = wp.penaltyFunction.clone();
@@ -131,12 +135,15 @@ public class WorkingPlan
 	
 	public void moveToPrecessorOfPrecessor() {
 		if(history.size() < 3)
-			throw new IllegalStateException("Shall not be called yet");
+			throw new IllegalStateException("Shall not be called yet, history size: '" + history.size() + "'");
 		history.pop();
 		history.pop();
 		setNextNode(history.pop());
 		
 		curIntention = curIntention.getParent();
+		if(curIntention == null) {
+			curIntention = rootIntention;
+		}
 	}
 	
 	void visited(GraphNode node) {
@@ -150,10 +157,11 @@ public class WorkingPlan
 
 	@Override
 	public String toString() {
-		String reval = "Plan - LOD: " + lod + " - Penalty: " + penalty + 
-				" - curNode: " + getNextNode().toString() + " - rootIntention:";
+		String reval = "LOD: '" + lod + "', Penalty: '" + penalty + 
+				"' - curNode: '" + getNextNode().toString() + "' - history: '" +
+				history + "'";
 		if(rootIntention != null) {
-			reval += rootIntention.toString();
+			reval += " - rootIntention: '" + rootIntention.toString() + "'";
 		}
 		return reval;
 	}

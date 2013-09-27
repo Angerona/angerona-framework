@@ -66,7 +66,7 @@ public class GraphPlanner extends GraphPlannerAdapter {
 			// plan one step
 			super.planOneStep(current, plans, graph, goal);
 			++iterations;
-			LOG.info("The current plans after '{}' iterations:\n{}", iterations, plans);
+			//LOG.info("The current plans after '{}' iterations:\n{}", iterations, plans);
 			
 			if(current.getLOD() >= targetLOD) {
 				complete_plans += 1;

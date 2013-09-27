@@ -12,7 +12,7 @@ public class RevisionCredibilityPrograms extends AspRevision {
 
 	@Override
 	protected MultipleBaseRevisionOperator<Rule> createRevisionImpl() {
-		return new CredibilityRevision(wrapper.getSolver());
+		return new CredibilityRevision(wrapper.getSolver(), 100);
 	}
 
 }

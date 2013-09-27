@@ -12,7 +12,7 @@ public class RevisionPreferenceHandling extends AspRevision {
 
 	@Override
 	protected MultipleBaseRevisionOperator<Rule> createRevisionImpl() {
-		return new PreferenceHandling(wrapper.getSolver());
+		return new PreferenceHandling(wrapper.getSolver(), 100);
 	}
 
 }
