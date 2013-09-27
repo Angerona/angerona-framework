@@ -10,7 +10,20 @@ import com.github.angerona.knowhow.graph.complexity.ComplexityCalculator;
 import com.github.angerona.knowhow.graph.parameter.Parameter;
 import com.github.angerona.knowhow.graph.parameter.ParameterCheckVisitor;
 
-
+/**
+ * This class represents a node in the graph. It provides
+ * visit methods (@see VisitorPattern) for the complexity
+ * calculation and for parameter checking. 
+ * 
+ * It also has
+ * a type that is either NT_PROCESSOR or NT_SELECTOR to
+ * distinguish between the processor and selector nodes.
+ * 
+ * It also supports listeners that allow to update the
+ * view of the graph node. 
+ * 
+ * @author Tim Janus
+ */
 public interface GraphNode extends Serializable, Cloneable {
 	public static enum NodeType {
 		NT_PROCESSOR,

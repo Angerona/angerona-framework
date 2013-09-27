@@ -34,7 +34,8 @@ import com.github.angerona.knowhow.penalty.PenaltyFunction;
 import com.github.angerona.knowhow.penalty.RestrictiveSecretsPenalty;
 
 /**
- * 
+ * A subgoal generation operator tries to generate plans for the desires
+ * of the agent using the knowhow over graphs approach.
  * @author Tim Janus
  */
 public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {

@@ -6,6 +6,13 @@ import com.github.angerona.fw.PlanElement;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import com.github.angerona.fw.example.operators.IntentionUpdateOperator;
 
+/**
+ * An IntentionUpdate operator implementation that does the same as
+ * {@link IntentionUpdateOperator} but handles the {@link ActionAdapter}
+ * actions correctly.
+ * 
+ * @author Tim Janus
+ */
 public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 	@Override
 	protected PlanElement processInternal(PlanParameter param) {

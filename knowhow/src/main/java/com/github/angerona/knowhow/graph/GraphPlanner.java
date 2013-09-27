@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 import com.github.angerona.fw.Desire;
 
 /**
+ * This class implements a sequential planning algorithm on
+ * a planning graph. It is described in the Diploma Thesis
+ * "Resource-bounded Planning of Communication under Confidentiality 
+ * Constraints for BDI-Agents" as 'plan_control'
  * 
  * @author Tim Janus
  */

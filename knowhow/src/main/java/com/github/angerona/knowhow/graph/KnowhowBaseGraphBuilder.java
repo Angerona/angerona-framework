@@ -15,6 +15,16 @@ import com.github.angerona.fw.Agent;
 import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowStatement;
 
+/**
+ * Builds a planning graph using a know-how base.
+ * Therefore the building process is separated into 
+ * these three steps:
+ * 1. buildCapabilities() - Generates the leaf nodes representing actions of the agent
+ * 2. buildKnowhowbase() - Generates the nodes that are defined by the Know-how base
+ * 3. buildEdges() - Generates the edges to connect the generated nodes.
+ * 
+ * @author Tim Janus
+ */
 public class KnowhowBaseGraphBuilder {
 	/** reference to the logback logger instance */
 	static private Logger LOG = LoggerFactory.getLogger(KnowhowBaseGraphBuilder.class);

@@ -3,8 +3,20 @@ package com.github.angerona.knowhow.graph.parameter;
 import java.util.List;
 import java.util.Stack;
 
+import com.github.angerona.knowhow.graph.ActionAdapter;
 import com.github.angerona.knowhow.graph.GraphNode;
 
+/**
+ * A parameter check visitor for {@link GraphNode} that checks if the
+ * parameters claimed by a child node can be provided by the parent
+ * node.
+ * 
+ * @todo add a parameter checker that also proofs if the signature
+ * 			of the actions (in leaf nodes) is fulfilled by
+ * 			the parameters of the knowhow. See also {@link ActionAdapter}.
+ * 
+ * @author Tim Janus
+ */
 public class DefaultParameterCheck implements ParameterCheckVisitor {
 
 	private String error = "";

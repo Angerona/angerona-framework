@@ -27,9 +27,11 @@ import com.github.angerona.knowhow.situation.SituationGraphBuilderFactory;
 import com.github.angerona.knowhow.situation.SituationStorage;
 
 /**
- * 
- * 
- *
+ * The KnowhowGraph is an agent component that depends on the {@link KnowhowBase}
+ * of an agent and on it's {@link SituationStorage}. Those components are used
+ * to generate a reachable Planning Graph as described in the Diploma Thesis
+ * "Resource-bounded Planning of Communication under Confidentiality Constraints
+ * for BDI Agents".
  * @author Tim Janus
  */
 public class KnowhowGraph extends BaseAgentComponent implements PropertyChangeListener {
