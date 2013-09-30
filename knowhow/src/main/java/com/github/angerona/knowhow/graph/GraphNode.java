@@ -45,6 +45,11 @@ public interface GraphNode extends Serializable, Cloneable {
 	 */
 	int visitComplexityCalculation(ComplexityCalculator calculator);
 	
+	/**
+	 * Checks if the parameters can be correctly mapped
+	 * @param parameterChecker
+	 * @return
+	 */
 	boolean visitParameterCheck(ParameterCheckVisitor parameterChecker);
 	
 	int getComplexity();
