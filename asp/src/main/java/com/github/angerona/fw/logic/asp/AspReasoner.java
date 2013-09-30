@@ -151,7 +151,7 @@ public class AspReasoner extends BaseReasoner {
 		}
 		
 		Solver s = solver.getSolver();
-		return s.computeModels(bb.getProgram(), 10);
+		return s.computeModels(bb.getProgram(), 100);
 	}
 
 	/** @todo The code in the literal loop is mostly conversion. Logic conversion module? */

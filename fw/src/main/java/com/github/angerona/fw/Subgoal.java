@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import com.github.angerona.fw.listener.SubgoalListener;
+
 /**
  * A subgoal is a complex intention. It can realize sub plans by using stacks. 
  * It gives the user the possibility of using more than one sub-plan, this allows the implementation of
@@ -12,6 +14,8 @@ import java.util.Stack;
  */
 public class Subgoal extends Intention implements Cloneable {
 
+	boolean multipleStacksAlternative = true;
+	
 	private String name = "SG";
 	
 	/** a collection of desires which will be fulfilled if this Intention was processed */
@@ -46,12 +50,17 @@ public class Subgoal extends Intention implements Cloneable {
 		return stacks.size();
 	}
 	
+	public int newStack() {
+		stacks.add(new Stack<PlanElement>());
+		return stacks.size()-1;
+	}
+	
 	/**
 	 * create a new stack for the given complex intention. Is used for creating a stack with a complex intention.
 	 * @param intention	will be put ontop of the newly create stack.
 	 * @return true
 	 */
-	public boolean newStack(Intention intention) {
+	public int newStack(Intention intention) {
 		return newStack(intention, null);
 	}
 	
@@ -64,17 +73,18 @@ public class Subgoal extends Intention implements Cloneable {
 	 * 					like the query which the intention wants to answer and so on.
 	 * @return			true
 	 */
-	public boolean newStack(Intention intention, Object context) {
+	public int newStack(Intention intention, Object context) {
 		return newStack(new PlanElement(intention, context));
 	}
 	
-	public boolean newStack(PlanElement pe) {
+	public int newStack(PlanElement pe) {
 		if(pe == null)
 			throw new IllegalArgumentException("PlanElement parameter must not be null.");
 		
 		Stack<PlanElement> newStack = new Stack<PlanElement>();
 		newStack.add(pe);
-		return stacks.add(newStack);
+		stacks.add(newStack);
+		return stacks.size()-1;
 	}
 	
 	public boolean addToStack(Intention intention, int index) {
@@ -130,10 +140,10 @@ public class Subgoal extends Intention implements Cloneable {
 			stacks.remove(toDel);
 		}
 		
-		if(parent != null && stacks.isEmpty())
+		SubgoalListener parent = this.parent == null ? getAgent() : this.parent;
+		
+		if(stacks.isEmpty() || (toDel != null && multipleStacksAlternative))
 			parent.onSubgoalFinished(this);
-		else
-			getAgent().onSubgoalFinished(this);
 	}
 	
 	/** @return collection of desires which will be fullfiled after the Intention was followed */

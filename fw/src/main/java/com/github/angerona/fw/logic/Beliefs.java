@@ -101,6 +101,12 @@ public class Beliefs implements Cloneable
 
 		if (reval) {
 			customComponents.add(component);
+			for(AgentComponent alreadyAdded : customComponents) {
+				if(alreadyAdded != component) {
+					alreadyAdded.componentAdded(component);
+					component.componentAdded(alreadyAdded);
+				}
+			}
 		}
 		return reval;
 	}

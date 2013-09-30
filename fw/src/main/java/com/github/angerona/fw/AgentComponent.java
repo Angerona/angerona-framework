@@ -1,8 +1,10 @@
 package com.github.angerona.fw;
 
+import java.beans.PropertyChangeListener;
 import java.util.Map;
 
 import com.github.angerona.fw.internal.Entity;
+import com.github.angerona.fw.listener.AgentListener;
 
 /**
  * An AgentComponent is an part of an Agent. Every data component of
@@ -17,7 +19,19 @@ import com.github.angerona.fw.internal.Entity;
  * 
  * @author Tim Janus
  */
-public interface AgentComponent extends Entity{
+public interface AgentComponent extends Entity, AgentListener {
+	
+	/**
+	 * Adds the given listener to the registered listeners
+	 * @param listener	Reference to the listener to add
+	 */
+	void addPropertyChangeListener(PropertyChangeListener listener);
+	
+	/**
+	 * Removes the given listener from the list of registered listeners
+	 * @param listener	Reference to the listener to remove
+	 */
+	void removePropertyChangeListener(PropertyChangeListener listener);
 	
 	/**
 	 * Makes a copy of the agent component. An components clone duplicates
