@@ -96,7 +96,7 @@ public class ActionAdapter extends Action {
 	
 	@Override
 	public String toString() {
-		return "<ActionAdapter(" + actionName +") - if shown in UI an error occured.>";
+		return "<ActionAdapter(" + actionName + ")>";
 	}
 	
 	/**

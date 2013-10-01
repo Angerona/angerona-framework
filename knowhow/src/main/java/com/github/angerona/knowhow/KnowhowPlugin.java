@@ -21,6 +21,11 @@ import com.github.angerona.knowhow.gui.KnowhowBaseView;
 import com.github.angerona.knowhow.gui.KnowhowGraphView;
 import com.github.angerona.knowhow.situation.SituationStorage;
 
+/**
+ * The plug-in contains know-how based planner capabilites.
+ * 
+ * @author Tim Janus
+ */
 @PluginImplementation
 public class KnowhowPlugin extends AngeronaPluginAdapter 
 	implements UIPlugin {

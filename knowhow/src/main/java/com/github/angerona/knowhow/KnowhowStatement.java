@@ -11,10 +11,13 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 import com.github.angerona.fw.util.Utility;
 
 /**
- * Class represents a KnowhowStatement like the one defined in Thimm, Krümpelmann 2009.
+ * Class represents a KnowhowStatement similar to the one defined in 
+ * Thimm, Krümpelmann 2009. But this version has also the parameters
+ * weight and irrelevance that are introduced in the Diploma Thesis
+ * "Resource-boundend Planning of Communication under Confidentiality
+ * Constraints for BDI Agents".
  * 
  * @author Tim Janus
- *
  */
 public class KnowhowStatement implements Serializable {
 	
@@ -48,20 +51,36 @@ public class KnowhowStatement implements Serializable {
 	/** counter used for automatic name generation */
 	private static int counter = 1;
 	
+	/**
+	 * Copy-Ctor: Generates a copy of the given KnowhowStatement
+	 * @param other	The KnowhowStatement that acts as source for the copy
+	 */
 	public KnowhowStatement(KnowhowStatement other) {
 		this(other.target.clone(), 
 			Utility.cloneList(other.subTargets, DLPAtom.class), 
 			Utility.cloneList(other.conditions, DLPAtom.class));
-		
-		if(!this.equals(other)) {
-			this.equals(other);
-		}
 	}
 	
+	/**
+	 * Ctor for the Thimm and Krümpelmann version of the know-how statement, the irrelevance and
+	 * the weight will get a default value of zero.
+	 * @param target		The target (goal) of the KnowhowStatement
+	 * @param subTargets	The sub targets that have to be achieved to fulfill the KnowhowStatement
+	 * @param conditions	The conditions that have to be fulfilled, otherwise the KnowhowStatement is not applicable
+	 */
 	public KnowhowStatement(DLPAtom target, Collection<DLPAtom> subTargets, Collection<DLPAtom> conditions) {
 		this(target, subTargets, conditions, 0, 0);
 	}
-		
+	
+	/**
+	 * Ctor for generating a full qualified know-how statement
+	 * @param target		The target (goal) of the KnowhowStatement
+	 * @param subTargets	The sub targets that have to be achieved to fulfill the KnowhowStatement
+	 * @param conditions	The conditions that have to be fulfilled, otherwise the KnowhowStatement is not applicable
+	 * @param weight		The weight of the KnowhowStatement, if statements have the same target then those statements
+	 * 						are preferred that have a higher weight.
+	 * @param irrelevance	@todo change irrelevance
+	 */
 	public KnowhowStatement(DLPAtom target, Collection<DLPAtom> subTargets, Collection<DLPAtom> conditions, 
 			double weight, double irrelevance) {
 		id = counter;
@@ -75,32 +94,37 @@ public class KnowhowStatement implements Serializable {
 		this.irrelevance = 0;
 	}
 	
-	/** @return	the id of the knowhow-statement (useable as index) */
+	/** @return	the unique id of the knowhow-statement (useable as index), a static ID counter is used to generate the id */
 	public int getId() {
 		return id;
 	}
 	
+	/** @return the unique name of the know-how statement, a static ID counter is used to generate the name */
 	public String getName() {
 		return name;
 	}
 	
+	/** @return the target (goal) of the know-how statement */
 	public DLPAtom getTarget() {
 		return target;
 	}
 	
-	
+	/** @return an unmodifiable list of the sub-targets of this know-how statement */
 	public List<DLPAtom> getSubTargets() {
 		return Collections.unmodifiableList(subTargets);
 	}
 	
+	/** @return an unmodifiable list of the conditions of this know-how statement */
 	public List<DLPAtom> getConditions() {
 		return Collections.unmodifiableList(conditions);
 	}
 	
+	/** @return the weight of this know-how statement */
 	public double getWeight() {
 		return weight;
 	}
 	
+	/** @return the irrelevance of this know-how statement */
 	public double getIrrelevance() {
 		return irrelevance;
 	}
