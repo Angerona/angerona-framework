@@ -36,7 +36,7 @@ public class AssignTest {
 			LOG.warn("Cannot find: '{}'", jarPath);
 			return;
 		}
-		Assign assign = SerializeHelper.loadXmlTry(Assign.class, new InputStreamReader(stream));
+		Assign assign = SerializeHelper.get().loadXmlTry(Assign.class, new InputStreamReader(stream));
 		
 		doStringTest(assign, new Context());
 	}

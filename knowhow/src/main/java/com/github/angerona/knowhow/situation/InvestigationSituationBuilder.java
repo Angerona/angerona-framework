@@ -20,7 +20,6 @@ import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -73,10 +72,8 @@ public class InvestigationSituationBuilder extends SituationBuilderAdapter {
 		LOG.debug("Entering build()");
 		
 		Program input = new Program();
-		for(FOLAtom query : situation.getQueries()) {
-			Rule fact = createRule("search_info(" + query.toString() + ").");
-			if(fact != null)
-				input.add(fact);
+		for(DLPAtom query : situation.getQueries()) {
+			input.addFact(new DLPAtom("search_info", new Constant(query.toString())));
 		}
 			
 		for(String source : situation.getSources()) {

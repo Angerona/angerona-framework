@@ -29,25 +29,31 @@ import com.github.angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorSt
  * @author Tim Janus
  */
 public interface AngeronaPlugin extends Plugin {
-	/** @return the agent component implementations defined in the plugin */
+	/** is called right before the plug-in is loaded */
+	void onLoading();
+	
+	/** is called after the plug-in is unloaded */
+	void unUnloaded();
+	
+	/** @return the agent component implementations defined in the plug-in */
 	List<Class<? extends AgentComponent>> getAgentComponentImpl();
 	
-	/** @return all the belief base implementations defined in the plugin */
+	/** @return all the belief base implementations defined in the plug-in */
 	List<Class<? extends BaseBeliefbase>> getBeliefbaseImpl();
 	
-	/** @return all the reasoner implementations defined in the plugin */
+	/** @return all the reasoner implementations defined in the plug-in */
 	List<Class<? extends BaseReasoner>> getReasonerImpl();
 	
-	/** @return all the implementations of change operations on belief bases defined in the plugin */
+	/** @return all the implementations of change operations on belief bases defined in the plug-in */
 	List<Class<? extends BaseChangeBeliefs>> getChangeImpl();
 	
-	/** @return all the translator implementations defined in the plugin */
+	/** @return all the translator implementations defined in the plug-in */
 	List<Class<? extends BaseTranslator>> getTranslatorImpl();
 	
-	/** @return all operator implementations defined in this plugin */
+	/** @return all operator implementations defined in this plug-in */
 	List<Class<? extends BaseOperator>> getOperators();
 	
-	/** @return all the environment behavior implementations of the plugin */
+	/** @return all the environment behavior implementations of the plug-in */
 	List<Class<? extends EnvironmentBehavior>> getEnvironmentBehaviors();
 	
 	/** @return all the iterator strategies, that can be used to iterate over continuous belief operator families */

@@ -50,7 +50,7 @@ public class AngeronaProject extends ModelAdapter {
 	
 	private <T extends Resource> void loadResource(File file, Class<T> cls) {
 		try {
-			T res = SerializeHelper.loadXml(cls, file);
+			T res = SerializeHelper.get().loadXml(cls, file);
 			resourceMap.put(res.getName(), res);
 			LOG.info("'{}' '"+res.getName()+"' in '{}' added to Angerona project.", 
 					res.getResourceType(), file.getAbsolutePath());

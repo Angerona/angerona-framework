@@ -160,6 +160,7 @@ public class PluginInstantiator {
 	 */
 	public void registerPlugin(AngeronaPlugin plugin) {
 		if(!loadedPlugins.contains(plugin)) {
+			plugin.onLoading();
 			for(PluginListener listener : listeners) {
 				listener.loadingPlugin(plugin);
 			}

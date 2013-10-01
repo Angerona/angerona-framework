@@ -8,11 +8,8 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 import com.github.angerona.fw.error.InvokeException;
-import com.github.angerona.fw.reflection.BooleanExpression;
 import com.github.angerona.fw.reflection.Condition;
 import com.github.angerona.fw.reflection.Context;
-import com.github.angerona.fw.reflection.Value;
-import com.github.angerona.fw.serialize.SerializeHelper;
 
 /**
  * An ASML conditional represents the if, elseif, else construct. Every if
@@ -89,19 +86,5 @@ public class Conditional extends ASMLCommand {
 		if(!done && elseCommandos != null) {
 			elseCommandos.execute(getContext());
 		}
-	}
-	
-	/**
-	 * Method to test the xml de-serialization of the ASML conditional.
-	 * @param args
-	 * @throws ClassNotFoundException
-	 */
-	public static void main(String [] args) throws ClassNotFoundException {
-		Conditional test = new Conditional();
-		test.ifPart = new ConditionalSequence();
-		test.ifPart.condition = new BooleanExpression(new Value("1"), BooleanExpression.Operator.LESS, new Value("2"));
-		test.ifPart.addCommando(new Assign("1k", new Value("1000")));
-		
-		SerializeHelper.outputXml(test, System.out);
 	}
 }

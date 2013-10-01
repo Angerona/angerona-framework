@@ -5,25 +5,14 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.transform.RegistryMatcher;
+import org.simpleframework.xml.transform.Transform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.angerona.fw.reflection.BooleanExpression;
-import com.github.angerona.fw.reflection.Condition;
-import com.github.angerona.fw.reflection.FolFormulaVariable;
-import com.github.angerona.fw.reflection.Value;
-import com.github.angerona.fw.serialize.transform.ConditionTransform;
-import com.github.angerona.fw.serialize.transform.FolAtomTransform;
-import com.github.angerona.fw.serialize.transform.FolFormulaTransform;
 import com.github.angerona.fw.serialize.transform.SpeechActStrategy;
-import com.github.angerona.fw.serialize.transform.ValueTransform;
-import com.github.angerona.fw.serialize.transform.VariableTransform;
 
 /**
  * Helper class encapsulates the exception handling during XML serialization.
@@ -34,33 +23,21 @@ public class SerializeHelper {
 	private static Logger LOG = LoggerFactory.getLogger(SerializeHelper.class);
 	
 	/** the used serializer */
-	private static Serializer serializer = null;
+	private Serializer serializer = null;
 	
-	/**
-	 * Initialize the SerializeHelper: Register transforms.
-	 */
-	private static void init() {
-		if(serializer == null) {
-			RegistryMatcher matcher = new RegistryMatcher();
-			matcher.bind(FolFormula.class, FolFormulaTransform.class);
-			matcher.bind(FOLAtom.class, FolAtomTransform.class);			
-			
-			matcher.bind(FolFormulaVariable.class, 
-					new VariableTransform<FolFormulaVariable>() {
-						@Override
-						protected Class<FolFormulaVariable> getCls() {
-							return FolFormulaVariable.class;
-						}
-			});
-			
-			matcher.bind(Value.class, ValueTransform.class);
-			matcher.bind(BooleanExpression.class, ConditionTransform.class);
-			matcher.bind(Condition.class, ConditionTransform.class);
-			
-			//matcher.bind(SpeechAct.class, SpeechActTransform.class);
-			
-			serializer = new Persister(new SpeechActStrategy(), matcher);
-		}
+	private RegistryMatcher matcher = null;
+	
+	/** singleton instance of serialize helper */
+	private static SerializeHelper instance;
+	
+	public void addTransformMapping(Class<?> dataCls, Class<? extends Transform<?>> transformCls) {
+		matcher.bind(dataCls, transformCls);
+		LOG.info("Registered Transform '{}' for '{}'.", transformCls.getSimpleName(), 
+				dataCls.getSimpleName());
+	}
+	
+	public void removeTransformMapping(Class<?> dataCls) {
+		// does nothing yet (has to generate new matcher instance) */
 	}
 	
 	/**
@@ -72,8 +49,7 @@ public class SerializeHelper {
 	 * @return			An instance of type T containing the data stored in the XML file.
 	 * @throws Exception	If an error occured during the parsing of the XML file.
 	 */
-	public static <T> T loadXml(Class<T> cls, File source) throws Exception {
-		init();
+	public <T> T loadXml(Class<T> cls, File source) throws Exception {
 		return serializer.read(cls, source);
 	}
 	
@@ -84,7 +60,7 @@ public class SerializeHelper {
 	 * @return			An instance of type T containing the XML data or null if an error occured during
 	 * 					parsing the XML file.
 	 */
-	public static <T> T loadXmlTry(Class<T> cls, File source) {
+	public <T> T loadXmlTry(Class<T> cls, File source) {
 		try {
 			return loadXml(cls, source);
 		} catch (Exception e) {
@@ -103,8 +79,7 @@ public class SerializeHelper {
 	 * @return			A instance of type T that contains the data stored in the XML expressions
 	 * @throws Exception	If an error occurred during parsing the XML expressions
 	 */
-	public static <T> T loadXml(Class<T> cls, Reader source) throws Exception {
-		init();
+	public <T> T loadXml(Class<T> cls, Reader source) throws Exception {
 		return serializer.read(cls, source);
 	}
 		
@@ -117,7 +92,7 @@ public class SerializeHelper {
 	 * @param source	A Java Reader object thats acts as source for the XML expressions
 	 * @return			A instance of type T that contains the data stored in the XML expressions
 	 */
-	public static <T> T loadXmlTry(Class<T> cls, Reader source) {
+	public <T> T loadXmlTry(Class<T> cls, Reader source) {
 		try {
 			return loadXml(cls, source);
 		} catch (Exception e) {
@@ -135,7 +110,7 @@ public class SerializeHelper {
 	 * @return		An object of type cls that contains the data saved in the XML expressions
 	 * @throws Exception	If an error occurs when parsing the XML.
 	 */
-	public static <T> T loadXml(Class<T> cls, String xml) throws Exception {
+	public <T> T loadXml(Class<T> cls, String xml) throws Exception {
 		return loadXml(cls, new StringReader(xml));
 	}
 	
@@ -147,7 +122,7 @@ public class SerializeHelper {
 	 * @return		An object of type cls that contains the data saved in the XML expressions or
 	 * 				null if an error occured during parsing the XML.
 	 */
-	public static <T> T loadXmlTry(Class<T> cls, String xml) {
+	public <T> T loadXmlTry(Class<T> cls, String xml) {
 		return loadXmlTry(cls, new StringReader(xml));
 	}
 	
@@ -156,8 +131,7 @@ public class SerializeHelper {
 	 * @param data			object serializable by simplexml framework
 	 * @param destination	file referencing the destination of the xml writing.
 	 */
-	public static <T> void writeXml(T data, File destination) {
-		init();
+	public <T> void writeXml(T data, File destination) {
 		try {
 			serializer.write(data, destination);
 		} catch (Exception e) {
@@ -171,13 +145,24 @@ public class SerializeHelper {
 	 * @param data		object serializable by simplexml framework.
 	 * @param output	output-stream referencing the object which receives the xml output.
 	 */
-	public static<T> void outputXml(T data, OutputStream output) {
-		init();
+	public <T> void outputXml(T data, OutputStream output) {
 		try {
 			serializer.write(data, output);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.error("Error occored during output of xml data: {}, ", e.getMessage());
 		}
+	}
+	
+	public static SerializeHelper get() {
+		if(instance == null) {
+			instance = new SerializeHelper();
+		}
+		return instance;
+	}
+	
+	private SerializeHelper() {
+		matcher = new RegistryMatcher();
+		serializer = new Persister(new SpeechActStrategy(), matcher);
 	}
 }

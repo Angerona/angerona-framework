@@ -78,7 +78,7 @@ public class AgentConfigReal implements AgentConfig {
 	}
 	
 	public static AgentConfigReal loadXml(File file) throws IOException {
-		return SerializeHelper.loadXmlTry(AgentConfigReal.class, file);
+		return SerializeHelper.get().loadXmlTry(AgentConfigReal.class, file);
 	}
 
 	@Override

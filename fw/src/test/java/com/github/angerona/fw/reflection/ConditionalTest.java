@@ -36,7 +36,7 @@ public class ConditionalTest {
 			LOG.warn("Cannot find: '{}'", jarPath);
 			return;
 		}
-		conditional = SerializeHelper.loadXmlTry(Conditional.class, new InputStreamReader(stream));
+		conditional = SerializeHelper.get().loadXmlTry(Conditional.class, new InputStreamReader(stream));
 	}
 	
 	@After 

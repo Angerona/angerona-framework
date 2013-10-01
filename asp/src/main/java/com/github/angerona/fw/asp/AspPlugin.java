@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.angerona.fw.AngeronaPluginAdapter;
@@ -25,6 +26,7 @@ import com.github.angerona.fw.logic.asp.AspTranslator;
 import com.github.angerona.fw.logic.asp.RevisionCredibilityPrograms;
 import com.github.angerona.fw.logic.asp.RevisionPreferenceHandling;
 import com.github.angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
+import com.github.angerona.serialize.asp.DLPAtomTransform;
 
 /**
  * The ASP plugin implements a belief base plugin which provides an ASP
@@ -39,6 +41,11 @@ import com.github.angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorSt
 public class AspPlugin extends AngeronaPluginAdapter 
 	implements UIPlugin {
 
+	@Override
+	public void onLoading() {
+		addTransformMapping(DLPAtom.class, DLPAtomTransform.class);
+	}
+	
 	@Override
 	public List<Class<? extends BaseBeliefbase>> getBeliefbaseImpl() {
 		List<Class<? extends BaseBeliefbase>> reval = new LinkedList<Class<? extends BaseBeliefbase>>();

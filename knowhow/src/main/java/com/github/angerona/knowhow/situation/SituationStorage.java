@@ -75,7 +75,7 @@ public class SituationStorage extends BaseAgentComponent {
 				}
 				
 				try {
-					Object o = SerializeHelper.loadXml(cls, new FileReader(f));
+					Object o = SerializeHelper.get().loadXml(cls, new FileReader(f));
 					if(o instanceof Situation) {
 						Situation s = (Situation)o;
 						situations.put(s.getGoal(), s);

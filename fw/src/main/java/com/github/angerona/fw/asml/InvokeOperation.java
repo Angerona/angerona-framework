@@ -14,7 +14,6 @@ import com.github.angerona.fw.operators.OperatorCaller;
 import com.github.angerona.fw.operators.OperatorProvider;
 import com.github.angerona.fw.operators.parameter.GenericOperatorParameter;
 import com.github.angerona.fw.reflection.Value;
-import com.github.angerona.fw.serialize.SerializeHelper;
 
 /**
  * The InvokeOperation ASML command calls an operator which implements an operation
@@ -109,13 +108,5 @@ public class InvokeOperation extends ASMLCommand {
 		if(out != null && output != null) {
 			getContext().set(output, out);
 		}
-	}
-	
-	public static void main(String [] args) throws ClassNotFoundException {
-		InvokeOperation op = new InvokeOperation("TestType", new HashMap<String, Value>(), "out");
-		op.parameters.put("beliefs", new Value("$beliefs"));
-		op.parameters.put("perception", new Value("$in.perception"));
-		
-		SerializeHelper.outputXml(op, System.out);
 	}
 }

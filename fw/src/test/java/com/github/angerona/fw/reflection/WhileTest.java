@@ -33,7 +33,7 @@ public class WhileTest {
 			LOG.warn("Cannot find: '{}'", jarPath);
 			return ;
 		}
-		loop = SerializeHelper.loadXmlTry(While.class, new InputStreamReader(stream));
+		loop = SerializeHelper.get().loadXmlTry(While.class, new InputStreamReader(stream));
 	}
 	
 	@Test

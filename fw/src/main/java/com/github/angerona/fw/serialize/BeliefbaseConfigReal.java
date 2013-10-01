@@ -71,7 +71,7 @@ public class BeliefbaseConfigReal implements BeliefbaseConfig {
 	 * @throws IOException
 	 */
 	public static BeliefbaseConfigReal loadXml(File source) {
-		return SerializeHelper.loadXmlTry(BeliefbaseConfigReal.class, source);
+		return SerializeHelper.get().loadXmlTry(BeliefbaseConfigReal.class, source);
 	}
 			
 	@Override

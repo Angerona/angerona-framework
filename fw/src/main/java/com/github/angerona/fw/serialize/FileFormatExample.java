@@ -24,6 +24,7 @@ public class FileFormatExample {
 		conf.behaviorCls = "net.sf.Behavior";
 		AgentInstance agent = getTestAgentInstance();
 		conf.agents.add(agent);
+		SerializeHelper sh = SerializeHelper.get();
 		
 		Agent sender = new Agent("Boss", null);
 		conf.perceptions.add(new Query(sender, "Employee", new FOLAtom(new Predicate("attend_scm"))));
@@ -37,7 +38,7 @@ public class FileFormatExample {
 		}
 		// Output example simulation configuration file:
 		System.out.println("Simulation - Configuration - An example XML:");
-		SerializeHelper.outputXml(conf, System.out);
+		sh.outputXml(conf, System.out);
 		System.out.println("\n\n");
 		
 		
@@ -56,7 +57,7 @@ public class FileFormatExample {
 		
 		// Output example belief base configuration file:
 		System.out.println("Beliefbase - Configuration - An example XML:");
-		SerializeHelper.outputXml(bbcr, System.out);
+		sh.outputXml(bbcr, System.out);
 		System.out.println("\n\n");
 		
 		opc.operationType = "GenerateOptions";
@@ -71,7 +72,7 @@ public class FileFormatExample {
 		
 		// Output example agent configuration file:
 		System.out.println("Agent - Configuration - An example XML:");
-		SerializeHelper.outputXml(acr, System.out);
+		sh.outputXml(acr, System.out);
 		
 	}
 

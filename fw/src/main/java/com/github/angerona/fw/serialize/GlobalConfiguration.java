@@ -71,7 +71,7 @@ public class GlobalConfiguration {
 	 * @throws IOException
 	 */
 	public static GlobalConfiguration loadXml(File source) {
-		return SerializeHelper.loadXmlTry(GlobalConfiguration.class, source);
+		return SerializeHelper.get().loadXmlTry(GlobalConfiguration.class, source);
 	}
 	
 	/**
