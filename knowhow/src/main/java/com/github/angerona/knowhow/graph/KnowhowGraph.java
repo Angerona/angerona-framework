@@ -127,6 +127,10 @@ public class KnowhowGraph extends BaseAgentComponent implements PropertyChangeLi
 		
 		for(GraphNode leaf : leafNodes) {
 			if(!kbBuilder.getLeafs().contains(leaf)) {
+				// check if the leaf node is in the graph (it might be removed by a previous iteration)
+				if(!graph.containsVertex(leaf))
+					continue;
+					
 				// TODO: Try to find situation to generate graph, otherwise remove from graph
 				if(leaf instanceof Selector) {
 					Selector lSel = (Selector)leaf;
@@ -144,7 +148,7 @@ public class KnowhowGraph extends BaseAgentComponent implements PropertyChangeLi
 					
 					if(sit != null) {
 						SituationGraphBuilder builder = SituationGraphBuilderFactory.createGraphBuilder(
-								sit, getAgent(), lSel);
+								sit, getAgent());
 						builder.build();
 						Graph<GraphNode, DefaultEdge> situationGraph = builder.getGraph();
 						

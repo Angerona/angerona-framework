@@ -1,9 +1,12 @@
 package com.github.angerona.fw.gui.view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -36,20 +39,36 @@ public class ReportView extends JPanel implements ViewComponent {
     
 	private JTree tree;
 
-	private TreeControllerAdapter controller;
+	private boolean showDetailsFlag = true;
+	
+	private ReportTreeController controller;
 	
 	public ReportView() {
     	tree = new JTree();
-		JScrollPane pane = new JScrollPane(tree);
+    	JPanel treeViewContainer = new JPanel();
+    	treeViewContainer.setLayout(new BorderLayout());
+		JScrollPane scrollPane = new JScrollPane(tree);
 		controller = new ReportTreeController(tree);
+		treeViewContainer.add(scrollPane, BorderLayout.CENTER);
+	
+		final JButton btn = new JButton("Hide Details");
+		btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showDetailsFlag = !showDetailsFlag;
+				btn.setText(showDetailsFlag ? "Hide Details" : "Show Details");
+				controller.showDetail(showDetailsFlag);
+			}
+		});
+		treeViewContainer.add(btn, BorderLayout.SOUTH);
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
-		tabbedPane.addTab("TreeView", pane);
+		tabbedPane.addTab("TreeView", treeViewContainer);
 
 		final JTextArea txtArea = new JTextArea();
-		pane = new JScrollPane(txtArea);
-		tabbedPane.addTab("Wiki-Syntax", pane);
+		scrollPane = new JScrollPane(txtArea);
+		tabbedPane.addTab("Wiki-Syntax", scrollPane);
 		
 		setLayout(new BorderLayout());
 		add(tabbedPane, BorderLayout.CENTER);

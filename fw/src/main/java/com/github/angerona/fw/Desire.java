@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.github.angerona.fw.util.Utility;
 
 /**
- * This class represents a desire as complex object.
- * In Angerona a desire might be linked to a plan, this object is responsible of
- * keeping track of those links.
+ * This class represents a desire.
  * 
  * @author Tim Janus
  */
@@ -19,9 +17,6 @@ public class Desire {
 	
 	/** tweety atom representing the desire */
 	private FolFormula formula;
-	
-	/** plan as subgoal */
-	private Subgoal plan;
 	
 	/** the perception which initialized the desire, this might be null */
 	private Perception perception;
@@ -47,31 +42,6 @@ public class Desire {
 		this.perception = other.perception;
 	}
 	
-	/**
-	 * Sets the given plan as actual linked plan of the desire
-	 * @param plan reference to a plan
-	 * @deprecated
-	 */
-	void setPlan(Subgoal plan) {
-		this.plan = plan;
-	}
-	
-	/** 
-	 * @deprecated
-	 * @return true if a plan is linked to the desire, false otherwise. 
-	 * */
-	boolean hasPlan() {
-		return plan != null;
-	}
-	
-	/** 
-	 * @deprecated
-	 * @return reference to the plan linked to the desire, this might be null
-	 */
-	public Subgoal getPlan() {
-		return plan;
-	}
-	
 	/** @return tweety representation of the desire */
 	public FolFormula getFormula() {
 		return formula;
@@ -88,21 +58,18 @@ public class Desire {
 	
 	@Override 
 	public boolean equals(Object other) {
-		if(! (other instanceof Desire))	
-			return false;
+		if(this == other) 	return true;
+		if(other == null || other.getClass() != this.getClass()) return false;
 		
 		Desire od = (Desire)other;
-		if(!Utility.equals(this.formula, od.formula))	
-			return false;
-		
-		if(!Utility.equals(this.perception, od.perception))
-			return false;
+		if(!Utility.equals(this.formula, od.formula))			return false;
+		if(!Utility.equals(this.perception, od.perception))		return false;
 		return true;
 	}
 	
 	@Override
 	public int hashCode() {
-		return this.formula.hashCode() +
-				(this.perception == null ? 0 : this.perception.hashCode());
+		return (this.formula.hashCode() +
+				(this.perception == null ? 0 : this.perception.hashCode())) * 11;
 	}
 }

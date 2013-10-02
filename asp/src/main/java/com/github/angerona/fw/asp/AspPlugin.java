@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.angerona.fw.AngeronaPluginAdapter;
@@ -27,6 +28,7 @@ import com.github.angerona.fw.logic.asp.RevisionCredibilityPrograms;
 import com.github.angerona.fw.logic.asp.RevisionPreferenceHandling;
 import com.github.angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 import com.github.angerona.serialize.asp.DLPAtomTransform;
+import com.github.angerona.serialize.asp.DLPLiteralTransform;
 
 /**
  * The ASP plugin implements a belief base plugin which provides an ASP
@@ -44,6 +46,7 @@ public class AspPlugin extends AngeronaPluginAdapter
 	@Override
 	public void onLoading() {
 		addTransformMapping(DLPAtom.class, DLPAtomTransform.class);
+		addTransformMapping(DLPLiteral.class, DLPLiteralTransform.class);
 	}
 	
 	@Override

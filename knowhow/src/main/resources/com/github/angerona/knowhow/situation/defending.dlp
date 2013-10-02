@@ -1,0 +1,25 @@
+% Init step
+step(0).
+
+% Communication types:
+type(p_honest).
+type(p_withholding).
+type(p_bullshitting).
+type(p_lie).
+
+% Generate Asked literal
+asked(Q,Z) :- question(Q), step(Z), 
+              not nasked(Q,Z), not asked_prior(Q,Z).
+
+% Only allow one asked literal:
+nasked(X,Z) :- asked(A,Z), question(A), question(X), A!=X.
+
+% Save what questions are already asked:
+asked_prior(Q, Z) :- step(Y), asked(Q, Y), Z=Y+1.
+asked_prior(Q, Z) :- asked_prior(Q, Y), Z=Y+1.
+
+answer(Q, A, Z) :- type(A), asked(Q,Z), answer_behavior(Q, A), not nanswer(Q,A,Z).
+nanswer(Q, A, Z) :- answer(Q,X,Z), type(A), type(X), X!=A.
+
+% increase step count:
+step(X) :- step(Y), asked(_,Y), X=Y+1.

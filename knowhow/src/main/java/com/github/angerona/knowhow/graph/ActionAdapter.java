@@ -84,8 +84,6 @@ public class ActionAdapter extends Action {
 		} else if(actionName.equals("Query")) {
 			reval = createQuery(parameters);
 		} else if(actionName.equals("QueryAnswer")) {
-			if(! (context instanceof Query))
-				throw new IllegalStateException("Context of Answer is no 'Query' but '" + context.getClass().getSimpleName() + "'");
 			reval = createAnswer(parameters, (Query)context);
 		} else {
 			throw new NotImplementedException("Generation of Action '" + actionName + "' not implemented yet");
@@ -107,46 +105,70 @@ public class ActionAdapter extends Action {
 	 * @return
 	 */
 	private Answer createAnswer(List<Parameter> parameters, Query context) {
-		if(parameters.size() != 1) {
-			throw new IllegalStateException("The parameter count for an Answer must be '1' not '" + parameters.size() + "'");
+		if(parameters.size() != 1 && parameters.size() != 3) {
+			throw new IllegalStateException("The parameter count for an Answer must be '1' or '3' not '" + parameters.size() + "'");
 		}
 		
-		Parameter param = parameters.get(0);
-		if(param.getType() == TYPE.T_HONESTY) {
+		if(parameters.size() == 3) {
+			TYPE t0 = parameters.get(0).getType();
+			TYPE t1 = parameters.get(1).getType();
+			TYPE t2 = parameters.get(2).getType();
 			
-			// TODO this bunch of code is duplo, create a factory somewhere:
-			if(context.getQuestion().isGround()) {
-				AnswerValue simpleAnswer = curBeliefs.getWorldKnowledge().reason(context.getQuestion()).getAnswerValue();		
-				if(param.getIdentifier().equals("p_honest")) {
-					// do nothing
-				} else if(param.getIdentifier().equals("p_lie")) {
-					simpleAnswer = Utility.lie(simpleAnswer);
-				} else {
-					throw new NotImplementedException("The honesty type: '" + param.getIdentifier().substring(2) + "' is not implemented yet.");
+			if(t0 != TYPE.T_AGENT || t1 != TYPE.T_FORMULA || t2 != TYPE.T_HONESTY) {
+				throw new IllegalStateException("Invalid Signature (" + t0.toString() + ", " + t1.toString() + ", " +
+						t2.toString() + ") awaitng: (" + TYPE.T_AGENT.toString() + ", " + TYPE.T_FORMULA.toString() + ", " +
+						TYPE.T_HONESTY + ").");
+			}
+
+			String receiver = mapAgent(parameters.get(0));
+			FolFormula question = mapFormula(parameters.get(1));
+			String honesty = parameters.get(2).getIdentifier();
+			
+			AngeronaAnswer answer = curBeliefs.getWorldKnowledge().reason(question);
+			if(honesty.equals("p_lie")) {
+				answer = Utility.lie(answer);
+			}
+			return new Answer(this.agent, receiver, question, answer);
+		} else {
+			if(! (context instanceof Query))
+				throw new IllegalStateException("Context of Answer is no 'Query' but '" + context.getClass().getSimpleName() + "'");
+			
+			Parameter param = parameters.get(0);
+			if(param.getType() == TYPE.T_HONESTY) {
+				// TODO this bunch of code is duplo, create a factory somewhere:
+				if(context.getQuestion().isGround()) {
+					AnswerValue simpleAnswer = curBeliefs.getWorldKnowledge().reason(context.getQuestion()).getAnswerValue();		
+					if(param.getIdentifier().equals("p_honest")) {
+						// do nothing
+					} else if(param.getIdentifier().equals("p_lie")) {
+						simpleAnswer = Utility.lie(simpleAnswer);
+					} else {
+						throw new NotImplementedException("The honesty type: '" + param.getIdentifier().substring(2) + "' is not implemented yet.");
+					}
+					
+					return new Answer(this.agent, context.getSenderId(), context.getQuestion(), 
+							new AngeronaAnswer(context.getQuestion(), simpleAnswer));
 				}
 				
-				return new Answer(this.agent, context.getSenderId(), context.getQuestion(), 
-						new AngeronaAnswer(context.getQuestion(), simpleAnswer));
-			}
-			
-			throw new NotImplementedException("Cannot handle the answer on open queries yet.");
-		} else if(param.getType() == TYPE.T_CONSTANT) {
-			String constant = param.getIdentifier().substring(2);
-			AnswerValue av = null;
-			if(constant.equalsIgnoreCase("YES")) {
-				av = AnswerValue.AV_TRUE;
-			} else if(constant.equalsIgnoreCase("NO")) {
-				av = AnswerValue.AV_FALSE;
-			} else if(constant.equalsIgnoreCase("UNKNOWN")) {
-				av = AnswerValue.AV_UNKNOWN;
-			} else if(constant.equalsIgnoreCase("REJECT")) {
-				av = AnswerValue.AV_REJECT;
+				throw new NotImplementedException("Cannot handle the answer on open queries yet.");
+			} else if(param.getType() == TYPE.T_CONSTANT) {
+				String constant = param.getIdentifier().substring(2);
+				AnswerValue av = null;
+				if(constant.equalsIgnoreCase("YES")) {
+					av = AnswerValue.AV_TRUE;
+				} else if(constant.equalsIgnoreCase("NO")) {
+					av = AnswerValue.AV_FALSE;
+				} else if(constant.equalsIgnoreCase("UNKNOWN")) {
+					av = AnswerValue.AV_UNKNOWN;
+				} else if(constant.equalsIgnoreCase("REJECT")) {
+					av = AnswerValue.AV_REJECT;
+				} else {
+					throw new IllegalArgumentException("The constant '" + constant + "' is not allowed as argument for an answer.");
+				}
+				return new Answer(this.agent, context.getSenderId(), context.getQuestion(), av);
 			} else {
-				throw new IllegalArgumentException("The constant '" + constant + "' is not allowed as argument for an answer.");
+				throw new IllegalArgumentException("The parameter type '" + param.getType() + "' is not supported for an Answer");
 			}
-			return new Answer(this.agent, context.getSenderId(), context.getQuestion(), av);
-		} else {
-			throw new IllegalArgumentException("The parameter type '" + param.getType() + "' is not supported for an Answer");
 		}
 	}
 	
@@ -212,7 +234,7 @@ public class ActionAdapter extends Action {
 						" '" + question.toString() + "' is not open.");
 			}
 			
-			AngeronaAnswer answer = this.agent.getBeliefs().getWorldKnowledge().reason(question);
+			AngeronaAnswer answer = curBeliefs.getWorldKnowledge().reason(question);
 			if(!answer.getAnswers().isEmpty()) {
 				FolFormula reval = answer.getAnswers().iterator().next();
 				return reval;

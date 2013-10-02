@@ -1,5 +1,10 @@
 package com.github.angerona.fw.def;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +87,16 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		somethingHappens = false;
 		angeronaReady = false;
 		++tick;
-		for(Agent agent : env.getAgents()) {
+		
+		List<Agent> orderedAlphabetically = new ArrayList<>(env.getAgents());
+		Collections.sort(orderedAlphabetically, new Comparator<Agent>() {
+			@Override
+			public int compare(Agent o1, Agent o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		
+		for(Agent agent : orderedAlphabetically) {
 			// cycle internally sends the selected action
 			// to the environment using sendAction() method.
 			agent.cycle();

@@ -33,33 +33,38 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	@Override
 	protected PlanElement processInternal(PlanParameter param) {
 		LOG.info("Run Default-Intention-Update");
-		Agent ag = param.getActualPlan().getAgent();
 		for(Subgoal plan : param.getActualPlan().getPlans()) {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
 				PlanElement pe = plan.peekStack(i);
-				if(pe.getIntention().isAtomic()) {
-					Intention intention = pe.getIntention();
-					
-					if(intention.isAtomic()) {
-						boolean select = Boolean.parseBoolean(param.getSetting("allowUnsafe", String.valueOf(false)));
-						
-						if(!select) {
-							OperatorCallWrapper op = ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
-							EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
-							select = ((ViolatesResult)op.process(eparam)).isAlright();
-							if(select) {
-								param.report("Mental action successful, using '" + intention.toString() + "' as next atomic action.");
-							}
-						}
-						
-						if(select) {
-							return pe;
-						}
-					}
+				if(check(param, pe)) {
+					return pe;
 				}
 			}
 		}
 		param.report("No atomic step candidate found.");
 		return null;
+	}
+
+	protected boolean check(PlanParameter param, PlanElement pe) {
+		Intention intention = pe.getIntention();
+		Agent ag = param.getAgent();
+		if(pe.getIntention().isAtomic()) {
+			
+			if(intention.isAtomic()) {
+				boolean select = Boolean.parseBoolean(param.getSetting("allowUnsafe", String.valueOf(false)));
+				
+				if(!select) {
+					OperatorCallWrapper op = ag.getOperators().getPreferedByType(BaseViolatesOperator.OPERATION_NAME);
+					EvaluateParameter eparam = new EvaluateParameter(ag, ag.getBeliefs(), pe);
+					select = ((ViolatesResult)op.process(eparam)).isAlright();
+					if(select) {
+						param.report("Mental action successful, using '" + intention.toString() + "' as next atomic action.");
+					}
+				}
+				
+				return select;
+			}
+		}
+		return false;
 	}
 }

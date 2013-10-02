@@ -58,7 +58,9 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 		
 		boolean gen  = false;
 		for (Desire des : param.getAgent().getComponent(Desires.class).getDesires()) {			
-			// TODO: Check for existing plans
+			if(param.getActualPlan().countPlansFor(des) > 0)
+				continue;
+			
 			List<WorkingPlan> plans = new ArrayList<>();
 			if(des.getFormula().toString().startsWith("revisionRequestProcessing")) {	
 				plans = handleInform(param, des, graph);

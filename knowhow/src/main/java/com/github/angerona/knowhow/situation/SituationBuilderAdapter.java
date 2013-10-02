@@ -1,8 +1,15 @@
 package com.github.angerona.knowhow.situation;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
+import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
+import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -11,7 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Agent;
+import com.github.angerona.fw.logic.asp.SolverWrapper;
+import com.github.angerona.knowhow.KnowhowBase;
+import com.github.angerona.knowhow.KnowhowStatement;
 import com.github.angerona.knowhow.graph.GraphNode;
+import com.github.angerona.knowhow.graph.KnowhowBaseGraphBuilder;
+import com.github.angerona.knowhow.graph.Processor;
 import com.github.angerona.knowhow.graph.Selector;
 
 /**
@@ -25,16 +37,88 @@ public abstract class SituationBuilderAdapter implements SituationGraphBuilder {
 	
 	protected Agent agent;
 	
-	protected Selector connectedNode;
+	protected Situation situation;
 	
-	public SituationBuilderAdapter(Agent agent, Selector connectedNode) {
+	public SituationBuilderAdapter(Situation situation, Agent agent) {
 		this.agent = agent;
-		this.connectedNode = connectedNode.clone();
+		this.situation = situation;
 	}
 	
 	@Override
 	public Graph<GraphNode, DefaultEdge> getGraph() {
 		return graph;
+	}
+	
+	abstract protected KnowhowBase knowhowBaseFromAnswerSet(AnswerSetList asl);
+	
+	abstract protected Program generateInputProgram();
+	
+	@Override
+	public void build() {
+		LOG.debug("Entering build()");
+		
+		Program input = generateInputProgram();
+		AnswerSetList asl = processAnswerSets(input);
+		if(asl != null) {
+			LOG.trace("Created answer-sets:\n{}", asl.toString());
+			graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+			KnowhowBase situationBase = knowhowBaseFromAnswerSet(asl);
+			generateGraphByKnowhowBase(situation, situationBase);
+			
+			/*
+			JGraphXAdapter<GraphNode, DefaultEdge> adapter = new JGraphXAdapter<>();
+			adapter.setDataSource(new ListenableDirectedGraph((DirectedGraph)graph));
+			mxHierarchicalLayout layout = new mxHierarchicalLayout(adapter);
+			layout.execute(adapter.getDefaultParent());
+			JFrame frame = new JFrame();
+			frame.setSize(600, 400);
+			frame.getContentPane().add(new JScrollPane(adapter.generateDefaultGraphComponent()));
+			frame.setVisible(true);
+			*/
+		}
+		
+		LOG.debug("Leaving build() = void");
+	}
+	
+	protected void generateGraphByKnowhowBase(Situation situation, KnowhowBase situationBase) {
+		KnowhowBaseGraphBuilder builder = new KnowhowBaseGraphBuilder(situationBase, agent);
+		builder.build();
+		graph = builder.getGraph();
+		
+		// add top of graph:
+		Selector connectorNode = new Selector(situation.getGoal(), graph);
+		graph.addVertex(connectorNode);
+		for(KnowhowStatement statement : situationBase.getStatements()) {
+			graph.addEdge(connectorNode, new Processor(statement, graph));
+		}
+	}
+	
+	protected Program loadProgramFromJar(String jarPath) {
+		Program reval = null;
+		InputStream stream = getClass().getResourceAsStream(jarPath);
+		if(stream == null) {
+			LOG.error("Creation of InvestigationSituationBuilder not possible: Cannot read Resource: '{}'", jarPath);
+		}
+		try {
+			reval = ASPParser.parseProgram(new InputStreamReader(stream));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			LOG.error("Creation of InvestigationSituationBuilder not possible: Cannot parse program in '{}'", jarPath);
+		}
+		return reval;
+	}
+	
+	protected AnswerSetList processAnswerSets(Program input) {
+		SolverWrapper wrapper = SolverWrapper.DLV;
+		Solver solver = wrapper.getSolver();
+		AnswerSetList asl = null;
+		try {
+			asl = solver.computeModels(input, 10);
+		} catch (SolverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return asl;
 	}
 	
 	protected Rule createRule(String str) {

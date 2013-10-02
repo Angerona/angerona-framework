@@ -8,6 +8,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
@@ -160,6 +161,20 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		TreeControllerAdapter.expandAll(tree, true);
 	}
 
+	public void showDetail(boolean details) {
+		if(details) {
+			expandAll(tree, true);
+		} else {
+			DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+			expandAll(tree, false);
+			
+			for(int i=0; i<root.getChildCount(); ++i) {
+				DefaultMutableTreeNode tickNode = (DefaultMutableTreeNode)root.getChildAt(i);
+				tree.expandPath(new TreePath(tickNode.getPath()));
+			}
+		}
+	}
+	
 	@Override
 	public JTree getOutput() {
 		return tree;
