@@ -13,5 +13,5 @@ penalty(66) :- reason(wd).
 
 % constraints to give up answer set
 :- reason(acquire).
-:- penalty(X), X>=66.
+:- reason(wd).
 :- answer(wd, p_honest, _).
