@@ -8,7 +8,7 @@
       <argument>X</argument>
    </question>
    
-   <allowedBehavior id="4" question="2" honesty-type="HT_BULLSHITTING"/>
+   <allowedBehavior id="4" question="2" honesty-type="HT_WITHHOLDING"/>
    <allowedBehavior id="3" question="2" honesty-type="HT_HONEST"/>
    <allowedBehavior id="2" question="1" honesty-type="HT_LIE"/>
    <allowedBehavior id="1" question="1" honesty-type="HT_HONEST"/>

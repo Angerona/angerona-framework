@@ -127,6 +127,8 @@ public class ActionAdapter extends Action {
 			AngeronaAnswer answer = curBeliefs.getWorldKnowledge().reason(question);
 			if(honesty.equals("p_lie")) {
 				answer = Utility.lie(answer);
+			} else if(honesty.equals("p_withholding")) {
+				return new Answer(this.agent, receiver, question, AnswerValue.AV_REJECT);
 			}
 			return new Answer(this.agent, receiver, question, answer);
 		} else {

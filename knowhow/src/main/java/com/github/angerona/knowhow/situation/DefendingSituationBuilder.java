@@ -117,10 +117,14 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 			DLPLiteral factToAdd = null;
 			HonestyType honesty = ai.getBehavior().getHonestyType();
 			if(honesty == HonestyType.HT_BULLSHITTING) {
-				factToAdd = new DLPAtom("answer_bs", new Constant("p_"+ai.getBehavior().getQuestion().getSymbol()), 
-						new Constant(ai.getAdditionalInformation().toString()));
+				throw new NotImplementedException("Bullshitting not implemented yet");
+			// TODO: Test and implement
+			//	factToAdd = new DLPAtom("answer_bs", ai.getBehavior().getQuestion().asTerm(), 
+			//			new Constant(ai.getAdditionalInformation().toString()));
 			} else if(honesty == HonestyType.HT_WITHHOLDING) {
-				throw new NotImplementedException("Withholding not implemnted in defending situation yet" );
+				factToAdd = new DLPAtom("answer_wh", 
+									new Constant(ai.getBehavior().getQuestion().getSymbol()), 
+									new Constant("c_REJECT"));
 			} else {
 				throw new IllegalStateException();
 			}
