@@ -1,12 +1,6 @@
 % Init step
 step(0).
 
-% Communication types:
-type(p_honest).
-type(p_withholding).
-type(p_bullshitting).
-type(p_lie).
-
 % Generate Asked literal
 asked(Q,Z) :- question(Q), step(Z), 
               not nasked(Q,Z), not asked_prior(Q,Z).

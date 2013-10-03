@@ -1,5 +1,14 @@
 package com.github.angerona.fw.example.operators;
 
+import java.util.Iterator;
+
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +19,7 @@ import com.github.angerona.fw.comm.Answer;
 import com.github.angerona.fw.comm.Inform;
 import com.github.angerona.fw.comm.Justification;
 import com.github.angerona.fw.comm.Query;
+import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.operators.BaseUpdateBeliefsOperator;
 import com.github.angerona.fw.operators.parameter.EvaluateParameter;
@@ -29,6 +39,10 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	@Override
 	protected Beliefs processInternal(EvaluateParameter param) {
 		LOG.info("Run Default-Update-Beliefs-Operator");
+		
+		if(param.getAgent().getName().equals("alice")) {
+			LOG.debug("alice");
+		}
 		
 		Beliefs beliefs = param.getBeliefs();
 		Beliefs oldBeliefs = (Beliefs)param.getBeliefs().clone();
@@ -60,8 +74,36 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			bb.addKnowledge(naa);
 			param.report(out, bb);
 		} else if(param.getAtom() instanceof Query) {
+			Query q = (Query)param.getAtom();
 			out += "Query ";
 			out += (!receiver) ? "as sender (no changes)" : "as receiver (no changes)";
+			
+			BaseBeliefbase bb = null;
+			if(receiver) {
+				bb = beliefs.getWorldKnowledge();
+			} else {
+				bb = beliefs.getViewKnowledge().get(q.getReceiverId());
+			}
+			
+			// find index:
+			int asked_index = 0;
+			AngeronaAnswer aa = bb.reason(new FOLAtom(new Predicate("asked_count", 1), new Variable("X")));
+			if(!aa.getAnswers().isEmpty()) {
+				Iterator<FolFormula> it = aa.getAnswers().iterator();
+				while(it.hasNext()) {
+					FolFormula formula = it.next();
+					if(formula instanceof FOLAtom) {
+						FOLAtom atom = (FOLAtom) formula;
+						int max = (Integer)atom.getArguments().get(0).get() + 1;
+						if(max > asked_index) {
+							asked_index = max;
+						}
+					}
+				}
+			}
+			
+			bb.addKnowledge(new FOLAtom(new Predicate("asked", 2), new NumberTerm(asked_index), 
+					new Constant(q.getQuestion().getPredicates().iterator().next().getName())));
 			
 			param.report(out);
 		} else if(param.getAtom() instanceof Inform) {

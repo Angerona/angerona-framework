@@ -28,7 +28,6 @@
 		<capability>Inform</capability>
 		
         <desire>acquire_brenton</desire>
-        <desire>prepare_for_interrogation</desire>
         
         <data key="Confidential">
             (bob, __DEFAULT__, antronic_wants_to_acquire_brenton)
@@ -39,7 +38,7 @@
 		<data key="KnowHow">
 			acquire_brenton, (investigate, make_offer), 
 			make_offer, s_Query(a_bob, q_offer(N)), 
-			prepare_for_interrogation, defending, 
+			answer_query, defending, 
 		</data>
 		<data key="situationFiles">
 			moduleA_investigation_situation.xml, InvestigationSituation

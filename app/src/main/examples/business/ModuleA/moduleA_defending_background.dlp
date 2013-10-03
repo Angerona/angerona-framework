@@ -1,12 +1,17 @@
+% Communication types:
+type(p_honest).
+type(p_bullshitting).
+type(p_lie).
+
 % knowledge about claires reasoning
 reason(se) :- answer(se, p_lie, _).
-reason(wd) :- answer(wd, P_lie, _).
+reason(wd) :- answer(wd, p_bullshiting, _).
 reason(acquire) :- not reason(wd), not reason(se).
 
 % penalty points for bad behavior
 penalty(66) :- reason(wd).
-penalty(33) :- answer(wd, p_honest, _).
 
 % constraints to give up answer set
 :- reason(acquire).
 :- penalty(X), X>=66.
+:- answer(wd, p_bullshitting, _).

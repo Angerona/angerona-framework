@@ -23,6 +23,7 @@ import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowStatement;
 import com.github.angerona.knowhow.situation.DefendingSituation.AdditionalInformation;
 import com.github.angerona.knowhow.situation.DefendingSituation.Behavior;
+import com.github.angerona.knowhow.situation.DefendingSituation.Question;
 
 public class DefendingSituationBuilder extends SituationBuilderAdapter {
 	/** logging facility */
@@ -67,15 +68,32 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 			if(!attackerName.startsWith("a_"))
 				attackerName = "a_"+attackerName;
 			
-			List<DLPAtom> subTargets = new ArrayList<>();
+			int index = 0;
+			List<DLPAtom> askedHistory = new ArrayList<>();
 			for(DLPLiteral lit : answerAtom) {
-				DLPAtom atom = new DLPAtom("s_QueryAnswer", new Constant(attackerName), lit.getArguments().get(0), 
+				DLPAtom asked = new DLPAtom("asked", new NumberTerm(index++), lit.getArguments().get(0));
+				askedHistory.add(asked);
+				
+				String questionSymbol = lit.getArguments().get(0).toString();
+				Question questiton = null;
+				for(Question cur : situation.getQuestions()) {
+					// there is not more than one question with the same symbol
+					// see the deserialization method (commit) of DefendingSituation.
+					if(cur.getSymbol().equals(questionSymbol)) {
+						questiton = cur;
+						break;
+					}
+				}
+				
+				
+				List<DLPAtom> subTargets = new ArrayList<>();
+				DLPAtom atom = new DLPAtom("s_QueryAnswer", new Constant(attackerName), questiton.asTerm(), 
 						lit.getArguments().get(1));
 				subTargets.add(atom);
+				KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, 1-(penalty/100.0), 0);
+				reval.addStatement(stmt);
 			}
 			
-			KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, new ArrayList<DLPAtom>());
-			reval.addStatement(stmt);
 		}
 		
 		return reval;
@@ -84,12 +102,14 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 	@Override
 	protected Program generateInputProgram() {
 		Program input = new Program();
-		for(DLPLiteral question : situation.getQuestions()) {
-			input.addFact(new DLPAtom("question", new Constant(question.toString())));
+		
+		for(Question question : situation.getQuestions()) {
+			input.addFact(new DLPAtom("question", new Constant(question.getSymbol())));
 		}
 		
+		
 		for(Behavior behavior : situation.getAllowedBehaviors()) {
-			input.addFact(new DLPAtom("answer_behavior", new Constant(behavior.getQuestion().toString()), 
+			input.addFact(new DLPAtom("answer_behavior", new Constant(behavior.getQuestion().getSymbol()), 
 					new Constant("p_"+behavior.getHonestyType().toString())));
 		}
 		
@@ -97,7 +117,7 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 			DLPLiteral factToAdd = null;
 			HonestyType honesty = ai.getBehavior().getHonestyType();
 			if(honesty == HonestyType.HT_BULLSHITTING) {
-				factToAdd = new DLPAtom("answer_bs", new Constant("p_"+ai.getBehavior().getQuestion().toString()), 
+				factToAdd = new DLPAtom("answer_bs", new Constant("p_"+ai.getBehavior().getQuestion().getSymbol()), 
 						new Constant(ai.getAdditionalInformation().toString()));
 			} else if(honesty == HonestyType.HT_WITHHOLDING) {
 				throw new NotImplementedException("Withholding not implemnted in defending situation yet" );
@@ -107,6 +127,7 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 			input.addFact(factToAdd);
 		}
 		input.add(programDefending);
+		input.add(situation.getBackground());
 		return input;
 	}
 

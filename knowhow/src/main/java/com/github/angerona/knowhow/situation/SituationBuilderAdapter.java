@@ -113,7 +113,7 @@ public abstract class SituationBuilderAdapter implements SituationGraphBuilder {
 		Solver solver = wrapper.getSolver();
 		AnswerSetList asl = null;
 		try {
-			asl = solver.computeModels(input, 10);
+			asl = solver.computeModels(input, 100);
 		} catch (SolverException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

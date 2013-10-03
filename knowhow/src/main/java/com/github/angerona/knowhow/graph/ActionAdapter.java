@@ -140,6 +140,7 @@ public class ActionAdapter extends Action {
 					AnswerValue simpleAnswer = curBeliefs.getWorldKnowledge().reason(context.getQuestion()).getAnswerValue();		
 					if(param.getIdentifier().equals("p_honest")) {
 						// do nothing
+						LOG.info("Honest");
 					} else if(param.getIdentifier().equals("p_lie")) {
 						simpleAnswer = Utility.lie(simpleAnswer);
 					} else {

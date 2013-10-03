@@ -3,20 +3,17 @@
    <background>moduleA_defending_background.dlp</background>
    <attacker>claire</attacker>
    
-   <question>se</question>
-   <question>wd</question>
-   <allowedBehavior question="se" honesty-type="HT_HONEST"/>
-   <allowedBehavior question="se" honesty-type="HT_LIE"/>
-   <allowedBehavior question="wd" honesty-type="HT_HONEST"/>
-   <allowedBehavior question="wd" honesty-type="HT_BULLSHITTING"/>
+   <question id="1" symbol="se"/>
+   <question id="2" symbol="wd">
+      <argument>X</argument>
+   </question>
    
-   <additionalInformation answer="apple">
-      <behavior question="wd" honesty-type="HT_BULLSHITTING"/>
-   </additionalInformation>
-   <additionalInformation answer="nokia">
-      <behavior question="wd" honesty-type="HT_BULLSHITTING"/>
-   </additionalInformation>
-   <additionalInformation answer="samsung">
-      <behavior question="wd" honesty-type="HT_BULLSHITTING"/>
-   </additionalInformation>
+   <allowedBehavior id="4" question="2" honesty-type="HT_BULLSHITTING"/>
+   <allowedBehavior id="3" question="2" honesty-type="HT_HONEST"/>
+   <allowedBehavior id="2" question="1" honesty-type="HT_LIE"/>
+   <allowedBehavior id="1" question="1" honesty-type="HT_HONEST"/>
+   
+   <additionalInformation behavior="4" answer="apple"/>
+   <additionalInformation behavior="4" answer="nokia"/>
+   <additionalInformation behavior="4" answer="samsung"/>
 </defending-situation>

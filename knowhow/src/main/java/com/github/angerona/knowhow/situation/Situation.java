@@ -48,18 +48,22 @@ public class Situation {
 	@Validate
 	public void validate() throws PersistenceException {
 		
-		if(!filenameBackgroundProgram.exists()) {
-			String dir = Angerona.getInstance().getActualSimulation().getDirectory();
-			filenameBackgroundProgram = new File(dir + "/" + filenameBackgroundProgram.getName());
-			if(!filenameBackgroundProgram.exists())
-				throw new PersistenceException("Cannot find background program in '" + filenameBackgroundProgram + "'");
+		if(filenameBackgroundProgram != null) {
+			if(!filenameBackgroundProgram.exists()) {
+				String dir = Angerona.getInstance().getActualSimulation().getDirectory();
+				filenameBackgroundProgram = new File(dir + "/" + filenameBackgroundProgram.getName());
+				if(!filenameBackgroundProgram.exists())
+					throw new PersistenceException("Cannot find background program in '" + filenameBackgroundProgram + "'");
+			}
 		}
 	}
 	
 	@Commit
 	public void build() throws PersistenceException {
 		try {
-			backgroundKnowledge = ASPParser.parseProgram(new FileReader(filenameBackgroundProgram));
+			if(filenameBackgroundProgram != null) {
+				backgroundKnowledge = ASPParser.parseProgram(new FileReader(filenameBackgroundProgram));
+			}
 		} catch (FileNotFoundException | ParseException e) {
 			throw new PersistenceException("Cannot parse background program in '" + filenameBackgroundProgram + "' - " + e.getMessage());
 		}

@@ -5,5 +5,7 @@ cai.
 asked_out :- se.
 asked_out :- -se.
 
-want_acquire :- want_to_know(os), want_to_know(cai).
-want_acquire :- want_to_know(rap), want_to_know(cai).
+asked_count(X) :- #max{S : asked(S, _)} = X.
+
+want_acquire :- asked(_, os), asked(_, cai).
+want_acquire :- asked(_, rap), asked(_, cai).

@@ -8,12 +8,14 @@ import java.io.InputStreamReader;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.asml.Assign;
 import com.github.angerona.fw.comm.Query;
+import com.github.angerona.fw.def.FrameworkPlugin;
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
 import com.github.angerona.fw.serialize.SerializeHelper;
@@ -21,6 +23,12 @@ import com.github.angerona.fw.serialize.SerializeHelper;
 public class AssignTest {
 	
 	private static Logger LOG = LoggerFactory.getLogger(AssignTest.class);
+	
+	@Before
+	public void initSerializer() {
+		FrameworkPlugin fp = new FrameworkPlugin();
+		fp.onLoading();
+	}
 	
 	@Test
 	public void testAssignOnEmptyContext() throws ClassNotFoundException {

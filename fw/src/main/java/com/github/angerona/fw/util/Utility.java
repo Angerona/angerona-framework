@@ -35,6 +35,10 @@ public class Utility {
 		return o1.equals(o2);
 	}
 	
+	public static int hash(Object o) {
+		return o == null ? 0 : o.hashCode();
+	}
+	
 	public static <T> List<T> cloneList(List<T> src, Class<T> cls) {
 		List<T> reval = new ArrayList<>();
 		Method clone; 

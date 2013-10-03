@@ -1,10 +1,15 @@
 package com.github.angerona.fw.logic.asp;
 
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
+import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
+import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
+import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.translate.aspnlp.AspNlpTranslator;
 
