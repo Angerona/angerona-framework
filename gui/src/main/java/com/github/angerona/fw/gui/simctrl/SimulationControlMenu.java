@@ -24,6 +24,8 @@ public class SimulationControlMenu extends ViewAdapter implements SimulationCont
 	/** the menu item used to laod another simulation configuration */
 	private JMenuItem miLoad;
 
+	private JMenuItem miComplete;
+	
 	private JMenu parent;
 	
 	/**
@@ -34,8 +36,10 @@ public class SimulationControlMenu extends ViewAdapter implements SimulationCont
 		this.parent = parent;
 		miState = new JMenuItem("Init");
 		miLoad = new JMenuItem("Load...");
+		miComplete = new JMenuItem("Complete");
 		parent.add(miState);
 		parent.add(miLoad);
+		parent.add(miComplete);
 	}
 
 	@Override
@@ -63,21 +67,25 @@ public class SimulationControlMenu extends ViewAdapter implements SimulationCont
 	public void onSimulationStateChanged(SimulationState newState) {
 		switch(newState) {
 		case SS_UNDEFINED:
+			miComplete.setEnabled(false);
 			miState.setEnabled(false);
 			miState.setText("init");
 			break;
 			
 		case SS_LOADED:
+			miComplete.setEnabled(true);
 			miState.setEnabled(true);
 			miState.setText("Init");
 			break;
 			
 		case SS_INITALIZED:
+			miComplete.setEnabled(true);
 			miState.setEnabled(true);
 			miState.setText("Run");
 			break;
 			
 		case SS_FINISHED:
+			miComplete.setEnabled(false);
 			miState.setEnabled(true);
 			miState.setText("Finish");
 			break;
@@ -92,5 +100,10 @@ public class SimulationControlMenu extends ViewAdapter implements SimulationCont
 	@Override
 	public JComponent getRootComponent() {
 		return parent;
+	}
+
+	@Override
+	public JMenuItem getCompleteButton() {
+		return miComplete;
 	}
 }

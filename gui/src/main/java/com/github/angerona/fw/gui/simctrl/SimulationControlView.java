@@ -21,6 +21,8 @@ public interface SimulationControlView extends View {
 	/**	@return	The button used to load a SimulationConfiguration from the file system. */
 	AbstractButton getLoadButton();
 	
+	AbstractButton getCompleteButton();
+	
 	/**
 	 * This  method is called if the SimulationConfiguration changes
 	 * @param config	The new SimulationConfiguration

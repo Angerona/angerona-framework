@@ -25,10 +25,12 @@ public class SimulationControlBar extends ObservingPanel implements SimulationCo
 	private JTextField txtSimStatus;
 	
 	/** a button which runs the next step of the simulation */
-	private JButton btnSimState;
+	private JButton btnRunOneTick;
 	
 	/** a button used to load another SimulationConfiguration from the filesystem */
 	private JButton btnLoad;
+	
+	private JButton btnRunComplete;
 	
 	/** a helper variable saving the name of the current selected simulation */
 	private String currentSimulationName = "";
@@ -46,10 +48,14 @@ public class SimulationControlBar extends ObservingPanel implements SimulationCo
 		btnLoad.setMinimumSize(new Dimension(100, 30));
 		buttonPanel.add(btnLoad);
 		
-		btnSimState = new JButton("Run");
-		btnSimState.setText("Init");
-		btnSimState.setEnabled(false);
-		buttonPanel.add(btnSimState);
+		btnRunComplete = new JButton("Complete");
+		btnRunComplete.setEnabled(false);
+		buttonPanel.add(btnRunComplete);
+		
+		btnRunOneTick = new JButton("Run");
+		btnRunOneTick.setText("Init");
+		btnRunOneTick.setEnabled(false);
+		buttonPanel.add(btnRunOneTick);
 		add(buttonPanel, BorderLayout.EAST);
 	}
 
@@ -73,34 +79,42 @@ public class SimulationControlBar extends ObservingPanel implements SimulationCo
 		String pre = "Simulation '" + currentSimulationName + "' ";
 		switch(newState) {
 		case SS_UNDEFINED:
-			btnSimState.setEnabled(false);
-			btnSimState.setText("init");
+			btnRunComplete.setEnabled(false);
+			btnRunOneTick.setEnabled(false);
+			btnRunOneTick.setText("init");
 			txtSimStatus.setText("No Simulation loaded.");
 			break;
 			
 		case SS_LOADED:
-			btnSimState.setEnabled(true);
-			btnSimState.setText("Init");
+			btnRunOneTick.setEnabled(true);
+			btnRunOneTick.setText("Init");
+			btnRunComplete.setEnabled(true);
 			txtSimStatus.setText( pre + "ready.");
 			break;
 			
 		case SS_INITALIZED:
-			btnSimState.setEnabled(true);
-			btnSimState.setText("Run");
+			btnRunOneTick.setEnabled(true);
+			btnRunOneTick.setText("Run");
 			txtSimStatus.setText( pre + "running." );
 			break;
 			
 		case SS_FINISHED:
-			btnSimState.setEnabled(true);
-			btnSimState.setText("Finish");
+			btnRunOneTick.setEnabled(true);
+			btnRunOneTick.setText("Finish");
+			btnRunComplete.setEnabled(false);
 			txtSimStatus.setText( pre + "finished.");
 			break;
 		}
 	}
 
 	@Override
+	public JButton getCompleteButton() {
+		return btnRunComplete;
+	}
+	
+	@Override
 	public JButton getSimStateButton() {
-		return btnSimState;
+		return btnRunOneTick;
 	}
 
 	@Override

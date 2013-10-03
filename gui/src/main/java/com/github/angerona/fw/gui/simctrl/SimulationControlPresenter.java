@@ -40,6 +40,10 @@ public class SimulationControlPresenter
 			onLoad();
 		} else if(ev.getSource() == view.getSimStateButton()) {
 			onSimStateChange();
+		} else if(ev.getSource() == view.getCompleteButton()) {
+			while(model.getSimulationState() != SimulationState.SS_FINISHED) {
+				onSimStateChange();
+			}
 		}
 	}
 
@@ -100,11 +104,13 @@ public class SimulationControlPresenter
 	protected void wireViewEvents() {
 		view.getLoadButton().addActionListener(this);
 		view.getSimStateButton().addActionListener(this);
+		view.getCompleteButton().addActionListener(this);
 	}
 
 	@Override
 	protected void unwireViewEvents() {
 		view.getLoadButton().removeActionListener(this);
 		view.getSimStateButton().removeActionListener(this);
+		view.getCompleteButton().removeActionListener(this);
 	}
 }
