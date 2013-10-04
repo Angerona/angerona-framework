@@ -56,6 +56,7 @@ public class RestrictiveSecretsPenalty implements PenaltyFunction {
 		OperatorCallWrapper violates = agent.getOperators().getOperationSetByType(ViolatesOperator.OPERATION_NAME).getPreferred();
 		EvaluateParameter param = new EvaluateParameter(agent, beliefs, action);
 		ViolatesResult res = (ViolatesResult)violates.process(param);
+		this.beliefs = res.getBeliefs();
 		++iterations;
 		return res.isAlright() ? 0 : Double.MAX_VALUE;
 	}

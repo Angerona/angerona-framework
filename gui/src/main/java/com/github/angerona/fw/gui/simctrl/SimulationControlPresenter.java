@@ -41,9 +41,13 @@ public class SimulationControlPresenter
 		} else if(ev.getSource() == view.getSimStateButton()) {
 			onSimStateChange();
 		} else if(ev.getSource() == view.getCompleteButton()) {
+			Long before = System.currentTimeMillis();
 			while(model.getSimulationState() != SimulationState.SS_FINISHED) {
 				onSimStateChange();
 			}
+			Long after = System.currentTimeMillis();
+			Long duration = after - before;
+			view.getCompleteButton().setText("In " + duration + "ms");
 		}
 	}
 

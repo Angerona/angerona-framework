@@ -133,7 +133,7 @@ public class WorkingPlan
 	}
 	
 	/**
-	 * Increments the penalty by mentaly performing the action
+	 * Increments the penalty by mentally performing the action
 	 * @param penalty	The amount of increment
 	 */
 	public void incrementPenalty(Action action) {
