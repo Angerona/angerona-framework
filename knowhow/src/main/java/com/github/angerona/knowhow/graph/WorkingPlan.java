@@ -41,6 +41,8 @@ public class WorkingPlan
 	/** the level of detail of this working plan, zero means the plans is empty and one means the plan is complete */
 	private double lod = 0;
 	
+	private double weight = 0;
+	
 	/** the index of the next child node */
 	private int nextIndex = -1;
 	
@@ -71,6 +73,10 @@ public class WorkingPlan
 		for(Integer way : path) {
 			this.curIntention = curIntention.getSubIntentions().get(way);
 		}
+	}
+	
+	public void incrementWeight(double weight) {
+		this.weight += weight;
 	}
 	
 	boolean isFailed() {
@@ -190,20 +196,15 @@ public class WorkingPlan
 	
 	@Override
 	public int compareTo(WorkingPlan o) {
-		if(penalty < o.penalty)
+		if(penalty < o.penalty) {
 			return -1;
-		else if(penalty > o.penalty)
+		} else if(penalty > o.penalty) {
 			return 1;
-		else if(nextNode instanceof Processor && o.nextNode instanceof Processor) {
-			Processor p1 = (Processor)nextNode;
-			Processor p2 = (Processor)o.nextNode;
-			if(p1.getStatement() != null && p2.getStatement() != null) {
-				double w1 = p1.getStatement().getWeight();
-				double w2 = p2.getStatement().getWeight();
-				if(w1 < w2)
-					return -1;
-				else if(w1 > w2)
-					return 1;
+		} else {
+			if(weight < o.weight) {
+				return 1;
+			} else if (weight > o.weight) {
+				return -1;
 			}
 		}
 		return 0;

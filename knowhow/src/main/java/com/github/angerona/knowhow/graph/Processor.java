@@ -1,10 +1,6 @@
 package com.github.angerona.knowhow.graph;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
@@ -88,7 +84,7 @@ public class Processor extends GraphNodeAdapter {
 			return super.toString();
 		else 
 			return "P(" + complexity + ") " + name + parameters + 
-					" - (" + statement.getConditions().toString() + ")";
+					" - (" + statement.getConditions().toString() + ") w="+statement.getWeight();
 	}
 	
 	public boolean equals(Object other) {

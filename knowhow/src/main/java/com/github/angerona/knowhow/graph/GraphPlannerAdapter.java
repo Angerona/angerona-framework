@@ -163,10 +163,9 @@ public abstract class GraphPlannerAdapter
 				subPlans.add(new WorkingPlan(curPlan));
 			}
 			
-			// adapt pointer to children
+			// init after creation
 			for(int i=0; i<subPlans.size(); ++i) {
-				Processor cur = children.get(i);
-				subPlans.get(i).setNextNode(cur);
+				initPlan(children.get(i), subPlans.get(i));
 			}
 			
 			subPlans.remove(curPlan);
@@ -250,5 +249,12 @@ public abstract class GraphPlannerAdapter
 		}
 		
 		LOG.debug("Leaving planOneStep(curPlan={}) = void", curPlan.toString());
+	}
+
+	protected void initPlan(Processor cur, WorkingPlan wp) {
+		wp.setNextNode(cur);
+		if(cur.getStatement() != null) {
+			wp.incrementWeight(cur.getStatement().getWeight());
+		}
 	}
 }

@@ -94,8 +94,8 @@ public class KnowhowStatement implements Serializable {
 		this.target = target;
 		this.subTargets.addAll(subTargets);
 		this.conditions.addAll(conditions);
-		this.weight = 0;
-		this.irrelevance = 0;
+		this.weight = weight;
+		this.irrelevance = irrelevance;
 	}
 	
 	/** @return	the unique id of the knowhow-statement (useable as index), a static ID counter is used to generate the id */

@@ -45,15 +45,7 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 		KnowhowBase reval = new KnowhowBase();
 		DLPAtom targetAtom = new DLPAtom(situation.getGoal());
 		
-		for(AnswerSet as : asl) {
-			int penalty = 0;
-			for(DLPLiteral lit : as.getLiteralsWithName("penalty")) {
-				Integer curPen = (Integer)lit.getArguments().get(0).get();
-				if(curPen > penalty) {
-					penalty = curPen;
-				}
-			}
-			
+		for(AnswerSet as : asl) {			
 			List<DLPLiteral> answerAtom = new ArrayList<>(as.getLiteralsWithName("answer"));
 			Collections.sort(answerAtom, new Comparator<DLPLiteral>() {
 				@Override
@@ -90,7 +82,7 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 				DLPAtom atom = new DLPAtom("s_QueryAnswer", new Constant(attackerName), questiton.asTerm(), 
 						lit.getArguments().get(1));
 				subTargets.add(atom);
-				KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, 1-(penalty/100.0), 0);
+				KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, askedHistory.size(), 0);
 				reval.addStatement(stmt);
 			}
 			

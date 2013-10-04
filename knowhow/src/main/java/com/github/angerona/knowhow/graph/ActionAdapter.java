@@ -94,7 +94,7 @@ public class ActionAdapter extends Action {
 	
 	@Override
 	public String toString() {
-		return "<ActionAdapter(" + actionName + ")>";
+		return "<ActionAdapter(" + evaluateAction().toString() + ")>";
 	}
 	
 	/**

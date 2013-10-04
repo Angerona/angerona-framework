@@ -43,8 +43,10 @@ public class GraphPlanner extends GraphPlannerAdapter {
 			Processor p = (Processor)graph.getEdgeTarget(edge);
 			WorkingPlan newPlan = new WorkingPlan(createPenaltyFunction());
 			plans.add(newPlan);
-			newPlan.setNextNode(p);
+			initPlan(p, newPlan);
+			
 			newPlan.visited(startNode);
+			
 		}
 		
 		// iterate the step function until enough plan alternatives are found:

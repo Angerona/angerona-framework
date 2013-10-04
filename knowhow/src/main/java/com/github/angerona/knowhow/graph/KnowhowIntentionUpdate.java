@@ -72,13 +72,8 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 			}
 		});
 		
-		Predicate prio = new Predicate("prepare_for_interrogation");
 		// find next plan element
 		for(Subgoal plan : orderedPlans) {
-			if(plan.getFulfillsDesire().getFormula().getPredicates().iterator().next().equals(prio)) {
-				continue;
-			}
-			
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {
 				PlanElement pe = plan.peekStack(i);
 				if(check(param, pe)) {
