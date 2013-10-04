@@ -22,6 +22,9 @@ public class Utility {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(Utility.class);
 	
+	/** is in presentation mode (fonts a bigger in presentation mode) */
+	public static boolean presentationMode = false;
+	
 	/**
 	 * Checks if the both object o1 and o2 are equal.
 	 * @param o1	The first object

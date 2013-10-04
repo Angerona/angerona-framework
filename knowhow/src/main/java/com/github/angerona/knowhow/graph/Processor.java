@@ -1,6 +1,10 @@
 package com.github.angerona.knowhow.graph;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
@@ -45,6 +49,26 @@ public class Processor extends GraphNodeAdapter {
 	@Override
 	public List<Selector> getChildren() {
 		return (List<Selector>)super.getChildren();
+		/*
+		List<Selector> reval = new ArrayList<>();
+		if(statement != null) {
+			List<Selector> children =  (List<Selector>)super.getChildren();
+			for(DLPAtom subtarget : statement.getSubTargets()) {
+				List<String> params = new ArrayList<>();
+				for(Term<?> term : subtarget.getArguments()) {
+					params.add(term.toString());
+				}
+				for(Selector child : children) {
+					if(	child.name.equals(subtarget.getPredicate().getName()) && 
+						child.parameters.equals(params)) {
+						reval.add(child);
+						continue;
+					}
+				}
+			}
+		}
+		return reval;
+		*/
 	}
 	
 	@Override

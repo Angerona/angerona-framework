@@ -56,9 +56,13 @@ public class KnowhowStatement implements Serializable {
 	 * @param other	The KnowhowStatement that acts as source for the copy
 	 */
 	public KnowhowStatement(KnowhowStatement other) {
-		this(other.target.clone(), 
-			Utility.cloneList(other.subTargets, DLPAtom.class), 
-			Utility.cloneList(other.conditions, DLPAtom.class));
+		target = other.target.clone();
+		subTargets = Utility.cloneList(other.subTargets, DLPAtom.class);
+		conditions = Utility.cloneList(other.conditions, DLPAtom.class);
+		this.name = other.name;
+		this.id = other.id;
+		this.weight = other.weight;
+		this.irrelevance = other.irrelevance;
 	}
 	
 	/**

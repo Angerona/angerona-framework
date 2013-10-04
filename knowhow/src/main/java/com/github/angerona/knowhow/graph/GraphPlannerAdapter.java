@@ -137,6 +137,25 @@ public abstract class GraphPlannerAdapter
 			Selector sel = (Selector)node;
 		
 			List<Processor> children = sel.getChildren();
+			Collections.sort(children, new Comparator<Processor>() {
+				@Override
+				public int compare(Processor p1, Processor p2) {
+					if(!p1.isAtomic() && !p2.isAtomic()) {
+						if(p1.getStatement().getWeight() < p2.getStatement().getWeight())
+							return -1;
+						else if(p1.getStatement().getWeight() == p2.getStatement().getWeight())
+							return -p1.getStatement().toString().compareTo(p2.getStatement().toString());
+						else
+							return 1;
+					} else if(p1.isAtomic() && !p2.isAtomic()) {
+						return 1;
+					} else if(!p1.isAtomic() && p2.isAtomic()) {
+						return -1;
+					} else {
+						return p1.getName().compareTo(p2.getName());
+					}
+				}
+			});
 			subPlans.add(curPlan);
 			
 			// copy plans:

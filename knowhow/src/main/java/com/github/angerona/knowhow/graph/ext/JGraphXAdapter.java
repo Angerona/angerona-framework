@@ -16,6 +16,7 @@ import org.jgrapht.event.GraphVertexChangeEvent;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.ListenableDirectedGraph;
 
+import com.github.angerona.fw.util.Utility;
 import com.github.angerona.knowhow.graph.GraphNode;
 import com.github.angerona.knowhow.graph.NodeListener;
 import com.github.angerona.knowhow.graph.Processor;
@@ -76,6 +77,10 @@ public class JGraphXAdapter<V extends GraphNode, E>
 	public JGraphXAdapter(final ListenableGraph<V, E> graphT) {
 		super();
 		setDataSource(graphT);
+		if(Utility.presentationMode) {
+			getStylesheet().getDefaultVertexStyle().put(mxConstants.STYLE_FONTSIZE, 16);
+			getStylesheet().getDefaultVertexStyle().put(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);
+		}
 		getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_NOLABEL, 1);
 	}
 	

@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bibliothek.gui.dock.DefaultDockable;
+import ch.qos.logback.classic.pattern.Util;
 
 import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.gui.AngeronaWindow;
@@ -24,6 +25,7 @@ import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.gui.controller.ReportTreeController;
 import com.github.angerona.fw.gui.controller.TreeControllerAdapter;
 import com.github.angerona.fw.report.ReportWikiGenerator;
+import com.github.angerona.fw.util.Utility;
 
 /**
  * shows the reports of the actual simulation in a list-view.
@@ -45,6 +47,9 @@ public class ReportView extends JPanel implements ViewComponent {
 	
 	public ReportView() {
     	tree = new JTree();
+    	if(Utility.presentationMode) {
+    		tree.setFont(tree.getFont().deriveFont(16f)); 
+    	}
     	JPanel treeViewContainer = new JPanel();
     	treeViewContainer.setLayout(new BorderLayout());
 		JScrollPane scrollPane = new JScrollPane(tree);

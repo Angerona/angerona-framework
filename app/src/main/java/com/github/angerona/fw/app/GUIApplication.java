@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 import com.github.angerona.fw.gui.AngeronaGUIDataStorage;
 import com.github.angerona.fw.gui.AngeronaWindow;
 import com.github.angerona.fw.serialize.SimulationConfiguration;
+import com.github.angerona.fw.util.Utility;
 public class GUIApplication {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
@@ -17,6 +18,10 @@ public class GUIApplication {
 		
 		// load simulation per commandline.
 		for(int k=0; k<args.length; ++k) {
+			if(args[k].equalsIgnoreCase("-presentation")) {
+				Utility.presentationMode = true;
+			}
+			
 			String [] ary = args[k].split("=");
 			if(ary.length == 2 && ary[0].equalsIgnoreCase("simulation")) {
 				SimulationConfiguration config = SimulationConfiguration.loadXml(new File(ary[1]));
