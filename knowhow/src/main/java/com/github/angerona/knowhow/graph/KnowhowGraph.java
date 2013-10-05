@@ -32,6 +32,9 @@ import com.github.angerona.knowhow.situation.SituationStorage;
  * to generate a reachable Planning Graph as described in the Diploma Thesis
  * "Resource-bounded Planning of Communication under Confidentiality Constraints
  * for BDI Agents".
+ * 
+ * @todo move build() method into external GraphBuilder class
+ * 
  * @author Tim Janus
  */
 public class KnowhowGraph extends BaseAgentComponent implements PropertyChangeListener {

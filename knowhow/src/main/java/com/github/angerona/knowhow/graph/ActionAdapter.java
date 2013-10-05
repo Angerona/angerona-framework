@@ -38,6 +38,8 @@ import com.github.angerona.knowhow.graph.parameter.Parameter.TYPE;
  * runtime variables cannot be evaluated, because the result of the query on the belief base
  * might have changed in the n steps beforehand.
  * 
+ * @todo use factory pattern to create actions of the action adapter, add registration of those factories
+ * 
  * @author Tim Janus
  */
 public class ActionAdapter extends Action {

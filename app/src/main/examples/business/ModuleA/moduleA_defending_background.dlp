@@ -8,9 +8,6 @@ reason(se) :- answer(se, p_lie, _).
 reason(wd) :- answer(wd, p_bullshiting, _).
 reason(acquire) :- not reason(wd), not reason(se).
 
-% penalty points for bad behavior
-penalty(66) :- reason(wd).
-
 % constraints to give up answer set
 :- reason(acquire).
 :- reason(wd).

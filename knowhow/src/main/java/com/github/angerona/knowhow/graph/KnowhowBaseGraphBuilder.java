@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.github.angerona.fw.Agent;
 import com.github.angerona.knowhow.KnowhowBase;
 import com.github.angerona.knowhow.KnowhowStatement;
+import com.github.angerona.knowhow.situation.SituationGraphBuilder;
 
 /**
  * Builds a planning graph using a know-how base.
@@ -22,6 +23,8 @@ import com.github.angerona.knowhow.KnowhowStatement;
  * 1. buildCapabilities() - Generates the leaf nodes representing actions of the agent
  * 2. buildKnowhowbase() - Generates the nodes that are defined by the Know-how base
  * 3. buildEdges() - Generates the edges to connect the generated nodes.
+ * 
+ * @todo use common base-class or interface for {@link SituationGraphBuilder}
  * 
  * @author Tim Janus
  */
