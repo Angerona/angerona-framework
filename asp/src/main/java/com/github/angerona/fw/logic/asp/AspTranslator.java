@@ -1,15 +1,10 @@
 package com.github.angerona.fw.logic.asp;
 
-import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
-import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
-import net.sf.tweety.logics.firstorderlogic.parser.ParseException;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.translate.aspnlp.AspNlpTranslator;
 
@@ -38,7 +33,7 @@ public class AspTranslator extends BaseTranslator {
 	private static AspNlpTranslator translator = new AspNlpTranslator();
 	
 	@Override
-	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
+	protected AspBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
 		
@@ -46,7 +41,7 @@ public class AspTranslator extends BaseTranslator {
 			Answer answer = (Answer)p;
 			AngeronaAnswer aa = answer.getAnswer();
 			if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
-				return translateFOL(caller, aa.getAnswers());
+				return (AspBeliefbase)translateFOL(caller, aa.getAnswers());
 			} else {
 				FolFormula knowledge = answer.getRegarding();
 				if(aa.getAnswerValue() == AnswerValue.AV_FALSE) {
@@ -64,11 +59,11 @@ public class AspTranslator extends BaseTranslator {
 			formulas.add(q.getQuestion());
 		}
 
-		return translateFOL(caller, formulas);
+		return (AspBeliefbase)translateFOL(caller, formulas);
 	}
 
 	@Override
-	protected BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
+	protected AspBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
 		AspBeliefbase reval = new AspBeliefbase();
 		reval.setProgram(translator.toASP(program));
 		return reval;

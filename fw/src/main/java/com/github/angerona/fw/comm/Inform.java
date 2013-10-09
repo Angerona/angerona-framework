@@ -84,4 +84,9 @@ public class Inform extends SpeechAct
 	public int hashCode() {
 		return super.hashCode() + sentences.hashCode() * 5;
 	}
+
+	@Override
+	public SpeechActType getType() {
+		return SpeechActType.SAT_INFORMATIVE;
+	}
 }

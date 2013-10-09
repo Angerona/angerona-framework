@@ -102,4 +102,9 @@ public class Answer extends SpeechAct {
 		}
 		return reval;
 	}
+
+	@Override
+	public SpeechActType getType() {
+		return SpeechActType.SAT_INFORMATIVE;
+	}
 }

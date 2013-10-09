@@ -73,4 +73,9 @@ public class Query extends SpeechAct {
 	public boolean isOpen() {
 		return !question.getInstance(getAgent().getContext()).isGround();
 	}
+
+	@Override
+	public SpeechActType getType() {
+		return SpeechActType.SAT_REQUESTING;
+	}
 }

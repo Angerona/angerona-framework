@@ -95,4 +95,9 @@ public class Justify extends SpeechAct {
 		return "< " +getSenderId() + " justify " + getReceiverId() + " " + propositon + " " +
 					answerValue + ">";
 	}
+
+	@Override
+	public SpeechActType getType() {
+		return SpeechActType.SAT_REQUESTING;
+	}
 }

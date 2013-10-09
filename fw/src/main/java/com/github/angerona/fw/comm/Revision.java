@@ -71,4 +71,9 @@ public class Revision extends SpeechAct {
 	public boolean isOpen() {
 		return !proposition.getInstance(getAgent().getContext()).isGround();
 	}
+
+	@Override
+	public SpeechActType getType() {
+		return SpeechActType.SAT_INFORMATIVE;
+	}
 }

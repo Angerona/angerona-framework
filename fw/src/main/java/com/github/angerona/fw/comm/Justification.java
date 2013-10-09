@@ -120,4 +120,9 @@ public class Justification extends SpeechAct {
 		return "< " + getSenderId() + " justification " + getReceiverId() + " " 
 					+ proposition + " " + answerValue + " " + justifications + " >";
 	}
+
+	@Override
+	public SpeechActType getType() {
+		return SpeechActType.SAT_INFORMATIVE;
+	}
 }
