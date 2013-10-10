@@ -103,6 +103,10 @@ public class KnowhowStatement implements Serializable {
 		} else {
 			this.irrelevance = irrelevance;
 		}
+		
+		if(this.irrelevance.size() != this.subTargets.size()) {
+			throw new IllegalArgumentException("The lenght of the irrelevance must be equal to the lenght of the subgoals");
+		}
 	}
 	
 	/** @return	the unique id of the knowhow-statement (useable as index), a static ID counter is used to generate the id */

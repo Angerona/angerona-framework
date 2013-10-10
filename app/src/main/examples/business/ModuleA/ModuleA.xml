@@ -34,14 +34,14 @@
             (claire, __DEFAULT__, want_acquire)
             (detective, __DEFAULT__, want_acquire)
         </data>
-        <!-- investigate, s_PlanGenerate(f_basis_investigation_situation, investigate), -->
+		
 		<data key="KnowHow">
 			acquire_brenton, (investigate, make_offer), 
 			make_offer, s_Query(a_bob, q_offer(N)), 
 			answer_query, defending, 
 		</data>
 		<data key="situationFiles">
-			moduleA_investigation_situation.xml, InvestigationSituation
+			../basis_investigation_situation.xml, InvestigationSituation
 			moduleA_defending_situation.xml, DefendingSituation
 		</data>
 	</agent-instance>

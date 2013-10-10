@@ -1,6 +1,6 @@
 <investigation-situation>
    <goal>investigate</goal>
-   <background>moduleA_investigation_background.dlp</background>
+   <background>../basis_background.dlp</background>
    <query>rap</query>
    <query>os</query>
    <query>cai</query>

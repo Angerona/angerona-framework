@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Basis Scenario</name>
+	<name>Scenario - Module C</name>
     <category>business</category>   
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	<description>
@@ -17,17 +17,17 @@
 	and os, that means she has to asks one of them for the cai and the other for both of the
 	other pieces of information.
 	</description>
-	
-	<agent-instance>
+
+    <agent-instance>
 		<name>alice</name>
-		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
-		<beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+        <agent-config source="config/agents/knowhow_agent_graph.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
-		<capability>Query</capability>
-		<capability>QueryAnswer</capability>
+        <capability>Query</capability>
+        <capability>QueryAnswer</capability>
 		<capability>Inform</capability>
 		
-		<desire>acquire_brenton</desire>
+        <desire>acquire_brenton</desire>
         
         <data key="Confidential">
             (bob, __DEFAULT__, want_acquire)
@@ -35,11 +35,12 @@
             (detective, __DEFAULT__, want_acquire)
         </data>
 		<data key="KnowHow">
-			acquire_brenton, (investigate, make_offer), 
+			acquire_brenton, (investigate, golfing, make_offer), 
 			make_offer, s_Query(a_bob, q_offer(N)), 
 		</data>
 		<data key="situationFiles">
 			../basis_investigation_situation.xml, InvestigationSituation
+			golf_situation.xml, InvestigationSituation
 		</data>
 	</agent-instance>
       
@@ -52,7 +53,7 @@
       	<capability>QueryAnswer</capability>
         
         <data key="KnowHow">
-			answer_query, s_QueryAnswer(c_No), want_acquire
+			answer_query, s_QueryAnswer(c_No), wants_to_acquire
 			answer_query, s_QueryAnswer(c_Yes), , 1
 		</data> 
 	</agent-instance>
@@ -66,9 +67,9 @@
 		<capability>Inform</capability>
 		
 		<desire>bonus</desire>
-		
-		<data key="KnowHow">
-			answer_query, s_QueryAnswer(p_honest),
+		<!-- be_suspicious, (s_Query(a_alice, se), s_Query(a_alice, wd(X))),  -->
+		<data key="KnowHow"> 
+			answer_query, s_QueryAnswer(p_honest), 
 			bonus, s_Inform(a_bob, want_acquire), want_acquire
 		</data>
 	</agent-instance>

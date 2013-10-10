@@ -51,7 +51,7 @@ public class Situation {
 		if(filenameBackgroundProgram != null) {
 			if(!filenameBackgroundProgram.exists()) {
 				String dir = Angerona.getInstance().getActualSimulation().getDirectory();
-				filenameBackgroundProgram = new File(dir + "/" + filenameBackgroundProgram.getName());
+				filenameBackgroundProgram = new File(dir + "/" + filenameBackgroundProgram.getPath());
 				if(!filenameBackgroundProgram.exists())
 					throw new PersistenceException("Cannot find background program in '" + filenameBackgroundProgram + "'");
 			}

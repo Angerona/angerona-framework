@@ -83,7 +83,7 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 						lit.getArguments().get(1));
 				subTargets.add(atom);
 				KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, 
-						askedHistory.size(), new ArrayList<Double>());
+						askedHistory.size(), null);
 				reval.addStatement(stmt);
 			}
 			
