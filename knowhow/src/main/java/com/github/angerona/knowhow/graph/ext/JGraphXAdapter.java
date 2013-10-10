@@ -77,11 +77,17 @@ public class JGraphXAdapter<V extends GraphNode, E>
 	public JGraphXAdapter(final ListenableGraph<V, E> graphT) {
 		super();
 		setDataSource(graphT);
+		Map<String, Object> vS = getStylesheet().getDefaultVertexStyle();
+		Map<String, Object> eS = getStylesheet().getDefaultEdgeStyle();
+		
 		if(Utility.presentationMode) {
-			getStylesheet().getDefaultVertexStyle().put(mxConstants.STYLE_FONTSIZE, 16);
-			getStylesheet().getDefaultVertexStyle().put(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);
+			vS.put(mxConstants.STYLE_FONTSIZE, 16);
+			vS.put(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);
 		}
-		getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_NOLABEL, 1);
+		vS.put(mxConstants.STYLE_FILLCOLOR, "FFFFFF");
+		vS.put(mxConstants.STYLE_FONTCOLOR, "000000");
+		
+		eS.put(mxConstants.STYLE_NOLABEL, 1);
 	}
 	
 	public void setDataSource(final ListenableGraph<V, E> graphT) {

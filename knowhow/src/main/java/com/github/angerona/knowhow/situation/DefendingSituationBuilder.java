@@ -82,7 +82,8 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 				DLPAtom atom = new DLPAtom("s_QueryAnswer", new Constant(attackerName), questiton.asTerm(), 
 						lit.getArguments().get(1));
 				subTargets.add(atom);
-				KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, askedHistory.size(), 0);
+				KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, 
+						askedHistory.size(), new ArrayList<Double>());
 				reval.addStatement(stmt);
 			}
 			

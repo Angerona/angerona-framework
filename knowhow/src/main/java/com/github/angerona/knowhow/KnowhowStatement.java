@@ -2,7 +2,6 @@ package com.github.angerona.knowhow;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class KnowhowStatement implements Serializable {
 	 * the irrelevance value of the know-how statement giving the subjective importance 
 	 * of the sub-step encoded in the know-how statement
 	 */
-	private double irrelevance;
+	private List<Double> irrelevance;
 	
 	/** internal name of the knowhow statement */
 	private String name;
@@ -62,7 +61,7 @@ public class KnowhowStatement implements Serializable {
 		this.name = other.name;
 		this.id = other.id;
 		this.weight = other.weight;
-		this.irrelevance = other.irrelevance;
+		this.irrelevance = new ArrayList<>(other.irrelevance);
 	}
 	
 	/**
@@ -72,8 +71,8 @@ public class KnowhowStatement implements Serializable {
 	 * @param subTargets	The sub targets that have to be achieved to fulfill the KnowhowStatement
 	 * @param conditions	The conditions that have to be fulfilled, otherwise the KnowhowStatement is not applicable
 	 */
-	public KnowhowStatement(DLPAtom target, Collection<DLPAtom> subTargets, Collection<DLPAtom> conditions) {
-		this(target, subTargets, conditions, 0, 0);
+	public KnowhowStatement(DLPAtom target, List<DLPAtom> subTargets, List<DLPAtom> conditions) {
+		this(target, subTargets, conditions, 0, null);
 	}
 	
 	/**
@@ -85,8 +84,8 @@ public class KnowhowStatement implements Serializable {
 	 * 						are preferred that have a higher weight.
 	 * @param irrelevance	@todo change irrelevance
 	 */
-	public KnowhowStatement(DLPAtom target, Collection<DLPAtom> subTargets, Collection<DLPAtom> conditions, 
-			double weight, double irrelevance) {
+	public KnowhowStatement(DLPAtom target, List<DLPAtom> subTargets, List<DLPAtom> conditions, 
+			double weight, List<Double> irrelevance) {
 		id = counter;
 		name = "kh_stmt_"+id;
 		++counter;
@@ -95,7 +94,15 @@ public class KnowhowStatement implements Serializable {
 		this.subTargets.addAll(subTargets);
 		this.conditions.addAll(conditions);
 		this.weight = weight;
-		this.irrelevance = irrelevance;
+		
+		if(irrelevance == null) {
+			this.irrelevance = new ArrayList<>();
+			for(int i=0; i<this.subTargets.size(); ++i) {
+				this.irrelevance.add(new Double(0));
+			}
+		} else {
+			this.irrelevance = irrelevance;
+		}
 	}
 	
 	/** @return	the unique id of the knowhow-statement (useable as index), a static ID counter is used to generate the id */
@@ -129,7 +136,7 @@ public class KnowhowStatement implements Serializable {
 	}
 	
 	/** @return the irrelevance of this know-how statement */
-	public double getIrrelevance() {
+	public List<Double> getIrrelevance() {
 		return irrelevance;
 	}
 	
@@ -142,22 +149,32 @@ public class KnowhowStatement implements Serializable {
 		return 	target.equals(stmt.target) &&
 				subTargets.equals(stmt.subTargets) &&
 				conditions.equals(stmt.conditions) &&
-				irrelevance == stmt.irrelevance &&
+				Utility.equals(irrelevance, stmt.irrelevance) &&
 				weight == stmt.weight;
 	}
 	
 	@Override
 	public int hashCode() {
 		return (target.hashCode() + subTargets.hashCode() + conditions.hashCode() + 
-				new Double(weight).hashCode() + new Double(irrelevance).hashCode()) * 13;
+				new Double(weight).hashCode() + irrelevance.hashCode()) * 13;
 	}
 	
 	@Override
 	public String toString() {
-		String reval = "(" + target.toString() + ", " + subTargets.toString() + ", " + conditions.toString();
+		String reval = "(" + target.toString() + ", {";
+		StringBuilder builder = new StringBuilder();
+		for(int i=0; i<subTargets.size(); ++i) {
+			builder.append(subTargets.get(i).toString());
+			builder.append("-");
+			builder.append(irrelevance.get(i).toString());
+			builder.append(", ");
+		}		
+		String inner = builder.toString();
+		
+		reval += inner.substring(0, inner.length()-2) + "}, " + conditions.toString();
 		if(weight != 0)
 			reval += ", " + String.valueOf(weight);
-		if(irrelevance != 0) 
+		if(!irrelevance.isEmpty())
 			reval += ", " + String.valueOf(irrelevance);
 		reval += ")";
 		return reval;

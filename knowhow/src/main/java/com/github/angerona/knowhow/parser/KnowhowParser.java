@@ -90,7 +90,8 @@ public class KnowhowParser implements KnowhowParserConstants {
   List<String > strings = null;
   Vector<DLPAtom> subtargets = new Vector<DLPAtom >();
   Vector<DLPAtom> conditions = new Vector<DLPAtom >();
-  double weight = 0, irrelevance = 0;
+  double weight = 0;
+  List<Double > irrelevance = null;
     elpStr = elpString();
     target = parseELPAtom(elpStr);
     LOG.debug("Target: " + elpStr);
@@ -123,7 +124,7 @@ public class KnowhowParser implements KnowhowParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case COMMA:
         jj_consume_token(COMMA);
-        irrelevance = number();
+        irrelevance = numberLst();
         break;
       default:
         jj_la1[2] = jj_gen;
@@ -232,10 +233,47 @@ public class KnowhowParser implements KnowhowParserConstants {
     throw new Error("Missing return statement in function");
   }
 
+  final public List<Double> numberLst() throws ParseException {
+  double no = 0;
+  List<Double> reval = new ArrayList<Double>();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case LBRACE:
+      jj_consume_token(LBRACE);
+      no = number();
+                         reval.add(no);
+      label_4:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMA:
+          ;
+          break;
+        default:
+          jj_la1[9] = jj_gen;
+          break label_4;
+        }
+        jj_consume_token(COMMA);
+        no = number();
+              reval.add(no);
+      }
+      jj_consume_token(RBRACE);
+      break;
+    case DIGIT:
+      no = number();
+      reval.add(no);
+    {if (true) return reval;}
+      break;
+    default:
+      jj_la1[10] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
   final public double number() throws ParseException {
   String str = "";
   Token token = null;
-    label_4:
+    label_5:
     while (true) {
       token = jj_consume_token(DIGIT);
                        str += token.image;
@@ -244,30 +282,30 @@ public class KnowhowParser implements KnowhowParserConstants {
         ;
         break;
       default:
-        jj_la1[9] = jj_gen;
-        break label_4;
+        jj_la1[11] = jj_gen;
+        break label_5;
       }
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOT:
       jj_consume_token(DOT);
              str += ".";
-      label_5:
+      label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case DIGIT:
           ;
           break;
         default:
-          jj_la1[10] = jj_gen;
-          break label_5;
+          jj_la1[12] = jj_gen;
+          break label_6;
         }
         token = jj_consume_token(DIGIT);
                          str += token.image;
       }
       break;
     default:
-      jj_la1[11] = jj_gen;
+      jj_la1[13] = jj_gen;
       ;
     }
     {if (true) return Double.parseDouble(str);}
@@ -283,13 +321,13 @@ public class KnowhowParser implements KnowhowParserConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[12];
+  final private int[] jj_la1 = new int[14];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x200,0xb200,0x40,0x40,0x40,0xb200,0xb000,0x40,0x200,0x800,0x800,0x80,};
+      jj_la1_0 = new int[] {0x200,0xb200,0x40,0x40,0x40,0xb200,0xb000,0x40,0x200,0x40,0xa00,0x800,0x800,0x80,};
    }
 
   /** Constructor with InputStream. */
@@ -303,7 +341,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 14; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -317,7 +355,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 14; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -327,7 +365,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 14; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -337,7 +375,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 14; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -346,7 +384,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 14; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -355,7 +393,7 @@ public class KnowhowParser implements KnowhowParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 14; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -411,7 +449,7 @@ public class KnowhowParser implements KnowhowParserConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 14; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

@@ -120,7 +120,8 @@ KnowhowStatement statement() :
   List<String > strings = null;
   Vector<DLPAtom> subtargets = new Vector<DLPAtom >();
   Vector<DLPAtom> conditions = new Vector<DLPAtom >();
-  double weight = 0, irrelevance = 0;
+  double weight = 0;
+  List<Double > irrelevance = null;
 }
 {
   elpStr = elpString()
@@ -153,7 +154,7 @@ KnowhowStatement statement() :
     weight = number()
 	(
       < COMMA >
-      irrelevance = number()    )?  )?
+      irrelevance = numberLst()    )?  )?
   
   {    return new KnowhowStatement(target, subtargets, conditions,
     	weight, irrelevance);  }  
@@ -219,6 +220,26 @@ String elpString() :
     
   {
     return reval;   }  }
+
+List<Double> numberLst() :
+{
+  double no = 0;
+  List<Double> reval = new ArrayList<Double>();}
+{
+  (	< LBRACE >
+	  no = number()	{reval.add(no);}
+	  (
+	    < COMMA >
+	    no = number()
+	    {
+	      reval.add(no);	    }	  )*
+	< RBRACE >
+  ) |
+  (
+    no = number()    {
+      reval.add(no);    }  )
+  {
+    return reval;  }}
 
 double number() :
 {
