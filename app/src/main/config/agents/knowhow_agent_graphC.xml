@@ -11,7 +11,7 @@
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>com.github.angerona.knowhow.graph.KnowhowGraphSubgoal{allowUnsafe=false;targetLOD=0.5;alternatives=1}</default-operator-cls>
+      <default-operator-cls>com.github.angerona.knowhow.graph.KnowhowGraphSubgoal{allowUnsafe=false;targetLOD=0.4;alternatives=1}</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">

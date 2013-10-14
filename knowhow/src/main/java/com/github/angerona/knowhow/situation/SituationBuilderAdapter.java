@@ -7,6 +7,7 @@ import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
 import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
 import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
 import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
 import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
@@ -86,7 +87,7 @@ public abstract class SituationBuilderAdapter implements SituationGraphBuilder {
 		graph = builder.getGraph();
 		
 		// add top of graph:
-		Selector connectorNode = new Selector(situation.getGoal(), graph);
+		Selector connectorNode = new Selector(new DLPAtom(situation.getGoal()), graph);
 		graph.addVertex(connectorNode);
 		for(KnowhowStatement statement : situationBase.getStatements()) {
 			graph.addEdge(connectorNode, new Processor(statement, graph));

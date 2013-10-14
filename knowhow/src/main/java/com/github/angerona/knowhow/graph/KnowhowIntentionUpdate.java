@@ -112,7 +112,7 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 				param.getAgent().getPlanComponent().report("Resumed and extended Plan");
 			}
 			
-			// then check if the current intention contains an ActionAdapter and evalute it.
+			// then check if the current intention contains an ActionAdapter and evaluate it.
 			// this order is important because the ActionAdapterReumse becomes an ActionAdapter when 
 			// resume planning.
 			if(reval.getIntention() instanceof ActionAdapter) {

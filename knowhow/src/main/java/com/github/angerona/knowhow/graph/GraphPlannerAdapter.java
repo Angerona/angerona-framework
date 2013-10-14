@@ -21,6 +21,7 @@ import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.Subgoal;
+import com.github.angerona.knowhow.KnowhowStatement;
 import com.github.angerona.knowhow.graph.parameter.DefaultPlanConverter;
 import com.github.angerona.knowhow.graph.parameter.PlanConverter;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
@@ -135,7 +136,7 @@ public abstract class GraphPlannerAdapter
 		if(alternatives.size() == 0)
 			return null;
 		
-		Selector sel = new Selector(goal.toString(), graph);
+		Selector sel = new Selector(new DLPAtom(goal.toString()), graph);
 		graph.addVertex(sel);
 		for(Processor p : alternatives) {
 			graph.addEdge(sel, p);
@@ -147,6 +148,8 @@ public abstract class GraphPlannerAdapter
 		GraphNode node = curPlan.getNextNode();
 		LOG.debug("Entering planOneStep(curPlan={}, curNode={})", curPlan.toString(), node);
 
+		Action actionAdded = null;
+		
 		if(node instanceof Selector) {
 			List<WorkingPlan> subPlans = new ArrayList<>();
 			Selector sel = (Selector)node;
@@ -194,8 +197,8 @@ public abstract class GraphPlannerAdapter
 			
 			plans.addAll(subPlans);
 		} else if(node instanceof Processor) {
-			Processor pro = (Processor)node;
-			List<Selector> children = pro.getChildren();
+			final Processor pro = (Processor)node;
+			final List<Selector> children = pro.getChildren();
 			
 			// replace the sub intention of the current intention
 			// to the intention formed by this processor:
@@ -221,7 +224,8 @@ public abstract class GraphPlannerAdapter
 						throw new IllegalStateException();
 					}
 					
-					curPlan.incrementPenalty((Action)actionInList.get(0));
+					actionAdded = (Action)actionInList.get(0);
+					curPlan.incrementPenalty(actionAdded);
 				}
 			}
 			
@@ -233,21 +237,59 @@ public abstract class GraphPlannerAdapter
 					curPlan.checkCondition(formula);
 				}
 				
-				// sort children by irrelevance: (if atomic nothing happens anymore
-				// TODO Overwork irrelevance concept
-				Collections.sort(children, new Comparator<Selector>() {
+				List<Integer> indexList = new ArrayList<>();
+				for(int i=0; i<children.size(); ++i) {
+					indexList.add(i);
+				}
+				
+				// @todo: calculate irrelevance like complexity beforehand and
+				// also pre-calculate the index-list
+				
+				// sort children by irrelevance: (if atomic nothing happens here)
+				Collections.sort(indexList, new Comparator<Integer>() {
 					@Override
-					public int compare(Selector o1, Selector o2) {
+					public int compare(Integer i1, Integer i2) {
+						Selector child1 = children.get(i1);
+						Selector child2 = children.get(i2);
+						
+						KnowhowStatement stmt = pro.getStatement();
+						int index1 = -1, index2 = -1;
+						for(int i=0; i<stmt.getSubTargets().size(); ++i) {
+							DLPAtom subtarget = stmt.getSubTargets().get(i);
+							if(subtarget.equals(child1.getSubTarget())) {
+								index1 = i;
+							}
+							if(subtarget.equals(child2.getSubTarget())) {
+								index2 = i;
+							}
+						}
+						
+						if(index1 != -1 && index2 != -1) {
+							double irr1 = stmt.getIrrelevance().get(index1);
+							double irr2 = stmt.getIrrelevance().get(index2);
+							
+							if(irr1 == irr2) {
+								return index1 - index2;
+							} else {
+								if(irr1 < irr2) {
+									return -1;
+								} else if(irr2 < irr1) {
+									return 1;
+								}
+							}
+						}
+						
 						return 0;
 					}
 				});
 				
 				// work on the next best relevant selector:
 				for(int i=0; i<children.size(); ++i) {
-					Selector sel = (Selector)children.get(i);
+					int index = indexList.get(i);
+					Selector sel = (Selector)children.get(index);
 					if(!curPlan.hasVisit(sel)) {
 						curPlan.setNextNode(sel);
-						curPlan.setWorkingNodeIndex(i);
+						curPlan.setWorkingNodeIndex(index);
 						break;
 					}
 				}
@@ -256,6 +298,10 @@ public abstract class GraphPlannerAdapter
 		
 		curPlan.updateLOD();
 		curPlan.visited(node);
+		
+		if(actionAdded != null) {
+			LOG.info("Add Action: '{}' to plan, new LOD: '{}'", actionAdded, curPlan.getLOD());
+		}
 		
 		if(curPlan.getNextNode() == node) {
 			curPlan.moveToPrecessorOfPrecessor();

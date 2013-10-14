@@ -27,6 +27,7 @@
         <capability>QueryAnswer</capability>
 		<capability>Inform</capability>
 		
+        <desire>meet_bob</desire>
         <desire>acquire_brenton</desire>
         
         <data key="Confidential">
@@ -35,8 +36,8 @@
             (detective, __DEFAULT__, want_acquire)
         </data>
 		<data key="KnowHow">
-			acquire_brenton, (golfing, make_offer), 
-			make_offer, s_Query(a_bob, q_offer(N)), 
+			meet_bob, golfing, 
+			acquire_brenton, s_Query(a_bob, q_offer(N)), informed
 		</data>
 		<data key="situationFiles">
 			golf_situation.xml, InvestigationSituation

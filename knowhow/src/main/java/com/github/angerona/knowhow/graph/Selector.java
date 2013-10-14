@@ -2,6 +2,8 @@ package com.github.angerona.knowhow.graph;
 
 import java.util.List;
 
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -16,14 +18,22 @@ public class Selector extends GraphNodeAdapter  {
 	/** serial version id */
 	private static final long serialVersionUID = -6949598700368734085L;
 
+	private DLPAtom subtarget;
+	
 	public Selector(Selector other) {
 		super(other);
+		this.subtarget = other.subtarget.clone();
 	}
 	
-	public Selector(String name, Graph<GraphNode, DefaultEdge> graph) {
-		super(name, graph);
+	public Selector(DLPAtom subtarget, Graph<GraphNode, DefaultEdge> graph) {
+		super(subtarget.toString(), graph);
+		this.subtarget = subtarget;
 	}
 
+	public DLPAtom getSubTarget() {
+		return subtarget;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Processor> getChildren() {

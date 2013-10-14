@@ -124,7 +124,7 @@ public class WorkingPlan
 	public void updateLOD() {
 		int actions = rootIntention.countActions();
 		double complexity = (double)rootIntention.getComplexity();
-		lod = actions / complexity;
+		lod = actions / (complexity);
 	}
 	
 	/** @return the current level of detail value, use updateLOD() to process the current value */

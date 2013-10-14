@@ -133,11 +133,11 @@ public class KnowhowBaseGraphBuilder {
 		if(str.contains("(")) {
 			String temp = str.substring(0, str.indexOf('('));
 			if(agent.getCapabilities().contains(temp)) {
-				str = temp;
+				subtarget = new DLPAtom(temp);
 			}
 		}
 		
-		return new Selector(str, graph);
+		return new Selector(subtarget, graph);
 	}
 	
 	private boolean addEdge(GraphNode source, GraphNode target) {

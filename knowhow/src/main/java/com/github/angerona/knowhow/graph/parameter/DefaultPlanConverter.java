@@ -124,9 +124,10 @@ public class DefaultPlanConverter implements PlanConverter {
 		} else if (graphIntention == GraphIntention.TBD) {
 			
 		} else {
-			for(GraphIntention gi : graphIntention.getSubIntentions()) {
+			for(int i=0; i<graphIntention.getSubIntentions().size(); ++i) {
+				GraphIntention gi = graphIntention.getSubIntentions().get(i);
 				if(gi == GraphIntention.TBD) {
-					reval.add(new ActionAdapterResume(plan, graphIntention, graphIntention.getSubIntentions().indexOf(gi)));
+					reval.add(new ActionAdapterResume(plan, graphIntention, i));
 				} else {
 					reval.addAll(this.convert(plan, gi));
 				}

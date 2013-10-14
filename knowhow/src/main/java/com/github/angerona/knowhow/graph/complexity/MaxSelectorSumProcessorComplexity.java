@@ -44,7 +44,7 @@ public class MaxSelectorSumProcessorComplexity implements ComplexityCalculator {
 					reval = childComplexity;
 				}
 			}
-			reval += 1;
+//			reval += 1;
 		} else {
 			throw new IllegalStateException();
 		}
