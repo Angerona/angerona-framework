@@ -52,8 +52,7 @@
       	<capability>QueryAnswer</capability>
         
         <data key="KnowHow">
-			answer_query, s_QueryAnswer(c_No), wants_to_acquire
-			answer_query, s_QueryAnswer(c_Yes), , 1
+			answer_query, s_QueryAnswer(p_honest),
 		</data> 
 	</agent-instance>
 </simulation-configuration>

@@ -87,15 +87,8 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 		
 		// evaluate action parameters:
 		if(reval != null) {
-			if(reval.getIntention() instanceof ActionAdapter) {
-				ActionAdapter aa = (ActionAdapter)reval.getIntention();
-				Action realAction = aa.evaluateAction();
-				if(realAction != null) {
-					reval.setIntention(realAction);
-				} else {
-					return null;
-				}
-			} else if(reval.getIntention() instanceof ActionAdapterResume) {
+			// first check if resume planning is needed:
+			if(reval.getIntention() instanceof ActionAdapterResume) {
 				ActionAdapterResume aar = (ActionAdapterResume)reval.getIntention();
 				KnowhowGraphSubgoal.planningStrategy.resumePlan(aar.getWorkingPlan());
 				
@@ -111,11 +104,26 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 						if(translatedAction.size() != 1) {
 							throw new IllegalStateException();
 						}
+						Intention parent = pe.getIntention().getParent();
 						pe.setIntention(translatedAction.get(0));
+						pe.getIntention().setParent(parent);
 					} 
 				}
 				param.getAgent().getPlanComponent().report("Resumed and extended Plan");
 			}
+			
+			// then check if the current intention contains an ActionAdapter and evalute it.
+			// this order is important because the ActionAdapterReumse becomes an ActionAdapter when 
+			// resume planning.
+			if(reval.getIntention() instanceof ActionAdapter) {
+				ActionAdapter aa = (ActionAdapter)reval.getIntention();
+				Action realAction = aa.evaluateAction();
+				if(realAction != null) {
+					reval.setIntention(realAction);
+				} else {
+					return null;
+				}
+			} 
 		}
 		
 		return reval;
