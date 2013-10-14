@@ -1,0 +1,12 @@
+<investigation-situation>
+   <goal>golfing</goal>
+   <background>/golf_background.dlp</background>
+
+   <query>family</query>
+   <query>travel</query>
+   <query>sport</query>
+   <query>many_open_receivables</query>
+   <query>good_order_situation</query>
+
+   <source>bob</source>
+</investigation-situation>

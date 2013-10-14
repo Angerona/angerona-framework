@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
@@ -120,8 +121,39 @@ public class InvestigationSituationBuilder extends SituationBuilderAdapter {
 				subTargets.add(converted);
 			}
 			
+			// generate irrelevance information
+			List<Double> irrelevanceInfo = new ArrayList<>();
+			for(int i=0; i<subTargets.size(); ++i) {
+				irrelevanceInfo.add(new Double(0));
+			}
+			
+			final String irrelevantPredName = "irrelevant";
+			Set<DLPLiteral> irrAtoms = as.getLiteralsWithName(irrelevantPredName);
+			for(DLPLiteral irrAtom : irrAtoms) {	
+				String errBeg = "Skipping irrelevance information because it has wrong format: ";
+				int size = irrAtom.getArguments().size();
+				if(size != 1) {
+					LOG.warn(errBeg + " irrelevance literal does not have 1 argument but has '{}' arguments.", size);
+					continue;
+				}
+				
+				Term<?> arg = irrAtom.getArguments().get(0);
+				if( !(arg instanceof NumberTerm)) {
+					LOG.warn(errBeg + "irrelevance argument is not of type 'NumberTerm' but of '{}'", arg.getClass().getSimpleName());
+					continue;
+				}
+				
+				NumberTerm nt = (NumberTerm)arg;
+				int index = nt.get();
+				if(index < 0 || index >= irrelevanceInfo.size()) {
+					LOG.warn(errBeg + " the given irrelevance index '{}' is not in range: '0-{}'", index, subTargets.size()-1);
+				}
+				
+				irrelevanceInfo.set(index, new Double(1));
+			}
+			
 			KnowhowStatement ks = new KnowhowStatement(targetAtom, 
-					subTargets, new ArrayList<DLPAtom>());
+					subTargets, new ArrayList<DLPAtom>(), 0, irrelevanceInfo);
 			situationBase.addStatement(ks);
 			
 		}
