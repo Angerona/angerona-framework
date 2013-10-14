@@ -90,7 +90,7 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 			// first check if resume planning is needed:
 			if(reval.getIntention() instanceof ActionAdapterResume) {
 				ActionAdapterResume aar = (ActionAdapterResume)reval.getIntention();
-				KnowhowGraphSubgoal.planningStrategy.resumePlan(aar.getWorkingPlan());
+				KnowhowGraphSubgoal.planningStrategy.resumePlan(aar.getWorkingPlan(), 1);
 				
 				// fill the new planned steps in the agent's plan component:
 				Subgoal planSequence = (Subgoal)aar.getParent();
@@ -98,6 +98,10 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 					if( pe.getIntention() instanceof ActionAdapterResume) {
 						ActionAdapterResume cur = (ActionAdapterResume)pe.getIntention();
 						GraphIntention atomicGraphIntention = cur.getParentIntention().getSubIntentions().get(cur.getIndexInIntention());
+						if(atomicGraphIntention == GraphIntention.TBD) {
+							continue;
+						}
+						
 						DefaultPlanConverter converter = new DefaultPlanConverter();
 						converter.init(param.getAgent());
 						List<Intention> translatedAction = converter.convert(aar.getWorkingPlan(), atomicGraphIntention);

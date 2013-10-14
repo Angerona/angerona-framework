@@ -36,7 +36,13 @@ public class GraphPlanner extends GraphPlannerAdapter {
 		if(plans.isEmpty()) {
 			return plans;
 		}
-		int iterations = iterativePlanning(alternatives, targetLOD, plans);
+		int iterations = iterativePlanning(alternatives, targetLOD, plans, new BreakCondition() {
+			@Override
+			public boolean breakCondition() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 		plans = filterPlans(alternatives, plans);
 		
 		LOG.debug("Leaving controlPlan() used '{}' iterations" + iterations);
@@ -59,11 +65,11 @@ public class GraphPlanner extends GraphPlannerAdapter {
 	}
 
 	private int iterativePlanning(final int alternatives, final double targetLOD,
-			List<WorkingPlan> plans) {
+			List<WorkingPlan> plans, BreakCondition breakCondition) {
 		// iterate the step function until enough plan alternatives are found:
 		int complete_plans = 0;
 		int iterations = 0;
-		while(alternatives == 0 || complete_plans < alternatives) {
+		while((alternatives == 0 || complete_plans < alternatives) && !breakCondition.breakCondition()) {
 			Collections.sort(plans, new Comparator<WorkingPlan>() {
 				@Override
 				public int compare(WorkingPlan arg0, WorkingPlan arg1) {
@@ -124,11 +130,25 @@ public class GraphPlanner extends GraphPlannerAdapter {
 		return plans;
 	}
 
-	@Override
-	public void resumePlan(WorkingPlan plan, double targetLOD) {
+	private void implResume(WorkingPlan plan, double targetLOD, BreakCondition breakCondition) {
 		List<WorkingPlan> plans = new ArrayList<>();
 		plans.add(plan);
-		iterativePlanning(1, targetLOD, plans);
+		iterativePlanning(1, targetLOD, plans, breakCondition);
+	}
+	
+	@Override
+	public void resumePlan(WorkingPlan plan, double targetLOD) {
+		implResume(plan, targetLOD, new BreakCondition() {
+			@Override
+			public boolean breakCondition() {
+				return false;
+			}
+		});
+	}
+	
+	@Override
+	public void resumePlan(WorkingPlan plan, int newActionCount) {
+		implResume(plan, 1, new BreakWhenXNewActions(plan));
 	}
 
 	@Override
@@ -136,4 +156,28 @@ public class GraphPlanner extends GraphPlannerAdapter {
 		throw new NotImplementedException();
 	}
 
+	public static interface BreakCondition {
+		boolean breakCondition();
+	}
+	
+	public static class BreakWhenXNewActions implements BreakCondition {
+		int neededActions;
+		
+		WorkingPlan wp;
+		
+		public BreakWhenXNewActions(WorkingPlan wp) {
+			this(wp, 1);
+		}
+		
+		public BreakWhenXNewActions(WorkingPlan wp, int actions) {
+			this.wp = wp;
+			this.neededActions = wp.getRootIntention().countActions() + actions;
+		}
+		
+		@Override
+		public boolean breakCondition() {
+			return wp.getRootIntention().countActions() >= neededActions;
+		}
+		
+	}
 }

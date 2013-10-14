@@ -45,6 +45,8 @@ public interface GraphPlannerStrategy {
 	
 	void resumePlan(WorkingPlan plan, double targetLOD);
 	
+	void resumePlan(WorkingPlan plan, int newActionCount);
+	
 	void resumePlan(WorkingPlan plan, GraphIntention complexIntention, int step);
 	
 	void resumePlan(WorkingPlan plan, List<GraphIntention> complexIntentions, List<Integer> steps);
