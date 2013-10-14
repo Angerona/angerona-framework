@@ -76,7 +76,7 @@ public class ActionAdapter extends Action {
 	/**
 	 * Generates the action that instance adapts using the beliefs that are given as parameter
 	 * @param beliefs	The beliefs used for evaluation (for reasoner calls for example)
-	 * @return	Reference to the generated action
+	 * @return	Reference to the generated action or null if the action is not planned yet.
 	 */
 	public Action evaluateAction(Beliefs beliefs) {
 		curBeliefs = beliefs;
@@ -87,6 +87,8 @@ public class ActionAdapter extends Action {
 			reval = createQuery(parameters);
 		} else if(actionName.equals("QueryAnswer")) {
 			reval = createAnswer(parameters, (Query)context);
+		} else if(actionName.equals("TBD")) {
+			return null;
 		} else {
 			throw new NotImplementedException("Generation of Action '" + actionName + "' not implemented yet");
 		}
@@ -96,7 +98,9 @@ public class ActionAdapter extends Action {
 	
 	@Override
 	public String toString() {
-		return "<ActionAdapter(" + evaluateAction().toString() + ")>";
+		if(actionName.equals("TBD"))
+			return "<ActionAdapter(TBD)>";
+		return "<ActionAdapter(" + evaluateAction() + ")>";
 	}
 	
 	/**

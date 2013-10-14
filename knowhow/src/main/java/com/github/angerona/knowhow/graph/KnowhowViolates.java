@@ -19,8 +19,11 @@ public class KnowhowViolates extends ViolatesOperator {
 		if(percept instanceof ActionAdapter) {
 			ActionAdapter aa = (ActionAdapter)percept;
 			Action a = aa.evaluateAction(param.getBeliefs());
-			param = new EvaluateParameter(param.getAgent(), param.getBeliefs(), a);
-			return super.onPerception(a, param);
+			if(a != null) {
+				param = new EvaluateParameter(param.getAgent(), param.getBeliefs(), a);
+				return super.onPerception(a, param);
+			}
+			return new ViolatesResult();
 		}
 		return super.onPerception(percept, param);
 	}

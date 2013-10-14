@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.PlanElement;
 import com.github.angerona.fw.Subgoal;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
@@ -21,6 +22,7 @@ import com.github.angerona.fw.example.operators.IntentionUpdateOperator;
 import com.github.angerona.fw.example.operators.SubgoalGenerationOperator;
 import com.github.angerona.fw.logic.Desires;
 import com.github.angerona.fw.operators.OperatorCallWrapper;
+import com.github.angerona.knowhow.graph.parameter.DefaultPlanConverter;
 import com.github.angerona.knowhow.situation.SituationBuilderAdapter;
 
 /**
@@ -93,6 +95,26 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 				} else {
 					return null;
 				}
+			} else if(reval.getIntention() instanceof ActionAdapterResume) {
+				ActionAdapterResume aar = (ActionAdapterResume)reval.getIntention();
+				KnowhowGraphSubgoal.planningStrategy.resumePlan(aar.getWorkingPlan());
+				
+				// fill the new planned steps in the agent's plan component:
+				Subgoal planSequence = (Subgoal)aar.getParent();
+				for(PlanElement pe : planSequence.getStack(0)) {
+					if( pe.getIntention() instanceof ActionAdapterResume) {
+						ActionAdapterResume cur = (ActionAdapterResume)pe.getIntention();
+						GraphIntention atomicGraphIntention = cur.getParentIntention().getSubIntentions().get(cur.getIndexInIntention());
+						DefaultPlanConverter converter = new DefaultPlanConverter();
+						converter.init(param.getAgent());
+						List<Intention> translatedAction = converter.convert(aar.getWorkingPlan(), atomicGraphIntention);
+						if(translatedAction.size() != 1) {
+							throw new IllegalStateException();
+						}
+						pe.setIntention(translatedAction.get(0));
+					} 
+				}
+				param.getAgent().getPlanComponent().report("Resumed and extended Plan");
 			}
 		}
 		

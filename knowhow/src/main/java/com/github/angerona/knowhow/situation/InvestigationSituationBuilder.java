@@ -147,6 +147,7 @@ public class InvestigationSituationBuilder extends SituationBuilderAdapter {
 				int index = nt.get();
 				if(index < 0 || index >= irrelevanceInfo.size()) {
 					LOG.warn(errBeg + " the given irrelevance index '{}' is not in range: '0-{}'", index, subTargets.size()-1);
+					continue;
 				}
 				
 				irrelevanceInfo.set(index, new Double(1));

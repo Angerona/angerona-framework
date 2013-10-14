@@ -16,10 +16,12 @@ import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.knowhow.graph.ActionAdapter;
+import com.github.angerona.knowhow.graph.ActionAdapterResume;
 import com.github.angerona.knowhow.graph.GraphIntention;
 import com.github.angerona.knowhow.graph.GraphNode;
 import com.github.angerona.knowhow.graph.Processor;
 import com.github.angerona.knowhow.graph.Selector;
+import com.github.angerona.knowhow.graph.WorkingPlan;
 import com.github.angerona.knowhow.graph.parameter.Parameter.TYPE;
 
 public class DefaultPlanConverter implements PlanConverter {
@@ -106,7 +108,7 @@ public class DefaultPlanConverter implements PlanConverter {
 	}
 	
 	@Override
-	public List<Intention> convert(GraphIntention graphIntention, Perception context) {
+	public List<Intention> convert(WorkingPlan plan, GraphIntention graphIntention) {
 		List<Intention> reval = new ArrayList<>();
 				
 		if(graphIntention.isAtomic()) {
@@ -114,13 +116,20 @@ public class DefaultPlanConverter implements PlanConverter {
 			List<Parameter> parameters = mapParameters(graphIntention.getNode().getGraph(), edges);
 			
 			String action = graphIntention.getNode().getName();
+			Perception context = plan.getGoal().getPerception();
 			Action toAdd = new ActionAdapter(agent, action, parameters, context);
 			
 			LOG.info("Created Action Adapter for: '{}'", toAdd.toString());
 			reval.add(toAdd);
+		} else if (graphIntention == GraphIntention.TBD) {
+			
 		} else {
 			for(GraphIntention gi : graphIntention.getSubIntentions()) {
-				reval.addAll(this.convert(gi, context));
+				if(gi == GraphIntention.TBD) {
+					reval.add(new ActionAdapterResume(plan, graphIntention, graphIntention.getSubIntentions().indexOf(gi)));
+				} else {
+					reval.addAll(this.convert(plan, gi));
+				}
 			}
 		}
 		return reval;

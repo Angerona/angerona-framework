@@ -40,4 +40,12 @@ public interface GraphPlannerStrategy {
 	
 	List<WorkingPlan> controlPlan(DirectedGraph<GraphNode, DefaultEdge> graph, Desire goal, 
 			int alternatives, double targetLOD);
+	
+	void resumePlan(WorkingPlan plan);
+	
+	void resumePlan(WorkingPlan plan, double targetLOD);
+	
+	void resumePlan(WorkingPlan plan, GraphIntention complexIntention, int step);
+	
+	void resumePlan(WorkingPlan plan, List<GraphIntention> complexIntentions, List<Integer> steps);
 }

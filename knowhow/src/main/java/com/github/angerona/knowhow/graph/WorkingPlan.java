@@ -8,6 +8,7 @@ import java.util.Stack;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 
 import com.github.angerona.fw.Action;
+import com.github.angerona.fw.Desire;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;
 
 /**
@@ -19,6 +20,8 @@ import com.github.angerona.knowhow.penalty.PenaltyFunction;
  */
 public class WorkingPlan 
 	implements Comparable<WorkingPlan>{
+	
+	private Desire goal;
 	
 	/** the root intention that describes the plan */
 	private GraphIntention rootIntention;
@@ -48,8 +51,9 @@ public class WorkingPlan
 	
 	private PenaltyFunction penaltyFunction;
 	
-	public WorkingPlan(PenaltyFunction pf) {
+	public WorkingPlan(PenaltyFunction pf, Desire goal) {
 		this.penaltyFunction = pf;
+		this.goal = goal;
 	}
 	
 	public WorkingPlan(WorkingPlan wp) {
@@ -63,6 +67,7 @@ public class WorkingPlan
 		this.penalty = wp.penalty;
 		this.lod = wp.lod;
 		this.penaltyFunction = wp.penaltyFunction.clone();
+		this.goal = wp.goal;
 		
 		this.nextIndex = wp.nextIndex;
 		this.nextNode = wp.nextNode;
@@ -73,6 +78,10 @@ public class WorkingPlan
 		for(Integer way : path) {
 			this.curIntention = curIntention.getSubIntentions().get(way);
 		}
+	}
+	
+	public Desire getGoal() {
+		return goal;
 	}
 	
 	public void incrementWeight(double weight) {

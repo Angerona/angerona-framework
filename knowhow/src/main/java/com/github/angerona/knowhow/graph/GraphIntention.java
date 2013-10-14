@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class GraphIntention {
 	/** the "to be done" constant */
-	private static final GraphIntention TBD = new GraphIntention();
+	public static final GraphIntention TBD = new GraphIntention();
 	
 	/** the selector associated with the graph intention, that is the parent of the intention attribute */
 	private Selector selector;

@@ -6,6 +6,11 @@ import org.slf4j.LoggerFactory;
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.error.NotImplementedException;
 
+/**
+ * This factory is responsible to generate the correct graph builders for the given situation.
+ * 
+ * @author Tim Janus
+ */
 public class SituationGraphBuilderFactory {
 	private static Logger LOG = LoggerFactory.getLogger(SituationGraphBuilderFactory.class);
 	

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.error.NotImplementedException;
 
 /**
  * This class implements a sequential planning algorithm on
@@ -31,24 +32,34 @@ public class GraphPlanner extends GraphPlannerAdapter {
 			final int alternatives, final double targetLOD) {
 		LOG.debug("Entering controlPlan(desire={}, alternatives={}, targetLod="+targetLOD+")", goal.toString(), alternatives);
 		
-		// generate temporary start node in planning graph:
-		Selector startNode = generateTemporaryGraph(graph, goal);
-		if(startNode == null) {
-			return new ArrayList<>();
+		List<WorkingPlan> plans = initalizePlanning(graph, goal);
+		if(plans.isEmpty()) {
+			return plans;
 		}
+		int iterations = iterativePlanning(alternatives, targetLOD, plans);
+		plans = filterPlans(alternatives, plans);
 		
-		// generate initial data structure used during the planning algorithm:
-		List<WorkingPlan> plans = new ArrayList<>();
-		for(DefaultEdge edge : graph.edgesOf(startNode)) {
-			Processor p = (Processor)graph.getEdgeTarget(edge);
-			WorkingPlan newPlan = new WorkingPlan(createPenaltyFunction());
-			plans.add(newPlan);
-			initPlan(p, newPlan);
-			
-			newPlan.visited(startNode);
-			
+		LOG.debug("Leaving controlPlan() used '{}' iterations" + iterations);
+		return plans;
+	}
+
+	private List<WorkingPlan> filterPlans(final int alternatives,
+			List<WorkingPlan> plans) {
+		// filter plans at the end
+		Collections.sort(plans);
+		plans = alternatives != 0 ? plans.subList(0, alternatives) : plans;
+		List<WorkingPlan> toDel = new ArrayList<>();
+		for(WorkingPlan wp : plans) {
+			if(wp.isFailed()) {
+				toDel.add(wp);
+			}
 		}
-		
+		plans.removeAll(toDel);
+		return plans;
+	}
+
+	private int iterativePlanning(final int alternatives, final double targetLOD,
+			List<WorkingPlan> plans) {
 		// iterate the step function until enough plan alternatives are found:
 		int complete_plans = 0;
 		int iterations = 0;
@@ -71,7 +82,7 @@ public class GraphPlanner extends GraphPlannerAdapter {
 				break;
 			
 			// plan one step
-			super.planOneStep(current, plans, graph, goal);
+			super.planOneStep(current, plans);
 			++iterations;
 			//LOG.info("The current plans after '{}' iterations:\n{}", iterations, plans);
 			
@@ -79,19 +90,50 @@ public class GraphPlanner extends GraphPlannerAdapter {
 				complete_plans += 1;
 			}
 		}
-		
-		// filter plans at the end
-		Collections.sort(plans);
-		plans = alternatives != 0 ? plans.subList(0, alternatives) : plans;
-		List<WorkingPlan> toDel = new ArrayList<>();
-		for(WorkingPlan wp : plans) {
-			if(wp.isFailed()) {
-				toDel.add(wp);
-			}
+		return iterations;
+	}
+
+	/**
+	 * Initalizes the planning by creating a list of working plans for a given
+	 * graph and a given goal.
+	 * @param graph
+	 * @param goal
+	 * @return	An non-empty list of plan alternatives that need further planning if no
+	 * 			error occurred or an empty list of plan alternatives if the given graph cannot
+	 * 			fulfill the given goal.
+	 */
+	private List<WorkingPlan> initalizePlanning(
+			DirectedGraph<GraphNode, DefaultEdge> graph, Desire goal) {
+		// generate temporary start node in planning graph:
+		Selector startNode = generateTemporaryGraph(graph, goal);
+		if(startNode == null) {
+			return new ArrayList<>();
 		}
-		plans.removeAll(toDel);
 		
-		LOG.debug("Leaving controlPlan() used '{}' iterations" + iterations);
+		// generate initial data structure used during the planning algorithm:
+		List<WorkingPlan> plans = new ArrayList<>();
+		for(DefaultEdge edge : graph.edgesOf(startNode)) {
+			Processor p = (Processor)graph.getEdgeTarget(edge);
+			WorkingPlan newPlan = new WorkingPlan(createPenaltyFunction(), goal);
+			plans.add(newPlan);
+			initPlan(p, newPlan);
+			
+			newPlan.visited(startNode);
+			
+		}
 		return plans;
 	}
+
+	@Override
+	public void resumePlan(WorkingPlan plan, double targetLOD) {
+		List<WorkingPlan> plans = new ArrayList<>();
+		plans.add(plan);
+		iterativePlanning(1, targetLOD, plans);
+	}
+
+	@Override
+	public void resumePlan(WorkingPlan plan, List<GraphIntention> complexIntentions, List<Integer> steps) {
+		throw new NotImplementedException();
+	}
+
 }

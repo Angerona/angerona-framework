@@ -84,6 +84,22 @@ public abstract class GraphPlannerAdapter
 	}
 	
 	@Override
+	public void resumePlan(WorkingPlan plan) {
+		resumePlan(plan, 1.0);
+	}
+	
+	@Override
+	public void resumePlan(WorkingPlan plan, GraphIntention complexIntention,
+			int step) {
+		List<GraphIntention> intentions = new ArrayList<>();
+		List<Integer> steps = new ArrayList<>();
+		
+		intentions.add(complexIntention);
+		steps.add(step);
+		resumePlan(plan, intentions, steps);
+	}
+	
+	@Override
 	public PlanConverter getPlanConverter() {
 		return converter;
 	}
@@ -127,8 +143,7 @@ public abstract class GraphPlannerAdapter
 		return sel;
 	}
 	
-	protected void planOneStep(WorkingPlan curPlan, List<WorkingPlan> plans,
-			DirectedGraph<GraphNode, DefaultEdge> graph, Desire des) {
+	protected void planOneStep(WorkingPlan curPlan, List<WorkingPlan> plans) {
 		GraphNode node = curPlan.getNextNode();
 		LOG.debug("Entering planOneStep(curPlan={}, curNode={})", curPlan.toString(), node);
 
@@ -197,7 +212,7 @@ public abstract class GraphPlannerAdapter
 				curPlan.setWorkingNodeIndex(-1);
 				
 				if(children.size() == 0) {
-					List<Intention> actionInList = getPlanConverter().convert(newIntention, des.getPerception());
+					List<Intention> actionInList = getPlanConverter().convert(curPlan, newIntention);
 					if(actionInList.size() != 1) {
 						throw new IllegalStateException();
 					}
@@ -223,7 +238,6 @@ public abstract class GraphPlannerAdapter
 				Collections.sort(children, new Comparator<Selector>() {
 					@Override
 					public int compare(Selector o1, Selector o2) {
-						// TODO Auto-generated method stub
 						return 0;
 					}
 				});
@@ -240,7 +254,6 @@ public abstract class GraphPlannerAdapter
 			}
 		}
 		
-		// TODO: Intention update
 		curPlan.updateLOD();
 		curPlan.visited(node);
 		

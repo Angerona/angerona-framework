@@ -17,6 +17,8 @@ import com.github.angerona.fw.util.Utility;
  * a boolean is stored indicating if the PlanElement represents a lie and give it a higher cost if it is a lie.
  * 
  * @see angerona.fw.listener.ActionProcessor
+ * 
+ * @todo add behavior of ActionAdapter of Know-how implementation
  * @author Tim Janus
  */
 public class PlanElement implements AngeronaAtom, Runnable {

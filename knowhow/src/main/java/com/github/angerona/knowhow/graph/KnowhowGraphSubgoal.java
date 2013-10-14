@@ -35,7 +35,12 @@ import com.github.angerona.knowhow.penalty.RestrictiveSecretsPenalty;
 
 /**
  * A subgoal generation operator tries to generate plans for the desires
- * of the agent using the knowhow over graphs approach.
+ * of the agent using the know-how over graphs approach.
+ * 
+ * It supports the following list of settings:
+ * - alternatives: decides how many alternative plans are calculated
+ * - targetLOD: decides when the plan processing is aborted (only calculates partial plans)
+ * 
  * @author Tim Janus
  */
 public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
@@ -43,7 +48,7 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(KnowhowGraphSubgoal.class);
 	
-	private GraphPlannerStrategy planningStrategy = new GraphPlanner();
+	public final static GraphPlannerStrategy planningStrategy = new GraphPlanner();
 	
 	@Override
 	protected Boolean processInternal(PlanParameter param) {
@@ -103,7 +108,7 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 		boolean gen = false;
 		for(WorkingPlan plan : plans) {
 			PlanConverter converter = getPlanConverter(param);
-			List<Intention> intentions = converter.convert(plan.getRootIntention(), des.getPerception());
+			List<Intention> intentions = converter.convert(plan, plan.getRootIntention());
 						
 			
 			if(intentions.isEmpty())
@@ -112,7 +117,7 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 			LOG.info("Converting WorkingPlan into Angerona format");
 					
 			// reverse add the intentions to the stack (the list of intentions is ordered in the way that the first 
-			// intention has to be done first and the stack of the angerona planning is ordered the other way round.
+			// intention has to be done first and the stack of the Angerona planning is ordered the other way round.
 			int index = sg.newStack();
 			for(int i=intentions.size()-1; i>=0; --i) {
 				sg.addToStack(new PlanElement(intentions.get(i)), index);
@@ -154,7 +159,10 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 		planningStrategy.setPenaltyTemplate(getPenaltyFunction(param));
 		planningStrategy.setPlanConverter(getPlanConverter(param));
 		
-		List<WorkingPlan> plans = planningStrategy.controlPlan(graph, des);
+		int alternatives = Integer.parseInt(param.getSetting("alternatives", "0"));
+		double targetLOD = Double.parseDouble(param.getSetting("targetLOD", "1"));
+		
+		List<WorkingPlan> plans = planningStrategy.controlPlan(graph, des, alternatives, targetLOD);
 		String output = String.format("The desire '%s' generates", des.toString());
 		if(plans.isEmpty()) {
 			output += " no plans";

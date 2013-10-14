@@ -1,5 +1,6 @@
 package com.github.angerona.fw;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -53,6 +54,14 @@ public class Subgoal extends Intention implements Cloneable {
 	public int newStack() {
 		stacks.add(new Stack<PlanElement>());
 		return stacks.size()-1;
+	}
+	
+	public void setStack(int index, Stack<PlanElement> stack) {
+		stacks.set(index,  stack);
+	}
+	
+	public List<PlanElement> getStack(int index) {
+		return Collections.unmodifiableList(stacks.get(index));
 	}
 	
 	/**
@@ -141,6 +150,8 @@ public class Subgoal extends Intention implements Cloneable {
 		}
 		
 		SubgoalListener parent = this.parent == null ? getAgent() : this.parent;
+		if(this.parent == null)
+			getAgent().getPlanComponent().report("Step of plan processed");
 		
 		if(stacks.isEmpty() || (toDel != null && multipleStacksAlternative))
 			parent.onSubgoalFinished(this);
