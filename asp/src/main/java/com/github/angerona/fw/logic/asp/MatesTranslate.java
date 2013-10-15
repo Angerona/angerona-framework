@@ -1,38 +1,42 @@
 package com.github.angerona.fw.logic.asp;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.comm.SpeechAct;
 
 /**
- * This translator implements a translate function as described by Krümpelmann
- * in mates13.
+ * This translate operation implements an extended translate functionality as described by Krümpelmann
+ * in mates13. The translation operator also encodes meta-information about the speech-act. 
+ * 
  * @author Tim Janus
  */
 public class MatesTranslate extends AspTranslator {
-
 	@Override
-	protected AspBeliefbase translatePerceptionInt(BaseBeliefbase caller,
-			Perception p) {
-		// the meta inferences of Krümpelmann only work on speech-acts ...
+	protected AspBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
+		AspBeliefbase reval = super.translatePerceptionInt(caller, p);
+		
+		// the meta inferences of Krümpelmann only works on speech-acts ...
 		if(p instanceof SpeechAct) {
+			SpeechAct speechAct = (SpeechAct)p;
 			
-			String type = p.getClass().getSimpleName();
+			String type = speechAct.getClass().getSimpleName();
+			String sender = speechAct.getSenderId();
 			
-			// TODO: represent agents, etc. pp.
+			Constant senderConstant = new Constant("a_"+sender);
 			
-			
-			AspBeliefbase reval = super.translatePerceptionInt(caller, p);
-			Program prog = reval.getProgram();
-			
-			
-			return reval;
-		} else {
-			// ... so that we use the default translate operator if the perception is
-			// no speech act.
-			return super.translatePerceptionInt(caller, p);
+			// todo: add mapping for constant symbols
+			Constant constantSymbolForL = new Constant("l");
+			// todo: get cur step (but in a way that simulating and real performs work)
+			NumberTerm curStep = new NumberTerm(0);
+						
+			DLPAtom atom = new DLPAtom(type, senderConstant, constantSymbolForL, curStep);
+			reval.getProgram().addFact(atom);
 		}
+		
+		return reval;
 	}
 }

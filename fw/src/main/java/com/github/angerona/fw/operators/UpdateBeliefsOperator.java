@@ -1,4 +1,4 @@
-package com.github.angerona.fw.example.operators;
+package com.github.angerona.fw.operators;
 
 import java.util.Iterator;
 
@@ -21,7 +21,6 @@ import com.github.angerona.fw.comm.Justification;
 import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.Beliefs;
-import com.github.angerona.fw.operators.BaseUpdateBeliefsOperator;
 import com.github.angerona.fw.operators.parameter.EvaluateParameter;
 
 /**

@@ -4,6 +4,7 @@ import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.comm.Inform;
 import com.github.angerona.fw.logic.Beliefs;
+import com.github.angerona.fw.operators.UpdateBeliefsOperator;
 import com.github.angerona.fw.operators.parameter.EvaluateParameter;
 
 /**
