@@ -8,9 +8,6 @@ import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
 import net.sf.tweety.logics.translate.aspnlp.AspNlpTranslator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.comm.Answer;
@@ -28,7 +25,7 @@ import com.github.angerona.fw.logic.BaseTranslator;
  */
 public class AspTranslator extends BaseTranslator {
 	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(AspTranslator.class);
+	//private static Logger LOG = LoggerFactory.getLogger(AspTranslator.class);
 	
 	private static AspNlpTranslator translator = new AspNlpTranslator();
 	

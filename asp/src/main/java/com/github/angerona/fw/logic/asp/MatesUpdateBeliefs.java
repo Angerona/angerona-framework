@@ -1,12 +1,19 @@
 package com.github.angerona.fw.logic.asp;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Aggregate;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPElement;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.SymbolicSet;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Variable;
 
 import com.github.angerona.fw.BaseBeliefbase;
+import com.github.angerona.fw.asp.component.AspMetaKnowledge;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.operators.UpdateBeliefsOperator;
 import com.github.angerona.fw.operators.parameter.EvaluateParameter;
@@ -22,27 +29,71 @@ import com.github.angerona.fw.operators.parameter.EvaluateParameter;
  */
 public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 
-	/** todo move scope to allow multi-threading more easily */
-	private static Map<AspBeliefbase, Set<DLPAtom>> findGoodName = new HashMap<>();
 	
 	@Override
 	protected Beliefs processInternal(EvaluateParameter param) {		
 		Beliefs reval = super.processInternal(param);
 		
-		if(reval.getWorldKnowledge() instanceof AspBeliefbase) {
-			synchonizeAux((AspBeliefbase)reval.getWorldKnowledge());
-		}
-		
-		for(BaseBeliefbase view : reval.getViewKnowledge().values()) {
-			if(view instanceof AspBeliefbase) {
-				synchonizeAux((AspBeliefbase)view);
+		AspMetaKnowledge metaKnowledge = param.getAgent().getComponent(AspMetaKnowledge.class);
+		if(metaKnowledge != null) {
+			if(reval.getWorldKnowledge() instanceof AspBeliefbase) {
+				synchonizeAux((AspBeliefbase)reval.getWorldKnowledge(), metaKnowledge);
+			}
+			
+			for(BaseBeliefbase view : reval.getViewKnowledge().values()) {
+				if(view instanceof AspBeliefbase) {
+					synchonizeAux((AspBeliefbase)view, metaKnowledge);
+				}
 			}
 		}
 		
 		return reval;
 	}
 	
-	private void synchonizeAux(AspBeliefbase beliefBase) {
-		// todo implement
+	private void synchonizeAux(AspBeliefbase beliefBase, AspMetaKnowledge metaKnowledge) {
+		Set<DLPAtom> atoms = new HashSet<>();
+		for(Rule r : beliefBase.getProgram()) {
+			atoms.addAll(r.getAtoms());
+		}
+		
+		// for every atom
+		for(DLPAtom atom : atoms) {
+			if(atom.getName().startsWith("mi_")) {
+				continue;
+			}
+			
+			// generate the holds rules if the atom is either negative or positive
+			Rule toAdd = new Rule();
+			toAdd.setConclusion(atom);
+			toAdd.addPremise(new DLPAtom("mi_holds", metaKnowledge.matesPosConst(atom)));
+			beliefBase.getProgram().add(toAdd);
+			
+			toAdd = new Rule();
+			toAdd.setConclusion(new DLPNeg(atom));
+			toAdd.addPremise(new DLPAtom("mi_holds", metaKnowledge.matesNegConst(atom)));
+			beliefBase.getProgram().add(toAdd);
+			
+			// generate the related facts:
+			beliefBase.getProgram().addFact(new DLPAtom("mi_related", metaKnowledge.matesVar(atom),
+					metaKnowledge.matesPosConst(atom)));
+			beliefBase.getProgram().addFact(new DLPAtom("mi_related", metaKnowledge.matesVar(atom),
+					metaKnowledge.matesNegConst(atom)));
+			
+			// generate time facts / rules:
+			Rule atRule = new Rule();
+			atRule.setConclusion(new DLPAtom("mi_at", new Variable("T")));
+			//atRule.addPremise(new DLPAtom("mi_time", new Variable("T")));
+			
+			Set<Variable> vars = new HashSet<>();
+			vars.add(new Variable("S"));
+			Set<DLPElement> literals = new HashSet<>();
+			literals.add(new DLPAtom("mi_time", new Variable("S")));
+			SymbolicSet ss = new SymbolicSet(vars, literals);
+			atRule.addPremise(new Aggregate("#max", ss, "=", new Variable("T")));
+			atRule.addPremise(new DLPAtom("mi_time", new Variable("T")));
+			
+			beliefBase.getProgram().add(atRule);
+			beliefBase.getProgram().addFact(new DLPAtom("mi_time", new NumberTerm(metaKnowledge.getTick())));
+		}
 	}
 }

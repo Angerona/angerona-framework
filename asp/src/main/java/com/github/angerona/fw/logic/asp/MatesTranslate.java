@@ -1,12 +1,16 @@
 package com.github.angerona.fw.logic.asp;
 
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
+import com.github.angerona.fw.asp.component.AspMetaKnowledge;
 import com.github.angerona.fw.comm.SpeechAct;
+import com.github.angerona.fw.comm.SpeechAct.SpeechActType;
 
 /**
  * This translate operation implements an extended translate functionality as described by Krümpelmann
@@ -23,15 +27,29 @@ public class MatesTranslate extends AspTranslator {
 		if(p instanceof SpeechAct) {
 			SpeechAct speechAct = (SpeechAct)p;
 			
-			String type = speechAct.getClass().getSimpleName();
+			AspMetaKnowledge metaKnowledge = caller.getAgent().getComponent(AspMetaKnowledge.class);
+			DLPLiteral knowledge = reval.getProgram().iterator().next().getConclusion().get(0);
+			
+			String type = "mi_"+speechAct.getClass().getSimpleName();
 			String sender = speechAct.getSenderId();
 			
 			Constant senderConstant = new Constant("a_"+sender);
 			
-			// todo: add mapping for constant symbols
-			Constant constantSymbolForL = new Constant("l");
+			Constant constantSymbolForL = null;
+			if(speechAct.getType() == SpeechActType.SAT_REQUESTING) {
+				constantSymbolForL = metaKnowledge.matesVar(knowledge.getAtom());
+			} else {
+				if(knowledge instanceof DLPAtom) {
+					constantSymbolForL = metaKnowledge.matesPosConst(knowledge.getAtom());
+				} else if(knowledge instanceof DLPNeg) {
+					constantSymbolForL = metaKnowledge.matesNegConst(knowledge.getAtom());
+				} else {
+					throw new IllegalStateException();
+				}
+			}
+			
 			// todo: get cur step (but in a way that simulating and real performs work)
-			NumberTerm curStep = new NumberTerm(0);
+			NumberTerm curStep = new NumberTerm(metaKnowledge.getTick());
 						
 			DLPAtom atom = new DLPAtom(type, senderConstant, constantSymbolForL, curStep);
 			reval.getProgram().addFact(atom);

@@ -10,8 +10,10 @@ import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
+import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.AngeronaPluginAdapter;
 import com.github.angerona.fw.BaseBeliefbase;
+import com.github.angerona.fw.asp.component.AspMetaKnowledge;
 import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.asp.AspBeliefbaseView;
 import com.github.angerona.fw.gui.base.ViewComponent;
@@ -105,6 +107,13 @@ public class AspPlugin extends AngeronaPluginAdapter
 	public List<Class<? extends BaseOperator>> getOperators() {
 		List<Class<? extends BaseOperator>> reval = new ArrayList<>();
 		reval.add(MatesUpdateBeliefs.class);
+		return reval;
+	}
+	
+	@Override
+	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
+		List<Class<? extends AgentComponent>> reval = new ArrayList<>();
+		reval.add(AspMetaKnowledge.class);
 		return reval;
 	}
 }

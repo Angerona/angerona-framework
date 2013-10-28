@@ -3,7 +3,6 @@ package com.github.angerona.fw.example.logic;
 import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
 import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
 import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.translate.aspnlp.AspNlpTranslator;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
@@ -19,8 +18,6 @@ import com.github.angerona.fw.logic.BaseTranslator;
  */
 public class ExampleTranslator extends BaseTranslator {
 
-	private static AspNlpTranslator translator = new AspNlpTranslator();
-	
 	@Override
 	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
 		// Translate the knowledge encoded in the answer into a dummy belief base.

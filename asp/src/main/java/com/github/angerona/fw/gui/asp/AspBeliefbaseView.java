@@ -59,14 +59,17 @@ public class AspBeliefbaseView extends BeliefbaseView {
 				
 				String output = "";
 				for(DLPLiteral l : as) {
-					output += ", " + l;
+					output += l + ",";
+					
 					if(output.length() > 100) {
-						output = output.substring(2);
+						//output = output.substring(2);
 						model.addElement(new ListElement(output, ListElement.ST_NOTCHANGED));
+						output = "";
 					}
 				}
+				
 				if(output.length() != 0) {
-					output = output.substring(2);
+					output = output.substring(0, output.length()-1);
 					model.addElement(new ListElement(output, ListElement.ST_NOTCHANGED));
 				}
 				
