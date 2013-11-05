@@ -65,7 +65,7 @@
 		  <archive>
 			<manifest>
               <!-- Specifies the main class of the application -->
-			  <mainClass>angerona.fw.app.GUIApplication</mainClass>
+			  <mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
 			</manifest>
 		  </archive>
 		</configuration>
@@ -217,7 +217,7 @@
                 <!-- automatically creates the classpath using all project dependencies,
                      also adding the project build directory -->
                 <classpath/>
-                <argument>angerona.fw.app.GUIApplication</argument>
+                <argument>com.github.angerona.fw.app.GUIApplication</argument>
                 </arguments>
             </configuration>
           </execution>
@@ -267,7 +267,7 @@
 	              -->
 	              <transformers>
 	                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-	                  <mainClass>angerona.fw.app.GUIApplication</mainClass>
+	                  <mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
 	                 </transformer>
 	               </transformers>
 	            </configuration>

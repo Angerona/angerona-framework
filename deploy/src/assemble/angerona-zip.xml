@@ -14,7 +14,7 @@
       
       <!-- Now, select which projects to include in this module-set. -->
       <includes>
-        <include>angerona.fw:app</include>
+        <include>com.github.angerona:app</include>
 	  </includes>
       <binaries>
         <outputDirectory>./lib</outputDirectory>
@@ -40,6 +40,7 @@
   		</excludes>
   	</fileSet>
   	
+  	<!-- 
   	<fileSet>
   		<outputDirectory>.</outputDirectory>
   		<directory>../app/target/classes/</directory>
@@ -47,14 +48,7 @@
   			<include>logback.xml</include>
   		</includes>
   	</fileSet>
-  	
-  	<fileSet>
-  		<outputDirectory>.</outputDirectory>
-  		<directory>../app/target/classes/</directory>
-  		<includes>
-  			<include>logback.xml</include>
-  		</includes>
-  	</fileSet>
+  	!-->
   	
   	<fileSet>
   		<outputDirectory>.</outputDirectory>

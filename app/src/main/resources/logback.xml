@@ -1,7 +1,7 @@
 <configuration>
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>Angerona-dev.log</file>
+    <file>Angerona.log</file>
     <encoder>
       <pattern>%date %level [%thread] %msg%n [%file:%line]</pattern>
     </encoder>
