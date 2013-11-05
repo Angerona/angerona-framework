@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Basis Scenario - A=0</name>
+	<name>Basis Scenario - A=1</name>
     <category>business</category>   
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	<description>
@@ -20,7 +20,7 @@
 	
 	<agent-instance>
 		<name>alice</name>
-		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
+		<agent-config source="config/agents/knowhow_agent_graphA1.xml" />         
 		<beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
 		<capability>Query</capability>
@@ -46,7 +46,7 @@
 	<agent-instance>
       	<name>bob</name>
       	
-        <agent-config source="config/agents/knowhow_agent_graph.xml" />         
+        <agent-config source="config/agents/knowhow_agent_graphA1.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
       	<capability>QueryAnswer</capability>
@@ -59,7 +59,7 @@
 	
 	<agent-instance>
 		<name>claire</name>
-		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
+		<agent-config source="config/agents/knowhow_agent_graphA1.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
         <capability>QueryAnswer</capability>
@@ -75,7 +75,7 @@
 	
 	<agent-instance>
 		<name>detective</name>
-		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
+		<agent-config source="config/agents/knowhow_agent_graphA1.xml" />         
         <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
         <capability>QueryAnswer</capability>

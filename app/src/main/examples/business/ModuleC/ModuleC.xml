@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Scenario - Module C</name>
+	<name>Scenario - Module C - A=0,LOD=0.4</name>
     <category>business</category>   
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	<description>

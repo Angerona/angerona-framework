@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Scenario - Module B</name>
+	<name>Scenario - Module B - A=0</name>
     <category>business</category>   
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	<description>

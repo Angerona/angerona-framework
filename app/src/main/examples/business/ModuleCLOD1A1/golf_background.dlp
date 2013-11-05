@@ -1,0 +1,20 @@
+topic(good_order_situation, business).
+topic(many_open_receiveables, business).
+
+% stores in which step business topics are discussed:
+business(Z) :- query(X, _, Z), topic(X, business).
+
+nquery(X,Y,Z) :- search_info(X), source_info(Y), step(Z), Z>=4.
+
+% if it is no business topic give step Z highest irrelevance
+irrelevant(Z) :- not business(Z), step(Z). 
+
+queried_for_os :- query(good_order_situation,_,_).
+queried_for_r :- query(many_open_receiveables,_,_).
+
+:- not queried_for_os.
+:- not queried_for_r.
+:- business(0).
+:- business(X), business(Y), X=Y+1.
+:- query(family,_,_).
+:- query(many_open_receiveables,_,X), query(good_order_situation,_,Y), X<Y.

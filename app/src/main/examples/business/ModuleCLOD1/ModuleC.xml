@@ -1,5 +1,5 @@
 <simulation-configuration>
-	<name>Basis Scenario - A=0</name>
+	<name>Scenario - Module C - A=0,LOD=1</name>
     <category>business</category>   
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	<description>
@@ -17,17 +17,18 @@
 	and os, that means she has to asks one of them for the cai and the other for both of the
 	other pieces of information.
 	</description>
-	
-	<agent-instance>
+
+    <agent-instance>
 		<name>alice</name>
-		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
-		<beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+        <agent-config source="config/agents/knowhow_agent_graph.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
          
-		<capability>Query</capability>
-		<capability>QueryAnswer</capability>
+        <capability>Query</capability>
+        <capability>QueryAnswer</capability>
 		<capability>Inform</capability>
 		
-		<desire>acquire_brenton</desire>
+        <desire>meet_bob</desire>
+        <desire>acquire_brenton</desire>
         
         <data key="Confidential">
             (bob, __DEFAULT__, want_acquire)
@@ -35,11 +36,11 @@
             (detective, __DEFAULT__, want_acquire)
         </data>
 		<data key="KnowHow">
-			acquire_brenton, (investigate, make_offer), 
-			make_offer, s_Query(a_bob, q_offer(N)), 
+			meet_bob, golfing, 
+			acquire_brenton, s_Query(a_bob, q_offer(N)), informed
 		</data>
 		<data key="situationFiles">
-			../basis_investigation_situation.xml, InvestigationSituation
+			golf_situation.xml, InvestigationSituation
 		</data>
 	</agent-instance>
       
@@ -52,40 +53,7 @@
       	<capability>QueryAnswer</capability>
         
         <data key="KnowHow">
-			answer_query, s_QueryAnswer(c_No), want_acquire
-			answer_query, s_QueryAnswer(c_Yes), , 1
-		</data> 
-	</agent-instance>
-	
-	<agent-instance>
-		<name>claire</name>
-		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
-        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
-         
-        <capability>QueryAnswer</capability>
-		<capability>Inform</capability>
-		
-		<desire>bonus</desire>
-		
-		<data key="KnowHow">
 			answer_query, s_QueryAnswer(p_honest),
-			bonus, s_Inform(a_bob, want_acquire), want_acquire
-		</data>
-	</agent-instance>
-	
-	<agent-instance>
-		<name>detective</name>
-		<agent-config source="config/agents/knowhow_agent_graph.xml" />         
-        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
-         
-        <capability>QueryAnswer</capability>
-        <capability>Inform</capability>
-		
-		<desire>bonus</desire>
-		
-		<data key="KnowHow">
-			answer_query, s_QueryAnswer(p_honest), 
-			bonus, s_Inform(a_bob, want_acquire), want_acquire
-		</data>
+		</data> 
 	</agent-instance>
 </simulation-configuration>
