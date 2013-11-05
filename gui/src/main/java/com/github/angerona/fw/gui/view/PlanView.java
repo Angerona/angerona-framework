@@ -3,6 +3,9 @@ package com.github.angerona.fw.gui.view;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.angerona.fw.PlanComponent;
 import com.github.angerona.fw.Subgoal;
 import com.github.angerona.fw.internal.Entity;
@@ -12,6 +15,9 @@ public class PlanView extends ListViewColored {
 	/** kick warning */
 	private static final long serialVersionUID = 7901339015161976585L;
 
+	/** reference to the logback logger instance */
+	private static Logger LOG = LoggerFactory.getLogger(PlanView.class);
+	
 	@Override
 	protected List<String> getStringRepresentation(Entity obj) {
 		List<String> reval = new LinkedList<>();
@@ -21,6 +27,7 @@ public class PlanView extends ListViewColored {
 				reval.add(sg.toString());
 			}
 		}
+		LOG.info(reval.toString());
 		return reval;
 	}
 

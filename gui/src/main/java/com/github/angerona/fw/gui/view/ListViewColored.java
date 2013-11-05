@@ -26,6 +26,7 @@ import com.github.angerona.fw.gui.nav.NavigationUser;
 import com.github.angerona.fw.internal.Entity;
 import com.github.angerona.fw.report.ReportEntry;
 import com.github.angerona.fw.report.ReportListener;
+import com.github.angerona.fw.util.Utility;
 
 /**
  * Base class for UI-Views which show a colored list of their content. For
@@ -124,6 +125,10 @@ public abstract class ListViewColored extends EntityViewComponent implements
 				JList<? extends ListViewColored.ListElement> list,
 				ListViewColored.ListElement le, int index2, boolean isSelected,
 				boolean cellHasFocus) {
+			//if(Utility.presentationMode) {
+			//setFont(getFont().deriveFont(16f));
+			//}
+				
 			setText(le.toString());
 			setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
 			setForeground(le.status == ListElement.ST_NEW ? new Color(0, 128, 0)

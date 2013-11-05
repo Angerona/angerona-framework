@@ -132,7 +132,11 @@ public class AngeronaEnvironment  {
 	 * @return true if at least one agents cylce function was called, false otherwise.
 	 */
 	public boolean runOneTick() {
-		return behavior.runOneTick(this);
+		Long before = System.currentTimeMillis();
+		boolean reval = behavior.runOneTick(this);
+		Long duration = System.currentTimeMillis() - before;
+		LOG.info("Tick '{}' Duration: '{}' ms", behavior.getTick(), duration);
+		return reval;
 	}
 	
 	/** @return	true if the environment is actually performing a tick, false otherwise. */
