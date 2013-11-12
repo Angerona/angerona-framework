@@ -22,7 +22,7 @@ Currently the Angerona framework provided the following list of features.
 External Documentation
 ----------------------
 
-External documentation exists on our Sourceforge page:
+External documentation will be publicized in the near future:
 - Manual: Contains information on how to install the Angerona framework. It starts by
   explaining how you can get the binary packages of Angerona to perform experiments and
   also contains installation steps for developers, that want to contribute to the Angerona
