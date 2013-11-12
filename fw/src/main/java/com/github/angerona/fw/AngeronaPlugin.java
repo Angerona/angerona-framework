@@ -12,19 +12,22 @@ import com.github.angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorSt
 
 
 /**
- * This interface represents an Angerona plugin. It provides list of class
- * implementations for different purposes. One can add new agent data components
- * to the agent. 
+ * This interface represents an Angerona plug-in. It provides list of class
+ * implementations for different purposes. 
+ * 
+ * New agent data components can be added to the Angerona
+ * framework by implementing this interface.
  * It is also possible to define new types of belief bases and their
- * operators like reasoner, change and translator to implement new knowledge
- * representation methods which are fully decoupled from the agent interface 
- * allowing an agent to use different belief bases for world and views on other
- * agents and so on.
+ * operators like reasoner, change and translator, such that new knowledge
+ * representation mechanisms can be implemented. Those mechanisms are 
+ * decoupled from the agent interface, such that the agent can use different 
+ * belief base types for it's world knowledge and for it's views on other agent's 
+ * knowledge.
+ * 
  * By providing operator implementations it is possible to change the agent cycle
  * to support different agent models. For further details see the SecrecyPlugin.
  * It is possible to define environment behavior implementations which decide
- * when the local agents are updated, if external simulation software is invoked
- * and so on.
+ * when the local agents are updated and if an external simulation software is invoked.
  * 
  * @author Tim Janus
  */

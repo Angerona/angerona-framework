@@ -23,7 +23,7 @@ import com.github.angerona.fw.operators.parameter.EvaluateParameter;
  * atoms to the different belief bases, therefore it uses a map that maps belief bases to their set of atoms that 
  * are handled by the AUX sub-program.
  * 
- * This operator handles the 'real' information of the speech-acts as {@link UpdateBeliefsOperator}.
+ * This operator handles the 'real' information of the speech-acts in the same way as {@link UpdateBeliefsOperator}.
  * 
  * @author Tim Janus
  */
@@ -32,14 +32,18 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 	
 	@Override
 	protected Beliefs processInternal(EvaluateParameter param) {		
+		// update the beliefs with the real-information of the speech-act
 		Beliefs reval = super.processInternal(param);
 		
+		// Retrieve the meta knowledge of the agent
 		AspMetaKnowledge metaKnowledge = param.getAgent().getComponent(AspMetaKnowledge.class);
 		if(metaKnowledge != null) {
+			// synchronize the AUX program using the world belief base of the agent
 			if(reval.getWorldKnowledge() instanceof AspBeliefbase) {
 				synchonizeAux((AspBeliefbase)reval.getWorldKnowledge(), metaKnowledge);
 			}
 			
+			// synchronize the AUX program using the views of the agent
 			for(BaseBeliefbase view : reval.getViewKnowledge().values()) {
 				if(view instanceof AspBeliefbase) {
 					synchonizeAux((AspBeliefbase)view, metaKnowledge);

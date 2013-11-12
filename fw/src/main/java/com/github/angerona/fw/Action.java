@@ -8,7 +8,10 @@ import com.github.angerona.fw.reflection.ContextFactory;
 import com.github.angerona.fw.reflection.ContextProvider;
 
 /**
- * Base class for different Actions used in the Angerona framework.
+ * An action that can be performed by an agent to either communicate with other
+ * agents or to affect the agent's environment. This class acts as a base class 
+ * for different Actions used in the Angerona framework. 
+ * 
  * @author Tim Janus
  */
 public class Action 
