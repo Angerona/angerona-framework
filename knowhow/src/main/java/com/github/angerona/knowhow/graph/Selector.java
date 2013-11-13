@@ -2,7 +2,7 @@ package com.github.angerona.knowhow.graph;
 
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;

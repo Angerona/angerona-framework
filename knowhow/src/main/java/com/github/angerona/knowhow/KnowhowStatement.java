@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
 
 import com.github.angerona.fw.util.Utility;
 

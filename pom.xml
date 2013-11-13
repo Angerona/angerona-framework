@@ -12,13 +12,13 @@
   
   <distributionManagement>
     <repository>
-      <id>nexus-angerona-releases</id>
+      <id>nexus-angerona</id>
       <name>Angerona Releases</name>
       <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
-      <id>nexus-angerona-snapshots</id>
+      <id>nexus-angerona</id>
       <name>Angerona Snapshots</name>
       <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
       <layout>default</layout>
@@ -30,7 +30,7 @@
       <snapshots>
         <enabled>true</enabled>
 	  </snapshots>
-      <id>nexus-angerona-repository</id>
+      <id>public-nexus-angerona</id>
       <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/groups/public</url>
     </repository>
   </repositories>
@@ -73,6 +73,19 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<version>2.2</version>
+
+			<executions>
+				<execution>
+					<goals>
+						<goal>test-jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
     </plugins>
   </build>
   

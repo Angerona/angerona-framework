@@ -1,16 +1,19 @@
 package com.github.angerona.fw.asp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
+import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.AngeronaPluginAdapter;
 import com.github.angerona.fw.BaseBeliefbase;
+import com.github.angerona.fw.asp.component.AspMetaKnowledge;
 import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.asp.AspBeliefbaseView;
 import com.github.angerona.fw.gui.base.ViewComponent;
@@ -24,8 +27,11 @@ import com.github.angerona.fw.logic.asp.AspIteratorStrategy;
 import com.github.angerona.fw.logic.asp.AspReasoner;
 import com.github.angerona.fw.logic.asp.AspSkepticalReasoner;
 import com.github.angerona.fw.logic.asp.AspTranslator;
+import com.github.angerona.fw.logic.asp.MatesTranslate;
+import com.github.angerona.fw.logic.asp.MatesUpdateBeliefs;
 import com.github.angerona.fw.logic.asp.RevisionCredibilityPrograms;
 import com.github.angerona.fw.logic.asp.RevisionPreferenceHandling;
+import com.github.angerona.fw.operators.BaseOperator;
 import com.github.angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 import com.github.angerona.serialize.asp.DLPAtomTransform;
 import com.github.angerona.serialize.asp.DLPLiteralTransform;
@@ -78,6 +84,7 @@ public class AspPlugin extends AngeronaPluginAdapter
 	public List<Class<? extends BaseTranslator>> getTranslatorImpl() {
 		List<Class<? extends BaseTranslator>> reval = new LinkedList<Class<? extends BaseTranslator>>();
 		reval.add(AspTranslator.class);
+		reval.add(MatesTranslate.class);
 		return reval;
 	}
 
@@ -93,6 +100,20 @@ public class AspPlugin extends AngeronaPluginAdapter
 	public List<Class<? extends ContinuousBeliefOperatorFamilyIteratorStrategy>> getBeliefOperatorFamilyIteratorStrategies() {
 		List<Class<? extends ContinuousBeliefOperatorFamilyIteratorStrategy>> reval = new LinkedList<>();
 		reval.add(AspIteratorStrategy.class);
+		return reval;
+	}
+	
+	@Override
+	public List<Class<? extends BaseOperator>> getOperators() {
+		List<Class<? extends BaseOperator>> reval = new ArrayList<>();
+		reval.add(MatesUpdateBeliefs.class);
+		return reval;
+	}
+	
+	@Override
+	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
+		List<Class<? extends AgentComponent>> reval = new ArrayList<>();
+		reval.add(AspMetaKnowledge.class);
 		return reval;
 	}
 }

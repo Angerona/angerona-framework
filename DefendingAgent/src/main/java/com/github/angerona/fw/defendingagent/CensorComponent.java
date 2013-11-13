@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
-import net.sf.tweety.logics.propositionallogic.syntax.Negation;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +73,9 @@ public class CensorComponent extends BaseAgentComponent {
 		
 		FolFormula s22 = new FOLAtom(new Predicate("s22"));
 		FolFormula s21 = new FOLAtom(new Predicate("s21"));
-		FolFormula not_s21 = new net.sf.tweety.logics.firstorderlogic.syntax.Negation(s21);
+		FolFormula not_s21 = new net.sf.tweety.logics.fol.syntax.Negation(s21);
 		FolFormula r = new FOLAtom(new Predicate("r"));
-		FolFormula s21_r = new net.sf.tweety.logics.firstorderlogic.syntax.Disjunction(not_s21, r); 
+		FolFormula s21_r = new net.sf.tweety.logics.fol.syntax.Disjunction(not_s21, r); 
 		
 		v = v.RefineViewByQuery(s21, AnswerValue.AV_UNKNOWN);
 		v = v.RefineViewByQuery(s21_r, AnswerValue.AV_TRUE);
@@ -152,12 +152,15 @@ public class CensorComponent extends BaseAgentComponent {
 				result.add(LogicTranslator.PlToFo(p));
 			}
 		}
+		
+		
 		for(Proposition p : signature) {
 			Negation n = new Negation(p);
 			if(scepticalInference(view, LogicTranslator.PlToFo(n))) {
 				result.add(LogicTranslator.PlToFo(n));
 			}
 		}
+		
 		return result;
 	}
 	

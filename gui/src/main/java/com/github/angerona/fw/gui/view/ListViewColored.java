@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ListCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -161,7 +162,7 @@ public abstract class ListViewColored extends EntityViewComponent implements
 
 		actualLiterals = new JList<ListElement>();
 		actualLiterals.setCellRenderer(new ListRenderer());
-		this.add(actualLiterals, BorderLayout.CENTER);
+		this.add(new JScrollPane(actualLiterals), BorderLayout.CENTER);
 
 		model = new DefaultListModel<ListElement>();
 		actualLiterals.setModel(model);

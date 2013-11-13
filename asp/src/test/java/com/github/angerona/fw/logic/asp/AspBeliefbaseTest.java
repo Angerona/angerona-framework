@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.lp.asp.syntax.Program;
 
 import org.junit.Before;
 import org.junit.Test;

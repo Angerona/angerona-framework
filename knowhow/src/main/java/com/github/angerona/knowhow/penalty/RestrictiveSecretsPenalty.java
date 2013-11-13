@@ -3,7 +3,7 @@ package com.github.angerona.knowhow.penalty;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;

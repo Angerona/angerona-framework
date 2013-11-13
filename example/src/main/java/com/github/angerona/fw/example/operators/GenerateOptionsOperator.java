@@ -5,7 +5,7 @@ import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

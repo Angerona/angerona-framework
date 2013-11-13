@@ -2,10 +2,10 @@ package com.github.angerona.fw.logic.asp;
 
 import java.io.File;
 
-import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
-import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
+import net.sf.tweety.lp.asp.solver.Clingo;
+import net.sf.tweety.lp.asp.solver.DLV;
+import net.sf.tweety.lp.asp.solver.DLVComplex;
+import net.sf.tweety.lp.asp.solver.Solver;
 
 import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.error.NotImplementedException;

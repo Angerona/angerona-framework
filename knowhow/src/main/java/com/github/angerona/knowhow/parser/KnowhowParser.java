@@ -9,8 +9,8 @@ import com.github.angerona.knowhow.KnowhowStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
-import net.sf.tweety.logicprogramming.asplibrary.parser.*;
+import net.sf.tweety.lp.asp.syntax.*;
+import net.sf.tweety.lp.asp.parser.*;
 
 @SuppressWarnings("all")
 public class KnowhowParser implements KnowhowParserConstants {
@@ -28,7 +28,7 @@ public class KnowhowParser implements KnowhowParserConstants {
      try {
         DLPLiteral lit = visitor.visit(parser.Atom(), null);
                 return (DLPAtom)lit;
-        } catch (net.sf.tweety.logicprogramming.asplibrary.parser.ParseException e) {
+        } catch (net.sf.tweety.lp.asp.parser.ParseException e) {
                 LOG.error(e.getMessage());
                 throw new ParseException();
         }

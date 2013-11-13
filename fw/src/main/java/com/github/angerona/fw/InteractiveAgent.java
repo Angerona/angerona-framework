@@ -1,13 +1,11 @@
 package com.github.angerona.fw;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class InteractiveAgent extends Agent{
 
 	/** reference to the logback logger instance */
-	private static Logger LOG = LoggerFactory.getLogger(InteractiveAgent.class);
+	//private static Logger LOG = LoggerFactory.getLogger(InteractiveAgent.class);
 	
 	private boolean hasPerception;
 	

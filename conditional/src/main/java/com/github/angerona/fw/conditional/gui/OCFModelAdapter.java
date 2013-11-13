@@ -9,8 +9,8 @@ import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
-import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
+import net.sf.tweety.logics.cl.BruteForceCReasoner;
+import net.sf.tweety.logics.cl.semantics.RankingFunction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

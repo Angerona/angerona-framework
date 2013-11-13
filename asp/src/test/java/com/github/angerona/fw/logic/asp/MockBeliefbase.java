@@ -1,7 +1,7 @@
 package com.github.angerona.fw.logic.asp;
 
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLV;
-import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
+import net.sf.tweety.lp.asp.solver.DLV;
+import net.sf.tweety.lp.asp.solver.Solver;
 
 import com.github.angerona.fw.logic.BaseChangeBeliefs;
 import com.github.angerona.fw.logic.BaseReasoner;

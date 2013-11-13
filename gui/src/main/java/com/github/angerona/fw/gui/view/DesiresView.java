@@ -3,7 +3,7 @@ package com.github.angerona.fw.gui.view;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.internal.Entity;
 import com.github.angerona.fw.logic.Desires;

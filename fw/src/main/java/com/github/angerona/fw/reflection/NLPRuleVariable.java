@@ -1,6 +1,6 @@
 package com.github.angerona.fw.reflection;
 
-import net.sf.tweety.logicprogramming.nlp.syntax.NLPRule;
+import net.sf.tweety.lp.nlp.syntax.NLPRule;
 
 import com.github.angerona.fw.error.AngeronaException;
 

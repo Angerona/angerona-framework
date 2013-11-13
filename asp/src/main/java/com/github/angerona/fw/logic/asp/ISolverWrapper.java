@@ -1,6 +1,6 @@
 package com.github.angerona.fw.logic.asp;
 
-import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
+import net.sf.tweety.lp.asp.solver.Solver;
 
 /**
  * A solver wrapper encapsulates a solver like DLV

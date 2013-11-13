@@ -17,8 +17,8 @@ import net.sf.tweety.BeliefBase;
 import net.sf.tweety.Formula;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

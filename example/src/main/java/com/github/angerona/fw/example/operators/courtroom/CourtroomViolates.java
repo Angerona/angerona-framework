@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.translate.aspfol.AspFolTranslator;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.Program;
+import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.util.AnswerSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.util.AnswerSet;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.gui.view.BeliefbaseView;
@@ -59,14 +59,17 @@ public class AspBeliefbaseView extends BeliefbaseView {
 				
 				String output = "";
 				for(DLPLiteral l : as) {
-					output += ", " + l;
+					output += l + ",";
+					
 					if(output.length() > 100) {
-						output = output.substring(2);
+						//output = output.substring(2);
 						model.addElement(new ListElement(output, ListElement.ST_NOTCHANGED));
+						output = "";
 					}
 				}
+				
 				if(output.length() != 0) {
-					output = output.substring(2);
+					output = output.substring(0, output.length()-1);
 					model.addElement(new ListElement(output, ListElement.ST_NOTCHANGED));
 				}
 				

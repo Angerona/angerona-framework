@@ -3,14 +3,13 @@ package com.github.angerona.fw.defendingagent;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
-import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
-import net.sf.tweety.logics.propositionallogic.syntax.Contradiction;
-import net.sf.tweety.logics.propositionallogic.syntax.Negation;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.logics.cl.syntax.Conditional;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +90,7 @@ public class View {
 		} else {
 			LOG.warn("unexpected answer value in query view refinement: " + av);
 		}
+		
 		return newView;
 	}
 	
@@ -102,6 +102,7 @@ public class View {
 	 * @return the resulting view after the consideration of the revision and the notification
 	 */
 	public View RefineViewByRevision(FolFormula revision, AnswerValue notification) {
+		/*
 		PropositionalFormula q = LogicTranslator.FoToPl(revision);
 		View newView = new View(this);
 		if(notification == AnswerValue.AV_TRUE) {
@@ -118,8 +119,8 @@ public class View {
 		} else {
 			LOG.warn("unexpected answer value in revision view refinement: " + notification);
 		}
-		
-		return newView;
+		*/
+		return null;
 	}
 	
 	public String toString() {

@@ -3,8 +3,8 @@ package com.github.angerona.fw.example.logic;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.logic.AngeronaAnswer;

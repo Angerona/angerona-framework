@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
  * An answer in the Angerona framework. Extends the GenericAnswer by an extended 
@@ -25,7 +25,7 @@ public class AngeronaAnswer {
 	private AnswerValue answerValue;
 
 	/** sets of answers used for complex answers (for open queries) */
-	private Set<FolFormula> answers;
+	private Set<FolFormula> answers = new HashSet<>();
 	
 	/**
 	 * The original query for this answer.

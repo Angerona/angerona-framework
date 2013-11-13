@@ -20,7 +20,6 @@ import com.github.angerona.fw.example.operators.CautiousUpdateBeliefs;
 import com.github.angerona.fw.example.operators.GenerateOptionsOperator;
 import com.github.angerona.fw.example.operators.IntentionUpdateOperator;
 import com.github.angerona.fw.example.operators.SubgoalGenerationOperator;
-import com.github.angerona.fw.example.operators.UpdateBeliefsOperator;
 import com.github.angerona.fw.example.operators.ViolatesOperator;
 import com.github.angerona.fw.example.operators.courtroom.CourtroomIntentionUpdate;
 import com.github.angerona.fw.example.operators.courtroom.CourtroomPlanner;
@@ -32,6 +31,7 @@ import com.github.angerona.fw.logic.BaseChangeBeliefs;
 import com.github.angerona.fw.logic.BaseReasoner;
 import com.github.angerona.fw.logic.BaseTranslator;
 import com.github.angerona.fw.operators.BaseOperator;
+import com.github.angerona.fw.operators.UpdateBeliefsOperator;
 
 /**
  * The example plug-in acts as example/default plug-in for the secrecy agent model in the Angerona framework.

@@ -30,12 +30,13 @@ import com.github.angerona.fw.serialize.GlobalConfiguration;
 
 /**
  * Main class of Angerona manages all resources.
+ * 
  * Give the user the ability to add new folders
  * as resource folders, all the files in those folders
  * will be loaded.
+ * 
  * @author Tim Janus
- * @todo Also handle plugins as resource.
- *
+ * @todo Also handle plug-ins as resource.
  */
 public class Angerona {
 	
@@ -310,8 +311,9 @@ public class Angerona {
 	
 	/**
 	 * Loads the resources in the folders registered so far. First of all the
-	 * AgentConfigurations are loaded then the Beliefbase Configurations and
+	 * AgentConfigurations are loaded then the belief base Configurations and
 	 * after that the Simulation templates.
+	 * 
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 * @throws SAXException

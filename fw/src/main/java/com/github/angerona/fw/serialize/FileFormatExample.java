@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 
 import org.simpleframework.xml.core.PersistenceException;
 

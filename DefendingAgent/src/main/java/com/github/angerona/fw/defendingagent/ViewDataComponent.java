@@ -4,7 +4,7 @@ package com.github.angerona.fw.defendingagent;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.logics.propositionallogic.PlBeliefSet;
+import net.sf.tweety.logics.pl.PlBeliefSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

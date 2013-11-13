@@ -1,6 +1,6 @@
 package com.github.angerona.fw.logic.asp;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.lp.asp.syntax.Program;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,11 +3,11 @@ package com.github.angerona.fw.logic.conditional;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.lp.nlp.syntax.NLPProgram;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +85,7 @@ public class ConditionalTranslator extends BaseTranslator {
 				if(negatedFormula instanceof FOLAtom) {
 					FOLAtom atom = (FOLAtom) negatedFormula;
 					Proposition p = new Proposition(atom.getPredicate().getName());
-					reval.getPropositions().add(new net.sf.tweety.logics.propositionallogic.syntax.Negation(p));
+					reval.getPropositions().add(new net.sf.tweety.logics.pl.syntax.Negation(p));
 				} else {
 					LOG.warn("Translation of invalid formula '{}', literal expected", formula);
 				}

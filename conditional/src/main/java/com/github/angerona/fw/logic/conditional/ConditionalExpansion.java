@@ -2,7 +2,7 @@ package com.github.angerona.fw.logic.conditional;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

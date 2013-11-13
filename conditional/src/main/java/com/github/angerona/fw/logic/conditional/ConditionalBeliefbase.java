@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.Signature;
-import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
-import net.sf.tweety.logics.conditionallogic.syntax.Conditional;
-import net.sf.tweety.logics.propositionallogic.parser.PlParser;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.logics.cl.ClBeliefSet;
+import net.sf.tweety.logics.cl.syntax.Conditional;
+import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
