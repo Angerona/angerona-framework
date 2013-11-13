@@ -2,7 +2,7 @@ package com.github.angerona.fw.defendingagent.comm;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.comm.Answer;

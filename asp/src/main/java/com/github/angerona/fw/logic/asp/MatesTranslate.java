@@ -1,10 +1,10 @@
 package com.github.angerona.fw.logic.asp;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.DLPNeg;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;

@@ -1,8 +1,8 @@
 package com.github.angerona.fw.logic.conditional;
 
-import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
-import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
-import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
+import net.sf.tweety.logics.cl.BruteForceCReasoner;
+import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 		RankingFunction ranking = creasoner.getCRepresentation();
 		long duration = System.currentTimeMillis() - startTime;
 		log.info("done. duration: {}ms", duration);
-				
+			
 		Conjunction con = new Conjunction(beliefbase.getPropositions());
 		con.addAll(newKnowledge.getPropositions());
 		
@@ -63,8 +63,10 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 		long duration = System.currentTimeMillis() - startTime;
 		log.info("done. duration: {}ms", duration);
 				
+		
 		Conjunction con = new Conjunction(bbase.getPropositions());
 		con.addAll(newKnowledge.getPropositions());
+		
 		
 		return ranking.rank(con) < RankingFunction.INFINITY;
 	}

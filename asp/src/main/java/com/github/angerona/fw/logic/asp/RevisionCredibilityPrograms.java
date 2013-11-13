@@ -1,8 +1,8 @@
 package com.github.angerona.fw.logic.asp;
 
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
-import net.sf.tweety.logicprogramming.asplibrary.beliefdynamics.revision.CredibilityRevision;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
+import net.sf.tweety.lp.asp.beliefdynamics.revision.CredibilityRevision;
+import net.sf.tweety.lp.asp.syntax.Rule;
 
 public class RevisionCredibilityPrograms extends AspRevision {
 

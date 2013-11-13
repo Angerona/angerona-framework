@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.angerona.fw.AgentComponent;

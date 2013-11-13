@@ -9,13 +9,13 @@ import java.util.List;
 import net.sf.tweety.Formula;
 import net.sf.tweety.ParserException;
 import net.sf.tweety.Signature;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
-import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
+import net.sf.tweety.lp.asp.parser.ParseException;
+import net.sf.tweety.lp.asp.syntax.Program;
+import net.sf.tweety.lp.asp.syntax.Rule;
 
 import com.github.angerona.fw.BaseBeliefbase;
 

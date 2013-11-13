@@ -19,18 +19,6 @@
       <version>4.9</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>fw</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.angerona</groupId>
-      <artifactId>fw</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
     
     <dependency>
     	<groupId>com.github.angerona</groupId>
@@ -38,19 +26,25 @@
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>net.sf.tweety.logics.translate</groupId>
-    	<artifactId>aspnlp</artifactId>
+    	<groupId>net.sf.tweety.logics</groupId>
+    	<artifactId>translators</artifactId>
     	<version>0.2.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>net.sf.tweety.logicprogramming.asplibrary</groupId>
+    	<groupId>net.sf.tweety.lp.asp</groupId>
     	<artifactId>beliefdynamics</artifactId>
     	<version>0.2.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>net.sf.tweety.logicprogramming</groupId>
-    	<artifactId>asplibrary</artifactId>
+    	<groupId>net.sf.tweety.lp</groupId>
+    	<artifactId>asp</artifactId>
     	<version>0.2.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.github.angerona</groupId>
+    	<artifactId>fw</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<type>test-jar</type>
     </dependency>
   </dependencies>
   <parent>

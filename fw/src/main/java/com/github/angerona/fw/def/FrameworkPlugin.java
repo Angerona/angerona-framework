@@ -3,8 +3,8 @@ package com.github.angerona.fw.def;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.angerona.fw.ActionHistory;

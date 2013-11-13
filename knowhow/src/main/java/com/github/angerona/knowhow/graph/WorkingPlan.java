@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.Action;
 import com.github.angerona.knowhow.penalty.PenaltyFunction;

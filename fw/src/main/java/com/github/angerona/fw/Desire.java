@@ -1,6 +1,6 @@
 package com.github.angerona.fw;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

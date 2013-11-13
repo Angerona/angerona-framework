@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.util.AnswerSet;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.gui.view.BeliefbaseView;

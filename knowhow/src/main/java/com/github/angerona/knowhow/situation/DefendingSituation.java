@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
-import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
+import net.sf.tweety.lp.asp.parser.ParseException;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;

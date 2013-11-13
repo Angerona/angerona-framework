@@ -7,9 +7,9 @@ import java.util.List;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.Signature;
-import net.sf.tweety.logics.firstorderlogic.FolBeliefSet;
-import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.parser.FolParserB;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.parser.ParseException;
@@ -68,7 +68,7 @@ public class ExampleBeliefbase extends BaseBeliefbase {
 		FolParserB parser = new FolParserB(br);
 		try {
 			fbs = parser.KB();
-		} catch (net.sf.tweety.logics.firstorderlogic.parser.ParseException ex) {
+		} catch (net.sf.tweety.logics.fol.parser.ParseException ex) {
 			ex.printStackTrace();
 			throw new ParseException(ex.getMessage());
 		}

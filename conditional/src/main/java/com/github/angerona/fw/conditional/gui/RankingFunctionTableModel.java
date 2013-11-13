@@ -2,17 +2,15 @@ package com.github.angerona.fw.conditional.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
-import net.sf.tweety.logics.propositionallogic.semantics.PossibleWorld;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 public class RankingFunctionTableModel extends AbstractTableModel {
 

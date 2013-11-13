@@ -2,9 +2,9 @@ package com.github.angerona.serialize.asp;
 
 import java.io.StringReader;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
-import net.sf.tweety.logicprogramming.asplibrary.parser.InstantiateVisitor;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 
 import org.simpleframework.xml.transform.Transform;
 

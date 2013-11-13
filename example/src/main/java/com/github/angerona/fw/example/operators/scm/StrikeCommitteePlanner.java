@@ -1,8 +1,8 @@
 package com.github.angerona.fw.example.operators.scm;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Desire;

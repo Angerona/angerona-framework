@@ -1,6 +1,6 @@
 package com.github.angerona.fw.operators.parameter;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.BaseBeliefbase;
 

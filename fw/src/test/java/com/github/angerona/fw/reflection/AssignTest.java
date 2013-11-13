@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 
 import org.junit.Before;
 import org.junit.Test;

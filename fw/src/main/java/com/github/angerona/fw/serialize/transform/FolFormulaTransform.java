@@ -2,9 +2,9 @@ package com.github.angerona.fw.serialize.transform;
 
 import java.io.StringReader;
 
-import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.logics.fol.parser.FolParserB;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 import org.simpleframework.xml.transform.Transform;
 

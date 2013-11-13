@@ -7,7 +7,7 @@ import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import bibliothek.gui.dock.DefaultDockable;
 
 import com.github.angerona.fw.BaseBeliefbase;

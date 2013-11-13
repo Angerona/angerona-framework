@@ -3,14 +3,14 @@ package com.github.angerona.fw.logic.asp;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Aggregate;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPElement;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPNeg;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.SymbolicSet;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.lp.asp.syntax.Aggregate;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPElement;
+import net.sf.tweety.lp.asp.syntax.DLPNeg;
+import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.SymbolicSet;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.asp.component.AspMetaKnowledge;

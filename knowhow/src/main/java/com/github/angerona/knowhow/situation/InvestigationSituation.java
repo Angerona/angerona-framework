@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;

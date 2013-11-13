@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ParseException;
+import net.sf.tweety.lp.asp.syntax.Program;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.core.Commit;

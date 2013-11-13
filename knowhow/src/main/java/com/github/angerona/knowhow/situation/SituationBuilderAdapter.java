@@ -3,13 +3,13 @@ package com.github.angerona.knowhow.situation;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
-import net.sf.tweety.logicprogramming.asplibrary.parser.ParseException;
-import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
-import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Rule;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ParseException;
+import net.sf.tweety.lp.asp.solver.Solver;
+import net.sf.tweety.lp.asp.solver.SolverException;
+import net.sf.tweety.lp.asp.syntax.Program;
+import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;

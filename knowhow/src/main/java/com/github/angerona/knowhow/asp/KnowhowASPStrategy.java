@@ -12,20 +12,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.logicprogramming.asplibrary.parser.ASPParser;
-import net.sf.tweety.logicprogramming.asplibrary.solver.DLVComplex;
-import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPLiteral;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ListTerm;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.ListTermValue;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.StringTerm;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.solver.DLVComplex;
+import net.sf.tweety.lp.asp.solver.SolverException;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.ListTerm;
+import net.sf.tweety.lp.asp.syntax.ListTermValue;
+import net.sf.tweety.lp.asp.syntax.Program;
+import net.sf.tweety.lp.asp.util.AnswerSet;
+import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +109,7 @@ public class KnowhowASPStrategy {
 		if (is != null) {
 			try {
 				nextAction = ASPParser.parseProgram(new InputStreamReader(is));
-			} catch (net.sf.tweety.logicprogramming.asplibrary.parser.ParseException e) {
+			} catch (net.sf.tweety.lp.asp.parser.ParseException e) {
 				nextAction = null;
 				LOG.error("Cannot load the 'nextAction' program: '{}'",
 						e.getMessage());

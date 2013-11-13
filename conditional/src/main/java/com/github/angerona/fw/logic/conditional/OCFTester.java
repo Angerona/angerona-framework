@@ -3,10 +3,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
-import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
-import net.sf.tweety.logics.firstorderlogic.parser.FolParserB;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolSignature;
+import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.fol.parser.FolParserB;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 import com.github.angerona.fw.parser.ParseException;
 
@@ -16,7 +16,7 @@ public class OCFTester {
 //	public static String rawbbase = "(d22|s22) \n (d11|s11) \n (r|d22 && d11) \n (-d22 || -d11 | s22 && s11 && i11_22) \n (d21|s21) \n (r|d21 && d11)";
 	public static String rawbbase = "(c|s1) \n (!s3|s2) \n (!s2|s3) \n (!s1 | s4)";
 	
-	public static void main(String[] args) throws ParseException, IOException, net.sf.tweety.logics.firstorderlogic.parser.ParseException {
+	public static void main(String[] args) throws ParseException, IOException, net.sf.tweety.logics.fol.parser.ParseException {
 		ConditionalBeliefbase bbase = new ConditionalBeliefbase();
 		bbase.parse(new BufferedReader(new StringReader(rawbbase)));
 		ConditionalReasoner bbasereasoner = new ConditionalReasoner();

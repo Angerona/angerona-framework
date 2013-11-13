@@ -6,17 +6,17 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
+import net.sf.tweety.logics.cl.BruteForceCReasoner;
+import net.sf.tweety.logics.cl.ClBeliefSet;
+import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.conditionallogic.BruteForceCReasoner;
-import net.sf.tweety.logics.conditionallogic.ClBeliefSet;
-import net.sf.tweety.logics.conditionallogic.semantics.RankingFunction;
-import net.sf.tweety.logics.firstorderlogic.syntax.FOLAtom;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.propositionallogic.syntax.Conjunction;
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula;
-import net.sf.tweety.logics.propositionallogic.syntax.PropositionalSignature;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +101,7 @@ public class ConditionalReasoner extends BaseReasoner {
 			if(rankAandB < rankAandNotB) {
 				retval.add(new FOLAtom(new Predicate(prop.getName())));
 			} else if(rankAandNotB < rankAandB) {
-				retval.add(new Negation(new FOLAtom(new Predicate(prop.getName()))));
+				retval.add(new net.sf.tweety.logics.fol.syntax.Negation(new FOLAtom(new Predicate(prop.getName()))));
 			}
 		}
 

@@ -3,10 +3,10 @@ package com.github.angerona.fw.logic.asp;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
-import net.sf.tweety.logics.translate.aspnlp.AspNlpTranslator;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.translators.aspnlp.AspNlpTranslator;
+import net.sf.tweety.lp.nlp.syntax.NLPProgram;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;

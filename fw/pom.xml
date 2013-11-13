@@ -72,16 +72,16 @@
 	 </dependency>
 	 <dependency>
 	 	<groupId>net.sf.tweety.logics</groupId>
-	 	<artifactId>firstorderlogic</artifactId>
+	 	<artifactId>fol</artifactId>
 	 	<version>0.2.0-SNAPSHOT</version>
 	 </dependency>
 	 <dependency>
 	 	<groupId>net.sf.tweety.logics</groupId>
-	 	<artifactId>propositionallogic</artifactId>
+	 	<artifactId>pl</artifactId>
 	 	<version>0.2.0-SNAPSHOT</version>
 	 </dependency>
 	 <dependency>
-	 	<groupId>net.sf.tweety.logicprogramming</groupId>
+	 	<groupId>net.sf.tweety.lp</groupId>
 	 	<artifactId>nlp</artifactId>
 	 	<version>0.2.0-SNAPSHOT</version>
 	 </dependency>

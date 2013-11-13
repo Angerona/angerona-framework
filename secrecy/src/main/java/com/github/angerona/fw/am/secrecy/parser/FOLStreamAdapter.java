@@ -16,7 +16,7 @@ import java.io.Reader;
  * @author Tim Janus
  */
 public class FOLStreamAdapter extends
-		net.sf.tweety.logics.firstorderlogic.parser.SimpleCharStream {
+		net.sf.tweety.logics.fol.parser.SimpleCharStream {
 
 	private SimpleCharStream source;
 

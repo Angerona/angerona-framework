@@ -1,8 +1,8 @@
 package com.github.angerona.fw.example.logic;
 
-import net.sf.tweety.logicprogramming.nlp.syntax.NLPProgram;
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
-import net.sf.tweety.logics.firstorderlogic.syntax.Negation;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.lp.nlp.syntax.NLPProgram;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;

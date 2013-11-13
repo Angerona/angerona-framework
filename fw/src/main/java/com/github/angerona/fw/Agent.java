@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.logics.firstorderlogic.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

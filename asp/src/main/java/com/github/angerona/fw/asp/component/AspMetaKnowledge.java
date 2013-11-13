@@ -3,9 +3,9 @@ package com.github.angerona.fw.asp.component;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.DLPAtom;
 import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.translate.aspfol.AspFolTranslator;
+import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
 
 import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
