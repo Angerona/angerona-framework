@@ -272,6 +272,7 @@ public class AngeronaWindow extends WindowAdapter
 	@Override
 	public void onError(String errorTitle, String errorMessage) {
 		txtErrorMsg.setText(errorMessage);
+		txtErrorMsg.setCaretPosition(0);
 		JOptionPane.showMessageDialog(mainWindow, errorMsgScroll, 
 				errorTitle, JOptionPane.ERROR_MESSAGE);
 	}

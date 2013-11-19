@@ -120,17 +120,27 @@ public class Angerona {
 				if(config == null) {
 					config = new GlobalConfiguration();
 					onError("Configuration File not Found", 
-							"Cannot find the file: '" + filename +
-							"' close the Application and create your own\n" +
-							"by renaming '.../software/test/src/main/config/configuration_template.xml'" +
-							"to 'configuration.xml'\nand replace the placeholders.");
+							"Cannot find the file: '" + filename +"'."
+							+ "Make sure that your working directory contains the config directory."
+							+ "\nIf you do not have a file 'configuration.xml' "
+							+ "in your config directory then close the application "
+							+ "and create your own by moving \n"
+							+ "'.../software/app/src/main/config/configuration_install.xml'" +
+							"\nto \n'"
+							+ (new File(configFilePath)).getAbsolutePath() + 
+							"'\nand replacing the placeholders.");
 				}
 			} else {
 				onError("Configuration File not Found", 
-						"Cannot find the file: '" + filename +
-						"' close the Application and create your own\n" +
-						"by renaming '.../software/test/src/main/config/configuration_template.xml'" +
-						"to 'configuration.xml'\nand replace the placeholders.");
+						"Cannot find the file: '" + filename +"'."
+						+ "Make sure that your working directory contains the config directory."
+						+ "\nIf you do not have a file 'configuration.xml' "
+						+ "in your config directory then close the application "
+						+ "and create your own by moving \n"
+						+ "'.../software/app/src/main/config/configuration_install.xml'" +
+						"\nto \n'"
+						+ (new File(configFilePath)).getAbsolutePath() + 
+						"'\nand replacing the placeholders.");
 			}
 		}
 		return config;

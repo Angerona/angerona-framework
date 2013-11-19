@@ -2,13 +2,17 @@ package com.github.angerona.fw.logic.conditional;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.cl.BruteForceCReasoner;
 import net.sf.tweety.logics.cl.ClBeliefSet;
+import net.sf.tweety.logics.cl.RuleBasedCReasoner;
+import net.sf.tweety.logics.cl.kappa.KappaValue;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -44,21 +48,55 @@ public class ConditionalReasoner extends BaseReasoner {
 	}
 	
 	public RankingFunction calculateCRepresentation(ClBeliefSet bbase) {
-		RankingFunction result = cache.get(bbase);
+//		RankingFunction result = cache.get(bbase);
+//		
+//		if(result == null) {
+//			// Calculate c-representation
+//			BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase, true);
+//			
+//			log.info("compute c-representation (bruteforce)");
+//			long startTime = System.currentTimeMillis();
+//			result = creasoner.getCRepresentation();
+//			long duration = System.currentTimeMillis() - startTime;
+//			log.info("done. duration: {}ms", duration);
+//			cache.put(bbase, result);
+//		}
 		
-		if(result == null) {
-			// Calculate c-representation
-			BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase, true);
-			
-			log.info("compute c-representation (bruteforce)");
-			long startTime = System.currentTimeMillis();
-			result = creasoner.getCRepresentation();
-			long duration = System.currentTimeMillis() - startTime;
-			log.info("done. duration: {}ms", duration);
-			cache.put(bbase, result);
+//		return result;
+		
+		Set<Conditional> conds = new HashSet<Conditional>();
+		Iterator<Conditional> iterator = bbase.iterator();
+		for(int i=0; i <= bbase.size() ; i++){
+			conds.add(iterator.next());
+		}		
+		
+		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
+		Long before = System.currentTimeMillis();
+		reasoner.prepare();
+		Long duration = System.currentTimeMillis() - before;
+		System.out.println("Generated in " + duration + "ms:");
+		System.out.println("Conditional Structure:");
+		System.out.println(reasoner.getConditionalStructure());
+		
+		System.out.println("Initial Kappa:");
+		for(KappaValue kv : reasoner.getKappas()) {
+			System.out.println(kv.fullString());
 		}
 		
-		return result;
+		before = System.currentTimeMillis();
+		reasoner.process();
+		duration = System.currentTimeMillis() - before;
+		System.out.println("Evaluated in " + duration + "ms:");
+		for(KappaValue kv : reasoner.getKappas()) {
+			System.out.println(kv.fullString());
+		}
+		System.out.println("Ranking-Function:");
+		System.out.println(reasoner.getSemantic());
+		System.out.println("");
+		
+		
+		return reasoner.getSemantic();
+		
 	}
 	
 	/**

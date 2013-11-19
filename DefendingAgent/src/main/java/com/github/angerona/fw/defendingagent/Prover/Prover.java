@@ -30,7 +30,7 @@ public class Prover {
 	}
 	
 	private static SynchronousQueue<ProverInput> inputQueue = new SynchronousQueue<ProverInput>();
-	private static SynchronousQueue<Boolean> outputQueue = new SynchronousQueue<Boolean>();
+	private static SynchronousQueue<Object> outputQueue = new SynchronousQueue<Object>();
 	private static boolean run = true;
 
 	/**
@@ -88,12 +88,23 @@ public class Prover {
 					continue;
 				}
 				System.out.println("sicstus worker: invoked sicstus worker thread");
-			
-			boolean result = runProver(input.kFormulas, input.formulaToProve, input.chooseInferenceSystem);
+				boolean result = false;
+				try{
+				result = runProver(input.kFormulas, input.formulaToProve, input.chooseInferenceSystem);
+				} catch(Exception e) {
+					try {
+						outputQueue.put(e);
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
+						continue;
+					}
+					
+				}
 			System.out.println("sicstus worker: prover result " + result);
 			try {
 				outputQueue.put(result);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 				continue;
 			}
 		}
@@ -128,7 +139,12 @@ public class Prover {
 		
 		try {
 			System.out.println("waiting for sicstus result");
-			return outputQueue.take();
+			Object result = outputQueue.take();
+			if(result instanceof Boolean) {
+				return (boolean) result;
+			} else if(result instanceof Exception) {
+				throw new RuntimeException((Exception)result);
+			} else throw new SICStusException("Illegal Value returned by klmlean solver.");
 		} catch (InterruptedException e) {
 			throw new SICStusException();
 		}
@@ -151,7 +167,7 @@ public class Prover {
 	 * @return true if formulaToProve can be inferred from kFormulas, false otherwise
 	 */
 	public static boolean runProver(List<String> kFormulas, String formulaToProve,
-			InferenceSystem chooseInferenceSystem) {
+			InferenceSystem chooseInferenceSystem) throws Exception {
 		
 		Query q;
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
@@ -238,9 +254,9 @@ public class Prover {
 		} catch (Exception choosingKLM) {
 			
 			System.out.println("\nERROR SICStus Prolog engine");
-			choosingKLM.printStackTrace();
+//			choosingKLM.printStackTrace();
+			throw choosingKLM;
+			
 		}
-		return false;
-
 	}
 }

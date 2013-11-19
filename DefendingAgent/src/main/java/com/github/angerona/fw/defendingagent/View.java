@@ -7,6 +7,7 @@ import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -102,7 +103,7 @@ public class View {
 	 * @return the resulting view after the consideration of the revision and the notification
 	 */
 	public View RefineViewByRevision(FolFormula revision, AnswerValue notification) {
-		/*
+		
 		PropositionalFormula q = LogicTranslator.FoToPl(revision);
 		View newView = new View(this);
 		if(notification == AnswerValue.AV_TRUE) {
@@ -119,8 +120,8 @@ public class View {
 		} else {
 			LOG.warn("unexpected answer value in revision view refinement: " + notification);
 		}
-		*/
-		return null;
+		
+		return newView;
 	}
 	
 	public String toString() {
