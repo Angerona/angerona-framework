@@ -26,11 +26,13 @@ public class SimulationAdapter implements SimulationListener {
 	@Override
 	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
 			Agent removed) {}
-
+	
+	@Override
+	public void tickStarting(AngeronaEnvironment simulationEnvironment) {}
+	
 	@Override
 	public void tickDone(AngeronaEnvironment simulationEnvironment) {}
 
 	@Override
 	public void actionPerformed(Agent agent, Action act) {}
-
 }

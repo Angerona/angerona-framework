@@ -51,6 +51,7 @@ import com.github.angerona.fw.InteractiveAgent;
 import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.gui.controller.SimulationTreeController;
 import com.github.angerona.fw.gui.project.ProjectTreeMVPComponent;
+import com.github.angerona.fw.gui.report.ReportTreeMVP;
 import com.github.angerona.fw.gui.simctrl.SimulationControlBar;
 import com.github.angerona.fw.gui.simctrl.SimulationControlBarMVPComponent;
 import com.github.angerona.fw.gui.simctrl.SimulationControlMenu;
@@ -371,6 +372,11 @@ public class AngeronaWindow extends WindowAdapter
 		reportView.decorate(dd);
 		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
 		
+		ReportTreeMVP reportTree = ViewComponentFactory.get().createViewComponent(ReportTreeMVP.class);
+		dd = new DefaultDockable(reportTree.getPanel());
+		reportTree.decorate(dd);
+		parentStation.drop(dd, new SplitDockProperty(0.25, 0, 0.75, 0.9));
+		
 		viewComp = ViewComponentFactory.get().createViewComponent(SimulationControlBarMVPComponent.class);
 		dd = new DefaultDockable(viewComp.getPanel());
 		/*
@@ -436,5 +442,11 @@ public class AngeronaWindow extends WindowAdapter
 	
 	public JFrame getMainWindow(){
 		return mainWindow;
+	}
+
+	@Override
+	public void tickStarting(AngeronaEnvironment simulationEnvironment) {
+		// TODO Auto-generated method stub
+		
 	}
 }

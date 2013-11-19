@@ -87,6 +87,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		somethingHappens = false;
 		angeronaReady = false;
 		++tick;
+		Angerona.getInstance().onTickStarting(env);
 		
 		List<Agent> orderedAlphabetically = new ArrayList<>(env.getAgents());
 		Collections.sort(orderedAlphabetically, new Comparator<Agent>() {

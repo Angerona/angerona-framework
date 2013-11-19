@@ -204,4 +204,10 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	public void actionPerformed(Agent agent, Action act) {
 		// does nothing
 	}
+
+
+	@Override
+	public void tickStarting(AngeronaEnvironment simulationEnvironment) {
+		// does nothing
+	}
 }

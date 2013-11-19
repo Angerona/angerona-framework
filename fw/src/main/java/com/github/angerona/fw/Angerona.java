@@ -286,9 +286,18 @@ public class Angerona {
 	}
 	
 	/**
+	 * Informs the simulations listeners when a tick of the simulation is starting.
+	 * @param ev		Reference to the simulation
+	 */
+	public void onTickStarting(AngeronaEnvironment ev) {
+		for(SimulationListener l : simulationListeners) {
+			l.tickStarting(ev);
+		}
+	}
+	
+	/**
 	 * Informs the simulations listeners when a tick of the simulation is done.
 	 * @param ev		Reference to the simulation
-	 * @param finished	Flag indicating if the simulation is finished now.
 	 */
 	public void onTickDone(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {

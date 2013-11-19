@@ -25,15 +25,25 @@ public abstract class Presenter<M extends Model, V extends View> {
 	 */
 	public void setModel(M model) {
 		if(this.model != null && view != null) {
-			this.model.removePropertyObserver(view);
-			this.model.removeMapObserver(view);
+			breakModelViewLink();
 		}
 		this.model = model;
 		if(this.model != null && view != null) {
-			forceUpdate();
-			this.model.addPropertyObserver(view);
-			this.model.addMapObserver(view);
+			createModelViewLinkAndUpdate();
 		}
+	}
+
+	public void createModelViewLinkAndUpdate() {
+		this.model.addPropertyObserver(view);
+		this.model.addMapObserver(view);
+		wireViewEvents();
+		forceUpdate();
+	}
+
+	public void breakModelViewLink() {
+		this.model.removePropertyObserver(view);
+		this.model.removeMapObserver(view);
+		unwireViewEvents();
 	}
 	
 	/**
@@ -43,14 +53,11 @@ public abstract class Presenter<M extends Model, V extends View> {
 	 */
 	public void setView(V view) {
 		if(this.view != null && model != null) {
-			unwireViewEvents();
-			this.model.removePropertyObserver(this.view);
+			breakModelViewLink();
 		}
 		this.view = view;
 		if(this.view != null && model != null) {
-			wireViewEvents();
-			forceUpdate();
-			this.model.addPropertyObserver(this.view);
+			createModelViewLinkAndUpdate();
 		}
 	}
 	

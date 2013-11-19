@@ -15,6 +15,7 @@ import com.github.angerona.fw.util.Utility;
 /**
  * Implementation of the SimulatioonControlView as a Bar using all the horizontal space
  * but only a small amount of vertical space.
+ * 
  * @author Tim Janus
  */
 public class SimulationControlBar extends ObservingPanel implements SimulationControlView {

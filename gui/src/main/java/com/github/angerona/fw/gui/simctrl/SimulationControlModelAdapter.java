@@ -22,7 +22,7 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	 * Helper method: sets the SimulationState and fires the PropertyChangeEvent
 	 * @param newState	The new SimulationState
 	 */
-	private void setSimulationState(SimulationState newState) {
+	private synchronized void setSimulationState(SimulationState newState) {
 		simulationState = changeProperty("simulationState", simulationState, newState);
 	}
 	
@@ -31,13 +31,14 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 		if(simulationConfig != null) {
 			if(	simulationState == SimulationState.SS_INITALIZED ||
 				simulationState == SimulationState.SS_FINISHED) {
-				// new Thread(new Runnable() {
-				//	@Override
-				//	public void run() {
-						environment.cleanupEnvironment();
-						
-				//	}
-				//}).start();
+				new Thread(new Runnable() {
+				@Override
+				public void run() {
+					synchronized(environment) {
+						environment.cleanupEnvironment();	
+					}
+				}
+				}).start();
 			}
 		}
 		simulationConfig = changeProperty("simulationConfig", simulationConfig, config);
@@ -51,11 +52,16 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	@Override
 	public SimulationState initSimulation() {
 		if(simulationState == SimulationState.SS_LOADED) {
-			if(environment.initSimulation(simulationConfig)) {
-				setSimulationState(SimulationState.SS_INITALIZED);
-			} else {
-				setSimulationState(SimulationState.SS_LOADED);
-			}
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					synchronized(environment) {
+						if(environment.initSimulation(simulationConfig)) {
+							setSimulationState(SimulationState.SS_INITALIZED);
+						}
+					}
+				}
+			}).start();
 		}
 		return simulationState;
 	}
@@ -63,14 +69,16 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	@Override
 	public SimulationState runSimulation() {
 		if(simulationState == SimulationState.SS_INITALIZED) {
-			//new Thread(new Runnable() {
-			//	@Override
-			//	public void run() {
-					if(!environment.runOneTick()) {
-						setSimulationState(SimulationState.SS_FINISHED);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					synchronized(environment) {
+						if(!environment.runOneTick()) {
+							setSimulationState(SimulationState.SS_FINISHED);
+						}
 					}
-			//	}
-			//}).start();
+				}
+			}).start();
 			
 		}
 		return simulationState;

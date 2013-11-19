@@ -1,5 +1,6 @@
 package com.github.angerona.fw.report;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.internal.Entity;
+import com.github.angerona.fw.util.ModelAdapter;
 
 /**
  * A report encapsulates the data collect during a simulation. The Angerona main class is responsible
@@ -16,7 +18,7 @@ import com.github.angerona.fw.internal.Entity;
  * 
  * @author Tim Janus
  */
-public class Report  {
+public class Report extends ModelAdapter  {
 	/** list containing all the report entries */
 	private List<ReportEntry> entries = new LinkedList<ReportEntry>();
 	
@@ -26,10 +28,25 @@ public class Report  {
 	/** reference to the simulation of the report */
 	private AngeronaEnvironment simulation;
 	
+	/** a list of listeners that are informed if the report listeners change */
+	private List<ReportListener> listeners = new ArrayList<>();
+	
 	public Report(AngeronaEnvironment simulation) {
 		this.simulation = simulation;
 	}
+	
+	public void addReportListener(ReportListener listener) {
+		this.listeners.add(listener);
+	}
 
+	public void removeReportListener(ReportListener listener) {
+		this.listeners.remove(listener);
+	}
+	
+	public void removeAllReportListeners() {
+		this.listeners.clear();
+	}
+	
 	/** 
 	 * saves the given entry in the data structures of the report. That means its  put in the complete list and
 	 * in the entity -> Report entries map if an attachment is added to the report.
@@ -44,12 +61,14 @@ public class Report  {
 			Entity att = entry.getAttachment();
 			if(att != null) {
 				Long id = att.getGUID();
-				List<ReportEntry> entries = null;
 				
 				if(id == null) {
 					throw new IllegalArgumentException("The id of attached entity must not be null.");
 				}
 				
+				// Adapt the list of report-entries that stores this attachment
+				// by adding this report-entry.
+				List<ReportEntry> entries = null;
 				if(!attachmentEntriesMap.containsKey(id)) {
 					entries = new LinkedList<ReportEntry>();
 					attachmentEntriesMap.put(id, entries);
@@ -57,6 +76,10 @@ public class Report  {
 					entries = attachmentEntriesMap.get(id);
 				}
 				entries.add(copy);
+			}
+			
+			for(ReportListener listener : listeners) {
+				listener.reportReceived(copy);
 			}
 		}
 	}

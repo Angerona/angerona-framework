@@ -123,6 +123,7 @@ public class ReportEntry implements Cloneable {
 		reval.operatorCallstack = new Stack<String>();
 		reval.operatorCallstack.addAll(operatorCallstack);
 		reval.simulation = this.simulation;
+		reval.scope = this.scope;
 		if(this.attachment != null) {
 			if(this.attachment instanceof AgentComponent) {
 				AgentComponent atomic = (AgentComponent) this.attachment;

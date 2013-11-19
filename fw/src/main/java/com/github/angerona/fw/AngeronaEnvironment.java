@@ -154,7 +154,10 @@ public class AngeronaEnvironment  {
 	 * @param config	reference to the data-structure containing the configuration of the simulation.
 	 * @return	true if everything was fine, false if an error occurred.
 	 */
-	public boolean initSimulation(SimulationConfiguration config) {
+	public synchronized boolean initSimulation(SimulationConfiguration config) {
+		if(ready)
+			return false;
+		
 		LOG.info("Starting simulation: " + config.getName());
 		this.name = config.getName();
 		this.simDirectory = config.getFile().getParent();
@@ -198,6 +201,8 @@ public class AngeronaEnvironment  {
 				this.sendAction(p.getReceiverId(), (Action)p);
 			}
 		}
+		
+		Angerona.getInstance().onTickDone(this);
 		
 		return ready = true;
 	}
@@ -317,7 +322,10 @@ public class AngeronaEnvironment  {
 	/**
 	 * deletes all agents from the environment and removes the information about the last simulation.
 	 */
-	public void cleanupEnvironment() {
+	public synchronized void cleanupEnvironment() {
+		if(ready == false)
+			return;
+		
 		agentMap.clear();
 		ready = false;
 		Angerona.getInstance().onSimulationDestroyed(this);
