@@ -122,15 +122,15 @@ public class Angerona {
 					onError("Configuration File not Found", 
 							"Cannot find the file: '" + filename +
 							"' close the Application and create your own\n" +
-							"by renaming '.../software/test/src/main/config/configuration_template.xml'" +
-							"to 'configuration.xml'\nand replace the placeholders.");
+							"by moving '.../software/app/src/main/config/configuration_install.xml'" +
+							"to '" + (new File(configFilePath)).getAbsolutePath() + "'\nand replacing the placeholders.");
 				}
 			} else {
 				onError("Configuration File not Found", 
 						"Cannot find the file: '" + filename +
 						"' close the Application and create your own\n" +
-						"by renaming '.../software/test/src/main/config/configuration_template.xml'" +
-						"to 'configuration.xml'\nand replace the placeholders.");
+						"by moving '.../software/app/src/main/config/configuration_install.xml'" +
+						"to '" + (new File(configFilePath)).getAbsolutePath() + "'\nand replacing the placeholders.");
 			}
 		}
 		return config;
