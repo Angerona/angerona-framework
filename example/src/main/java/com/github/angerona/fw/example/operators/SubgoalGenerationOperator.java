@@ -315,7 +315,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			return true;
 		}
 		
-		pp.report("Add the honest answer '"+ honest.toString() + "' as alternative plan");
+		if(honest != null)
+			pp.report("Add the honest answer '"+ honest.toString() + "' as alternative plan");
 		if(lie != null)
 			pp.report("Add the lie '"+ lie.toString() + "' as alternative plan");
 		if(lie2 != null)

@@ -67,7 +67,7 @@ public class OperatorMap extends PluginAdapter {
 			try {
 				op = (BaseOperator)pi.createInstance(cls.getName());
 				mOperatorMap.put(cls.getName(), op);
-			} catch (InstantiationException|IllegalAccessException e) {
+			} catch (IllegalAccessException|InstantiationException e) {
 				e.printStackTrace();
 				LOG.error("Cannot instantiate '{}': '{}'", cls.getName(), e.getMessage());
 				if(e instanceof InstantiationException)

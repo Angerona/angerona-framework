@@ -10,7 +10,7 @@ import com.github.angerona.fw.Agent;
  * 
  * @author Tim Janus
  */
-public interface PenaltyFunction {
+public interface PenaltyFunction extends Cloneable {
 	
 	/**
 	 * Initializes the penalty function for the given agent, after this call

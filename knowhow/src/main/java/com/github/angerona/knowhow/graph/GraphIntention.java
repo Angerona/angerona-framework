@@ -22,7 +22,7 @@ import java.util.List;
  * 
  * @author Tim Janus
  */
-public class GraphIntention {
+public class GraphIntention implements Cloneable {
 	/** the "to be done" constant */
 	public static final GraphIntention TBD = new GraphIntention();
 	

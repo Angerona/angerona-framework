@@ -67,24 +67,25 @@ public class DefendingSituationBuilder extends SituationBuilderAdapter {
 				askedHistory.add(asked);
 				
 				String questionSymbol = lit.getArguments().get(0).toString();
-				Question questiton = null;
+				Question question = null;
 				for(Question cur : situation.getQuestions()) {
 					// there is not more than one question with the same symbol
 					// see the deserialization method (commit) of DefendingSituation.
 					if(cur.getSymbol().equals(questionSymbol)) {
-						questiton = cur;
+						question = cur;
 						break;
 					}
 				}
 				
-				
-				List<DLPAtom> subTargets = new ArrayList<>();
-				DLPAtom atom = new DLPAtom("s_QueryAnswer", new Constant(attackerName), questiton.asTerm(), 
-						lit.getArguments().get(1));
-				subTargets.add(atom);
-				KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, 
-						askedHistory.size(), null);
-				reval.addStatement(stmt);
+				if(question != null) {
+					List<DLPAtom> subTargets = new ArrayList<>();
+					DLPAtom atom = new DLPAtom("s_QueryAnswer", new Constant(attackerName), question.asTerm(), 
+							lit.getArguments().get(1));
+					subTargets.add(atom);
+					KnowhowStatement stmt = new KnowhowStatement(targetAtom, subTargets, askedHistory, 
+							askedHistory.size(), null);
+					reval.addStatement(stmt);
+				}
 			}
 			
 		}

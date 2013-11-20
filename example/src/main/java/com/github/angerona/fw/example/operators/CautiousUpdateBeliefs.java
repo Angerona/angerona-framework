@@ -6,6 +6,7 @@ import com.github.angerona.fw.comm.Inform;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.operators.UpdateBeliefsOperator;
 import com.github.angerona.fw.operators.parameter.EvaluateParameter;
+import com.github.angerona.fw.util.Utility;
 
 /**
  * This Update Beliefs operator acts more cautious by only updating the view
@@ -23,7 +24,8 @@ public class CautiousUpdateBeliefs extends UpdateBeliefsOperator {
 			Beliefs oldBeliefs = beliefs.clone();
 			Inform i = (Inform) param.getAtom();
 			BaseBeliefbase bb = null;
-			boolean receiver = i.getReceiverId() == param.getAgent().getName();
+			boolean receiver = Utility.equals(i.getReceiverId(), 
+					param.getAgent().getName());
 			
 			// inform speech act only updates views in those scenarios
 			String out = "Inform as ";

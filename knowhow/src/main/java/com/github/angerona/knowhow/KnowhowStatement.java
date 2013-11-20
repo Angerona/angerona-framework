@@ -1,5 +1,6 @@
 package com.github.angerona.knowhow;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +19,7 @@ import com.github.angerona.fw.util.Utility;
  * 
  * @author Tim Janus
  */
-public class KnowhowStatement implements Serializable {
+public class KnowhowStatement implements Serializable, Cloneable {
 	
 	/** serial version id */
 	private static final long serialVersionUID = -6842116356054584387L;
@@ -187,5 +188,20 @@ public class KnowhowStatement implements Serializable {
 	@Override
 	public KnowhowStatement clone() {
 		return new KnowhowStatement(this);
+	}
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.writeObject(this.target);
+		out.writeObject(this.subTargets);
+		out.writeObject(this.conditions);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+		this.target = (DLPAtom)in.readObject();
+		// this casts produce the warnings but are legal as long as the writeObject()
+		// method is in-sync with this readObject method
+		this.subTargets = (List<DLPAtom>)in.readObject();
+		this.conditions = (List<DLPAtom>)in.readObject();
 	}
 }

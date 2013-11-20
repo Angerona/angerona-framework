@@ -99,12 +99,13 @@ public abstract class SituationBuilderAdapter implements SituationGraphBuilder {
 		InputStream stream = getClass().getResourceAsStream(jarPath);
 		if(stream == null) {
 			LOG.error("Creation of InvestigationSituationBuilder not possible: Cannot read Resource: '{}'", jarPath);
-		}
-		try {
-			reval = ASPParser.parseProgram(new InputStreamReader(stream));
-		} catch (ParseException e) {
-			e.printStackTrace();
-			LOG.error("Creation of InvestigationSituationBuilder not possible: Cannot parse program in '{}'", jarPath);
+		} else {
+			try {
+				reval = ASPParser.parseProgram(new InputStreamReader(stream));
+			} catch (ParseException e) {
+				e.printStackTrace();
+				LOG.error("Creation of InvestigationSituationBuilder not possible: Cannot parse program in '{}'", jarPath);
+			}
 		}
 		return reval;
 	}
