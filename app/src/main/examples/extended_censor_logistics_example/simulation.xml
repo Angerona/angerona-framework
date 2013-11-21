@@ -40,7 +40,7 @@
         	<SpeechAct type="Revision">
         		<sender>Customer</sender>
         		<receiver>Supplier</receiver>
-        		<proposition>Mkgl</proposition>
+        		<proposition>mkgl</proposition>
         	</SpeechAct>
         </script>
 		<script>
