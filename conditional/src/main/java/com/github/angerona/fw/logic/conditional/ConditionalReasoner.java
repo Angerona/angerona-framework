@@ -67,6 +67,7 @@ public class ConditionalReasoner extends BaseReasoner {
 //		}		
 		
 		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
+		System.out.println("Prepare conditional structures...");
 		Long before = System.currentTimeMillis();
 		reasoner.prepare();
 		Long duration = System.currentTimeMillis() - before;
