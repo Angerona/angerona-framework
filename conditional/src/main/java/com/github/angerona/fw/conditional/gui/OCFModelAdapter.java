@@ -3,14 +3,18 @@ package com.github.angerona.fw.conditional.gui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import net.sf.tweety.logics.cl.BruteForceCReasoner;
+import net.sf.tweety.logics.cl.RuleBasedCReasoner;
+import net.sf.tweety.logics.cl.kappa.KappaValue;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.cl.syntax.Conditional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,15 +55,48 @@ public class OCFModelAdapter extends ModelAdapter implements OCFModel {
 		if(bbase == null) 
 			return;
 		
-		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
+//		BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase.getConditionalBeliefs(), true);
+//		
+//		log.info("compute c-representation (bruteforce)");
+//		long startTime = System.currentTimeMillis();
+//		RankingFunction ocf = creasoner.getCRepresentation();
+//		long duration = System.currentTimeMillis() - startTime;
+//		log.info("done. duration: {}ms", duration);
+//		
+//		tableModel.updateRankingFunction(ocf);
+				
+		Set<Conditional> conds = new HashSet<Conditional>();
+		conds.addAll(bbase.getConditionalBeliefs());		
 		
-		log.info("compute c-representation (bruteforce)");
-		long startTime = System.currentTimeMillis();
-		RankingFunction ocf = creasoner.getCRepresentation();
-		long duration = System.currentTimeMillis() - startTime;
-		log.info("done. duration: {}ms", duration);
+		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
+		Long before = System.currentTimeMillis();
+		reasoner.prepare();
+		Long duration = System.currentTimeMillis() - before;
+		System.out.println("Generated in " + duration + "ms:");
+		System.out.println("Conditional Structure:");
+		System.out.println(reasoner.getConditionalStructure());
+		
+		System.out.println("Initial Kappa:");
+		for(KappaValue kv : reasoner.getKappas()) {
+			System.out.println(kv.fullString());
+		}
+		
+		before = System.currentTimeMillis();
+		reasoner.process();
+		duration = System.currentTimeMillis() - before;
+		System.out.println("Evaluated in " + duration + "ms:");
+		for(KappaValue kv : reasoner.getKappas()) {
+			System.out.println(kv.fullString());
+		}
+		System.out.println("Ranking-Function:");
+		System.out.println(reasoner.getSemantic());
+		System.out.println("");
+		
+		
+		RankingFunction ocf = reasoner.getSemantic();
 		
 		tableModel.updateRankingFunction(ocf);
+		
 	}
 
 	@Override
