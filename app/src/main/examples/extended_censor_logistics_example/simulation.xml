@@ -11,7 +11,7 @@
         <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
       	
       	<data key="Confidential">
-            (Supplier, __DEFAULT__, r)
+            (Customer, __DEFAULT__, fA)
         </data>
         
         <!-- Choose a semantic for the klmlean solver used by the censor component
