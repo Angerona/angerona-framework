@@ -16,24 +16,18 @@ public class InteractiveAgent extends Agent{
 		hasPerception = true;
 	}
 
-//	public boolean cycle() {
-//		Perception percept = perceptions.get(0);
-//		perceptions.clear();
-//		LOG.info("[" + this.getName() + "] Cylce starts: " + percept);
-//
-//		regenContext();
-//		Context c = getContext();
-//		c.set("perception", percept);
-//		
-//		return asmlCylce.execute(c);
-//	}
+	public boolean cycle() {
+		return hasPerceptions();
+	}
 	
 	/** 
 	 * returns always true, except the User pressed the Finish Button
 	 */
 	public boolean hasPerceptions() {
-		if(hasPerception)
+		if(hasPerception){
+			System.out.println("HasPerception true in Interactive Agent");
 			hasPerception = nextActionRequester.request();
+		}
 		return hasPerception;
 	}
 	

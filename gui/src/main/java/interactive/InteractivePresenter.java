@@ -79,6 +79,9 @@ public class InteractivePresenter
 				JFrame frame = ((InteractiveBar) view).getFrame();
 				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 			}
+//			else{
+//				this.hasAction = false;
+//			}
 		}else{// FinischButton was pressed
 			this.hasAction = false;
 			JFrame frame = ((InteractiveBar) view).getFrame();
