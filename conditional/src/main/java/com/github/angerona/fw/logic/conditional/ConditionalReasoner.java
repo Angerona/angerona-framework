@@ -1,6 +1,8 @@
 package com.github.angerona.fw.logic.conditional;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
@@ -37,7 +39,7 @@ public class ConditionalReasoner extends BaseReasoner {
 	/** reference to the logging facility */
 	private static Logger log = LoggerFactory.getLogger(ConditionalReasoner.class);
 
-//	private Map<ClBeliefSet, RankingFunction> cache = new HashMap<ClBeliefSet, RankingFunction>();
+	private Map<ClBeliefSet, RankingFunction> cache = new HashMap<ClBeliefSet, RankingFunction>();
 	
 	public ConditionalReasoner() {
 	}
@@ -58,13 +60,13 @@ public class ConditionalReasoner extends BaseReasoner {
 //		}
 		
 //		return result;
+		RankingFunction result = cache.get(bbase);
+		if(result != null) {
+			return result;
+		}
 		
 		Set<Conditional> conds = new HashSet<Conditional>();
 		conds.addAll(bbase);
-//		Iterator<Conditional> iterator = bbase.iterator();
-//		for(int i=0; i <= bbase.size() ; i++){
-//			conds.add(iterator.next());
-//		}		
 		
 		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
 		System.out.println("Prepare conditional structures...");
@@ -91,8 +93,9 @@ public class ConditionalReasoner extends BaseReasoner {
 		System.out.println(reasoner.getSemantic());
 		System.out.println("");
 		
-		
-		return reasoner.getSemantic();
+		result = reasoner.getSemantic();
+		cache.put(bbase, result);
+		return result;
 		
 	}
 	
