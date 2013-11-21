@@ -65,10 +65,11 @@ public class ConditionalReasoner extends BaseReasoner {
 //		return result;
 		
 		Set<Conditional> conds = new HashSet<Conditional>();
-		Iterator<Conditional> iterator = bbase.iterator();
-		for(int i=0; i <= bbase.size() ; i++){
-			conds.add(iterator.next());
-		}		
+		conds.addAll(bbase);
+//		Iterator<Conditional> iterator = bbase.iterator();
+//		for(int i=0; i <= bbase.size() ; i++){
+//			conds.add(iterator.next());
+//		}		
 		
 		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
 		Long before = System.currentTimeMillis();
