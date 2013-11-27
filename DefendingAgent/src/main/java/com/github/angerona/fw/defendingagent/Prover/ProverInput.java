@@ -22,4 +22,8 @@ public class ProverInput {
 	public ProverInput(List<String> kFormulas, String formulaToProve) {
 		this(kFormulas, formulaToProve, InferenceSystem.RATIONAL);
 	}
+	
+	public String toString() {
+		return "kFormulas: " + kFormulas + "\ntoProve: " + formulaToProve;
+	}
 }

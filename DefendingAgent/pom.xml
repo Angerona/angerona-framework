@@ -26,7 +26,7 @@
             </goals>
             <phase>process-resources</phase>
             <configuration>
-              <outputDirectory>${basedir}/target/</outputDirectory>
+              <outputDirectory>${basedir}/target/resources/</outputDirectory>
               <resources>
                 <resource>
                   <directory>src/main/resources</directory>

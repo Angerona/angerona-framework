@@ -227,6 +227,10 @@ public class CensorComponent extends BaseAgentComponent {
 	 * Connected with "and"
 	 */
 	public String translate(Collection<PropositionalFormula> formulas){
+		if(formulas.isEmpty()) {
+			// empty conjunction is always true
+			return "true";
+		}
 		String result = "";
 		for(PropositionalFormula a : formulas){
 			if(result.equalsIgnoreCase("")){

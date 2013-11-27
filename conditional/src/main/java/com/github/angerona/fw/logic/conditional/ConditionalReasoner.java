@@ -2,12 +2,10 @@ package com.github.angerona.fw.logic.conditional;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
-import net.sf.tweety.logics.cl.BruteForceCReasoner;
 import net.sf.tweety.logics.cl.ClBeliefSet;
 import net.sf.tweety.logics.cl.RuleBasedCReasoner;
 import net.sf.tweety.logics.cl.kappa.KappaValue;
@@ -17,7 +15,6 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -63,14 +60,16 @@ public class ConditionalReasoner extends BaseReasoner {
 //		}
 		
 //		return result;
+		RankingFunction result = cache.get(bbase);
+		if(result != null) {
+			return result;
+		}
 		
 		Set<Conditional> conds = new HashSet<Conditional>();
-		Iterator<Conditional> iterator = bbase.iterator();
-		for(int i=0; i <= bbase.size() ; i++){
-			conds.add(iterator.next());
-		}		
+		conds.addAll(bbase);
 		
 		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
+		System.out.println("Prepare conditional structures...");
 		Long before = System.currentTimeMillis();
 		reasoner.prepare();
 		Long duration = System.currentTimeMillis() - before;
@@ -94,8 +93,9 @@ public class ConditionalReasoner extends BaseReasoner {
 		System.out.println(reasoner.getSemantic());
 		System.out.println("");
 		
-		
-		return reasoner.getSemantic();
+		result = reasoner.getSemantic();
+		cache.put(bbase, result);
+		return result;
 		
 	}
 	

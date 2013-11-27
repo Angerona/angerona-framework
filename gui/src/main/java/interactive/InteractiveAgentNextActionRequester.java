@@ -29,7 +29,7 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 		try {
 			wait();
 		} catch (InterruptedException e) {
-			// expected interupt, do nothing
+			// expected interrupt, do nothing
 		}
 		AngeronaWindow.get().getMainWindow().setEnabled(true);
 		return barMVPComponent.getHasAction();

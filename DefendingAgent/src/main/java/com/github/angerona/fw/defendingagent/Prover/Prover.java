@@ -112,7 +112,10 @@ public class Prover {
 	
 	/**
 	 * Read the knowledgebase and the formula to prove and give it the prolog
-	 * solver to prove
+	 * solver to prove.
+	 * IMPORTANT: All atoms have to start with a lower case letter. Otherwise
+	 * the prolog engine will use up all available memory and die with a
+	 * resource_error.
 	 * 
 	 * @param kFormulas
 	 *            the knowledgebase
@@ -130,6 +133,7 @@ public class Prover {
 			InferenceSystem chooseInferenceSystem) throws SICStusException {
 		
 		ProverInput input = new ProverInput(kFormulas, formulaToProve, chooseInferenceSystem);
+		
 		try {
 			inputQueue.put(input);
 		} catch (InterruptedException e1) {
@@ -217,6 +221,7 @@ public class Prover {
 			kBaseList = kBaseList + "]";
 
 			String goal = new String("parseinput(" + kBaseList + ").");
+			System.out.println("Prover input: " + goal + ", map: "+ map);
 			q = sp.openPrologQuery(goal, map);
 			if (!(q.nextSolution())) {
 				System.err
@@ -243,11 +248,11 @@ public class Prover {
 			System.out.println("kbaselist:" + kBaseList);
 			q = sp.openPrologQuery(goal, map);
 			if (q.nextSolution()) {
-				//return new String(map.toString());
+				q.close();
 				return true;
 
 			} else {
-				//return null;
+				q.close();
 				return false;
 			}
 
