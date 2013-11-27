@@ -28,8 +28,6 @@
 			    <assign name="running" value="FALSE" />
 			</else>
 		</conditional>
-		
-		<assign name="searching" value="$changed" />
 	</while>
 	
 	<execute action="$action" />
