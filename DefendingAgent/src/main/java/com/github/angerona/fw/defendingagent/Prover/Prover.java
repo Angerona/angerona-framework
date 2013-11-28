@@ -147,7 +147,7 @@ public class Prover {
 			if(result instanceof Boolean) {
 				return (boolean) result;
 			} else if(result instanceof Exception) {
-				throw new RuntimeException((Exception)result);
+				throw new SICStusException(((Exception)result).getMessage());
 			} else throw new SICStusException("Illegal Value returned by klmlean solver.");
 		} catch (InterruptedException e) {
 			throw new SICStusException();
