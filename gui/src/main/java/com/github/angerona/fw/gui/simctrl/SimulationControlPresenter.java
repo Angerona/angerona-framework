@@ -6,10 +6,13 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.github.angerona.fw.gui.base.Presenter;
 import com.github.angerona.fw.gui.simctrl.SimulationControlModel.SimulationState;
 import com.github.angerona.fw.serialize.SimulationConfiguration;
+import com.github.angerona.fw.util.PropertyObserver;
+import com.github.angerona.fw.util.Utility;
 
 /**
  * This class is responsible to wire a SimulationControlModel with a
@@ -19,7 +22,9 @@ import com.github.angerona.fw.serialize.SimulationConfiguration;
  */
 public class SimulationControlPresenter 
 	extends Presenter<SimulationControlModel, SimulationControlView>
-	implements ActionListener {
+	implements ActionListener, PropertyObserver {
+	
+	private boolean complete = false;
 	
 	/** Default Ctor: The user has to call setModel() and setView(). */
 	public SimulationControlPresenter() {}
@@ -33,21 +38,27 @@ public class SimulationControlPresenter
 		setModel(model);
 		setView(view);
 	}
+	
+	@Override
+	public void setModel(SimulationControlModel model) {
+		if(this.model != null) {
+			this.model.removePropertyObserver(this);
+		}
+		super.setModel(model);
+		if(this.model != null) {
+			this.model.addPropertyObserver(this);
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
 		if(ev.getSource() == view.getLoadButton()) {
 			onLoad();
 		} else if(ev.getSource() == view.getSimStateButton()) {
-			onSimStateChange();
+			changeSimState();
 		} else if(ev.getSource() == view.getCompleteButton()) {
-			Long before = System.currentTimeMillis();
-			while(model.getSimulationState() != SimulationState.SS_FINISHED) {
-				onSimStateChange();
-			}
-			Long after = System.currentTimeMillis();
-			Long duration = after - before;
-			view.getCompleteButton().setText("In " + duration + "ms");
+			complete = true;
+			changeSimState();
 		}
 	}
 
@@ -55,7 +66,7 @@ public class SimulationControlPresenter
 	 * Is called when the SimulationState change button is called and updates the 
 	 * simulation of the SimulationControlModel depending on the current SimulationState
 	 */
-	private void onSimStateChange() {
+	private void changeSimState() {
 		switch(model.getSimulationState()) {
 		case SS_LOADED:
 			model.initSimulation();
@@ -67,6 +78,9 @@ public class SimulationControlPresenter
 			
 		case SS_FINISHED:
 			model.setSimulation(model.getSimulation());
+			break;
+			
+		default:
 			break;
 		}
 	}
@@ -116,5 +130,39 @@ public class SimulationControlPresenter
 		view.getLoadButton().removeActionListener(this);
 		view.getSimStateButton().removeActionListener(this);
 		view.getCompleteButton().removeActionListener(this);
+	}
+
+	@Override
+	public <T> boolean allowPropertyChange(String propertyName, T oldValue,
+			T newValue) {
+		return true;
+	}
+
+	@Override
+	public <T> T transformPropertyChange(String propertyName, T oldValue,
+			T newValue) {
+		return null;
+	}
+
+	@Override
+	public <T> void propertyChange(String propertyName, T oldValue, T newValue) {
+		if(Utility.equals(propertyName, "simulationTick") && complete) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					changeSimState();
+				}
+			});
+		} else if(Utility.equals(propertyName, "simulationState")) {
+			SimulationState ss = (SimulationState)newValue;
+			if(ss == SimulationState.SS_FINISHED) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						complete = false;
+					}
+				});
+			}
+		}
 	}
 }

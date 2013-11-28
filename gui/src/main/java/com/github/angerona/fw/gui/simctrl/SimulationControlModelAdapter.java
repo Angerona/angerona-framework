@@ -1,5 +1,8 @@
 package com.github.angerona.fw.gui.simctrl;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.serialize.SimulationConfiguration;
 import com.github.angerona.fw.util.ModelAdapter;
@@ -12,11 +15,16 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	/** the SimulationConfiguration of the data model */
 	private SimulationConfiguration simulationConfig;
 	
+	private int simulationTick;
+	
 	/** the SimulationState of the data model */
 	private SimulationState simulationState = SimulationState.SS_UNDEFINED;
 	
 	/** the AngeroneEnvironment representing the dynamic simulation */
 	private AngeronaEnvironment environment = new AngeronaEnvironment();
+	
+	/** generate a thread pool using one thread (the worker thread for the simulation) */
+	private final ExecutorService pool = Executors.newFixedThreadPool(1);
 	
 	/** 
 	 * Helper method: sets the SimulationState and fires the PropertyChangeEvent
@@ -26,19 +34,23 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 		simulationState = changeProperty("simulationState", simulationState, newState);
 	}
 	
+	private synchronized void setSimulationTick(int tick) {
+		tick = changeProperty("simulationTick", this.simulationTick, tick);
+	}
+	
 	@Override
 	public void setSimulation(SimulationConfiguration config) {
 		if(simulationConfig != null) {
 			if(	simulationState == SimulationState.SS_INITALIZED ||
 				simulationState == SimulationState.SS_FINISHED) {
-				new Thread(new Runnable() {
-				@Override
-				public void run() {
-					synchronized(environment) {
-						environment.cleanupEnvironment();	
+				pool.execute(new Runnable() {
+					@Override
+					public void run() {
+						synchronized(environment) {
+							environment.cleanupEnvironment();	
+						}
 					}
-				}
-				}).start();
+				});
 			}
 		}
 		simulationConfig = changeProperty("simulationConfig", simulationConfig, config);
@@ -52,16 +64,17 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	@Override
 	public SimulationState initSimulation() {
 		if(simulationState == SimulationState.SS_LOADED) {
-			new Thread(new Runnable() {
+			pool.execute(new Runnable() {
 				@Override
 				public void run() {
 					synchronized(environment) {
 						if(environment.initSimulation(simulationConfig)) {
 							setSimulationState(SimulationState.SS_INITALIZED);
+							setSimulationTick(simulationTick);
 						}
 					}
 				}
-			}).start();
+			});
 		}
 		return simulationState;
 	}
@@ -69,16 +82,18 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	@Override
 	public SimulationState runSimulation() {
 		if(simulationState == SimulationState.SS_INITALIZED) {
-			new Thread(new Runnable() {
+			pool.execute(new Runnable() {
 				@Override
 				public void run() {
 					synchronized(environment) {
 						if(!environment.runOneTick()) {
 							setSimulationState(SimulationState.SS_FINISHED);
+						} else {
+							setSimulationTick(simulationTick);
 						}
 					}
 				}
-			}).start();
+			});
 			
 		}
 		return simulationState;
