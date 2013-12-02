@@ -7,7 +7,9 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.translators.clnlp.ClNLPTranslator;
 import net.sf.tweety.lp.nlp.syntax.NLPProgram;
+import net.sf.tweety.lp.nlp.syntax.NLPRule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,7 @@ public class ConditionalTranslator extends BaseTranslator {
 	
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ConditionalTranslator.class);
-
+	private ClNLPTranslator cl2nlp = new ClNLPTranslator();
 	/**
 	 * Translates a perception into a beliefbase. A perception may contain
 	 * formulas in first order logic, which have to be translated to a conditional
@@ -66,13 +68,16 @@ public class ConditionalTranslator extends BaseTranslator {
 	}
 
 	/**
-	 * Translates a set of first order formulas to a conditional belief base.
+	 * Translates a set of facts contained in a nlp-program to a conditional belief base.
 	 * Each formula is interpreted as one propositional literal.
 	 */
 	@Override
 	protected BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
 		
+		// uncomment the following line if all nlp-rules should be
+	    // translated to conditionals
+//		reval.setConditionalBeliefs(cl2nlp.toCl(program));
 		
 		for(FolFormula formula : program.getFacts()) {
 			if(formula instanceof FOLAtom) {

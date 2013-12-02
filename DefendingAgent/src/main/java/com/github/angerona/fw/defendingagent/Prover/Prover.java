@@ -219,7 +219,6 @@ public class Prover {
 			if (kBaseList.charAt(kBaseList.length() - 1) == ',')
 				kBaseList = kBaseList.substring(0, kBaseList.length() - 1);
 			kBaseList = kBaseList + "]";
-
 			String goal = new String("parseinput(" + kBaseList + ").");
 			System.out.println("Prover input: " + goal + ", map: "+ map);
 			q = sp.openPrologQuery(goal, map);
