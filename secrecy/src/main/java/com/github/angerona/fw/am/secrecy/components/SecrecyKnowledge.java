@@ -212,6 +212,8 @@ public class SecrecyKnowledge extends BaseAgentComponent
 			//  Check for startup inconsistency:
 			this.eventHandler.updateBeliefs(null, null, getAgent().getBeliefs());
 		}
+		
+		super.init(additionalData);
 	}
 
 	@SuppressWarnings("unchecked")

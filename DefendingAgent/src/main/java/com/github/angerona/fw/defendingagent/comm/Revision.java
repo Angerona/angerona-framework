@@ -1,5 +1,8 @@
 package com.github.angerona.fw.defendingagent.comm;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.simpleframework.xml.Element;
@@ -57,5 +60,12 @@ public class Revision extends SpeechAct {
 	@Override
 	public SpeechActType getType() {
 		return SpeechActType.SAT_INFORMATIVE;
+	}
+
+	@Override
+	public Set<FolFormula> getContent() {
+		Set<FolFormula> reval = new HashSet<>();
+		reval.add(getProposition());
+		return reval;
 	}
 }

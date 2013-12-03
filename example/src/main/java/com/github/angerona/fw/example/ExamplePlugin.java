@@ -11,6 +11,7 @@ import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.AngeronaPluginAdapter;
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.example.components.CommunicationHistory;
+import com.github.angerona.fw.example.components.MatesAttackerModelling;
 import com.github.angerona.fw.example.gui.ExampleBeliefbaseComponent;
 import com.github.angerona.fw.example.logic.ExampleBeliefbase;
 import com.github.angerona.fw.example.logic.ExampleExpansion;
@@ -113,6 +114,7 @@ public class ExamplePlugin extends AngeronaPluginAdapter
 	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
 		List<Class<? extends AgentComponent>> reval = new ArrayList<>();
 		reval.add(CommunicationHistory.class);
+		reval.add(MatesAttackerModelling.class);
 		return reval;
 	}
 }

@@ -89,4 +89,11 @@ public class Inform extends SpeechAct
 	public SpeechActType getType() {
 		return SpeechActType.SAT_INFORMATIVE;
 	}
+
+	@Override
+	public Set<FolFormula> getContent() {
+		return Collections.unmodifiableSet(sentences);
+	}
+	
+	
 }

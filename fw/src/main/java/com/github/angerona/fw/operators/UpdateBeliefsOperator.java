@@ -75,7 +75,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		} else if(param.getAtom() instanceof Query) {
 			Query q = (Query)param.getAtom();
 			out += "Query ";
-			out += (!receiver) ? "as sender (no changes)" : "as receiver (no changes)";
+			out += (!receiver) ? "as sender " : "as receiver ";
 			
 			BaseBeliefbase bb = null;
 			if(receiver) {
@@ -101,10 +101,13 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				}
 			}
 			
+			// the asked literal is used by know-how
+			/// @todo update know-how to use another asked literal
 			bb.addKnowledge(new FOLAtom(new Predicate("asked", 2), new NumberTerm(asked_index), 
 					new Constant(q.getQuestion().getPredicates().iterator().next().getName())));
+			bb.addKnowledge(q);
 			
-			param.report(out);
+			param.report(out, bb);
 		} else if(param.getAtom() instanceof Inform) {
 			Inform i = (Inform) param.getAtom();
 			BaseBeliefbase bb = null;

@@ -2,6 +2,8 @@ package com.github.angerona.fw.logic.asp;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.sf.tweety.lp.asp.syntax.DLPNeg;
@@ -21,16 +23,19 @@ import com.github.angerona.fw.comm.SpeechAct.SpeechActType;
 public class MatesTranslate extends AspTranslator {
 	@Override
 	protected AspBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
-		AspBeliefbase reval = super.translatePerceptionInt(caller, p);
-		
 		// the meta inferences of Krümpelmann only works on speech-acts ...
-		if(p instanceof SpeechAct) {
-			SpeechAct speechAct = (SpeechAct)p;
+		if(! (p instanceof SpeechAct))
+			return super.translatePerceptionInt(caller, p);
+		
+		SpeechAct speechAct = (SpeechAct)p;
+		AspBeliefbase reval = new AspBeliefbase();
+		
+		AspMetaKnowledge metaKnowledge = caller.getAgent().getComponent(AspMetaKnowledge.class);
+		AspFolTranslator translator = new AspFolTranslator();
+		for(FolFormula info : speechAct.getContent()) {
+			DLPLiteral knowledge = (DLPLiteral)translator.toASP(info);
 			
-			AspMetaKnowledge metaKnowledge = caller.getAgent().getComponent(AspMetaKnowledge.class);
-			DLPLiteral knowledge = reval.getProgram().iterator().next().getConclusion().get(0);
-			
-			String type = "mi_"+speechAct.getClass().getSimpleName();
+			String type = "t_"+speechAct.getClass().getSimpleName();
 			String sender = speechAct.getSenderId();
 			
 			Constant senderConstant = new Constant("a_"+sender);
@@ -46,12 +51,18 @@ public class MatesTranslate extends AspTranslator {
 				} else {
 					throw new IllegalStateException();
 				}
+				
+				boolean isSender = caller.getAgent().getName().equals(speechAct.getSenderId());
+				boolean isView = caller.getAgent().getBeliefs().getWorldKnowledge().getGUID() != caller.getGUID();
+				if(!isSender || (isSender && isView)) {
+					reval = super.translatePerceptionInt(caller, speechAct);
+				}
 			}
 			
 			// todo: get cur step (but in a way that simulating and real performs work)
 			NumberTerm curStep = new NumberTerm(metaKnowledge.getTick());
 						
-			DLPAtom atom = new DLPAtom(type, senderConstant, constantSymbolForL, curStep);
+			DLPAtom atom = new DLPAtom("mi_sact", new Constant(type), senderConstant, constantSymbolForL, curStep);
 			reval.getProgram().addFact(atom);
 		}
 		

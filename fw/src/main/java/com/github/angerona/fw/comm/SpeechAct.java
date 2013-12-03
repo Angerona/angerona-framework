@@ -1,5 +1,9 @@
 package com.github.angerona.fw.comm;
 
+import java.util.Set;
+
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
 
@@ -44,4 +48,6 @@ public abstract class SpeechAct extends Action {
 	 * @return
 	 */
 	public abstract SpeechActType getType();
+	
+	public abstract Set<FolFormula> getContent();
 }

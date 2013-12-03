@@ -1,5 +1,8 @@
 package com.github.angerona.fw.comm;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.simpleframework.xml.Element;
@@ -77,5 +80,12 @@ public class Query extends SpeechAct {
 	@Override
 	public SpeechActType getType() {
 		return SpeechActType.SAT_REQUESTING;
+	}
+
+	@Override
+	public Set<FolFormula> getContent() {
+		Set<FolFormula> reval = new HashSet<>();
+		reval.add(getQuestion());
+		return reval;
 	}
 }

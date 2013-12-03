@@ -1,5 +1,6 @@
 package com.github.angerona.fw.comm;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -106,5 +107,22 @@ public class Answer extends SpeechAct {
 	@Override
 	public SpeechActType getType() {
 		return SpeechActType.SAT_INFORMATIVE;
+	}
+
+	@Override
+	public Set<FolFormula> getContent() {
+		FolFormula formula = null;
+		
+		if(answer.getAnswerValue() == AnswerValue.AV_COMPLEX) {
+			return answer.getAnswers();
+		} else if(answer.getAnswerValue() == AnswerValue.AV_FALSE) {
+			formula = (FolFormula)regarding.complement() ;
+		} else {
+			formula = regarding;
+		}
+		
+		Set<FolFormula> reval = new HashSet<>();
+		reval.add(formula);
+		return reval;
 	}
 }

@@ -1,0 +1,213 @@
+package com.github.angerona.fw.example.components;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
+import net.sf.tweety.lp.asp.syntax.Arithmetic;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPNot;
+import net.sf.tweety.lp.asp.syntax.Program;
+import net.sf.tweety.lp.asp.syntax.Rule;
+
+import com.github.angerona.fw.AgentComponent;
+import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.BaseBeliefbase;
+import com.github.angerona.fw.am.secrecy.Secret;
+import com.github.angerona.fw.am.secrecy.components.SecrecyKnowledge;
+import com.github.angerona.fw.asp.component.AspMetaKnowledge;
+import com.github.angerona.fw.asp.component.AspMetaKnowledge.ConstantTriple;
+import com.github.angerona.fw.comm.Answer;
+import com.github.angerona.fw.comm.Query;
+import com.github.angerona.fw.logic.asp.AspBeliefbase;
+
+/**
+ * This component models the attacker as described in MATES13 of Krümpelmann.
+ * That means it depends on the secrecy agent model and also on ASP as knowledge
+ * representation mechanism. 
+ * 
+ * It  depends on the components: 
+ * - {@link AspMetaKnowledge}
+ * - {@link SecrecyKnowledge}
+ * 
+ * @author Tim Janus
+ */
+public class MatesAttackerModelling extends BaseAgentComponent {
+
+	/** the secrecy knowledge of the agent */
+	SecrecyKnowledge secrecyKnowledge;
+	
+	/** the meta knowledge of the agent */
+	AspMetaKnowledge metaKnowledge;
+	
+	/** a map of agent names to programs representing the current attacker modeling for that agent view */
+	private Map<String, Program> attackerModels = new HashMap<>();
+	
+	/** Default Ctor */
+	public MatesAttackerModelling() {}
+	
+	/** Copy-Ctor */
+	public MatesAttackerModelling(MatesAttackerModelling other) {}
+	
+	@Override
+	public void init(Map<String, String> additionalData) { 
+		secrecyKnowledge = getAgent().getComponent(SecrecyKnowledge.class);
+		metaKnowledge = getAgent().getComponent(AspMetaKnowledge.class);
+	
+		onInit();
+		super.init(additionalData);
+		
+		onSecrecyChanged();
+	}
+	
+	@Override
+	public void componentInitialized(AgentComponent comp) {
+		if(comp == secrecyKnowledge || comp == metaKnowledge)
+			onSecrecyChanged();
+	}
+	
+	/**
+	 * 	This method adds the MATES attacker modeling to the world knowledge and
+	 * 	the views of the component's agent. As the name indicates it only adds the
+	 * 	Initialization specific rules like 'mi_refused' and 'mi_sensetive'.
+	 * 	This method gets called when the component is initialized.
+	 */
+	private void onInit() {
+		// First: Add the attacker modeling to the world knowledge
+		BaseBeliefbase world = getAgent().getBeliefs().getWorldKnowledge();
+		if(world instanceof AspBeliefbase) {
+			Program attackerModel = new Program();
+			String name = getAgent().getName();
+			attackerModels.put(name, attackerModel);
+			
+			for(String defender : getAgent().getEnvironment().getAgentNames()) {
+				addAttackerModelling((AspBeliefbase)world, name, new Constant("a_"+defender));
+			}
+		}
+		
+		// Second: Add it to every view:
+		for(Entry<String, BaseBeliefbase> entry : getAgent().getBeliefs().getViewKnowledge().entrySet()) {
+			if(! (entry.getValue() instanceof AspBeliefbase))
+				continue;
+			AspBeliefbase view = (AspBeliefbase)entry.getValue();
+			
+			Program attackerModel = new Program();
+			attackerModels.put(entry.getKey(), attackerModel);
+			
+			addAttackerModelling(view, entry.getKey(), new Constant("a_"+getAgent().getName()));
+		}	
+	}
+	
+	/**
+	 * This methods adds the general attacker modeling to the given belief base, therefore the 
+	 * @param beliefbase
+	 * @param programKey
+	 * @param defender
+	 */
+	private void addAttackerModelling(AspBeliefbase beliefbase, String programKey, Constant defender) {
+		// remove attacker modeling first:
+		Program program = attackerModels.get(programKey);
+		beliefbase.getProgram().removeAll(program);
+		
+		// generate sensitive rule:
+		Rule sensetive = new Rule() ;
+		sensetive.setConclusion(new DLPAtom("mi_sensetive", new Variable("D"), new Variable("V")));
+		sensetive.addPremise(new DLPAtom("mi_refused", new Variable("D"), new Variable("V")));
+		program.add(sensetive);
+		
+		// the refuse rule:
+		Rule refuse = new Rule();
+		refuse.setConclusion(new DLPAtom("mi_refused", defender, new Variable("V")));
+		refuse.addPremise(new DLPAtom("mi_sact",
+				new Constant("t_" + Query.class.getSimpleName()), 
+				new Variable("A"),		// sender
+				new Variable("V"),		// question
+				new Variable("T1")));	// point in time of question
+		
+		refuse.addPremise(new DLPNot(new DLPAtom("mi_sact",
+				new Constant("t_" + Answer.class.getSimpleName()),
+				defender,		// sender
+				new Variable("W"),		// information
+				new Variable("T2")		// the the point in time for the answer
+				)));
+		
+		// use variable response time for the rule.
+		int tResponse = 1;
+		refuse.addPremise(new DLPAtom("mi_related", new Variable("V"), new Variable("W")));
+		refuse.addPremise(new DLPAtom("mi_time", new Variable("T2")));
+		refuse.addPremise(new Arithmetic("+", new Variable("T1"), new NumberTerm(tResponse), new Variable("T2")));
+		program.add(refuse);
+
+		beliefbase.getProgram().add(program);
+	}
+	
+	/**
+	 * This method shall be called every time the secrecy knowledge changes
+	 * @todo register listeners
+	 */
+	private void onSecrecyChanged() {
+		if(!secrecyKnowledge.isInitialized() || !metaKnowledge.isInitialized() || !isInitialized()) 
+			return;
+		
+		for(Secret s : secrecyKnowledge.getSecrets()) {
+			Constant symbol = null;
+			ConstantTriple tripel = null;
+			Constant agentName = new Constant("a_" + this.getAgent().getName());
+			
+			// the attackers belief base:
+			BaseBeliefbase viewAttacker = getAgent().getBeliefs().getViewKnowledge().get(s.getSubjectName());
+			if(! (viewAttacker instanceof AspBeliefbase)) {
+				continue;
+			}
+			
+			// process the symbol used in meta knowledge for the secret piece of information:
+			AspFolTranslator translator = new AspFolTranslator();
+			if(s.getInformation() instanceof FOLAtom) {
+				DLPAtom atom = translator.toASP((FOLAtom)s.getInformation());
+				tripel = metaKnowledge.getOrCreateTriple(atom);
+				symbol = tripel.posConst;
+			} else if(s.getInformation() instanceof Negation) {
+				FOLAtom fAtom = (FOLAtom)((Negation)s.getInformation()).getFormula();
+				DLPAtom dlpAtom = translator.toASP(fAtom);
+				tripel = metaKnowledge.getOrCreateTriple(dlpAtom);
+				symbol = tripel.negConst;
+			}
+			
+			// continue with next secret if no symbol can be found
+			if(symbol == null || tripel == null) {
+				continue;
+			}
+
+			Program attackerModel = new Program();
+			
+			// the has_secret fact:
+			attackerModel.addFact(new DLPAtom("mi_has_secret", agentName, symbol));
+			
+			
+			// the holds rule:
+			Rule holds = new Rule();
+			holds.setConclusion(new DLPAtom("mi_holds", symbol));
+			holds.addPremise(new DLPAtom("mi_has_secret", agentName, symbol));
+			holds.addPremise(new DLPAtom("mi_refused", agentName, symbol));
+			attackerModel.add(holds);
+			
+			((AspBeliefbase)viewAttacker).getProgram().add(attackerModel);
+			this.report("Extends attacker modelling for Secret: '" + s.toString() + "'", viewAttacker);
+		}
+		
+		if(!isInitialized())
+			initalized = true;
+	}
+	
+	@Override
+	public MatesAttackerModelling clone() {
+		return new MatesAttackerModelling(this);
+	}
+
+}

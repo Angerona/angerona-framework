@@ -28,5 +28,6 @@
 	<component>com.github.angerona.fw.PlanComponent</component>
 	<component>com.github.angerona.fw.example.components.CommunicationHistory</component>
 	<component>com.github.angerona.fw.asp.component.AspMetaKnowledge</component>
+	<component>com.github.angerona.fw.example.components.MatesAttackerModelling</component>
 	
 </agent-configuration>
