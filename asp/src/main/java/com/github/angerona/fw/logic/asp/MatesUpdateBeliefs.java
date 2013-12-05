@@ -1,6 +1,9 @@
 package com.github.angerona.fw.logic.asp;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -14,6 +17,7 @@ import net.sf.tweety.lp.asp.syntax.Rule;
 import net.sf.tweety.lp.asp.syntax.SymbolicSet;
 
 import com.github.angerona.fw.BaseBeliefbase;
+import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.asp.component.AspMetaKnowledge;
 import com.github.angerona.fw.comm.SpeechAct;
 import com.github.angerona.fw.logic.Beliefs;
@@ -34,21 +38,30 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 	
 	@Override
 	protected Beliefs processInternal(EvaluateParameter param) {		
-		// update the beliefs with the real-information of the speech-act
-		// Beliefs reval = super.processInternal(param); // this operator does not update all belief bases...
+		// variables stores output for the report system:
+		String outputWorld = "Only add the meta-information to the world knowledge";
+		Map<String, String> outputView = new HashMap<>();
+		for(String agentName : param.getAgent().getBeliefs().getViewKnowledge().keySet()) {
+			outputView.put(agentName, "Only add the meta-information to the view on '" + agentName +"'");
+		}
+
+		// store old beliefs:
 		Beliefs working = param.getBeliefs();
+		Beliefs oldBeliefs = working.clone();
+		
+		// update the beliefs with the real-information of the speech-act
 		if(param.getAtom() instanceof SpeechAct) {
 			SpeechAct sa = (SpeechAct)param.getAtom();
 			
 			BaseBeliefbase world = working.getWorldKnowledge();
 			world.addKnowledge(sa);
-			param.report("Add the information of '"+sa.toString()+"' to the world knowledge", world);
+			outputWorld = "Add the information of '"+sa.toString()+"' to the world knowledge";
 			
 			boolean isReceiver = sa.getReceiverId().equals(param.getAgent().getName());
 			String otherAgent = isReceiver ? sa.getSenderId() : sa.getReceiverId();
 			BaseBeliefbase view = working.getViewKnowledge().get(otherAgent);
 			view.addKnowledge(sa);
-			param.report("Add the information of '"+sa.toString()+"' to the view on '"+otherAgent+"'", view);
+			outputView.put(otherAgent, "Add the information of '"+sa.toString()+"' to the view on '"+otherAgent+"'");
 		}
 		
 		
@@ -69,6 +82,16 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 			}
 		}
 		
+		// after updating the meta knowledge generate the report outputs:
+		param.report(outputWorld, working.getWorldKnowledge());
+		for(Entry<String, String> entry : outputView.entrySet()) {
+			BaseBeliefbase view = working.getViewKnowledge().get(entry.getKey());
+			param.report(entry.getValue(), view);
+		}
+		
+		if(working.getCopyDepth() == 0) {
+			param.getAgent().onUpdateBeliefs((Perception)param.getAtom(), oldBeliefs);
+		}
 		
 		return working;
 	}

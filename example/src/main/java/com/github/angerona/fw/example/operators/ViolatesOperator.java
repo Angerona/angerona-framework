@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.slf4j.Logger;
@@ -53,8 +56,13 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		Action p = (Action) param.getAtom();
 		
 		// use cloned beliefs to generate new beliefs:
-		//Beliefs newBeliefs = ag.updateBeliefs((Perception)param.getAtom(), beliefs.clone());
 		Beliefs newBeliefs = ag.updateBeliefs(percept, beliefs.clone());
+		
+		// add meta information about time as described by Krümpelmann in MATES
+		int futureTick = ag.getEnvironment().getSimulationTick() + newBeliefs.getCopyDepth();
+		FOLAtom metaTime = new FOLAtom(new Predicate("mi_time", 1));
+		metaTime.addArgument(new NumberTerm(futureTick));
+		newBeliefs.addGlobalKnowledge(metaTime);
 		
 		
 		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();

@@ -15,6 +15,12 @@ import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
 
 /**
+ * This implementation of the {@link SubgoalGenerationOperator} handles the
+ * reaction to the ask_for_escuse literal by directly asking if the employee
+ * wants to attend the strike committee meeting.
+ * 
+ * The code is fairly simple because the {@link StrikeCommitteePlanner} assumes
+ * that only Boss and Employee are agents.
  * 
  * @author Tim Janus
  */

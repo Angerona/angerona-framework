@@ -25,6 +25,7 @@ import com.github.angerona.fw.example.operators.ViolatesOperator;
 import com.github.angerona.fw.example.operators.courtroom.CourtroomIntentionUpdate;
 import com.github.angerona.fw.example.operators.courtroom.CourtroomPlanner;
 import com.github.angerona.fw.example.operators.courtroom.CourtroomViolates;
+import com.github.angerona.fw.example.operators.mates.MatesPlanner;
 import com.github.angerona.fw.example.operators.scm.StrikeCommitteePlanner;
 import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.base.ViewComponent;
@@ -99,6 +100,9 @@ public class ExamplePlugin extends AngeronaPluginAdapter
 		
 		// strike committee meeting operators:
 		reval.add(StrikeCommitteePlanner.class);
+		
+		// mates
+		reval.add(MatesPlanner.class);
 		
 		return reval;
 	}

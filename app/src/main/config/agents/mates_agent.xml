@@ -11,7 +11,7 @@
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>com.github.angerona.fw.example.operators.scm.StrikeCommitteePlanner</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.example.operators.mates.MatesPlanner</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">

@@ -39,7 +39,7 @@ import com.github.angerona.fw.logic.ScriptingComponent;
  * Default subgoal generation generates the atomic actions need to react on the
  * different speech acts. Subclasses can use the default behavior to react to speech
  * acts.
- * Also implements specialized methods for the simple version of the strike-committee-example.
+ * 
  * @author Tim Janus
  */
 public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
@@ -233,7 +233,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * @return		true if a new subgoal was created and added to the master-plan, false otherwise.
 	 */
 	protected Boolean answerQuery(Desire des, PlanParameter pp, Agent ag) {
-		Subgoal answer = new Subgoal(ag, des);
+		
 		Query q = (Query) des.getPerception();
 		
 		BaseBeliefbase bb = ag.getBeliefs().getWorldKnowledge();
@@ -241,9 +241,51 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		boolean generateLies = Boolean.parseBoolean(pp.getSetting("generateLies", String.valueOf(true)));	
 		
+		// handle complex answers
+		if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
+			List<FolFormula> answers = new LinkedList<>(aa.getAnswers());
+			
+			Collections.sort(answers, new Comparator<FolFormula>() {
+				public int compare(FolFormula a1, FolFormula a2) {
+					return a1.toString().compareTo(a2.toString());
+				}
+			}); 
+			
+			
+			List<FolFormula> lies = new LinkedList<>();
+			if(generateLies) {
+				// create lieing alternatives:
+				for(int i=0; i<answers.size(); i++) {
+					//if(isClosedQuery(answers.get(i))) {
+					if(answers.get(i).isGround()) {
+						FolFormula simpleLie = generateLie(answers.get(i));
+						lies.add(simpleLie);
+					}
+				}
+			}
+			
+			Query query = (Query) des.getPerception();
+			Subgoal sg = new Subgoal(ag, des);
+			createSubgoals(answers, sg, query, new Boolean(false), ag);
+			createSubgoals(lies, sg, query, new Boolean(true), ag);
+			ag.getPlanComponent().addPlan(sg);
+			return true;
+		}
+		
+		Subgoal answer = generateDefaultAnswerPlan(pp, ag, des, q, aa);
+		ag.getPlanComponent().addPlan(answer);
+		
+		return true;
+	}
+
+	protected Subgoal generateDefaultAnswerPlan(PlanParameter pp, Agent ag,
+			Desire des, Query q, AngeronaAnswer aa) {
+		Subgoal answer = new Subgoal(ag, des);
 		Answer honest = null;
 		Answer lie = null;
 		Answer lie2 = null;
+		
+		boolean generateLies = Boolean.parseBoolean(pp.getSetting("generateLies", String.valueOf(true)));	
 		
 		if(aa.getAnswerValue() == AnswerValue.AV_TRUE ||
 				aa.getAnswerValue() == AnswerValue.AV_FALSE) {
@@ -285,34 +327,6 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		} else if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX && aa.getAnswers().isEmpty()) {
 			honest = new Answer(ag, q.getSenderId(), q.getQuestion(), AnswerValue.AV_UNKNOWN);
 			answer.newStack(honest);
-		} else if(aa.getAnswerValue() == AnswerValue.AV_COMPLEX) {
-			List<FolFormula> answers = new LinkedList<>(aa.getAnswers());
-			
-			Collections.sort(answers, new Comparator<FolFormula>() {
-				public int compare(FolFormula a1, FolFormula a2) {
-					return a1.toString().compareTo(a2.toString());
-				}
-			}); 
-			
-			
-			List<FolFormula> lies = new LinkedList<>();
-			if(generateLies) {
-				// create lieing alternatives:
-				for(int i=0; i<answers.size(); i++) {
-					//if(isClosedQuery(answers.get(i))) {
-					if(answers.get(i).isGround()) {
-						FolFormula simpleLie = generateLie(answers.get(i));
-						lies.add(simpleLie);
-					}
-				}
-			}
-			
-			Query query = (Query) des.getPerception();
-			Subgoal sg = new Subgoal(ag, des);
-			createSubgoals(answers, sg, query, new Boolean(false), ag);
-			createSubgoals(lies, sg, query, new Boolean(true), ag);
-			ag.getPlanComponent().addPlan(sg);
-			return true;
 		}
 		
 		if(honest != null)
@@ -321,9 +335,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			pp.report("Add the lie '"+ lie.toString() + "' as alternative plan");
 		if(lie2 != null)
 			pp.report("Add the lie '"+ lie2.toString() + "' as alternative plan");
-		ag.getPlanComponent().addPlan(answer);
 		
-		return true;
+		return answer;
 	}
 	
 	private void createSubgoals(List<FolFormula> answers, Subgoal sg, Query q, Boolean ud, Agent ag) {

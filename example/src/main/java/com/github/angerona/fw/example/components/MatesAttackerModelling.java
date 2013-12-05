@@ -11,6 +11,7 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
 import net.sf.tweety.lp.asp.syntax.Arithmetic;
+import net.sf.tweety.lp.asp.syntax.Comparative;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
 import net.sf.tweety.lp.asp.syntax.DLPNot;
 import net.sf.tweety.lp.asp.syntax.Program;
@@ -142,7 +143,15 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 		refuse.addPremise(new DLPAtom("mi_related", new Variable("V"), new Variable("W")));
 		refuse.addPremise(new DLPAtom("mi_time", new Variable("T2")));
 		refuse.addPremise(new Arithmetic("+", new Variable("T1"), new NumberTerm(tResponse), new Variable("T2")));
+		refuse.addPremise(new Comparative("!=", new Variable("A"), defender));
 		program.add(refuse);
+
+		// the holds rule:
+		Rule holds = new Rule();
+		holds.setConclusion(new DLPAtom("mi_holds", new Variable("S")));
+		holds.addPremise(new DLPAtom("mi_has_secret", new Variable("D"), new Variable("S")));
+		holds.addPremise(new DLPAtom("mi_refused", new Variable("D"), new Variable("S")));
+		program.add(holds);
 
 		beliefbase.getProgram().add(program);
 	}
@@ -190,12 +199,14 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 			attackerModel.addFact(new DLPAtom("mi_has_secret", agentName, symbol));
 			
 			
+			/*
 			// the holds rule:
 			Rule holds = new Rule();
 			holds.setConclusion(new DLPAtom("mi_holds", symbol));
 			holds.addPremise(new DLPAtom("mi_has_secret", agentName, symbol));
 			holds.addPremise(new DLPAtom("mi_refused", agentName, symbol));
 			attackerModel.add(holds);
+			*/
 			
 			((AspBeliefbase)viewAttacker).getProgram().add(attackerModel);
 			this.report("Extends attacker modelling for Secret: '" + s.toString() + "'", viewAttacker);

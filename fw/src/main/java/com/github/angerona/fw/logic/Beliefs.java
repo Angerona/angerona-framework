@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.util.Utility;
@@ -163,6 +165,19 @@ public class Beliefs implements Cloneable
 		}
 		return buf.toString();
 	}
+	
+	/**
+	 * This method adds the given formula to the world knowledge and every
+	 * view such that it represents global knowledge.
+	 * @param formula	A FOL formula representing the global knowledge
+	 */
+	public void addGlobalKnowledge(FolFormula formula) {
+		worldKnowledge.addKnowledge(formula);
+		for(BaseBeliefbase bb : viewKnowledge.values()) {
+			bb.addKnowledge(formula);
+		}
+	}
+
 	
 	@Override
 	public boolean equals(Object other) {

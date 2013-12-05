@@ -132,9 +132,11 @@ public class AspMetaKnowledge extends BaseAgentComponent {
 	 * @param atom	The atom
 	 * @return A constant that represents the variable version of the atom
 	 */
+	/*
 	public Constant matesVar(DLPAtom atom) {
 		return getOrCreateTriple(atom).varConst;
 	}
+	*/
 	
 	/**
 	 * Gets or creates a triple that contains three constants for
