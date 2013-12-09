@@ -106,7 +106,7 @@ public class CensorComponent extends BaseAgentComponent {
 	
 	public CensorComponent(Prover.InferenceSystem inferenceSystem) {
 		super();
-		this.inferenceSystem = inferenceSystem; 
+		this.inferenceSystem = inferenceSystem;
 	}	
 	
 	/**
@@ -177,7 +177,8 @@ public class CensorComponent extends BaseAgentComponent {
 		try {
 			return ! p.prove(knowledgeBase, "(true => false)", inferenceSystem);
 		} catch (SICStusException e) {
-			LOG.error("error on invocation of SICStus engine");
+			e.printStackTrace();
+			LOG.error("error on invocation of SICStus engine", e);
 			return false;
 		}
 	}
