@@ -1,24 +1,27 @@
 package interactive;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.JFrame;
 
+import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.NextActionRequester;
-import com.github.angerona.fw.gui.AngeronaWindow;
 
 public class InteractiveAgentNextActionRequester implements NextActionRequester {
 
 	private AngeronaEnvironment environment;
 
-	
 	public InteractiveAgentNextActionRequester(AngeronaEnvironment environment){
 		this.environment = environment;
 	}
+	
 	@Override
 	public synchronized void request() {
-		AngeronaWindow.get().getMainWindow().setEnabled(false);
+	
 		final InteractiveBarMVPComponent barMVPComponent= new InteractiveBarMVPComponent(environment, Thread.currentThread());
-			javax.swing.SwingUtilities.invokeLater(new Runnable(){
+		try {
+			javax.swing.SwingUtilities.invokeAndWait(new Runnable(){
 
 				@Override
 				public void run() {
@@ -26,15 +29,21 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 					frame.setVisible(true);
 				}
 			});
+		} catch (InvocationTargetException e1) {
+			Angerona.getInstance().onError("Interactive User-Input Internal Error", e1.getMessage());
+			e1.printStackTrace();
+		} catch (InterruptedException e1) {
+			Angerona.getInstance().onError("Interactive User-Input interruped", e1.getMessage());
+			e1.printStackTrace();
+		}
+			
 		try {
-			while(((InteractiveBar) barMVPComponent.getPanel()).getFrame().isDisplayable()){
+			while(((InteractiveBar) barMVPComponent.getPanel()).getFrame().isDisplayable()) {
 				wait();
 			}			
 		} catch (InterruptedException e) {
 			// expected interrupt, do nothing
 		}
-		AngeronaWindow.get().getMainWindow().setEnabled(true);
-		//return barMVPComponent.getHasAction();
 	}
 
 }
