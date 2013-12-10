@@ -35,7 +35,7 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	}
 	
 	private synchronized void setSimulationTick(int tick) {
-		tick = changeProperty("simulationTick", this.simulationTick, tick);
+		this.simulationTick = changeProperty("simulationTick", this.simulationTick, tick);
 	}
 	
 	@Override
