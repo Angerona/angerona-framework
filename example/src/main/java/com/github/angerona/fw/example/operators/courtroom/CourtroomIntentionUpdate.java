@@ -84,7 +84,7 @@ public class CourtroomIntentionUpdate extends BaseIntentionUpdateOperator {
 	}
 
 	@Override
-	protected PlanElement processInternal(PlanParameter param) {
+	protected PlanElement processImpl(PlanParameter param) {
 		LOG.info("Run Mary-Intention-Update");
 		Agent ag = param.getActualPlan().getAgent();
 		List<PlanElement> atomicIntentions = new LinkedList<PlanElement>();

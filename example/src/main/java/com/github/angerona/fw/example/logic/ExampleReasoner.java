@@ -25,7 +25,7 @@ public class ExampleReasoner extends BaseReasoner {
 	}
 
 	@Override
-	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {
+	protected Pair<Set<FolFormula>, AngeronaAnswer> queryImpl(ReasonerParameter params) {
 		
 		ExampleBeliefbase bb = (ExampleBeliefbase)params.getBeliefBase();
 		boolean b = bb.fbs.contains(params.getQuery());
@@ -35,7 +35,7 @@ public class ExampleReasoner extends BaseReasoner {
 	}
 
 	@Override
-	protected Set<FolFormula> inferInt(ReasonerParameter params) {
+	protected Set<FolFormula> inferImpl(ReasonerParameter params) {
 		FolBeliefSet fbs = ((ExampleBeliefbase)params.getBeliefBase()).getBeliefSet();
 		Set<FolFormula> reval = new HashSet<>();
 		reval.addAll(fbs);

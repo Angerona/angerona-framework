@@ -51,7 +51,7 @@ public class CourtroomPlanner extends SubgoalGenerationOperator {
 	private boolean generateLies = false;
 	
 	@Override
-	protected Boolean processInternal(PlanParameter pp) {
+	protected Boolean processImpl(PlanParameter pp) {
 		LOG.info("Run Mary-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
 		

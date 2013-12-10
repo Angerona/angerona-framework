@@ -37,7 +37,7 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 
 	
 	@Override
-	protected Beliefs processInternal(EvaluateParameter param) {		
+	protected Beliefs processImpl(EvaluateParameter param) {		
 		// variables stores output for the report system:
 		String outputWorld = "Only add the meta-information to the world knowledge";
 		Map<String, String> outputView = new HashMap<>();

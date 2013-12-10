@@ -58,7 +58,7 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 	 * 									parameters of type IN
 	 * @return	An instance of the output object of type OUT.
 	 */
-	protected abstract OUT processInternal(IN preprocessedParameters);
+	protected abstract OUT processImpl(IN preprocessedParameters);
 	
 	/**
 	 * sub classes have to implement this method to provide a default return
@@ -84,7 +84,7 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 		try {
 			preparedParams.fromGenericParameter(genericParams);
 			prepare(preparedParams);
-			reval = processInternal(preparedParams);
+			reval = processImpl(preparedParams);
 		} catch(AttributeNotFoundException | ConversionException ex) {
 			LOG.error("Operator '{}' is not able to fetch the parameters: '{}'",
 					this.getClass().getName(), ex.getMessage());
@@ -106,7 +106,7 @@ public abstract class Operator<TCaller extends OperatorCaller, IN extends Operat
 		@SuppressWarnings("unchecked")
 		IN params2 = (IN)params;
 		prepare(params2);
-		OUT reval = processInternal((IN)params2);
+		OUT reval = processImpl((IN)params2);
 		params.getStack().popOperator();
 		return reval;
 	}

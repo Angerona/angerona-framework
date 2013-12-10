@@ -64,7 +64,7 @@ public class AspBeliefbase extends BaseBeliefbase {
 	}
 
 	@Override
-	protected void parseInt(BufferedReader br) throws ParserException, IOException {
+	protected void parseImpl(BufferedReader br) throws ParserException, IOException {
 		ASPParser parser = new ASPParser(br);
 		InstantiateVisitor visitor = new InstantiateVisitor();
 		try {
@@ -108,7 +108,7 @@ public class AspBeliefbase extends BaseBeliefbase {
 	}
 
 	@Override
-	public List<String> getAtoms() {
+	public List<String> getAtomsAsStringList() {
 		List<String> facts = new LinkedList<String>();
 		List<String> rules = new LinkedList<String>();
 		

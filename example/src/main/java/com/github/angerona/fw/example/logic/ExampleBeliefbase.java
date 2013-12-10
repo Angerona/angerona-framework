@@ -64,7 +64,7 @@ public class ExampleBeliefbase extends BaseBeliefbase {
 
 	// Belief base is a simple FOL Beliefbase.
 	@Override
-	protected void parseInt(BufferedReader br) throws ParseException, IOException {
+	protected void parseImpl(BufferedReader br) throws ParseException, IOException {
 		FolParserB parser = new FolParserB(br);
 		try {
 			fbs = parser.KB();
@@ -80,7 +80,7 @@ public class ExampleBeliefbase extends BaseBeliefbase {
 	}
 
 	@Override
-	public List<String> getAtoms() {
+	public List<String> getAtomsAsStringList() {
 		List<String> reval = new LinkedList<String>();
 		for(FolFormula ff : fbs)
 			reval.add(ff.toString());

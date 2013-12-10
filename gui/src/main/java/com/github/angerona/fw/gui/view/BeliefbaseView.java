@@ -105,7 +105,7 @@ public class BeliefbaseView extends ListViewColored {
 	protected List<String> getStringRepresentation(Entity obj) {
 		if(obj instanceof BaseBeliefbase) {
 			BaseBeliefbase bb = (BaseBeliefbase)obj;
-			return bb.getAtoms();
+			return bb.getAtomsAsStringList();
 		}
 		
 		return null;

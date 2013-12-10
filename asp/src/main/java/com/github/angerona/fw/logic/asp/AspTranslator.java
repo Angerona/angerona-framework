@@ -30,7 +30,7 @@ public class AspTranslator extends BaseTranslator {
 	private static AspNlpTranslator translator = new AspNlpTranslator();
 	
 	@Override
-	protected AspBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
+	protected AspBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
 		AspBeliefbase reval = new AspBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
 		
@@ -60,9 +60,14 @@ public class AspTranslator extends BaseTranslator {
 	}
 
 	@Override
-	protected AspBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
+	protected AspBeliefbase translateNLPImpl(BaseBeliefbase caller, NLPProgram program) {
 		AspBeliefbase reval = new AspBeliefbase();
 		reval.setProgram(translator.toASP(program));
 		return reval;
+	}
+
+	@Override
+	protected AspBeliefbase defaultReturnValue() {
+		return new AspBeliefbase();
 	}
 }

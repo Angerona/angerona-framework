@@ -11,11 +11,19 @@ import com.github.angerona.fw.operators.parameter.ReasonerParameter;
 import com.github.angerona.fw.util.Pair;
 
 /**
- * Base class for all reasoners used by the Angerona project.
+ * Base class for all reasoners used in the Angerona framework, sub classes can implement
+ * a reasoning mechanism for a specific knowledge representation mechanism, such that
+ * this reasoning mechanism can be used by a sub-class of {@link BaseBeliefbase}.
  * 
  * To query the reasoner a subset of the FOL Language defined in Tweety is used.
  * It is the responsibility of the Reasoner implementation to translate the given
  * query into its native language. 
+ * 
+ * Sub classes have to implement the method with the ending *Impl to provide their
+ * own implementation. They must not override the infer() or query() method because
+ * those do internal work and then call their *Impl versions. The processImpl() method
+ * contains a appropriate default behavior such that it is highly recommended to not
+ * override this method unless you know what you are doing.
  * 
  * @author Tim Janus
  */
@@ -38,20 +46,20 @@ public abstract class BaseReasoner
 	}
 	
 	@Override 
-	protected Pair<Set<FolFormula>, AngeronaAnswer> processInternal(ReasonerParameter params) {
+	protected Pair<Set<FolFormula>, AngeronaAnswer> processImpl(ReasonerParameter params) {
 		if(params.getQuery() == null) {
-			return new Pair<>(inferInt(params), null);
+			return new Pair<>(inferImpl(params), null);
 		} else {
-			return queryInt(params);
+			return queryImpl(params);
 		}
 	}
 	
 	/** 
 	 * Infers all the knowledge of the BaseBeliefbase and saves it in FolFormula (only Atom and Negation)
 	 * @param params	The input parameter containing the BaseBeliefbase.
-	 * @return	A set of FolFormula representing Cn(Bel).
+	 * @return	A set of FolFormula representing the literals in Cn(Bel).
 	 */
-	protected abstract Set<FolFormula> inferInt(ReasonerParameter params);
+	protected abstract Set<FolFormula> inferImpl(ReasonerParameter params);
 	
 	/**
 	 * Infers all the knowledge in a given BaseBeliefbase and returns it as a set of FOLFormula.
@@ -62,7 +70,7 @@ public abstract class BaseReasoner
 	public Set<FolFormula> infer(BaseBeliefbase caller) {
 		ReasonerParameter params = new ReasonerParameter(caller, null);
 		caller.getStack().pushOperator(this);
-		Set<FolFormula> reval = processInternal(params).first;
+		Set<FolFormula> reval = processImpl(params).first;
 		caller.getStack().popOperator();
 		return reval;
 	}
@@ -72,7 +80,7 @@ public abstract class BaseReasoner
 	 * @param params 	A structure containing the BaseBeliefbase and the Query.
 	 * @return the answer to the query.
 	 */
-	protected abstract  Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params);
+	protected abstract  Pair<Set<FolFormula>, AngeronaAnswer> queryImpl(ReasonerParameter params);
 	
 	/**
 	 * Query for the FolFormula given as parameter. Its a helper method which 
@@ -85,7 +93,7 @@ public abstract class BaseReasoner
 	public Pair<Set<FolFormula>, AngeronaAnswer> query(BaseBeliefbase caller, FolFormula query) {
 		ReasonerParameter params = new ReasonerParameter(caller, query);
 		caller.getStack().pushOperator(this);
-		Pair<Set<FolFormula>, AngeronaAnswer> reval = processInternal(params);
+		Pair<Set<FolFormula>, AngeronaAnswer> reval = processImpl(params);
 		caller.getStack().popOperator();
 		return reval;
 	}

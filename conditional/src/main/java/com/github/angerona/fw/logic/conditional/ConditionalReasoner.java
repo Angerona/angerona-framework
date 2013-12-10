@@ -108,7 +108,7 @@ public class ConditionalReasoner extends BaseReasoner {
 	 * 
 	 */
 	@Override
-	protected Set<FolFormula> inferInt(ReasonerParameter params) {
+	protected Set<FolFormula> inferImpl(ReasonerParameter params) {
 		Set<FolFormula> retval = new HashSet<FolFormula>();
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
 		
@@ -147,7 +147,7 @@ public class ConditionalReasoner extends BaseReasoner {
 	}
 
 	@Override
-	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {
+	protected Pair<Set<FolFormula>, AngeronaAnswer> queryImpl(ReasonerParameter params) {
 		
 		AnswerValue answer = AnswerValue.AV_FALSE;
 		

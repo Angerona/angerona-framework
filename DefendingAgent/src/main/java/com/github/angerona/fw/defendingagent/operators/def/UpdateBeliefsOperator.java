@@ -29,7 +29,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	private static Logger LOG = LoggerFactory.getLogger(UpdateBeliefsOperator.class);
 	
 	@Override
-	protected Beliefs processInternal(EvaluateParameter param) {
+	protected Beliefs processImpl(EvaluateParameter param) {
 		LOG.info("Run Defending-Update-Beliefs-Operator");
 		Beliefs beliefs = param.getBeliefs();
 		Beliefs oldBeliefs = (Beliefs)param.getBeliefs().clone();

@@ -31,7 +31,7 @@ public class IntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	private static Logger LOG = LoggerFactory.getLogger(IntentionUpdateOperator.class);
 	
 	@Override
-	protected PlanElement processInternal(PlanParameter param) {
+	protected PlanElement processImpl(PlanParameter param) {
 		LOG.info("Run Default-Intention-Update");
 		for(Subgoal plan : param.getActualPlan().getPlans()) {
 			for(int i=0; i<plan.getNumberOfStacks(); ++i) {

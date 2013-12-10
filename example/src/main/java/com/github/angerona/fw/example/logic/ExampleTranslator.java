@@ -19,7 +19,7 @@ import com.github.angerona.fw.logic.BaseTranslator;
 public class ExampleTranslator extends BaseTranslator {
 
 	@Override
-	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
+	protected ExampleBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
 		// Translate the knowledge encoded in the answer into a dummy belief base.
 		if(p instanceof Answer) {
 			FolFormula formula = null;
@@ -31,7 +31,7 @@ public class ExampleTranslator extends BaseTranslator {
 			} else {
 				return new ExampleBeliefbase();
 			}
-			return translateFOL(caller, formula);
+			return (ExampleBeliefbase)translateFOL(caller, formula);
 		}
 		
 		// nothing but answer implemented yet.
@@ -39,9 +39,14 @@ public class ExampleTranslator extends BaseTranslator {
 	}
 
 	@Override
-	protected BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
+	protected ExampleBeliefbase translateNLPImpl(BaseBeliefbase caller, NLPProgram program) {
 		ExampleBeliefbase reval = new ExampleBeliefbase();
 		reval.fbs.addAll(program.getFacts());
 		return reval;
+	}
+
+	@Override
+	protected ExampleBeliefbase defaultReturnValue() {
+		return new ExampleBeliefbase();
 	}
 }

@@ -25,7 +25,7 @@ public class AspExpansion extends BaseChangeBeliefs {
 	}
 
 	@Override
-	protected BaseBeliefbase processInternal(
+	protected BaseBeliefbase processImpl(
 			ChangeBeliefbaseParameter preprocessedParameters) {
 		LOG.info("Perform ASPExpansion as change.");
 		AspBeliefbase abb = (AspBeliefbase)preprocessedParameters.getSourceBeliefBase();

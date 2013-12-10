@@ -12,7 +12,7 @@ public class ExampleExpansion extends BaseChangeBeliefs {
 	}
 
 	@Override
-	protected BaseBeliefbase processInternal(ChangeBeliefbaseParameter param) {
+	protected BaseBeliefbase processImpl(ChangeBeliefbaseParameter param) {
 		ExampleBeliefbase bb = (ExampleBeliefbase) param.getSourceBeliefBase();
 		ExampleBeliefbase nbb = (ExampleBeliefbase) param.getNewKnowledge();
 		bb.fbs.addAll(nbb.fbs);

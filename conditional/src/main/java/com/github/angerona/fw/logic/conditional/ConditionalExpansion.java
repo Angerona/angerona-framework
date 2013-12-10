@@ -28,7 +28,7 @@ public class ConditionalExpansion extends BaseChangeBeliefs {
 	 * Add all propositions from the new knowledge to the existing belief base
 	 */
 	@Override
-	protected BaseBeliefbase processInternal(ChangeBeliefbaseParameter param) {
+	protected BaseBeliefbase processImpl(ChangeBeliefbaseParameter param) {
 		log.info("Expansion with '{}'", param.getNewKnowledge());
 		ConditionalBeliefbase beliefbase = (ConditionalBeliefbase) param.getBeliefBase();
 		ConditionalBeliefbase newKnowledge = (ConditionalBeliefbase) param.getNewKnowledge();

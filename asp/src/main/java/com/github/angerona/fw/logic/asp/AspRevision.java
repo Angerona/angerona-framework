@@ -51,7 +51,7 @@ public abstract class AspRevision extends BaseChangeBeliefs {
 	protected abstract MultipleBaseRevisionOperator<Rule> createRevisionImpl();
 	
 	@Override
-	protected BaseBeliefbase processInternal(
+	protected BaseBeliefbase processImpl(
 			ChangeBeliefbaseParameter param) {
 		LOG.info("Perform ASPRevison as change.");
 		if(! (param.getSourceBeliefBase() instanceof AspBeliefbase))

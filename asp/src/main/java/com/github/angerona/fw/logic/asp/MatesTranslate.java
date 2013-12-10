@@ -27,10 +27,10 @@ import com.github.angerona.fw.logic.AnswerValue;
  */
 public class MatesTranslate extends AspTranslator {
 	@Override
-	protected AspBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
+	protected AspBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
 		// the meta inferences of Krümpelmann only works on speech-acts ...
 		if(! (p instanceof SpeechAct))
-			return super.translatePerceptionInt(caller, p);
+			return super.translatePerceptionImpl(caller, p);
 		
 		SpeechAct speechAct = (SpeechAct)p;
 		AspBeliefbase reval = new AspBeliefbase();
@@ -67,7 +67,7 @@ public class MatesTranslate extends AspTranslator {
 			boolean isSender = caller.getAgent().getName().equals(speechAct.getSenderId());
 			boolean isView = caller.getAgent().getBeliefs().getWorldKnowledge().getGUID() != caller.getGUID();
 			if((!isSender || (isSender && isView)) && (speechAct.getType() != SpeechActType.SAT_REQUESTING)) {
-				reval = super.translatePerceptionInt(caller, speechAct);
+				reval = super.translatePerceptionImpl(caller, speechAct);
 			}
 			
 			// todo: get cur step (but in a way that simulating and real performs work)

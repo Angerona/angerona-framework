@@ -12,7 +12,17 @@ import com.github.angerona.fw.reflection.Context;
 import com.github.angerona.fw.util.Utility;
 
 /**
- * Implementation of the speech act "Answer".
+ * An {@link Answer} is an informative speech-act thats is returned to a {@link Query} for
+ * example.
+ * 
+ * Answer is special because most of the speech-acts store their entire semantic in their type name
+ * but the {@link Answer} speech-act also stores an {@link AngeronaAnswer} containing an {@link AnswerValue}, 
+ * which can have four different values and give the answer another semantic. AV_TRUE and AV_FALSE represent 
+ * the boolean true or false for an answer regarding the given question. AV_REJECT means the agent rejects to
+ * give an answer, AV_UNKNOWN means the agent does not know the answer and AV_COMPLEX means the answer contains
+ * multiple first order formulas. That can happen if a query is open, like brother(X), which might return multiple
+ * brothers.
+ * 
  * @author Tim Janus
  */
 public class Answer extends SpeechAct {

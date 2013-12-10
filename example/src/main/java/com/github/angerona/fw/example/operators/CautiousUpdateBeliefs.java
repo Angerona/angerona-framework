@@ -18,7 +18,7 @@ import com.github.angerona.fw.util.Utility;
 public class CautiousUpdateBeliefs extends UpdateBeliefsOperator {
 
 	@Override
-	protected Beliefs processInternal(EvaluateParameter param) {
+	protected Beliefs processImpl(EvaluateParameter param) {
 		if(param.getAtom() instanceof Inform) {
 			Beliefs beliefs = param.getBeliefs();
 			Beliefs oldBeliefs = beliefs.clone();
@@ -42,7 +42,7 @@ public class CautiousUpdateBeliefs extends UpdateBeliefsOperator {
 			
 			return beliefs;
 		} else {
-			return super.processInternal(param);
+			return super.processImpl(param);
 		}
 	}
 	

@@ -8,19 +8,27 @@ import net.sf.tweety.lp.nlp.syntax.NLPRule;
 
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
+import com.github.angerona.fw.comm.Answer;
+import com.github.angerona.fw.comm.Inform;
+import com.github.angerona.fw.comm.Justification;
+import com.github.angerona.fw.comm.Justify;
+import com.github.angerona.fw.comm.Query;
+import com.github.angerona.fw.comm.SpeechAct;
 import com.github.angerona.fw.operators.Operator;
 import com.github.angerona.fw.operators.parameter.TranslatorParameter;
 import com.github.angerona.fw.util.Pair;
 
 /**
  * Base class for all translate operations for different belief base type
- * implementations.
+ * implementations. It supports the translation of {@link Perception}, of first order logic
+ * and of nested logic programs, whereby the perceptions and first order constructs are
+ * translated into nested logic programs internally.
  * 
  * It supports two important methods which has to be implemented by subclasses:
- * 1. translatePerception to transform a perception into a belief base which
+ * 1. translatePerceptionImpl() to transform a perception into a belief base which
  *    can be used for revision operations with the agents knowledge
- * 2. translateFOL to transform a set of FOL formulas into a belief base which
- *    which represents the knowledge encoded in FOL.
+ * 2. translateNLPImpl() to transform a set of nested logic program rules into a belief base
+ *    which represents the knowledge encoded in the given NLP.
  * 
  * @author Tim Janus
  */
@@ -30,12 +38,12 @@ public abstract class BaseTranslator
 	public static final String OPERATION_TYPE = "Translator";
 	
 	@Override
-	protected BaseBeliefbase processInternal(TranslatorParameter preprocessedParameters) {
+	protected BaseBeliefbase processImpl(TranslatorParameter preprocessedParameters) {
 		if(preprocessedParameters.getPerception() != null) {
-			return translatePerceptionInt(preprocessedParameters.getBeliefBase(), 
+			return translatePerceptionImpl(preprocessedParameters.getBeliefBase(), 
 					preprocessedParameters.getPerception());
 		} else if(preprocessedParameters.getInformation() != null) {
-			return translateNLPInt(preprocessedParameters.getBeliefBase(), 
+			return translateNLPImpl(preprocessedParameters.getBeliefBase(), 
 					preprocessedParameters.getInformation());
 		}
 		return null;
@@ -52,14 +60,14 @@ public abstract class BaseTranslator
 	/**
 	 * Translates the given perception in a belief base only containing the knowledge 
 	 * encoded in the Perception. This method ensures that the operator callstack is updated
-	 * but the real work is done in the translatePerceptionInt method. 
+	 * but the real work is done in the translatePerceptionImpl() method. 
 	 * @param caller	The BaseBeliefbase which acts as caller.
 	 * @param p			The Perception which shall be translated into a BaseBeliefbase.
 	 * @return			A BaseBeliefbase containing the information encoded in the Perception.
 	 */
 	public BaseBeliefbase translatePerception(BaseBeliefbase caller, Perception p) {
 		caller.getStack().pushOperator(this);
-		BaseBeliefbase reval = translatePerceptionInt(caller, p);
+		BaseBeliefbase reval = translatePerceptionImpl(caller, p);
 		caller.getStack().popOperator();
 		return reval;
 	}
@@ -67,11 +75,22 @@ public abstract class BaseTranslator
 	/**
 	 * Sub classes implement this method to translate a Perception into a sub class of
 	 * BaseBeliefbase.
+	 * 
+	 * Angerona's default package uses {@link SpeechAct} as communication actions. There are
+	 * requesting speech-acts like {@link Query} or {@link Justify} and informative speech-acts
+	 * like {@link Inform}, {@link Justification} and {@link Answer}. They have in common that
+	 * they store a set of information as first order formulas. But {@link Answer} is special
+	 * because it also stores more semantically information in form of a {@link AnswerValue}.
+	 * Thats why it is highly recommended to investigate the {@link SpeechAct} interface and at
+	 * least the {@link Answer} and the {@link Query} speech-act before implementing this
+	 * method on your own.
+	 * 
+	 * 
 	 * @param caller	The BaseBeliefbase which acts as caller.
 	 * @param p			The Perception which shall be translated into a BaseBeliefbase.
 	 * @return			A BaseBeliefbase instance containing the knowledge encapsulated in p.
 	 */
-	protected abstract BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p);
+	protected abstract BaseBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p);
 	
 	/**
 	 * Translates the given FOL formula in a BaseBeliefbase that only contains the knowledge
@@ -123,7 +142,7 @@ public abstract class BaseTranslator
 	 */
 	public BaseBeliefbase translateNLP(BaseBeliefbase caller, NLPProgram program) {
 		caller.getStack().pushOperator(this);
-		BaseBeliefbase reval = translateNLPInt(caller, program);
+		BaseBeliefbase reval = translateNLPImpl(caller, program);
 		caller.getStack().popOperator();
 		return reval;
 	}
@@ -135,17 +154,11 @@ public abstract class BaseTranslator
 	 * @param program	A NLP-program containing the information which shall be translated.
 	 * @return A BaseBeliefbase containing the knowledge encoded in the set of FolFormula.
 	 */
-	protected abstract BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program);
+	protected abstract BaseBeliefbase translateNLPImpl(BaseBeliefbase caller, NLPProgram program);
 	
 	
 	@Override
 	protected TranslatorParameter getEmptyParameter() {
 		return new TranslatorParameter();
-	}
-
-	@Override
-	protected BaseBeliefbase defaultReturnValue() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

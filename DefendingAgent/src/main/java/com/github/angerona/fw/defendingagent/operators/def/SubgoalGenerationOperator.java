@@ -55,7 +55,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	 * Processes current desires and breaks them down into subgoals using the censor component.
 	 */
 	@Override
-	protected Boolean processInternal(PlanParameter pp) {
+	protected Boolean processImpl(PlanParameter pp) {
 		LOG.info("Run Default-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
 		Desires des = ag.getComponent(Desires.class);

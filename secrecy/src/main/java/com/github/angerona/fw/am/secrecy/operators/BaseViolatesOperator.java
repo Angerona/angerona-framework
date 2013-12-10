@@ -59,7 +59,7 @@ public abstract class BaseViolatesOperator
 		return new ViolatesResult(true);
 	}
 	
-	protected ViolatesResult processInternal(EvaluateParameter param) {
+	protected ViolatesResult processImpl(EvaluateParameter param) {
 		ViolatesResult reval = null;
 		
 		/* try to find calculation in cache:

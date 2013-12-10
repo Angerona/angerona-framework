@@ -9,7 +9,6 @@ import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.translators.clnlp.ClNLPTranslator;
 import net.sf.tweety.lp.nlp.syntax.NLPProgram;
-import net.sf.tweety.lp.nlp.syntax.NLPRule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,7 @@ public class ConditionalTranslator extends BaseTranslator {
 	 * belief base.
 	 */
 	@Override
-	protected BaseBeliefbase translatePerceptionInt(BaseBeliefbase caller, Perception p) {
+	protected BaseBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
 		Set<FolFormula>  formulas = new HashSet<FolFormula>();
 		
@@ -72,7 +71,7 @@ public class ConditionalTranslator extends BaseTranslator {
 	 * Each formula is interpreted as one propositional literal.
 	 */
 	@Override
-	protected BaseBeliefbase translateNLPInt(BaseBeliefbase caller, NLPProgram program) {
+	protected BaseBeliefbase translateNLPImpl(BaseBeliefbase caller, NLPProgram program) {
 		ConditionalBeliefbase reval = new ConditionalBeliefbase();
 		
 		// uncomment the following line if all nlp-rules should be
@@ -98,6 +97,11 @@ public class ConditionalTranslator extends BaseTranslator {
 		}
 		
 		return reval;
+	}
+
+	@Override
+	protected ConditionalBeliefbase defaultReturnValue() {
+		return new ConditionalBeliefbase();
 	}
 
 }

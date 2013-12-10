@@ -90,8 +90,8 @@ public class AspReasoner extends BaseReasoner {
 	}
 	
 	@Override
-	protected Pair<Set<FolFormula>, AngeronaAnswer> queryInt(ReasonerParameter params) {		
-		Set<FolFormula> answers = inferInt(params);
+	protected Pair<Set<FolFormula>, AngeronaAnswer> queryImpl(ReasonerParameter params) {		
+		Set<FolFormula> answers = inferImpl(params);
 		AnswerValue av = AnswerValue.AV_UNKNOWN;
 
 		FolFormula query = params.getQuery();
@@ -156,7 +156,7 @@ public class AspReasoner extends BaseReasoner {
 
 	/** @todo The code in the literal loop is mostly conversion. Logic conversion module? */
 	@Override
-	protected Set<FolFormula> inferInt(ReasonerParameter params) {
+	protected Set<FolFormula> inferImpl(ReasonerParameter params) {
 		List<AnswerSet> answerSets = processAnswerSets((AspBeliefbase)params.getBeliefBase());
 		
 		if(answerSets == null) {

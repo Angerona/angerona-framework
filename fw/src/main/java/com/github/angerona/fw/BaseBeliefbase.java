@@ -177,7 +177,7 @@ public abstract class BaseBeliefbase
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);
 		
-		parseInt(br);
+		parseImpl(br);
 	}
 	
 	/**
@@ -188,32 +188,20 @@ public abstract class BaseBeliefbase
 	 * @throws IOException
 	 */
 	public void parse(BufferedReader br) throws ParseException, IOException {
-		parseInt(br);
+		parseImpl(br);
 	}
 	
 	/**
 	 * The internal parse function for the belief base.
 	 * Sub classes must implement this method to parse a string representation into a 
 	 * belief base living in memory.
-	 * Because the belief base files of Angerona contain multiple belief bases the content
-	 * of the file is split for each belief base by a parser which is called pior parseInt.
-	 * Therefore the content in the BufferedReader is the content of one belief base in such
-	 * a belief base file which is defined between '{' '}'. 
-	 * Example Beliefbase File:
-	 * World {
-	 *   a. b.
-	 * } view->other {
-	 *   b. c.
-	 * }
-	 * Such a file would cause two calls on parseInt methods on different instances of belief
-	 * bases. The first would get the String '  a. b.' the second '  b. c.' as content of its
-	 * BufferedReader.
+	 * 
 	 * @param br	The content representing the belief base. It is encapsulated by
 	 * 				a BufferedReader to read from a file for example.
 	 * @throws IOException 
 	 * @throws ParserException 
 	 */
-	protected abstract void parseInt(BufferedReader br) throws ParseException, IOException;
+	protected abstract void parseImpl(BufferedReader br) throws ParseException, IOException;
 	
 	/**
 	 * Adds the given set of FOL formulas to the knowledge of the belief base.
@@ -357,13 +345,14 @@ public abstract class BaseBeliefbase
 	}
 	
 	/** 
-	 * gets the content of the belief base in string representation: Usefull for viewing them in UIs for example.
+	 * gets the content of the belief base in string representation: Useful for viewing them in UIs for example.
 	 * Subclasses have to implement the method. For every entry in the belief base like a fact, a rule or a conditional
 	 * a string has to be added to the list of strings which is returned.
+	 * 
 	 * @return a list of strings representing the content of the belief base.
 	 * @todo Think about a more complex object which could map to the belief base for example.
 	 */
-	public abstract List<String> getAtoms();
+	public abstract List<String> getAtomsAsStringList();
 	
 	/** 
 	 * @return 	An empty String until isQueryValid returns false the first time. Then it contains the reason why the last

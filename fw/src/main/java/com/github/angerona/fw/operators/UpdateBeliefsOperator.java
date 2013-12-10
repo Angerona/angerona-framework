@@ -36,7 +36,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 	private static Logger LOG = LoggerFactory.getLogger(UpdateBeliefsOperator.class);
 	
 	@Override
-	protected Beliefs processInternal(EvaluateParameter param) {
+	protected Beliefs processImpl(EvaluateParameter param) {
 		LOG.info("Run Default-Update-Beliefs-Operator");
 		
 		if(param.getAgent().getName().equals("alice")) {

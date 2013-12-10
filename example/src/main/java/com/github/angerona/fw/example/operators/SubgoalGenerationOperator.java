@@ -48,7 +48,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 	private static Logger LOG = LoggerFactory.getLogger(SubgoalGenerationOperator.class);
 	
 	@Override
-	protected Boolean processInternal(PlanParameter pp) {
+	protected Boolean processImpl(PlanParameter pp) {
 		LOG.info("Run Default-Subgoal-Generation");
 		Agent ag = pp.getActualPlan().getAgent();
 

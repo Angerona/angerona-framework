@@ -37,7 +37,7 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	public static final IdGenerator desireIds = new IdGenerator();
 	
 	@Override
-	protected Integer processInternal(GenerateOptionsParameter param) {
+	protected Integer processImpl(GenerateOptionsParameter param) {
 		LOG.info("Run Censor-Generate-Options-operator");
 		
 		FOLAtom ad = null;

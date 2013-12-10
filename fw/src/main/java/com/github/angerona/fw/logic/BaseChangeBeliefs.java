@@ -25,7 +25,7 @@ public abstract class BaseChangeBeliefs
 	public static final String OPERATION_TYPE = "ChangeBeliefs";
 	
 	@Override
-	protected abstract BaseBeliefbase processInternal(ChangeBeliefbaseParameter in);
+	protected abstract BaseBeliefbase processImpl(ChangeBeliefbaseParameter in);
 	
 	@Override
 	protected ChangeBeliefbaseParameter getEmptyParameter() {

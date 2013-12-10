@@ -72,7 +72,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	 * FACT        ::= PLLITERAL
 	 */
 	@Override
-	protected void parseInt(BufferedReader br) throws ParseException,
+	protected void parseImpl(BufferedReader br) throws ParseException,
 			IOException {
 		log.info("parsing conditional belief base");
 		propositions = new HashSet<PropositionalFormula>();
@@ -133,7 +133,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	 * for debugging purposes.
 	 */
 	@Override
-	public List<String> getAtoms() {
+	public List<String> getAtomsAsStringList() {
 		List<String> retval = new LinkedList<String>();
 		retval.add("propositions: ");
 		for(PropositionalFormula proposition : propositions) {
