@@ -2,13 +2,24 @@ package com.github.angerona.fw.am.secrecy.operators;
 
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
+import com.github.angerona.fw.logic.Desires;
 import com.github.angerona.fw.operators.Operator;
 import com.github.angerona.fw.util.Pair;
 
 
 /**
- * Base class for option generation operators.
- * It creates a set of formulas which represent the new agent desires.
+ * Base class for option generation operators, sub-classes of this class
+ * are responsible to generate the agents' desires.
+ * 
+ * Subclasses might depend on the {@link Desires} component of the agent and adapt this
+ * component.
+ * 
+ * It input parameters contain the perception of the current tick, such that
+ * the operator can react to the current perceived perceptions.
+ * 
+ * The operator outputs an integer that represents the count of newly generated
+ * desires.
+ *
  * @author Tim Janus
  */
 public abstract class BaseGenerateOptionsOperator extends 
