@@ -39,13 +39,39 @@ public class ViolatesOperator extends BaseViolatesOperator {
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
 	
-	/** The ViolatesResult reference used internally if working on a plan in mental state */
+	/** 
+	 * The ViolatesResult reference used internally if working on a plan in mental state 
+	 * @todo move into parameter structure to fulfill state-less constraint for multi threading */
 	private ViolatesResult violates;
 	
 	@Override
-	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
-		LOG.info("Run Default-ViolatesOperator");
+	protected ViolatesResult onAction(Action action, EvaluateParameter param) {
+		// only apply violates if secrecy knowledge is saved in agent.
+		SecrecyKnowledge conf = param.getAgent().getComponent(SecrecyKnowledge.class);
+		if(conf == null)
+			return new ViolatesResult();
 		
+		/// @todo: Check if the linked environment generates perceptions for this action
+		///			and then also proof violates for those peceptions.
+		
+		Beliefs beliefs = param.getBeliefs();
+		Beliefs newBeliefs = beliefs.clone();
+		
+		ViolatesResult reval = new ViolatesResult();
+		addMetaInformation(newBeliefs, param);
+		for(String viewName : param.getAgent().getEnvironment().getAgentNames()) {
+			if(viewName.equals(param.getAgent().getName())) {
+				continue;
+			}
+			
+			reval = reval.combine(violates(beliefs, newBeliefs, param, viewName));
+		}
+		
+		return reval;
+	}
+	
+	@Override
+	protected ViolatesResult onPerception(Perception percept, EvaluateParameter param) {
 		// only apply violates if secrecy knowledge is saved in agent.
 		SecrecyKnowledge conf = param.getAgent().getComponent(SecrecyKnowledge.class);
 		if(conf == null)
@@ -53,31 +79,38 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		Agent ag = param.getAgent();
 		Beliefs beliefs = param.getBeliefs();
-		Action p = (Action) param.getAtom();
 		
 		// use cloned beliefs to generate new beliefs:
 		Beliefs newBeliefs = ag.updateBeliefs(percept, beliefs.clone());
+		addMetaInformation(newBeliefs, param);
 		
-		// add meta information about time as described by Krümpelmann in MATES
-		int futureTick = ag.getEnvironment().getSimulationTick() + newBeliefs.getCopyDepth();
-		FOLAtom metaTime = new FOLAtom(new Predicate("mi_time", 1));
-		metaTime.addArgument(new NumberTerm(futureTick));
-		newBeliefs.addGlobalKnowledge(metaTime);
+		// TODO: Check if other views are invalid, (because of meta information for example)
+		ViolatesResult reval = violates(beliefs, newBeliefs, param, percept.getReceiverId());
+		
+		if(reval.isAlright())
+			param.report("No violation applying the perception/action: '" + percept + "'");
+		else
+			param.report("Violation by appling the perception/action: '" + percept + "'");
+		return reval;
+	}
+	
+	private ViolatesResult violates(Beliefs beliefs, Beliefs newBeliefs, EvaluateParameter param, String viewName) {
+		SecrecyKnowledge conf = param.getAgent().getComponent(SecrecyKnowledge.class);
 		
 		
 		Map<String, BaseBeliefbase> views = param.getBeliefs().getViewKnowledge();
-		BaseBeliefbase origView = beliefs.getViewKnowledge().get(p.getReceiverId());
-		BaseBeliefbase view = newBeliefs.getViewKnowledge().get(p.getReceiverId()); 
+		BaseBeliefbase origView = beliefs.getViewKnowledge().get(viewName);
+		BaseBeliefbase view = newBeliefs.getViewKnowledge().get(viewName); 
 		
 		boolean alright = true;
-		if(views.containsKey(p.getReceiverId())) {
+		if(views.containsKey(viewName)) {
 			for(Pair<String, Map<String, String>> reasoningOperator : conf.getSecretsByReasoningOperator().keySet()) {
 				
 				// Infer only once with the ReasoningOperator defined by the pair.
 				Set<FolFormula> origInfere = origView.infere(reasoningOperator.first, reasoningOperator.second);
 				Set<FolFormula> cloneInfere = view.infere(reasoningOperator.first, reasoningOperator.second);
 				for(Secret secret : conf.getSecretsByReasoningOperator().get(reasoningOperator)) {
-					if(secret.getSubjectName().equals(p.getReceiverId())) {
+					if(secret.getSubjectName().equals(viewName)) {
 						// Check for false positives first, output an warning, because secret weakening was not applied correctly then
 						boolean inOrig = origInfere.contains(secret.getInformation());
 						if(inOrig) {
@@ -95,15 +128,22 @@ public class ViolatesOperator extends BaseViolatesOperator {
 				}
 			}
 		}
+		
 		ViolatesResult reval = new ViolatesResult(alright);
 		reval.setBeliefs(newBeliefs);
-		
-		if(alright)
-			param.report("No violation applying the perception/action: '" + percept + "'");
-		else
-			param.report("Violation by appling the perception/action: '" + percept + "'");
 		return reval;
 	}
+
+	public void addMetaInformation(Beliefs newBeliefs, EvaluateParameter param) {
+		// add meta information about time as described by Krümpelmann in MATES
+		int futureTick = param.getAgent().getEnvironment().getSimulationTick();
+		futureTick += newBeliefs.getCopyDepth();
+		
+		FOLAtom metaTime = new FOLAtom(new Predicate("mi_time", 1));
+		metaTime.addArgument(new NumberTerm(futureTick));
+		newBeliefs.addGlobalKnowledge(metaTime);
+	}
+	
 	
 	@Override
 	protected ViolatesResult onPlan(PlanElement pe, EvaluateParameter param) {

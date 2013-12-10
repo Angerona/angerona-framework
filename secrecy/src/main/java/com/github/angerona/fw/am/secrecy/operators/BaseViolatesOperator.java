@@ -79,6 +79,8 @@ public abstract class BaseViolatesOperator
 			reval = onPerception(p, param);
 		} else if(atom instanceof PlanElement) {
 			reval = onPlan((PlanElement)atom, param);
+		} else if(atom instanceof Action) { 
+			reval = onAction((Action)atom, param);
 		} else if(atom == null) {
 			reval = onCheck(param.getAgent(), param.getBeliefs());
 		}
@@ -90,6 +92,8 @@ public abstract class BaseViolatesOperator
 		}
 		throw new NotImplementedException("Violates is not implemeted for Action of type: " + atom.getClass().getSimpleName());
 	}
+	
+	protected abstract ViolatesResult onAction(Action action, EvaluateParameter param);
 	
 	/**
 	 * Is called by the processInt method when an perception like Query or Answer was given for violation checking.

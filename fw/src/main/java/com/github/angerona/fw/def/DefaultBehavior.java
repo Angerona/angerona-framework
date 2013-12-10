@@ -14,6 +14,7 @@ import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.EnvironmentBehavior;
 import com.github.angerona.fw.Perception;
+import com.github.angerona.fw.comm.SpeechAct;
 
 /**
  * Behavior implementing the default Angerona environment behavior.
@@ -38,8 +39,13 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	public void sendAction(AngeronaEnvironment env, Action act) {
 		// The action send by one agent is the perception of the other one.
 		somethingHappens = true;
-		String agentName = act.getReceiverId();
-		localDelegate(env, act, agentName);
+		
+		// forward the action if it can be perceived by other agents
+		if(act instanceof Perception) {
+			Perception per = (Perception) act;
+			String agentName = per.getReceiverId();
+			localDelegate(env, per, agentName);
+		}
 	}
 
 	@Override
@@ -55,7 +61,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	 * @param agentName
 	 */
 	protected void localDelegate(AngeronaEnvironment env, Perception percept, String agentName) {
-		if(Action.ALL.equals(agentName)) {
+		if(SpeechAct.ALL.equals(agentName)) {
 			for(Agent agent : env.getAgents()) {
 				agent.perceive(percept);
 			}

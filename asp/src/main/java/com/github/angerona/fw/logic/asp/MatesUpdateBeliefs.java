@@ -90,7 +90,8 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 		}
 		
 		if(working.getCopyDepth() == 0) {
-			param.getAgent().onUpdateBeliefs((Perception)param.getAtom(), oldBeliefs);
+			Perception p = (param.getAtom() instanceof Perception ? (Perception)param.getAtom() : null);
+			param.getAgent().onUpdateBeliefs(p, oldBeliefs);
 		}
 		
 		return working;

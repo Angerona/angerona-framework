@@ -4,13 +4,12 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.Skip;
 import com.github.angerona.fw.Subgoal;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
-import com.github.angerona.fw.comm.Answer;
 import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.example.operators.scm.StrikeCommitteePlanner;
 import com.github.angerona.fw.logic.AngeronaAnswer;
-import com.github.angerona.fw.logic.AnswerValue;
 
 /**
  * This {@link MatesPlanner} extends the {@link StrikeCommitteePlanner} by a
@@ -35,11 +34,11 @@ public class MatesPlanner extends StrikeCommitteePlanner {
 			// test if attend_scm is asked
 			if(qPred.getName().equals("attend_scm")) {
 				// and if this is the case react with an rejection:
-				Answer reject = new Answer(ag, q.getSenderId(), q.getQuestion(), 
-						new AngeronaAnswer(q.getQuestion(), AnswerValue.AV_REJECT));
+				//Answer reject = new Answer(ag, q.getSenderId(), q.getQuestion(), 
+				//		new AngeronaAnswer(q.getQuestion(), AnswerValue.AV_REJECT));
 				
 				Subgoal sg = new Subgoal(ag, des);
-				sg.newStack(reject);
+				sg.newStack(new Skip(ag));
 				sg.newStack(answerGoal.getStack(0).get(0));
 				sg.newStack(answerGoal.getStack(1).get(0));
 				

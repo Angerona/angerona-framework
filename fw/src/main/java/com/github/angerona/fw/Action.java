@@ -16,25 +16,16 @@ import com.github.angerona.fw.reflection.ContextProvider;
  */
 public class Action 
 	extends Intention 
-	implements Perception, ContextProvider {
+	implements AngeronaAtom, ContextProvider {
 
 	/** the unique name of the sender of the action **/
 	@Element(name="sender")
 	private String sender;
 	
-	/** the unique name of the receiver of the action, might be null or sender in later implementations */
-	@Element(name="receiver")
-	private String receiver;
-
-	/** this field is used if the action should be received by every agent in the network */
-	public static final String ALL = "__ALL__";
-	
 	/** Ctor used for deserialization */
-	public Action(	@Element(name="sender") String senderId, 
-					@Element(name="receiver") String receiverId ) {
+	public Action(	@Element(name="sender") String senderId ) {
 		super((Agent) null);
 		this.sender = senderId;
-		this.receiver = receiverId;
 	}
 	
 	/**
@@ -42,10 +33,9 @@ public class Action
 	 * @param sender	unique name of the sender of the action
 	 * @param receiver	unique name of the receiver of the action, static member ALL means everyone receives this action
 	 */
-	public Action(Agent sender, String receiver) {
+	public Action(Agent sender) {
 		super(sender);
 		this.sender = sender.getName();
-		this.receiver = receiver;
 	}
 	
 	/**	@return the unique name of the sender */
@@ -53,42 +43,14 @@ public class Action
 		return sender;
 	}
 	
-	/** @return the unique name of the receiver, the static member ALL means everyone should receive this action */
-	public String getReceiverId() {
-		return receiver;
-	}
-	
 	@Override
 	public String toString() {
-		return "A: " + sender + " --> " + receiver;
+		return "Action '" + this.getClass().getSimpleName() + "' by '" + sender + "'" ;
 	}
 	
 	@Override
 	public Context getContext() {
 		return ContextFactory.createContext(this);
-	}
-	//************Begin Daniel's changes*************//
-	@Override
-	public boolean equals(Object obj)
-	{
-		if(!(obj instanceof Action)) 
-			return false;
-		
-		Action a = (Action)obj;
-		if(!this.sender.equals(a.sender)) {
-			return false;
-		}
-		if(!this.receiver.equals(a.receiver))
-		{
-			return false;
-		}
-		return true;
-	}
-	//************End Daniel's changes*************//
-
-	@Override
-	public int hashCode() {
-		return (sender.hashCode() + receiver.hashCode()) * 29;
 	}
 	
 	@Override

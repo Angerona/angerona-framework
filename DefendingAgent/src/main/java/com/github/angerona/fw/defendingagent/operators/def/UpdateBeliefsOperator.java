@@ -3,10 +3,10 @@ package com.github.angerona.fw.defendingagent.operators.def;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.angerona.fw.Action;
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.comm.Answer;
+import com.github.angerona.fw.comm.SpeechAct;
 import com.github.angerona.fw.defendingagent.View;
 import com.github.angerona.fw.defendingagent.ViewDataComponent;
 import com.github.angerona.fw.defendingagent.comm.RevisionAnswer;
@@ -34,7 +34,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		Beliefs beliefs = param.getBeliefs();
 		Beliefs oldBeliefs = (Beliefs)param.getBeliefs().clone();
 		String id = param.getAgent().getName();
-		Action act = (Action)param.getAtom();
+		SpeechAct act = (SpeechAct)param.getAtom();
 		if(act == null) {
 			return beliefs;
 		}

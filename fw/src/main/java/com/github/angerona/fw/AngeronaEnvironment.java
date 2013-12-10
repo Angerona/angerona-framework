@@ -198,7 +198,7 @@ public class AngeronaEnvironment  {
 		// file to the environment.
 		for(Perception p : config.getPerceptions()) {
 			if(p instanceof Action) {
-				this.sendAction(p.getReceiverId(), (Action)p);
+				this.sendAction((Action)p);
 			}
 		}
 		
@@ -331,7 +331,7 @@ public class AngeronaEnvironment  {
 		Angerona.getInstance().onSimulationDestroyed(this);
 	}
 	
-	public void sendAction(String agentName, Object action) {
+	public void sendAction(Action action) {
 		behavior.sendAction(this, (Action)action);
 	}
 

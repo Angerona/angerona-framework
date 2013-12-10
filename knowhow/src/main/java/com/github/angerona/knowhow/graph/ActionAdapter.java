@@ -59,7 +59,7 @@ public class ActionAdapter extends Action {
 	private Beliefs curBeliefs;
 	
 	public ActionAdapter(Agent sender, String actionName, List<Parameter> parameters, Perception context) {
-		super(sender, Action.ALL);
+		super(sender);
 		this.actionName = actionName;
 		this.parameters = parameters;
 		this.context = context;

@@ -39,7 +39,7 @@ import com.github.angerona.fw.operators.OperatorCallWrapper;
 import com.github.angerona.fw.operators.OperatorCaller;
 import com.github.angerona.fw.operators.OperatorProvider;
 import com.github.angerona.fw.operators.OperatorStack;
-import com.github.angerona.fw.operators.parameter.GenericOperatorParameter;
+import com.github.angerona.fw.operators.parameter.EvaluateParameter;
 import com.github.angerona.fw.parser.ParseException;
 import com.github.angerona.fw.reflection.Context;
 import com.github.angerona.fw.reflection.ContextFactory;
@@ -463,7 +463,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		}
 	}
 
-	public Beliefs updateBeliefs(Perception perception) {
+	public Beliefs updateBeliefs(AngeronaAtom perception) {
 		return updateBeliefs(perception, beliefs);
 	}
 
@@ -477,13 +477,12 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 *            The Beliefs used as basis for the update process.
 	 * @return The updated version of the beliefs.
 	 */
-	public Beliefs updateBeliefs(Perception perception, Beliefs beliefs) {
+	public Beliefs updateBeliefs(AngeronaAtom perception, Beliefs beliefs) {
 		if (perception != null) {
 			// save the perception for later use in messaging system.
-			lastUpdateBeliefsPercept = perception;
-			GenericOperatorParameter param = new GenericOperatorParameter(this);
-			param.setParameter("beliefs", beliefs);
-			param.setParameter("information", perception);
+			if(perception instanceof Perception)
+				lastUpdateBeliefsPercept = (Perception)perception;
+			EvaluateParameter param = new EvaluateParameter(this, beliefs, perception);
 			OperatorCallWrapper bubo = operators.getPreferedByType(BaseUpdateBeliefsOperator.OPERATION_NAME);
 			return (Beliefs) bubo.process(param);
 		}
@@ -547,7 +546,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	public void performAction(Action act) {
 		updateBeliefs(act);
 		act.onSubgoalFinished(null);
-		env.sendAction(act.getReceiverId(), act);
+		env.sendAction(act);
 		LOG.info("Action performed: " + act.toString());
 		reporter.report("Action: '" + act.toString() + "' performed.");
 		Angerona.getInstance().onActionPerformed(this, act);

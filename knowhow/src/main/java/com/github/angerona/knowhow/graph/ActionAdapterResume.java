@@ -10,7 +10,7 @@ public class ActionAdapterResume extends Action {
 	private int indexInIntention;
 	
 	public ActionAdapterResume(WorkingPlan plan, GraphIntention parent, int indexInIntetion) {
-		super("", Action.ALL);
+		super("");
 		this.plan = plan;
 		this.parent = parent;
 		this.indexInIntention = indexInIntetion;

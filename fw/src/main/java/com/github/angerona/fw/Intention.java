@@ -1,5 +1,6 @@
 package com.github.angerona.fw;
 
+import com.github.angerona.fw.internal.IdGenerator;
 import com.github.angerona.fw.listener.SubgoalListener;
 
 /**
@@ -19,6 +20,15 @@ public abstract class Intention implements SubgoalListener {
 
 	/** the parent intention of this instance */
 	protected Intention parent;
+	
+	/** 
+	 * an id used to identify the object, this is important because otherwise 
+	 * equals() and hashCode() cannot resolute the parent / child relation.
+	 */
+	private long objectId;
+	
+	/** the intention specific id generator */
+	private static IdGenerator intentionIdGen = new IdGenerator();
 
 	/**
 	 * Ctor: Creates a new instance of an intention for the given agent.
@@ -26,11 +36,13 @@ public abstract class Intention implements SubgoalListener {
 	 */
 	public Intention(Agent agent) {
 		this.agent = agent;
+		this.objectId = intentionIdGen.getNextId();
 	}
 
 	protected Intention(Intention other) {
 		this.parent = other.parent;
 		this.agent = other.agent;
+		this.objectId = other.objectId;
 	}
 
 	/** @return reference to the agent owning this Intention */
@@ -76,5 +88,36 @@ public abstract class Intention implements SubgoalListener {
 	/** @return true if this is the high level plan of an agent. */
 	public boolean isPlan() {
 		return parent == null;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((agent == null) ? 0 : agent.hashCode());
+		result = (int) (prime * result + ((parent == null) ? 0 : parent.objectId));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Intention other = (Intention) obj;
+		if (agent == null) {
+			if (other.agent != null)
+				return false;
+		} else if (!agent.equals(other.agent))
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (parent.objectId != other.parent.objectId)
+			return false;
+		return true;
 	}
 }

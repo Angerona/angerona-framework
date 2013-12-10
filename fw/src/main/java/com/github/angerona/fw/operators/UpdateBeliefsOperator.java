@@ -125,8 +125,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				bb = beliefs.getViewKnowledge().get(i.getReceiverId());
 				bb.addKnowledge(i);
 				param.report(out + "sender adapt view on '" + i.getReceiverId() + "'", bb);
-			}
-			
+			}			
 		} else if (param.getAtom() instanceof Justification) {
 			Justification j = (Justification) param.getAtom();
 			BaseBeliefbase bb = null;
@@ -136,7 +135,7 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 				param.report("Justification as receiver (1. update view->" + j.getSenderId() + ")", bb);
 				bb = beliefs.getWorldKnowledge();
 				bb.addKnowledge(j.getJustifications());
-				param.report("Justification as receiver (2. update world-knowledge.)", bb);
+				param.report("Justification as receiver (2. update world-knowledge)", bb);
 			} else {
 				bb = beliefs.getViewKnowledge().get(j.getReceiverId());
 				bb.addKnowledge(j.getJustifications());
