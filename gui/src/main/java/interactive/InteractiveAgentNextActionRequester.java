@@ -15,7 +15,7 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 		this.environment = environment;
 	}
 	@Override
-	public synchronized boolean request() {
+	public synchronized void request() {
 		AngeronaWindow.get().getMainWindow().setEnabled(false);
 		final InteractiveBarMVPComponent barMVPComponent= new InteractiveBarMVPComponent(environment, Thread.currentThread());
 			javax.swing.SwingUtilities.invokeLater(new Runnable(){
@@ -27,12 +27,14 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 				}
 			});
 		try {
-			wait();
+			while(((InteractiveBar) barMVPComponent.getPanel()).getFrame().isDisplayable()){
+				wait();
+			}			
 		} catch (InterruptedException e) {
 			// expected interrupt, do nothing
 		}
 		AngeronaWindow.get().getMainWindow().setEnabled(true);
-		return barMVPComponent.getHasAction();
+		//return barMVPComponent.getHasAction();
 	}
 
 }

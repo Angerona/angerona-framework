@@ -15,13 +15,12 @@ import com.github.angerona.fw.gui.base.ViewComponent;
 public class InteractiveBarMVPComponent implements ViewComponent {
 
 	private InteractiveBar view;
-	private InteractivePresenter presenter;
 
 	
 	public InteractiveBarMVPComponent(AngeronaEnvironment simulationEnvironment, Thread caller) {
 		InteractiveModelAdapter modelAdapter = new InteractiveModelAdapter(simulationEnvironment);
 		view = new InteractiveBar(modelAdapter.getReceiver(), modelAdapter.getActionTypes());
-		presenter = new InteractivePresenter(modelAdapter, view, caller);
+		new InteractivePresenter(modelAdapter, view, caller);
 	}
 	
 	@Override
@@ -34,10 +33,6 @@ public class InteractiveBarMVPComponent implements ViewComponent {
 		dockable.setTitleText("Interactive View");
 		dockable.setTitleIcon(AngeronaWindow.get().getIcons().get("monitor"));
 		
-	}
-	
-	public boolean getHasAction(){
-		return presenter.getHasAction();
 	}
 
 }

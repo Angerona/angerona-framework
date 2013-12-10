@@ -36,7 +36,7 @@ public class Prover {
 	/**
 	 * The following object is used to interact with the SICStus Prolog kernel
 	 * */
-	private static SICStus sp;
+	private static SICStus sp = null;
 
 	
 	/**
@@ -58,6 +58,7 @@ public class Prover {
 				if (sp == null) {
 					/* Instantiating a SICStus object */
 					try {
+						System.out.println("initialising sicstus runtime engine");
 						sp = new SICStus();
 					} catch (SPException e) {
 						// TODO Auto-generated catch block
@@ -93,6 +94,7 @@ public class Prover {
 				result = runProver(input.kFormulas, input.formulaToProve, input.chooseInferenceSystem);
 				} catch(Exception e) {
 					try {
+						e.printStackTrace();
 						outputQueue.put(e);
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
@@ -134,6 +136,7 @@ public class Prover {
 		
 		ProverInput input = new ProverInput(kFormulas, formulaToProve, chooseInferenceSystem);
 		
+		
 		try {
 			inputQueue.put(input);
 		} catch (InterruptedException e1) {
@@ -169,6 +172,7 @@ public class Prover {
 	 *            RATIONAL - Rational logic, 
 	 *            FREE_RATIONAL - Rational logic with free variables
 	 * @return true if formulaToProve can be inferred from kFormulas, false otherwise
+	 * @throws Exception 
 	 */
 	public static boolean runProver(List<String> kFormulas, String formulaToProve,
 			InferenceSystem chooseInferenceSystem) throws Exception {
@@ -177,27 +181,48 @@ public class Prover {
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 
 		/* Initialize the SICStus Prolog engine */
-		try {
+//		try {
 			/* Parameter 1 determines the KLM logic to consider */
+			
 			switch (chooseInferenceSystem) {
 			case CUMMULATIV: {
-				sp.restore("resources/tct.sav");
+				try {
+					sp.restore("resources/tct.sav");
+				} catch (SPException e) {
+					System.err.println("Error on restore file: " + e.toString() + " " + e.getMessage());
+				}
 				break;
 			}
 			case LOOP_CUMMULATIV: {
-				sp.restore("resources/tclt.sav");
+				try {
+					sp.restore("resources/tclt.sav");
+				} catch (SPException e) {
+					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+				}
 				break;
 			}
 			case PREFERENTIAL: {
-				sp.restore("resources/tpt.sav");
+				try {
+					sp.restore("resources/tpt.sav");
+				} catch (SPException e) {
+					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+				}
 				break;
 			}
 			case RATIONAL: {
-				sp.restore("resources/trt.sav");
+				try {
+					sp.restore("resources/trt.sav");
+				} catch (SPException e) {
+					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+				}
 				break;
 			}
 			case FREE_RATIONAL: {
-				sp.restore("resources/trtfree.sav");
+				try {
+					sp.restore("resources/trtfree.sav");
+				} catch (SPException e) {
+					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+				}
 				break;
 			}
 			}
@@ -221,10 +246,28 @@ public class Prover {
 			kBaseList = kBaseList + "]";
 			String goal = new String("parseinput(" + kBaseList + ").");
 			System.out.println("Prover input: " + goal + ", map: "+ map);
-			q = sp.openPrologQuery(goal, map);
-			if (!(q.nextSolution())) {
-				System.err
-						.println("Error in the knowledge base: you cannot use nested conditionals");
+			
+			try {
+//				q = sp.openPrologQuery(goal, map);
+				q = sp.openQuery(goal, null);
+			} catch (SPException e) {
+				System.err.println("Error on open Query: " + e.toString() + " " + e.getMessage() );
+				throw e;
+			}
+			try {
+				if (!(q.nextSolution())) {
+					System.err
+							.println("Error in the knowledge base: you cannot use nested conditionals");
+				}
+			} catch (NoSuchMethodException e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
+			} catch (InterruptedException e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
+			} catch (Exception e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
 			}
 
 			/* Step 2: formulas to prove base must be in the KLM language */
@@ -232,10 +275,26 @@ public class Prover {
 
 			goal = new String("parseinput(" + toProveList + ").");
 			System.out.println("GOAL: "+goal);
-			q = sp.openPrologQuery(goal, map);
-			if (!(q.nextSolution())) {
-				System.err
-						.println("Error in the formula to prove: you cannot use nested conditionals");
+			try {
+				q = sp.openPrologQuery(goal, map);
+			} catch (SPException e) {
+				System.err.println("Error on open Query: " + e.toString() + " " + e.getMessage());
+				throw e;
+			}
+			try {
+				if (!(q.nextSolution())) {
+					System.err
+							.println("Error in the formula to prove: you cannot use nested conditionals");
+				}
+			} catch (NoSuchMethodException e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
+			} catch (InterruptedException e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
+			} catch (Exception e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
 			}
 			/*
 			 * Step 3: finding a derivation of the formula from the knowledge
@@ -245,22 +304,39 @@ public class Prover {
 			goal = new String("unsatinterface(" + kBaseList + "," + toProveList
 					+ ",Tree).");
 			System.out.println("kbaselist:" + kBaseList);
-			q = sp.openPrologQuery(goal, map);
-			if (q.nextSolution()) {
-				q.close();
-				return true;
+			try {
+				q = sp.openPrologQuery(goal, map);
+			} catch (SPException e) {
+				System.err.println("Error on open Query: " + e.toString() + " " + e.getMessage());
+				throw e;
+			}
+			try {
+				if (q.nextSolution()) {
+					q.close();
+					return true;
 
-			} else {
-				q.close();
-				return false;
+				} else {
+					q.close();
+					return false;
+				}
+			} catch (NoSuchMethodException e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
+			} catch (InterruptedException e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
+			} catch (Exception e) {
+				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				throw e;
 			}
 
-		} catch (Exception choosingKLM) {
-			
-			System.out.println("\nERROR SICStus Prolog engine");
+//		} catch (SPException choosingKLM) {
+//			
+//			
+//			System.out.println("\nERROR SICStus Prolog engine: " + choosingKLM.getMessage());
 //			choosingKLM.printStackTrace();
-			throw choosingKLM;
-			
-		}
+//			throw choosingKLM;
+//			
+//		}
 	}
 }

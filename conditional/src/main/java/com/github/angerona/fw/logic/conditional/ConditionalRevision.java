@@ -61,28 +61,31 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 		conds.addAll(beliefbase.getConditionalBeliefs());
 		
 		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
+		log.info("ConditionalRevision: preparing conditional structures");
 		Long before = System.currentTimeMillis();
 		reasoner.prepare();
 		Long duration = System.currentTimeMillis() - before;
-		System.out.println("Generated in " + duration + "ms:");
-		System.out.println("Conditional Structure:");
-		System.out.println(reasoner.getConditionalStructure());
+		log.info("Generated in " + duration + "ms:");
+		log.debug("Conditional Structure:");
+		log.debug(reasoner.getConditionalStructure().toString());
 		
-		System.out.println("Initial Kappa:");
+		log.debug("Initial Kappa:");
 		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
+			log.debug(kv.fullString());
 		}
 		
+		log.info("processing RuleBasedCReasoner");
 		before = System.currentTimeMillis();
 		reasoner.process();
 		duration = System.currentTimeMillis() - before;
-		System.out.println("Evaluated in " + duration + "ms:");
+		log.info("Evaluated in " + duration + "ms:");
+		log.debug("Initial Kappa:");
 		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
+			log.debug(kv.fullString());
 		}
-		System.out.println("Ranking-Function:");
-		System.out.println(reasoner.getSemantic());
-		System.out.println("");
+		log.debug("Ranking-Function:");
+		log.debug(reasoner.getSemantic().toString());
+		log.debug("");
 		
 		RankingFunction ranking = reasoner.getSemantic();
 	
@@ -118,28 +121,31 @@ public class ConditionalRevision extends BaseChangeBeliefs {
 		conds.addAll(bbase.getConditionalBeliefs());
 		
 		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
+		log.info("ConditionalRevision: preparing conditional structures");
 		Long before = System.currentTimeMillis();
 		reasoner.prepare();
 		Long duration = System.currentTimeMillis() - before;
-		System.out.println("Generated in " + duration + "ms:");
-		System.out.println("Conditional Structure:");
-		System.out.println(reasoner.getConditionalStructure());
+		log.info("Generated in " + duration + "ms:");
+		log.debug("Conditional Structure:");
+		log.debug(reasoner.getConditionalStructure().toString());
 		
-		System.out.println("Initial Kappa:");
+		log.debug("Initial Kappa:");
 		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
+			log.debug(kv.fullString());
 		}
 		
+		log.info("processing RuleBasedCReasoner");
 		before = System.currentTimeMillis();
 		reasoner.process();
 		duration = System.currentTimeMillis() - before;
-		System.out.println("Evaluated in " + duration + "ms:");
+		log.info("Evaluated in " + duration + "ms:");
+		log.debug("Initial Kappa:");
 		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
+			log.debug(kv.fullString());
 		}
-		System.out.println("Ranking-Function:");
-		System.out.println(reasoner.getSemantic());
-		System.out.println("");
+		log.debug("Ranking-Function:");
+		log.debug(reasoner.getSemantic().toString());
+		log.debug("");
 		
 		
 		RankingFunction ranking = reasoner.getSemantic();

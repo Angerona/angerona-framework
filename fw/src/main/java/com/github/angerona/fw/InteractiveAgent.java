@@ -26,13 +26,17 @@ public class InteractiveAgent extends Agent{
 	public boolean hasPerceptions() {
 		if(hasPerception){
 			System.out.println("HasPerception true in Interactive Agent");
-			hasPerception = nextActionRequester.request();
+			nextActionRequester.request();
 		}
 		return hasPerception;
 	}
 	
 	public void setNextActionRequester(NextActionRequester req){
 		this.nextActionRequester = req;
+	}
+	
+	public void setHasPerception(boolean a){
+		this.hasPerception = a;
 	}
 	
 }

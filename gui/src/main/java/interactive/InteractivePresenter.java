@@ -29,7 +29,6 @@ public class InteractivePresenter
 	/** Default Ctor: The user has to call setModel() and setView(). */
 	public InteractivePresenter() {}
 	
-	private boolean hasAction;
 	private Thread caller;
 	
 	private InteractiveAgent a;
@@ -75,15 +74,12 @@ public class InteractivePresenter
 			}
 			if(act != null){
 				a.performAction(act);
-				this.hasAction = true;
+				a.setHasPerception(true);
 				JFrame frame = ((InteractiveBar) view).getFrame();
 				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 			}
-//			else{
-//				this.hasAction = false;
-//			}
 		}else{// FinischButton was pressed
-			this.hasAction = false;
+			a.setHasPerception(false);
 			JFrame frame = ((InteractiveBar) view).getFrame();
 			frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 		}
@@ -103,10 +99,6 @@ public class InteractivePresenter
 	protected void unwireViewEvents() {
 		view.getActionButton().removeActionListener(this);
 		view.getFinButton().removeActionListener(this);
-	}
-	
-	public boolean getHasAction(){
-		return hasAction;
 	}
 
 	@Override
