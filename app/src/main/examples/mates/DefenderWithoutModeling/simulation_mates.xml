@@ -1,13 +1,14 @@
 <simulation-configuration>
-	<name>Strike Committee Meeting (MATES)</name>
+	<name>MATES (SCM) - Defender without Attacker modeling</name>
     <category>scm/mates</category>
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	
 	<agent-instance>
 		<name>Employee</name>
         
-        <agent-config source="config/agents/mates_agent.xml" />         
-        <beliefbase-config source="config/beliefbases/asp_mates_beliefbase.xml" />
+        <agent-config source="config/agents/mates_agent_no_attacker_modeling.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+        <view-config agent="Boss">config/beliefbases/asp_beliefbase.xml</view-config>
         
         <desire>v_Boss(ask_for_excuse)</desire>
         
