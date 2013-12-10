@@ -1,8 +1,10 @@
 package com.github.angerona.fw.example.components;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
@@ -17,6 +19,7 @@ import net.sf.tweety.lp.asp.syntax.DLPNot;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.Rule;
 
+import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.BaseBeliefbase;
@@ -80,19 +83,32 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 	 * 	This method gets called when the component is initialized.
 	 */
 	private void onInit() {
-		// First: Add the attacker modeling to the world knowledge
+		// Prepare a set of all mi_agent(*) facts:
+		Set<DLPAtom> agentFacts = new HashSet<>();
+		for(Agent ag : getAgent().getEnvironment().getAgents()) {
+			DLPAtom agentFact = new DLPAtom("mi_agent", new Constant("a_" + ag.getName()));
+			agentFacts.add(agentFact);
+		}
+		
+		
+		// Add the attacker modeling to the world knowlede
 		BaseBeliefbase world = getAgent().getBeliefs().getWorldKnowledge();
 		if(world instanceof AspBeliefbase) {
 			Program attackerModel = new Program();
 			String name = getAgent().getName();
 			attackerModels.put(name, attackerModel);
 			
-			for(String defender : getAgent().getEnvironment().getAgentNames()) {
-				addAttackerModelling((AspBeliefbase)world, name, new Constant("a_"+defender));
+			// add information about other agents:
+			for(DLPAtom fact : agentFacts) {
+				attackerModel.addFact(fact);
 			}
+			
+			// add attacker modeling
+			addAttackerModelling((AspBeliefbase)world, name);
+			
 		}
 		
-		// Second: Add it to every view:
+		// Add information about agents and attacker modeling to every view:
 		for(Entry<String, BaseBeliefbase> entry : getAgent().getBeliefs().getViewKnowledge().entrySet()) {
 			if(! (entry.getValue() instanceof AspBeliefbase))
 				continue;
@@ -101,7 +117,12 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 			Program attackerModel = new Program();
 			attackerModels.put(entry.getKey(), attackerModel);
 			
-			addAttackerModelling(view, entry.getKey(), new Constant("a_"+getAgent().getName()));
+			for(DLPAtom agentFact : agentFacts) {
+				attackerModel.addFact(agentFact);
+			}
+			
+			// add attacker modeling
+			addAttackerModelling(view, entry.getKey());
 		}	
 	}
 	
@@ -111,7 +132,7 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 	 * @param programKey
 	 * @param defender
 	 */
-	private void addAttackerModelling(AspBeliefbase beliefbase, String programKey, Constant defender) {
+	private void addAttackerModelling(AspBeliefbase beliefbase, String programKey) {
 		// remove attacker modeling first:
 		Program program = attackerModels.get(programKey);
 		beliefbase.getProgram().removeAll(program);
@@ -122,18 +143,22 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 		sensetive.addPremise(new DLPAtom("mi_refused", new Variable("D"), new Variable("V")));
 		program.add(sensetive);
 		
+		// generate the agent terms:
+		Variable attacker = new Variable("A");
+		Variable defender = new Variable("D");
+		
 		// the refuse rule:
 		Rule refuse = new Rule();
 		refuse.setConclusion(new DLPAtom("mi_refused", defender, new Variable("V")));
 		refuse.addPremise(new DLPAtom("mi_sact",
 				new Constant("t_" + Query.class.getSimpleName()), 
-				new Variable("A"),		// sender
+				attacker,			// sender
 				new Variable("V"),		// question
 				new Variable("T1")));	// point in time of question
 		
 		refuse.addPremise(new DLPNot(new DLPAtom("mi_sact",
 				new Constant("t_" + Answer.class.getSimpleName()),
-				defender,		// sender
+				defender,			// sender
 				new Variable("W"),		// information
 				new Variable("T2")		// the the point in time for the answer
 				)));
@@ -142,8 +167,10 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 		int tResponse = 1;
 		refuse.addPremise(new DLPAtom("mi_related", new Variable("V"), new Variable("W")));
 		refuse.addPremise(new DLPAtom("mi_time", new Variable("T2")));
+		refuse.addPremise(new DLPAtom("mi_agent", attacker));
+		refuse.addPremise(new DLPAtom("mi_agent", defender));
 		refuse.addPremise(new Arithmetic("+", new Variable("T1"), new NumberTerm(tResponse), new Variable("T2")));
-		refuse.addPremise(new Comparative("!=", new Variable("A"), defender));
+		refuse.addPremise(new Comparative("!=", new Variable("A"), new Variable("D")));
 		program.add(refuse);
 
 		// the holds rule:
