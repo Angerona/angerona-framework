@@ -51,13 +51,13 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 	public final static GraphPlannerStrategy planningStrategy = new GraphPlanner();
 	
 	@Override
-	protected Boolean processInternal(PlanParameter param) {
+	protected Boolean processImpl(PlanParameter param) {
 		param.report("Using Knowhow for Subgoal Generation.");
 		
 		KnowhowGraph comp = param.getAgent().getComponent(KnowhowGraph.class);
 		if(comp == null) {
 			LOG.warn("Using KnowhowGraphSubgoal without KnowhowGraph data component");
-			return super.processInternal(param);
+			return super.processImpl(param);
 		}
 		ListenableDirectedGraph<GraphNode, DefaultEdge> graph = comp.getGraph();
 		
@@ -99,7 +99,7 @@ public class KnowhowGraphSubgoal extends SubgoalGenerationOperator {
 		if(gen)
 			return true;
 		else
-			return super.processInternal(param);
+			return super.processImpl(param);
 	}
 
 	private boolean translate(List<WorkingPlan> plans, PlanParameter param, Desire des) {

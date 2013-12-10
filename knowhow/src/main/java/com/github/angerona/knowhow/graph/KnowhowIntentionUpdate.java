@@ -39,7 +39,7 @@ public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
 	
 	
 	@Override
-	protected PlanElement processInternal(PlanParameter param) {
+	protected PlanElement processImpl(PlanParameter param) {
 		PlanElement reval = null;
 		
 		// check for desires that have no plan yet:

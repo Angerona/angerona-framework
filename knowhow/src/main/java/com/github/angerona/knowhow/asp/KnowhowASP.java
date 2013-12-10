@@ -60,7 +60,7 @@ public class KnowhowASP extends SubgoalGenerationOperator {
 	private KnowhowASPStrategy lastUsedStrategy;
 	
 	@Override
-	protected Boolean processInternal(PlanParameter param) {
+	protected Boolean processImpl(PlanParameter param) {
 		param.report("Using Knowhow for Subgoal Generation.");
 		
 		boolean gen  = false;
