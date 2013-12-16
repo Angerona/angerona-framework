@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -132,6 +134,7 @@ public class CensorComponent extends BaseAgentComponent {
 			reval = p.prove(knowledgeBase, translate(view.getBeliefSet()) + " => " + translate(formula), inferenceSystem);
 		} catch (SICStusException e) {
 			LOG.error("error on invocation of SICStus prolog engine");
+			JOptionPane.showMessageDialog(null, "Error on invocation of SICStus engine ", "SICStus error", JOptionPane.ERROR_MESSAGE);
 		}
 		report("Calculate sceptical inference of '" + translate(formula) + "' using bbase: " + knowledgeBase + ". Result: " + Boolean.toString(reval));
 		return reval;
@@ -179,6 +182,7 @@ public class CensorComponent extends BaseAgentComponent {
 		} catch (SICStusException e) {
 			e.printStackTrace();
 			LOG.error("error on invocation of SICStus engine", e);
+			JOptionPane.showMessageDialog(null, "Error on invocation of SICStus engine ", "SICStus error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
