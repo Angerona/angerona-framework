@@ -35,7 +35,9 @@ External documentation will be publicized in the near future:
 Articles
 --------
 
-- [The Operator Concept](@ref conceptoperators)
-- [Secrecy aware BDI Agent Model](@ref secrecyawarebdiagentmodel)
+- [The Operator Concept](@ref conceptoperators) 
+- [Secrecy aware BDI Agent Model](@ref secrecyawarebdiagentmodel) 
+- [Concurrency in the Angerona Framework](@ref concurrencyinangerona)
+- [How-to: Implement an GUI-Extension for Angerona](@ref howtoguiextension)
 
  

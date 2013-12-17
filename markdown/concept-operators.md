@@ -14,7 +14,7 @@ Given this information the following conceptual hierarchy can be defined:
 The abstract Base-Class
 -----------------------
 
-@ref angerona.fw.operators.Operator<TCaller extends OperatorCaller, IN extends OperatorParameter, OUT extends Object> 
+@ref com.github.angerona.fw.operators.Operator<TCaller extends OperatorCaller, IN extends OperatorParameter, OUT extends Object> 
 defines the *parent layer* of the conceptual 
 Operator hierarchy. This class provides the following type parameters:
 
@@ -26,10 +26,10 @@ Operator hierarchy. This class provides the following type parameters:
 
 The most important implemented method is process(). There are two overloads:
 1. Using *IN* as argument type, such that this overload is called from code
-2. Using @ref angerona.fw.operators.parameter.GenericOperatorParameter as argument type to call the overload from the @ref ASML scope. 
-   Every operator invocation in @ref ASML generates a @ref angerona.fw.operators.parameter.GenericOperatorParameter instance
+2. Using @ref com.github.angerona.fw.operators.parameter.GenericOperatorParameter as argument type to call the overload from the @ref ASML scope. 
+   Every operator invocation in @ref ASML generates a @ref com.github.angerona.fw.operators.parameter.GenericOperatorParameter instance
    that has to be transformed into the type given by *IN*. Therefore the interface @ref angerona.fw.operators.parameter.OperatorParameter,
-   that is defined implemented by *IN* defines a method @ref angerona.fw.operators.parameter.OperatorParameter.fromGenericParameter().
+   that is defined implemented by *IN* defines a method @ref com.github.angerona.fw.operators.parameter.OperatorParameter.fromGenericParameter().
 process() is defined in the abstract base-class and calls processInternal() that shall be overridden
 by sub-classes in the third, the implementation, layer.
 
