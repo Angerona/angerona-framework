@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 
+import javax.swing.JOptionPane;
+
 import se.sics.jasper.Query;
 import se.sics.jasper.SICStus;
 import se.sics.jasper.SPException;
@@ -190,6 +192,7 @@ public class Prover {
 					sp.restore("resources/tct.sav");
 				} catch (SPException e) {
 					System.err.println("Error on restore file: " + e.toString() + " " + e.getMessage());
+					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -198,6 +201,7 @@ public class Prover {
 					sp.restore("resources/tclt.sav");
 				} catch (SPException e) {
 					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -206,6 +210,7 @@ public class Prover {
 					sp.restore("resources/tpt.sav");
 				} catch (SPException e) {
 					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -214,6 +219,7 @@ public class Prover {
 					sp.restore("resources/trt.sav");
 				} catch (SPException e) {
 					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -222,6 +228,7 @@ public class Prover {
 					sp.restore("resources/trtfree.sav");
 				} catch (SPException e) {
 					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
+					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -248,8 +255,8 @@ public class Prover {
 			System.out.println("Prover input: " + goal + ", map: "+ map);
 			
 			try {
-//				q = sp.openPrologQuery(goal, map);
-				q = sp.openQuery(goal, null);
+				q = sp.openPrologQuery(goal, map);
+//				q = sp.openQuery(goal, null);
 			} catch (SPException e) {
 				System.err.println("Error on open Query: " + e.toString() + " " + e.getMessage() );
 				throw e;
