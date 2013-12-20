@@ -65,6 +65,7 @@ public class Prover {
 					} catch (SPException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Error with SICStus: Couldn't initialise sicstus runtime engine ", "SICStus error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				workerThread();
