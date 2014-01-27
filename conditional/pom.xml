@@ -25,7 +25,7 @@
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>cl</artifactId>
-    	<version>0.2.0-SNAPSHOT</version>
+    	<version>1.0.358</version>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
@@ -35,7 +35,7 @@
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>pl</artifactId>
-    	<version>0.2.0-SNAPSHOT</version>
+    	<version>1.0.358</version>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
@@ -45,7 +45,7 @@
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>translators</artifactId>
-    	<version>0.2.0-SNAPSHOT</version>
+    	<version>1.0.358</version>
     </dependency>
   </dependencies>
 </project>

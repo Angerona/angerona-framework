@@ -10,6 +10,12 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
+  <scm>
+  	<url>https://github.com/Angerona/angerona-framework</url>
+  	<connection>scm:git:https://github.com/Angerona/angerona-framework.git</connection>
+	<developerConnection>scm:git:https://github.com/Angerona/angerona-framework.git</developerConnection>
+  </scm>
+  
   <distributionManagement>
     <repository>
       <id>nexus-angerona</id>
@@ -35,18 +41,61 @@
     </repository>
   </repositories>
   
-  <reporting> 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
-        <configuration>
-          <aggregate>true</aggregate>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
+   <profiles>
+    <profile>
+      <id>FULL-Release</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      
+      <build>
+        <plugins>
+          <!-- Generate jar containing the sources of the project: -->
+          <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-source-plugin</artifactId>
+			<version>2.2.1</version>
+			<executions>
+				<execution>
+					<id>attach-sources</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		  </plugin>
+		
+		<!-- Generate Jar containing java-docs -->
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-javadoc-plugin</artifactId>
+		  <version>2.9.1</version>
+		  <executions>
+		    <execution>
+		      <id>attach-javadocs</id>
+		      <goals>
+		        <goal>jar</goal>
+		      </goals>
+		    </execution>
+		  </executions>
+		  <configuration>
+		    <quiet>true</quiet>
+		    <tags>
+			  <tag>
+			    <name>todo</name>
+			    <placement>X</placement>
+			  </tag>
+			  <tag>
+			    <name>remark</name>
+			    <placement>X</placement>
+			  </tag>
+			</tags>
+		  </configuration>
+		</plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   
   <build>
   	<pluginManagement>
@@ -86,8 +135,46 @@
 				</execution>
 			</executions>
 		</plugin>
+		
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-release-plugin</artifactId>
+		  <version>2.4.2</version>
+		  <configuration>
+		    <goals>deploy</goals>
+		    <autoVersionSubmodules>true</autoVersionSubmodules>
+			<tagNameFormat>maven-release-v@{version}</tagNameFormat>
+			
+			<!--  is relevant for svn (like in tweety) -->
+			<!--
+			<tagBase>https://svn.code.sf.net/p/tweety/code/tags/</tagBase>
+			<remoteTagging>true</remoteTagging>
+			-->
+			
+			<!-- un/comment this to allow changes in this pom.xml for testing purposes in maven-release-plugin -->
+			<!--  
+			<checkModificationExcludes>
+			  <checkModificationExclude>pom.xml</checkModificationExclude>
+			</checkModificationExcludes>
+			-->
+		  </configuration>
+		</plugin>
     </plugins>
   </build>
+  
+  <!-- Enable java doc goals -->
+  <reporting> 
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <aggregate>true</aggregate>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
   
   <modules>
   	<module>asp</module>
