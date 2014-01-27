@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.angerona</groupId>
   <artifactId>maven-build-all</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>Parent-Angerona</name>
   
@@ -14,6 +14,7 @@
   	<url>https://github.com/Angerona/angerona-framework</url>
   	<connection>scm:git:https://github.com/Angerona/angerona-framework.git</connection>
 	<developerConnection>scm:git:https://github.com/Angerona/angerona-framework.git</developerConnection>
+    <tag>maven-release-v1.0.0</tag>
   </scm>
   
   <distributionManagement>
