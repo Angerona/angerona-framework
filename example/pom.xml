@@ -21,12 +21,12 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>fw</artifactId>
-    	<version>1.0.0</version>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.github.angerona</groupId>
       <artifactId>fw</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -34,23 +34,23 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>gui</artifactId>
-    	<version>1.0.0</version>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona.fw.am</groupId>
     	<artifactId>secrecy</artifactId>
-    	<version>1.0.0</version>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>asp</artifactId>
-    	<version>1.0.0</version>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <parent>
   	<groupId>com.github.angerona</groupId>
   	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.0</version>
+  	<version>1.0.1-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <artifactId>example</artifactId>
