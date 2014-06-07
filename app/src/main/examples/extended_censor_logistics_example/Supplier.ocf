@@ -2,10 +2,14 @@ fA
 lkA
 
 (! | - ( hLZ || khLZ ) ) 
+(mkgl | mX || mY)
+(-mkgl | mZ)
 (-fA|hLZ && mkgl)
 (fA|khLZ && ltA && lkA)
-(ltA|lt1 && mkgl)
-(-ltA|lt2 && mkgl)
+(ltA|(lt1 || lt2) && mkgl)
+(-ltA|lt3 && mkgl)
 (khLZ|mkgl)
-(! | - ((-mkgl || lt1) && (-lt1 || mkgl)) )
-(! | - (lt1 || lt2) ) 
+(! | -(-mX || lt1 ))
+(! | -(-mY || lt2 ))
+(! | -(-mZ || lt3 )) 
+

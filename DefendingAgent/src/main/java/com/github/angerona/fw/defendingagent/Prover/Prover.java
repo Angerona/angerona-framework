@@ -184,55 +184,36 @@ public class Prover {
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 
 		/* Initialize the SICStus Prolog engine */
-//		try {
-			/* Parameter 1 determines the KLM logic to consider */
-			
+		/* Parameter 1 determines the KLM logic to consider */
+		String filename =null;
 			switch (chooseInferenceSystem) {
 			case CUMMULATIV: {
-				try {
-					sp.restore("resources/tct.sav");
-				} catch (SPException e) {
-					System.err.println("Error on restore file: " + e.toString() + " " + e.getMessage());
-					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
-				}
+				filename = "tct.sav";
 				break;
 			}
 			case LOOP_CUMMULATIV: {
-				try {
-					sp.restore("resources/tclt.sav");
-				} catch (SPException e) {
-					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
-					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
-				}
+				filename = "tclt.sav";
 				break;
 			}
 			case PREFERENTIAL: {
-				try {
-					sp.restore("resources/tpt.sav");
-				} catch (SPException e) {
-					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
-					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
-				}
+				filename = "tpt.sav";
 				break;
 			}
 			case RATIONAL: {
-				try {
-					sp.restore("resources/trt.sav");
-				} catch (SPException e) {
-					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
-					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
-				}
+				filename = "trt.sav";
 				break;
 			}
 			case FREE_RATIONAL: {
-				try {
-					sp.restore("resources/trtfree.sav");
-				} catch (SPException e) {
-					System.err.println("Error on restore file: " +e.toString() + " " + e.getMessage());
-					JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
-				}
+				filename = "trtfree.sav";
 				break;
 			}
+			}
+			String path = "resources/" + filename;
+			try{
+				sp.restore(path);
+			}catch(SPException e) {
+				System.err.println("\nERROR Prolog engineon restore file: " + e.getMessage());
+				JOptionPane.showMessageDialog(null, "Error with SICStus: Error on restore file: " + e.toString(), "SICStus error", JOptionPane.ERROR_MESSAGE);
 			}
 
 			/*
@@ -245,7 +226,6 @@ public class Prover {
 			 */
 			String kBaseList = new String("[");
 			for (String currentFormula : kFormulas) {
-//				String currentFormula = this.kFormulas[i];
 				if (currentFormula.length() > 0)
 					kBaseList = kBaseList + currentFormula + ",";
 			}
@@ -257,9 +237,8 @@ public class Prover {
 			
 			try {
 				q = sp.openPrologQuery(goal, map);
-//				q = sp.openQuery(goal, null);
 			} catch (SPException e) {
-				System.err.println("Error on open Query: " + e.toString() + " " + e.getMessage() );
+				System.err.println("\nERROR Prolog engine on open Query: " + e.getMessage());
 				throw e;
 			}
 			try {
@@ -268,13 +247,13 @@ public class Prover {
 							.println("Error in the knowledge base: you cannot use nested conditionals");
 				}
 			} catch (NoSuchMethodException e) {
-				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				System.err.println("Error on finding solution: " + e.getMessage());
 				throw e;
 			} catch (InterruptedException e) {
-				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				System.err.println("Error on finding solution: " + e.getMessage());
 				throw e;
 			} catch (Exception e) {
-				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
+				System.err.println("Error on finding solution: " + e.getMessage());
 				throw e;
 			}
 
@@ -286,7 +265,7 @@ public class Prover {
 			try {
 				q = sp.openPrologQuery(goal, map);
 			} catch (SPException e) {
-				System.err.println("Error on open Query: " + e.toString() + " " + e.getMessage());
+				System.err.println("\nERROR Prolog engine on open Query: " + e.getMessage());
 				throw e;
 			}
 			try {
@@ -315,7 +294,7 @@ public class Prover {
 			try {
 				q = sp.openPrologQuery(goal, map);
 			} catch (SPException e) {
-				System.err.println("Error on open Query: " + e.toString() + " " + e.getMessage());
+				System.err.println("\nERROR Prolog engine on open Query: " + e.getMessage());
 				throw e;
 			}
 			try {
@@ -337,14 +316,5 @@ public class Prover {
 				System.err.println("Error on finding solution: " + e.toString() + " " + e.getMessage());
 				throw e;
 			}
-
-//		} catch (SPException choosingKLM) {
-//			
-//			
-//			System.out.println("\nERROR SICStus Prolog engine: " + choosingKLM.getMessage());
-//			choosingKLM.printStackTrace();
-//			throw choosingKLM;
-//			
-//		}
 	}
 }

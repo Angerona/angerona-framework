@@ -40,7 +40,7 @@
         	<SpeechAct type="Revision">
         		<sender>Customer</sender>
         		<receiver>Supplier</receiver>
-        		<proposition>mkgl</proposition>
+        		<proposition>mX</proposition>
         	</SpeechAct>
         </script>
 		<script>
@@ -57,13 +57,6 @@
         		<question>lkA</question>
         	</SpeechAct>
         </script>
-        <script>
-        	<SpeechAct type="Query">
-        		<sender>Customer</sender>
-        		<receiver>Supplier</receiver>
-        		<question>khLZ</question>
-        	</SpeechAct>
-        </script> 
 
         <capability>Query</capability>
         <capability>Revision</capability>
