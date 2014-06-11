@@ -189,5 +189,6 @@
   	<module>deploy</module>
   	<module>conditional</module>
   	<module>DefendingAgent</module>
+  	<module>plwithknowledge</module>
   </modules>
 </project>

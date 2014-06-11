@@ -1,0 +1,14 @@
+<beliefbase-configuration>
+   <name>PL Belief Base With Knowledge</name>
+   <reasoners>
+      <default-operator-cls>com.github.angerona.fw.plwithknowledge.PLWithKnowledgeReasoner</default-operator-cls>
+   </reasoners>
+   <change-operators>
+      <default-operator-cls>com.github.angerona.fw.plwithknowledge.PLWithKnowledgeUpdate</default-operator-cls>
+   </change-operators>
+   <translators>
+      <default-operator-cls>com.github.angerona.fw.plwithknowledge.PLWithKnowledgeTranslator</default-operator-cls>
+   </translators>
+   
+   <beliefbase-class>com.github.angerona.fw.plwithknowledge.PLWithKnowledgeBeliefbase</beliefbase-class>
+</beliefbase-configuration>

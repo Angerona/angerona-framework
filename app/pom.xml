@@ -352,6 +352,12 @@
     	<version>1.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
+    <dependency>
+    	<groupId>com.github.angerona</groupId>
+    	<artifactId>plwithknowledge</artifactId>
+    	<version>1.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>com.github.angerona</groupId>
