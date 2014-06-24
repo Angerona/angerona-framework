@@ -59,11 +59,14 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		ViolatesResult reval = new ViolatesResult();
 		addMetaInformation(newBeliefs, param);
+		
+		Agent ag = param.getAgent();
+		ag.updateBeliefs(action, newBeliefs);
+
 		for(String viewName : param.getAgent().getEnvironment().getAgentNames()) {
 			if(viewName.equals(param.getAgent().getName())) {
 				continue;
 			}
-			
 			reval = reval.combine(violates(beliefs, newBeliefs, param, viewName));
 		}
 		
