@@ -82,10 +82,12 @@ public class ViolatesOperator extends BaseViolatesOperator {
 		
 		Agent ag = param.getAgent();
 		Beliefs beliefs = param.getBeliefs();
+		Beliefs newBeliefs = beliefs.clone();
 		
 		// use cloned beliefs to generate new beliefs:
-		Beliefs newBeliefs = ag.updateBeliefs(percept, beliefs.clone());
 		addMetaInformation(newBeliefs, param);
+		newBeliefs = ag.updateBeliefs(percept, newBeliefs);
+		
 		
 		// TODO: Check if other views are invalid, (because of meta information for example)
 		ViolatesResult reval = violates(beliefs, newBeliefs, param, percept.getReceiverId());
