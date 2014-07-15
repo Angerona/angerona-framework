@@ -14,13 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import angerona.fw.aspgraph.controller.EDGController;
-import angerona.fw.aspgraph.controller.EGController;
-import angerona.fw.aspgraph.graphs.EGEdge;
-import angerona.fw.aspgraph.graphs.EGVertex;
-import angerona.fw.aspgraph.graphs.ExplanationGraph;
-import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
-import angerona.fw.aspgraph.view.util.SteppedComboBox;
+import com.github.angerona.fw.aspgraph.controller.EDGController;
+import com.github.angerona.fw.aspgraph.controller.EGController;
+import com.github.angerona.fw.aspgraph.graphs.EGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EGVertex;
+import com.github.angerona.fw.aspgraph.graphs.ExplanationGraph;
+import com.github.angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
+import com.github.angerona.fw.aspgraph.view.util.SteppedComboBox;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
@@ -28,8 +28,8 @@ import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+import net.sf.tweety.lp.asp.util.AnswerSet;
+import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 /**
  * Main view for presenting Explanation Graphs

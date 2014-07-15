@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import angerona.fw.aspgraph.graphs.ExplanationGraph;
+import com.github.angerona.fw.aspgraph.graphs.ExplanationGraph;
 
 public class EGList {
 	

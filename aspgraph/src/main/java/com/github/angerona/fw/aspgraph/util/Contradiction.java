@@ -3,7 +3,7 @@ package com.github.angerona.fw.aspgraph.util;
 import java.util.Collection;
 import java.util.HashSet;
 
-import angerona.fw.aspgraph.graphs.EDGVertex;
+import com.github.angerona.fw.aspgraph.graphs.EDGVertex;
 
 /**
  * Stores sets of vertices that contradict each other

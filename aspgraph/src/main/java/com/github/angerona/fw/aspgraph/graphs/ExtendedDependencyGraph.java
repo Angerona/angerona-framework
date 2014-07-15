@@ -13,9 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import angerona.fw.aspgraph.graphs.EDGVertex.Color;
-import angerona.fw.aspgraph.util.AnswerSetTwoValued;
+import net.sf.tweety.lp.asp.util.AnswerSet;
+import com.github.angerona.fw.aspgraph.graphs.EDGVertex.Color;
+import com.github.angerona.fw.aspgraph.util.AnswerSetTwoValued;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;

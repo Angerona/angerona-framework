@@ -7,27 +7,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import angerona.fw.aspgraph.graphs.EDGEdge;
-import angerona.fw.aspgraph.graphs.EDGVertex;
-import angerona.fw.aspgraph.graphs.EDGVertex.Color;
-import angerona.fw.aspgraph.graphs.EGAssumptionVertex;
-import angerona.fw.aspgraph.graphs.EGBotVertex;
-import angerona.fw.aspgraph.graphs.EGEdge;
-import angerona.fw.aspgraph.graphs.EGEdge.EdgeType;
-import angerona.fw.aspgraph.graphs.EGLiteralVertex;
-import angerona.fw.aspgraph.graphs.EGLiteralVertex.Annotation;
-import angerona.fw.aspgraph.graphs.EGTopVertex;
-import angerona.fw.aspgraph.graphs.EGVertex;
-import angerona.fw.aspgraph.graphs.ExplanationGraph;
-import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
-import angerona.fw.aspgraph.util.AnswerSetTwoValued;
-import angerona.fw.aspgraph.util.EGList;
-import angerona.fw.aspgraph.util.LinkedCycle;
-import angerona.fw.aspgraph.util.Path;
-import angerona.fw.aspgraph.util.SubEG;
-import angerona.fw.aspgraph.util.Tarjan;
+import com.github.angerona.fw.aspgraph.graphs.EDGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EDGVertex;
+import com.github.angerona.fw.aspgraph.graphs.EDGVertex.Color;
+import com.github.angerona.fw.aspgraph.graphs.EGAssumptionVertex;
+import com.github.angerona.fw.aspgraph.graphs.EGBotVertex;
+import com.github.angerona.fw.aspgraph.graphs.EGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EGEdge.EdgeType;
+import com.github.angerona.fw.aspgraph.graphs.EGLiteralVertex;
+import com.github.angerona.fw.aspgraph.graphs.EGLiteralVertex.Annotation;
+import com.github.angerona.fw.aspgraph.graphs.EGTopVertex;
+import com.github.angerona.fw.aspgraph.graphs.EGVertex;
+import com.github.angerona.fw.aspgraph.graphs.ExplanationGraph;
+import com.github.angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
+import com.github.angerona.fw.aspgraph.util.AnswerSetTwoValued;
+import com.github.angerona.fw.aspgraph.util.EGList;
+import com.github.angerona.fw.aspgraph.util.LinkedCycle;
+import com.github.angerona.fw.aspgraph.util.Path;
+import com.github.angerona.fw.aspgraph.util.SubEG;
+import com.github.angerona.fw.aspgraph.util.Tarjan;
 
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
+import net.sf.tweety.lp.asp.util.AnswerSet;
 
 /**
  * Responsible for construction and administration of Explanation Graphs

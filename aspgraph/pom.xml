@@ -20,20 +20,46 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>angerona.fw</groupId>
+    	<groupId>com.github.angerona</groupId>
     	<artifactId>gui</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
+     <dependency>
+    	<groupId>org.apache.commons</groupId>
+    	<artifactId>commons-collections4</artifactId>
+    	<version>4.0</version>
+    </dependency>
+<!--     <dependency> -->
+<!-- 		<groupId>jung</groupId> -->
+<!-- 		<artifactId>jung</artifactId> -->
+<!-- 		<version>1.7.6</version> -->
+<!-- 	</dependency> -->
     <dependency>
-    	<groupId>net.sf.tweety.logicprogramming</groupId>
-    	<artifactId>asplibrary</artifactId>
-    	<version>0.1.69-SNAPSHOT</version>
+    	<groupId>net.sf.tweety.lp</groupId>
+    	<artifactId>asp</artifactId>
+    	<version>1.0.358</version>
     </dependency>
+<!--     <dependency> -->
+<!--     	<groupId>com.whiplash</groupId> -->
+<!--     	<artifactId>WlMacWidgets</artifactId> -->
+<!--     	<version>0.1.24-SNAPSHOT</version> -->
+<!--     </dependency> -->
+<!--     <dependency> -->
+<!--     	<groupId>com.whiplash</groupId> -->
+<!--     	<artifactId>WlResourceManager</artifactId> -->
+<!--     	<version>0.1.24-SNAPSHOT</version> -->
+<!--     </dependency> -->
+<!--     <dependency> -->
+<!--     	<groupId>com.whiplash</groupId> -->
+<!--     	<artifactId>WlWindows</artifactId> -->
+<!--     	<version>0.1.24-SNAPSHOT</version> -->
+<!--     </dependency> -->
+    
   </dependencies>
   <parent>
-  	<groupId>angerona.fw</groupId>
+  	<groupId>com.github.angerona</groupId>
   	<artifactId>maven-build-all</artifactId>
-  	<version>0.0.1-SNAPSHOT</version>
+  	<version>1.0.1-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

@@ -3,9 +3,9 @@ package com.github.angerona.fw.aspgraph.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import angerona.fw.aspgraph.graphs.EDGEdge;
-import angerona.fw.aspgraph.graphs.EDGVertex;
-import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
+import com.github.angerona.fw.aspgraph.graphs.EDGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EDGVertex;
+import com.github.angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
 
 public class Tarjan {
 	private int index = 0;

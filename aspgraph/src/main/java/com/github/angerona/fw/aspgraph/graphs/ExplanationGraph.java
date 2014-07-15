@@ -12,9 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections15.CollectionUtils;
-
-import angerona.fw.aspgraph.graphs.EGLiteralVertex.Annotation;
+import org.apache.commons.collections4.CollectionUtils;
+import com.github.angerona.fw.aspgraph.graphs.EGLiteralVertex.Annotation;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;

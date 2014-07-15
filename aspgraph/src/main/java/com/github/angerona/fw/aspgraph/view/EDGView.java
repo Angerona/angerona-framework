@@ -22,13 +22,13 @@ import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 
-import angerona.fw.aspgraph.controller.EDGController;
-import angerona.fw.aspgraph.graphs.EDGEdge;
-import angerona.fw.aspgraph.graphs.EDGVertex;
-import angerona.fw.aspgraph.graphs.EGEdge;
-import angerona.fw.aspgraph.graphs.EGVertex;
-import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
-import angerona.fw.aspgraph.view.util.SteppedComboBox;
+import com.github.angerona.fw.aspgraph.controller.EDGController;
+import com.github.angerona.fw.aspgraph.graphs.EDGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EDGVertex;
+import com.github.angerona.fw.aspgraph.graphs.EGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EGVertex;
+import com.github.angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
+import com.github.angerona.fw.aspgraph.view.util.SteppedComboBox;
 
 import edu.uci.ics.jung.algorithms.layout.BalloonLayout;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
@@ -48,8 +48,8 @@ import edu.uci.ics.jung.visualization.layout.CachingLayout;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import edu.uci.ics.jung.visualization.renderers.VertexLabelRenderer;
 
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+import net.sf.tweety.lp.asp.util.AnswerSet;
+import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 
 public class EDGView extends JPanel{

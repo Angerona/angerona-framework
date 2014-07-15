@@ -1,19 +1,23 @@
 package com.github.angerona.fw.aspgraph.view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
+import com.github.angerona.fw.gui.view.BeliefbaseView;
 
-import angerona.fw.gui.view.BaseView;
+import net.sf.tweety.lp.asp.syntax.Program;
 
-public class GraphView extends BaseView {
+import com.github.angerona.fw.gui.view.BeliefbaseView;
+
+public class GraphView extends BeliefbaseView {
 	/**
 	 * 
 	 */
@@ -24,6 +28,7 @@ public class GraphView extends BaseView {
 	private JPanel programPanel;
 	
 	public GraphView() {
+		this.setLayout(new BorderLayout());
 		JTabbedPane tabbedPane = new JTabbedPane();
 		edgPanel = new EDGView();
 		egPanel = new EGView();
@@ -31,7 +36,7 @@ public class GraphView extends BaseView {
 		tabbedPane.add("Extended Dependency Graph", edgPanel);
 		tabbedPane.add("Explanation Graphs", egPanel);
 		tabbedPane.add("Program", programPanel);
-		add(tabbedPane);
+		this.add(tabbedPane, BorderLayout.CENTER);
 	}
 	
 	public void setEDGPanel(EDGView edgv){

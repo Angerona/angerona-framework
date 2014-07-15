@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import angerona.fw.aspgraph.graphs.EDGEdge;
-import angerona.fw.aspgraph.graphs.EDGVertex;
-import angerona.fw.aspgraph.graphs.EGEdge;
-import angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
+import com.github.angerona.fw.aspgraph.graphs.EDGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EDGVertex;
+import com.github.angerona.fw.aspgraph.graphs.EGEdge;
+import com.github.angerona.fw.aspgraph.graphs.ExtendedDependencyGraph;
 
 public class LinkedCycle {
 	private Set<EDGVertex> vertices;

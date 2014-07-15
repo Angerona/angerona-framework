@@ -1,9 +1,9 @@
 package com.github.angerona.fw.aspgraph.util;
 
-import angerona.fw.aspgraph.graphs.EGEdge;
-import angerona.fw.aspgraph.graphs.EGLiteralVertex;
-import angerona.fw.aspgraph.graphs.EGVertex;
-import angerona.fw.aspgraph.graphs.ExplanationGraph;
+import com.github.angerona.fw.aspgraph.graphs.EGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EGLiteralVertex;
+import com.github.angerona.fw.aspgraph.graphs.EGVertex;
+import com.github.angerona.fw.aspgraph.graphs.ExplanationGraph;
 
 public class SubEG {
 	private ExplanationGraph eg;

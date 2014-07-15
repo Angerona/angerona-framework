@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Literal;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSet;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.util.AnswerSet;
 
 /**
  * Two valued representation of an answer set
@@ -41,16 +41,18 @@ public class AnswerSetTwoValued {
 	public AnswerSetTwoValued(Set<String> allLiterals, AnswerSet as){
 		founded = new HashSet<String>();
 		unfounded = new HashSet<String>();
-		Map<String,Set<Literal>> asLiterals = as.literals;
+//		Map<String,Set<DLPLiteral>> asLiterals = as.literals;
 		Set<String> answerSetLiterals = new HashSet<String>();
-		
+		while (as.iterator().hasNext()) {
+			answerSetLiterals.add(as.iterator().next().toString()); //.name() statt toString()?
+		}	
 		/* Get String representation of literals in answer set */
-		for (String s : asLiterals.keySet()){
-			for (Literal l : asLiterals.get(s)){
-				answerSetLiterals.add(l.toString());
-			}
-		}
-		
+//		for (String s : asLiterals.keySet()){
+//			for (Literal l : asLiterals.get(s)){
+//				answerSetLiterals.add(l.toString());
+//			}
+//		}
+//		
 		/* Divide literals into founded and unfounded set */
 		for (String lit : allLiterals){
 			if (answerSetLiterals.contains(lit)) founded.add(lit);

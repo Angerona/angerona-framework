@@ -16,10 +16,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
-import angerona.fw.aspgraph.controller.MasterController;
-import angerona.fw.aspgraph.view.GraphView;
-
+import com.github.angerona.fw.aspgraph.controller.MasterController;
+import com.github.angerona.fw.aspgraph.view.GraphView;
 import com.whiplash.res.DefaultResourceManager;
 import com.whiplash.res.WlResourceManager;
 
@@ -64,7 +64,7 @@ public class App extends JFrame implements ActionListener
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            File file = fc.getSelectedFile();
 	            path2clingo = file.getPath();
-	            
+				//path2clingo = "/Users/Stefan/Documents/Studium/Angerona_SHK/ASP-Solvers/clingo";
 	            /* Write settings file where path is saved */
 	            try {
 					FileOutputStream outputStream = new FileOutputStream("settings.txt");

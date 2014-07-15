@@ -23,9 +23,9 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
-import angerona.fw.aspgraph.graphs.EGEdge;
-import angerona.fw.aspgraph.graphs.EGVertex;
-import angerona.fw.aspgraph.graphs.ExplanationGraph;
+import com.github.angerona.fw.aspgraph.graphs.EGEdge;
+import com.github.angerona.fw.aspgraph.graphs.EGVertex;
+import com.github.angerona.fw.aspgraph.graphs.ExplanationGraph;
 
 public class EGPanel extends JPanel{
 	

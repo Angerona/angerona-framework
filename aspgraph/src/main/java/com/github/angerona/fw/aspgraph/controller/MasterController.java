@@ -2,16 +2,18 @@ package com.github.angerona.fw.aspgraph.controller;
 
 import javax.swing.JOptionPane;
 
-import net.sf.tweety.logicprogramming.asplibrary.solver.Clingo;
-import net.sf.tweety.logicprogramming.asplibrary.solver.Solver;
-import net.sf.tweety.logicprogramming.asplibrary.solver.SolverException;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.Program;
-import net.sf.tweety.logicprogramming.asplibrary.util.AnswerSetList;
+import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ParseException;
+import net.sf.tweety.lp.asp.solver.Clingo;
+import net.sf.tweety.lp.asp.solver.Solver;
+import net.sf.tweety.lp.asp.solver.SolverException;
+import net.sf.tweety.lp.asp.syntax.Program;
+import net.sf.tweety.lp.asp.util.AnswerSetList;
 
-import angerona.fw.aspgraph.exceptions.NotValidProgramException;
-import angerona.fw.aspgraph.view.EDGView;
-import angerona.fw.aspgraph.view.EGView;
-import angerona.fw.aspgraph.view.GraphView;
+import com.github.angerona.fw.aspgraph.exceptions.NotValidProgramException;
+import com.github.angerona.fw.aspgraph.view.EDGView;
+import com.github.angerona.fw.aspgraph.view.EGView;
+import com.github.angerona.fw.aspgraph.view.GraphView;
 
 /**
  * MasterController who controls construction and visualization of graphs 
@@ -50,8 +52,12 @@ public class MasterController {
 	 */
 	public static void execute(String path2clingo, String filename){
 		/* Load logic program from file */
-		p = Program.loadFrom(filename);
-		
+		//p = Program.loadFrom(filename);
+		try {
+			p = ASPParser.parseProgram(filename);
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
 		/* Instantiate controllers and views */
 		EDGController edgContr = EDGController.instance();
 		EGController egContr = EGController.instance();
