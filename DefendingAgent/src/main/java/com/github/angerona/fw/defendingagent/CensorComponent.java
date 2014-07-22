@@ -2,6 +2,7 @@ package com.github.angerona.fw.defendingagent;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -23,10 +25,14 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.defendingagent.Prover.Prover;
 import com.github.angerona.fw.defendingagent.Prover.SICStusException;
 import com.github.angerona.fw.logic.AnswerValue;
+import com.github.angerona.fw.plwithknowledge.logic.ModelTupel;
+import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
+import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeReasoner;
 import com.github.angerona.fw.util.LogicTranslator;
 
 /**
@@ -55,7 +61,7 @@ public class CensorComponent extends BaseAgentComponent {
 		LogicalSymbols.setContradictionSymbol("!");
 		LogicalSymbols.setClassicalNegationSymbol("-");
 		
-		CensorComponent cexec = new CensorComponent();
+//		CensorComponent cexec = new CensorComponent();
 		File directory = new File (".");
 		 try {
 		 System.out.println ("Current directory's canonical path: " 
@@ -73,7 +79,7 @@ public class CensorComponent extends BaseAgentComponent {
 		// Build View
 		View v = new View(beliefs);
 		
-		FolFormula s22 = new FOLAtom(new Predicate("s22"));
+//		FolFormula s22 = new FOLAtom(new Predicate("s22"));
 		FolFormula s21 = new FOLAtom(new Predicate("s21"));
 		FolFormula not_s21 = new net.sf.tweety.logics.fol.syntax.Negation(s21);
 		FolFormula r = new FOLAtom(new Predicate("r"));
@@ -84,9 +90,9 @@ public class CensorComponent extends BaseAgentComponent {
 		v = v.RefineViewByRevision(s21, AnswerValue.AV_TRUE);
 		System.out.println("View:" +v);
 		
-		List<String> CL_V = cexec.makeBeliefBase(v);
+//		List<String> CL_V = cexec.makeBeliefBase(v);
 //		PropositionalFormula plprove = new Disjunction(new Negation(new Tautology()), new Contradiction());
-		String toProve = cexec.translate(r);
+//		String toProve = cexec.translate(r);
 //		toProve = "(true => false)";
 		
 		Prover prover = Prover.getInstance();
@@ -101,7 +107,6 @@ public class CensorComponent extends BaseAgentComponent {
 		try {
 			System.out.println("Prover: "+prover.prove(manual, "i11_22 and s21 => r", Prover.InferenceSystem.RATIONAL));
 		} catch (SICStusException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -186,6 +191,85 @@ public class CensorComponent extends BaseAgentComponent {
 			return false;
 		}
 	}
+	
+	/**
+	 * Calculate a skeptical inference of a given formula under a specific view.
+	 * Returns true iff formula follows skeptically from the view and false otherwise 
+	 * @param view
+	 * @param formula
+	 * @return
+	 */
+	public boolean scepticalInference(ViewWithHistory view, FolFormula formula) {
+		boolean satisfy = true;
+		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getView().getReasoningOperator().getImplementation();
+		ModelTupel models = reasoner.getModels(view.getView());
+		Iterator<NicePossibleWorld> iterator = models.getModels().iterator();
+		while(iterator.hasNext()){
+			if(!iterator.next().satisfies(formula)){
+				satisfy = false;
+				break;
+			}
+		}
+		return satisfy;
+	}
+	
+	/**
+	 * Calculate all possible literals that can be sceptically infered from a given view.
+	 * 
+	 * @param view a view.
+	 * @return a list of positive and negated literals that can be infered from the given view.
+	 */
+	public List<FolFormula> scepticalInferences(ViewWithHistory view) {
+		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getView().getReasoningOperator().getImplementation();
+		return new LinkedList<FolFormula>(reasoner.infer(view.getView()));
+	}
+	
+	
+	/**
+	 * Calculate a skeptical inference of a given formula under a specific view.
+	 * Returns true iff formula follows skeptically from the view and false otherwise 
+	 * @param view
+	 * @param formula
+	 * @return
+	 */
+	public boolean scepticalInference(ViewWithCompressedHistory view, FolFormula formula) {
+		List<FolFormula> list = this.scepticalInferences(view);
+		return list.contains(formula);
+	}
+	
+	/**
+	 * Calculate all possible literals that can be sceptically infered from a given view.
+	 * 
+	 * @param view a view.
+	 * @return a list of positive and negated literals that can be infered from the given view.
+	 */
+	public List<FolFormula> scepticalInferences(ViewWithCompressedHistory view) {
+		Agent ag = view.getView().getAgent();
+		CompressedHistory history = (CompressedHistory) ag.getComponent(HistoryComponent.class).getHistories().get(ag.getName());
+		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getView().getReasoningOperator().getImplementation();
+		view.calculatePossibleBeliefbases(history);
+		LinkedList<Set<FolFormula>> list = new LinkedList<Set<FolFormula>>();
+		LinkedList<FolFormula> retval = new LinkedList<FolFormula>();
+		for(PLWithKnowledgeBeliefbase bbase : view.getPossibleBeliefbases()){
+			list.add(reasoner.infer(bbase));
+		}
+		Set<FolFormula> compareList = list.poll();
+		for(FolFormula formula: compareList){
+			boolean inAllLists = true;
+			for(Set<FolFormula> l: list){
+				if(!l.contains(formula)){
+					inAllLists = false;
+					break;
+				}
+			}
+			if(inAllLists){
+				retval.add(formula);
+			}
+		}
+		
+		return retval;
+	}
+	
 	
 	/**
 	 * Create a BeliefBase out of the View on the attacking agent

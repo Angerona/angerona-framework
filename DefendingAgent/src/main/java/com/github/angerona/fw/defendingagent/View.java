@@ -28,7 +28,7 @@ import com.github.angerona.fw.util.LogicTranslator;
  * @author Sebastian Homann, Pia Wierzoch
  *
  */
-public class View {
+public class View implements GeneralView{
 	private PlBeliefSet beliefSet;
 	private Set<Conditional> positiveConditionalBeliefs;
 	private Set<Conditional> negativeConditionalBeliefs;

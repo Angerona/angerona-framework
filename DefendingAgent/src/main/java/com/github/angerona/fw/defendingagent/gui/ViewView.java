@@ -7,8 +7,11 @@ import java.util.Map;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.defendingagent.CensorComponent;
+import com.github.angerona.fw.defendingagent.GeneralView;
 import com.github.angerona.fw.defendingagent.View;
 import com.github.angerona.fw.defendingagent.ViewDataComponent;
+import com.github.angerona.fw.defendingagent.ViewWithCompressedHistory;
+import com.github.angerona.fw.defendingagent.ViewWithHistory;
 import com.github.angerona.fw.gui.view.ListViewColored;
 import com.github.angerona.fw.internal.Entity;
 
@@ -34,17 +37,39 @@ public class ViewView extends ListViewColored {
 			CensorComponent cexec = new CensorComponent();
 			
 			ViewDataComponent viewComponent = (ViewDataComponent)obj;
-			Map<String, View> views = viewComponent.getViews();
+			Map<String, GeneralView> views = viewComponent.getViews();
 			for(String agent : views.keySet()) {
-				View currentView = views.get(agent);
-				reval.add("View on agent " + agent + ": <B+, B-, C> with");
-				reval.add("   B+ = " + currentView.getPositiveConditionalBeliefs());
-				reval.add("   B- = " + currentView.getNegativeConditionalBeliefs());
-				reval.add("   C  = " + currentView.getBeliefSet());
-				reval.add("   sceptical inferences: ");
-				List<FolFormula> inf = cexec.scepticalInferences(currentView);
-				for(FolFormula fol : inf) {
-					reval.add("    " + fol.toString());					
+				if(views.get(agent) instanceof View){
+					View currentView = (View)views.get(agent);
+					reval.add("View on agent " + agent + ": <B+, B-, C> with");
+					reval.add("   B+ = " + currentView.getPositiveConditionalBeliefs());
+					reval.add("   B- = " + currentView.getNegativeConditionalBeliefs());
+					reval.add("   C  = " + currentView.getBeliefSet());
+					reval.add("   sceptical inferences: ");
+					List<FolFormula> inf = cexec.scepticalInferences(currentView);
+					for(FolFormula fol : inf) {
+						reval.add("    " + fol.toString());					
+					}
+				}else if(views.get(agent) instanceof ViewWithHistory){
+					ViewWithHistory currentView = (ViewWithHistory)views.get(agent);
+					reval.add("View on agent " + agent + ": <Knowledge, Assertions> with");
+					reval.add("   Knowledge  = " + currentView.getView().getKnowledge());
+					reval.add("   Assertions = " + currentView.getView().getAssertions());
+					reval.add("   sceptical inferences: ");
+					List<FolFormula> inf = cexec.scepticalInferences(currentView);
+					for(FolFormula fol : inf) {
+						reval.add("    " + fol.toString());					
+					}
+				}else if(views.get(agent) instanceof ViewWithCompressedHistory){
+					ViewWithCompressedHistory currentView = (ViewWithCompressedHistory)views.get(agent);
+					reval.add("View on agent " + agent + ": <Knowledge, Assertions> with");
+					reval.add("   Knowledge  = " + currentView.getView().getKnowledge());
+					reval.add("   Assertions = " + currentView.getView().getAssertions());
+					reval.add("   sceptical inferences: ");
+					List<FolFormula> inf = cexec.scepticalInferences(currentView);
+					for(FolFormula fol : inf) {
+						reval.add("    " + fol.toString());					
+					}
 				}
 			}
 		}

@@ -15,6 +15,7 @@ import com.github.angerona.fw.am.secrecy.operators.BaseGenerateOptionsOperator;
 import com.github.angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.comm.Revision;
+import com.github.angerona.fw.comm.Update;
 import com.github.angerona.fw.internal.IdGenerator;
 import com.github.angerona.fw.logic.Desires;
 
@@ -32,6 +33,8 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 	
 	public static final Predicate prepareRevisionProcessing = new Predicate("revisionProcessing", 1);
 	
+	public static final Predicate prepareUpdateProcessing = new Predicate("updateProcessing", 1);
+	
 	public static final Predicate prepareScriptingProcessing = new Predicate("scriptingProcessing", 1);
 	
 	public static final IdGenerator desireIds = new IdGenerator();
@@ -46,6 +49,8 @@ public class GenerateOptionsOperator extends BaseGenerateOptionsOperator {
 			ad = new FOLAtom(prepareQueryProcessing);
 		} else if(param.getPerception() instanceof Revision) {
 			ad = new FOLAtom(prepareRevisionProcessing);
+		}else if(param.getPerception() instanceof Update) {
+			ad = new FOLAtom(prepareUpdateProcessing);
 		}
 		if(ad != null) {
 			ad.addArgument(new Constant(desireIds.getNextId().toString()));

@@ -116,26 +116,14 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 		return y;
 	}
 	
-	private void calculateModels(ReasonerParameter params){
-		PLWithKnowledgeBeliefbase beliefbase = (PLWithKnowledgeBeliefbase) params.getBeliefBase();
+	private void calculateModels(PLWithKnowledgeBeliefbase beliefbase){
 		Set<PropositionalFormula> knowledge = new HashSet<PropositionalFormula>(beliefbase.getKnowledge());
 		
 		Sat4jEntailment test = new Sat4jEntailment();
-		Set<PossibleWorld> helper = null;
-		Set<NicePossibleWorld> worlds = new HashSet<NicePossibleWorld>();;
-			
+
 		Collection<Proposition> signature = (Collection<Proposition>) beliefbase.getSignature();
-		helper = PossibleWorld.getAllPossibleWorlds(signature);
+		Set<NicePossibleWorld> worlds = NicePossibleWorld.getAllPossibleWorlds(signature);
 		Set<NicePossibleWorld> satisfyingWorlds = new HashSet<NicePossibleWorld>();
-		
-		for(PossibleWorld w: helper){
-			Collection<Proposition> a = new HashSet<Proposition>();
-			Iterator<Proposition> iterator = w.iterator();
-			while(iterator.hasNext()){
-				a.add(iterator.next());
-			}
-			worlds.add(new NicePossibleWorld(a, signature));
-		}
 		
 		//compute the models/worlds for the nonupdatabale formulas
 		for(NicePossibleWorld world: worlds){
@@ -161,48 +149,61 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 		
 		//Update the models/worlds of the nonupdatable formulas step by step with the consitent context formulas
 		
-		PropositionalFormula form = consitent.poll();
-		testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
-		testFormulaSet.add(form);
-		for(NicePossibleWorld world: satisfyingWorlds){	
-			if(world.satisfies(testFormulaSet)){
-				contextModels.add(world);
-				
+		if(consitent.isEmpty()){
+			contextModels = new HashSet<NicePossibleWorld>(satisfyingWorlds);
+		}else{
+			PropositionalFormula form = consitent.poll();
+			testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
+			testFormulaSet.add(form);
+			for(NicePossibleWorld world: satisfyingWorlds){	
+				if(world.satisfies(testFormulaSet)){
+					contextModels.add(world);
+					
+				}
 			}
-		}
-		if(!consitent.isEmpty()){
-			Set<NicePossibleWorld> iterator = new HashSet<NicePossibleWorld>(contextModels);
-			contextModels.clear();
-			
-			for(PropositionalFormula formula: consitent){
-				testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
-				testFormulaSet.add(formula);
-				for(NicePossibleWorld world: iterator){	
-					if(world.satisfies(testFormulaSet)){
-						contextModels.add(world);
-						
-					}else{
-						int nearest = Integer.MAX_VALUE;
-						Set<NicePossibleWorld> possibleNewModels = new HashSet<NicePossibleWorld>();
-						for(NicePossibleWorld a: satisfyingWorlds){
-							if(!a.equals(world) && a.satisfies(formula)){
-								int i = distnace(a, world);
-								if(i == nearest){
-									possibleNewModels.add(a);
-								}else if(i < nearest){
-									//nearer world found delete others
-									nearest = distnace(a, world);
-									possibleNewModels.clear();
-									possibleNewModels.add(a);
+			if(!consitent.isEmpty()){
+				for(PropositionalFormula formula: consitent){
+					Set<NicePossibleWorld> iterator = new HashSet<NicePossibleWorld>(contextModels);
+					contextModels.clear();
+					testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
+					testFormulaSet.add(formula);
+					for(NicePossibleWorld world: iterator){	
+						if(world.satisfies(testFormulaSet)){
+							contextModels.add(world);
+							
+						}else{
+							int nearest = Integer.MAX_VALUE;
+							Set<NicePossibleWorld> possibleNewModels = new HashSet<NicePossibleWorld>();
+							for(NicePossibleWorld a: satisfyingWorlds){
+								if(!a.equals(world) && a.satisfies(formula)){
+									int i = distnace(a, world);
+									if(i == nearest){
+										possibleNewModels.add(a);
+									}else if(i < nearest){
+										//nearer world found delete others
+										nearest = distnace(a, world);
+										possibleNewModels.clear();
+										possibleNewModels.add(a);
+									}
 								}
 							}
+							contextModels.addAll(possibleNewModels);
 						}
-						contextModels.addAll(possibleNewModels);
 					}
 				}
 			}
 		}
 		
 		beliefbaseModels = new ModelTupel(satisfyingWorlds, contextModels);
+	}
+	
+	private void calculateModels(ReasonerParameter params){
+		this.calculateModels((PLWithKnowledgeBeliefbase) params.getBeliefBase());
+		
+	}
+	
+	public ModelTupel getModels(PLWithKnowledgeBeliefbase view){
+		this.calculateModels(view);
+		return this.beliefbaseModels;
 	}
 }

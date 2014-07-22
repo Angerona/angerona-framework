@@ -20,17 +20,15 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
 
-import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
-import com.github.angerona.fw.operators.parameter.ChangeBeliefbaseParameter;
 import com.github.angerona.fw.operators.parameter.ReasonerParameter;
 import com.github.angerona.fw.parser.ParseException;
 import com.github.angerona.fw.util.Pair;
 
 public class Tester {
 	
-	public static String rawbbase = "!Mx || L1  \n !My || L2 \n (L1 && !L2) || (!L1 && L2) \n (Mx && !My) || (!Mx && My) \n !My || P \n ; \n  Mx";
+	public static String rawbbase = "!Mx || L1  \n !My || L2 \n (L1 && !L2) || (!L1 && L2) \n (Mx && !My) || (!Mx && My) \n !My || P \n ; \n  L1 \n Mx";
 	
 	private static ModelTupel beliefbaseModels;
 	
@@ -52,16 +50,17 @@ public class Tester {
 		System.out.println(bbase.toString());
 		
 		System.out.println("Models:");
-		calculateModels(bbase);
+		Set<FolFormula> formulas = inferImpl(bbase);
 		System.out.println(beliefbaseModels);
+		System.out.println("infrerence: " + formulas);
 		
 		PropositionalFormula form = new Proposition("My");
 		bbase.getAssertions().addLast(form);
 		
 		System.out.println("Models:");
-		 Set<FolFormula> formulas = inferImpl(bbase);
+		formulas = inferImpl(bbase);
 		System.out.println(beliefbaseModels);
-		System.out.println(formulas);
+		System.out.println("infrerence: " + formulas);
 		
 		FolFormula query = new FOLAtom(new Predicate("Mx"));
 		System.out.println("Query: " + query);
@@ -128,52 +127,42 @@ public class Tester {
 		return new Pair<Set<FolFormula>, AngeronaAnswer>(answers, new AngeronaAnswer(query, answer));
 	}
 	
-	
-	private static void calculateModels(PLWithKnowledgeBeliefbase params){
-		PLWithKnowledgeBeliefbase beliefbase = params;
+	private static void calculateModels(PLWithKnowledgeBeliefbase beliefbase){
 		Set<PropositionalFormula> knowledge = new HashSet<PropositionalFormula>(beliefbase.getKnowledge());
 		
 		Sat4jEntailment test = new Sat4jEntailment();
-		Set<PossibleWorld> helper = null;
-		Set<NicePossibleWorld> worlds = new HashSet<NicePossibleWorld>();;
-			
-			Collection<Proposition> signature = (Collection<Proposition>) beliefbase.getSignature();
-			helper = PossibleWorld.getAllPossibleWorlds(signature);
-			Set<NicePossibleWorld> satisfyingWorlds = new HashSet<NicePossibleWorld>();
-			
-			for(PossibleWorld w: helper){
-				Collection<Proposition> a = new HashSet<Proposition>();
-				Iterator<Proposition> iterator = w.iterator();
-				while(iterator.hasNext()){
-					a.add(iterator.next());
-				}
-				worlds.add(new NicePossibleWorld(a, signature));
+
+		Collection<Proposition> signature = (Collection<Proposition>) beliefbase.getSignature();
+		Set<NicePossibleWorld> worlds = NicePossibleWorld.getAllPossibleWorlds(signature);
+		Set<NicePossibleWorld> satisfyingWorlds = new HashSet<NicePossibleWorld>();
+		
+		//compute the models/worlds for the nonupdatabale formulas
+		for(NicePossibleWorld world: worlds){
+			if(world.satisfies(knowledge)){
+				satisfyingWorlds.add(world);
 			}
-			
-			//compute the models/worlds for the nonupdatabale formulas
-			for(NicePossibleWorld world: worlds){
-				if(world.satisfies(knowledge)){
-					satisfyingWorlds.add(world);
-				}
+		}
+		
+		//the set of formulas from context which are consistent with the nonupdatable formulas
+		LinkedList<PropositionalFormula> consitent = new LinkedList<PropositionalFormula>();
+		
+		Set<PropositionalFormula> testFormulaSet;
+		
+		for(PropositionalFormula formula : beliefbase.getAssertions()){
+			testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
+			testFormulaSet.add(formula);
+			if(test.isConsistent(testFormulaSet)){
+				consitent.addLast(formula);
 			}
-			
-			//the set of formulas from context which are consistent with the nonupdatable formulas
-			LinkedList<PropositionalFormula> consitent = new LinkedList<PropositionalFormula>();
-			
-			Set<PropositionalFormula> testFormulaSet;
-			
-			for(PropositionalFormula formula : beliefbase.getAssertions()){
-				testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
-				testFormulaSet.add(formula);
-				if(test.isConsistent(testFormulaSet)){
-					consitent.addLast(formula);
-				}
-			}
-			
-			Set<NicePossibleWorld> contextModels = new HashSet<NicePossibleWorld>();
-			
-			//Update the models/worlds of the nonupdatable formulas step by step with the consitent context formulas
-			
+		}
+		
+		Set<NicePossibleWorld> contextModels = new HashSet<NicePossibleWorld>();
+		
+		//Update the models/worlds of the nonupdatable formulas step by step with the consitent context formulas
+		
+		if(consitent.isEmpty()){
+			contextModels = new HashSet<NicePossibleWorld>(satisfyingWorlds);
+		}else{
 			PropositionalFormula form = consitent.poll();
 			testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
 			testFormulaSet.add(form);
@@ -183,11 +172,11 @@ public class Tester {
 					
 				}
 			}
+	
 			if(!consitent.isEmpty()){
-				Set<NicePossibleWorld> iterator = new HashSet<NicePossibleWorld>(contextModels);
-				contextModels.clear();
-				
 				for(PropositionalFormula formula: consitent){
+					Set<NicePossibleWorld> iterator = new HashSet<NicePossibleWorld>(contextModels);
+					contextModels.clear();
 					testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
 					testFormulaSet.add(formula);
 					for(NicePossibleWorld world: iterator){	
@@ -215,8 +204,9 @@ public class Tester {
 					}
 				}
 			}
-			
-			beliefbaseModels = new ModelTupel(satisfyingWorlds, contextModels);
+		}
+		
+		beliefbaseModels = new ModelTupel(satisfyingWorlds, contextModels);
 	}
 	
 	private static int distnace(NicePossibleWorld a, NicePossibleWorld b){

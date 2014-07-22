@@ -9,10 +9,12 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.AngeronaPluginAdapter;
+import com.github.angerona.fw.defendingagent.gui.HistoryView;
 import com.github.angerona.fw.defendingagent.gui.ViewView;
 import com.github.angerona.fw.defendingagent.operators.def.GenerateOptionsOperator;
 import com.github.angerona.fw.defendingagent.operators.def.SubgoalGenerationOperator;
 import com.github.angerona.fw.defendingagent.operators.def.UpdateBeliefsOperator;
+import com.github.angerona.fw.defendingagent.operators.def.ViolatesOperator;
 import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.operators.BaseOperator;
@@ -32,6 +34,7 @@ public class DefendingAgentPlugin extends AngeronaPluginAdapter implements UIPlu
 		reval.add(GenerateOptionsOperator.class);
 		reval.add(UpdateBeliefsOperator.class);
 		reval.add(SubgoalGenerationOperator.class);
+		reval.add(ViolatesOperator.class);
 		return reval;
 	}
 	
@@ -41,6 +44,7 @@ public class DefendingAgentPlugin extends AngeronaPluginAdapter implements UIPlu
 
 		reval.add(CensorComponent.class);
 		reval.add(ViewDataComponent.class);
+		reval.add(HistoryComponent.class);
 		return reval;
 	}
 
@@ -48,6 +52,7 @@ public class DefendingAgentPlugin extends AngeronaPluginAdapter implements UIPlu
 	public Map<String, Class<? extends ViewComponent>> getUIComponents() {
 		Map<String, Class<? extends ViewComponent>> reval = new HashMap<String, Class<? extends ViewComponent>>();
 		reval.put("Views", ViewView.class);
+		reval.put("History", HistoryView.class);
 		return reval;
 	}
 

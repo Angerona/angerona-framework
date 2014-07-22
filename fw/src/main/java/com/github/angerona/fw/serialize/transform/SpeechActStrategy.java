@@ -14,6 +14,7 @@ import com.github.angerona.fw.comm.Justification;
 import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.comm.Revision;
 import com.github.angerona.fw.comm.SpeechAct;
+import com.github.angerona.fw.comm.Update;
 
 public class SpeechActStrategy implements Strategy{
 
@@ -129,6 +130,33 @@ public class SpeechActStrategy implements Strategy{
 					@Override
 					public Class getType() {
 						return Justification.class;
+					}
+
+					@Override
+					public int getLength() {
+						return 0;
+					}
+				};
+			}else if (typeValue.equals("Update")) {
+
+				return new Value() {
+					@Override
+					public void setValue(Object arg0) {
+					}
+
+					@Override
+					public boolean isReference() {
+						return false;
+					}
+
+					@Override
+					public Object getValue() {
+						return null;
+					}
+
+					@Override
+					public Class getType() {
+						return Update.class;
 					}
 
 					@Override

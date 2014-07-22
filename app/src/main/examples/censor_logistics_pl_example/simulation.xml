@@ -1,0 +1,73 @@
+<simulation-configuration>
+	<name>Logistics Example Propositional Logic</name>
+	<category>censor</category>
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    
+    <agent-instance>
+      	<name>Manufacturer</name>
+      	<beliefbase-name>Manufacturer</beliefbase-name>
+      	
+      	<agent-config source="config/agents/censor_defending_agent.xml" />
+        <beliefbase-config source="config/beliefbases/plknowledge_beliefbase.xml" />
+      	
+      <!--  
+        <data key="Confidential">
+            (Supplier, __DEFAULT__, r)
+        </data> 
+      -->
+        
+        <!-- Choose a semantic for the klmlean solver used by the censor component
+		     * CUMMULATIV - Cumulative logic, 
+			 * LOOP_CUMMULATIV - Loop-Cumulative logic, 
+			 * PREFERENTIAL - Preferential logic, 
+			 * RATIONAL - Rational logic, 
+			 * FREE_RATIONAL - Rational logic with free variables
+         -->
+        <data key="KLMSemantics">RATIONAL</data>
+  		
+  		<!-- Choose a View and associated History
+  			* ViewCompressed - Compressed History and the related View
+  			* ViewHistory - Normal History and related View
+  		 -->
+  		<data key="View">ViewHistory</data>
+  	
+      	<capability>Answer</capability>
+      	<capability>UpdateAnswer</capability>
+         
+	</agent-instance>
+    
+	<agent-instance>
+		<name>Supplier</name>
+        <beliefbase-name>Supplier</beliefbase-name>
+         
+        <agent-config source="config/agents/censor_attacking_agent.xml" />
+        <beliefbase-config source="config/beliefbases/plknowledge_beliefbase.xml" />
+
+		<desire>scriptingProcessing</desire>
+		<script>
+        	<SpeechAct type="Query">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<question>Mx</question>
+        	</SpeechAct>
+        </script>      
+        <script>
+        	<SpeechAct type="Query">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<question>P</question>
+        	</SpeechAct>
+        </script> 
+        <script>
+        	<SpeechAct type="Update">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<proposition>My</proposition>
+        	</SpeechAct>
+        </script>   
+
+        <capability>Query</capability>
+        <capability>Update</capability>
+        
+	</agent-instance>	
+</simulation-configuration>
