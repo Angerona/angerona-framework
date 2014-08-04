@@ -64,6 +64,12 @@ public class ViewDataComponent extends BaseAgentComponent {
 				String agent = iterator.next();
 				views.put(agent, new ViewWithHistory((ViewWithHistory)other.views.get(agent)));
 			}
+		}else if(v instanceof BetterView){
+			views.put(s, new BetterView((BetterView)v));
+			while(iterator.hasNext()){
+				String agent = iterator.next();
+				views.put(agent, new BetterView((BetterView)other.views.get(agent)));
+			}
 		}
 	}
 
@@ -116,6 +122,10 @@ public class ViewDataComponent extends BaseAgentComponent {
 						report("Added view for new agent '" + agent +"': " + view.toString());
 					}else if(str.equals("ViewHistory")){
 						ViewWithHistory view = new ViewWithHistory((PLWithKnowledgeBeliefbase)bbase);
+						this.views.put(agent, view);
+						report("Added view for new agent '" + agent +"': " + view.toString());
+					}else if(str.equals("BetterView")){
+						BetterView view = new BetterView((PLWithKnowledgeBeliefbase)bbase);
 						this.views.put(agent, view);
 						report("Added view for new agent '" + agent +"': " + view.toString());
 					}

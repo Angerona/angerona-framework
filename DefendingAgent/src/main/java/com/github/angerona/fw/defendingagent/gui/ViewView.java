@@ -6,8 +6,11 @@ import java.util.Map;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
+import com.github.angerona.fw.defendingagent.BetterView;
 import com.github.angerona.fw.defendingagent.CensorComponent;
+import com.github.angerona.fw.defendingagent.CompressedHistory;
 import com.github.angerona.fw.defendingagent.GeneralView;
+import com.github.angerona.fw.defendingagent.HistoryComponent;
 import com.github.angerona.fw.defendingagent.View;
 import com.github.angerona.fw.defendingagent.ViewDataComponent;
 import com.github.angerona.fw.defendingagent.ViewWithCompressedHistory;
@@ -34,9 +37,8 @@ public class ViewView extends ListViewColored {
 	protected List<String> getStringRepresentation(Entity obj) {
 		List<String> reval = new LinkedList<>();
 		if(obj instanceof ViewDataComponent) {
-			CensorComponent cexec = new CensorComponent();
-			
 			ViewDataComponent viewComponent = (ViewDataComponent)obj;
+			CensorComponent cexec = viewComponent.getAgent().getComponent(CensorComponent.class);
 			Map<String, GeneralView> views = viewComponent.getViews();
 			for(String agent : views.keySet()) {
 				if(views.get(agent) instanceof View){
@@ -62,6 +64,17 @@ public class ViewView extends ListViewColored {
 					}
 				}else if(views.get(agent) instanceof ViewWithCompressedHistory){
 					ViewWithCompressedHistory currentView = (ViewWithCompressedHistory)views.get(agent);
+					reval.add("View on agent " + agent + ": <Knowledge, Assertions> with");
+					reval.add("   Knowledge  = " + currentView.getView().getKnowledge());
+					reval.add("   Assertions = " + currentView.getView().getAssertions());
+					reval.add("   sceptical inferences: ");
+					CompressedHistory history = (CompressedHistory)viewComponent.getAgent().getComponent(HistoryComponent.class).getHistories().get(agent);
+					List<FolFormula> inf = cexec.scepticalInferences(currentView, history);
+					for(FolFormula fol : inf) {
+						reval.add("    " + fol.toString());					
+					}
+				}else if(views.get(agent) instanceof BetterView){
+					BetterView currentView = (BetterView)views.get(agent);
 					reval.add("View on agent " + agent + ": <Knowledge, Assertions> with");
 					reval.add("   Knowledge  = " + currentView.getView().getKnowledge());
 					reval.add("   Assertions = " + currentView.getView().getAssertions());

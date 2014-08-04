@@ -17,15 +17,16 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.defendingagent.Prover.Prover;
 import com.github.angerona.fw.defendingagent.Prover.SICStusException;
@@ -204,8 +205,9 @@ public class CensorComponent extends BaseAgentComponent {
 		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getView().getReasoningOperator().getImplementation();
 		ModelTupel models = reasoner.getModels(view.getView());
 		Iterator<NicePossibleWorld> iterator = models.getModels().iterator();
+		FOLPropTranslator translator = new FOLPropTranslator();
 		while(iterator.hasNext()){
-			if(!iterator.next().satisfies(formula)){
+			if(!iterator.next().satisfies(translator.toPropositional(formula))){
 				satisfy = false;
 				break;
 			}
@@ -232,9 +234,78 @@ public class CensorComponent extends BaseAgentComponent {
 	 * @param formula
 	 * @return
 	 */
-	public boolean scepticalInference(ViewWithCompressedHistory view, FolFormula formula) {
-		List<FolFormula> list = this.scepticalInferences(view);
+	public boolean scepticalInference(ViewWithCompressedHistory view, FolFormula formula, CompressedHistory history) {
+		List<FolFormula> list = this.scepticalInferences(view, history);
 		return list.contains(formula);
+	}
+	
+	/**
+	 * Calculate all possible literals that can be sceptically infered from a given view with a history.
+	 * 
+	 * @param view a view.
+	 * @param history a history
+	 * @return a list of positive and negated literals that can be infered from the given view.
+	 */
+	public List<FolFormula> scepticalInferences(ViewWithCompressedHistory view, CompressedHistory history) {
+		
+		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) this.getAgent().getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
+		LinkedList<Set<FolFormula>> list = new LinkedList<Set<FolFormula>>();
+		LinkedList<FolFormula> retval = new LinkedList<FolFormula>();
+		Set<PLWithKnowledgeBeliefbase> b = view.calculatePossibleBeliefbases(history);
+		if(!b.isEmpty()){
+			for(PLWithKnowledgeBeliefbase bbase : b){
+				list.add(reasoner.infer(bbase));
+			}
+		}
+		Set<FolFormula> compareList = list.poll();
+		if(!list.isEmpty()){
+			for(FolFormula formula: compareList){
+				boolean inAllLists = true;
+				for(Set<FolFormula> l: list){
+					if(!l.contains(formula)){
+						inAllLists = false;
+						break;
+					}
+				}
+				if(inAllLists){
+					retval.add(formula);
+				}
+			}
+		}else{
+			if(compareList != null){
+				retval = new LinkedList<FolFormula>(compareList);
+			}else{
+				retval = new LinkedList<FolFormula>();
+			}
+		}
+		
+		return retval;
+	}
+	
+	/**
+	 * Calculate a skeptical inference of a given formula under a specific view.
+	 * Returns true iff formula follows skeptically from the view and false otherwise 
+	 * @param view
+	 * @param formula
+	 * @return
+	 */
+	public boolean scepticalInference(BetterView view, FolFormula formula) {
+		boolean satisfy = true;
+		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getAgent().getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
+		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
+		bbase.setKnowledge(view.getView().getKnowledge());
+		bbase.setAssertions(new LinkedList<>(new Conjunction(view.getView().getAssertions())));
+
+		ModelTupel models = reasoner.getModels(bbase);
+		Iterator<NicePossibleWorld> iterator = models.getModels().iterator();
+		FOLPropTranslator translator = new FOLPropTranslator();
+		while(iterator.hasNext()){
+			if(!iterator.next().satisfies(translator.toPropositional(formula))){
+				satisfy = false;
+				break;
+			}
+		}
+		return satisfy;
 	}
 	
 	/**
@@ -243,33 +314,13 @@ public class CensorComponent extends BaseAgentComponent {
 	 * @param view a view.
 	 * @return a list of positive and negated literals that can be infered from the given view.
 	 */
-	public List<FolFormula> scepticalInferences(ViewWithCompressedHistory view) {
-		Agent ag = view.getView().getAgent();
-		CompressedHistory history = (CompressedHistory) ag.getComponent(HistoryComponent.class).getHistories().get(ag.getName());
-		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getView().getReasoningOperator().getImplementation();
-		view.calculatePossibleBeliefbases(history);
-		LinkedList<Set<FolFormula>> list = new LinkedList<Set<FolFormula>>();
-		LinkedList<FolFormula> retval = new LinkedList<FolFormula>();
-		for(PLWithKnowledgeBeliefbase bbase : view.getPossibleBeliefbases()){
-			list.add(reasoner.infer(bbase));
-		}
-		Set<FolFormula> compareList = list.poll();
-		for(FolFormula formula: compareList){
-			boolean inAllLists = true;
-			for(Set<FolFormula> l: list){
-				if(!l.contains(formula)){
-					inAllLists = false;
-					break;
-				}
-			}
-			if(inAllLists){
-				retval.add(formula);
-			}
-		}
-		
-		return retval;
+	public List<FolFormula> scepticalInferences(BetterView view) {
+		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getAgent().getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
+		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
+		bbase.setKnowledge(view.getView().getKnowledge());
+		bbase.setAssertions(new LinkedList<>(new Conjunction(view.getView().getAssertions())));
+		return new LinkedList<FolFormula>(reasoner.infer(bbase));
 	}
-	
 	
 	/**
 	 * Create a BeliefBase out of the View on the attacking agent

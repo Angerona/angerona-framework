@@ -79,7 +79,7 @@ public class CompressedHistory implements GeneralHistory{
 
 	public void putAction(Perception perception, AnswerValue answer) {
 		if(perception instanceof Query) {
-			//If the perception is a Quary the sets of the triplet will be updatet dependent on the AnswerValue
+			//If the perception is a Query the sets of the triplet will be updatet dependent on the AnswerValue
 			if(answer == AnswerValue.AV_UNKNOWN){
 				Query query = ((Query) perception);
 				FOLPropTranslator translator = new FOLPropTranslator();
@@ -98,18 +98,21 @@ public class CompressedHistory implements GeneralHistory{
 				history.getLast().getAnswers().add(formula);
 			}
 		}else if(perception instanceof Update){
-			//If the perception is an Update a new triplet is added to the history
-			Update update = (Update) perception;
-			FOLPropTranslator translator = new FOLPropTranslator();
-			PropositionalFormula formula = translator.toPropositional(update.getProposition());
-			Triplet<PropositionalFormula, 
-					Set<PropositionalFormula>, 
-					Set<PropositionalFormula>> triplet = new Triplet<PropositionalFormula, 
-																				Set<PropositionalFormula>, 
-																				Set<PropositionalFormula>>(formula, 
-																													  new HashSet<PropositionalFormula>(), 
-																													  new HashSet<PropositionalFormula>());
-			history.add(triplet);
+			if(answer == AnswerValue.AV_TRUE){
+				//If the perception is a successful Update a new triplet is added to the history
+				Update update = (Update) perception;
+				FOLPropTranslator translator = new FOLPropTranslator();
+				PropositionalFormula formula = translator.toPropositional(update.getProposition());
+				Triplet<PropositionalFormula, 
+						Set<PropositionalFormula>, 
+						Set<PropositionalFormula>> triplet = new Triplet<PropositionalFormula, 
+																					Set<PropositionalFormula>, 
+																					Set<PropositionalFormula>>(formula, 
+																														  new HashSet<PropositionalFormula>(), 
+																														  new HashSet<PropositionalFormula>());
+				history.add(triplet);
+			}
+			
 		}
 	}
 	
@@ -117,5 +120,24 @@ public class CompressedHistory implements GeneralHistory{
 	   Set<PropositionalFormula>,
 	   Set<PropositionalFormula>>> getHistory(){
 		return history;
+	}
+	
+	public void init(PropositionalFormula upd){
+		Triplet<PropositionalFormula, 
+		Set<PropositionalFormula>, 
+		Set<PropositionalFormula>> triplet = new Triplet<PropositionalFormula, 
+																	Set<PropositionalFormula>, 
+																	Set<PropositionalFormula>>(upd, 
+																										  new HashSet<PropositionalFormula>(), 
+																										  new HashSet<PropositionalFormula>());
+		this.history.add(triplet);
+	}
+	
+	public String toString(){
+		String reval = "History: ";
+		for(Triplet<PropositionalFormula, Set<PropositionalFormula>, Set<PropositionalFormula>> t : history){
+			reval += "< Update: " + t.update + ", B+: " + t.getAnswers() +", B-: " + t.getUndefAnswers() + ">";
+ 		}
+		return reval;
 	}
 }

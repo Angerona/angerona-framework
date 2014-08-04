@@ -29,6 +29,7 @@ import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.comm.Revision;
 import com.github.angerona.fw.comm.SpeechAct;
 import com.github.angerona.fw.comm.Update;
+import com.github.angerona.fw.defendingagent.BetterView;
 import com.github.angerona.fw.defendingagent.CensorComponent;
 import com.github.angerona.fw.defendingagent.CompressedHistory;
 import com.github.angerona.fw.defendingagent.GeneralHistory;
@@ -114,8 +115,8 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
-		Query query = (Query) desire.getPerception();
-
+		Query query = (Query) desire.getPerception();		
+		
 		GeneralView v = ag.getComponent(ViewDataComponent.class).getView(query.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		GeneralHistory history = null;
@@ -163,59 +164,33 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 				ViewWithCompressedHistory copyView = new ViewWithCompressedHistory(view);
 				CompressedHistory refinedHistory = new CompressedHistory((CompressedHistory)history);
 				refinedHistory.putAction(query, AnswerValue.AV_TRUE);
-				copyView.calculatePossibleBeliefbases(refinedHistory);
-				boolean allRevealSecret = true;
-				for(PLWithKnowledgeBeliefbase bbase: copyView.getPossibleBeliefbases()){
-					ViewWithCompressedHistory refinedView = new ViewWithCompressedHistory(bbase);
-					if(!cexec.scepticalInference(refinedView, a.getInformation())){
-						allRevealSecret = false;
-						break;
-					}
-				}
-				if(allRevealSecret){
+				if(cexec.scepticalInference(copyView, a.getInformation(), refinedHistory)){
 					this.sendRejectAnswer(ag, desire, cexec, query, a, "true");
 					history.putAction(query, AnswerValue.AV_REJECT);
 					ag.getComponent(HistoryComponent.class).getHistories().put(query.getSenderId(), history);
 					return true;
 				}
-				
+
 				//ans := false
 				copyView = new ViewWithCompressedHistory(view);
 				refinedHistory = new CompressedHistory((CompressedHistory)history);
 				refinedHistory.putAction(query, AnswerValue.AV_FALSE);
-				copyView.calculatePossibleBeliefbases(refinedHistory);
-				allRevealSecret = true;
-				for(PLWithKnowledgeBeliefbase bbase: copyView.getPossibleBeliefbases()){
-					ViewWithCompressedHistory refinedView = new ViewWithCompressedHistory(bbase);
-					if(!cexec.scepticalInference(refinedView, a.getInformation())){
-						allRevealSecret = false;
-						break;
-					}
-				}
-				if(allRevealSecret){
+				if(cexec.scepticalInference(copyView, a.getInformation(), refinedHistory)){
 					this.sendRejectAnswer(ag, desire, cexec, query, a, "false");
 					history.putAction(query, AnswerValue.AV_REJECT);
 					ag.getComponent(HistoryComponent.class).getHistories().put(query.getSenderId(), history);
 					return true;
 				}
+				
 				//ans := undef
 				copyView = new ViewWithCompressedHistory(view);
 				refinedHistory = new CompressedHistory((CompressedHistory)history);
 				refinedHistory.putAction(query, AnswerValue.AV_UNKNOWN);
-				copyView.calculatePossibleBeliefbases(refinedHistory);
-				allRevealSecret = true;
-				for(PLWithKnowledgeBeliefbase bbase: copyView.getPossibleBeliefbases()){
-					ViewWithCompressedHistory refinedView = new ViewWithCompressedHistory(bbase);
-					if(!cexec.scepticalInference(refinedView, a.getInformation())){
-						allRevealSecret = false;
-						break;
-					}
-				}
-				if(allRevealSecret){
+				if(cexec.scepticalInference(copyView, a.getInformation(), refinedHistory)){
 					this.sendRejectAnswer(ag, desire, cexec, query, a, "unknown");
 					history.putAction(query, AnswerValue.AV_REJECT);
 					ag.getComponent(HistoryComponent.class).getHistories().put(query.getSenderId(), history);
-					return true;
+					return true;					
 				}
 			}
 		}else if(v instanceof ViewWithHistory){
@@ -250,6 +225,31 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					this.sendRejectAnswer(ag, desire, cexec, query, a, "unknown");
 					history.putAction(query, AnswerValue.AV_REJECT);
 					ag.getComponent(HistoryComponent.class).getHistories().put(query.getSenderId(), history);
+					return true;
+				}
+			}
+		}else if(v instanceof BetterView){
+			BetterView view = (BetterView) v;
+			
+			// check for all possible answers to the query, whether this answer would
+			// potentially reveal a secret and in that case, refuse to answer.
+			for(Secret a : conf.getSecrets()){
+				//ans := true
+				if(cexec.scepticalInference(view.MentalRefineViewByQuery(query.getQuestion(), AnswerValue.AV_TRUE),
+						a.getInformation())){
+					this.sendRejectAnswer(ag, desire, cexec, query, a, "true");
+					return true;
+				}
+				//ans := false
+				if(cexec.scepticalInference(view.MentalRefineViewByQuery(query.getQuestion(), AnswerValue.AV_FALSE),
+						a.getInformation())){
+					this.sendRejectAnswer(ag, desire, cexec, query, a, "false");
+					return true;
+				}
+				//ans := undef
+				if(cexec.scepticalInference(view.MentalRefineViewByQuery(query.getQuestion(), AnswerValue.AV_UNKNOWN), 
+						a.getInformation())){
+					this.sendRejectAnswer(ag, desire, cexec, query, a, "unknown");
 					return true;
 				}
 			}
@@ -364,14 +364,14 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		CensorComponent cexec = ag.getComponent(CensorComponent.class);
 		
 		Update update = (Update) desire.getPerception();
-
+				
 		GeneralView v = ag.getComponent(ViewDataComponent.class).getView(update.getSenderId());
 		SecrecyKnowledge conf = ag.getComponent(SecrecyKnowledge.class);
 		GeneralHistory history = null;
 		
 		pp.report("Invoke censor to check all possible answers for meta inferences");
 		if(v instanceof ViewWithCompressedHistory){
-			ViewWithCompressedHistory view = (ViewWithCompressedHistory) v;
+			ViewWithCompressedHistory view = new ViewWithCompressedHistory((ViewWithCompressedHistory) v);
 			history = ag.getComponent(HistoryComponent.class).getHistories().get(update.getSenderId());
 			if(history == null){
 				history = new CompressedHistory();
@@ -379,19 +379,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			}
 			// check if update would reveal a secret
 			ViewWithCompressedHistory refinedView = view.RefineViewByUpdate(update.getProposition(), AnswerValue.AV_TRUE);
-			refinedView.calculatePossibleBeliefbases((CompressedHistory)history);
-			
-			boolean allRevealSecret = true;
+			CompressedHistory refinedHistory = new CompressedHistory((CompressedHistory)history);
+			refinedHistory.putAction(update, AnswerValue.AV_TRUE);
 		
 			for(Secret s : conf.getSecrets()) {
-				for(PLWithKnowledgeBeliefbase bbase: refinedView.getPossibleBeliefbases()){
-					ViewWithCompressedHistory possiblebbase = new ViewWithCompressedHistory(bbase);
-					if(!cexec.scepticalInference(possiblebbase, s.getInformation())){
-						allRevealSecret = false;
-						break;
-					}
-				}
-				if(allRevealSecret) {
+				if(cexec.scepticalInference(refinedView, s.getInformation(), refinedHistory)){
 					this.sendRejectAnswer(ag, desire, cexec, update, s, "success");
 					history.putAction(update, AnswerValue.AV_REJECT);
 					ag.getComponent(HistoryComponent.class).getHistories().put(update.getSenderId(), history);
@@ -401,19 +393,11 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 			
 			// check if the failure of the update would reveal a secret
 			refinedView = view.RefineViewByUpdate(update.getProposition(), AnswerValue.AV_FALSE);
-			refinedView.calculatePossibleBeliefbases((CompressedHistory)history);
-			
-			allRevealSecret = true;
+			refinedHistory = new CompressedHistory((CompressedHistory)history);
+			refinedHistory.putAction(update, AnswerValue.AV_FALSE);
 		
 			for(Secret s : conf.getSecrets()) {
-				for(PLWithKnowledgeBeliefbase bbase: refinedView.getPossibleBeliefbases()){
-					ViewWithCompressedHistory possiblebbase = new ViewWithCompressedHistory(bbase);
-					if(!cexec.scepticalInference(possiblebbase, s.getInformation())){
-						allRevealSecret = false;
-						break;
-					}
-				}
-				if(allRevealSecret) {
+				if(cexec.scepticalInference(refinedView, s.getInformation(), refinedHistory)){
 					this.sendRejectAnswer(ag, desire, cexec, update, s, "failure");
 					history.putAction(update, AnswerValue.AV_REJECT);
 					ag.getComponent(HistoryComponent.class).getHistories().put(update.getSenderId(), history);
@@ -445,6 +429,26 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					this.sendRejectAnswer(ag, desire, cexec, update, s, "failure");
 					history.putAction(update, AnswerValue.AV_REJECT);
 					ag.getComponent(HistoryComponent.class).getHistories().put(update.getSenderId(), history);
+					return true;
+				}
+			}
+		}else if(v instanceof BetterView){
+			BetterView view = (BetterView) v;
+			
+			// check if update would reveal a secret
+			BetterView refinedView = view.RefineViewByUpdate(update.getProposition(), AnswerValue.AV_TRUE);
+			for(Secret s : conf.getSecrets()) {
+				if(cexec.scepticalInference(refinedView, s.getInformation())) {
+					this.sendRejectAnswer(ag, desire, cexec, update, s, "success");
+					return true;
+				}
+			}
+			
+			// check if the failure of the update would reveal a secret
+			refinedView = view.RefineViewByUpdate(update.getProposition(), AnswerValue.AV_FALSE);
+			for(Secret s : conf.getSecrets()) {
+				if(cexec.scepticalInference(refinedView, s.getInformation())) {
+					this.sendRejectAnswer(ag, desire, cexec, update, s, "failure");
 					return true;
 				}
 			}

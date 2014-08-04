@@ -5,8 +5,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.logic.AnswerValue;
+import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
 
 public class HistoryComponent extends BaseAgentComponent{
 	
@@ -66,6 +68,15 @@ public class HistoryComponent extends BaseAgentComponent{
 	public void init(Map<String, String> additionalData) {
 		if(additionalData.containsKey("View")) {
 			instance = additionalData.get("View");
+			if(instance.equals("ViewCompressed")){
+				Map<String, BaseBeliefbase> bbviews = getAgent().getBeliefs().getViewKnowledge();
+				for(String agent : bbviews.keySet()) {
+					PLWithKnowledgeBeliefbase bbase = (PLWithKnowledgeBeliefbase) bbviews.get(agent);
+					CompressedHistory h = new CompressedHistory();
+					h.init(bbase.getAssertions().getLast());
+					history.put(agent, h);
+				}
+			}
 		}
 	}
 }

@@ -11,10 +11,8 @@ import com.github.angerona.fw.comm.Answer;
 import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.comm.SpeechAct;
 import com.github.angerona.fw.comm.Update;
-import com.github.angerona.fw.defendingagent.CompressedHistory;
-import com.github.angerona.fw.defendingagent.GeneralHistory;
+import com.github.angerona.fw.defendingagent.BetterView;
 import com.github.angerona.fw.defendingagent.GeneralView;
-import com.github.angerona.fw.defendingagent.HistoryComponent;
 import com.github.angerona.fw.defendingagent.View;
 import com.github.angerona.fw.defendingagent.ViewDataComponent;
 import com.github.angerona.fw.defendingagent.ViewWithCompressedHistory;
@@ -54,7 +52,6 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 		}
 		String out = "Received perception: " + act.toString();
 		ViewDataComponent views = param.getAgent().getComponent(ViewDataComponent.class);
-		HistoryComponent histories = param.getAgent().getComponent(HistoryComponent.class);
 		// ignore incoming actions
 		if(!id.equals(act.getSenderId())) {
 			param.report(out);
@@ -90,16 +87,17 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			UpdateAnswer ans = (UpdateAnswer) act;
 			AnswerValue value = ans.getAnswer().getAnswerValue();
 			Update update = new Update(ans.getReceiverId(), ans.getSenderId(), ans.getRegarding());
-			GeneralHistory history = histories.getHistories().get(ans.getReceiverId());
 			if(value != AnswerValue.AV_REJECT) {
 				GeneralView view = views.getView(act.getReceiverId());
 				if(view instanceof ViewWithCompressedHistory){
 					view = ((ViewWithCompressedHistory)view).RefineViewByUpdate(update.getProposition(), value);
-					((ViewWithCompressedHistory)view).calculatePossibleBeliefbases((CompressedHistory) history);
 					views.setView(act.getReceiverId(), (ViewWithCompressedHistory)view);
 				}else if(view instanceof ViewWithHistory){
 					view = ((ViewWithHistory)view).RefineViewByUpdate(update.getProposition(), value);
 					views.setView(act.getReceiverId(), (ViewWithHistory)view);
+				}else if(view instanceof BetterView){
+					view = ((BetterView)view).RefineViewByUpdate(update.getProposition(), value);
+					views.setView(act.getReceiverId(), (BetterView)view);
 				}
 			}
 			
@@ -125,13 +123,12 @@ public class UpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 					//param.report("Refined view on agent '" + act.getReceiverId() + "': " + view.toString());
 				}else{
 					Query query = new Query(ans.getReceiverId(), ans.getSenderId(), new FolFormulaVariable(ans.getRegarding()));
-					GeneralHistory history = histories.getHistories().get(ans.getReceiverId());
-					
-					if(view instanceof ViewWithCompressedHistory){
-						((ViewWithCompressedHistory)view).calculatePossibleBeliefbases((CompressedHistory) history);	
-					}else if(view instanceof ViewWithHistory){
-						view = ((ViewWithHistory)view).RefineViewByUpdate(query.getQuestion(), value);
+					if(view instanceof ViewWithHistory){
+						view = ((ViewWithHistory)view).RefineViewByQuery(query.getQuestion(), value);
 						views.setView(act.getReceiverId(), (ViewWithHistory)view);
+					}else if(view instanceof BetterView){
+						view = ((BetterView)view).RefineViewByQuery(query.getQuestion(), value);
+						views.setView(act.getReceiverId(), (BetterView)view);
 					}	
 				}			
 			}

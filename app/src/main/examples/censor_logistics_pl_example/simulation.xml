@@ -10,26 +10,18 @@
       	<agent-config source="config/agents/censor_defending_agent.xml" />
         <beliefbase-config source="config/beliefbases/plknowledge_beliefbase.xml" />
       	
-      <!--  
+      
         <data key="Confidential">
-            (Supplier, __DEFAULT__, r)
+            (Supplier, __DEFAULT__, My)
         </data> 
-      -->
-        
-        <!-- Choose a semantic for the klmlean solver used by the censor component
-		     * CUMMULATIV - Cumulative logic, 
-			 * LOOP_CUMMULATIV - Loop-Cumulative logic, 
-			 * PREFERENTIAL - Preferential logic, 
-			 * RATIONAL - Rational logic, 
-			 * FREE_RATIONAL - Rational logic with free variables
-         -->
-        <data key="KLMSemantics">RATIONAL</data>
+     
   		
   		<!-- Choose a View and associated History
   			* ViewCompressed - Compressed History and the related View
   			* ViewHistory - Normal History and related View
+  			* BetterView - Faster alternative for ViewCompressed
   		 -->
-  		<data key="View">ViewHistory</data>
+  		<data key="View">BetterView</data>
   	
       	<capability>Answer</capability>
       	<capability>UpdateAnswer</capability>
@@ -50,21 +42,28 @@
         		<receiver>Manufacturer</receiver>
         		<question>Mx</question>
         	</SpeechAct>
-        </script>      
+        </script> 
+        <script>
+        	<SpeechAct type="Update">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<proposition>P</proposition>
+        	</SpeechAct>
+        </script>  
+        <script>
+        	<SpeechAct type="Update">
+        		<sender>Supplier</sender>
+        		<receiver>Manufacturer</receiver>
+        		<proposition>L2</proposition>
+        	</SpeechAct>
+        </script>     
         <script>
         	<SpeechAct type="Query">
         		<sender>Supplier</sender>
         		<receiver>Manufacturer</receiver>
         		<question>P</question>
         	</SpeechAct>
-        </script> 
-        <script>
-        	<SpeechAct type="Update">
-        		<sender>Supplier</sender>
-        		<receiver>Manufacturer</receiver>
-        		<proposition>My</proposition>
-        	</SpeechAct>
-        </script>   
+        </script>    
 
         <capability>Query</capability>
         <capability>Update</capability>
