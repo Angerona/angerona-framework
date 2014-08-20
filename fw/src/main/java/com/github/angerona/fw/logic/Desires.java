@@ -57,6 +57,13 @@ public class Desires extends BaseAgentComponent {
 		return false;
 	}
 	
+	/**
+	 * Removes all current desires.
+	 */
+	public void clear() {
+		desires = new HashSet<Desire>();
+	}
+	
 	public Desire getDesire(Desire desire) {
 		for(Desire des : desires) {
 			if(desire.equals(des))
@@ -96,6 +103,7 @@ public class Desires extends BaseAgentComponent {
 		}
 		return reval;
 	}
+	
 
 	@Override
 	public Desires clone() {
