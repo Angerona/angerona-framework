@@ -1,7 +1,9 @@
 package com.github.angerona.fw.motivation.dao.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,7 @@ import com.github.angerona.fw.motivation.dao.LevelWeightDao;
  * @author Manuel Barbi
  * 
  */
-public abstract class GenLevelWeights<L extends MotiveLevel> extends BaseAgentComponent implements LevelWeightDao<L> {
+public abstract class GenLevelWeights<L extends MotiveLevel> extends BaseAgentComponent implements LevelWeightDao<L>, Iterable<Entry<L, Double>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GenLevelWeights.class);
 
@@ -33,6 +35,11 @@ public abstract class GenLevelWeights<L extends MotiveLevel> extends BaseAgentCo
 	@Override
 	public void putWeight(L key, double value) {
 		weights.put(key, value);
+	}
+
+	@Override
+	public Iterator<Entry<L, Double>> iterator() {
+		return weights.entrySet().iterator();
 	}
 
 	@Override

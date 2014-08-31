@@ -3,6 +3,7 @@ package com.github.angerona.fw.motivation.dao.impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -23,7 +24,8 @@ import com.github.angerona.fw.motivation.model.MotiveCoupling;
  * @author Manuel Barbi
  * 
  */
-public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formula> extends BaseAgentComponent implements CouplingDao<L, F> {
+public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formula> extends BaseAgentComponent implements CouplingDao<L, F>,
+		Iterable<MotiveCoupling<L, F>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GenMotiveCouplings.class);
 
@@ -122,6 +124,11 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formul
 		}
 
 		return (count > 0) ? sum / count : 0;
+	}
+
+	@Override
+	public Iterator<MotiveCoupling<L, F>> iterator() {
+		return couplings.iterator();
 	}
 
 	@Override

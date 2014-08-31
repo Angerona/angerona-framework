@@ -2,6 +2,7 @@ package com.github.angerona.fw.motivation.dao.impl;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import com.github.angerona.fw.motivation.model.MotStrcEntry;
  * @author Manuel Barbi
  * 
  */
-public class MotStructure extends BaseAgentComponent implements MotStructureDao {
+public class MotStructure extends BaseAgentComponent implements MotStructureDao, Iterable<MotStrcEntry> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MotStructure.class);
 
@@ -49,6 +50,11 @@ public class MotStructure extends BaseAgentComponent implements MotStructureDao 
 		this.entries.clear();
 		this.entries.addAll(entries);
 		Collections.sort(this.entries);
+	}
+
+	@Override
+	public Iterator<MotStrcEntry> iterator() {
+		return entries.iterator();
 	}
 
 	@Override

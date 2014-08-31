@@ -35,7 +35,7 @@ public class MotStrcEntry implements Comparable<MotStrcEntry> {
 
 	@Override
 	public String toString() {
-		return "MotStrcEntry [" + desire + ", " + motivationalValue + "]";
+		return "(" + desire + ", " + motivationalValue + ")";
 	}
 
 	@Override

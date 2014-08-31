@@ -1,5 +1,7 @@
 package com.github.angerona.fw.motivation.island.comp;
 
+import java.util.Arrays;
+
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.motivation.island.enums.Location;
 
@@ -22,6 +24,34 @@ public class Area extends BaseAgentComponent {
 
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	public void build(int step) {
+		for (int i = 0; i < 16; i++) {
+			if (i < 8) {
+				if (solid[i] < 8) {
+					solid[i] = Math.min(solid[i] + step, 8);
+					return;
+				}
+			} else {
+				if (vulnurable[i - 8] < 8) {
+					vulnurable[i - 8] = Math.min(vulnurable[i - 8] + step, 8);
+					return;
+				}
+			}
+		}
+	}
+
+	public String getExpansionStage() {
+		return "(solid: " + Arrays.toString(solid) + ", vulnurable: " + Arrays.toString(vulnurable) + ")";
+	}
+
+	public int getOn_way() {
+		return on_way;
+	}
+
+	public void setOn_way(int on_way) {
+		this.on_way = on_way;
 	}
 
 	public boolean isSecured() {
