@@ -14,8 +14,12 @@ import com.github.angerona.fw.motivation.dao.impl.MotStructure;
 import com.github.angerona.fw.motivation.dao.impl.MotiveCouplings;
 import com.github.angerona.fw.motivation.dao.impl.WeightRanges;
 import com.github.angerona.fw.motivation.island.IslandTranslator;
+import com.github.angerona.fw.motivation.island.comp.Area;
+import com.github.angerona.fw.motivation.island.comp.Battery;
 import com.github.angerona.fw.motivation.island.comp.IslandCouplings;
 import com.github.angerona.fw.motivation.island.comp.IslandDesires;
+import com.github.angerona.fw.motivation.island.operators.BdiSelectionOperator;
+import com.github.angerona.fw.motivation.island.operators.IslandActionOperator;
 import com.github.angerona.fw.operators.BaseOperator;
 
 /**
@@ -36,6 +40,8 @@ public class MotivationPlugin extends AngeronaPluginAdapter {
 		reval.add(DefaultRanges.class);
 		reval.add(IslandDesires.class);
 		reval.add(IslandCouplings.class);
+		reval.add(Battery.class);
+		reval.add(Area.class);
 		return reval;
 	}
 
@@ -43,6 +49,9 @@ public class MotivationPlugin extends AngeronaPluginAdapter {
 	public List<Class<? extends BaseOperator>> getOperators() {
 		List<Class<? extends BaseOperator>> reval = new ArrayList<>();
 		reval.add(MotivationOperator.class);
+		reval.add(MotivationFilterOperator.class);
+		reval.add(BdiSelectionOperator.class);
+		reval.add(IslandActionOperator.class);
 		return reval;
 	}
 

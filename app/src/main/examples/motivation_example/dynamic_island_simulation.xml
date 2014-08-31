@@ -1,0 +1,44 @@
+<simulation-configuration>
+	<name>Strike Committee Meeting (Simple)</name>
+	<category>scm</category>
+	<behavior>com.github.angerona.fw.motivation.island.IslandBehavior</behavior>
+	<description>
+		This scenario uses the simple knowledge representation mechanism
+		and shows that the agent using this mechanism is capable to lie
+		if it is directly asked for an agent.
+		- The employee informs the boss that he needs the next day off
+		- The boss ask the employee if he attends to the strike committee
+		  meeting
+		- The employee lies and therefore answers with no.
+	</description>
+	
+	<agent-instance>
+		<name>Employee</name>
+		
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/example_beliefbase.xml" />
+		
+		<data key="Confidential">(Boss, __DEFAULT__, attend_scm)</data>
+	</agent-instance>
+	
+	<agent-instance>
+		<name>Boss</name>
+		
+	
+		
+        <agent-config source="config/agents/default_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/example_beliefbase.xml" />
+        
+        <desire>q_Employee(attend_scm)</desire>
+	</agent-instance>
+	
+	<!-- Undocument the following to generate a Peception at the beginning of the simulation: -->
+	<!-- 
+	<perception class="angerona.fw.comm.Query">
+      <sender>Boss</sender>
+      <receiver>Employee</receiver>
+      <question>attend_scm</question>
+   	</perception>
+   	-->
+   	
+</simulation-configuration>
