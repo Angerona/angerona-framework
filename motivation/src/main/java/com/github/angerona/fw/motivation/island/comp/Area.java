@@ -42,8 +42,8 @@ public class Area extends BaseAgentComponent {
 		}
 	}
 
-	public String getExpansionStage() {
-		return "(solid: " + Arrays.toString(solid) + ", vulnurable: " + Arrays.toString(vulnurable) + ")";
+	public String getExpansion() {
+		return Arrays.toString(solid) + " " + Arrays.toString(vulnurable);
 	}
 
 	public int getOn_way() {

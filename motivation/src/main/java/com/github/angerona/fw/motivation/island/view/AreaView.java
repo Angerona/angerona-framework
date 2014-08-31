@@ -22,7 +22,7 @@ public class AreaView extends ListViewColored {
 			Area area = (Area) entity;
 			List<String> reval = new LinkedList<String>();
 			reval.add("Location: " + area.getLocation());
-			reval.add("Expandsion: " + area.getExpansionStage());
+			reval.add("Expandsion: " + area.getExpansion());
 			reval.add("Secured: " + area.isSecured());
 			reval.add("Way: " + area.getOn_way());
 			return reval;
