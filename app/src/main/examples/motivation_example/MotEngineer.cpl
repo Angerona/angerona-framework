@@ -1,0 +1,8 @@
+([hunger, PHYSIOLOGICAL_NEEDS]; fill_battery; 1.0; low);
+([prudence, SAFETY_NEEDS]; fill_battery; 0.3; tautology);
+([self_preservation, SAFETY_NEEDS]; find_shelter; 0.8; danger);
+([hunger, PHYSIOLOGICAL_NEEDS]; find_shelter; 0.3; low);
+([prudence, SAFETY_NEEDS]; secure_site; 0.9; tautology);
+([work_ethic, ESTEEM]; finish_work; 0.85; tautology);
+([hunger, PHYSIOLOGICAL_NEEDS]; finish_work; 0.7; low);
+([self_preservation, SAFETY_NEEDS]; finish_workwork; 0.3; danger);

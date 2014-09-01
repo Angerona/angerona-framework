@@ -7,6 +7,6 @@ package com.github.angerona.fw.motivation.island.enums;
  */
 public enum EnergyLevel {
 
-	FULL, PARTIAL, MEDIUM, LOW;
+	FULL, PARTIAL, LOW;
 
 }

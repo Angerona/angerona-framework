@@ -43,7 +43,7 @@ public abstract class IslandBehavior extends DefaultBehavior {
 
 	@Override
 	public void sendAction(AngeronaEnvironment env, Action act) {
-		// TODO Auto-generated method stub
+		act.getAgent();
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public abstract class IslandBehavior extends DefaultBehavior {
 						if (!area.isSecured()) {
 							LOG.debug("damage site");
 							area.damage();
-							if (area.getLocation() == Location.SITE) {
+							if (area.getLocation() == Location.AT_SITE) {
 								LOG.debug("damage agent");
 								battery.damage();
 							}

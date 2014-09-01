@@ -11,15 +11,15 @@
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>com.github.angerona.fw.example.operators.scm.StrikeCommitteePlanner</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.motivation.island.operators.IslandActionOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
       <default-operator-cls>com.github.angerona.fw.operators.UpdateBeliefsOperator</default-operator-cls>
    	</operation-set>
    	
-	<component>com.github.angerona.fw.motivation.island.comp.IslandCouplings</component>
-	<component>com.github.angerona.fw.motivation.dao.impl.DefaultRanges</component>
+	<component>com.github.angerona.fw.motivation.dao.impl.MotiveCouplings</component>
+	<component>com.github.angerona.fw.motivation.dao.impl.WeightRanges</component>
 	<component>com.github.angerona.fw.motivation.dao.impl.LevelWeights</component>
 	<component>com.github.angerona.fw.motivation.dao.impl.MotStructure</component>
 	<component>com.github.angerona.fw.logic.Desires</component>

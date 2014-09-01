@@ -2,26 +2,20 @@
 	<name>BDI Engineer</name>
 	<cycle-script source="config/secrecy_cycle.xml" />
 	
-	<operation-set operation-type="GenerateOptions">
-      <default-operator-cls>com.github.angerona.fw.example.operators.GenerateOptionsOperator</default-operator-cls>
-   	</operation-set>
-	
 	<operation-set operation-type="IntentionUpdate">
-      <default-operator-cls>com.github.angerona.fw.example.operators.IntentionUpdateOperator</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.motivation.island.operators.BdiSelectionOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="SubgoalGeneration">
-      <default-operator-cls>com.github.angerona.fw.example.operators.scm.StrikeCommitteePlanner</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.motivation.island.operators.IslandActionOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
       <default-operator-cls>com.github.angerona.fw.operators.UpdateBeliefsOperator</default-operator-cls>
    	</operation-set>
    	   	
-	<component>com.github.angerona.fw.motivation.island.comp.IslandDesires</component>
-	<component>com.github.angerona.fw.am.secrecy.components.SecrecyKnowledge</component>
+	<component>com.github.angerona.fw.logic.Desires</component>
 	<component>com.github.angerona.fw.PlanComponent</component>
-	<component>com.github.angerona.fw.example.components.CommunicationHistory</component>
 	<component>com.github.angerona.fw.motivation.island.comp.Battery</component>
 	<component>com.github.angerona.fw.motivation.island.comp.Area</component>
 	

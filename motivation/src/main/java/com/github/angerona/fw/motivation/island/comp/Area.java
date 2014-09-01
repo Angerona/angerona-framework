@@ -12,7 +12,7 @@ import com.github.angerona.fw.motivation.island.enums.Location;
  */
 public class Area extends BaseAgentComponent {
 
-	protected Location location = Location.SITE;
+	protected Location location = Location.AT_SITE;
 	protected int[] solid = new int[8];
 	protected int[] vulnurable = new int[8];
 	protected boolean secured = false;
@@ -63,7 +63,7 @@ public class Area extends BaseAgentComponent {
 	}
 
 	public boolean isShelter() {
-		return location == Location.HQ || location == Location.CAVE;
+		return location == Location.AT_HQ || location == Location.IN_CAVE;
 	}
 
 	public void damage() {
