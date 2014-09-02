@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 
 import net.sf.tweety.Formula;
@@ -47,7 +46,7 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formul
 
 	@Override
 	public Collection<Motive<L>> getMotives(L level) {
-		Collection<Motive<L>> mot = new LinkedList<>();
+		Set<Motive<L>> mot = new HashSet<>();
 
 		for (MotiveCoupling<L, F> mc : couplings) {
 			if (mc.getMotive().getLevel() == level) {
@@ -90,7 +89,7 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formul
 			}
 		}
 
-		return couplings;
+		return cpl;
 	}
 
 	@Override
@@ -103,7 +102,7 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formul
 			}
 		}
 
-		return couplings;
+		return cpl;
 	}
 
 	@Override
@@ -113,7 +112,7 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formul
 
 	@Override
 	public double getMeanCouplingStrength() {
-		int sum = 0;
+		double sum = 0;
 		int count = 0;
 
 		for (MotiveCoupling<L, F> mc : couplings) {
@@ -123,7 +122,7 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formul
 			}
 		}
 
-		return (count > 0) ? sum / count : 0;
+		return (count > 0) ? (sum / count) : 0;
 	}
 
 	@Override

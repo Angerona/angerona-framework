@@ -68,7 +68,6 @@ public abstract class GenStrcAdjustmentImpl<L extends MotiveLevel, F extends For
 				double mu = 0;
 
 				for (MotiveCoupling<L, F> mc : couplings) {
-					LOGGER.debug(mc.toString());
 
 					// use only activated motive couplings
 					if (b.verify(mc.getStatement())) {

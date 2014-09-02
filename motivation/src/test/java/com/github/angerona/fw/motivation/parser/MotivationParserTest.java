@@ -1,4 +1,4 @@
-package angerona.fw.motivation.parser;
+package com.github.angerona.fw.motivation.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,6 +24,9 @@ import com.github.angerona.fw.motivation.parser.MotivationParser;
 import com.github.angerona.fw.motivation.parser.ParseException;
 import com.github.angerona.fw.util.Pair;
 
+import static com.github.angerona.fw.motivation.dummies.DummyCouplingsOne.*;
+import static com.github.angerona.fw.motivation.Maslow.*;
+
 public class MotivationParserTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MotivationParserTest.class);
@@ -35,12 +38,12 @@ public class MotivationParserTest {
 			"self_preservation", Maslow.SAFETY_NEEDS), new Desire(new FOLAtom(new Predicate("find_shelter"))), 0.65, new FOLAtom(new Predicate(
 			"danger")));
 
-	private static final String COUPLINGS = COUPLING_1 + ";\n" + COUPLING_2 + ";";
+	private static final String COUPLINGS = COUPL_WHALES + ";\n" + COUPL_FRUITS + ";";
 
 	private static final WeightRange RANGE_1 = new WeightRange(0.85, 1);
 	private static final WeightRange RANGE_2 = new WeightRange(0.65, 0.9);
 
-	private static final String RANGES = "(" + Maslow.PHYSIOLOGICAL_NEEDS + ";\t" + RANGE_1 + ");\n" + "(" + Maslow.SAFETY_NEEDS + ";\t"
+	private static final String RANGES = "(" + PHYSIOLOGICAL_NEEDS + ";\t" + RANGE_1 + ");\n" + "(" + SAFETY_NEEDS + ";\t"
 			+ RANGE_2 + ");";
 
 	@Test
@@ -75,26 +78,26 @@ public class MotivationParserTest {
 
 	@Test
 	public void testReadKeyword() throws ParseException {
-		String identifier = COUPLING_1.getMotive().getIdentifier();
+		String identifier = COUPL_WHALES.getMotive().getIdentifier();
 		LOG.debug(identifier);
 
 		InputStream in = new ByteArrayInputStream(identifier.getBytes(StandardCharsets.UTF_8));
 		MotivationParser parser = new MotivationParser(in);
 
-		Assert.assertEquals(COUPLING_1.getMotive().getIdentifier(), parser.readKeyword());
+		Assert.assertEquals(COUPL_WHALES.getMotive().getIdentifier(), parser.readKeyword());
 	}
 
 	@Test
 	public void testReadKeyPair() throws ParseException {
-		String mot = COUPLING_1.getMotive().toString();
+		String mot = COUPL_WHALES.getMotive().toString();
 		LOG.debug(mot);
 
 		InputStream in = new ByteArrayInputStream(mot.getBytes(StandardCharsets.UTF_8));
 		MotivationParser parser = new MotivationParser(in);
 
 		Pair<String, String> words = parser.readKeyPair();
-		Assert.assertEquals(COUPLING_1.getMotive().getIdentifier(), words.first);
-		Assert.assertEquals(COUPLING_1.getMotive().getLevel().toString(), words.second);
+		Assert.assertEquals(COUPL_WHALES.getMotive().getIdentifier(), words.first);
+		Assert.assertEquals(COUPL_WHALES.getMotive().getLevel().toString(), words.second);
 	}
 
 	@Test
@@ -106,8 +109,8 @@ public class MotivationParserTest {
 
 		Set<MotiveCoupling<Maslow, FolFormula>> couplings = parser.gatherCouplings();
 		Assert.assertTrue(couplings.size() == 2);
-		Assert.assertTrue(couplings.contains(COUPLING_1));
-		Assert.assertTrue(couplings.contains(COUPLING_2));
+		Assert.assertTrue(couplings.contains(COUPL_WHALES));
+		Assert.assertTrue(couplings.contains(COUPL_FRUITS));
 	}
 
 	@Test

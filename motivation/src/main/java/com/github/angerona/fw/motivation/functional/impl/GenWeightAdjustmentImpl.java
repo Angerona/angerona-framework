@@ -82,7 +82,7 @@ public abstract class GenWeightAdjustmentImpl<L extends MotiveLevel, F extends F
 		}
 	}
 
-	double rel_sit(MotiveState<L, F> ms, BeliefState<F> b) {
+	public double rel_sit(MotiveState<L, F> ms, BeliefState<F> b) {
 		double top = 0;
 		double bottom = 0;
 		double mean;

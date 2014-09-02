@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.motivation.Maslow;
 import com.github.angerona.fw.motivation.Parsable;
+import com.github.angerona.fw.motivation.model.MotiveCoupling;
 import com.github.angerona.fw.motivation.parser.MotivationParser;
 import com.github.angerona.fw.motivation.parser.ParseException;
 
@@ -18,6 +20,12 @@ import com.github.angerona.fw.motivation.parser.ParseException;
  * 
  */
 public class MotiveCouplings extends GenMotiveCouplings<Maslow, FolFormula> implements Parsable {
+
+	protected MotiveCouplings() {}
+
+	protected MotiveCouplings(Set<MotiveCoupling<Maslow, FolFormula>> couplings) {
+		super(couplings);
+	}
 
 	@Override
 	protected GenMotiveCouplings<Maslow, FolFormula> create() {

@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import com.github.angerona.fw.motivation.Maslow;
 import com.github.angerona.fw.motivation.Parsable;
+import com.github.angerona.fw.motivation.model.WeightRange;
 import com.github.angerona.fw.motivation.parser.MotivationParser;
 import com.github.angerona.fw.motivation.parser.ParseException;
 
@@ -16,6 +18,12 @@ import com.github.angerona.fw.motivation.parser.ParseException;
  * 
  */
 public class WeightRanges extends GenWeightRanges<Maslow> implements Parsable {
+
+	protected WeightRanges() {}
+
+	protected WeightRanges(Map<Maslow, WeightRange> ranges) {
+		super(ranges);
+	}
 
 	@Override
 	protected GenWeightRanges<Maslow> create() {
