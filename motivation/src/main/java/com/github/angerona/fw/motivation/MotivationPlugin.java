@@ -13,6 +13,7 @@ import com.github.angerona.fw.EnvironmentBehavior;
 import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.logic.BaseTranslator;
+import com.github.angerona.fw.motivation.basic.BasicBehavior;
 import com.github.angerona.fw.motivation.dao.impl.LevelWeights;
 import com.github.angerona.fw.motivation.dao.impl.MotStructure;
 import com.github.angerona.fw.motivation.dao.impl.MotiveCouplings;
@@ -84,6 +85,7 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 	@Override
 	public List<Class<? extends EnvironmentBehavior>> getEnvironmentBehaviors() {
 		List<Class<? extends EnvironmentBehavior>> reval = new ArrayList<>();
+		reval.add(BasicBehavior.class);
 		reval.add(StaticIslandBehavior.class);
 		reval.add(DynamicIslandBehavior.class);
 		return reval;

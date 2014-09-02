@@ -128,7 +128,7 @@ public class TestMotiveCouplings {
 	@Test
 	public void testGetMeanCs() {
 		MotiveCouplings cpl1 = new DummyCouplingsOne();
-		Assert.assertEquals((2.2 / 3), cpl1.getMeanCouplingStrength(), 0.0);
+		Assert.assertEquals((2.2 / 3), cpl1.getMeanCouplingStrength(), 0.000001);
 
 		MotiveCouplings cpl2 = new DummyCouplingsTwo();
 		Assert.assertEquals(0.3, cpl2.getMeanCouplingStrength(), 0.0);

@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation;
+package com.github.angerona.fw.motivation.basic;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,5 +14,7 @@ public interface Parsable {
 	public void loadFromFile(File path) throws IOException;
 
 	public void loadFromStream(InputStream src) throws IOException;
+
+	public String getFileExtention();
 
 }

@@ -1,0 +1,6 @@
+<asml-script name="secrecyCycle">
+	<operation type="GenerateOptions">
+	    <param name="perception" value="$perception" />
+	    <output>newDesireCount</output>
+	</operation>
+</asml-script>

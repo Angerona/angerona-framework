@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
-import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.Perception;
-import com.github.angerona.fw.def.DefaultBehavior;
+import com.github.angerona.fw.motivation.basic.ParsingBehavior;
 import com.github.angerona.fw.motivation.island.comp.Area;
 import com.github.angerona.fw.motivation.island.comp.Battery;
 import com.github.angerona.fw.motivation.island.enums.Location;
@@ -19,7 +18,7 @@ import com.github.angerona.fw.motivation.island.enums.Weather;
  * @author Manuel Barbi
  * 
  */
-public abstract class IslandBehavior extends DefaultBehavior {
+public abstract class IslandBehavior extends ParsingBehavior {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IslandBehavior.class);
 
@@ -28,6 +27,8 @@ public abstract class IslandBehavior extends DefaultBehavior {
 	protected Weather current;
 	protected Weather next = generateWeather();
 	protected Weather prediction;
+
+	protected boolean initialized = false;
 
 	/**
 	 * 
@@ -47,22 +48,14 @@ public abstract class IslandBehavior extends DefaultBehavior {
 	}
 
 	@Override
-	public void receivePerception(AngeronaEnvironment env, Perception percept) {}
-
-	@Override
-	public boolean runOneTick(AngeronaEnvironment env) {
-		doingTick = true;
-		angeronaReady = false;
-
-		if (tick++ % 4 == 0) {
+	protected boolean _runOnTick(AngeronaEnvironment env) {
+		if (tick % 4 == 0) {
 			current = next;
 			next = generateWeather();
 			prediction = prediction(next);
 			LOG.debug("update weather: {}", current);
 			LOG.debug("prediction: {}, next: {}", prediction, next);
 		}
-
-		Angerona.getInstance().onTickStarting(env);
 
 		somethingHappens = false;
 		Perception perception;
@@ -116,10 +109,6 @@ public abstract class IslandBehavior extends DefaultBehavior {
 			LOG.debug("discarge battery");
 			battery.discharge();
 		}
-		angeronaReady = true;
-
-		doingTick = false;
-		Angerona.getInstance().onTickDone(env);
 
 		return somethingHappens;
 	}

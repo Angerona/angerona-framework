@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>static island</name>
-	<category>motivation</category>
+	<category>motivation/island</category>
 	<behavior>com.github.angerona.fw.motivation.island.DynamicIslandBehavior</behavior>
 	<description>
 		The Agent is located on a tropical island with constant weather conditions.
