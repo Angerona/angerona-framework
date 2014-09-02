@@ -50,6 +50,7 @@ public class MotStructure extends BaseAgentComponent implements MotStructureDao,
 		this.entries.clear();
 		this.entries.addAll(entries);
 		Collections.sort(this.entries);
+		report("adjusted motivational-structure");
 	}
 
 	@Override

@@ -30,21 +30,26 @@ public class Battery extends BaseAgentComponent {
 	}
 
 	public int charge(int c) {
-		return (charge = Math.min(charge + c, 15));
+		charge = Math.min(charge + c, 15);
+		report("charged battery");
+		return charge;
 	}
 
 	public int discharge() {
-		return --charge;
+		charge--;
+		report("discharged battery");
+		return charge;
 	}
 
 	public boolean isEmpty() {
 		return charge < 1;
 	}
-	
+
 	public void damage() {
 		damaged = true;
+		report("battery is damaged");
 	}
-	
+
 	public boolean isDamaged() {
 		return damaged;
 	}

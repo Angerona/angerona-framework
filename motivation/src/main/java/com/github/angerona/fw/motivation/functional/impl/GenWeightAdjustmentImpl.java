@@ -64,6 +64,7 @@ public abstract class GenWeightAdjustmentImpl<L extends MotiveLevel, F extends F
 
 		WeightRange range;
 		double rel_sit = rel_sit(ms, b);
+		LOGGER.info("calculate reliability: {}", rel_sit);
 
 		for (L level : levels) {
 			if (ms.getMotives(level).size() > 0) {
@@ -76,7 +77,7 @@ public abstract class GenWeightAdjustmentImpl<L extends MotiveLevel, F extends F
 					w = range.getLower() + range.getDelta() * rel_sit;
 				}
 
-				LOGGER.info("set level weight {} for motive level <{}>", w, level);
+				LOGGER.info("set level weight {} for motive level <{}>", format(w), level);
 				out.putWeight(level, w);
 			}
 		}

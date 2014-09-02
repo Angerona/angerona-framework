@@ -49,7 +49,7 @@ public abstract class IslandBehavior extends ParsingBehavior {
 
 	@Override
 	protected boolean _runOnTick(AngeronaEnvironment env) {
-		if (tick % 4 == 0) {
+		if (tick % 4 == 1) {
 			current = next;
 			next = generateWeather();
 			prediction = prediction(next);

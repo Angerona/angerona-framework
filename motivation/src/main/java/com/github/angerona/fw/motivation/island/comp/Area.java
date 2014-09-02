@@ -24,6 +24,7 @@ public class Area extends BaseAgentComponent {
 
 	public void setLocation(Location location) {
 		this.location = location;
+		report("change location");
 	}
 
 	public void build(int step) {
@@ -31,11 +32,13 @@ public class Area extends BaseAgentComponent {
 			if (i < 8) {
 				if (solid[i] < 8) {
 					solid[i] = Math.min(solid[i] + step, 8);
+					report("assemble solid parts");
 					return;
 				}
 			} else {
 				if (vulnurable[i - 8] < 8) {
 					vulnurable[i - 8] = Math.min(vulnurable[i - 8] + step, 8);
+					report("assemble vulnerable parts");
 					return;
 				}
 			}
@@ -52,6 +55,7 @@ public class Area extends BaseAgentComponent {
 
 	public void setOn_way(int on_way) {
 		this.on_way = on_way;
+		report("move along the way");
 	}
 
 	public boolean isSecured() {
@@ -60,6 +64,7 @@ public class Area extends BaseAgentComponent {
 
 	public void setSecured(boolean secured) {
 		this.secured = secured;
+		report("site is now secured: " + secured);
 	}
 
 	public boolean isShelter() {

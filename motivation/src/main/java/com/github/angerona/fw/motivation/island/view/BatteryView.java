@@ -19,8 +19,11 @@ public class BatteryView extends ListViewColored {
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
 		if (entity instanceof Battery) {
+			Battery akku = (Battery) entity;
 			List<String> reval = new LinkedList<String>();
-			reval.add("Charge: " + ((Battery) entity).getCharge());
+			reval.add("Charge: " + akku.getCharge());
+			reval.add("Level: " + akku.getLevel());
+			reval.add("damaged:" + akku.isDamaged());
 			return reval;
 		}
 		return null;

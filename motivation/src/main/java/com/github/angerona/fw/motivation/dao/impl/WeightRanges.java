@@ -54,6 +54,7 @@ public class WeightRanges extends GenWeightRanges<Maslow> implements Parsable {
 		try {
 			MotivationParser parser = new MotivationParser(src);
 			this.ranges = parser.gatherRanges();
+			report("loaded weight-ranges from file");
 		} catch (ParseException e) {
 			throw new IOException(e);
 		}

@@ -1,13 +1,18 @@
 package com.github.angerona.fw.motivation.parser;
 
+import static com.github.angerona.fw.motivation.Maslow.PHYSIOLOGICAL_NEEDS;
+import static com.github.angerona.fw.motivation.Maslow.SELF_ACTUALIZATION;
+import static com.github.angerona.fw.motivation.dummies.DummyCouplingsOne.COUPL_FRUITS;
+import static com.github.angerona.fw.motivation.dummies.DummyCouplingsOne.COUPL_WHALES;
+import static com.github.angerona.fw.motivation.dummies.DummyRanges.WR_PN;
+import static com.github.angerona.fw.motivation.dummies.DummyRanges.WR_SA;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.junit.Assert;
@@ -15,36 +20,18 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.motivation.Maslow;
-import com.github.angerona.fw.motivation.model.Motive;
 import com.github.angerona.fw.motivation.model.MotiveCoupling;
 import com.github.angerona.fw.motivation.model.WeightRange;
-import com.github.angerona.fw.motivation.parser.MotivationParser;
-import com.github.angerona.fw.motivation.parser.ParseException;
 import com.github.angerona.fw.util.Pair;
-
-import static com.github.angerona.fw.motivation.dummies.DummyCouplingsOne.*;
-import static com.github.angerona.fw.motivation.Maslow.*;
 
 public class MotivationParserTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MotivationParserTest.class);
 
-	private static final MotiveCoupling<Maslow, FolFormula> COUPLING_1 = new MotiveCoupling<Maslow, FolFormula>(new Motive<Maslow>("hunger",
-			Maslow.PHYSIOLOGICAL_NEEDS), new Desire(new FOLAtom(new Predicate("fill_battery"))), 0.85, new FOLAtom(new Predicate("low_battery")));
-
-	private static final MotiveCoupling<Maslow, FolFormula> COUPLING_2 = new MotiveCoupling<Maslow, FolFormula>(new Motive<Maslow>(
-			"self_preservation", Maslow.SAFETY_NEEDS), new Desire(new FOLAtom(new Predicate("find_shelter"))), 0.65, new FOLAtom(new Predicate(
-			"danger")));
-
 	private static final String COUPLINGS = COUPL_WHALES + ";\n" + COUPL_FRUITS + ";";
 
-	private static final WeightRange RANGE_1 = new WeightRange(0.85, 1);
-	private static final WeightRange RANGE_2 = new WeightRange(0.65, 0.9);
-
-	private static final String RANGES = "(" + PHYSIOLOGICAL_NEEDS + ";\t" + RANGE_1 + ");\n" + "(" + SAFETY_NEEDS + ";\t"
-			+ RANGE_2 + ");";
+	private static final String RANGES = "(" + PHYSIOLOGICAL_NEEDS + ";\t" + WR_PN + ");\n" + "(" + SELF_ACTUALIZATION + ";\t" + WR_SA + ");";
 
 	@Test
 	public void testCreateParser() {
@@ -54,26 +41,26 @@ public class MotivationParserTest {
 
 	@Test
 	public void testReadNumber() throws ParseException {
-		String lower = String.valueOf(RANGE_1.getLower());
+		String lower = String.valueOf(WR_PN.getLower());
 		LOG.debug(lower);
 
 		InputStream in = new ByteArrayInputStream(lower.getBytes(StandardCharsets.UTF_8));
 		MotivationParser parser = new MotivationParser(in);
 
-		Assert.assertEquals(RANGE_1.getLower(), parser.readNumber(), 0);
+		Assert.assertEquals(WR_PN.getLower(), parser.readNumber(), 0);
 	}
 
 	@Test
 	public void testReadNumPair() throws ParseException {
-		String range = RANGE_1.toString();
+		String range = WR_PN.toString();
 		LOG.debug(range);
 
 		InputStream in = new ByteArrayInputStream(range.getBytes(StandardCharsets.UTF_8));
 		MotivationParser parser = new MotivationParser(in);
 
 		Pair<Double, Double> numbers = parser.readNumPair();
-		Assert.assertEquals(RANGE_1.getLower(), numbers.first, 0);
-		Assert.assertEquals(RANGE_1.getUpper(), numbers.second, 0);
+		Assert.assertEquals(WR_PN.getLower(), numbers.first, 0);
+		Assert.assertEquals(WR_PN.getUpper(), numbers.second, 0);
 	}
 
 	@Test
@@ -122,7 +109,7 @@ public class MotivationParserTest {
 
 		Map<Maslow, WeightRange> ranges = parser.gatherRanges();
 		Assert.assertTrue(ranges.size() == 2);
-		Assert.assertEquals(RANGE_1, ranges.get(Maslow.PHYSIOLOGICAL_NEEDS));
-		Assert.assertEquals(RANGE_2, ranges.get(Maslow.SAFETY_NEEDS));
+		Assert.assertEquals(WR_PN, ranges.get(Maslow.PHYSIOLOGICAL_NEEDS));
+		Assert.assertEquals(WR_SA, ranges.get(Maslow.SELF_ACTUALIZATION));
 	}
 }

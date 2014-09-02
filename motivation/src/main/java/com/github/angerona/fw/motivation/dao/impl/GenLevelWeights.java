@@ -35,6 +35,7 @@ public abstract class GenLevelWeights<L extends MotiveLevel> extends BaseAgentCo
 	@Override
 	public void putWeight(L key, double value) {
 		weights.put(key, value);
+		report("set level-weight");
 	}
 
 	@Override

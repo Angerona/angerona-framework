@@ -56,6 +56,7 @@ public class MotiveCouplings extends GenMotiveCouplings<Maslow, FolFormula> impl
 		try {
 			MotivationParser parser = new MotivationParser(src);
 			couplings = parser.gatherCouplings();
+			report("loaded motive-couplings from file");
 		} catch (ParseException e) {
 			throw new IOException(e);
 		}

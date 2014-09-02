@@ -33,7 +33,7 @@ public class QuantileDesireSelection<F extends Formula> implements DesireSelecti
 	public Collection<Desire> select(BeliefState<F> b, MotStructureDao st) {
 		List<MotStrcEntry> entries = st.getOrderedEntries();
 		List<Desire> des = new LinkedList<>();
-		Double xp = calcQuantile(entries, p);
+		Double xp = calcQuantile(entries);
 
 		if (xp != null) {
 			for (MotStrcEntry e : entries) {
@@ -46,7 +46,7 @@ public class QuantileDesireSelection<F extends Formula> implements DesireSelecti
 		return des;
 	}
 
-	Double calcQuantile(List<MotStrcEntry> entries, double p) {
+	public Double calcQuantile(List<MotStrcEntry> entries) {
 		if (entries == null) {
 			throw new NullPointerException("entries must not be null");
 		}
