@@ -34,7 +34,7 @@ public class BeliefStateImpl implements BeliefState<FolFormula> {
 	@Override
 	public boolean isReliable(Desire d) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
