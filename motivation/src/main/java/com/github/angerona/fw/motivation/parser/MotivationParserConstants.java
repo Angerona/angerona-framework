@@ -15,17 +15,19 @@ public interface MotivationParserConstants {
   /** RegularExpression Id. */
   int KEYWORD = 7;
   /** RegularExpression Id. */
-  int OPEN = 8;
+  int NEG = 8;
   /** RegularExpression Id. */
-  int CLOSE = 9;
+  int OPEN = 9;
   /** RegularExpression Id. */
-  int KOMMA = 10;
+  int CLOSE = 10;
   /** RegularExpression Id. */
-  int OPAR = 11;
+  int KOMMA = 11;
   /** RegularExpression Id. */
-  int CPAR = 12;
+  int OPAR = 12;
   /** RegularExpression Id. */
-  int DIV = 13;
+  int CPAR = 13;
+  /** RegularExpression Id. */
+  int DIV = 14;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -40,6 +42,7 @@ public interface MotivationParserConstants {
     "\"\\r\\n\"",
     "<NUMBER>",
     "<KEYWORD>",
+    "\"-\"",
     "\"[\"",
     "\"]\"",
     "\",\"",

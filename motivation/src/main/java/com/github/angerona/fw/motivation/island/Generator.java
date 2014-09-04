@@ -49,7 +49,7 @@ public class Generator {
 		case 3:
 			return Weather.STORM;
 		case 4:
-			return Weather.TEMPEST;
+			return Weather.THUNDERSTORM;
 		default:
 			return Weather.CLOUDS;
 		}

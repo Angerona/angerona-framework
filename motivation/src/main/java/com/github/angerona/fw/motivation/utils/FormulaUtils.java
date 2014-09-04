@@ -14,7 +14,15 @@ import com.github.angerona.fw.Desire;
 public class FormulaUtils {
 
 	public static final FolFormula createFormula(String arg) {
-		return new FOLAtom(new Predicate(arg));
+		if (!arg.equals("true")) {
+			if (!arg.startsWith("-")) {
+				return new FOLAtom(new Predicate(arg));
+			} else {
+				return (FolFormula) new FOLAtom(new Predicate(arg)).complement();
+			}
+		}
+
+		return null;
 	}
 
 	public static final Desire createDesire(String arg) {

@@ -14,7 +14,6 @@ import com.github.angerona.fw.motivation.dao.BeliefState;
 public class DummyBeliefState implements BeliefState<FolFormula> {
 
 	public static final FolFormula WHALES = createFormula("endangered_whales");
-	public static final FolFormula TRUE = createFormula("true");
 
 	@Override
 	public boolean isReliable(Desire d) {
@@ -28,7 +27,7 @@ public class DummyBeliefState implements BeliefState<FolFormula> {
 
 	@Override
 	public boolean verify(FolFormula statement) {
-		return statement.toString().equals(TRUE.toString());
+		return false;
 	}
 
 }

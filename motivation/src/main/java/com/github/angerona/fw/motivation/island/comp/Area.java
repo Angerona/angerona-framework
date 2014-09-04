@@ -86,4 +86,9 @@ public class Area extends BaseAgentComponent {
 		return cln;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
 }

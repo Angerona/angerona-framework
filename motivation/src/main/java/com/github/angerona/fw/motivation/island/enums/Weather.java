@@ -7,6 +7,6 @@ package com.github.angerona.fw.motivation.island.enums;
  */
 public enum Weather {
 
-	SUN, CLOUDS, RAIN, STORM, TEMPEST;
+	SUN, CLOUDS, RAIN, STORM, THUNDERSTORM;
 
 }

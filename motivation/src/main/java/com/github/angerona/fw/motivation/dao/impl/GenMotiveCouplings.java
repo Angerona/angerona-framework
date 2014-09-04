@@ -139,4 +139,9 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formul
 
 	protected abstract GenMotiveCouplings<L, F> create();
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
 }

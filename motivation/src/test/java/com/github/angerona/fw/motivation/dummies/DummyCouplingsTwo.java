@@ -2,7 +2,6 @@ package com.github.angerona.fw.motivation.dummies;
 
 import static com.github.angerona.fw.motivation.Maslow.PHYSIOLOGICAL_NEEDS;
 import static com.github.angerona.fw.motivation.Maslow.SELF_ACTUALIZATION;
-import static com.github.angerona.fw.motivation.dummies.DummyBeliefState.TRUE;
 import static com.github.angerona.fw.motivation.utils.FormulaUtils.createDesire;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
@@ -25,8 +24,8 @@ public class DummyCouplingsTwo extends MotiveCouplings {
 	public static final Desire OWN_COUNTRY = createDesire("buy fruits from your own country");
 	public static final Desire CHEAP_FOOD = createDesire("buy cheap food");
 
-	public static final MotiveCoupling<Maslow, FolFormula> COUPL_OWN = new MotiveCoupling<>(ENVIRONMENTAL_AWARENESS, OWN_COUNTRY, 0.3, TRUE);
-	public static final MotiveCoupling<Maslow, FolFormula> COUPL_CHEAP = new MotiveCoupling<>(FOOD, CHEAP_FOOD, 0.3, TRUE);
+	public static final MotiveCoupling<Maslow, FolFormula> COUPL_OWN = new MotiveCoupling<>(ENVIRONMENTAL_AWARENESS, OWN_COUNTRY, 0.3, null);
+	public static final MotiveCoupling<Maslow, FolFormula> COUPL_CHEAP = new MotiveCoupling<>(FOOD, CHEAP_FOOD, 0.3, null);
 
 	public DummyCouplingsTwo() {
 		this.couplings.add(COUPL_OWN);

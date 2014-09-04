@@ -32,10 +32,6 @@ public class MotiveCoupling<L extends MotiveLevel, F extends Formula> {
 			throw new IllegalArgumentException("coupling-strength must lie between (-1) and 1");
 		}
 
-		if (statement == null) {
-			throw new NullPointerException("statement must not be null");
-		}
-
 		this.motive = motive;
 		this.desire = desire;
 		this.couplingStrength = couplingStrength;
@@ -60,7 +56,7 @@ public class MotiveCoupling<L extends MotiveLevel, F extends Formula> {
 
 	@Override
 	public String toString() {
-		return "(" + motive + "; " + desire + "; " + couplingStrength + "; " + statement + ")";
+		return "(" + motive + "; " + desire + "; " + couplingStrength + "; " + (statement != null ? statement : "true") + ")";
 	}
 
 	@Override

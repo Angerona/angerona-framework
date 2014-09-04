@@ -73,7 +73,7 @@ public abstract class IslandBehavior extends ParsingBehavior {
 					battery.charge(2);
 				}
 				break;
-			case TEMPEST:
+			case THUNDERSTORM:
 				if (generator.chance(1, 8)) {
 					if (generator.chance(1, 2)) {
 						if (!area.isShelter()) {
