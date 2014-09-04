@@ -5,7 +5,7 @@
       <operator-cls>com.github.angerona.fw.logic.asp.AspCredulousReasoner</operator-cls>
    </reasoners>
    <change-operators>
-      <default-operator-cls>com.github.angerona.fw.logic.asp.RevisionPreferenceHandling</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.RevisionCredibilityProgramsKeepRules</default-operator-cls>
       <operator-cls>com.github.angerona.fw.logic.asp.AspExpansion</operator-cls>
    </change-operators>
    <translators>
