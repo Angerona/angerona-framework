@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation;
+package com.github.angerona.fw.motivation.operators;
 
 import com.github.angerona.fw.PlanElement;
 import com.github.angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;

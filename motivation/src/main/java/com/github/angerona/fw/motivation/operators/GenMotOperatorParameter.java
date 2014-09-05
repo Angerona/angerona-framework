@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation;
+package com.github.angerona.fw.motivation.operators;
 
 import javax.management.AttributeNotFoundException;
 
@@ -7,6 +7,7 @@ import net.sf.tweety.Formula;
 import com.github.angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import com.github.angerona.fw.error.ConversionException;
 import com.github.angerona.fw.logic.Desires;
+import com.github.angerona.fw.motivation.MotiveLevel;
 import com.github.angerona.fw.motivation.dao.BeliefState;
 import com.github.angerona.fw.motivation.dao.MotStructureDao;
 import com.github.angerona.fw.motivation.dao.MotiveState;

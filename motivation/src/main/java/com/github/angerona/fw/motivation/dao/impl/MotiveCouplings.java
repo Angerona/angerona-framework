@@ -9,7 +9,6 @@ import java.util.Set;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.motivation.Maslow;
-import com.github.angerona.fw.motivation.basic.Parsable;
 import com.github.angerona.fw.motivation.model.MotiveCoupling;
 import com.github.angerona.fw.motivation.parser.MotivationParser;
 import com.github.angerona.fw.motivation.parser.ParseException;

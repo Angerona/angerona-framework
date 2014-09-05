@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation.basic;
+package com.github.angerona.fw.motivation.dao.impl;
 
 import java.io.File;
 import java.io.IOException;

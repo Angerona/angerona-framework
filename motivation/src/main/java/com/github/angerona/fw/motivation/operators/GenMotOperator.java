@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation;
+package com.github.angerona.fw.motivation.operators;
 
 import java.util.Collection;
 
@@ -11,6 +11,7 @@ import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.am.secrecy.operators.BaseGenerateOptionsOperator;
 import com.github.angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import com.github.angerona.fw.logic.Desires;
+import com.github.angerona.fw.motivation.MotiveLevel;
 import com.github.angerona.fw.motivation.functional.WeightAdjustment;
 import com.github.angerona.fw.motivation.functional.DesireSelection;
 import com.github.angerona.fw.motivation.functional.StructureAdjustment;

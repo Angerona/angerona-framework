@@ -27,6 +27,8 @@ import com.github.angerona.fw.motivation.island.operators.BdiSelectionOperator;
 import com.github.angerona.fw.motivation.island.operators.IslandActionOperator;
 import com.github.angerona.fw.motivation.island.view.AreaView;
 import com.github.angerona.fw.motivation.island.view.BatteryView;
+import com.github.angerona.fw.motivation.operators.MotivationFilterOperator;
+import com.github.angerona.fw.motivation.operators.MotivationOperator;
 import com.github.angerona.fw.motivation.view.CouplingsView;
 import com.github.angerona.fw.motivation.view.MotStructureView;
 import com.github.angerona.fw.motivation.view.RangesView;

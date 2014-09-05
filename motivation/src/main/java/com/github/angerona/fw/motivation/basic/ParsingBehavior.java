@@ -13,6 +13,7 @@ import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.def.DefaultBehavior;
+import com.github.angerona.fw.motivation.dao.impl.Parsable;
 
 /**
  * 

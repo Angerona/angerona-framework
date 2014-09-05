@@ -1,7 +1,8 @@
-package com.github.angerona.fw.motivation;
+package com.github.angerona.fw.motivation.operators;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
+import com.github.angerona.fw.motivation.Maslow;
 import com.github.angerona.fw.motivation.functional.WeightAdjustment;
 import com.github.angerona.fw.motivation.functional.DesireSelection;
 import com.github.angerona.fw.motivation.functional.StructureAdjustment;

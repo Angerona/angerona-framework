@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.Map;
 
 import com.github.angerona.fw.motivation.Maslow;
-import com.github.angerona.fw.motivation.basic.Parsable;
 import com.github.angerona.fw.motivation.model.WeightRange;
 import com.github.angerona.fw.motivation.parser.MotivationParser;
 import com.github.angerona.fw.motivation.parser.ParseException;
