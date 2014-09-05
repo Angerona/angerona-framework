@@ -45,10 +45,10 @@ public class IslandTranslator extends AspTranslator {
 				formulas.add(create("PRE_" + ip.getWeatherPrediction()));
 			}
 
-			reval.addKnowledge(formulas);
+			//reval.addKnowledge(formulas);
 		}
 
-		return reval;
+		return (AspBeliefbase)translateFOL(caller, formulas);
 
 	}
 
