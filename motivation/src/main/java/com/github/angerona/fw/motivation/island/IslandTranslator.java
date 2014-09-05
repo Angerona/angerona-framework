@@ -2,12 +2,12 @@ package com.github.angerona.fw.motivation.island;
 
 import static com.github.angerona.fw.motivation.island.enums.Weather.RAIN;
 import static com.github.angerona.fw.motivation.island.enums.Weather.STORM;
+import static com.github.angerona.fw.motivation.utils.FormulaUtils.createFormula;
+import static com.github.angerona.fw.motivation.utils.FormulaUtils.intToBoolAra;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.BaseBeliefbase;
@@ -24,36 +24,55 @@ public class IslandTranslator extends AspTranslator {
 
 	@Override
 	protected AspBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
-		AspBeliefbase reval = new AspBeliefbase();
 		Set<FolFormula> formulas = new HashSet<FolFormula>();
 
 		if (p instanceof IslandPerception) {
 			IslandPerception ip = (IslandPerception) p;
 
-			formulas.add(create(ip.getCurrentLocation().toString()));
-			formulas.add(create(ip.getEnergyLevel().toString()));
+			// evaluate location
+			formulas.add(createFormula(ip.getLocation().toString()));
 
-			if (ip.getCurrentWeather() == STORM || ip.getCurrentWeather() == RAIN) {
-				formulas.add(create(STORM + "_OR_" + RAIN));
+			// evaluate energy_value
+			boolean[] energy = intToBoolAra(ip.getEnergyValue() - 1, 4);
+			FolFormula energy_8 = createFormula("energy_8");
+			FolFormula energy_4 = createFormula("energy_4");
+			FolFormula energy_2 = createFormula("energy_2");
+			FolFormula energy_1 = createFormula("energy_1");
+
+			formulas.add(energy[0] ? energy_8 : (FolFormula) energy_8.complement());
+			formulas.add(energy[1] ? energy_4 : (FolFormula) energy_4.complement());
+			formulas.add(energy[2] ? energy_2 : (FolFormula) energy_2.complement());
+			formulas.add(energy[3] ? energy_1 : (FolFormula) energy_1.complement());
+
+			// evaluate weather
+			if (ip.getWeather() == STORM || ip.getWeather() == RAIN) {
+				formulas.add(createFormula(STORM + "_OR_" + RAIN));
 			} else {
-				formulas.add(create(ip.getCurrentWeather().toString()));
+				formulas.add(createFormula(ip.getWeather().toString()));
 			}
 
-			if (ip.getWeatherPrediction() == STORM || ip.getWeatherPrediction() == RAIN) {
-				formulas.add(create("PRE_" + STORM + "_OR_" + RAIN));
+			// evaluate prediction
+			if (ip.getPrediction() == STORM || ip.getPrediction() == RAIN) {
+				formulas.add(createFormula("PRE_" + STORM + "_OR_" + RAIN));
 			} else {
-				formulas.add(create("PRE_" + ip.getWeatherPrediction()));
+				formulas.add(createFormula("PRE_" + ip.getPrediction()));
 			}
 
-			//reval.addKnowledge(formulas);
+			// evaluate remaining
+			boolean[] remaining = intToBoolAra(ip.getRemaining(), 2);
+			FolFormula remaining_2 = createFormula("remaining_2");
+			FolFormula remaining_1 = createFormula("remaining_1");
+
+			formulas.add(remaining[0] ? remaining_2 : (FolFormula) remaining_2.complement());
+			formulas.add(remaining[1] ? remaining_1 : (FolFormula) remaining_1.complement());
+
+			// evaluate secured
+			FolFormula secured = createFormula("secured");
+			formulas.add(ip.isSecured() ? secured : (FolFormula) secured.complement());
 		}
 
-		return (AspBeliefbase)translateFOL(caller, formulas);
+		return (AspBeliefbase) translateFOL(caller, formulas);
 
-	}
-
-	private FolFormula create(String str) {
-		return new FOLAtom(new Predicate(str.toLowerCase()));
 	}
 
 }

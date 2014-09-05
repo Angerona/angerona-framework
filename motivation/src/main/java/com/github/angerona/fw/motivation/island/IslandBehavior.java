@@ -98,7 +98,8 @@ public abstract class IslandBehavior extends ParsingBehavior {
 			if (!battery.isDamaged() && !battery.isEmpty()) {
 				somethingHappens = true;
 
-				perception = new IslandPerception(agent.getName(), battery.getLevel(), area.getLocation(), current, prediction);
+				perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, (tick % 4) - 1,
+						area.isSecured());
 				agent.perceive(perception);
 				LOG.debug("create perception: {}", perception);
 
