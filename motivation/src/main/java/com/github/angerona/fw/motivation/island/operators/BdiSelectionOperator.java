@@ -1,19 +1,17 @@
 package com.github.angerona.fw.motivation.island.operators;
 
-import com.github.angerona.fw.PlanElement;
-import com.github.angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
-import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
+import com.github.angerona.fw.motivation.operators.BaseFilterOperator;
+import com.github.angerona.fw.motivation.operators.FilterOperatorParameter;
 
 /**
  * 
  * @author Manuel Barbi
- *
+ * 
  */
-public class BdiSelectionOperator extends BaseIntentionUpdateOperator {
+public class BdiSelectionOperator extends BaseFilterOperator {
 
 	@Override
-	protected PlanElement processImpl(PlanParameter preprocessedParameters) {
-		// TODO Auto-generated method stub
+	protected Integer processImpl(FilterOperatorParameter preprocessedParameters) {
 		return null;
 	}
 

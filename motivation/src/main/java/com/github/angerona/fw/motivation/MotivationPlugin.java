@@ -17,6 +17,7 @@ import com.github.angerona.fw.motivation.basic.BasicBehavior;
 import com.github.angerona.fw.motivation.dao.impl.LevelWeights;
 import com.github.angerona.fw.motivation.dao.impl.MotStructure;
 import com.github.angerona.fw.motivation.dao.impl.MotiveCouplings;
+import com.github.angerona.fw.motivation.dao.impl.TrailBasedPlans;
 import com.github.angerona.fw.motivation.dao.impl.WeightRanges;
 import com.github.angerona.fw.motivation.island.DynamicIslandBehavior;
 import com.github.angerona.fw.motivation.island.IslandTranslator;
@@ -28,7 +29,6 @@ import com.github.angerona.fw.motivation.island.operators.IslandActionOperator;
 import com.github.angerona.fw.motivation.island.operators.IslandUpdateBeliefsOperator;
 import com.github.angerona.fw.motivation.island.view.AreaView;
 import com.github.angerona.fw.motivation.island.view.BatteryView;
-import com.github.angerona.fw.motivation.operators.MotivationFilterOperator;
 import com.github.angerona.fw.motivation.operators.MotivationOperator;
 import com.github.angerona.fw.motivation.view.CouplingsView;
 import com.github.angerona.fw.motivation.view.MotStructureView;
@@ -51,6 +51,7 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 		reval.add(WeightRanges.class);
 		reval.add(LevelWeights.class);
 		reval.add(MotStructure.class);
+		reval.add(TrailBasedPlans.class);
 		reval.add(Battery.class);
 		reval.add(Area.class);
 		return reval;
@@ -72,7 +73,6 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 	public List<Class<? extends BaseOperator>> getOperators() {
 		List<Class<? extends BaseOperator>> reval = new ArrayList<>();
 		reval.add(MotivationOperator.class);
-		reval.add(MotivationFilterOperator.class);
 		reval.add(BdiSelectionOperator.class);
 		reval.add(IslandActionOperator.class);
 		reval.add(IslandUpdateBeliefsOperator.class);

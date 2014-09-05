@@ -40,7 +40,6 @@ public abstract class ParsingBehavior extends DefaultBehavior {
 		somethingHappens = false;
 
 		if (loaded) {
-			tick++;
 			somethingHappens = _runOnTick(env);
 		} else {
 			init(env);
@@ -48,6 +47,7 @@ public abstract class ParsingBehavior extends DefaultBehavior {
 			somethingHappens = true;
 		}
 
+		tick++;
 		angeronaReady = true;
 		doingTick = false;
 		Angerona.getInstance().onTickDone(env);

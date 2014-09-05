@@ -1,18 +1,17 @@
 package com.github.angerona.fw.motivation.island.operators;
 
-import com.github.angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
-import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
+import com.github.angerona.fw.motivation.operators.ActionSelectionParameter;
+import com.github.angerona.fw.motivation.operators.BaseActionSelectionOperator;
 
 /**
  * 
  * @author Manuel Barbi
- *
+ * 
  */
-public class IslandActionOperator extends BaseSubgoalGenerationOperator {
+public class IslandActionOperator extends BaseActionSelectionOperator {
 
 	@Override
-	protected Boolean processImpl(PlanParameter preprocessedParameters) {
-		// TODO Auto-generated method stub
+	protected Void processImpl(ActionSelectionParameter preprocessedParameters) {
 		return null;
 	}
 
