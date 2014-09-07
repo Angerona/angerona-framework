@@ -12,11 +12,10 @@ import com.github.angerona.fw.motivation.island.enums.Location;
  */
 public class Area extends BaseAgentComponent {
 
-	protected Location location = Location.AT_SITE;
+	protected Location location = Location.AT_HQ;
 	protected int[] solid = new int[8];
 	protected int[] vulnurable = new int[8];
 	protected boolean secured = false;
-	protected int on_way = 0;
 
 	public Location getLocation() {
 		return location;
@@ -24,7 +23,7 @@ public class Area extends BaseAgentComponent {
 
 	public void setLocation(Location location) {
 		this.location = location;
-		report("change location");
+		report("new location: " + location);
 	}
 
 	public void build(int step) {
@@ -47,15 +46,6 @@ public class Area extends BaseAgentComponent {
 
 	public String getExpansion() {
 		return Arrays.toString(solid) + " " + Arrays.toString(vulnurable);
-	}
-
-	public int getOn_way() {
-		return on_way;
-	}
-
-	public void setOn_way(int on_way) {
-		this.on_way = on_way;
-		report("move along the way");
 	}
 
 	public boolean isSecured() {
@@ -82,7 +72,6 @@ public class Area extends BaseAgentComponent {
 		System.arraycopy(this.solid, 0, cln.solid, 0, this.solid.length);
 		System.arraycopy(this.vulnurable, 0, cln.vulnurable, 0, this.vulnurable.length);
 		cln.secured = this.secured;
-		cln.on_way = this.on_way;
 		return cln;
 	}
 

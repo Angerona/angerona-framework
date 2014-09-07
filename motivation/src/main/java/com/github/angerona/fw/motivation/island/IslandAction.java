@@ -1,6 +1,7 @@
 package com.github.angerona.fw.motivation.island;
 
 import com.github.angerona.fw.Action;
+import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.motivation.island.enums.ActionId;
 
 /**
@@ -12,13 +13,19 @@ public class IslandAction extends Action {
 
 	private final ActionId id;
 
-	public IslandAction(String senderId, ActionId id) {
-		super(senderId);
+	public IslandAction(Agent agent, ActionId id) {
+		super(agent.getName());
+		this.setAgent(agent);
 		this.id = id;
 	}
 
 	public ActionId getId() {
 		return id;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + id + "]";
 	}
 
 }

@@ -1,5 +1,15 @@
 package com.github.angerona.fw.motivation.island;
 
+import static com.github.angerona.fw.motivation.island.enums.ActionId.MOVE_TO_SITE;
+import static com.github.angerona.fw.motivation.island.enums.Location.AT_HQ;
+import static com.github.angerona.fw.motivation.island.enums.Location.AT_SITE;
+import static com.github.angerona.fw.motivation.island.enums.Location.IN_CAVE;
+import static com.github.angerona.fw.motivation.island.enums.Location.ON_THE_WAY_1;
+import static com.github.angerona.fw.motivation.island.enums.Location.ON_THE_WAY_2;
+import static com.github.angerona.fw.motivation.island.enums.Location.ON_THE_WAY_3;
+import static com.github.angerona.fw.motivation.island.enums.Weather.CLOUDS;
+import static com.github.angerona.fw.motivation.island.enums.Weather.SUN;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +54,82 @@ public abstract class IslandBehavior extends ParsingBehavior {
 
 	@Override
 	public void sendAction(AngeronaEnvironment env, Action act) {
-		act.getAgent();
+
+		if (act instanceof IslandAction) {
+			boolean slow = current != CLOUDS && current != SUN;
+
+			Battery battery = act.getAgent().getComponent(Battery.class);
+			Area area = act.getAgent().getComponent(Area.class);
+
+			switch (((IslandAction) act).getId()) {
+			case ASSEMBLE_PARTS:
+				if (area.getLocation() == AT_SITE && !area.isSecured()) {
+					area.build(slow ? 1 : 2);
+				}
+				break;
+			case CHARGE_BATTERY:
+				if (area.getLocation() == AT_HQ) {
+					battery.charge(6);
+				}
+				break;
+			case MOVE_TO_SITE:
+				switch (area.getLocation()) {
+				case AT_HQ:
+					area.setLocation(slow ? ON_THE_WAY_1 : ON_THE_WAY_2);
+					break;
+				case ON_THE_WAY_1:
+					area.setLocation(slow ? ON_THE_WAY_2 : ON_THE_WAY_3);
+					break;
+				case ON_THE_WAY_2:
+					area.setLocation(slow ? ON_THE_WAY_3 : AT_SITE);
+					break;
+				case ON_THE_WAY_3:
+					area.setLocation(AT_SITE);
+					break;
+				default: // ignore
+				}
+				break;
+			case MOVE_TO_HQ:
+				switch (area.getLocation()) {
+				case AT_SITE:
+					area.setLocation(slow ? ON_THE_WAY_3 : ON_THE_WAY_2);
+					break;
+				case ON_THE_WAY_3:
+					area.setLocation(slow ? ON_THE_WAY_2 : ON_THE_WAY_1);
+					break;
+				case ON_THE_WAY_2:
+					area.setLocation(slow ? ON_THE_WAY_1 : AT_HQ);
+					break;
+				case ON_THE_WAY_1:
+					area.setLocation(AT_HQ);
+					break;
+				default: // ignore
+				}
+				break;
+			case COVER_SITE:
+				if (area.getLocation() == AT_SITE && !area.isSecured()) {
+					area.setSecured(true);
+				}
+				break;
+			case UNCOVER_SITE:
+				if (area.getLocation() == AT_SITE && area.isSecured()) {
+					area.setSecured(false);
+				}
+				break;
+			case ENTER_CAVE:
+				if (area.getLocation() == AT_SITE) {
+					area.setLocation(IN_CAVE);
+				}
+				break;
+			case LEAVE_CAVE:
+				if (area.getLocation() == IN_CAVE) {
+					area.setLocation(AT_SITE);
+				}
+				break;
+			default:
+				LOG.warn("unhandled action-id");
+			}
+		}
 	}
 
 	@Override
@@ -98,13 +183,14 @@ public abstract class IslandBehavior extends ParsingBehavior {
 			if (!battery.isDamaged() && !battery.isEmpty()) {
 				somethingHappens = true;
 
-				perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, (tick % 4) - 1,
+				perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, (tick - 1 % 4),
 						area.isSecured());
 				agent.perceive(perception);
 				LOG.debug("create perception: {}", perception);
 
 				LOG.debug("call agent cycle");
 				agent.cycle();
+				sendAction(env, new IslandAction(agent, MOVE_TO_SITE));
 			}
 
 			LOG.debug("discarge battery");

@@ -1,9 +1,9 @@
 <agent-configuration>
 	<name>Motivation Engineer</name>
-	<cycle-script source="config/secrecy_cycle.xml" />
+	<cycle-script source="config/island_cycle.xml" />
 	
 	<operation-set operation-type="GenerateOptions">
-      <default-operator-cls>com.github.angerona.fw.motivation.operators.MotivationOperator</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.motivation.island.operators.IslandMotOperator</default-operator-cls>
    	</operation-set>
    	
 	<operation-set operation-type="ActionSelection">
@@ -18,8 +18,9 @@
 	<component>com.github.angerona.fw.motivation.dao.impl.WeightRanges</component>
 	<component>com.github.angerona.fw.motivation.dao.impl.LevelWeights</component>
 	<component>com.github.angerona.fw.motivation.dao.impl.MotStructure</component>
-	<component>com.github.angerona.fw.motivation.dao.impl.TrailBasedPlans</component>
 	<component>com.github.angerona.fw.logic.Desires</component>
+	<component>com.github.angerona.fw.motivation.island.comp.IslandPlans</component>
+	<component>com.github.angerona.fw.motivation.island.comp.IslandActions</component>
 	<component>com.github.angerona.fw.motivation.island.comp.Battery</component>
 	<component>com.github.angerona.fw.motivation.island.comp.Area</component>
 	

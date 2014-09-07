@@ -2,6 +2,7 @@ package com.github.angerona.fw.motivation.operators;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
+import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.motivation.Maslow;
 import com.github.angerona.fw.motivation.dao.BeliefState;
 import com.github.angerona.fw.motivation.dao.impl.BeliefStateImpl;
@@ -11,6 +12,7 @@ import com.github.angerona.fw.motivation.dao.impl.GenWeightRanges;
 import com.github.angerona.fw.motivation.dao.impl.LevelWeights;
 import com.github.angerona.fw.motivation.dao.impl.MotiveCouplings;
 import com.github.angerona.fw.motivation.dao.impl.WeightRanges;
+import com.github.angerona.fw.motivation.functional.ReliabilityChecker;
 
 /**
  * 
@@ -36,7 +38,24 @@ public class MotOperatorParameter extends GenMotOperatorParameter<Maslow, FolFor
 
 	@Override
 	protected BeliefState<FolFormula> beliefState() {
-		return new BeliefStateImpl(getAgent().getBeliefs());
+		return new BeliefStateImpl(getAgent().getBeliefs(), checker());
+	}
+
+	/**
+	 * returns dummy checker. Override if wanted.
+	 * 
+	 * @param beliefs
+	 * @return
+	 */
+	protected ReliabilityChecker checker() {
+		return new ReliabilityChecker() {
+
+			@Override
+			public boolean reliable(Desire d) {
+				return true;
+			}
+
+		};
 	}
 
 }

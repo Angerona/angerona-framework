@@ -24,7 +24,6 @@ public class AreaView extends ListViewColored {
 			reval.add("Location: " + area.getLocation());
 			reval.add("Expandsion: " + area.getExpansion());
 			reval.add("Secured: " + area.isSecured());
-			reval.add("Way: " + area.getOn_way());
 			return reval;
 		}
 		return null;

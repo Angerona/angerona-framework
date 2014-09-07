@@ -7,6 +7,6 @@ package com.github.angerona.fw.motivation.island.enums;
  */
 public enum Location {
 
-	AT_SITE, IN_CAVE, AT_HQ, ON_THE_WAY;
+	AT_HQ, AT_SITE, IN_CAVE, ON_THE_WAY_1, ON_THE_WAY_2, ON_THE_WAY_3;
 
 }

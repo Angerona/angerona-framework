@@ -10,7 +10,7 @@ import com.github.angerona.fw.motivation.island.enums.EnergyLevel;
  */
 public class Battery extends BaseAgentComponent {
 
-	protected int charge = 15;
+	protected int charge = 16;
 	protected boolean damaged = false;
 
 	public int getCharge() {
@@ -31,13 +31,13 @@ public class Battery extends BaseAgentComponent {
 
 	public int charge(int c) {
 		charge = Math.min(charge + c, 15);
-		report("charged battery");
+		report("charge battery, remaining: " + charge);
 		return charge;
 	}
 
 	public int discharge() {
 		charge--;
-		report("discharged battery");
+		report("discharge battery, remaining: " + charge);
 		return charge;
 	}
 
