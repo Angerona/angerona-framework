@@ -18,7 +18,7 @@ import com.github.angerona.fw.motivation.model.WeightRange;
  * @author Manuel Barbi
  * 
  */
-public abstract class GenWeightRanges<L extends MotiveLevel> extends BaseAgentComponent implements WeightRangeDao<L>,
+public abstract class GenWeightRanges<L extends MotiveLevel> extends ParsableComponent implements WeightRangeDao<L>,
 		Iterable<Entry<L, WeightRange>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GenWeightRanges.class);

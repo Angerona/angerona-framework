@@ -1,7 +1,5 @@
 package com.github.angerona.fw.motivation.dao.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -16,7 +14,7 @@ import com.github.angerona.fw.motivation.parser.ParseException;
  * @author Manuel Barbi
  * 
  */
-public class WeightRanges extends GenWeightRanges<Maslow> implements Parsable {
+public class WeightRanges extends GenWeightRanges<Maslow> {
 
 	private static final String EXT = ".rng";
 
@@ -32,23 +30,6 @@ public class WeightRanges extends GenWeightRanges<Maslow> implements Parsable {
 	}
 
 	@Override
-	public void loadFromFile(File path) throws IOException {
-		InputStream fileIn = null;
-		try {
-			fileIn = new FileInputStream(path);
-			loadFromStream(fileIn);
-		} finally {
-			try {
-				if (fileIn != null) {
-					fileIn.close();
-				}
-			} catch (IOException ioe) {
-				// ignore
-			}
-		}
-	}
-
-	@Override
 	public void loadFromStream(InputStream src) throws IOException {
 		try {
 			MotivationParser parser = new MotivationParser(src);
@@ -60,7 +41,7 @@ public class WeightRanges extends GenWeightRanges<Maslow> implements Parsable {
 	}
 
 	@Override
-	public String getFileExtention() {
+	public String getFileSuffix() {
 		return EXT;
 	}
 

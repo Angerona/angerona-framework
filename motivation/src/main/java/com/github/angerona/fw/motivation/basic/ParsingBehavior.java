@@ -13,7 +13,7 @@ import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.def.DefaultBehavior;
-import com.github.angerona.fw.motivation.dao.impl.Parsable;
+import com.github.angerona.fw.motivation.dao.impl.ParsableComponent;
 
 /**
  * 
@@ -62,16 +62,16 @@ public abstract class ParsingBehavior extends DefaultBehavior {
 	}
 
 	protected boolean init(AngeronaEnvironment env) {
-		Parsable pComp = null;
+		ParsableComponent pComp = null;
 		File path = null;
 		boolean success = true;
 
 		for (Agent agnt : env.getAgents()) {
 			for (AgentComponent comp : agnt.getComponents()) {
-				if (comp instanceof Parsable) {
-					pComp = (Parsable) comp;
+				if (comp instanceof ParsableComponent) {
+					pComp = (ParsableComponent) comp;
 					try {
-						path = new File(env.getDirectory() + "/" + agnt.getName() + pComp.getFileExtention());
+						path = new File(env.getDirectory() + "/" + agnt.getName() + pComp.getFileSuffix());
 						LOG.info("loading component from file: {}", path);
 						pComp.loadFromFile(path);
 					} catch (IOException e) {

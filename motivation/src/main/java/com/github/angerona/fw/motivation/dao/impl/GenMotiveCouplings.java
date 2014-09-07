@@ -23,7 +23,7 @@ import com.github.angerona.fw.motivation.model.MotiveCoupling;
  * @author Manuel Barbi
  * 
  */
-public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formula> extends BaseAgentComponent implements CouplingDao<L, F>,
+public abstract class GenMotiveCouplings<L extends MotiveLevel, F extends Formula> extends ParsableComponent implements CouplingDao<L, F>,
 		Iterable<MotiveCoupling<L, F>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GenMotiveCouplings.class);
