@@ -42,4 +42,14 @@ public class FormulaUtils {
 		return bool;
 	}
 
+	public static final String desireToString(Desire d) {
+		try {
+			return d.toString();
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return null;
+	}
+
 }

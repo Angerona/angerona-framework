@@ -18,8 +18,4 @@ public interface PlanComponentDao<ID extends Comparable<ID>, F extends Formula> 
 
 	public Collection<StateNode<ID, F>> getPlan(Desire d);
 
-	public F getRelCondition(Desire d);
-
-	public F getRelAlternatives(Desire d);
-
 }

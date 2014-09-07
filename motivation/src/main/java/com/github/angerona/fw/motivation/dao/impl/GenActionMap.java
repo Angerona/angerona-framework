@@ -1,11 +1,14 @@
 package com.github.angerona.fw.motivation.dao.impl;
 
+import static com.github.angerona.fw.motivation.utils.FormulaUtils.desireToString;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.motivation.dao.ActionComponentDao;
+import com.github.angerona.fw.motivation.model.ActionNode;
 
 /**
  * 
@@ -14,10 +17,10 @@ import com.github.angerona.fw.motivation.dao.ActionComponentDao;
  */
 public class GenActionMap<T extends Comparable<T>> extends BaseAgentComponent implements ActionComponentDao<T> {
 
-	protected Map<String, T> actions = new HashMap<>();
+	protected Map<String, ActionNode<T>> actions = new HashMap<>();
 
 	@Override
-	public T get(Desire d) {
+	public ActionNode<T> get(Desire d) {
 		String key = desireToString(d);
 
 		if (key != null) {
@@ -28,37 +31,19 @@ public class GenActionMap<T extends Comparable<T>> extends BaseAgentComponent im
 	}
 
 	@Override
-	public boolean exists(Desire d) {
-		return get(d) != null;
-	}
-
-	@Override
-	public void put(Desire d, T actionId) {
+	public void put(Desire d, ActionNode<T> node) {
 		String key = desireToString(d);
 
 		if (key != null) {
-			if (actionId != null) {
-				actions.put(key, actionId);
-			} else {
-				actions.remove(key);
-			}
+			actions.put(key, node);
 		}
 	}
 
 	@Override
 	public BaseAgentComponent clone() {
 		GenActionMap<T> cln = new GenActionMap<T>();
+		cln.actions.putAll(this.actions);
 		return cln;
-	}
-
-	private String desireToString(Desire d) {
-		try {
-			return d.toString();
-		} catch (Exception e) {
-			// ignore
-		}
-
-		return null;
 	}
 
 }
