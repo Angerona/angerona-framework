@@ -1,14 +1,15 @@
 package com.github.angerona.fw.motivation.dao.impl;
 
+import static com.github.angerona.fw.motivation.utils.FolReasonUtils.reason;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Desire;
-import com.github.angerona.fw.logic.AnswerValue;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.motivation.dao.BeliefState;
+import com.github.angerona.fw.motivation.functional.ReliabilityChecker;
 
 /**
  * 
@@ -20,21 +21,26 @@ public class BeliefStateImpl implements BeliefState<FolFormula> {
 	private static final Logger LOG = LoggerFactory.getLogger(BeliefStateImpl.class);
 
 	protected Beliefs beliefs;
+	protected ReliabilityChecker checker;
 
-	public BeliefStateImpl(Beliefs beliefs) {
+	public BeliefStateImpl(Beliefs beliefs, ReliabilityChecker checker) {
 		if (beliefs == null) {
 			throw new NullPointerException("beliefs must not be null");
 		}
 
+		if (checker == null) {
+			throw new NullPointerException("reliability-checker must not be null");
+		}
+
 		this.beliefs = beliefs;
+		this.checker = checker;
 
 		LOG.debug("created {}", this.getClass().getSimpleName());
 	}
 
 	@Override
 	public boolean isReliable(Desire d) {
-		// TODO Auto-generated method stub
-		return true;
+		return checker.reliable(d);
 	}
 
 	@Override
@@ -44,7 +50,7 @@ public class BeliefStateImpl implements BeliefState<FolFormula> {
 
 	@Override
 	public boolean verify(FolFormula statement) {
-		return (beliefs.getWorldKnowledge().reason(statement).getAnswerValue() == AnswerValue.AV_TRUE);
+		return reason(beliefs, statement);
 	}
 
 }
