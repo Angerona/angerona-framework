@@ -1,43 +1,56 @@
 package com.github.angerona.fw.motivation.plan;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
  * 
  * @author Manuel Barbi
  * 
- * @param <F>
  */
-public class ActionEdge<F extends Formula> {
+public class ActionEdge {
 
 	protected String actionId;
-	protected F condition;
-	protected StateNode<F> goal;
+	protected FolFormula condition;
+	protected StateNode goal;
 
-	public ActionEdge(String actionId, F condition, StateNode<F> goal) {
+	ActionEdge(String actionId) {
+		setActionId(actionId);
+	}
+
+	ActionEdge setActionId(String actionId) {
 		if (actionId == null) {
-			throw new NullPointerException("action  must not be null");
-		}
-
-		if (goal == null) {
-			throw new NullPointerException("goal must not be null");
+			throw new NullPointerException("action-id must not be null");
 		}
 
 		this.actionId = actionId;
+		return this;
+	}
+
+	ActionEdge setCondition(FolFormula condition) {
 		this.condition = condition;
+		return this;
+	}
+
+	ActionEdge setGoal(StateNode goal) {
 		this.goal = goal;
+		return this;
 	}
 
 	public String getActionId() {
 		return actionId;
 	}
 
-	public F getCondition() {
+	public FolFormula getCondition() {
 		return condition;
 	}
 
-	public StateNode<F> getGoal() {
+	public StateNode getGoal() {
 		return goal;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + actionId + ", " + condition + ", " + goal + "]";
 	}
 
 }

@@ -30,6 +30,11 @@ public abstract class ParsableComponent extends BaseAgentComponent {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
 	public abstract void loadFromStream(InputStream src) throws IOException;
 
 	public abstract String getFileSuffix();

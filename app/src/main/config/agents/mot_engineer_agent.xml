@@ -19,7 +19,7 @@
 	<component>com.github.angerona.fw.motivation.dao.impl.LevelWeights</component>
 	<component>com.github.angerona.fw.motivation.dao.impl.MotStructure</component>
 	<component>com.github.angerona.fw.logic.Desires</component>
-	<component>com.github.angerona.fw.motivation.island.comp.IslandPlans</component>
+	<component>com.github.angerona.fw.motivation.island.comp.TrailBasedPlans</component>
 	<component>com.github.angerona.fw.motivation.island.comp.IslandActions</component>
 	<component>com.github.angerona.fw.motivation.island.comp.Battery</component>
 	<component>com.github.angerona.fw.motivation.island.comp.Area</component>

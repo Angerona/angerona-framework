@@ -35,4 +35,9 @@ public class TrailDTO {
 		this.pln = pln;
 	}
 
+	@Override
+	public String toString() {
+		return "[" + des + ", " + pln + "]";
+	}
+
 }

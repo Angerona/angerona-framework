@@ -36,4 +36,9 @@ public class SequenceDTO implements PlanDTO {
 		this.act = act;
 	}
 
+	@Override
+	public String toString() {
+		return "[" + id + ", " + act + "]";
+	}
+
 }

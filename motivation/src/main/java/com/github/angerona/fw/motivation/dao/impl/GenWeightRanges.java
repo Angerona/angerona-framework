@@ -62,8 +62,4 @@ public abstract class GenWeightRanges<L extends MotiveLevel> extends ParsableCom
 
 	protected abstract GenWeightRanges<L> create();
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
 }

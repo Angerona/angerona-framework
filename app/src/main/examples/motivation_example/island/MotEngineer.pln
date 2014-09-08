@@ -33,6 +33,12 @@
 		<action>
 			<id>move_to_site</id>
 			<condition>-storm_or_rain,-thunderstorm</condition>
+			<src>on_the_way_1</src>
+			<dst>on_the_way_3</dst>
+		</action>
+		<action>
+			<id>move_to_site</id>
+			<condition>-storm_or_rain,-thunderstorm</condition>
 			<src>on_the_way_2</src>
 			<dst>at_site</dst>
 		</action>		
@@ -42,7 +48,7 @@
 		<action>
 			<id>move_to_hq</id>
 			<condition>-sun,-clouds</condition>
-			<src>at_at</src>
+			<src>at_site</src>
 			<dst>on_the_way_3</dst>
 		</action>
 		<action>
@@ -68,6 +74,12 @@
 			<src>at_site</src>
 			<dst>on_the_way_2</dst>
 		</action>
+		<action>
+			<id>move_to_hq</id>
+			<condition>-storm_or_rain,-thunderstorm</condition>
+			<src>on_the_way_3</src>
+			<dst>on_the_way_1</dst>
+		</action>		
 		<action>
 			<id>move_to_hq</id>
 			<condition>-storm_or_rain,-thunderstorm</condition>

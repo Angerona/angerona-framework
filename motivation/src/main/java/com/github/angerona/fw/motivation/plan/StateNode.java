@@ -2,35 +2,46 @@ package com.github.angerona.fw.motivation.plan;
 
 import java.util.Iterator;
 
-import net.sf.tweety.Formula;
-
 /**
  * 
  * @author Manuel Barbi
  * 
- * @param <F>
  */
-public class StateNode<F extends Formula> implements Iterable<ActionEdge<F>> {
+public class StateNode implements Comparable<StateNode>, Iterable<ActionEdge> {
 
 	protected String name;
-	protected ActionEdge<F>[] actions;
+	protected ActionEdge[] actions = new ActionEdge[0];
 
-	public StateNode(String name, ActionEdge<F>[] actions) {
+	StateNode(String name) {
+		this.setName(name);
+	}
+
+	StateNode setName(String name) {
 		if (name == null) {
 			throw new NullPointerException("name must not be null");
 		}
 
-		if (actions == null) {
-			throw new NullPointerException("actions must not be null");
-		}
-
 		this.name = name;
+		return this;
+	}
+
+	StateNode setActions(ActionEdge[] actions) {
 		this.actions = actions;
+		return this;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	@Override
-	public Iterator<ActionEdge<F>> iterator() {
-		return new Iterator<ActionEdge<F>>() {
+	public int compareTo(StateNode o) {
+		return this.getName().compareTo(o.getName());
+	}
+
+	@Override
+	public Iterator<ActionEdge> iterator() {
+		return new Iterator<ActionEdge>() {
 
 			private int i = 0;
 
@@ -40,7 +51,7 @@ public class StateNode<F extends Formula> implements Iterable<ActionEdge<F>> {
 			}
 
 			@Override
-			public ActionEdge<F> next() {
+			public ActionEdge next() {
 				return hasNext() ? actions[i++] : null;
 			}
 
@@ -50,6 +61,11 @@ public class StateNode<F extends Formula> implements Iterable<ActionEdge<F>> {
 			}
 
 		};
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }

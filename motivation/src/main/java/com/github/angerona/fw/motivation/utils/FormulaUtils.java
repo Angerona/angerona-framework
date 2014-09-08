@@ -1,5 +1,8 @@
 package com.github.angerona.fw.motivation.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -13,18 +16,31 @@ import com.github.angerona.fw.Desire;
  */
 public class FormulaUtils {
 
-	public static final FolFormula createFormula(String arg) {
-		String fStr = arg.toLowerCase();
+	private static final Pattern FORMULA = Pattern.compile("(\\-?)(\\w+)(,\\s?)?");
 
-		// check for tautology
-		if (!fStr.equals("true")) {
-			// check for negation
-			boolean neg = fStr.startsWith("-");
-			FolFormula formula = new FOLAtom(new Predicate(fStr.substring(neg ? 1 : 0)));
-			return (!neg) ? formula : (FolFormula) formula.complement();
+	public static final FolFormula createFormula(String arg) {
+		Matcher m = FORMULA.matcher(arg.toLowerCase());
+		FolFormula out = null;
+		FolFormula f;
+		String part;
+		boolean neg;
+
+		while (m.find()) {
+			neg = m.group(1).equals("-");
+			part = m.group(2);
+
+			if (neg || !part.equals("true")) {
+				f = new FOLAtom(new Predicate(part));
+
+				if (out != null) {
+					out = out.combineWithAnd(neg ? (FolFormula) f.complement() : f);
+				} else {
+					out = neg ? (FolFormula) f.complement() : f;
+				}
+			}
 		}
 
-		return null;
+		return out;
 	}
 
 	public static final Desire createDesire(String arg) {
@@ -50,6 +66,14 @@ public class FormulaUtils {
 		}
 
 		return null;
+	}
+
+	public static void main(String[] args) {
+		Matcher m = FORMULA.matcher("-bal_gg5, not, -foo");
+		while (m.find()) {
+			System.out.println(m.group(1).equals("-"));
+			System.out.println(m.group(2));
+		}
 	}
 
 }

@@ -54,4 +54,9 @@ public class ActionDTO implements PlanDTO {
 		this.dst = dst;
 	}
 
+	@Override
+	public String toString() {
+		return "[" + id + ", " + cond + ", " + src + ", " + dst + "]";
+	}
+
 }

@@ -18,11 +18,11 @@ import com.github.angerona.fw.motivation.model.MotiveCoupling;
  */
 public class DummyCouplingsTwo extends MotiveCouplings {
 
-	public static final Motive<Maslow> ENVIRONMENTAL_AWARENESS = new Motive<>("environmental awareness", SELF_ACTUALIZATION);
+	public static final Motive<Maslow> ENVIRONMENTAL_AWARENESS = new Motive<>("environmental_awareness", SELF_ACTUALIZATION);
 	public static final Motive<Maslow> FOOD = new Motive<>("food", PHYSIOLOGICAL_NEEDS);
 
-	public static final Desire OWN_COUNTRY = createDesire("buy fruits from your own country");
-	public static final Desire CHEAP_FOOD = createDesire("buy cheap food");
+	public static final Desire OWN_COUNTRY = createDesire("buy_fruits_from_your_own_country");
+	public static final Desire CHEAP_FOOD = createDesire("buy_cheap_food");
 
 	public static final MotiveCoupling<Maslow, FolFormula> COUPL_OWN = new MotiveCoupling<>(ENVIRONMENTAL_AWARENESS, OWN_COUNTRY, 0.3, null);
 	public static final MotiveCoupling<Maslow, FolFormula> COUPL_CHEAP = new MotiveCoupling<>(FOOD, CHEAP_FOOD, 0.3, null);
