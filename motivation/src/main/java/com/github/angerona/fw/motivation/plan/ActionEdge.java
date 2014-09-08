@@ -6,19 +6,17 @@ import net.sf.tweety.Formula;
  * 
  * @author Manuel Barbi
  * 
- * @param <ID>
  * @param <F>
- * @param <S>
  */
-public class ActionEdge<ID extends Comparable<ID>, F extends Formula> {
+public class ActionEdge<F extends Formula> {
 
-	protected ID actionId;
+	protected String actionId;
 	protected F condition;
-	protected StateNode<ID, F> goal;
+	protected StateNode<F> goal;
 
-	public ActionEdge(ID actionId, F condition, StateNode<ID, F> goal) {
+	public ActionEdge(String actionId, F condition, StateNode<F> goal) {
 		if (actionId == null) {
-			throw new NullPointerException("action ID must not be null");
+			throw new NullPointerException("action  must not be null");
 		}
 
 		if (goal == null) {
@@ -30,7 +28,7 @@ public class ActionEdge<ID extends Comparable<ID>, F extends Formula> {
 		this.goal = goal;
 	}
 
-	public ID getActionId() {
+	public String getActionId() {
 		return actionId;
 	}
 
@@ -38,7 +36,7 @@ public class ActionEdge<ID extends Comparable<ID>, F extends Formula> {
 		return condition;
 	}
 
-	public StateNode<ID, F> getGoal() {
+	public StateNode<F> getGoal() {
 		return goal;
 	}
 

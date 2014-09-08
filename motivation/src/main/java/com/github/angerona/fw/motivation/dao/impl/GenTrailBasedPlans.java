@@ -19,13 +19,13 @@ import com.github.angerona.fw.motivation.plan.StateNode;
  * @param <ID>
  * @param <F>
  */
-public abstract class GenTrailBasedPlans<ID extends Comparable<ID>, F extends Formula> extends ParsableComponent implements
-		PlanComponentDao<ID, F> {
+public abstract class GenTrailBasedPlans<F extends Formula> extends ParsableComponent implements
+		PlanComponentDao<F> {
 
-	protected Map<String, Collection<StateNode<ID, F>>> trails;
+	protected Map<String, Collection<StateNode<F>>> trails;
 
 	@Override
-	public Collection<StateNode<ID, F>> getPlan(Desire d) {
+	public Collection<StateNode<F>> getPlan(Desire d) {
 		String key = desireToString(d);
 
 		if (key != null) {
@@ -35,11 +35,11 @@ public abstract class GenTrailBasedPlans<ID extends Comparable<ID>, F extends Fo
 		return null;
 	}
 
-	protected abstract GenTrailBasedPlans<ID, F> create();
+	protected abstract GenTrailBasedPlans<F> create();
 
 	@Override
 	public BaseAgentComponent clone() {
-		GenTrailBasedPlans<ID, F> cln = create();
+		GenTrailBasedPlans<F> cln = create();
 		return cln;
 	}
 

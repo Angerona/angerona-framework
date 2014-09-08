@@ -8,15 +8,14 @@ import net.sf.tweety.Formula;
  * 
  * @author Manuel Barbi
  * 
- * @param <ID>
  * @param <F>
  */
-public class StateNode<ID extends Comparable<ID>, F extends Formula> implements Iterable<ActionEdge<ID, F>> {
+public class StateNode<F extends Formula> implements Iterable<ActionEdge<F>> {
 
 	protected String name;
-	protected ActionEdge<ID, F>[] actions;
+	protected ActionEdge<F>[] actions;
 
-	public StateNode(String name, ActionEdge<ID, F>[] actions) {
+	public StateNode(String name, ActionEdge<F>[] actions) {
 		if (name == null) {
 			throw new NullPointerException("name must not be null");
 		}
@@ -30,8 +29,8 @@ public class StateNode<ID extends Comparable<ID>, F extends Formula> implements 
 	}
 
 	@Override
-	public Iterator<ActionEdge<ID, F>> iterator() {
-		return new Iterator<ActionEdge<ID, F>>() {
+	public Iterator<ActionEdge<F>> iterator() {
+		return new Iterator<ActionEdge<F>>() {
 
 			private int i = 0;
 
@@ -41,7 +40,7 @@ public class StateNode<ID extends Comparable<ID>, F extends Formula> implements 
 			}
 
 			@Override
-			public ActionEdge<ID, F> next() {
+			public ActionEdge<F> next() {
 				return hasNext() ? actions[i++] : null;
 			}
 
