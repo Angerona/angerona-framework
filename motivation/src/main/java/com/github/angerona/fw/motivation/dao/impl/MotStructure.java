@@ -1,6 +1,5 @@
 package com.github.angerona.fw.motivation.dao.impl;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,15 +41,8 @@ public class MotStructure extends BaseAgentComponent implements MotStructureDao,
 
 	@Override
 	public List<MotStrcEntry> getOrderedEntries() {
-		return Collections.unmodifiableList(this.entries);
-	}
-
-	@Override
-	public void putEntries(Collection<MotStrcEntry> entries) {
-		this.entries.clear();
-		this.entries.addAll(entries);
 		Collections.sort(this.entries);
-		report("adjusted motivational-structure");
+		return Collections.unmodifiableList(this.entries);
 	}
 
 	@Override
@@ -68,6 +60,17 @@ public class MotStructure extends BaseAgentComponent implements MotStructureDao,
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName();
+	}
+
+	@Override
+	public void putEntry(MotStrcEntry entry) {
+		this.entries.add(entry);
+		report("set motivational-value " + entry.getMotivationalValue() + " for desire " + entry.getDesire());
+	}
+
+	@Override
+	public void clear() {
+		this.entries.clear();
 	}
 
 }

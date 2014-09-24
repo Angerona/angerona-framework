@@ -1,5 +1,9 @@
 low :- -energy_8, -energy_4.
 
+slow :- storm_or_rain.
+slow :- thunderstorm.
+-slow :- not slow.
+
 -fill_battery :- energy_8, energy_4.
 -secure_site :- secured.
 

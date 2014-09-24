@@ -1,6 +1,5 @@
 package com.github.angerona.fw.motivation.island;
 
-import static com.github.angerona.fw.motivation.island.enums.ActionId.MOVE_TO_SITE;
 import static com.github.angerona.fw.motivation.island.enums.Location.AT_HQ;
 import static com.github.angerona.fw.motivation.island.enums.Location.AT_SITE;
 import static com.github.angerona.fw.motivation.island.enums.Location.IN_CAVE;
@@ -22,6 +21,7 @@ import com.github.angerona.fw.motivation.island.comp.Area;
 import com.github.angerona.fw.motivation.island.comp.Battery;
 import com.github.angerona.fw.motivation.island.enums.Location;
 import com.github.angerona.fw.motivation.island.enums.Weather;
+import com.github.angerona.fw.motivation.plan.WeatherChart;
 
 /**
  * 
@@ -183,14 +183,14 @@ public abstract class IslandBehavior extends ParsingBehavior {
 			if (!battery.isDamaged() && !battery.isEmpty()) {
 				somethingHappens = true;
 
-				perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, (tick - 1 % 4),
+				area.setWeather(new WeatherChart(current, prediction, rem(tick)));
+				perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, rem(tick),
 						area.isSecured());
 				agent.perceive(perception);
 				LOG.debug("create perception: {}", perception);
 
 				LOG.debug("call agent cycle");
 				agent.cycle();
-				sendAction(env, new IslandAction(agent, MOVE_TO_SITE));
 			}
 
 			LOG.debug("discarge battery");
@@ -198,6 +198,12 @@ public abstract class IslandBehavior extends ParsingBehavior {
 		}
 
 		return somethingHappens;
+	}
+
+	private int rem(int tick) {
+		int mod = 4 - ((tick - 1) % 4);
+
+		return mod;
 	}
 
 }

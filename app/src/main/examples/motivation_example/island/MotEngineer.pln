@@ -3,19 +3,19 @@
 		<id>way_to_site</id>
 		<action>
 			<id>move_to_site</id>
-			<condition>-sun,-clouds</condition>
+			<condition>slow</condition>
 			<src>at_hq</src>
 			<dst>on_the_way_1</dst>
 		</action>
 		<action>
 			<id>move_to_site</id>
-			<condition>-sun,-clouds</condition>
+			<condition>slow</condition>
 			<src>on_the_way_1</src>
 			<dst>on_the_way_2</dst>
 		</action>
 		<action>
 			<id>move_to_site</id>
-			<condition>-sun,-clouds</condition>
+			<condition>slow</condition>
 			<src>on_the_way_2</src>
 			<dst>on_the_way_3</dst>
 		</action>
@@ -26,19 +26,19 @@
 		</action>
 		<action>
 			<id>move_to_site</id>
-			<condition>-storm_or_rain,-thunderstorm</condition>
+			<condition>-slow</condition>
 			<src>at_hq</src>
 			<dst>on_the_way_2</dst>
 		</action>
 		<action>
 			<id>move_to_site</id>
-			<condition>-storm_or_rain,-thunderstorm</condition>
+			<condition>-slow</condition>
 			<src>on_the_way_1</src>
 			<dst>on_the_way_3</dst>
 		</action>
 		<action>
 			<id>move_to_site</id>
-			<condition>-storm_or_rain,-thunderstorm</condition>
+			<condition>-slow</condition>
 			<src>on_the_way_2</src>
 			<dst>at_site</dst>
 		</action>		
@@ -47,19 +47,19 @@
 		<id>way_to_hq</id>
 		<action>
 			<id>move_to_hq</id>
-			<condition>-sun,-clouds</condition>
+			<condition>slow</condition>
 			<src>at_site</src>
 			<dst>on_the_way_3</dst>
 		</action>
 		<action>
 			<id>move_to_hq</id>
-			<condition>-sun,-clouds</condition>
+			<condition>slow</condition>
 			<src>on_the_way_3</src>
 			<dst>on_the_way_2</dst>
 		</action>
 		<action>
 			<id>move_to_hq</id>
-			<condition>-sun,-clouds</condition>
+			<condition>slow</condition>
 			<src>on_the_way_2</src>
 			<dst>on_the_way_1</dst>
 		</action>
@@ -70,19 +70,19 @@
 		</action>
 		<action>
 			<id>move_to_hq</id>
-			<condition>-storm_or_rain,-thunderstorm</condition>
+			<condition>-slow</condition>
 			<src>at_site</src>
 			<dst>on_the_way_2</dst>
 		</action>
 		<action>
 			<id>move_to_hq</id>
-			<condition>-storm_or_rain,-thunderstorm</condition>
+			<condition>-slow</condition>
 			<src>on_the_way_3</src>
 			<dst>on_the_way_1</dst>
 		</action>		
 		<action>
 			<id>move_to_hq</id>
-			<condition>-storm_or_rain,-thunderstorm</condition>
+			<condition>-slow</condition>
 			<src>on_the_way_2</src>
 			<dst>at_hq</dst>
 		</action>		

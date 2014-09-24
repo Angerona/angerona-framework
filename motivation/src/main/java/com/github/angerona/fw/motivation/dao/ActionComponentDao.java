@@ -1,7 +1,7 @@
 package com.github.angerona.fw.motivation.dao;
 
 import com.github.angerona.fw.Desire;
-import com.github.angerona.fw.motivation.model.ActionNode;
+import com.github.angerona.fw.motivation.plan.ActionSequence;
 
 /**
  * 
@@ -16,7 +16,15 @@ public interface ActionComponentDao<T extends Comparable<T>> {
 	 * @param d
 	 * @return
 	 */
-	public ActionNode<T> get(Desire d);
+	public ActionSequence<T> get(Desire d);
+	
+	/**
+	 * returns the ActionNode linked with Desire represented by key
+	 * 
+	 * @param d
+	 * @return
+	 */
+	public ActionSequence<T> get(String key);
 
 	/**
 	 * links Desire d with an ActionNode
@@ -24,6 +32,6 @@ public interface ActionComponentDao<T extends Comparable<T>> {
 	 * @param d
 	 * @param actionId
 	 */
-	public void put(Desire d, ActionNode<T> node);
+	public void put(Desire d, ActionSequence<T> node);
 
 }

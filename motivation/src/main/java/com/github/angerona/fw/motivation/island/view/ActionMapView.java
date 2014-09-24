@@ -5,26 +5,25 @@ import java.util.List;
 
 import com.github.angerona.fw.gui.view.ListViewColored;
 import com.github.angerona.fw.internal.Entity;
-import com.github.angerona.fw.motivation.island.comp.Area;
+import com.github.angerona.fw.motivation.island.comp.IslandActions;
 
 /**
  * 
  * @author Manuel Barbi
- * 
+ *
  */
-public class AreaView extends ListViewColored {
+public class ActionMapView extends ListViewColored {
 
-	private static final long serialVersionUID = -5614395245664119810L;
+	private static final long serialVersionUID = 3262083863956889360L;
 
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
-		if (entity instanceof Area) {
-			Area area = (Area) entity;
+		if (entity instanceof IslandActions) {
+			IslandActions actions = (IslandActions) entity;
 			List<String> reval = new LinkedList<String>();
-			reval.add("Location: " + area.getLocation());
-			reval.add("Expandsion: " + area.getExpansion());
-			reval.add("Secured: " + area.isSecured());
-			reval.add("Weather: " + area.getWeather());
+			for (String key : actions) {
+				reval.add(actions.get(key).toString());
+			}
 			return reval;
 		}
 		return null;
@@ -32,7 +31,7 @@ public class AreaView extends ListViewColored {
 
 	@Override
 	public Class<? extends Entity> getObservedType() {
-		return Area.class;
+		return IslandActions.class;
 	}
 
 }

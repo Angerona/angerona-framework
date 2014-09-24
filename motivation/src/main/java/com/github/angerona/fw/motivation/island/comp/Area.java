@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.motivation.island.enums.Location;
+import com.github.angerona.fw.motivation.plan.WeatherChart;
 
 /**
  * 
@@ -16,6 +17,7 @@ public class Area extends BaseAgentComponent {
 	protected int[] solid = new int[8];
 	protected int[] vulnurable = new int[8];
 	protected boolean secured = false;
+	protected WeatherChart weather;
 
 	public Location getLocation() {
 		return location;
@@ -59,6 +61,14 @@ public class Area extends BaseAgentComponent {
 
 	public boolean isShelter() {
 		return location == Location.AT_HQ || location == Location.IN_CAVE;
+	}
+
+	public WeatherChart getWeather() {
+		return weather;
+	}
+
+	public void setWeather(WeatherChart weather) {
+		this.weather = weather;
 	}
 
 	public void damage() {

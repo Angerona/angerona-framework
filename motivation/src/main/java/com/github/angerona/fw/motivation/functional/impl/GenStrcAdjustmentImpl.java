@@ -3,7 +3,6 @@ package com.github.angerona.fw.motivation.functional.impl;
 import static com.github.angerona.fw.motivation.utils.FormatUtils.format;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import net.sf.tweety.Formula;
 
@@ -56,7 +55,7 @@ public abstract class GenStrcAdjustmentImpl<L extends MotiveLevel, F extends For
 			throw new NullPointerException("mot-structure-access must not be null");
 		}
 
-		Collection<MotStrcEntry> entries = new HashSet<>();
+		out.clear();
 		Collection<MotiveCoupling<L, F>> couplings;
 
 		for (Desire d : ms.getDesires()) {
@@ -87,12 +86,10 @@ public abstract class GenStrcAdjustmentImpl<L extends MotiveLevel, F extends For
 
 				if (!isFst) {
 					LOGGER.info("set motivational-value {} for desire <{}>", format(mu), d);
-					entries.add(new MotStrcEntry(d, mu));
+					out.putEntry(new MotStrcEntry(d, mu));
 				}
 			}
 		}
-
-		out.putEntries(entries);
 	}
 
 }

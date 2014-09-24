@@ -87,11 +87,8 @@ public abstract class GenWeightAdjustmentImpl<L extends MotiveLevel, F extends F
 		double top = 0;
 		double bottom = 0;
 		double mean;
-		double meanCS = ms.getMeanCouplingStrength();
 		int satCount;
 		Collection<Motive<L>> motives;
-
-		LOGGER.debug("mean coupling strength: {}", format(meanCS));
 
 		for (L level : levels) {
 			motives = ms.getMotives(level);
@@ -104,7 +101,7 @@ public abstract class GenWeightAdjustmentImpl<L extends MotiveLevel, F extends F
 				for (Motive<L> m : motives) {
 					for (MotiveCoupling<L, F> mc : ms.getCouplings(m)) {
 						// check if desire is reliable and coupled over average
-						if ((mc.getCouplingStrength() >= meanCS) && b.isReliable(mc.getDesire())) {
+						if ((mc.getCouplingStrength() > 0) && b.isReliable(mc.getDesire())) {
 							satCount++;
 							break;
 						}

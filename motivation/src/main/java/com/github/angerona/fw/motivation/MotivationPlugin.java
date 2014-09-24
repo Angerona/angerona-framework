@@ -29,6 +29,7 @@ import com.github.angerona.fw.motivation.island.operators.BdiSelectionOperator;
 import com.github.angerona.fw.motivation.island.operators.IslandActionOperator;
 import com.github.angerona.fw.motivation.island.operators.IslandMotOperator;
 import com.github.angerona.fw.motivation.island.operators.IslandUpdateBeliefsOperator;
+import com.github.angerona.fw.motivation.island.view.ActionMapView;
 import com.github.angerona.fw.motivation.island.view.AreaView;
 import com.github.angerona.fw.motivation.island.view.BatteryView;
 import com.github.angerona.fw.motivation.island.view.TrailPlanView;
@@ -69,6 +70,7 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 		reval.put("LevelWeight-View", WeightsView.class);
 		reval.put("MotStructure-View", MotStructureView.class);
 		reval.put("Plan-View", TrailPlanView.class);
+		reval.put("Action-View", ActionMapView.class);
 		reval.put("Area-View", AreaView.class);
 		reval.put("Battery-View", BatteryView.class);
 		return reval;

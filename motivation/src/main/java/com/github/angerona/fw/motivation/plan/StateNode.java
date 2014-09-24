@@ -34,6 +34,10 @@ public class StateNode implements Comparable<StateNode>, Iterable<ActionEdge> {
 		return name;
 	}
 
+	public int getEgdeCount() {
+		return actions.length;
+	}
+
 	@Override
 	public int compareTo(StateNode o) {
 		return this.getName().compareTo(o.getName());
@@ -66,6 +70,31 @@ public class StateNode implements Comparable<StateNode>, Iterable<ActionEdge> {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StateNode other = (StateNode) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 
 }

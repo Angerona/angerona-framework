@@ -1,6 +1,5 @@
 package com.github.angerona.fw.motivation.dao;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.github.angerona.fw.Desire;
@@ -17,6 +16,8 @@ public interface MotStructureDao {
 
 	public List<MotStrcEntry> getOrderedEntries();
 
-	public void putEntries(Collection<MotStrcEntry> entries);
+	public void putEntry(MotStrcEntry entry);
+
+	public void clear();
 
 }

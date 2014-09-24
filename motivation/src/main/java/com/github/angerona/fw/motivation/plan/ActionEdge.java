@@ -53,4 +53,41 @@ public class ActionEdge {
 		return "[" + actionId + ", " + condition + ", " + goal + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((actionId == null) ? 0 : actionId.hashCode());
+		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
+		result = prime * result + ((goal == null) ? 0 : goal.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ActionEdge other = (ActionEdge) obj;
+		if (actionId == null) {
+			if (other.actionId != null)
+				return false;
+		} else if (!actionId.equals(other.actionId))
+			return false;
+		if (condition == null) {
+			if (other.condition != null)
+				return false;
+		} else if (!condition.equals(other.condition))
+			return false;
+		if (goal == null) {
+			if (other.goal != null)
+				return false;
+		} else if (!goal.equals(other.goal))
+			return false;
+		return true;
+	}
+
 }
