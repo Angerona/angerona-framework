@@ -5,7 +5,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Set;
 
 import com.github.angerona.fw.motivation.Maslow;
-import com.github.angerona.fw.motivation.model.MotiveCoupling;
+import com.github.angerona.fw.motivation.MotiveCoupling;
 
 /**
  * {@link MotiveCouplings} is a specialized AgentComponent for {@link Maslow} MotiveCouplings

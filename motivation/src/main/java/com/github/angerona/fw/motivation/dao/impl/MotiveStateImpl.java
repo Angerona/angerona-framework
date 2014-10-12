@@ -3,14 +3,14 @@ package com.github.angerona.fw.motivation.dao.impl;
 import java.util.Collection;
 
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.motivation.Motive;
+import com.github.angerona.fw.motivation.MotiveCoupling;
 import com.github.angerona.fw.motivation.MotiveLevel;
+import com.github.angerona.fw.motivation.WeightRange;
 import com.github.angerona.fw.motivation.dao.CouplingDao;
 import com.github.angerona.fw.motivation.dao.LevelWeightDao;
 import com.github.angerona.fw.motivation.dao.MotiveState;
 import com.github.angerona.fw.motivation.dao.WeightRangeDao;
-import com.github.angerona.fw.motivation.model.Motive;
-import com.github.angerona.fw.motivation.model.MotiveCoupling;
-import com.github.angerona.fw.motivation.model.WeightRange;
 
 /**
  * 

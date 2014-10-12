@@ -1,9 +1,8 @@
-package com.github.angerona.fw.motivation.model;
+package com.github.angerona.fw.motivation;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import com.github.angerona.fw.Desire;
-import com.github.angerona.fw.motivation.MotiveLevel;
 
 /**
  * 

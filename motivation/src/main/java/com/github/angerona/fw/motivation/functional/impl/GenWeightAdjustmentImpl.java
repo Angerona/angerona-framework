@@ -8,15 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.motivation.GenLevelIterable;
+import com.github.angerona.fw.motivation.Motive;
+import com.github.angerona.fw.motivation.MotiveCoupling;
 import com.github.angerona.fw.motivation.MotiveLevel;
+import com.github.angerona.fw.motivation.WeightRange;
 import com.github.angerona.fw.motivation.dao.BeliefState;
 import com.github.angerona.fw.motivation.dao.LevelWeightDao;
 import com.github.angerona.fw.motivation.dao.MotiveState;
 import com.github.angerona.fw.motivation.functional.DeficiencyPartition;
 import com.github.angerona.fw.motivation.functional.WeightAdjustment;
-import com.github.angerona.fw.motivation.model.Motive;
-import com.github.angerona.fw.motivation.model.MotiveCoupling;
-import com.github.angerona.fw.motivation.model.WeightRange;
 
 /**
  * 

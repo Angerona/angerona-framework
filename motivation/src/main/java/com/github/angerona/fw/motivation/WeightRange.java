@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation.model;
+package com.github.angerona.fw.motivation;
 
 /**
  * 

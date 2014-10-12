@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.motivation.Maslow;
-import com.github.angerona.fw.motivation.model.WeightRange;
+import com.github.angerona.fw.motivation.WeightRange;
 
 /**
  * {@link WeightRange} is a specialized {@link AgentComponent} for {@link Maslow} WeightRanges

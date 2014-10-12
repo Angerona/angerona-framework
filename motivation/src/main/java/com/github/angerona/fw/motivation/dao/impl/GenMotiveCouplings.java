@@ -8,10 +8,10 @@ import java.util.Set;
 
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.motivation.Motive;
+import com.github.angerona.fw.motivation.MotiveCoupling;
 import com.github.angerona.fw.motivation.MotiveLevel;
 import com.github.angerona.fw.motivation.dao.CouplingDao;
-import com.github.angerona.fw.motivation.model.Motive;
-import com.github.angerona.fw.motivation.model.MotiveCoupling;
 
 /**
  * {@link GenMotiveCouplings} is a generic class delivering access to the MotiveCouplings of an Agent. MotiveCouplings can be parsed from file.

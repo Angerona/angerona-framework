@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.motivation.MotiveLevel;
+import com.github.angerona.fw.motivation.WeightRange;
 import com.github.angerona.fw.motivation.dao.WeightRangeDao;
-import com.github.angerona.fw.motivation.model.WeightRange;
 
 /**
  * {@link GenWeightRanges} is a generic class delivering access to the LevelWeights of an Agent. LevelWeights can be parsed from file.
