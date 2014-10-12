@@ -5,23 +5,23 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.logic.AnswerValue;
 import com.github.angerona.fw.logic.Beliefs;
+import com.github.angerona.fw.motivation.ActionSequence;
 import com.github.angerona.fw.motivation.dao.ActionSequenceDao;
 import com.github.angerona.fw.motivation.dao.BeliefState;
-import com.github.angerona.fw.motivation.plans.ActionSequence;
-import com.github.angerona.fw.motivation.plans.TimeSlots;
+import com.github.angerona.fw.motivation.dao.TimeSlotDao;
 
 /**
  * 
  * @author Manuel Barbi
  *
  */
-public class BelieveStateImpl implements BeliefState {
+public class BeliefStateImpl implements BeliefState {
 
 	private Beliefs beliefs;
 	private ActionSequenceDao sequences;
-	private TimeSlots timeSlots;
+	private TimeSlotDao timeSlots;
 
-	public BelieveStateImpl(Beliefs beliefs, ActionSequenceDao sequences, TimeSlots timeSlots) {
+	public BeliefStateImpl(Beliefs beliefs, ActionSequenceDao sequences, TimeSlotDao timeSlots) {
 		if (beliefs == null) {
 			throw new NullPointerException("beliefs must not be null");
 		}

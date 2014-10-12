@@ -20,8 +20,8 @@ public class MotivationOperator extends GenMotOperator<Maslow> {
 	}
 
 	private MotivationOperator(WeightAdjustment<Maslow> weightAdjustment, MotivationAdjustment<Maslow> motivationAdjustment,
-			DesireSelection selection) {
-		super(weightAdjustment, motivationAdjustment, selection);
+			DesireSelection desireSelection) {
+		super(weightAdjustment, motivationAdjustment, desireSelection);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class MotivationOperator extends GenMotOperator<Maslow> {
 
 	@Override
 	protected GenMotOperator<Maslow> clone() {
-		return new MotivationOperator(this.weightAdjustment.copy(), this.motivationAdjustment.copy(), this.selection.copy());
+		return new MotivationOperator(this.weightAdjustment.copy(), this.motivationAdjustment.copy(), this.desireSelection.copy());
 	}
 
 }

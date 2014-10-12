@@ -1,7 +1,7 @@
 package com.github.angerona.fw.motivation.dao;
 
 import com.github.angerona.fw.Desire;
-import com.github.angerona.fw.motivation.plans.ActionSequence;
+import com.github.angerona.fw.motivation.ActionSequence;
 
 /**
  * 

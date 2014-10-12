@@ -1,7 +1,6 @@
 package com.github.angerona.fw.motivation.operators;
 
 import com.github.angerona.fw.motivation.Maslow;
-import com.github.angerona.fw.motivation.dao.BeliefState;
 import com.github.angerona.fw.motivation.dao.impl.GenLevelWeights;
 import com.github.angerona.fw.motivation.dao.impl.GenMotiveCouplings;
 import com.github.angerona.fw.motivation.dao.impl.GenWeightRanges;
@@ -29,11 +28,6 @@ public class MotOperatorParameter extends GenMotOperatorParameter<Maslow> {
 	@Override
 	protected GenLevelWeights<Maslow> weights() {
 		return getAgent().getComponent(LevelWeights.class);
-	}
-
-	@Override
-	protected BeliefState beliefState() {
-		return null;
 	}
 
 }

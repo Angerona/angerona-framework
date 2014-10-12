@@ -2,9 +2,6 @@ package com.github.angerona.fw.motivation.operators;
 
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.am.secrecy.operators.BaseGenerateOptionsOperator;
 import com.github.angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
@@ -22,13 +19,12 @@ import com.github.angerona.fw.motivation.functional.WeightAdjustment;
  */
 public abstract class GenMotOperator<L extends MotiveLevel> extends BaseGenerateOptionsOperator {
 
-	private static final Logger LOG = LoggerFactory.getLogger(GenMotOperator.class);
-
 	protected WeightAdjustment<L> weightAdjustment;
 	protected MotivationAdjustment<L> motivationAdjustment;
-	protected DesireSelection selection;
+	protected DesireSelection desireSelection;
 
-	public GenMotOperator(WeightAdjustment<L> weightAdjustment, MotivationAdjustment<L> motivationAdjustment, DesireSelection selection) {
+	public GenMotOperator(WeightAdjustment<L> weightAdjustment, MotivationAdjustment<L> motivationAdjustment, DesireSelection desireSelection) {
+
 		if (weightAdjustment == null) {
 			throw new NullPointerException("weight-adjustment must not be null");
 		}
@@ -37,13 +33,13 @@ public abstract class GenMotOperator<L extends MotiveLevel> extends BaseGenerate
 			throw new NullPointerException("motivation-adjustment must not be null");
 		}
 
-		if (selection == null) {
+		if (desireSelection == null) {
 			throw new NullPointerException("desire-selection must not be null");
 		}
 
 		this.weightAdjustment = weightAdjustment;
 		this.motivationAdjustment = motivationAdjustment;
-		this.selection = selection;
+		this.desireSelection = desireSelection;
 	}
 
 	@Override
@@ -58,7 +54,7 @@ public abstract class GenMotOperator<L extends MotiveLevel> extends BaseGenerate
 		motivationAdjustment.adjust(param.getMotiveState(), param.getBeliefState(), param.getStructure());
 
 		// select desires
-		Collection<Desire> selected = selection.select(param.getBeliefState(), param.getStructure());
+		Collection<Desire> selected = desireSelection.select(param.getBeliefState(), param.getStructure());
 
 		// clear and add all selected desires
 		Desires desires = param.getDesires();

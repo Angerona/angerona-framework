@@ -25,7 +25,7 @@ public interface BeliefState {
 	public boolean isSatisfied(Desire d);
 
 	/**
-	 * verify some {@link FolFormula} for example the statement of a {@link MotiveCouplings}
+	 * verify some {@link FolFormula} for example the statement of a MotiveCoupling
 	 * 
 	 * @param statement
 	 * @return
