@@ -21,9 +21,6 @@ import com.github.angerona.fw.parser.ParseException;
 /**
  * A propositional beliefbase containing knowledge and assertions (K,E)
  * 
- * See Pia Wierzoch, Aktualisierung von Wissen unter Vertraulichkeitsanforderungen.
- * Bachelorthesis, 2014.
- * 
  * @author Pia Wierzoch
  */
 public class PLWithKnowledgeBeliefbase extends BaseBeliefbase{

@@ -4,15 +4,15 @@
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
     
     <agent-instance>
-      	<name>Manufacturer</name>
-      	<beliefbase-name>Manufacturer</beliefbase-name>
+      	<name>Vendor</name>
+      	<beliefbase-name>Vendor</beliefbase-name>
       	
       	<agent-config source="config/agents/censor_defending_agent.xml" />
         <beliefbase-config source="config/beliefbases/plknowledge_beliefbase.xml" />
       	
       
         <data key="Confidential">
-            (Supplier, __DEFAULT__, My)
+            (Customer, __DEFAULT__, My)
         </data> 
      
   		
@@ -21,16 +21,16 @@
   			* ViewHistory - Normal History and related View
   			* BetterView - Faster alternative for ViewCompressed
   		 -->
-  		<data key="View">BetterView</data>
-  	
+  		<data key="View">ViewHistory</data>
+
       	<capability>Answer</capability>
       	<capability>UpdateAnswer</capability>
          
 	</agent-instance>
     
 	<agent-instance>
-		<name>Supplier</name>
-        <beliefbase-name>Supplier</beliefbase-name>
+		<name>Customer</name>
+        <beliefbase-name>Customer</beliefbase-name>
          
         <agent-config source="config/agents/censor_attacking_agent.xml" />
         <beliefbase-config source="config/beliefbases/plknowledge_beliefbase.xml" />
@@ -38,32 +38,25 @@
 		<desire>scriptingProcessing</desire>
 		<script>
         	<SpeechAct type="Query">
-        		<sender>Supplier</sender>
-        		<receiver>Manufacturer</receiver>
+        		<sender>Customer</sender>
+        		<receiver>Vendor</receiver>
         		<question>Mx</question>
         	</SpeechAct>
         </script> 
         <script>
         	<SpeechAct type="Update">
-        		<sender>Supplier</sender>
-        		<receiver>Manufacturer</receiver>
+        		<sender>Customer</sender>
+        		<receiver>Vendor</receiver>
         		<proposition>P</proposition>
         	</SpeechAct>
         </script>  
         <script>
         	<SpeechAct type="Update">
-        		<sender>Supplier</sender>
-        		<receiver>Manufacturer</receiver>
+        		<sender>Customer</sender>
+        		<receiver>Vendor</receiver>
         		<proposition>L2</proposition>
         	</SpeechAct>
         </script>     
-        <script>
-        	<SpeechAct type="Query">
-        		<sender>Supplier</sender>
-        		<receiver>Manufacturer</receiver>
-        		<question>P</question>
-        	</SpeechAct>
-        </script>    
 
         <capability>Query</capability>
         <capability>Update</capability>
