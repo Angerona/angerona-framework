@@ -38,7 +38,7 @@ The Angerona framework is well documented from the theoretical concept down to t
 Here is a list of the primary sources of information, further below follows a list of Publications on, and related to, Angerona.
 
 - [Technical Report](http://sfb876.tu-dortmund.de/PublicPublicationFiles/kruempelmann_janus_2014a.pdf)
-  The report is divided into two parts, the first part introduces the general concept of angerona and the BDI secrecy agent model. The second part describes the implementation of the concepts in Angerona.
+  The report is divided into two parts, the first part introduces the general concept of Angerona and the BDI secrecy agent model. The second part describes the implementation of the concepts in Angerona.
 - [Manual](documentation/manual.pdf)
   Contains information on how to install the Angerona framework. It starts by explaining how you can get the binary packages of Angerona to perform experiments and also contains installation steps for developers, that want to contribute to the Angerona framework.
 - [Doxygen Code-Documentation](https://marathon.cs.tu-dortmund.de/docs/)
@@ -55,7 +55,7 @@ Angerona is collaboratively developed by several contributors. If you could’t 
 
  + **Patrick Krümpelmann** *(patrick.kruempelmann@udo.edu)*
     Initiator and maintainer of the general Angerona Framework, and the secrecy and ASP instances; supervision of students.
- + **Stefan Rötner** *(stefan.roetner@udo.edu})*
+ + **Stefan Rötner** *(stefan.roetner@udo.edu)*
   Student research assistant : In charge of framework maintenance and further development.
  + **Tim Janus** *(tim.janus@udo.edu)*
   Former student research assistant  : Initial main developer of the Angerona Framework, including the secrecy, ASP and know-how implementation.
@@ -69,20 +69,20 @@ Angerona is collaboratively developed by several contributors. If you could’t 
 Thanks also go to Ella Albrecht, Manuel Barbi, Benedict Börger and Daniel Dilger for their contributions to Angerona (see Publications and Theses below).
 
 ##Publications:
-+ Albrecht, E. and Krümpelmann, P. and Kern-Isberner, G. (to appear). "Construction of explanation graphs from extended dependency graphs for answer set programs". In Hanus, M. and Rocha, R., editors, Post- proceedings of the 27th Workshop on Functional and Logic Programming (WFLP 2013), Lecture Notes in Computer Science. Springer.
++ Albrecht, E. and Krümpelmann, P. and Kern-Isberner, G. (to appear). "Construction of explanation graphs from extended dependency graphs for answer set programs". In Hanus, M. and Rocha, R., editors, Postproceedings of the 27th Workshop on Functional and Logic Programming (WFLP 2013), Lecture Notes in Computer Science. Springer.
 + Biskup, J. and Tadros, C. (2012). "Revising belief without revealing secrets". In Lukasiewicz, T. and Sali, A., editors, 7th International Symposium on Foundations of Information and Knowledge Systems (FoIKS 2012), volume 7153 of LNCS, pages 51–70. Springer.
 + Biskup, J. and Tadros, C. (2013). "Preserving confidentiality while reacting on iterated queries and belief revisions". Annals of Mathematics and Artificial Intelligence, pages 1–49.
 + Tadros, C. (2014). "Belief Change Operations under Confidentiality Requirements in Multiagent Systems". PhD thesis, Technische Universität Dortmund.
-+ Thimm, M. and Krü̈mpelmann, P. (2009). "Know-how for motivated BDI agents (extended version)". Technical Report 822, Technische Universitä̈t Dortmund, Department of Computer Science.
-+ Krü̈mpelmann, P. and Janus, T. and Kern-Isberner, G. (2014a). "Angerona - a flexible multiagent framework for knowledge-based agents". In Bulling, N., editor, Proceedings of the 12th European Con- ference on Multi-Agent Systems, volume to appear of Lecture Notes in Artificial Intelligence. Springer.
++ Thimm, M. and Krümpelmann, P. (2009). "Know-how for motivated BDI agents (extended version)". Technical Report 822, Technische Universität Dortmund, Department of Computer Science.
++ Krümpelmann, P. and Janus, T. and Kern-Isberner, G. (2014a). "Angerona - a flexible multiagent framework for knowledge-based agents". In Bulling, N., editor, Proceedings of the 12th European Conference on Multi-Agent Systems, volume to appear of Lecture Notes in Artificial Intelligence. Springer.
 
 
 ####Related Theses:
-+ Albrecht, E. (2012). "Abhä̈ngigkeitsgraphen und Erklä̈rungen fü̈r die Antwortmengen Programmierung" (Dependency Graphs and Explanations for Answerset Programming). Bachelor’s Thesis, Technische Universität Dortmund.
++ Albrecht, E. (2012). "Abhängigkeitsgraphen und Erklärungen für die Antwortmengen Programmierung" (Dependency Graphs and Explanations for Answerset Programming). Bachelor’s Thesis, Technische Universität Dortmund.
 + Barbi, M. (2014). "Implementierung einer Motivationskomponente fü̈r wissensbasierte Agenten" (Implementation of a Motivation Component for Knowledge-based Agents). Bachelor’s Thesis, Technische Universität Dortmund.
-+ Bö̈hmer, M. (2011). "Evaluation von Ansä̈tzen zur Wissensä̈nderung von ASP Wissensbasen" (Evaluation of approaches to belief change in ASP knowldege bases). Master’s thesis, Technische Universitä̈t Dortmund.
-+ Börger, B. (2014). "Modellierung und Evaluation von vertraulichkeitsbewahrenden Agenten in einem E-Markt Szenario mittels Antwortmengenprogrammierung" (Conceptualization and evaluation of secrecy preserving agents in an E-Market scenario with answerset programming). Bachelor’s Thesis, Technische Universitä̈t Dortmund.
-+ Dilger, D. and Krümpelmann, P. and Tadros, C. (2013). "Preserving confidentiality in multiagent systems - an internship project within the daad rise program". Technical Report, Technische Universitä̈t Dortmund.
-+ Homann, S. (2013). "Argumentationsbasierte selektive Revision erweiterter logischer Programme" (Argumentation based selective revi- sion of extended logic programs). Master’s thesis, Technische Universitä̈t Dortmund.
-+ Janus, T. (2013). "Resource-bounded Planning of Communication under Confidentiality Constraints for BDI Agents". Master’s thesis, Technis- che Universita ̈t Dortmund.
-+ Wierzoch, P. (2014). "Aktualisierung von Wissen unter Vertraulichkeitsanforderungen". Bachelor’s Thesis, Technische Universitä̈t Dortmund, LS 6 - Information Systems and Security.
++ Böhmer, M. (2011). "Evaluation von Ansätzen zur Wissensänderung von ASP Wissensbasen" (Evaluation of approaches to belief change in ASP knowldege bases). Master’s thesis, Technische Universität Dortmund.
++ Börger, B. (2014). "Modellierung und Evaluation von vertraulichkeitsbewahrenden Agenten in einem E-Markt Szenario mittels Antwortmengenprogrammierung" (Conceptualization and evaluation of secrecy preserving agents in an E-Market scenario with answerset programming). Bachelor’s Thesis, Technische Universität Dortmund.
++ Dilger, D. and Krümpelmann, P. and Tadros, C. (2013). "Preserving confidentiality in multiagent systems - an internship project within the daad rise program". Technical Report, Technische Universität Dortmund.
++ Homann, S. (2013). "Argumentationsbasierte selektive Revision erweiterter logischer Programme" (Argumentation based selective revision of extended logic programs). Master’s thesis, Technische Universität Dortmund.
++ Janus, T. (2013). "Resource-bounded Planning of Communication under Confidentiality Constraints for BDI Agents". Master’s thesis, Technische Universität Dortmund.
++ Wierzoch, P. (2014). "Aktualisierung von Wissen unter Vertraulichkeitsanforderungen". Bachelor’s Thesis, Technische Universität Dortmund, LS 6 - Information Systems and Security.
