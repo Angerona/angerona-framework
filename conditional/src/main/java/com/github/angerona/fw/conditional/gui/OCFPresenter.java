@@ -8,7 +8,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
 
 import com.github.angerona.fw.gui.base.Presenter;
 import com.github.angerona.fw.parser.ParseException;

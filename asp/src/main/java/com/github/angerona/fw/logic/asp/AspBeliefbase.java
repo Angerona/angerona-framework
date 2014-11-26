@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.ParserException;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.lp.asp.parser.ASPParser;

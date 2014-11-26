@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.slf4j.Logger;

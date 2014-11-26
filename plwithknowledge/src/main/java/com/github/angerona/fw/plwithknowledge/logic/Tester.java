@@ -5,16 +5,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.pl.Sat4jEntailment;
+import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -22,7 +20,6 @@ import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
 
 import com.github.angerona.fw.logic.AngeronaAnswer;
 import com.github.angerona.fw.logic.AnswerValue;
-import com.github.angerona.fw.operators.parameter.ReasonerParameter;
 import com.github.angerona.fw.parser.ParseException;
 import com.github.angerona.fw.util.Pair;
 
@@ -130,7 +127,9 @@ public class Tester {
 	private static void calculateModels(PLWithKnowledgeBeliefbase beliefbase){
 		Set<PropositionalFormula> knowledge = new HashSet<PropositionalFormula>(beliefbase.getKnowledge());
 		
-		Sat4jEntailment test = new Sat4jEntailment();
+		//Changed During Update to Tweety 1.2: Needs Testing
+		//Sat4jEntailment test = new Sat4jEntailment();
+		ClassicalEntailment test = new ClassicalEntailment();
 
 		Collection<Proposition> signature = (Collection<Proposition>) beliefbase.getSignature();
 		Set<NicePossibleWorld> worlds = NicePossibleWorld.getAllPossibleWorlds(signature);

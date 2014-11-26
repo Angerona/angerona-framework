@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParserB;
 import net.sf.tweety.logics.fol.syntax.FolFormula;

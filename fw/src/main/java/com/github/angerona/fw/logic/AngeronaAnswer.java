@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**

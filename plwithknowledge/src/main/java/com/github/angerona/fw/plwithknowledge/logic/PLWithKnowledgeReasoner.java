@@ -9,7 +9,8 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.pl.Sat4jEntailment;
+import net.sf.tweety.logics.pl.ClassicalEntailment;
+//import net.sf.tweety.logics.pl.Sat4jEntailment;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -119,8 +120,10 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 	private void calculateModels(PLWithKnowledgeBeliefbase beliefbase){
 		Set<PropositionalFormula> knowledge = new HashSet<PropositionalFormula>(beliefbase.getKnowledge());
 		
-		Sat4jEntailment test = new Sat4jEntailment();
-
+		//Changed During Update to Tweety 1.2: Needs Testing
+		//Sat4jEntailment test = new Sat4jEntailment();
+		ClassicalEntailment test = new ClassicalEntailment();
+		
 		Collection<Proposition> signature = (Collection<Proposition>) beliefbase.getSignature();
 		Set<NicePossibleWorld> worlds = NicePossibleWorld.getAllPossibleWorlds(signature);
 		Set<NicePossibleWorld> satisfyingWorlds = new HashSet<NicePossibleWorld>();

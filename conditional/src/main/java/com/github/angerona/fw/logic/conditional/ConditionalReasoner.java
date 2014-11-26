@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.cl.ClBeliefSet;
 import net.sf.tweety.logics.cl.RuleBasedCReasoner;
 import net.sf.tweety.logics.cl.kappa.KappaValue;

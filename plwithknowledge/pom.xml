@@ -12,6 +12,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tweety.version>1.2</tweety.version>
   </properties>
   <dependencies>
     <dependency>
@@ -28,7 +29,7 @@
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>pl</artifactId>
-    	<version>1.0.358</version>
+    	<version>${tweety.version}</version>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
@@ -38,7 +39,7 @@
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>translators</artifactId>
-    	<version>1.0.358</version>
+    	<version>${tweety.version}</version>
     </dependency>
   </dependencies>
 </project>

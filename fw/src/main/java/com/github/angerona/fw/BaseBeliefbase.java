@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
-import net.sf.tweety.ParserException;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 

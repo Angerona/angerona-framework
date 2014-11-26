@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.cl.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.parser.PlParser;
