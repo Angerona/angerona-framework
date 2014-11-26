@@ -87,7 +87,7 @@ public abstract class BaseViolatesOperator
 		
 		// return it and save it for later use in a cache:
 		if(reval != null) {
-			cache.setCacheValue(param, reval);
+			//cache.setCacheValue(param, reval);
 			return reval;
 		}
 		throw new NotImplementedException("Violates is not implemeted for Action of type: " + atom.getClass().getSimpleName());
