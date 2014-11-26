@@ -4,7 +4,7 @@
     <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
 	
 	<agent-instance>
-		<name>Kaeufer</name>
+		<name>Kaeufer2</name>
         
         <agent-config source="config/agents/mates_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_mates_beliefbase.xml" />
@@ -20,7 +20,7 @@
 	</agent-instance>
       
 	<agent-instance>
-      	<name>Verkaeufer</name>
+      	<name>Verkaeufer2</name>
       	
         <agent-config source="config/agents/mates_agent.xml" />         
         <beliefbase-config source="config/beliefbases/asp_mates_beliefbase.xml" />

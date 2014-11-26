@@ -5,8 +5,11 @@
       <operator-cls>com.github.angerona.fw.logic.asp.AspCredulousReasoner</operator-cls>
    </reasoners>
    <change-operators>
-      <default-operator-cls>com.github.angerona.fw.logic.asp.RevisionPreferenceHandling</default-operator-cls>
-      <operator-cls>com.github.angerona.fw.logic.asp.AspExpansion</operator-cls>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.RevisionCredibilityPrograms</default-operator-cls>
+<!--       <operator-cls>com.github.angerona.fw.logic.asp.AspExpansion</operator-cls> -->
+<!--       <operator-cls>com.github.angerona.fw.logic.asp.RevisionPreferenceHandling</operator-cls> -->
+<!--       <operator-cls>com.github.angerona.fw.logic.asp.RevisionConfidentSelectiveLiteral</operator-cls> -->
+<!--       <operator-cls>com.github.angerona.fw.logic.asp.RevisionCredibilityPrograms</operator-cls> -->
    </change-operators>
    <translators>
       <default-operator-cls>com.github.angerona.fw.logic.asp.MatesTranslate</default-operator-cls>

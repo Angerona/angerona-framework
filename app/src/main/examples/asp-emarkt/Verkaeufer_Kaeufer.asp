@@ -12,4 +12,4 @@ volleLager(a).
 geringerPreis(a) :- volleLager(a), firma(a).
 -geringerPreis(a) :- -firma(a).
 % Hmm folgende Regel führt in Angerona zur keiner Antwortmenge -> DLV unterstützt dies
-herstellung(a); -herstellung(a).
+herstellung(a) ; -herstellung(a).

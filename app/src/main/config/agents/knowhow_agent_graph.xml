@@ -15,7 +15,8 @@
    	</operation-set>
    	
 	<operation-set operation-type="UpdateBeliefs">
-      <default-operator-cls>com.github.angerona.fw.example.operators.CautiousUpdateBeliefs</default-operator-cls>
+	   <default-operator-cls>com.github.angerona.fw.operators.UpdateBeliefsOperator</default-operator-cls>
+<!--        <default-operator-cls>com.github.angerona.fw.example.operators.CautiousUpdateBeliefs</default-operator-cls> -->
    	</operation-set>
    	
 	<operation-set operation-type="Violates">
