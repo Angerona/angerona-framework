@@ -1,0 +1,47 @@
+<simulation-configuration>
+	<name>E-Markt Szenario A Mates Only</name>
+	<category>scm/mates</category>
+	<behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+	<description>
+		Dies ist zwei normale Mates Agenten. Die initialen Wissenbasen
+		sind leer. Doch der Mates Agent fügt ein Aggregat hinzu. Dies
+		führt bei mir zu einer Exception in der tweety Libary in dem
+		ersten Tick.
+	</description>
+	
+	<agent-instance>
+		<name>Kaeufer</name>
+        
+        	<agent-config source="config/agents/mates_agent.xml" />
+        	<beliefbase-config
+		source="config/beliefbases/asp_mates_beliefbase.xml" />
+
+		<desire>v_Verkaeufer(menge(5,a), 1)</desire>
+		<desire>q_Verkaeufer(volleLager(a),2)</desire>
+
+		<data key="Confidential">
+		(Verkaeufer, __DEFAULT__, minPreis(X))
+		</data>
+
+		<capability>Inform</capability>	
+        	<capability>Query</capability>
+        	<capability>Answer</capability>
+	</agent-instance>
+      
+	<agent-instance>
+      		<name>Verkaeufer</name>
+      	
+        	<agent-config source="config/agents/mates_agent.xml" />         
+		<beliefbase-config
+		source="config/beliefbases/asp_mates_beliefbase.xml" />
+
+		<data key="Confidential">
+		(Kaeufer, __DEFAULT__, volleLager(a))
+		(Kaeufer, __DEFAULT__, maxPreisVerkaeufer(X))
+		</data>
+
+		<capability>Inform</capability>
+		<capability>Query</capability>
+      		<capability>Answer</capability>
+	</agent-instance>
+</simulation-configuration>

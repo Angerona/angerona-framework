@@ -1,0 +1,60 @@
+<simulation-configuration>
+	<name>E-Markt Szenario A KnowHow Only</name>
+	<category>scm/mates</category>
+	<behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+	<description>
+		Diese Agenten verwenden den Know-How Agenten. Hier möchte ich
+		mit Know-How ein Inform absetzen. Das funktioniert
+		grundsätzlich (siehe desire: normalesInform). Ich möchte aber ein Literal aus der Wissensbasis 
+		abfragen und den anderen Agenten dies mitteilen (siehe: desire
+		erweitertesInform). Dies funktioniert nicht.
+
+		Des Weiteren bekomme ich hier eine zweite tweety Exception.
+		Diesmal ist es eine Parser Exception. Hmm so langsam denk ich
+		darüber nach ob das mit tweety alles geklappt hat. Wenn bei dir
+		die tweety Exception nicht auftreten, dann musst du mir mal beim
+		build-Prozess drüberschauen.
+	</description>
+	
+	<agent-instance>
+		<name>Kaeufer</name>
+        
+        	<agent-config source="config/agents/knowhow_agent_graph.xml" />
+        	<beliefbase-config
+		source="config/beliefbases/asp_beliefbase.xml" />
+
+		<desire>normalesInform</desire>
+		<desire>erweiteresInform</desire>
+
+		<data key="Confidential">
+		(Verkaeufer, __DEFAULT__, minPreis(X))
+		</data>
+
+		<data key="KnowHow">
+		normalesInform, s_Inform(a_Verkaeufer, nachricht),
+		erweiteresInform, s_Inform(a_Verkaeufer, q_menge(N)),
+		</data>
+
+		<capability>Inform</capability>	
+        	<capability>Query</capability>
+        	<capability>Answer</capability>
+	</agent-instance>
+      
+	<agent-instance>
+      		<name>Verkaeufer</name>
+      	
+        	<agent-config source="config/agents/knowhow_agent_graph.xml" />         
+		<beliefbase-config
+		source="config/beliefbases/asp_beliefbase.xml" />
+
+		<data key="Confidential">
+		(Kaeufer, __DEFAULT__, volleLager(a))
+		(Kaeufer, __DEFAULT__, maxPreisVerkaeufer(X))
+		</data>
+
+
+		<capability>Inform</capability>
+		<capability>Query</capability>
+      		<capability>Answer</capability>
+	</agent-instance>
+</simulation-configuration>
