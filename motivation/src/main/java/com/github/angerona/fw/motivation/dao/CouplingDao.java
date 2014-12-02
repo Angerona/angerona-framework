@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.motivation.Motive;
+import com.github.angerona.fw.motivation.MotiveCoupling;
 import com.github.angerona.fw.motivation.MotiveLevel;
-import com.github.angerona.fw.motivation.model.Motive;
-import com.github.angerona.fw.motivation.model.MotiveCoupling;
 
 /**
  * {@link CouplingDao} is a generic class, that delivers access to the set of {@link MotiveCoupling}s of an {@link Agent}.

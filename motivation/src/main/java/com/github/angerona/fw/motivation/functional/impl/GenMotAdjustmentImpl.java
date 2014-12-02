@@ -8,13 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.motivation.MotiveCoupling;
 import com.github.angerona.fw.motivation.MotiveLevel;
 import com.github.angerona.fw.motivation.dao.BeliefState;
 import com.github.angerona.fw.motivation.dao.MotStructureDao;
 import com.github.angerona.fw.motivation.dao.MotiveState;
 import com.github.angerona.fw.motivation.functional.AggregationFunction;
 import com.github.angerona.fw.motivation.functional.MotivationAdjustment;
-import com.github.angerona.fw.motivation.model.MotiveCoupling;
 
 /**
  * {@link GenMotAdjustmentImpl} is the generic implementation of the MotivationAdjustment-function lambda specified in the article

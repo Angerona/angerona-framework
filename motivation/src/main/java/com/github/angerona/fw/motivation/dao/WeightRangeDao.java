@@ -1,7 +1,7 @@
 package com.github.angerona.fw.motivation.dao;
 
 import com.github.angerona.fw.motivation.MotiveLevel;
-import com.github.angerona.fw.motivation.model.WeightRange;
+import com.github.angerona.fw.motivation.WeightRange;
 
 /**
  * 
