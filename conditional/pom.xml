@@ -13,7 +13,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tweety.version>1.2</tweety.version>
+    <tweety.version>1.2-SNAPSHOT</tweety.version>
   </properties>
   <dependencies>
     <dependency>
