@@ -8,12 +8,6 @@
 		grundsätzlich (siehe desire: normalesInform). Ich möchte aber ein Literal aus der Wissensbasis 
 		abfragen und den anderen Agenten dies mitteilen (siehe: desire
 		erweitertesInform). Dies funktioniert nicht.
-
-		Des Weiteren bekomme ich hier eine zweite tweety Exception.
-		Diesmal ist es eine Parser Exception. Hmm so langsam denk ich
-		darüber nach ob das mit tweety alles geklappt hat. Wenn bei dir
-		die tweety Exception nicht auftreten, dann musst du mir mal beim
-		build-Prozess drüberschauen.
 	</description>
 	
 	<agent-instance>
