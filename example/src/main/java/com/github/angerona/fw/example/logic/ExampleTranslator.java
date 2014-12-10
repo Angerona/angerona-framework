@@ -1,5 +1,7 @@
 package com.github.angerona.fw.example.logic;
 
+import java.util.Set;
+
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.lp.nlp.syntax.NLPProgram;
@@ -7,6 +9,8 @@ import net.sf.tweety.lp.nlp.syntax.NLPProgram;
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.comm.Answer;
+import com.github.angerona.fw.comm.Inform;
+import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.error.NotImplementedException;
 import com.github.angerona.fw.logic.AnswerValue;
 import com.github.angerona.fw.logic.BaseTranslator;
@@ -21,8 +25,8 @@ public class ExampleTranslator extends BaseTranslator {
 	@Override
 	protected ExampleBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
 		// Translate the knowledge encoded in the answer into a dummy belief base.
+		FolFormula formula = null;
 		if(p instanceof Answer) {
-			FolFormula formula = null;
 			Answer a = (Answer)p;
 			if(a.getAnswer().getAnswerValue() == AnswerValue.AV_TRUE) {
 				formula = a.getRegarding();
@@ -31,6 +35,17 @@ public class ExampleTranslator extends BaseTranslator {
 			} else {
 				return new ExampleBeliefbase();
 			}
+			return (ExampleBeliefbase)translateFOL(caller, formula);
+		} else if(p instanceof Inform) {
+			Inform i = (Inform)p;
+			Set<FolFormula> sentences = i.getSentences();
+			if (sentences.iterator().hasNext()) {
+				formula = sentences.iterator().next();
+				return (ExampleBeliefbase)translateFOL(caller, formula);
+			}
+		} else if (p instanceof Query) {
+			Query q = (Query)p;
+			formula = (q.getQuestion());
 			return (ExampleBeliefbase)translateFOL(caller, formula);
 		}
 		
