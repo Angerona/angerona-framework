@@ -11,6 +11,7 @@ import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.motivation.Motive;
 import com.github.angerona.fw.motivation.MotiveCoupling;
 import com.github.angerona.fw.motivation.MotiveLevel;
+import com.github.angerona.fw.motivation.behavior.ParsableComponent;
 import com.github.angerona.fw.motivation.dao.CouplingDao;
 
 /**
@@ -129,5 +130,11 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel> extends Parsable
 	}
 
 	protected abstract GenMotiveCouplings<L> create();
+	
+	@Override
+	public String toString() {
+		// this is a unpleasant workaround
+		return this.getClass().getSimpleName();
+	}
 
 }

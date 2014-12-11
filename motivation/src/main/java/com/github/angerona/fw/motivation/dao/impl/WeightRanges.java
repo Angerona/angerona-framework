@@ -1,12 +1,14 @@
 package com.github.angerona.fw.motivation.dao.impl;
 
 import java.io.IOException;
-import java.nio.channels.ReadableByteChannel;
+import java.io.InputStream;
 import java.util.Map;
 
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.motivation.Maslow;
 import com.github.angerona.fw.motivation.WeightRange;
+import com.github.angerona.fw.motivation.parser.MotivationParser;
+import com.github.angerona.fw.motivation.parser.ParseException;
 
 /**
  * {@link WeightRange} is a specialized {@link AgentComponent} for {@link Maslow} WeightRanges
@@ -30,8 +32,14 @@ public class WeightRanges extends GenWeightRanges<Maslow> {
 	}
 
 	@Override
-	public void loadFromChannel(ReadableByteChannel src) throws IOException {
-		report("loaded weight-ranges from file");
+	public void loadFromStream(InputStream src) throws IOException {
+		try {
+			MotivationParser parser = new MotivationParser(src);
+			this.ranges = parser.gatherRanges();
+			report("loaded weight-ranges from file");
+		} catch (ParseException e) {
+			throw new IOException(e);
+		}
 	}
 
 	@Override

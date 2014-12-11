@@ -53,7 +53,7 @@ public class Desire implements Comparable<Desire> {
 	
 	@Override
 	public String toString() {
-		return (formula != null) ? formula.toString() : "";
+		return (formula != null) ? formula.toString() : null;
 	}
 	
 	@Override 

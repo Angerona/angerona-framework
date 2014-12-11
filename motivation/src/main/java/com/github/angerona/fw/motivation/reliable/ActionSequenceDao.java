@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation.dao;
+package com.github.angerona.fw.motivation.reliable;
 
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.motivation.ActionSequence;

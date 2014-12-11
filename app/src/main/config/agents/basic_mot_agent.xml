@@ -1,0 +1,15 @@
+<agent-configuration>
+	<name>Motivation Agent</name>
+	<cycle-script source="config/mot_cycle.xml" />
+	
+	<operation-set operation-type="GenerateOptions">
+      <default-operator-cls>com.github.angerona.fw.motivation.operators.MotivationOperator</default-operator-cls>
+   	</operation-set>
+	   	
+	<component>com.github.angerona.fw.motivation.dao.impl.MotiveCouplings</component>
+	<component>com.github.angerona.fw.motivation.dao.impl.WeightRanges</component>
+	<component>com.github.angerona.fw.motivation.dao.impl.LevelWeights</component>
+	<component>com.github.angerona.fw.motivation.dao.impl.MotStructure</component>
+	<component>com.github.angerona.fw.logic.Desires</component>
+	
+</agent-configuration>

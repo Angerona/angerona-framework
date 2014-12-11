@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.motivation.MotiveLevel;
 import com.github.angerona.fw.motivation.WeightRange;
+import com.github.angerona.fw.motivation.behavior.ParsableComponent;
 import com.github.angerona.fw.motivation.dao.WeightRangeDao;
 
 /**
@@ -62,5 +63,11 @@ public abstract class GenWeightRanges<L extends MotiveLevel> extends ParsableCom
 	}
 
 	protected abstract GenWeightRanges<L> create();
+
+	@Override
+	public String toString() {
+		// this is a unpleasant workaround
+		return this.getClass().getSimpleName();
+	}
 
 }

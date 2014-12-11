@@ -1,0 +1,6 @@
+([hunger, PHYSIOLOGICAL_NEEDS]; fill_battery; 0.5; true);
+([self_preservation, SAFETY_NEEDS]; find_shelter; 0.6; true);
+([work_ethic, ESTEEM]; finish_work; 0.7; true);
+
+([prudence, SAFETY_NEEDS]; secure_site; 0.605; -thunderstorm);
+([self_preservation, SAFETY_NEEDS]; finish_work; -1.0; thunderstorm);

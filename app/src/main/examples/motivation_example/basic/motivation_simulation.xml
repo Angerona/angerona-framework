@@ -1,0 +1,16 @@
+<simulation-configuration>
+	<name>basic motivation</name>
+	<category>motivation/basic</category>
+	<behavior>com.github.angerona.fw.motivation.BasicBehavior</behavior>
+	<description>
+		The Agent runs one full cycle of motivation calculation 
+	</description>
+	
+	<agent-instance>
+		<name>MotAgent</name>
+		
+        <agent-config source="config/agents/basic_mot_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_beliefbase.xml" />
+	</agent-instance>
+	   	
+</simulation-configuration>

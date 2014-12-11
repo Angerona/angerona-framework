@@ -53,4 +53,10 @@ public abstract class GenLevelWeights<L extends MotiveLevel> extends BaseAgentCo
 
 	protected abstract GenLevelWeights<L> create();
 
+	@Override
+	public String toString() {
+		// this is a unpleasant workaround
+		return this.getClass().getSimpleName();
+	}
+
 }

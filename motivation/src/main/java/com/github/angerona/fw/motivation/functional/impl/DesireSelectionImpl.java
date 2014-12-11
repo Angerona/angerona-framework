@@ -27,6 +27,7 @@ public class DesireSelectionImpl implements DesireSelection {
 		Set<Entry<Desire, Double>> entries = st.getEntries();
 
 		if (!entries.isEmpty()) {
+			// TODO: add more than one Desire if they have equal motivation-values
 			desires.add(Collections.max(entries, COMPARATOR).getKey());
 		}
 

@@ -1,9 +1,9 @@
-package com.github.angerona.fw.motivation.dao.impl;
+package com.github.angerona.fw.motivation.behavior;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.channels.ReadableByteChannel;
+import java.io.InputStream;
 
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.BaseAgentComponent;
@@ -16,14 +16,13 @@ import com.github.angerona.fw.BaseAgentComponent;
  */
 public abstract class ParsableComponent extends BaseAgentComponent {
 
-	@SuppressWarnings("resource")
 	public void loadFromFile(File path) throws IOException {
-		try (ReadableByteChannel src = new FileInputStream(path).getChannel()) {
-			loadFromChannel(src);
+		try (InputStream src = new FileInputStream(path)) {
+			loadFromStream(src);
 		}
 	}
 
-	public abstract void loadFromChannel(ReadableByteChannel src) throws IOException;
+	public abstract void loadFromStream(InputStream src) throws IOException;
 
 	public abstract String getFileSuffix();
 

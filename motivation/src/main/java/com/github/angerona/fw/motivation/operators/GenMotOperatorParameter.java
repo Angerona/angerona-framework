@@ -7,19 +7,19 @@ import com.github.angerona.fw.error.ConversionException;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.logic.Desires;
 import com.github.angerona.fw.motivation.MotiveLevel;
-import com.github.angerona.fw.motivation.dao.ActionSequenceDao;
 import com.github.angerona.fw.motivation.dao.BeliefState;
 import com.github.angerona.fw.motivation.dao.MotStructureDao;
 import com.github.angerona.fw.motivation.dao.MotiveState;
-import com.github.angerona.fw.motivation.dao.TimeSlotDao;
-import com.github.angerona.fw.motivation.dao.impl.ActionSequences;
 import com.github.angerona.fw.motivation.dao.impl.BeliefStateImpl;
 import com.github.angerona.fw.motivation.dao.impl.GenLevelWeights;
 import com.github.angerona.fw.motivation.dao.impl.GenMotiveCouplings;
 import com.github.angerona.fw.motivation.dao.impl.GenWeightRanges;
 import com.github.angerona.fw.motivation.dao.impl.MotStructure;
 import com.github.angerona.fw.motivation.dao.impl.MotiveStateImpl;
-import com.github.angerona.fw.motivation.dao.impl.TimeSlots;
+import com.github.angerona.fw.motivation.reliable.ActionSequenceDao;
+import com.github.angerona.fw.motivation.reliable.TimeSlotDao;
+import com.github.angerona.fw.motivation.reliable.impl.ActionSequences;
+import com.github.angerona.fw.motivation.reliable.impl.TimeSlots;
 import com.github.angerona.fw.operators.parameter.GenericOperatorParameter;
 
 /**

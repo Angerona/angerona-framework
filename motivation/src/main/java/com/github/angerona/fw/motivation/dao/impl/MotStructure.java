@@ -64,4 +64,10 @@ public class MotStructure extends BaseAgentComponent implements MotStructureDao,
 		this.entries.clear();
 	}
 
+	@Override
+	public String toString() {
+		// this is a unpleasant workaround
+		return this.getClass().getSimpleName();
+	}
+
 }

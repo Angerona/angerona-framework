@@ -2,13 +2,16 @@ package com.github.angerona.fw.motivation.dao.impl;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.logic.AnswerValue;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.motivation.ActionSequence;
-import com.github.angerona.fw.motivation.dao.ActionSequenceDao;
 import com.github.angerona.fw.motivation.dao.BeliefState;
-import com.github.angerona.fw.motivation.dao.TimeSlotDao;
+import com.github.angerona.fw.motivation.reliable.ActionSequenceDao;
+import com.github.angerona.fw.motivation.reliable.TimeSlotDao;
 
 /**
  * 
@@ -16,6 +19,8 @@ import com.github.angerona.fw.motivation.dao.TimeSlotDao;
  *
  */
 public class BeliefStateImpl implements BeliefState {
+
+	private static final Logger LOG = LoggerFactory.getLogger(BeliefStateImpl.class);
 
 	private Beliefs beliefs;
 	private ActionSequenceDao sequences;
@@ -26,14 +31,6 @@ public class BeliefStateImpl implements BeliefState {
 			throw new NullPointerException("beliefs must not be null");
 		}
 
-		if (sequences == null) {
-			throw new NullPointerException("sequences must not be null");
-		}
-
-		if (timeSlots == null) {
-			throw new NullPointerException("time-slots must not be null");
-		}
-
 		this.beliefs = beliefs;
 		this.sequences = sequences;
 		this.timeSlots = timeSlots;
@@ -41,15 +38,29 @@ public class BeliefStateImpl implements BeliefState {
 
 	@Override
 	public boolean isReliable(Desire d) {
-		ActionSequence sequence = sequences.getSequence(d);
-		Integer minSlot = timeSlots.getMinSlot();
 
-		// check weather any sequence exists
+		// check whether sequence-component is initialized
+		if (sequences == null) {
+			LOG.warn("sequence-component is not initialized");
+			return true;
+		}
+
+		ActionSequence sequence = sequences.getSequence(d);
+
+		// check whether any sequence exists
 		if (sequence == null) {
 			return false;
 		}
 
-		// check weather shortest sequence is smaller than minimal time-slot
+		// check whether time-slot-component is initialized
+		if (timeSlots == null) {
+			LOG.warn("time-slot-component is not initialized");
+			return true;
+		}
+
+		Integer minSlot = timeSlots.getMinSlot();
+
+		// check whether shortest sequence is smaller than minimal time-slot
 		if (minSlot != null) {
 			return sequence.getLength() < minSlot;
 		}

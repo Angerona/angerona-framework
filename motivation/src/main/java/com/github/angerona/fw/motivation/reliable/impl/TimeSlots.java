@@ -1,4 +1,4 @@
-package com.github.angerona.fw.motivation.dao.impl;
+package com.github.angerona.fw.motivation.reliable.impl;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.github.angerona.fw.BaseAgentComponent;
-import com.github.angerona.fw.motivation.dao.TimeSlotDao;
+import com.github.angerona.fw.motivation.reliable.TimeSlotDao;
 
 /**
  * 

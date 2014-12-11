@@ -1,0 +1,17 @@
+<simulation-configuration>
+	<name>static island</name>
+	<category>motivation/island</category>
+	<behavior>com.github.angerona.fw.island.StaticIslandBehavior</behavior>
+	<description>
+		The Agent is located on a tropical island with constant weather conditions.
+		The Agent has to construct a transmitting station.
+	</description>
+	
+	<agent-instance>
+		<name>MotEngineer</name>
+		
+        <agent-config source="config/agents/mot_engineer_agent.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_island_beliefbase.xml" />
+	</agent-instance>
+	   	
+</simulation-configuration>
