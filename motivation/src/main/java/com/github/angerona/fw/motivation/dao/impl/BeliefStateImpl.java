@@ -26,14 +26,14 @@ public class BeliefStateImpl implements BeliefState {
 	private ActionSequenceDao sequences;
 	private TimeSlotDao timeSlots;
 
-	public BeliefStateImpl(Beliefs beliefs, ActionSequenceDao sequences, TimeSlotDao timeSlots) {
+	public BeliefStateImpl(Beliefs beliefs, ActionSequenceDao actionSequenceDao, TimeSlotDao timeSlotDao) {
 		if (beliefs == null) {
 			throw new NullPointerException("beliefs must not be null");
 		}
 
 		this.beliefs = beliefs;
-		this.sequences = sequences;
-		this.timeSlots = timeSlots;
+		this.sequences = actionSequenceDao;
+		this.timeSlots = timeSlotDao;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class BeliefStateImpl implements BeliefState {
 
 		ActionSequence sequence = sequences.getSequence(d);
 
-		// check whether any sequence exists
+		// check weather any sequence exists
 		if (sequence == null) {
 			return false;
 		}

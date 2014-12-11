@@ -2,7 +2,8 @@ package com.github.angerona.fw.motivation.functional.impl;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -16,18 +17,18 @@ import com.github.angerona.fw.motivation.functional.DesireSelection;
  * @author Manuel Barbi
  *
  */
-public class SingleDesireSelection implements DesireSelection {
+public class DesireSelectionImpl implements DesireSelection {
 
-	private static final MotivationComparator COMPARATOR = new MotivationComparator();
+	protected static final Comparator<Entry<Desire, Double>> COMPARATOR = new MotivationComparator();
 
 	@Override
 	public Collection<Desire> select(BeliefState b, MotStructureDao st) {
-		Collection<Desire> desires = new LinkedList<>();
+		Set<Desire> desires = new HashSet<Desire>();
 		Set<Entry<Desire, Double>> entries = st.getEntries();
 
 		if (!entries.isEmpty()) {
-			Entry<Desire, Double> max = Collections.max(entries, COMPARATOR);
-			desires.add(max.getKey());
+			// TODO: add more than one Desire if they have equal motivation-values
+			desires.add(Collections.max(entries, COMPARATOR).getKey());
 		}
 
 		return desires;
@@ -35,7 +36,7 @@ public class SingleDesireSelection implements DesireSelection {
 
 	@Override
 	public DesireSelection copy() {
-		return new SingleDesireSelection();
+		return new DesireSelectionImpl();
 	}
 
 }

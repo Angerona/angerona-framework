@@ -130,7 +130,7 @@ public abstract class GenMotiveCouplings<L extends MotiveLevel> extends Parsable
 	}
 
 	protected abstract GenMotiveCouplings<L> create();
-	
+
 	@Override
 	public String toString() {
 		// this is a unpleasant workaround
