@@ -215,7 +215,8 @@ public class ActionAdapter extends Action {
 		Parameter formulaP = parameters.get(1);
 		
 		Set<FolFormula> formulas = new HashSet<>();
-		formulas.add(createFormula(formulaP));
+//		formulas.add(createFormula(formulaP));
+		formulas.add(mapFormula(formulaP));
 		Inform inform = new Inform(agent.getName(), 
 				mapAgent(recvP), formulas);
 		
