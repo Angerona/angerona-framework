@@ -15,6 +15,9 @@ import com.github.angerona.fw.comm.Answer;
 import com.github.angerona.fw.comm.SpeechAct;
 import com.github.angerona.fw.comm.SpeechAct.SpeechActType;
 import com.github.angerona.fw.logic.AnswerValue;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This translate operation implements an extended translate functionality as described by Krümpelmann
@@ -27,8 +30,9 @@ import com.github.angerona.fw.logic.AnswerValue;
  */
 public class MatesTranslate extends AspTranslator {
 	@Override
-	protected AspBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
+	protected AspBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {        
 		// the meta inferences of Krümpelmann only works on speech-acts ...
+            System.out.println("BENEDICT: im matesTranslator");
 		if(! (p instanceof SpeechAct))
 			return super.translatePerceptionImpl(caller, p);
 		
@@ -49,6 +53,9 @@ public class MatesTranslate extends AspTranslator {
 		AspFolTranslator translator = new AspFolTranslator();
 		for(FolFormula info : speechAct.getContent()) {
 			DLPLiteral knowledge = (DLPLiteral)translator.toASP(info);
+                        
+                        if(! (knowledge.isGround()))
+			    throw new IllegalArgumentException();
 			
 			String type = "t_"+speechAct.getClass().getSimpleName();
 			String sender = speechAct.getSenderId();
@@ -73,8 +80,12 @@ public class MatesTranslate extends AspTranslator {
 			// todo: get cur step (but in a way that simulating and real performs work)
 			NumberTerm curStep = new NumberTerm(metaKnowledge.getTick());
 						
-			DLPAtom atom = new DLPAtom("mi_sact", new Constant(type), senderConstant, constantSymbolForL, curStep);
-			reval.getProgram().addFact(atom);
+			DLPAtom atom = new DLPAtom("mi_sact"+knowledge.getTerms().size(), new Constant(type), senderConstant, constantSymbolForL, curStep);
+			for(Term t : knowledge.getTerms())
+                            atom.addArgument(t);
+		
+                        reval.getProgram().addFact(atom);
+			
 		}
 		
 		return reval;

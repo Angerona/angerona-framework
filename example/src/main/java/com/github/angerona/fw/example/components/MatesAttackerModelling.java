@@ -30,6 +30,11 @@ import com.github.angerona.fw.asp.component.AspMetaKnowledge.ConstantTriple;
 import com.github.angerona.fw.comm.Answer;
 import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.logic.asp.AspBeliefbase;
+import com.github.angerona.fw.logic.asp.MatesUpdateBeliefs;
+import java.util.ArrayList;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This component models the attacker as described in MATES13 of Krümpelmann.
@@ -52,6 +57,8 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 	
 	/** a map of agent names to programs representing the current attacker modeling for that agent view */
 	private Map<String, Program> attackerModels = new HashMap<>();
+        
+         private static Logger LOG = LoggerFactory.getLogger(MatesUpdateBeliefs.class);
 	
 	/** Default Ctor */
 	public MatesAttackerModelling() {}
@@ -132,12 +139,13 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 	 * @param programKey
 	 * @param defender
 	 */
-	private void addAttackerModelling(AspBeliefbase beliefbase, String programKey) {
+	private  void  addAttackerModelling(AspBeliefbase beliefbase, String programKey) {
 		// remove attacker modeling first:
 		Program program = attackerModels.get(programKey);
 		beliefbase.getProgram().removeAll(program);
 		
 		// generate sensitive rule:
+                                    // TODO: Was ist mit der sensitive rule? Ebenfalls anpassen?
 		Rule sensetive = new Rule() ;
 		sensetive.setConclusion(new DLPAtom("mi_sensetive", new Variable("D"), new Variable("V")));
 		sensetive.addPremise(new DLPAtom("mi_refused", new Variable("D"), new Variable("V")));
@@ -146,42 +154,73 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 		// generate the agent terms:
 		Variable attacker = new Variable("A");
 		Variable defender = new Variable("D");
-		
-		// the refuse rule:
-		Rule refuse = new Rule();
-		refuse.setConclusion(new DLPAtom("mi_refused", defender, new Variable("V")));
-		refuse.addPremise(new DLPAtom("mi_sact",
-				new Constant("t_" + Query.class.getSimpleName()), 
-				attacker,			// sender
-				new Variable("V"),		// question
-				new Variable("T1")));	// point in time of question
-		
-		refuse.addPremise(new DLPNot(new DLPAtom("mi_sact",
-				new Constant("t_" + Answer.class.getSimpleName()),
-				defender,			// sender
-				new Variable("W"),		// information
-				new Variable("T2")		// the the point in time for the answer
-				)));
-		
-		// use variable response time for the rule.
-		int tResponse = 1;
-		refuse.addPremise(new DLPAtom("mi_related", new Variable("V"), new Variable("W")));
-		refuse.addPremise(new DLPAtom("mi_time", new Variable("T2")));
-		refuse.addPremise(new DLPAtom("mi_agent", attacker));
-		refuse.addPremise(new DLPAtom("mi_agent", defender));
-		refuse.addPremise(new Arithmetic("+", new Variable("T1"), new NumberTerm(tResponse), new Variable("T2")));
-		refuse.addPremise(new Comparative("!=", new Variable("A"), new Variable("D")));
-		program.add(refuse);
+                
+                                    // List of already added arities
+                                    ArrayList<Integer> arityAdded = new ArrayList();
+                                    // TODO Wenn die Wissensmenge leer ist, wird keine refused hinzugefügt
+                                     for (Rule r : beliefbase.getProgram()) {
+                                            // Ich zähle die Terme die Insgesamt im Rumpf der Regel auftauchen.
+                                            // Ich brauche die Terme pro Rumofliteral
+                                            for (DLPAtom a : r.getAtoms()) {
+                                              
+                                                     int arity = a.getArity();
+                                                     if(arityAdded.contains(arity))
+                                                                continue;
+                                                     
+                                                      arityAdded.add(arity);
+                                                      Rule refuse = new Rule();
+                                                      Rule holds = new Rule();
+                                                                                       
+                                            DLPAtom sact1 =new DLPAtom("mi_sact"+arity,
+                                                    new Constant("t_" + Query.class.getSimpleName()),
+                                                    attacker,			// sender
+                                                    new Variable("V"),		// question
+                                                    new Variable("T1"));                   // point in time of question
+                                            DLPAtom sact2 = new DLPAtom("mi_sact"+arity,
+                                                    new Constant("t_" + Answer.class.getSimpleName()),
+                                                    defender,			// sender
+                                                    new Variable("W"),		// information
+                                                    new Variable("T2"));         	// the the point in time for the answer
 
-		// the holds rule:
-		Rule holds = new Rule();
-		holds.setConclusion(new DLPAtom("mi_holds", new Variable("S")));
-		holds.addPremise(new DLPAtom("mi_has_secret", new Variable("D"), new Variable("S")));
-		holds.addPremise(new DLPAtom("mi_refused", new Variable("D"), new Variable("S")));
-		program.add(holds);
+                                            DLPAtom refuseHead = new DLPAtom("mi_refused"+arity, defender, new Variable("V"));
+                                            DLPAtom holdsHead = new DLPAtom("mi_holds"+arity, new Variable("S"));
+                                            DLPAtom refuseHoldsAtom = new DLPAtom("mi_refused"+arity, new Variable("D"), new Variable("S"));
+                                            
+                                             for(int i=0;i<arity;i++) {
+                                                 sact1.addArgument(new Variable("Z"+i));
+                                                 sact2.addArgument(new Variable("Z"+i));
+                                                 refuseHead.addArgument(new Variable("Z"+i));
+                                                 holdsHead.addArgument(new Variable("Z"+i));
+                                                 refuseHoldsAtom.addArgument(new Variable("Z"+i));
+                                             }
+                                            // TODO Die variabeln müssen auch noch im Kopf der Regel hinzugefügt werden  
+                                            
+                                            refuse.setConclusion(refuseHead);
+                                            // TODO BEIDE mi_sact muss der arity entsprechend angepasst werden
+                                            refuse.addPremise(sact1);
+                                            
+                                            refuse.addPremise(new DLPNot(sact2));
+                                            // use variable response time for the rule.
+                                            int tResponse = 1;
+                                            // TODO Evtl. mi_related anpassen nocht nicht entschieden!!!
+                                            refuse.addPremise(new DLPAtom("mi_related", new Variable("V"), new Variable("W")));
+                                            refuse.addPremise(new DLPAtom("mi_time", new Variable("T2")));
+                                            refuse.addPremise(new DLPAtom("mi_agent", attacker));
+                                            refuse.addPremise(new DLPAtom("mi_agent", defender));
+                                            refuse.addPremise(new Arithmetic("+", new Variable("T1"), new NumberTerm(tResponse), new Variable("T2")));
+                                            refuse.addPremise(new Comparative("!=", new Variable("A"), new Variable("D")));
+                                            program.add(refuse);
+                                            
+                                            holds.setConclusion(holdsHead);
+                                            holds.addPremise(refuseHoldsAtom);
+                                            holds.addPremise(new DLPAtom("mi_has_secret", new Variable("D"), new Variable("S")));
+                                            program.add(holds);
+                                                                         }
+                           }
+                                            
+                                            beliefbase.getProgram().add(program);
 
-		beliefbase.getProgram().add(program);
-	}
+        }
 	
 	/**
 	 * This method shall be called every time the secrecy knowledge changes
@@ -195,6 +234,11 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 			Constant symbol = null;
 			ConstantTriple tripel = null;
 			Constant agentName = new Constant("a_" + this.getAgent().getName());
+                                                    
+                                                    // Gucken, ob man hier überprüfen kann, ob die Terme grounded sind, ansonsten, getGroundedInstances
+                                                    // und dann überprüfen wie groß die Menge ist, sollte ein sein.
+                                                   //s.getInformation().getTerms()
+                            
 			
 			// the attackers belief base:
 			BaseBeliefbase viewAttacker = getAgent().getBeliefs().getViewKnowledge().get(s.getSubjectName());
@@ -222,6 +266,7 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 
 			Program attackerModel = new Program();
 			
+                                                        // TODO Wenn has_secret ebenfalls die terme führen soll, dann hier anpassen
 			// the has_secret fact:
 			attackerModel.addFact(new DLPAtom("mi_has_secret", agentName, symbol));
 			
