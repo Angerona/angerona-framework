@@ -32,7 +32,6 @@ import com.github.angerona.fw.comm.Query;
 import com.github.angerona.fw.logic.asp.AspBeliefbase;
 import com.github.angerona.fw.logic.asp.MatesUpdateBeliefs;
 import java.util.ArrayList;
-import net.sf.tweety.logics.commons.syntax.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -193,16 +192,13 @@ public class MatesAttackerModelling extends BaseAgentComponent {
                                                  holdsHead.addArgument(new Variable("Z"+i));
                                                  refuseHoldsAtom.addArgument(new Variable("Z"+i));
                                              }
-                                            // TODO Die variabeln müssen auch noch im Kopf der Regel hinzugefügt werden  
                                             
                                             refuse.setConclusion(refuseHead);
-                                            // TODO BEIDE mi_sact muss der arity entsprechend angepasst werden
                                             refuse.addPremise(sact1);
                                             
                                             refuse.addPremise(new DLPNot(sact2));
                                             // use variable response time for the rule.
                                             int tResponse = 1;
-                                            // TODO Evtl. mi_related anpassen nocht nicht entschieden!!!
                                             refuse.addPremise(new DLPAtom("mi_related", new Variable("V"), new Variable("W")));
                                             refuse.addPremise(new DLPAtom("mi_time", new Variable("T2")));
                                             refuse.addPremise(new DLPAtom("mi_agent", attacker));
@@ -234,10 +230,7 @@ public class MatesAttackerModelling extends BaseAgentComponent {
 			Constant symbol = null;
 			ConstantTriple tripel = null;
 			Constant agentName = new Constant("a_" + this.getAgent().getName());
-                                                    
-                                                    // Gucken, ob man hier überprüfen kann, ob die Terme grounded sind, ansonsten, getGroundedInstances
-                                                    // und dann überprüfen wie groß die Menge ist, sollte ein sein.
-                                                   //s.getInformation().getTerms()
+      
                             
 			
 			// the attackers belief base:

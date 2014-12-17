@@ -16,8 +16,6 @@ import com.github.angerona.fw.comm.SpeechAct;
 import com.github.angerona.fw.comm.SpeechAct.SpeechActType;
 import com.github.angerona.fw.logic.AnswerValue;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This translate operation implements an extended translate functionality as described by Krümpelmann
@@ -32,7 +30,7 @@ public class MatesTranslate extends AspTranslator {
 	@Override
 	protected AspBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {        
 		// the meta inferences of Krümpelmann only works on speech-acts ...
-            System.out.println("BENEDICT: im matesTranslator");
+	    
 		if(! (p instanceof SpeechAct))
 			return super.translatePerceptionImpl(caller, p);
 		
@@ -55,7 +53,7 @@ public class MatesTranslate extends AspTranslator {
 			DLPLiteral knowledge = (DLPLiteral)translator.toASP(info);
                         
                         if(! (knowledge.isGround()))
-			    throw new IllegalArgumentException();
+			    continue;
 			
 			String type = "t_"+speechAct.getClass().getSimpleName();
 			String sender = speechAct.getSenderId();

@@ -60,6 +60,8 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 	    SpeechAct sa = (SpeechAct) param.getAtom();
 
 	    BaseBeliefbase world = working.getWorldKnowledge();
+	    // cannot revise ASP with... ; vllt liegt das an der Tweety Exception davor (rule not save
+	    // aber ich erhalte eine Antwortmenge -> für DLV SAVE
 	    world.addKnowledge(sa);
 	    outputWorld = "Add the information of '" + sa.toString() + "' to the world knowledge";
 
@@ -119,14 +121,15 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 
 	// find every atom in belief base:
 	Set<DLPAtom> atoms = new HashSet<>();
+	Set<String> predicatesTmp = new HashSet<>();
 	for (Rule r : beliefBase.getProgram()) {
 	    // add no facts and every atom once
 	    if (r.isFact()) {
 		continue;
 	    }
 	    for (DLPAtom a : r.getAtoms()) {
-		if (!atoms.contains(a)) {
-		    atoms.add(a);
+		if (predicatesTmp.add(a.getPredicate().getName())) {
+		    atoms.add(a);;
 		}
 	    }
 	}
@@ -136,34 +139,27 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 	    if (atom.getName().startsWith("mi_")) {
 		continue;
 	    }
-	    // Wieso werden in jedem neuen Gang die dinger in manchen Szenarien hinzugefügt und in machen nicht
 
 	    Constant posSymbol = metaKnowledge.matesPosConst(atom);
 	    Constant negSymbol = metaKnowledge.matesNegConst(atom);
-
+	    
 	    // generate the holds rules
 	    Rule pos = new Rule();
 	    Rule neg = new Rule();
-	    // set the atom with all its terms as conlusion
+	    
 	    DLPAtom conclusion = new DLPAtom(atom.getName());
 
-	    int arity = atom.getArity();
+	    int arity = atom.getTerms().size();
 	    // cerate the premise by adding all terms to premise
 	    DLPAtom premiseNeg = new DLPAtom("mi_holds" + arity, negSymbol);
 	    DLPAtom premisePos = new DLPAtom("mi_holds" + arity, posSymbol);
-
+	    // TODO ist im zweiten durhclauf nicht gleich arity
 	    for (int i = 0; i < atom.getTerms().size(); i++) {
-		// replace anonyous variables through "real" variabels
-		if (atom.getTerm(i).toString().equals("_")) {
-		    premisePos.addArgument(new Variable("Ano" + i));
-		    premiseNeg.addArgument(new Variable("Ano" + i));
-		    conclusion.addArgument(new Variable("Ano" + i));
-		} else {
-		    premisePos.addArgument(atom.getTerm(i));
-		    premiseNeg.addArgument(atom.getTerm(i));
-		    conclusion.addArgument(atom.getTerm(i));
-		}
+		    premisePos.addArgument(new Variable("Z" + i));
+		    premiseNeg.addArgument(new Variable("Z" + i));
+		    conclusion.addArgument(new Variable("Z" + i));
 	    }
+		
 	    pos.setConclusion(conclusion);
 	    neg.setConclusion(new DLPNeg(conclusion));
 	    pos.addPremise(premisePos);
@@ -183,4 +179,4 @@ public class MatesUpdateBeliefs extends UpdateBeliefsOperator {
 	}
 
     }
-}
+    }

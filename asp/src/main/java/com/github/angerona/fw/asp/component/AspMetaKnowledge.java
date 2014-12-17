@@ -52,7 +52,7 @@ public class AspMetaKnowledge extends BaseAgentComponent {
 	 * A map that maps an atom to it's three constants for positive, 
 	 * negative and variable representation 
 	 */
-	private Map<DLPAtom, ConstantTriple> constantsMap = new HashMap<>();
+	private Map<String, ConstantTriple> constantsMap = new HashMap<>();
 	
 	/** the id generator that is used for the constants' names */
 	private IdGenerator idGen = new IdGenerator();
@@ -148,14 +148,14 @@ public class AspMetaKnowledge extends BaseAgentComponent {
 	 * @return		A triple of constants
 	 */
 	public ConstantTriple getOrCreateTriple(DLPAtom atom) {
-		ConstantTriple reval = constantsMap.get(atom);
+		ConstantTriple reval = constantsMap.get(atom.getName());
 		if(reval == null) {
 			reval = new ConstantTriple();
 			long id = idGen.getNextId();
 			reval.posConst = new Constant("pa_"+id);
 			reval.negConst = new Constant("na_"+id);
 			reval.varConst = new Constant("va_"+id);
-			constantsMap.put(atom, reval);
+			constantsMap.put(atom.getName(), reval);
 		}
 		return reval;
 	}
