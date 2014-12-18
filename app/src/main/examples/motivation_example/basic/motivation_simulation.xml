@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>basic motivation</name>
 	<category>motivation/basic</category>
-	<behavior>com.github.angerona.fw.motivation.BasicBehavior</behavior>
+	<behavior>com.github.angerona.fw.motivation.behavior.BasicBehavior</behavior>
 	<description>
 		The Agent runs one full cycle of motivation calculation 
 	</description>

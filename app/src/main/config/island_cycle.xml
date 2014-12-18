@@ -3,10 +3,18 @@
         <param name="information" value="$perception" />
         <param name="beliefs" value="$beliefs" />
     </operation>
+    
+    <operation type="PlanCalculation">
+		<param name="perception" value="$perception" />
+	</operation>
      
 	<operation type="GenerateOptions">
 	    <param name="perception" value="$perception" />
 	    <output>newDesireCount</output>
+	</operation>
+	
+	<operation type="Filter">
+		<param name="perception" value="$perception" />
 	</operation>
 	
 	<operation type="ActionSelection">

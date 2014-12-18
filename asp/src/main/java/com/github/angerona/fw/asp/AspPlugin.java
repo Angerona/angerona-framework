@@ -29,7 +29,10 @@ import com.github.angerona.fw.logic.asp.AspSkepticalReasoner;
 import com.github.angerona.fw.logic.asp.AspTranslator;
 import com.github.angerona.fw.logic.asp.MatesTranslate;
 import com.github.angerona.fw.logic.asp.MatesUpdateBeliefs;
+import com.github.angerona.fw.logic.asp.RevisionBaseRevision;
+import com.github.angerona.fw.logic.asp.RevisionConfidentSelectiveLiteral;
 import com.github.angerona.fw.logic.asp.RevisionCredibilityPrograms;
+import com.github.angerona.fw.logic.asp.RevisionCredibilityProgramsKeepRules;
 import com.github.angerona.fw.logic.asp.RevisionPreferenceHandling;
 import com.github.angerona.fw.operators.BaseOperator;
 import com.github.angerona.fw.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
@@ -77,6 +80,9 @@ public class AspPlugin extends AngeronaPluginAdapter
 		reval.add(RevisionPreferenceHandling.class);
 		reval.add(RevisionCredibilityPrograms.class);
 		reval.add(AspExpansion.class);
+		reval.add(RevisionBaseRevision.class);
+		reval.add(RevisionCredibilityProgramsKeepRules.class);
+		reval.add(RevisionConfidentSelectiveLiteral.class);
 		return reval;
 	}
 	

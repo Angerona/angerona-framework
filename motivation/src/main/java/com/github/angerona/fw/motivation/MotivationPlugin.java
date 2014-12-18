@@ -13,15 +13,21 @@ import com.github.angerona.fw.EnvironmentBehavior;
 import com.github.angerona.fw.gui.UIPlugin;
 import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.island.DynamicIslandBehavior;
+import com.github.angerona.fw.island.IslandTranslator;
+import com.github.angerona.fw.island.IslandUpdateBeliefsOperator;
 import com.github.angerona.fw.island.StaticIslandBehavior;
 import com.github.angerona.fw.island.comp.Area;
 import com.github.angerona.fw.island.comp.Battery;
+import com.github.angerona.fw.logic.BaseTranslator;
 import com.github.angerona.fw.motivation.behavior.BasicBehavior;
 import com.github.angerona.fw.motivation.dao.impl.LevelWeights;
 import com.github.angerona.fw.motivation.dao.impl.MotStructure;
 import com.github.angerona.fw.motivation.dao.impl.MotiveCouplings;
 import com.github.angerona.fw.motivation.dao.impl.WeightRanges;
 import com.github.angerona.fw.motivation.operators.MotivationOperator;
+import com.github.angerona.fw.motivation.operators.temp.ActionSelectionOperator;
+import com.github.angerona.fw.motivation.operators.temp.FilterOperator;
+import com.github.angerona.fw.motivation.plans.impl.TrailOperator;
 import com.github.angerona.fw.motivation.reliable.impl.ActionSequences;
 import com.github.angerona.fw.motivation.reliable.impl.TimeSlots;
 import com.github.angerona.fw.motivation.view.CouplingsView;
@@ -69,6 +75,12 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 	public List<Class<? extends BaseOperator>> getOperators() {
 		List<Class<? extends BaseOperator>> reval = new ArrayList<>();
 		reval.add(MotivationOperator.class);
+
+		reval.add(TrailOperator.class);
+		reval.add(FilterOperator.class);
+		reval.add(ActionSelectionOperator.class);
+
+		reval.add(IslandUpdateBeliefsOperator.class);
 		return reval;
 	}
 
@@ -79,6 +91,13 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 
 		reval.add(StaticIslandBehavior.class);
 		reval.add(DynamicIslandBehavior.class);
+		return reval;
+	}
+
+	@Override
+	public List<Class<? extends BaseTranslator>> getTranslatorImpl() {
+		List<Class<? extends BaseTranslator>> reval = new ArrayList<>();
+		reval.add(IslandTranslator.class);
 		return reval;
 	}
 
