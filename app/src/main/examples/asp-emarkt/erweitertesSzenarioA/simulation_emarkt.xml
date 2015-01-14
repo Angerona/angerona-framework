@@ -1,13 +1,16 @@
 <simulation-configuration>
-	<name>E-Markt Szenario Geheim</name>
+	<name>E-Markt Szenario Erweitertes Szenario A</name>
 	<category>scm/mates</category>
 	<behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+	<description>
+	
+	</description>
 	
 	<agent-instance>
 		<name>Kaeufer</name>
         
         	<agent-config source="config/agents/know_mates_bene.xml" />
-        	<beliefbase-config source="config/beliefbases/asp_mates_beliefbase.xml" />
+        	<beliefbase-config source="config/beliefbases/asp_mates_beliefbase_new_revision.xml" />
 
 	      	<desire>v_Verkaeufer(menge(5), 1)</desire>
 		<desire>q_Verkaeufer(startAngebot(X),2)</desire>
@@ -35,10 +38,10 @@
       		<name>Verkaeufer</name>
       	
         	<agent-config source="config/agents/know_mates_bene.xml" />         
-		<beliefbase-config source="config/beliefbases/asp_mates_beliefbase.xml" />
+		<beliefbase-config source="config/beliefbases/asp_mates_beliefbase_new_revision.xml" />
 
 		<desire>verkaufeWare</desire>
-		<desire>knappeWare</desire>
+		<desire>taeuscheKaeufer</desire>
 
 		<data key="Confidential">
 		(Kaeufer, __DEFAULT__, volleLager)
@@ -47,7 +50,7 @@
 
 		<data key="KnowHow">
 		verkaufeWare, s_Inform(a_Kaeufer, q_akzeptiertesKaufangebot(X)), akzeptiertesKaufangebot_trigger
-		knappeWare, s_Inform(a_Kaeufer, knappeWare), knappeWare
+		taeuscheKaeufer, s_Inform(a_Kaeufer, knappeWare), knappeWare_trigger
 		</data>
 
 		<capability>Inform</capability>

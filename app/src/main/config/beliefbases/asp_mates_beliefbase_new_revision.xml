@@ -12,7 +12,7 @@
 <!--       <operator-cls>com.github.angerona.fw.logic.asp.RevisionCredibilityPrograms</operator-cls> -->
    </change-operators>
    <translators>
-      <default-operator-cls>com.github.angerona.fw.logic.asp.MatesTranslator</default-operator-cls>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.MatesTranslate</default-operator-cls>
    </translators>
    <discrete-family>
      <operator>com.github.angerona.fw.logic.asp.AspSkepticalReasoner</operator>

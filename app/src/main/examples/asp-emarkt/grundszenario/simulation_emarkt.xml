@@ -1,0 +1,34 @@
+<simulation-configuration>
+	<name>E-Markt Grundszenario</name>
+    <category>scm/mates</category>
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+	
+	<agent-instance>
+		<name>Kaeufer</name>
+        
+        <agent-config source="config/agents/mates_agent_bene.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_mates_beliefbase_new_revision.xml" />
+
+        <desire>v_Verkaeufer(menge(5,a), 1)</desire>
+	<desire>q_Verkaeufer(lieferTermin(1,a), 2)</desire>
+	<desire>q_Verkaeufer(lieferKosten(a), 3)</desire>
+	<desire>q_Verkaeufer(herstellung(a), 4)</desire>
+
+	<capability>Inform</capability>
+        <capability>Query</capability>
+        <capability>Answer</capability>
+	</agent-instance>
+      
+	<agent-instance>
+      	<name>Verkaeufer</name>
+      	
+        <agent-config source="config/agents/mates_agent_bene.xml" />         
+        <beliefbase-config source="config/beliefbases/asp_mates_beliefbase_new_revision.xml" />
+      	<data key="Confidential">
+		(Kaeufer, __DEFAULT__, firma(a))
+	</data>
+	<capability>Query</capability>
+      	<capability>Answer</capability>
+      	
+	</agent-instance>
+</simulation-configuration>
