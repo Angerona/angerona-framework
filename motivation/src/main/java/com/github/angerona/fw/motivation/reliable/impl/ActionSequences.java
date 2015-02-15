@@ -3,6 +3,7 @@ package com.github.angerona.fw.motivation.reliable.impl;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.Desire;
@@ -14,7 +15,7 @@ import com.github.angerona.fw.motivation.reliable.ActionSequenceDao;
  * @author Manuel Barbi
  *
  */
-public class ActionSequences extends BaseAgentComponent implements ActionSequenceDao, Iterable<String> {
+public class ActionSequences extends BaseAgentComponent implements ActionSequenceDao, Iterable<Entry<String, ActionSequence>> {
 
 	protected Map<String, ActionSequence> sequences = new HashMap<>();
 
@@ -41,8 +42,14 @@ public class ActionSequences extends BaseAgentComponent implements ActionSequenc
 	}
 
 	@Override
-	public Iterator<String> iterator() {
-		return sequences.keySet().iterator();
+	public Iterator<Entry<String, ActionSequence>> iterator() {
+		return sequences.entrySet().iterator();
+	}
+	
+	@Override
+	public String toString() {
+		// this is a unpleasant workaround
+		return this.getClass().getSimpleName();
 	}
 
 }

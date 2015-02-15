@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.AngeronaPluginAdapter;
 import com.github.angerona.fw.EnvironmentBehavior;
@@ -15,9 +17,9 @@ import com.github.angerona.fw.island.IslandTranslator;
 import com.github.angerona.fw.island.IslandUpdateBeliefsOperator;
 import com.github.angerona.fw.island.StaticIslandBehavior;
 import com.github.angerona.fw.island.comp.Area;
-import com.github.angerona.fw.island.comp.AreaView;
 import com.github.angerona.fw.island.comp.Battery;
-import com.github.angerona.fw.island.comp.BatteryView;
+import com.github.angerona.fw.island.view.AreaView;
+import com.github.angerona.fw.island.view.BatteryView;
 import com.github.angerona.fw.logic.BaseTranslator;
 import com.github.angerona.fw.motivation.behavior.BasicBehavior;
 import com.github.angerona.fw.motivation.dao.impl.LevelWeights;
@@ -28,18 +30,19 @@ import com.github.angerona.fw.motivation.operators.MotivationOperator;
 import com.github.angerona.fw.motivation.operators.temp.ActionSelectionOperator;
 import com.github.angerona.fw.motivation.operators.temp.FilterOperator;
 import com.github.angerona.fw.motivation.operators.temp.Intentions;
+import com.github.angerona.fw.motivation.operators.temp.view.IntentionsView;
 import com.github.angerona.fw.motivation.plans.impl.TrailBasedPlans;
 import com.github.angerona.fw.motivation.plans.impl.TrailOperator;
 import com.github.angerona.fw.motivation.plans.impl.TrailPlanView;
 import com.github.angerona.fw.motivation.reliable.impl.ActionSequences;
 import com.github.angerona.fw.motivation.reliable.impl.TimeSlots;
+import com.github.angerona.fw.motivation.reliable.view.ActionSequencesView;
+import com.github.angerona.fw.motivation.reliable.view.TimeSlotsView;
 import com.github.angerona.fw.motivation.view.CouplingsView;
 import com.github.angerona.fw.motivation.view.MotStructureView;
 import com.github.angerona.fw.motivation.view.RangesView;
 import com.github.angerona.fw.motivation.view.WeightsView;
 import com.github.angerona.fw.operators.BaseOperator;
-
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * {@link MotivationPlugin} introduces the basic operator to integrate the motivation component into the framework. as well as the depending
@@ -77,9 +80,13 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 		reval.put("WeightRange-View", RangesView.class);
 		reval.put("LevelWeight-View", WeightsView.class);
 		reval.put("MotStructure-View", MotStructureView.class);
+		reval.put("ActionSequence-View", ActionSequencesView.class);
+		reval.put("TimeSlot-View", TimeSlotsView.class);
 
 		reval.put("Battery-View", BatteryView.class);
 		reval.put("Area-View", AreaView.class);
+
+		reval.put("Intentions-View", IntentionsView.class);
 
 		reval.put("TrailPlan-View", TrailPlanView.class);
 		return reval;

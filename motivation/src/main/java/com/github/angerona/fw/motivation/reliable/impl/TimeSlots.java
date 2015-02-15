@@ -3,6 +3,7 @@ package com.github.angerona.fw.motivation.reliable.impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import com.github.angerona.fw.BaseAgentComponent;
@@ -13,7 +14,7 @@ import com.github.angerona.fw.motivation.reliable.TimeSlotDao;
  * @author Manuel Barbi
  *
  */
-public class TimeSlots extends BaseAgentComponent implements TimeSlotDao {
+public class TimeSlots extends BaseAgentComponent implements TimeSlotDao, Iterable<Integer> {
 
 	protected Set<Integer> slots = new HashSet<>();
 
@@ -44,6 +45,17 @@ public class TimeSlots extends BaseAgentComponent implements TimeSlotDao {
 	@Override
 	public BaseAgentComponent clone() {
 		return new TimeSlots();
+	}
+
+	@Override
+	public Iterator<Integer> iterator() {
+		return slots.iterator();
+	}
+	
+	@Override
+	public String toString() {
+		// this is a unpleasant workaround
+		return this.getClass().getSimpleName();
 	}
 
 }

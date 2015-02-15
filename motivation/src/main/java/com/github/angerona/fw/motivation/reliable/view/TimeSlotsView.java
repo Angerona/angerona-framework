@@ -1,27 +1,31 @@
-package com.github.angerona.fw.island.comp;
+package com.github.angerona.fw.motivation.reliable.view;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.github.angerona.fw.gui.view.ListViewColored;
 import com.github.angerona.fw.internal.Entity;
+import com.github.angerona.fw.island.comp.Battery;
+import com.github.angerona.fw.motivation.reliable.impl.TimeSlots;
 
 /**
  * 
  * @author Manuel Barbi
  * 
  */
-public class BatteryView extends ListViewColored {
+public class TimeSlotsView extends ListViewColored {
 
-	private static final long serialVersionUID = -6063338442612426053L;
+	private static final long serialVersionUID = -3837032144260387351L;
 
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
 		if (entity instanceof Battery) {
-			Battery akku = (Battery) entity;
 			List<String> reval = new LinkedList<String>();
-			reval.add("Charge: " + akku.getCharge());
-			reval.add("Damaged:" + akku.isDamaged());
+
+			for (Integer slot : (TimeSlots) entity) {
+				reval.add(String.valueOf(slot));
+			}
+
 			return reval;
 		}
 		return null;
@@ -29,7 +33,7 @@ public class BatteryView extends ListViewColored {
 
 	@Override
 	public Class<? extends Entity> getObservedType() {
-		return Battery.class;
+		return TimeSlots.class;
 	}
 
 }

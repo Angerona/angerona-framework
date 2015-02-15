@@ -1,10 +1,11 @@
-package com.github.angerona.fw.island.comp;
+package com.github.angerona.fw.island.view;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.github.angerona.fw.gui.view.ListViewColored;
 import com.github.angerona.fw.internal.Entity;
+import com.github.angerona.fw.island.comp.Area;
 
 /**
  * 
