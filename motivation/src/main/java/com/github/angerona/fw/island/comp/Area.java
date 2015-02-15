@@ -13,9 +13,12 @@ import com.github.angerona.fw.island.enums.Location;
  */
 public class Area extends BaseAgentComponent {
 
+	private static final int PARTS = 8;
+	private static final int INC = 8;
+
 	protected Location location = Location.AT_HQ;
-	protected int[] solid = new int[8];
-	protected int[] vulnurable = new int[8];
+	protected int[] solid = new int[PARTS];
+	protected int[] vulnerable = new int[PARTS];
 	protected boolean secured = false;
 	protected WeatherChart weather;
 
@@ -29,25 +32,29 @@ public class Area extends BaseAgentComponent {
 	}
 
 	public void build(int step) {
-		for (int i = 0; i < 16; i++) {
-			if (i < 8) {
-				if (solid[i] < 8) {
-					solid[i] = Math.min(solid[i] + step, 8);
+		for (int i = 0; i < 2 * PARTS; i++) {
+			if (i < PARTS) {
+				if (solid[i] < INC) {
+					solid[i] = Math.min(solid[i] + step, INC);
 					report("assemble solid parts");
 					return;
 				}
 			} else {
-				if (vulnurable[i - 8] < 8) {
-					vulnurable[i - 8] = Math.min(vulnurable[i - 8] + step, 8);
+				if (vulnerable[i - PARTS] < INC) {
+					vulnerable[i - PARTS] = Math.min(vulnerable[i - PARTS] + step, INC);
 					report("assemble vulnerable parts");
 					return;
 				}
 			}
 		}
+
+		if (isFinished()) {
+			report("assembled all parts");
+		}
 	}
 
 	public String getExpansion() {
-		return Arrays.toString(solid) + " " + Arrays.toString(vulnurable);
+		return Arrays.toString(solid) + " " + Arrays.toString(vulnerable);
 	}
 
 	public boolean isSecured() {
@@ -72,7 +79,27 @@ public class Area extends BaseAgentComponent {
 	}
 
 	public void damage() {
-		// TODO: implement
+		int d = 3;
+
+		for (int i = PARTS - 1; i >= 0; i--) {
+			if (d-- > 0 && vulnerable[i] > 0) {
+				vulnerable[i] = -INC;
+			}
+		}
+	}
+
+	public boolean isFinished() {
+		for (int i = 0; i < PARTS; i++) {
+			if (solid[i] < INC) {
+				return false;
+			}
+
+			if (vulnerable[i] < INC) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override
@@ -80,7 +107,7 @@ public class Area extends BaseAgentComponent {
 		Area cln = new Area();
 		cln.location = this.location;
 		System.arraycopy(this.solid, 0, cln.solid, 0, this.solid.length);
-		System.arraycopy(this.vulnurable, 0, cln.vulnurable, 0, this.vulnurable.length);
+		System.arraycopy(this.vulnerable, 0, cln.vulnerable, 0, this.vulnerable.length);
 		cln.secured = this.secured;
 		return cln;
 	}

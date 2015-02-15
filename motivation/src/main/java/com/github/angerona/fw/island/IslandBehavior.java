@@ -150,50 +150,52 @@ public abstract class IslandBehavior extends ParsingBehavior {
 			battery = agent.getComponent(Battery.class);
 			area = agent.getComponent(Area.class);
 
-			switch (current) {
-			case SUN:
-				if (!area.isShelter()) {
-					LOG.debug("charging with solar panel");
-					battery.charge(2);
-				}
-				break;
-			case THUNDERSTORM:
-				if (generator.chance(1, 8)) {
-					if (generator.chance(1, 2)) {
-						if (!area.isShelter()) {
-							LOG.debug("damage agent");
-							battery.damage();
-						}
-					} else {
-						if (!area.isSecured()) {
-							LOG.debug("damage site");
-							area.damage();
-							if (area.getLocation() == Location.AT_SITE) {
+			if (!area.isFinished()) {
+				switch (current) {
+				case SUN:
+					if (!area.isShelter()) {
+						LOG.debug("charging with solar panel");
+						battery.charge(2);
+					}
+					break;
+				case THUNDERSTORM:
+					if (generator.chance(1, 8)) {
+						if (generator.chance(1, 2)) {
+							if (!area.isShelter()) {
 								LOG.debug("damage agent");
 								battery.damage();
 							}
+						} else {
+							if (!area.isSecured()) {
+								LOG.debug("damage site");
+								area.damage();
+								if (area.getLocation() == Location.AT_SITE) {
+									LOG.debug("damage agent");
+									battery.damage();
+								}
+							}
 						}
 					}
+					break;
+				default: // do nothing
 				}
-				break;
-			default: // do nothing
+
+				if (!battery.isDamaged() && !battery.isEmpty()) {
+					somethingHappens = true;
+
+					area.setWeather(new WeatherChart(current, prediction, rem(tick)));
+					perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, rem(tick),
+							area.isSecured());
+					agent.perceive(perception);
+					LOG.debug("create perception: {}", perception);
+
+					LOG.debug("call agent cycle");
+					agent.cycle();
+				}
+
+				LOG.debug("discarge battery");
+				battery.discharge();
 			}
-
-			if (!battery.isDamaged() && !battery.isEmpty()) {
-				somethingHappens = true;
-
-				area.setWeather(new WeatherChart(current, prediction, rem(tick)));
-				perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, rem(tick),
-						area.isSecured());
-				agent.perceive(perception);
-				LOG.debug("create perception: {}", perception);
-
-				LOG.debug("call agent cycle");
-				agent.cycle();
-			}
-
-			LOG.debug("discarge battery");
-			battery.discharge();
 		}
 
 		return somethingHappens;

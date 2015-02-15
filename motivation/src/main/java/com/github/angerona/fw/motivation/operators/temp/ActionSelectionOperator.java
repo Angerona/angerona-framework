@@ -1,7 +1,7 @@
 package com.github.angerona.fw.motivation.operators.temp;
 
 import com.github.angerona.fw.Agent;
-import com.github.angerona.fw.Intention;
+import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.motivation.ActionSequence;
 import com.github.angerona.fw.motivation.reliable.ActionSequenceDao;
 import com.github.angerona.fw.operators.Operator;
@@ -31,10 +31,10 @@ public class ActionSelectionOperator extends Operator<Agent, ActionSelectionPara
 		Intentions intentions = param.getIntentions();
 		ActionSequenceDao sequences = param.getSequences();
 
-		Intention selected = intentions.getSelected();
+		Desire selected = intentions.getSelected();
 
-		if (selected != null && selected instanceof DIntention) {
-			ActionSequence seq = sequences.getSequence(((DIntention) selected).getRelated());
+		if (selected != null) {
+			ActionSequence seq = sequences.getSequence(selected);
 
 			if (seq != null) {
 				if (seq.getLength() > 0) {

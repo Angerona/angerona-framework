@@ -47,7 +47,7 @@ public abstract class BasePlanOperator extends Operator<Agent, PlanOperatorParam
 	protected ActionSequence getMinSequence(Desire d) {
 		Set<ActionSequence> sequences = getSequences(d);
 
-		if (!sequences.isEmpty()) {
+		if (sequences != null && !sequences.isEmpty()) {
 			return Collections.min(sequences);
 		}
 

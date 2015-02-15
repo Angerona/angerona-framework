@@ -27,6 +27,7 @@
 	<component>com.github.angerona.fw.motivation.dao.impl.LevelWeights</component>
 	<component>com.github.angerona.fw.motivation.dao.impl.MotStructure</component>
 	<component>com.github.angerona.fw.logic.Desires</component>
+	<component>com.github.angerona.fw.motivation.operators.temp.Intentions</component>
 	<component>com.github.angerona.fw.motivation.reliable.impl.ActionSequences</component>
 	<component>com.github.angerona.fw.motivation.reliable.impl.TimeSlots</component>
 	<component>com.github.angerona.fw.island.comp.Battery</component>

@@ -34,7 +34,7 @@ public class FilterOperator extends Operator<Agent, FilterParameter, Void> {
 		Intentions intentions = param.getIntention();
 
 		if (!desires.isEmpty()) {
-			intentions.setSelected(new DIntention(param.getAgent(), desires.iterator().next()));
+			intentions.setSelected(desires.iterator().next());
 		}
 
 		return null;

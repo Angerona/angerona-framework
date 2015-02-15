@@ -1,7 +1,7 @@
 package com.github.angerona.fw.motivation.operators.temp;
 
 import com.github.angerona.fw.BaseAgentComponent;
-import com.github.angerona.fw.Intention;
+import com.github.angerona.fw.Desire;
 
 /**
  * 
@@ -10,13 +10,13 @@ import com.github.angerona.fw.Intention;
  */
 public class Intentions extends BaseAgentComponent {
 
-	private Intention selected;
+	private Desire selected;
 
-	public Intention getSelected() {
+	public Desire getSelected() {
 		return selected;
 	}
 
-	public void setSelected(Intention selected) {
+	public void setSelected(Desire selected) {
 		this.selected = selected;
 	}
 
