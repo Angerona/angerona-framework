@@ -15,13 +15,10 @@ public class MaslowDeficiency implements DeficiencyPartition<Maslow> {
 	public boolean contains(Maslow level) {
 		switch (level) {
 		case PHYSIOLOGICAL_NEEDS:
-			return true;
 		case SAFETY_NEEDS:
-			return true;
 		case LOVE_AND_BELONGING:
 			return true;
 		case ESTEEM:
-			return false;
 		case SELF_ACTUALIZATION:
 			return false;
 		default:

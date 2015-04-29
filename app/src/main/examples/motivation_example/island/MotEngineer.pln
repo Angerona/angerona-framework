@@ -99,6 +99,7 @@
 			<id>assemble_parts</id>
 			<condition>-secured</condition>
 			<src>at_site</src>
+			<accept>true</accept>
 		</action>				
 	</sequence>
 </sequences>
@@ -113,6 +114,7 @@
 		<action>
 			<id>charge_battery</id>
 			<src>at_hq</src>
+			<accept>true</accept>
 		</action>
 		<sequence>way_to_hq</sequence>		
 	</trail>
@@ -135,6 +137,7 @@
 		<action>
 			<id>enter_cave</id>
 			<src>at_site</src>
+			<accept>true</accept>
 		</action>
 		<sequence>way_to_site</sequence>		
 	</trail>
@@ -158,6 +161,7 @@
 			<id>cover_site</id>
 			<condition>-secured</condition>
 			<src>at_site</src>
+			<accept>true</accept>
 		</action>
 	</trail>
 	<trail>
@@ -166,6 +170,7 @@
 			<id>cover_site</id>
 			<condition>-secured</condition>
 			<src>at_site</src>
+			<accept>true</accept>
 		</action>
 		<sequence>way_to_site</sequence>
 	</trail>

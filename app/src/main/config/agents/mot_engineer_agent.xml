@@ -32,5 +32,6 @@
 	<component>com.github.angerona.fw.motivation.reliable.impl.TimeSlots</component>
 	<component>com.github.angerona.fw.island.comp.Battery</component>
 	<component>com.github.angerona.fw.island.comp.Area</component>
+	<component>com.github.angerona.fw.motivation.plans.impl.TrailBasedPlans</component>	
 	
 </agent-configuration>

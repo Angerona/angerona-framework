@@ -15,6 +15,10 @@ public class ActionSequence implements Comparable<ActionSequence>, Iterable<Acti
 
 	protected List<Action> actions = new LinkedList<>();
 
+	public void add(Action action) {
+		actions.add(action);
+	}
+
 	public int getLength() {
 		return actions.size();
 	}

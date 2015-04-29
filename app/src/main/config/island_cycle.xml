@@ -1,4 +1,4 @@
-<asml-script name="secrecyCycle">
+<asml-script name="islandCycle">
     <operation type="UpdateBeliefs">
         <param name="information" value="$perception" />
         <param name="beliefs" value="$beliefs" />

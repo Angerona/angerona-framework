@@ -1,7 +1,5 @@
 package com.github.angerona.fw.motivation.plans;
 
-import java.util.Collection;
-
 import com.github.angerona.fw.Desire;
 
 /**
@@ -11,8 +9,8 @@ import com.github.angerona.fw.Desire;
  */
 public interface PlanComponentDao {
 
-	public Collection<StateNode> getPlan(Desire d);
+	public Trail[] getTrails(Desire d);
 
-	public Collection<StateNode> getPlan(String key);
+	public Trail[] getTrails(String key);
 
 }

@@ -3,7 +3,6 @@ package com.github.angerona.fw.motivation.plans.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -12,8 +11,8 @@ import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.motivation.behavior.ParsableComponent;
 import com.github.angerona.fw.motivation.plans.PlanComponentDao;
-import com.github.angerona.fw.motivation.plans.PlanFactory;
-import com.github.angerona.fw.motivation.plans.StateNode;
+import com.github.angerona.fw.motivation.plans.Trail;
+import com.github.angerona.fw.motivation.plans.dto.TrailDTO;
 import com.github.angerona.fw.motivation.plans.parser.ParseException;
 import com.github.angerona.fw.motivation.plans.parser.PlanParser;
 
@@ -26,33 +25,29 @@ public class TrailBasedPlans extends ParsableComponent implements PlanComponentD
 
 	public static final String EXT = ".pln";
 
-	protected Map<String, Collection<StateNode>> trails = new HashMap<>();
+	protected Map<String, Trail[]> trails = new HashMap<>();
 
 	@Override
-	public Collection<StateNode> getPlan(Desire d) {
-		return getPlan(d);
+	public Trail[] getTrails(Desire d) {
+		return getTrails(d.toString());
 	}
 
 	@Override
-	public Collection<StateNode> getPlan(String key) {
-		Collection<StateNode> list = trails.get(key);
-
-		if (list != null) {
-			return Collections.unmodifiableCollection(list);
-		}
-
-		return null;
+	public Trail[] getTrails(String key) {
+		return getTrails(key);
 	}
 
 	@Override
 	public void loadFromStream(InputStream src) throws IOException {
-		try {
+	/*	try {
 			PlanParser parser = new PlanParser(src);
-			this.trails = PlanFactory.assemble(parser.gatherPlans());
+			Collection<TrailDTO> list = parser.gatherPlans();
+			System.out.println(list);
+		//	this.trails = TrailFactory.assemble(list);
 			report("loaded action-plans from file");
 		} catch (ParseException e) {
 			throw new IOException(e);
-		}
+		} */
 	}
 
 	@Override

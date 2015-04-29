@@ -1,14 +1,10 @@
 package com.github.angerona.fw.motivation.plans.impl;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.github.angerona.fw.gui.view.ListViewColored;
 import com.github.angerona.fw.internal.Entity;
-import com.github.angerona.fw.motivation.plans.ActionEdge;
-import com.github.angerona.fw.motivation.plans.StateNode;
 
 /**
  * 
@@ -28,9 +24,9 @@ public class TrailPlanView extends ListViewColored {
 			for (String key : plans) {
 				reval.add(key);
 
-				for (StateNode node : plans.getPlan(key)) {
+			/*	for (StateNode node : plans.getTrails(key)) {
 					printPlan(reval, new HashSet<String>(), node);
-				}
+				} */
 			}
 
 			return reval;
@@ -38,20 +34,20 @@ public class TrailPlanView extends ListViewColored {
 		return null;
 	}
 
-	private void printPlan(List<String> reval, Set<String> visited, StateNode node) {
-		reval.add("|_____" + node);
+/*	private void printPlan(List<String> reval, Set<String> visited, Trail trail) {
+		reval.add("|_____" + trail);
 		visited.add(node.toString());
 
-		for (ActionEdge a : node) {
+		for (TrailElem a : node) {
 			reval.add("|__________" + a);
 		}
 
-		for (ActionEdge a : node) {
+		for (TrailElem a : node) {
 			if (a.getGoal() != null && !visited.contains(a.getGoal().toString())) {
 				printPlan(reval, visited, a.getGoal());
 			}
 		}
-	}
+	} */
 
 	@Override
 	public Class<? extends Entity> getObservedType() {

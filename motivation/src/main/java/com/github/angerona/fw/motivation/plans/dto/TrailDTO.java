@@ -10,12 +10,14 @@ import java.util.Collection;
 public class TrailDTO {
 
 	protected String des;
-	protected Collection<PlanDTO> pln;
+	protected String org;
+	protected Collection<ActionDTO> pln;
 
 	public TrailDTO() {}
 
-	public TrailDTO(String des, Collection<PlanDTO> pln) {
+	public TrailDTO(String des, String org, Collection<ActionDTO> pln) {
 		this.des = des;
+		this.org = org;
 		this.pln = pln;
 	}
 
@@ -27,17 +29,25 @@ public class TrailDTO {
 		this.des = des;
 	}
 
-	public Collection<PlanDTO> getPln() {
+	public String getOrg() {
+		return org;
+	}
+
+	public void setOrg(String org) {
+		this.org = org;
+	}
+
+	public Collection<ActionDTO> getPln() {
 		return pln;
 	}
 
-	public void setPln(Collection<PlanDTO> pln) {
+	public void setPln(Collection<ActionDTO> pln) {
 		this.pln = pln;
 	}
 
 	@Override
 	public String toString() {
-		return "[" + des + ", " + pln + "]";
+		return "[" + des + ", " + org + ", " + pln + "]";
 	}
 
 }
