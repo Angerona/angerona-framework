@@ -190,5 +190,6 @@
   	<module>conditional</module>
   	<module>DefendingAgent</module>
   	<module>plwithknowledge</module>
+  	<module>island</module>
   </modules>
 </project>
