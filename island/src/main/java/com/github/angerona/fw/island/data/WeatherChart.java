@@ -1,4 +1,4 @@
-package com.github.angerona.fw.island.components;
+package com.github.angerona.fw.island.data;
 
 import static com.github.angerona.fw.island.enums.Weather.THUNDERSTORM;
 
@@ -51,7 +51,7 @@ public class WeatherChart {
 	}
 
 	@Override
-	protected WeatherChart clone() {
+	public WeatherChart clone() {
 		WeatherChart cln = new WeatherChart();
 		System.arraycopy(this.weather, 0, cln.weather, 0, this.weather.length);
 		cln.safeWindow = this.safeWindow;

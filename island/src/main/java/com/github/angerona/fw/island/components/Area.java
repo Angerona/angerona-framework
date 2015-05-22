@@ -3,6 +3,7 @@ package com.github.angerona.fw.island.components;
 import java.util.Arrays;
 
 import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.island.data.WeatherChart;
 import com.github.angerona.fw.island.enums.Location;
 
 /**
