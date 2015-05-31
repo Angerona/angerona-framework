@@ -1,0 +1,30 @@
+<agent-configuration>
+	<name>Island Engineer</name>
+	<cycle-script source="config/island_cycle.xml" />
+	
+	<operation-set operation-type="GenerateOptions">
+      <default-operator-cls>com.github.angerona.fw.island.operators.IslandGenerateOptionsOperator</default-operator-cls>
+   	</operation-set>
+	
+	<operation-set operation-type="IntentionUpdate">
+      <default-operator-cls>com.github.angerona.fw.island.operators.IslandIntentionUpdateOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="SubgoalGeneration">
+      <default-operator-cls>com.github.angerona.fw.island.operators.IslandSubgoalGenerationOperator</default-operator-cls>
+   	</operation-set>
+	
+	<operation-set operation-type="Execute">
+      <default-operator-cls>com.github.angerona.fw.island.operators.ExecuteOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="UpdateBeliefs">
+      <default-operator-cls>com.github.angerona.fw.island.beliefbase.IslandUpdateBeliefsOperator</default-operator-cls>
+   	</operation-set>
+   	   	
+	<component>com.github.angerona.fw.logic.Desires</component>
+	<component>com.github.angerona.fw.PlanComponent</component>
+	<component>com.github.angerona.fw.island.components.Area</component>
+	<component>com.github.angerona.fw.island.components.Battery</component>
+	
+</agent-configuration>

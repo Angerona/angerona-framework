@@ -1,0 +1,19 @@
+<beliefbase-configuration>
+   <name>Answer-Set Belief base</name>
+   <reasoners>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.AspSkepticalReasoner</default-operator-cls>
+      <operator-cls>com.github.angerona.fw.logic.asp.AspCredulousReasoner</operator-cls>
+   </reasoners>
+   <change-operators>
+      <default-operator-cls>com.github.angerona.fw.logic.asp.RevisionPreferenceHandling</default-operator-cls>
+      <operator-cls>com.github.angerona.fw.logic.asp.AspExpansion</operator-cls>
+   </change-operators>
+   <translators>
+      <default-operator-cls>com.github.angerona.fw.island.beliefbase.IslandTranslator</default-operator-cls>
+   </translators>
+   <discrete-family>
+     <operator>com.github.angerona.fw.logic.asp.AspSkepticalReasoner</operator>
+     <operator>com.github.angerona.fw.logic.asp.AspCredulousReasoner</operator>
+   </discrete-family>
+   <beliefbase-class>com.github.angerona.fw.logic.asp.AspBeliefbase</beliefbase-class>
+</beliefbase-configuration>

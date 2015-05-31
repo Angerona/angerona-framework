@@ -15,12 +15,13 @@ import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.island.behavior.DynamicIslandBehavior;
 import com.github.angerona.fw.island.behavior.IslandBehavior;
 import com.github.angerona.fw.island.beliefbase.IslandTranslator;
+import com.github.angerona.fw.island.beliefbase.IslandUpdateBeliefsOperator;
 import com.github.angerona.fw.island.components.Area;
 import com.github.angerona.fw.island.components.Battery;
 import com.github.angerona.fw.island.operators.ExecuteOperator;
-import com.github.angerona.fw.island.operators.IslandSubgoalGenerationOperator;
 import com.github.angerona.fw.island.operators.IslandGenerateOptionsOperator;
 import com.github.angerona.fw.island.operators.IslandIntentionUpdateOperator;
+import com.github.angerona.fw.island.operators.IslandSubgoalGenerationOperator;
 import com.github.angerona.fw.island.view.AreaView;
 import com.github.angerona.fw.island.view.BatteryView;
 import com.github.angerona.fw.logic.BaseTranslator;
@@ -56,6 +57,8 @@ public class IslandPlugin extends AngeronaPluginAdapter implements UIPlugin {
 		operators.add(IslandIntentionUpdateOperator.class);
 		operators.add(IslandSubgoalGenerationOperator.class);
 		operators.add(ExecuteOperator.class);
+
+		operators.add(IslandUpdateBeliefsOperator.class);
 		return operators;
 	}
 
