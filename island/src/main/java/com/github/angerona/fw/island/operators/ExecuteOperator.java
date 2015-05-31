@@ -1,6 +1,10 @@
 package com.github.angerona.fw.island.operators;
 
+import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
+import com.github.angerona.fw.Intention;
+import com.github.angerona.fw.PlanElement;
+import com.github.angerona.fw.Subgoal;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import com.github.angerona.fw.operators.Operator;
 import com.github.angerona.fw.util.Pair;
@@ -25,9 +29,33 @@ public class ExecuteOperator extends Operator<Agent, PlanParameter, Void> {
 	}
 
 	@Override
-	protected Void processImpl(PlanParameter preprocessedParameters) {
-		// TODO Auto-generated method stub
+	protected Void processImpl(PlanParameter param) {
+		for (Subgoal sub : param.getActualPlan().getPlans()) {
+			if (sweep(sub, param)) {
+				break;
+			}
+		}
+
 		return null;
+	}
+
+	protected boolean sweep(Intention intention, PlanParameter param) {
+		if (intention instanceof Action) {
+			param.getAgent().performAction((Action) intention);
+			return true;
+		} else if (intention instanceof Subgoal) {
+			Subgoal sub = (Subgoal) intention;
+
+			for (int i = 0; i < sub.getNumberOfStacks(); i++) {
+				for (PlanElement elem : sub.getStack(i)) {
+					if (sweep(elem.getIntention(), param)) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override
