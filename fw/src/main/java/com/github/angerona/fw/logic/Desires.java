@@ -61,7 +61,7 @@ public class Desires extends BaseAgentComponent {
 	 * Removes all current desires.
 	 */
 	public void clear() {
-		desires = new HashSet<Desire>();
+		desires = new HashSet<>();
 	}
 	
 	public Desire getDesire(Desire desire) {

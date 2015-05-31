@@ -40,11 +40,13 @@ import com.github.angerona.fw.island.enums.Location;
 import com.github.angerona.fw.island.enums.Weather;
 
 /**
+ * A simple SubgoalGenerationOperator for the island-scenario.
+ * It's basically a hard coded implementation of the trail-based planning-component
  * 
  * @author Manuel Barbi
  *
  */
-public class HardCodedSubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
+public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 
 	@Override
 	protected Boolean processImpl(PlanParameter param) {

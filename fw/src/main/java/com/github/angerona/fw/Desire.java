@@ -12,7 +12,7 @@ import com.github.angerona.fw.util.Utility;
  * 
  * @author Tim Janus
  */
-public class Desire {
+public class Desire implements Comparable<Desire>{
 	Logger LOG = LoggerFactory.getLogger(Desire.class);
 	
 	/** tweety atom representing the desire */
@@ -53,7 +53,7 @@ public class Desire {
 	
 	@Override
 	public String toString() {
-		return formula.toString();
+		return formula != null ? formula.toString() : "";
 	}
 	
 	@Override 
@@ -71,5 +71,10 @@ public class Desire {
 	public int hashCode() {
 		return (this.formula.hashCode() +
 				(this.perception == null ? 0 : this.perception.hashCode())) * 11;
+	}
+
+	@Override
+	public int compareTo(Desire other) {
+		return this.toString().compareTo(other.toString());
 	}
 }

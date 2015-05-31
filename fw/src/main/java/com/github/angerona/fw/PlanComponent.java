@@ -15,7 +15,7 @@ import com.github.angerona.fw.logic.Desires;
 public class PlanComponent extends BaseAgentComponent implements SubgoalListener{
 
 	/** parallel plans of the Plan Component */
-	private List<Subgoal> plans = new LinkedList<Subgoal>();
+	private List<Subgoal> plans = new LinkedList<>();
 	
 	public PlanComponent() {}
 	
@@ -62,6 +62,13 @@ public class PlanComponent extends BaseAgentComponent implements SubgoalListener
 	
 	public List<Subgoal> getPlans() {
 		return Collections.unmodifiableList(plans);
+	}
+	
+	/**
+	 * Removes all current plans.
+	 */
+	public void clear() {
+		plans = new LinkedList<>();
 	}
 
 	@Override
