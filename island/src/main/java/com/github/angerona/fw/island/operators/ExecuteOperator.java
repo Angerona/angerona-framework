@@ -42,6 +42,10 @@ public class ExecuteOperator extends Operator<Agent, PlanParameter, Void> {
 		return null;
 	}
 
+	/**
+	 * search in chronological order for the first Intention, that is and Action
+	 * and execute it
+	 */
 	protected boolean sweep(Intention intention, PlanParameter param) {
 		if (intention instanceof Action) {
 			param.getAgent().performAction((Action) intention);

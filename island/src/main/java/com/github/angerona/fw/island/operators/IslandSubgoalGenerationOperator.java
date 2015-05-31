@@ -55,10 +55,7 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 
 		if (area != null && !plans.getPlans().isEmpty()) {
 			Desire desire = plans.getPlans().get(0).getFulfillsDesire();
-
-			for (Subgoal plan : plans.getPlans()) {
-				plans.removePlan(plan);
-			}
+			plans.clear();
 
 			List<Action> sequence = calcMinSequence(desire, param.getAgent(), area);
 
