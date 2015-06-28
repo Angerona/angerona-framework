@@ -30,15 +30,13 @@ public class IslandGenerateOptionsOperator extends BaseGenerateOptionsOperator {
 			if (!area.isFinished()) {
 				desires.add(FINISH_WORK);
 			}
-			
+
 			if (battery != null && battery.getCharge() < 15) {
 				desires.add(FILL_BATTERY);
 			}
-			
-			if (!area.isShelter()) {
-				desires.add(FIND_SHELTER);
-			}
-			
+
+			desires.add(FIND_SHELTER);
+
 			if (!area.isSecured()) {
 				desires.add(SECURE_SITE);
 			}

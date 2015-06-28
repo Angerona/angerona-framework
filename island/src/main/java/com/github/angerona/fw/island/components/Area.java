@@ -19,7 +19,7 @@ public class Area extends BaseAgentComponent {
 	protected Location location = Location.AT_HQ;
 	protected int[] solid = new int[PARTS];
 	protected int[] vulnerable = new int[PARTS];
-	protected boolean secured = false;
+	protected boolean secured = true;
 	protected WeatherChart weather;
 
 	public Location getLocation() {

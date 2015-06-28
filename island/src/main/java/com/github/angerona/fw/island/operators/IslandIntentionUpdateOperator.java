@@ -61,9 +61,9 @@ public class IslandIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 				} else {
 					choose(plans, intentions, FILL_BATTERY, param);
 				}
-			} else if (area.getWeather().getWeather(0) == THUNDERSTORM && desires.contains(FIND_SHELTER)) {
+			} else if (area.getWeather().getWeather(0) == THUNDERSTORM) {
 				// if weather is dangerous then find shelter
-				if (desires.contains(SECURE_SITE)) {
+				if (!area.isShelter() && pursued != FIND_SHELTER && desires.contains(SECURE_SITE)) {
 					// secure site before leaving
 					choose(plans, intentions, SECURE_SITE, param);
 				} else {
@@ -86,7 +86,7 @@ public class IslandIntentionUpdateOperator extends BaseIntentionUpdateOperator {
 	protected void choose(PlanComponent plans, Map<Desire, Subgoal> intentions, Desire desire, PlanParameter param) {
 		Subgoal tmp = intentions.remove(desire);
 		plans.addPlan((tmp != null) ? tmp : new Subgoal(param.getAgent(), desire));
-		param.report("chose " + desire);
+		param.report("agent has chosen " + desire);
 	}
 
 	@Override

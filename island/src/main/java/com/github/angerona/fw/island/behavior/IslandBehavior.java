@@ -6,8 +6,8 @@ import static com.github.angerona.fw.island.enums.Location.IN_CAVE;
 import static com.github.angerona.fw.island.enums.Location.ON_THE_WAY_1;
 import static com.github.angerona.fw.island.enums.Location.ON_THE_WAY_2;
 import static com.github.angerona.fw.island.enums.Location.ON_THE_WAY_3;
-import static com.github.angerona.fw.island.enums.Weather.CLOUDS;
-import static com.github.angerona.fw.island.enums.Weather.SUN;
+import static com.github.angerona.fw.island.enums.Weather.STORM_OR_RAIN;
+import static com.github.angerona.fw.island.enums.Weather.THUNDERSTORM;
 
 import java.security.SecureRandom;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class IslandBehavior extends ParsingBehavior {
 	protected Weather prediction;
 
 	protected boolean initialized = false;
-	
+
 	public IslandBehavior() {}
 
 	/**
@@ -66,7 +66,7 @@ public class IslandBehavior extends ParsingBehavior {
 	public void sendAction(AngeronaEnvironment env, Action act) {
 
 		if (act instanceof IslandAction) {
-			boolean slow = current != CLOUDS && current != SUN;
+			boolean slow = current == STORM_OR_RAIN && current == THUNDERSTORM;
 
 			Battery battery = act.getAgent().getComponent(Battery.class);
 			Area area = act.getAgent().getComponent(Area.class);
@@ -165,12 +165,14 @@ public class IslandBehavior extends ParsingBehavior {
 				switch (current) {
 				case SUN:
 					if (!area.isShelter()) {
-						LOG.debug("charging with solar panel");
+						battery.report("charging with solar panel");
 						battery.charge(2);
 					}
 					break;
 				case THUNDERSTORM:
 					if (generator.chance(1, 8)) {
+						area.report("lightning stroke occured");
+
 						if (generator.chance(1, 2)) {
 							if (!area.isShelter()) {
 								LOG.debug("damage agent");
@@ -202,10 +204,10 @@ public class IslandBehavior extends ParsingBehavior {
 
 					LOG.debug("call agent cycle");
 					agent.cycle();
-				}
 
-				LOG.debug("discarge battery");
-				battery.discharge();
+					LOG.debug("discarge battery");
+					battery.discharge();
+				}
 			}
 		}
 
@@ -217,7 +219,7 @@ public class IslandBehavior extends ParsingBehavior {
 
 		return mod;
 	}
-	
+
 	protected class Generator {
 
 		protected final Random random = new SecureRandom();

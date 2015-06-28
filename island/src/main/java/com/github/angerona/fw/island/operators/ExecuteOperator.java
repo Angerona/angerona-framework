@@ -1,5 +1,7 @@
 package com.github.angerona.fw.island.operators;
 
+import java.util.List;
+
 import com.github.angerona.fw.Action;
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Intention;
@@ -34,10 +36,14 @@ public class ExecuteOperator extends Operator<Agent, PlanParameter, Void> {
 
 	@Override
 	protected Void processImpl(PlanParameter param) {
-		for (Subgoal sub : param.getActualPlan().getPlans()) {
-			if (sweep(sub, param)) {
-				break;
+		List<Subgoal> plans = param.getActualPlan().getPlans();
+
+		if (!plans.isEmpty()) {
+			if (!sweep(plans.get(0), param)) {
+				param.report("agent has decided to wait");
 			}
+		} else {
+			param.report("no plans executable");
 		}
 
 		return null;

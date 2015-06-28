@@ -182,6 +182,7 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 			return findShelterFromHQ(seq, AT_SITE, agent, area, tick + 1);
 		case AT_SITE:
 			seq.add(new IslandAction(agent, ENTER_CAVE));
+		case IN_CAVE:
 			return seq;
 		default:
 			return null;
@@ -204,6 +205,7 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 			return findShelterFromCave(seq, isSlow(area, tick) ? ON_THE_WAY_1 : AT_HQ, agent, area, tick + 1);
 		case ON_THE_WAY_1:
 			seq.add(new IslandAction(agent, MOVE_TO_HQ));
+		case AT_HQ:
 			return seq;
 		default:
 			return null;
