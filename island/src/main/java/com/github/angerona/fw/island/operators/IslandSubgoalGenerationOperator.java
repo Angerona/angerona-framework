@@ -21,7 +21,6 @@ import static com.github.angerona.fw.island.enums.Location.ON_THE_WAY_3;
 import static com.github.angerona.fw.island.enums.Weather.STORM_OR_RAIN;
 import static com.github.angerona.fw.island.enums.Weather.THUNDERSTORM;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -59,12 +58,13 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 			plans.clear();
 
 			List<Action> sequence = calcMinSequence(desire, param.getAgent(), area);
+			param.report(sequence.toString());
 
 			if (sequence != null) {
 				Subgoal plan = new Subgoal(param.getAgent(), desire);
 				Stack<PlanElement> temp = new Stack<>();
 
-				for (Action a : new RevIt<Action>(sequence)) {
+				for (Action a : sequence) {
 					temp.push(new PlanElement(a));
 				}
 
@@ -265,42 +265,6 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 	@Override
 	protected PlanParameter getEmptyParameter() {
 		return new IslandPlanParameter();
-	}
-
-	protected class RevIt<T> implements Iterator<T>, Iterable<T> {
-
-		private List<T> core;
-		private int pos;
-
-		public RevIt(List<T> core) {
-			if (core == null) {
-				throw new NullPointerException("core must not be null");
-			}
-
-			this.core = core;
-			this.pos = core.size() - 1;
-		}
-
-		@Override
-		public Iterator<T> iterator() {
-			return this;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return pos >= 0;
-		}
-
-		@Override
-		public T next() {
-			return core.get(pos--);
-		}
-
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException("remove");
-		}
-
 	}
 
 }

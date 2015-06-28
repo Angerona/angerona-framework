@@ -31,7 +31,7 @@ public class IslandGenerateOptionsOperator extends BaseGenerateOptionsOperator {
 				desires.add(FINISH_WORK);
 			}
 			
-			if (battery != null && battery.getCharge() < 16) {
+			if (battery != null && battery.getCharge() < 15) {
 				desires.add(FILL_BATTERY);
 			}
 			
