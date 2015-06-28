@@ -38,10 +38,11 @@ import com.github.angerona.fw.island.components.Area;
 import com.github.angerona.fw.island.data.IslandAction;
 import com.github.angerona.fw.island.enums.Location;
 import com.github.angerona.fw.island.enums.Weather;
+import com.github.angerona.fw.island.operators.parameter.IslandPlanParameter;
 
 /**
- * A simple SubgoalGenerationOperator for the island-scenario.
- * It's basically a hard coded implementation of the trail-based planning-component
+ * A simple SubgoalGenerationOperator for the island-scenario. It's basically a
+ * hard coded implementation of the trail-based planning-component
  * 
  * @author Manuel Barbi
  *
@@ -67,6 +68,7 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 					temp.push(new PlanElement(a));
 				}
 
+				plan.newStack();
 				plan.setStack(0, temp);
 				plans.addPlan(plan);
 			}
@@ -258,6 +260,11 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 
 	protected static List<Action> min(List<Action> fst, List<Action> snd) {
 		return (fst != null && (snd == null || fst.size() <= snd.size())) ? fst : snd;
+	}
+
+	@Override
+	protected PlanParameter getEmptyParameter() {
+		return new IslandPlanParameter();
 	}
 
 	protected class RevIt<T> implements Iterator<T>, Iterable<T> {

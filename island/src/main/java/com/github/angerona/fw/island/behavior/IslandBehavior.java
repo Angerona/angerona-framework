@@ -32,7 +32,7 @@ import com.github.angerona.fw.island.enums.Weather;
  * @author Manuel Barbi
  * 
  */
-public abstract class IslandBehavior extends ParsingBehavior {
+public class IslandBehavior extends ParsingBehavior {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IslandBehavior.class);
 
@@ -44,6 +44,8 @@ public abstract class IslandBehavior extends ParsingBehavior {
 
 	protected boolean initialized = false;
 	
+	public IslandBehavior() {}
+
 	/**
 	 * 
 	 * @return the next weather

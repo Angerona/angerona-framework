@@ -36,13 +36,13 @@ public class Area extends BaseAgentComponent {
 			if (i < PARTS) {
 				if (solid[i] < INC) {
 					solid[i] = Math.min(solid[i] + step, INC);
-					report("assemble solid parts");
+					report("assemble solid parts " + getExpansion());
 					return;
 				}
 			} else {
 				if (vulnerable[i - PARTS] < INC) {
 					vulnerable[i - PARTS] = Math.min(vulnerable[i - PARTS] + step, INC);
-					report("assemble vulnerable parts");
+					report("assemble vulnerable parts " + getExpansion());
 					return;
 				}
 			}
@@ -109,7 +109,8 @@ public class Area extends BaseAgentComponent {
 		System.arraycopy(this.solid, 0, cln.solid, 0, this.solid.length);
 		System.arraycopy(this.vulnerable, 0, cln.vulnerable, 0, this.vulnerable.length);
 		cln.secured = this.secured;
-		cln.weather = this.weather.clone();
+		if (this.weather != null)
+			cln.weather = this.weather.clone();
 		return cln;
 	}
 

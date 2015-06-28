@@ -23,11 +23,9 @@ public class IslandUpdateBeliefsOperator extends BaseUpdateBeliefsOperator {
 			IslandPerception p = (IslandPerception) param.getAtom();
 			bb.addKnowledge(p);
 			param.report("Reveived Perception: " + p.toString(), bb);
-		} else {
-			param.report("Update-Operator: Can't handle perception of type: " + param.getAtom().getClass().getName());
+			param.getAgent().onUpdateBeliefs((Perception) param.getAtom(), oldBeliefs);
 		}
 
-		param.getAgent().onUpdateBeliefs((Perception) param.getAtom(), oldBeliefs);
 		return beliefs;
 	}
 
