@@ -86,6 +86,8 @@ public class Area extends BaseAgentComponent {
 				vulnerable[i] = -INC;
 			}
 		}
+
+		report("site was damaged");
 	}
 
 	public boolean isFinished() {

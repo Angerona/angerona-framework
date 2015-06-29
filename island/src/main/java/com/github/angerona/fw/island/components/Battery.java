@@ -25,6 +25,8 @@ public class Battery extends BaseAgentComponent {
 	public int discharge() {
 		charge = Math.max(charge - 1, 0);
 		report("discharge battery, remaining: " + charge);
+		if (charge < 1)
+			report("battery is empty");
 		return charge;
 	}
 
@@ -34,7 +36,7 @@ public class Battery extends BaseAgentComponent {
 
 	public void damage() {
 		damaged = true;
-		report("battery is damaged");
+		report("battery was damaged");
 	}
 
 	public boolean isDamaged() {

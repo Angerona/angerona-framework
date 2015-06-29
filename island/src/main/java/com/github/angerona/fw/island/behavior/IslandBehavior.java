@@ -66,7 +66,7 @@ public class IslandBehavior extends ParsingBehavior {
 	public void sendAction(AngeronaEnvironment env, Action act) {
 
 		if (act instanceof IslandAction) {
-			boolean slow = current == STORM_OR_RAIN && current == THUNDERSTORM;
+			boolean slow = current == STORM_OR_RAIN || current == THUNDERSTORM;
 
 			Battery battery = act.getAgent().getComponent(Battery.class);
 			Area area = act.getAgent().getComponent(Area.class);
@@ -175,15 +175,12 @@ public class IslandBehavior extends ParsingBehavior {
 
 						if (generator.chance(1, 2)) {
 							if (!area.isShelter()) {
-								LOG.debug("damage agent");
 								battery.damage();
 							}
 						} else {
 							if (!area.isSecured()) {
-								LOG.debug("damage site");
 								area.damage();
 								if (area.getLocation() == Location.AT_SITE) {
-									LOG.debug("damage agent");
 									battery.damage();
 								}
 							}
