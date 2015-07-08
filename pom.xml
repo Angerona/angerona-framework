@@ -191,5 +191,6 @@
   	<module>DefendingAgent</module>
   	<module>plwithknowledge</module>
   	<module>island</module>
+  	<module>motivation</module>  	
   </modules>
 </project>
