@@ -37,7 +37,6 @@ public class WeightRanges extends GenWeightRanges<Maslow> {
 	@Override
 	public void loadFromStream(InputStream src) throws IOException {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

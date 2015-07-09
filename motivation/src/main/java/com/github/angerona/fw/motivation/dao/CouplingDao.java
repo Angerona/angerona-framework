@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.Desire;
+import com.github.angerona.fw.motivation.dao.impl.MotiveCouplings;
 import com.github.angerona.fw.motivation.data.Motive;
 import com.github.angerona.fw.motivation.data.MotiveCoupling;
 import com.github.angerona.fw.motivation.data.MotiveLevel;

@@ -1,6 +1,5 @@
 package com.github.angerona.fw.motivation.data;
 
-
 /**
  * 
  * @author Manuel Barbi

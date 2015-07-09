@@ -36,7 +36,7 @@ public class MotiveCouplings extends GenMotiveCouplings<Maslow> {
 	@Override
 	public void loadFromStream(InputStream src) throws IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

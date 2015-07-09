@@ -4,7 +4,7 @@ import javax.management.AttributeNotFoundException;
 
 import com.github.angerona.fw.PlanComponent;
 import com.github.angerona.fw.error.ConversionException;
-import com.github.angerona.fw.island.operators.parameter.IslandPlanParameter;
+import com.github.angerona.fw.island.operators.parameter.AdvancedPlanParameter;
 import com.github.angerona.fw.logic.Beliefs;
 import com.github.angerona.fw.logic.Desires;
 import com.github.angerona.fw.motivation.dao.ActionSequenceDao;
@@ -29,7 +29,7 @@ import com.github.angerona.fw.operators.parameter.GenericOperatorParameter;
  * 
  * @param <L>
  */
-public abstract class GenMotOperatorParameter<L extends MotiveLevel> extends IslandPlanParameter {
+public abstract class GenMotOperatorParameter<L extends MotiveLevel> extends AdvancedPlanParameter {
 
 	protected BeliefState beliefState;
 	protected MotiveState<L> motiveState;
@@ -60,7 +60,7 @@ public abstract class GenMotOperatorParameter<L extends MotiveLevel> extends Isl
 	protected Beliefs beliefs() {
 		return getAgent().getBeliefs();
 	}
-	
+
 	protected ActionSequenceDao sequences() {
 		PlanComponent sequences = getActualPlan();
 		if (sequences != null) {

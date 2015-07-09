@@ -4,8 +4,7 @@ import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.motivation.data.Maslow;
 
 /**
- * {@link LevelWeights} is a specialized {@link AgentComponent}
- * for {@link Maslow} MotiveLevels
+ * {@link LevelWeights} is a specialized {@link AgentComponent} for {@link Maslow} MotiveLevels
  * 
  * @author Manuel Barbi
  * 

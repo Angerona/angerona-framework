@@ -51,7 +51,7 @@ public class TimeSlots extends BaseAgentComponent implements TimeSlotDao, Iterab
 	public Iterator<Integer> iterator() {
 		return slots.iterator();
 	}
-	
+
 	@Override
 	public String toString() {
 		// this is a unpleasant workaround

@@ -16,25 +16,25 @@ import com.github.angerona.fw.motivation.dao.ActionSequenceDao;
  *
  */
 public class ActionSequences implements ActionSequenceDao {
-	
+
 	protected PlanComponent sequences;
 
 	public ActionSequences(PlanComponent sequences) {
 		this.sequences = sequences;
 	}
-	
+
 	@Override
 	public List<Action> getSequence(Desire d) {
 		// TODO: search for plan for Desire d
 		return null;
 	}
-	
+
 	@Override
 	public void putSequence(Desire d, List<Action> seq) {
 		if (seq != null) {
 			Subgoal plan = new Subgoal(sequences.getAgent(), d);
 			Stack<PlanElement> temp = new Stack<>();
-			
+
 			for (Action a : seq) {
 				temp.push(new PlanElement(a));
 			}
@@ -48,7 +48,7 @@ public class ActionSequences implements ActionSequenceDao {
 
 	@Override
 	public void clear() {
-		sequences.clear();	
+		sequences.clear();
 	}
-	
+
 }

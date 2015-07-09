@@ -27,7 +27,7 @@ public class BeliefStateImpl implements BeliefState {
 
 	private Beliefs beliefs;
 	private ActionSequenceDao sequences;
-	private TimeSlotDao timeSlots;	
+	private TimeSlotDao timeSlots;
 	private Desires desires;
 
 	public BeliefStateImpl(Beliefs beliefs, ActionSequenceDao sequences, TimeSlotDao timeSlots, Desires desires) {
