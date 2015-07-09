@@ -8,7 +8,7 @@ import com.github.angerona.fw.Intention;
 import com.github.angerona.fw.PlanElement;
 import com.github.angerona.fw.Subgoal;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
-import com.github.angerona.fw.island.operators.parameter.IslandPlanParameter;
+import com.github.angerona.fw.island.operators.parameter.AdvancedPlanParameter;
 import com.github.angerona.fw.operators.Operator;
 import com.github.angerona.fw.util.Pair;
 
@@ -31,7 +31,7 @@ public class ExecuteOperator extends Operator<Agent, PlanParameter, Void> {
 
 	@Override
 	protected PlanParameter getEmptyParameter() {
-		return new IslandPlanParameter();
+		return new AdvancedPlanParameter();
 	}
 
 	@Override

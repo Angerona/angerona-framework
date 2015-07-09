@@ -15,6 +15,7 @@ import com.github.angerona.fw.motivation.dao.impl.LevelWeights;
 import com.github.angerona.fw.motivation.dao.impl.MotStructure;
 import com.github.angerona.fw.motivation.dao.impl.MotiveCouplings;
 import com.github.angerona.fw.motivation.dao.impl.WeightRanges;
+import com.github.angerona.fw.motivation.operators.IslandReliabilityOperator;
 import com.github.angerona.fw.motivation.operators.MotivationOperator;
 import com.github.angerona.fw.motivation.view.CouplingsView;
 import com.github.angerona.fw.motivation.view.MotStructureView;
@@ -43,6 +44,7 @@ public class MotivationPlugin extends AngeronaPluginAdapter implements UIPlugin 
 	@Override
 	public List<Class<? extends BaseOperator>> getOperators() {
 		List<Class<? extends BaseOperator>> operators = new ArrayList<>();
+		operators.add(IslandReliabilityOperator.class);
 		operators.add(MotivationOperator.class);
 		return operators;
 	}

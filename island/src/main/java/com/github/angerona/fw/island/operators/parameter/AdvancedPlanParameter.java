@@ -12,7 +12,7 @@ import com.github.angerona.fw.operators.parameter.GenericOperatorParameter;
  * @author Manuel Barbi
  *
  */
-public class IslandPlanParameter extends PlanParameter {
+public class AdvancedPlanParameter extends PlanParameter {
 
 	@Override
 	public PlanComponent getActualPlan() {

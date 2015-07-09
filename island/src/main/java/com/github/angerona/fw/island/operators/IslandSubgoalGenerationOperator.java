@@ -37,7 +37,7 @@ import com.github.angerona.fw.island.components.Area;
 import com.github.angerona.fw.island.data.IslandAction;
 import com.github.angerona.fw.island.enums.Location;
 import com.github.angerona.fw.island.enums.Weather;
-import com.github.angerona.fw.island.operators.parameter.IslandPlanParameter;
+import com.github.angerona.fw.island.operators.parameter.AdvancedPlanParameter;
 
 /**
  * A simple SubgoalGenerationOperator for the island-scenario. It's basically a
@@ -266,7 +266,7 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 
 	@Override
 	protected PlanParameter getEmptyParameter() {
-		return new IslandPlanParameter();
+		return new AdvancedPlanParameter();
 	}
 
 }
