@@ -1,9 +1,10 @@
 package com.github.angerona.fw.motivation.operators;
 
+import java.util.Set;
+
 import com.github.angerona.fw.Desire;
-import com.github.angerona.fw.PlanElement;
-import com.github.angerona.fw.am.secrecy.operators.BaseIntentionUpdateOperator;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
+import com.github.angerona.fw.island.operators.AdvancedIntentionUpdateOperator;
 import com.github.angerona.fw.motivation.data.MotiveLevel;
 import com.github.angerona.fw.motivation.functional.DesireSelection;
 import com.github.angerona.fw.motivation.functional.MotivationAdjustment;
@@ -16,7 +17,7 @@ import com.github.angerona.fw.motivation.operators.parameters.GenMotOperatorPara
  *
  * @param <L>
  */
-public class GenMotOperator<L extends MotiveLevel> extends BaseIntentionUpdateOperator {
+public abstract class GenMotOperator<L extends MotiveLevel> extends AdvancedIntentionUpdateOperator {
 
 	protected WeightAdjustment<L> weightAdjustment;
 	protected MotivationAdjustment<L> motivationAdjustment;
@@ -41,11 +42,10 @@ public class GenMotOperator<L extends MotiveLevel> extends BaseIntentionUpdateOp
 		this.desireSelection = desireSelection;
 	}
 
-	
 	@Override
-	protected PlanElement processImpl(PlanParameter preprocessedParameters) {
+	protected Desire chooseIntention(PlanParameter preParam, Set<Desire> desires, Desire pursued) {
 		@SuppressWarnings("unchecked")
-		GenMotOperatorParameter<L> param = (GenMotOperatorParameter<L>) preprocessedParameters;
+		GenMotOperatorParameter<L> param = (GenMotOperatorParameter<L>) preParam;
 
 		// adjust weights
 		weightAdjustment.adjust(param.getMotiveState(), param.getBeliefState(), param.getMotiveState());
@@ -54,11 +54,13 @@ public class GenMotOperator<L extends MotiveLevel> extends BaseIntentionUpdateOp
 		motivationAdjustment.adjust(param.getMotiveState(), param.getBeliefState(), param.getStructure());
 
 		// select desire
-		Desire selected = desireSelection.select(param.getBeliefState(), param.getStructure());
-		
-		// TODO: choose selected desire as intention
-		
-		return null;
+		return desireSelection.select(param.getBeliefState(), param.getStructure());
 	}
+
+	@Override
+	protected abstract GenMotOperatorParameter<L> getEmptyParameter();
+
+	@Override
+	protected abstract GenMotOperator<L> clone();
 
 }
