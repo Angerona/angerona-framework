@@ -21,7 +21,7 @@ public class MotStructureView extends ListViewColored {
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
 		if (entity instanceof MotStructure) {
-			List<String> reval = new LinkedList<String>();
+			List<String> reval = new LinkedList<>();
 
 			for (Entry<Desire, Double> mse : (MotStructure) entity) {
 				reval.add("(" + mse.getKey() + ", " + mse.getValue() + ")");

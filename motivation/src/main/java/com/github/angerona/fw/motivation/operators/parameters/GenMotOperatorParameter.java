@@ -38,7 +38,7 @@ public abstract class GenMotOperatorParameter<L extends MotiveLevel> extends Adv
 	public void fromGenericParameter(GenericOperatorParameter gop) throws ConversionException, AttributeNotFoundException {
 		super.fromGenericParameter(gop);
 		this.beliefState = new BeliefStateImpl(beliefs(), sequences(), timeSlots(), getDesires());
-		this.motiveState = new MotiveStateImpl<L>(couplings(), ranges(), weights());
+		this.motiveState = new MotiveStateImpl<>(couplings(), ranges(), weights());
 	}
 
 	public BeliefState getBeliefState() {

@@ -21,7 +21,7 @@ public class CouplingsView extends ListViewColored {
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
 		if (entity instanceof MotiveCouplings) {
-			List<String> reval = new LinkedList<String>();
+			List<String> reval = new LinkedList<>();
 
 			for (MotiveCoupling<Maslow> mc : (MotiveCouplings) entity) {
 				reval.add(mc.toString());

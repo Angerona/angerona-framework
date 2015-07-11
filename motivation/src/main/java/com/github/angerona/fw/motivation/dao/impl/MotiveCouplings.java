@@ -1,11 +1,12 @@
 package com.github.angerona.fw.motivation.dao.impl;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Set;
 
 import com.github.angerona.fw.motivation.data.Maslow;
 import com.github.angerona.fw.motivation.data.MotiveCoupling;
+import com.github.angerona.fw.motivation.parser.CouplingParser;
 
 /**
  * {@link MotiveCouplings} is a specialized AgentComponent for {@link Maslow} MotiveCouplings
@@ -34,9 +35,10 @@ public class MotiveCouplings extends GenMotiveCouplings<Maslow> {
 	}
 
 	@Override
-	public void loadFromStream(InputStream src) throws IOException {
-		// TODO Auto-generated method stub
-
+	public void loadFromStream(FileInputStream src) throws IOException {
+		CouplingParser parser = new CouplingParser();
+		couplings = parser.read(src);
+		report("loaded motive-couplings from file");
 	}
 
 }

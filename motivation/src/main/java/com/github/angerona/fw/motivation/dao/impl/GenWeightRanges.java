@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.BaseAgentComponent;
-import com.github.angerona.fw.island.components.ParsableComponent;
+import com.github.angerona.fw.island.parsing.ParsableComponent;
 import com.github.angerona.fw.motivation.dao.WeightRangeDao;
 import com.github.angerona.fw.motivation.data.MotiveLevel;
 import com.github.angerona.fw.motivation.data.WeightRange;

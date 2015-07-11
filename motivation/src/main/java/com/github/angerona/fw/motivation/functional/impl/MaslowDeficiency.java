@@ -13,6 +13,7 @@ import com.github.angerona.fw.motivation.functional.DeficiencyPartition;
  */
 public class MaslowDeficiency implements DeficiencyPartition<Maslow> {
 
+	@Override
 	public boolean contains(Maslow level) {
 		switch (level) {
 		case PHYSIOLOGICAL_NEEDS:

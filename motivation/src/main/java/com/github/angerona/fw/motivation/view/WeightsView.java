@@ -21,7 +21,7 @@ public class WeightsView extends ListViewColored {
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
 		if (entity instanceof LevelWeights) {
-			List<String> reval = new LinkedList<String>();
+			List<String> reval = new LinkedList<>();
 
 			for (Entry<Maslow, Double> e : (LevelWeights) entity) {
 				reval.add("(" + e.getKey() + ", " + e.getValue() + ")");

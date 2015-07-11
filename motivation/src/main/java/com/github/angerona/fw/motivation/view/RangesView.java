@@ -22,7 +22,7 @@ public class RangesView extends ListViewColored {
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
 		if (entity instanceof WeightRanges) {
-			List<String> reval = new LinkedList<String>();
+			List<String> reval = new LinkedList<>();
 
 			for (Entry<Maslow, WeightRange> e : (WeightRanges) entity) {
 				reval.add("(" + e.getKey() + ", " + e.getValue() + ")");

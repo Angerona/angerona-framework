@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.Desire;
-import com.github.angerona.fw.island.components.ParsableComponent;
+import com.github.angerona.fw.island.parsing.ParsableComponent;
 import com.github.angerona.fw.motivation.dao.CouplingDao;
 import com.github.angerona.fw.motivation.data.Motive;
 import com.github.angerona.fw.motivation.data.MotiveCoupling;
