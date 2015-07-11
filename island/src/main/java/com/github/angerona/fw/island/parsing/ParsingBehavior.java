@@ -1,4 +1,4 @@
-package com.github.angerona.fw.island.behavior;
+package com.github.angerona.fw.island.parsing;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.def.DefaultBehavior;
-import com.github.angerona.fw.island.components.ParsableComponent;
 
 /**
  * 

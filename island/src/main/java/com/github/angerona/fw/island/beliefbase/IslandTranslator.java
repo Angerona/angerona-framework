@@ -26,7 +26,7 @@ public class IslandTranslator extends AspTranslator {
 
 	@Override
 	protected AspBeliefbase translatePerceptionImpl(BaseBeliefbase caller, Perception p) {
-		Set<FolFormula> formulas = new HashSet<FolFormula>();
+		Set<FolFormula> formulas = new HashSet<>();
 
 		if (p instanceof IslandPerception) {
 			IslandPerception ip = (IslandPerception) p;

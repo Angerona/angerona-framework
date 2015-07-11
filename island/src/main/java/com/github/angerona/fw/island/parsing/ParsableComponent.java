@@ -1,9 +1,8 @@
-package com.github.angerona.fw.island.components;
+package com.github.angerona.fw.island.parsing;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.BaseAgentComponent;
@@ -18,12 +17,12 @@ import com.github.angerona.fw.BaseAgentComponent;
 public abstract class ParsableComponent extends BaseAgentComponent {
 
 	public void loadFromFile(File path) throws IOException {
-		try (InputStream src = new FileInputStream(path)) {
+		try (FileInputStream src = new FileInputStream(path)) {
 			loadFromStream(src);
 		}
 	}
 
-	public abstract void loadFromStream(InputStream src) throws IOException;
+	public abstract void loadFromStream(FileInputStream src) throws IOException;
 
 	public abstract String getFileSuffix();
 

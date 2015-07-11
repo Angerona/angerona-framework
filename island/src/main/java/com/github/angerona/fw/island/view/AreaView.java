@@ -18,7 +18,7 @@ public class AreaView extends ListViewColored {
 
 	@Override
 	protected List<String> getStringRepresentation(Entity entity) {
-		List<String> reval = new LinkedList<String>();
+		List<String> reval = new LinkedList<>();
 
 		if (entity instanceof Area) {
 			Area area = (Area) entity;

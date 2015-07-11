@@ -26,6 +26,7 @@ import com.github.angerona.fw.island.data.IslandPerception;
 import com.github.angerona.fw.island.data.WeatherChart;
 import com.github.angerona.fw.island.enums.Location;
 import com.github.angerona.fw.island.enums.Weather;
+import com.github.angerona.fw.island.parsing.ParsingBehavior;
 
 /**
  * 
