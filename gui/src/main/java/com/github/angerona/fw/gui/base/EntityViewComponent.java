@@ -38,7 +38,7 @@ public abstract class EntityViewComponent
 	public void decorate(DefaultDockable dockable) {
 		DecoratorLibrary.closeDecorator.decorate(dockable);
 		if(ref != null) {
-			dockable.setTitleText(ref.toString());
+			dockable.setTitleText(ref.getClass().getSimpleName());
 		}
 	}
 }
