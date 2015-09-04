@@ -15,14 +15,14 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.9</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>gui</artifactId>
-    	<version>1.0.1-SNAPSHOT</version>
+    	<version>1.0.2</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
@@ -42,8 +42,7 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>fw</artifactId>
-    	<version>1.0.1-SNAPSHOT</version>
-    	<type>test-jar</type>
+    	<version>1.0.2</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.arg</groupId>
@@ -54,7 +53,7 @@
   <parent>
   	<groupId>com.github.angerona</groupId>
   	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.1-SNAPSHOT</version>
+  	<version>1.0.1</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

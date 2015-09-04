@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.github.angerona</groupId>
     <artifactId>maven-build-all</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   <artifactId>plwithknowledge</artifactId>
   <name>Angerona (BPlugin-PL With Knowledge)</name>
@@ -17,13 +17,13 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
      <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>fw</artifactId>
-    	<version>1.0.1-SNAPSHOT</version>
+    	<version>1.0.2</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
@@ -33,7 +33,7 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>gui</artifactId>
-    	<version>1.0.1-SNAPSHOT</version>
+    	<version>1.0.2</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>

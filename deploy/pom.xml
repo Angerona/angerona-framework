@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.github.angerona</groupId>
     <artifactId>maven-build-all</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   
   <artifactId>distribution</artifactId>
@@ -49,47 +49,47 @@
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>fw</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.2</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>asp</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.1</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona.fw.am</groupId>
    		<artifactId>secrecy</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.1</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>conditional</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.1</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>gui</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.2</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>knowhow</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.1</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>app</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.2</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>example</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.1</version>
    	</dependency>
    	<dependency>
    		<groupId>com.github.angerona</groupId>
    		<artifactId>defendingagent</artifactId>
-   		<version>1.0.1-SNAPSHOT</version>
+   		<version>1.0.1</version>
    	</dependency>
    </dependencies>
 </project>
