@@ -358,6 +358,11 @@
     	<version>1.0.1</version>
     	<scope>runtime</scope>
     </dependency>
+    <dependency>
+    	<groupId>com.github.angerona</groupId>
+    	<artifactId>island</artifactId>
+    	<version>1.0.3</version>
+    </dependency>
   </dependencies>
   <parent>
   	<groupId>com.github.angerona</groupId>
