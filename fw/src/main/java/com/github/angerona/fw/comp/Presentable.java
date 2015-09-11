@@ -11,12 +11,17 @@ import java.util.List;
  */
 public interface Presentable {
 
-	default List<String> present() {
+	default List<String> getRepresentation() {
 		List<String> representation = new LinkedList<>();
-		present(representation);
+		getRepresentation(representation);
 		return representation;
 	}
 
-	void present(List<String> representation);
+	/**
+	 * fill the list with for example one String per item
+	 * 
+	 * @param representation
+	 */
+	void getRepresentation(List<String> representation);
 
 }

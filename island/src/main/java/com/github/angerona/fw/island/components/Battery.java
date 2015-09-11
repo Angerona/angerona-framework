@@ -1,16 +1,27 @@
 package com.github.angerona.fw.island.components;
 
+import java.util.List;
+
 import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.comp.Presentable;
 
 /**
  * 
  * @author Manuel Barbi
  * 
  */
-public class Battery extends BaseAgentComponent {
+public class Battery extends BaseAgentComponent implements Presentable {
 
 	protected int charge = 16;
 	protected boolean damaged = false;
+
+	public Battery() {}
+
+	public Battery(Battery other) {
+		super(other);
+		this.charge = other.charge;
+		this.damaged = other.damaged;
+	}
 
 	public int getCharge() {
 		return charge;
@@ -45,15 +56,18 @@ public class Battery extends BaseAgentComponent {
 
 	@Override
 	public BaseAgentComponent clone() {
-		Battery cln = new Battery();
-		cln.charge = this.charge;
-		cln.damaged = this.damaged;
-		return cln;
+		return new Battery(this);
 	}
 
 	@Override
 	public String toString() {
 		return "Battery [charge=" + charge + ", damaged=" + damaged + "]";
+	}
+
+	@Override
+	public void getRepresentation(List<String> representation) {
+		representation.add("Charge: " + this.getCharge());
+		representation.add("Damaged: " + this.isDamaged());
 	}
 
 }

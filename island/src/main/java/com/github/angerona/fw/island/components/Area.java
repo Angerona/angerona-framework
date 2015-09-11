@@ -1,17 +1,21 @@
 package com.github.angerona.fw.island.components;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.comp.Presentable;
 import com.github.angerona.fw.island.data.WeatherChart;
 import com.github.angerona.fw.island.enums.Location;
 
 /**
+ * the area component represents the agent's environment, thus the island, the
+ * weather, and the progress of the site
  * 
  * @author Manuel Barbi
  * 
  */
-public class Area extends BaseAgentComponent {
+public class Area extends BaseAgentComponent implements Presentable {
 
 	private static final int PARTS = 8;
 	private static final int INC = 8;
@@ -21,6 +25,18 @@ public class Area extends BaseAgentComponent {
 	protected int[] vulnerable = new int[PARTS];
 	protected boolean secured = true;
 	protected WeatherChart weather;
+
+	public Area() {}
+
+	public Area(Area other) {
+		super(other);
+		this.location = other.location;
+		System.arraycopy(other.solid, 0, this.solid, 0, other.solid.length);
+		System.arraycopy(other.vulnerable, 0, this.vulnerable, 0, other.vulnerable.length);
+		this.secured = other.secured;
+		if (other.weather != null)
+			this.weather = other.weather.clone();
+	}
 
 	public Location getLocation() {
 		return location;
@@ -106,19 +122,15 @@ public class Area extends BaseAgentComponent {
 
 	@Override
 	public BaseAgentComponent clone() {
-		Area cln = new Area();
-		cln.location = this.location;
-		System.arraycopy(this.solid, 0, cln.solid, 0, this.solid.length);
-		System.arraycopy(this.vulnerable, 0, cln.vulnerable, 0, this.vulnerable.length);
-		cln.secured = this.secured;
-		if (this.weather != null)
-			cln.weather = this.weather.clone();
-		return cln;
+		return new Area(this);
 	}
 
 	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
+	public void getRepresentation(List<String> representation) {
+		representation.add("Location: " + this.getLocation());
+		representation.add("Expandsion: " + this.getExpansion());
+		representation.add("Secured: " + this.isSecured());
+		representation.add("Weather: " + this.getWeather());
 	}
 
 }
