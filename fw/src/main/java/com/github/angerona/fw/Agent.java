@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.asml.CommandSequence;
+import com.github.angerona.fw.comp.Parsable;
 import com.github.angerona.fw.error.AgentInstantiationException;
 import com.github.angerona.fw.internal.AngeronaReporter;
 import com.github.angerona.fw.internal.Entity;
@@ -224,7 +225,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		}
 
 		createBeliefbases(ai, config);
-		createAgentComponents(ai);
+		createAgentComponents(ai, config.getFile().getParentFile());
 		parseBeliefbases(ai, config.getFile().getParentFile());
 
 		// add desire component if necessary.
@@ -370,7 +371,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	 *            operators / components used by the agent.
 	 * @throws AgentInstantiationException
 	 */
-	protected void createAgentComponents(AgentInstance ai)
+	protected void createAgentComponents(AgentInstance ai, File path)
 			throws AgentInstantiationException {
 		AgentConfig ac = ai.getConfig();
 		PluginInstantiator pi = PluginInstantiator.getInstance();
@@ -378,6 +379,19 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 			for (String compName : ac.getComponents()) {
 				AgentComponent comp = pi.createComponent(compName);
 				comp.setParent(id);
+				
+				// added simple parsing of Parsable components
+				if(comp instanceof Parsable) {
+					String dir = path.getAbsolutePath() + '/' + ai.getName() + '.' + ((Parsable) comp).getFileExtention();
+
+					try {
+						((Parsable) comp).loadFromFile(new File(dir));
+					} catch (Exception e) {
+						LOG.warn("Not able to parse content from " + dir);
+						e.printStackTrace();
+					}
+				}
+				
 				beliefs.addComponent(comp);
 				LOG.info("Add custom Component '{}' to agent '{}'", compName,
 						getName());
