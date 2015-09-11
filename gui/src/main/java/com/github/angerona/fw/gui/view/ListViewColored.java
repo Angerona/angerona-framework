@@ -217,18 +217,22 @@ public abstract class ListViewColored extends EntityViewComponent implements
 	protected void updateBeliefbaseOutput(DefaultListModel<ListElement> model) {
 		// prepare for changeset.
 		List<String> actual = getStringRepresentation(this.actual);
-		List<String> last = previous == null ? null
-				: getStringRepresentation(this.previous);
+		List<String> last = previous == null ? null : getStringRepresentation(this.previous);
 
 		// Show the changeset in the entity:
 		model.clear();
-		for (String atom : actual) {
-			if (last != null && !last.contains(atom)) {
-				model.addElement(new ListElement(atom, ListElement.ST_NEW));
-			} else {
-				model.addElement(new ListElement(atom,
-						ListElement.ST_NOTCHANGED));
+		
+		if(actual != null) {
+			for (String atom : actual) {
+				if (last != null && !last.contains(atom)) {
+					model.addElement(new ListElement(atom, ListElement.ST_NEW));
+				} else {
+					model.addElement(new ListElement(atom, ListElement.ST_NOTCHANGED));
+				}
 			}
+		} else {
+			model.addElement(new ListElement("not able to display " +
+					this.actual.getClass().getSimpleName(), ListElement.ST_NOTCHANGED));
 		}
 
 		// at the end of the list show all rules which are removed by this step
