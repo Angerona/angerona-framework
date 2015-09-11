@@ -13,7 +13,6 @@ import com.github.angerona.fw.Angerona;
 import com.github.angerona.fw.AngeronaEnvironment;
 import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.def.DefaultBehavior;
-import com.github.angerona.fw.island.components.ParsableComponent;
 
 /**
  * 
@@ -62,23 +61,23 @@ public abstract class ParsingBehavior extends DefaultBehavior {
 	}
 
 	protected boolean init(AngeronaEnvironment env) {
-		ParsableComponent pComp = null;
+	//	ParsableComponent pComp = null;
 		File path = null;
 		boolean success = true;
 
 		for (Agent agnt : env.getAgents()) {
 			for (AgentComponent comp : agnt.getComponents()) {
-				if (comp instanceof ParsableComponent) {
-					pComp = (ParsableComponent) comp;
-					try {
-						path = new File(env.getDirectory() + "/" + agnt.getName() + pComp.getFileSuffix());
-						LOG.info("loading component from file: {}", path);
-						pComp.loadFromFile(path);
-					} catch (IOException e) {
-						LOG.warn("failed loading from file", e);
-						success = false;
-					}
-				}
+			//	if (comp instanceof ParsableComponent) {
+			//		pComp = (ParsableComponent) comp;
+				//	try {
+					//	path = new File(env.getDirectory() + "/" + agnt.getName() + pComp.getFileSuffix());
+					//	LOG.info("loading component from file: {}", path);
+				//		pComp.loadFromFile(path);
+				//	} catch (IOException e) {
+				//		LOG.warn("failed loading from file", e);
+				//		success = false;
+				//	}
+			//	}
 			}
 		}
 

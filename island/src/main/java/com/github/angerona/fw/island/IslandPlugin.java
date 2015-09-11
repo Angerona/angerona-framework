@@ -1,17 +1,11 @@
 package com.github.angerona.fw.island;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.angerona.fw.AgentComponent;
 import com.github.angerona.fw.AngeronaPluginAdapter;
 import com.github.angerona.fw.EnvironmentBehavior;
-import com.github.angerona.fw.gui.UIPlugin;
-import com.github.angerona.fw.gui.base.ViewComponent;
 import com.github.angerona.fw.island.behavior.DynamicIslandBehavior;
 import com.github.angerona.fw.island.behavior.IslandBehavior;
 import com.github.angerona.fw.island.beliefbase.IslandTranslator;
@@ -22,10 +16,10 @@ import com.github.angerona.fw.island.operators.ExecuteOperator;
 import com.github.angerona.fw.island.operators.IslandGenerateOptionsOperator;
 import com.github.angerona.fw.island.operators.IslandIntentionUpdateOperator;
 import com.github.angerona.fw.island.operators.IslandSubgoalGenerationOperator;
-import com.github.angerona.fw.island.view.AreaView;
-import com.github.angerona.fw.island.view.BatteryView;
 import com.github.angerona.fw.logic.BaseTranslator;
 import com.github.angerona.fw.operators.BaseOperator;
+
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * 
@@ -33,7 +27,7 @@ import com.github.angerona.fw.operators.BaseOperator;
  *
  */
 @PluginImplementation
-public class IslandPlugin extends AngeronaPluginAdapter implements UIPlugin {
+public class IslandPlugin extends AngeronaPluginAdapter {
 
 	@Override
 	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
@@ -68,14 +62,6 @@ public class IslandPlugin extends AngeronaPluginAdapter implements UIPlugin {
 		behaviors.add(IslandBehavior.class);
 		behaviors.add(DynamicIslandBehavior.class);
 		return behaviors;
-	}
-
-	@Override
-	public Map<String, Class<? extends ViewComponent>> getUIComponents() {
-		Map<String, Class<? extends ViewComponent>> views = new HashMap<>();
-		views.put("AreaView", AreaView.class);
-		views.put("BatteryView", BatteryView.class);
-		return views;
 	}
 
 }

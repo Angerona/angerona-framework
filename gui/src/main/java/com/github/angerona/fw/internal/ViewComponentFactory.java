@@ -8,8 +8,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.angerona.fw.comp.Presentable;
 import com.github.angerona.fw.gui.base.EntityViewComponent;
 import com.github.angerona.fw.gui.base.ViewComponent;
+import com.github.angerona.fw.gui.view.PresentableView;
 
 public class ViewComponentFactory {
 	/** reference to logger implementation */
@@ -55,6 +57,11 @@ public class ViewComponentFactory {
 				EntityViewComponent newly = createEntityView(cls, comp);
 				return newly;
 			}
+		}
+		
+		// added simple view for Presentable
+		if (comp instanceof Presentable) {
+			return createEntityView(PresentableView.class, comp);
 		}
 		
 		LOG.warn("Cannot find UI-View for '{}'", 
