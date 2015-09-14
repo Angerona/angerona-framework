@@ -31,22 +31,21 @@ import com.github.angerona.fw.Desire;
 import com.github.angerona.fw.PlanComponent;
 import com.github.angerona.fw.PlanElement;
 import com.github.angerona.fw.Subgoal;
-import com.github.angerona.fw.am.secrecy.operators.BaseSubgoalGenerationOperator;
 import com.github.angerona.fw.am.secrecy.operators.parameter.PlanParameter;
 import com.github.angerona.fw.island.components.Area;
 import com.github.angerona.fw.island.data.IslandAction;
 import com.github.angerona.fw.island.enums.Location;
 import com.github.angerona.fw.island.enums.Weather;
-import com.github.angerona.fw.island.operators.parameter.IslandPlanParameter;
+import com.github.angerona.fw.simple.operators.PlanningOperator;
 
 /**
- * A simple SubgoalGenerationOperator for the island-scenario. It's basically a
- * hard coded implementation of the trail-based planning-component
+ * A simple PlanningOperator for the island-scenario. It's basically a hard
+ * coded implementation of the trail-based planning-component
  * 
  * @author Manuel Barbi
  *
  */
-public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
+public class IslandPlanningOperator extends PlanningOperator {
 
 	@Override
 	protected Boolean processImpl(PlanParameter param) {
@@ -262,11 +261,6 @@ public class IslandSubgoalGenerationOperator extends BaseSubgoalGenerationOperat
 
 	protected static List<Action> min(List<Action> fst, List<Action> snd) {
 		return (fst != null && (snd == null || fst.size() <= snd.size())) ? fst : snd;
-	}
-
-	@Override
-	protected PlanParameter getEmptyParameter() {
-		return new IslandPlanParameter();
 	}
 
 }

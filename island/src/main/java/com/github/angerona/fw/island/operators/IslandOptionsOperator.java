@@ -5,18 +5,18 @@ import static com.github.angerona.fw.island.data.IslandDesires.FIND_SHELTER;
 import static com.github.angerona.fw.island.data.IslandDesires.FINISH_WORK;
 import static com.github.angerona.fw.island.data.IslandDesires.SECURE_SITE;
 
-import com.github.angerona.fw.am.secrecy.operators.BaseGenerateOptionsOperator;
 import com.github.angerona.fw.am.secrecy.operators.parameter.GenerateOptionsParameter;
 import com.github.angerona.fw.island.components.Area;
 import com.github.angerona.fw.island.components.Battery;
 import com.github.angerona.fw.logic.Desires;
+import com.github.angerona.fw.simple.operators.OptionsOperator;
 
 /**
  * 
  * @author Manuel Barbi
  *
  */
-public class IslandGenerateOptionsOperator extends BaseGenerateOptionsOperator {
+public class IslandOptionsOperator extends OptionsOperator {
 
 	@Override
 	protected Integer processImpl(GenerateOptionsParameter param) {

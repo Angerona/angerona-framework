@@ -22,17 +22,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.angerona</groupId>
-			<artifactId>gui</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.angerona</groupId>
 			<artifactId>fw</artifactId>
 			<version>1.0.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.angerona.fw.am</groupId>
-			<artifactId>secrecy</artifactId>
+			<groupId>com.github.angerona</groupId>
+			<artifactId>simple</artifactId>
 			<version>1.0.1</version>
 		</dependency>
 		<dependency>
