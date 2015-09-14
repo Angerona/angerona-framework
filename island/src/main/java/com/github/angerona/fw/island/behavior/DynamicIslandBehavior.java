@@ -9,8 +9,6 @@ import com.github.angerona.fw.island.enums.Weather;
  */
 public class DynamicIslandBehavior extends IslandBehavior {
 
-	public DynamicIslandBehavior() {}
-	
 	@Override
 	protected Weather generateWeather() {
 		return generator.next();

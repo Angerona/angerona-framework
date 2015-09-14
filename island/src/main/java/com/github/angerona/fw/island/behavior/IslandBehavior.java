@@ -22,55 +22,37 @@ import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.island.components.Area;
 import com.github.angerona.fw.island.components.Battery;
 import com.github.angerona.fw.island.data.IslandAction;
-import com.github.angerona.fw.island.data.IslandPerception;
-import com.github.angerona.fw.island.data.WeatherChart;
-import com.github.angerona.fw.island.enums.Location;
 import com.github.angerona.fw.island.enums.Weather;
+import com.github.angerona.fw.simple.behavior.SimpleBehavior;
 
 /**
  * 
  * @author Manuel Barbi
- * 
+ *
  */
-public class IslandBehavior extends ParsingBehavior {
+public class IslandBehavior extends SimpleBehavior<IslandBehaviorParam> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IslandBehavior.class);
-
+	
 	protected Generator generator = new Generator();
 
 	protected Weather current;
 	protected Weather next = generateWeather();
 	protected Weather prediction;
 
-	protected boolean initialized = false;
-
-	public IslandBehavior() {}
-
-	/**
-	 * 
-	 * @return the next weather
-	 */
-	protected Weather generateWeather() {
-		return Weather.CLOUDS;
-	}
-
-	/**
-	 * 
-	 * @return the probability, that the weather prediction applies
-	 */
-	protected Weather prediction(Weather next) {
-		return next;
-	}
-
 	@Override
 	public void sendAction(AngeronaEnvironment env, Action act) {
-
 		if (act instanceof IslandAction) {
 			boolean slow = current == STORM_OR_RAIN || current == THUNDERSTORM;
 
 			Battery battery = act.getAgent().getComponent(Battery.class);
 			Area area = act.getAgent().getComponent(Area.class);
 
+			if(battery == null || area == null) {
+				LOG.warn("agent has no battery or area component");
+				return;
+			}
+			
 			switch (((IslandAction) act).getId()) {
 			case ASSEMBLE_PARTS:
 				if (area.getLocation() == AT_SITE && !area.isSecured()) {
@@ -143,78 +125,43 @@ public class IslandBehavior extends ParsingBehavior {
 	}
 
 	@Override
-	protected boolean _runOnTick(AngeronaEnvironment env) {
-		if (tick % 4 == 1) {
-			current = next;
-			next = generateWeather();
-			prediction = prediction(next);
-			LOG.debug("update weather: {}", current);
-			LOG.debug("prediction: {}, next: {}", prediction, next);
-		}
-
-		somethingHappens = false;
-		Perception perception;
-		Battery battery = null;
-		Area area = null;
-
-		for (Agent agent : env.getAgents()) {
-			battery = agent.getComponent(Battery.class);
-			area = agent.getComponent(Area.class);
-
-			if (!area.isFinished()) {
-				switch (current) {
-				case SUN:
-					if (!area.isShelter()) {
-						battery.report("charging with solar panel");
-						battery.charge(2);
-					}
-					break;
-				case THUNDERSTORM:
-					if (generator.chance(1, 8)) {
-						area.report("lightning stroke occured");
-
-						if (generator.chance(1, 2)) {
-							if (!area.isShelter()) {
-								battery.damage();
-							}
-						} else {
-							if (!area.isSecured()) {
-								area.damage();
-								if (area.getLocation() == Location.AT_SITE) {
-									battery.damage();
-								}
-							}
-						}
-					}
-					break;
-				default: // do nothing
-				}
-
-				if (!battery.isDamaged() && !battery.isEmpty()) {
-					somethingHappens = true;
-
-					area.setWeather(new WeatherChart(current, prediction, rem(tick)));
-					perception = new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, rem(tick),
-							area.isSecured());
-					agent.perceive(perception);
-					LOG.debug("create perception: {}", perception);
-
-					LOG.debug("call agent cycle");
-					agent.cycle();
-
-					LOG.debug("discarge battery");
-					battery.discharge();
-				}
-			}
-		}
-
-		return somethingHappens;
+	protected IslandBehaviorParam runEnvironment() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	private int rem(int tick) {
-		int mod = 4 - ((tick - 1) % 4);
+	@Override
+	protected boolean cycleCondition(AngeronaEnvironment env, Agent agent, IslandBehaviorParam param) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-		return mod;
+	@Override
+	protected Perception createPerception(AngeronaEnvironment env, Agent agent, IslandBehaviorParam param) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void postCycle(AngeronaEnvironment env, Agent agent, IslandBehaviorParam param) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * 
+	 * @return the next weather
+	 */
+	protected Weather generateWeather() {
+		return Weather.CLOUDS;
+	}
+
+	/**
+	 * 
+	 * @return the probability, that the weather prediction applies
+	 */
+	protected Weather prediction(Weather next) {
+		return next;
 	}
 
 	protected class Generator {
