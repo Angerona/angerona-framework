@@ -21,12 +21,10 @@ public class SimplePlanParameter extends PlanParameter {
 
 	@Override
 	public void fromGenericParameter(GenericOperatorParameter gop) throws ConversionException, AttributeNotFoundException {
-		// this is an unpleasant workaround
-
 		try {
 			super.fromGenericParameter(gop);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			// this is an unpleasant workaround
 		}
 	}
 
