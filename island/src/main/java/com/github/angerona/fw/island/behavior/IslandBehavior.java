@@ -9,9 +9,6 @@ import static com.github.angerona.fw.island.enums.Location.ON_THE_WAY_3;
 import static com.github.angerona.fw.island.enums.Weather.STORM_OR_RAIN;
 import static com.github.angerona.fw.island.enums.Weather.THUNDERSTORM;
 
-import java.security.SecureRandom;
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +19,11 @@ import com.github.angerona.fw.Perception;
 import com.github.angerona.fw.island.components.Area;
 import com.github.angerona.fw.island.components.Battery;
 import com.github.angerona.fw.island.data.IslandAction;
+import com.github.angerona.fw.island.data.IslandPerception;
+import com.github.angerona.fw.island.data.WeatherChart;
+import com.github.angerona.fw.island.enums.Location;
 import com.github.angerona.fw.island.enums.Weather;
+import com.github.angerona.fw.simple.behavior.Generator;
 import com.github.angerona.fw.simple.behavior.SimpleBehavior;
 
 /**
@@ -30,15 +31,25 @@ import com.github.angerona.fw.simple.behavior.SimpleBehavior;
  * @author Manuel Barbi
  *
  */
-public class IslandBehavior extends SimpleBehavior<IslandBehaviorParam> {
+public class IslandBehavior extends SimpleBehavior {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IslandBehavior.class);
-	
-	protected Generator generator = new Generator();
+	public static final int DEFAULT_WEATHER_PERIOD = 4;
+	public static final int DEFAULT_CHARGE = 6;
+
+	protected static final Generator GENERATOR = new Generator();
 
 	protected Weather current;
-	protected Weather next = generateWeather();
+	protected Weather next = nextWeather();
 	protected Weather prediction;
+
+	protected int getDurationOfWeatherPeriod() {
+		return DEFAULT_WEATHER_PERIOD;
+	}
+
+	protected int getChargePerTick() {
+		return DEFAULT_CHARGE;
+	}
 
 	@Override
 	public void sendAction(AngeronaEnvironment env, Action act) {
@@ -48,11 +59,6 @@ public class IslandBehavior extends SimpleBehavior<IslandBehaviorParam> {
 			Battery battery = act.getAgent().getComponent(Battery.class);
 			Area area = act.getAgent().getComponent(Area.class);
 
-			if(battery == null || area == null) {
-				LOG.warn("agent has no battery or area component");
-				return;
-			}
-			
 			switch (((IslandAction) act).getId()) {
 			case ASSEMBLE_PARTS:
 				if (area.getLocation() == AT_SITE && !area.isSecured()) {
@@ -61,7 +67,7 @@ public class IslandBehavior extends SimpleBehavior<IslandBehaviorParam> {
 				break;
 			case CHARGE_BATTERY:
 				if (area.getLocation() == AT_HQ) {
-					battery.charge(6);
+					battery.charge(getChargePerTick());
 				}
 				break;
 			case MOVE_TO_SITE:
@@ -125,34 +131,99 @@ public class IslandBehavior extends SimpleBehavior<IslandBehaviorParam> {
 	}
 
 	@Override
-	protected IslandBehaviorParam runEnvironment() {
-		// TODO Auto-generated method stub
-		return null;
+	protected void runEnvironment() {
+		if (tick % getDurationOfWeatherPeriod() == 1) {
+			current = next;
+			next = nextWeather();
+			prediction = prediction(next);
+			LOG.debug("update weather: {}", current);
+			LOG.debug("prediction: {}, next: {}", prediction, next);
+		}
 	}
 
 	@Override
-	protected boolean cycleCondition(AngeronaEnvironment env, Agent agent, IslandBehaviorParam param) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean cycleCondition(AngeronaEnvironment env, Agent agent) {
+		Area area = agent.getComponent(Area.class);
+		Battery battery = agent.getComponent(Battery.class);
+
+		if (area == null || battery == null)
+			throw new IllegalStateException("agent has no area or no battery found");
+
+		return !area.isFinished() && !battery.isDamaged() && !battery.isEmpty();
 	}
 
 	@Override
-	protected Perception createPerception(AngeronaEnvironment env, Agent agent, IslandBehaviorParam param) {
-		// TODO Auto-generated method stub
-		return null;
+	protected Perception createPerception(AngeronaEnvironment env, Agent agent) {
+		Area area = agent.getComponent(Area.class);
+		Battery battery = agent.getComponent(Battery.class);
+
+		area.setWeather(new WeatherChart(current, prediction, rem(tick)));
+
+		return new IslandPerception(agent.getName(), battery.getCharge(), area.getLocation(), current, prediction, rem(tick), area.isSecured());
+	}
+
+	/**
+	 * 
+	 * @param tick
+	 * @return the ticks, until new weather is generated
+	 */
+	protected int rem(int tick) {
+		int dur = getDurationOfWeatherPeriod();
+		int mod = dur - ((tick - 1) % dur);
+
+		return mod;
 	}
 
 	@Override
-	protected void postCycle(AngeronaEnvironment env, Agent agent, IslandBehaviorParam param) {
-		// TODO Auto-generated method stub
+	protected void postCycle(AngeronaEnvironment env, Agent agent) {
+		Area area = agent.getComponent(Area.class);
+		Battery battery = agent.getComponent(Battery.class);
 
+		LOG.debug("discarge battery");
+		battery.discharge();
+
+		switch (current) {
+		case SUN:
+			chargeOnSun(battery, !area.isShelter(), 2);
+			break;
+		case THUNDERSTORM:
+			damageOnThunderstorm(area, battery, GENERATOR.chance(1, 8));
+			break;
+		default: // do nothing
+		}
+	}
+
+	protected void chargeOnSun(Battery battery, boolean charge, int amount) {
+		if (charge) {
+			battery.report("charging with solar panel");
+			battery.charge(amount);
+		}
+	}
+
+	protected void damageOnThunderstorm(Area area, Battery battery, boolean damage) {
+		if (damage) {
+			area.report("lightning stroke occured");
+
+			if (GENERATOR.chance(1, 2)) {
+				if (!area.isShelter()) {
+					battery.damage();
+				}
+			} else {
+				if (!area.isSecured()) {
+					area.damage();
+					if (area.getLocation() == Location.AT_SITE) {
+						battery.damage();
+					}
+				}
+			}
+		}
 	}
 
 	/**
 	 * 
 	 * @return the next weather
 	 */
-	protected Weather generateWeather() {
+	protected Weather nextWeather() {
 		return Weather.CLOUDS;
 	}
 
@@ -164,47 +235,20 @@ public class IslandBehavior extends SimpleBehavior<IslandBehaviorParam> {
 		return next;
 	}
 
-	protected class Generator {
-
-		protected final Random random = new SecureRandom();
-
-		public Generator() {
-			random.setSeed(System.nanoTime());
-		}
-
-		/**
-		 * 
-		 * @param k
-		 * @param n
-		 * @return true with a probability of k/n
-		 */
-		public boolean chance(int k, int n) {
-			if (n < 1) {
-				throw new IllegalArgumentException("n must be greater than 0");
-			}
-
-			if (k > n) {
-				throw new IllegalArgumentException("k must not be greater than n");
-			}
-
-			return random.nextInt(n) < k;
-		}
-
-		/**
-		 * 
-		 * @return a random weather occurrence
-		 */
-		public Weather next() {
-			switch (random.nextInt(4)) {
-			case 1:
-				return Weather.SUN;
-			case 2:
-				return Weather.STORM_OR_RAIN;
-			case 3:
-				return Weather.THUNDERSTORM;
-			default:
-				return Weather.CLOUDS;
-			}
+	/**
+	 * 
+	 * @return a random weather occurrence
+	 */
+	protected Weather randomWeather() {
+		switch (GENERATOR.nextInt(4)) {
+		case 1:
+			return Weather.SUN;
+		case 2:
+			return Weather.STORM_OR_RAIN;
+		case 3:
+			return Weather.THUNDERSTORM;
+		default:
+			return Weather.CLOUDS;
 		}
 	}
 

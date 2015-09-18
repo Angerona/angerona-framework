@@ -10,8 +10,8 @@ import com.github.angerona.fw.island.enums.Weather;
 public class DynamicIslandBehavior extends IslandBehavior {
 
 	@Override
-	protected Weather generateWeather() {
-		return generator.next();
+	protected Weather nextWeather() {
+		return randomWeather();
 	}
 
 	@Override
@@ -20,11 +20,11 @@ public class DynamicIslandBehavior extends IslandBehavior {
 
 		// generating weather until it's different from the actual
 		do {
-			alt = generator.next();
+			alt = randomWeather();
 		} while (alt == next);
 
 		// weather prediction is right with a probability of 70%
-		return generator.chance(7, 10) ? next : alt;
+		return GENERATOR.chance(7, 10) ? next : alt;
 	}
 
 }

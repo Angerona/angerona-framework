@@ -26,10 +26,7 @@ public class IslandFilterOperator extends FilterOperator {
 		Area area = param.getAgent().getComponent(Area.class);
 		Battery battery = param.getAgent().getComponent(Battery.class);
 
-		if (area == null)
-			return null;
-
-		if ((battery != null && battery.getCharge() <= 4 || pursued == FILL_BATTERY) && options.contains(FILL_BATTERY)) {
+		if ((battery.getCharge() <= 4 || pursued == FILL_BATTERY) && options.contains(FILL_BATTERY)) {
 			// if battery low or last pursued intention was 'fill battery'
 			// then fill battery
 			if (options.contains(SECURE_SITE)) {
