@@ -60,19 +60,19 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 	}
 
 	protected boolean runAgentCycles(AngeronaEnvironment env) {
-		boolean somethingHappend = false;
+		boolean doContinue = false;
 		Perception perception;
 
 		for (Agent agent : env.getAgents()) {
 			if (cycleCondition(env, agent)) {
 				try {
-					somethingHappend = true;
 					perception = createPerception(env, agent);
 					LOG.debug("create perception: {}", perception);
 					agent.perceive(perception);
 					LOG.debug("call agent cycle");
 					agent.cycle();
 					postCycle(env, agent);
+					doContinue = doContinue || !terminationCriterion(env, agent);
 				} catch (Exception e) {
 					e.printStackTrace();
 					// TODO: show some kind of message in gui
@@ -80,7 +80,7 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 			}
 		}
 
-		return somethingHappend;
+		return doContinue;
 	}
 
 	/**
@@ -100,5 +100,13 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 	protected abstract Perception createPerception(AngeronaEnvironment env, Agent agent);
 
 	protected abstract void postCycle(AngeronaEnvironment env, Agent agent);
+
+	/**
+	 * 
+	 * @param env
+	 * @param agent
+	 * @return weather the agent's cycle should be called again
+	 */
+	protected abstract boolean terminationCriterion(AngeronaEnvironment env, Agent agent);
 
 }

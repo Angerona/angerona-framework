@@ -53,13 +53,13 @@ public class Area extends BaseAgentComponent implements Presentable {
 				if (solid[i] < INC) {
 					solid[i] = Math.min(solid[i] + step, INC);
 					report("assemble solid parts " + getExpansion());
-					return;
+					break;
 				}
 			} else {
 				if (vulnerable[i - PARTS] < INC) {
 					vulnerable[i - PARTS] = Math.min(vulnerable[i - PARTS] + step, INC);
 					report("assemble vulnerable parts " + getExpansion());
-					return;
+					break;
 				}
 			}
 		}

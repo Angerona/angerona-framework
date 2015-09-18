@@ -143,13 +143,7 @@ public class IslandBehavior extends SimpleBehavior {
 
 	@Override
 	protected boolean cycleCondition(AngeronaEnvironment env, Agent agent) {
-		Area area = agent.getComponent(Area.class);
-		Battery battery = agent.getComponent(Battery.class);
-
-		if (area == null || battery == null)
-			throw new IllegalStateException("agent has no area or no battery found");
-
-		return !area.isFinished() && !battery.isDamaged() && !battery.isEmpty();
+		return !terminationCriterion(env, agent);
 	}
 
 	@Override
@@ -217,6 +211,14 @@ public class IslandBehavior extends SimpleBehavior {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected boolean terminationCriterion(AngeronaEnvironment env, Agent agent) {
+		Area area = agent.getComponent(Area.class);
+		Battery battery = agent.getComponent(Battery.class);
+
+		return area.isFinished() || battery.isDamaged() || battery.isEmpty();
 	}
 
 	/**
