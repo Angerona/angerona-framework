@@ -26,9 +26,10 @@ public interface SimulationListener {
 	/** is called when a new tick is starting, before the first agent does anything */
 	void tickStarting(AngeronaEnvironment simulationEnvironment);
 	
-	/** is called after a complete cylce of the simulation (an update of ever agent) is done. */
+	/** is called after a complete cycle of the simulation (an update of ever agent) is done. */
 	void tickDone(AngeronaEnvironment simulationEnvironment);
 
 	/** is called after an agent has performed an action. */
 	void actionPerformed(Agent agent, Action act);
+	
 }

@@ -4,7 +4,7 @@ package com.github.angerona.fw;
  * This interface defines an behavior for an environment.
  *
  * Also see the DefaultBehavior class it implements a simulation
- * cylce. Subclasses can adapt a lot by overloading sendAction,
+ * cycle. Subclasses can adapt a lot by overloading sendAction,
  * receivePerception and isSimulationReady.
  * 
  * @author Tim Janus
@@ -12,14 +12,14 @@ package com.github.angerona.fw;
 public interface EnvironmentBehavior {
 	/**
 	 * Is called by Angerona when an agent does an action.
-	 * @param env		Visitor environment to fetch futher information.
+	 * @param env		Visitor environment to fetch further information.
 	 * @param action	Reference to the action.
 	 */
 	void sendAction(AngeronaEnvironment env, Action action);
 	
 	/**
 	 * Is called by an external simulation if Angerona should receive an perception
-	 * @param env		Visitor environment to fetch futher informatin.
+	 * @param env		Visitor environment to fetch further information.
 	 * @param percept	Reference to the perception received from the external simulation.
 	 */
 	void receivePerception(AngeronaEnvironment env, Perception percept);
