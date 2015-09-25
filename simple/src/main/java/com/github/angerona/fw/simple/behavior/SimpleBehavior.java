@@ -75,7 +75,7 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 					doContinue = doContinue || !terminationCriterion(env, agent);
 				} catch (Exception e) {
 					e.printStackTrace();
-					// TODO: show some kind of message in gui
+					Angerona.getInstance().onError(e.getClass().getSimpleName(), e.getMessage() != null ? e.getMessage() : "<no message>");
 				}
 			}
 		}
