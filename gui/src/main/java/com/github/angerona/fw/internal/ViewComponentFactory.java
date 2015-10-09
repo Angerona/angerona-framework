@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.github.angerona.fw.comp.Presentable;
 import com.github.angerona.fw.gui.base.EntityViewComponent;
 import com.github.angerona.fw.gui.base.ViewComponent;
+import com.github.angerona.fw.gui.view.ListViewColored;
+import com.github.angerona.fw.gui.view.NoView;
 import com.github.angerona.fw.gui.view.PresentableView;
 
 public class ViewComponentFactory {
@@ -66,7 +68,7 @@ public class ViewComponentFactory {
 		
 		LOG.warn("Cannot find UI-View for '{}'", 
 				comp.getClass().getName());
-		return null;
+		return createEntityView(NoView.class, comp);
 	}
 	
 	/**

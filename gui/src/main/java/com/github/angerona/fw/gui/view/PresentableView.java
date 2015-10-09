@@ -22,7 +22,7 @@ public class PresentableView extends ListViewColored {
 			return ((Presentable) item).getRepresentation();
 		}
 
-		return null;
+		throw new IllegalArgumentException("entity does not have the type Presentable");
 	}
 
 	@Override
