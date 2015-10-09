@@ -69,7 +69,7 @@ public abstract class FilterOperator extends BaseIntentionUpdateOperator {
 	 * @param options
 	 *            a set of all desires, the agent currently has
 	 * @param pursued
-	 *            the currently pursued desire, if any
+	 *            the last pursued desire, if any
 	 * @param param
 	 *            the original plan-parameter
 	 * @return the desire the agent will pursue

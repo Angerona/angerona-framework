@@ -14,9 +14,8 @@ import java.nio.channels.ReadableByteChannel;
  * @param <T>
  *            the data-structure collecting parsed items
  * @param <S>
- *            can be used as parser-state, typically an enum, but may also
- *            represent the context, since the class itself should remain
- *            stateless
+ *            can be used as parser-state, typically an enum-class, but may also
+ *            represent the context, since the parser itself should remain stateless
  */
 public interface ChannelBasedParser<T, S> {
 
@@ -61,15 +60,15 @@ public interface ChannelBasedParser<T, S> {
 	 * method must not throw BufferUnderflowException, but rather catch and
 	 * reset the buffer's position to the last processed position, like...
 	 * 
-	 * int processed = buf.position();
+	 * 		int processed = buf.position();
 	 * 
-	 * try {
-	 * 		// parse something
-	 * 		processed = buf.position();
-	 * } catch(BufferUnderflowException bu) {
-	 * 		buf.position(processed);
-	 * 		return state;
-	 * }
+	 * 		try {
+	 * 			// parse something
+	 * 			processed = buf.position();
+	 * 		} catch(BufferUnderflowException bu) {
+	 * 			buf.position(processed);
+	 * 			return state;
+	 * 		}
 	 * 
 	 * @param buf
 	 * @param structure

@@ -23,7 +23,7 @@ public class SimplePlanParameter extends PlanParameter {
 	public void fromGenericParameter(GenericOperatorParameter gop) throws ConversionException, AttributeNotFoundException {
 		try {
 			super.fromGenericParameter(gop);
-		} catch (Exception e) {
+		} catch (ConversionException e) {
 			// this is an unpleasant workaround
 		}
 	}

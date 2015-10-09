@@ -15,7 +15,7 @@ import com.github.angerona.fw.util.Pair;
 /**
  * I decided to add an ExecuteOperator, that realizes the
  * ActionSelectionFunction from the BDI-Architecture, because apparently it has
- * not been existed yet.
+ * not been implemented yet.
  * 
  * @author Manuel Barbi
  *
