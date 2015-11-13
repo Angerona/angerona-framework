@@ -43,7 +43,7 @@ public class Angerona {
 	/** reference to the logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(Angerona.class);
 	
-	/** the only instnce of angerona */
+	/** the only instance of Angerona */
 	private static Angerona instance = null;
 	
 	/** the list of registered report listeners */
@@ -114,23 +114,19 @@ public class Angerona {
 		if(config == null) {
 			String filename = getConfigFilePath();
 			File defConfigFile = new File(filename);
+			
 			if(defConfigFile.exists()) {
 				config = GlobalConfiguration.loadXml(defConfigFile);
-				
-				if(config == null) {
-					config = new GlobalConfiguration();
-					onError("Configuration File not Found", 
-							"Cannot find the file: '" + filename +"'."
-							+ "Make sure that your working directory contains the config directory."
-							+ "\nIf you do not have a file 'configuration.xml' "
-							+ "in your config directory then close the application "
-							+ "and create your own by moving \n"
-							+ "'.../software/app/src/main/config/configuration_install.xml'" +
-							"\nto \n'"
-							+ (new File(configFilePath)).getAbsolutePath() + 
-							"'\nand replacing the placeholders.");
-				}
 			} else {
+				defConfigFile = new File("app/target/" + getConfigFilePath());
+				
+				if(defConfigFile.exists()) {
+					config = GlobalConfiguration.loadXml(defConfigFile);
+				}
+			}
+			
+			if(config == null) {
+				config = new GlobalConfiguration();
 				onError("Configuration File not Found", 
 						"Cannot find the file: '" + filename +"'."
 						+ "Make sure that your working directory contains the config directory."
