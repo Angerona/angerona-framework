@@ -1,1 +1,8 @@
+bin
+doc
 /target/
+
+*.project
+*.texclipse
+*.classpath
+*.settings
