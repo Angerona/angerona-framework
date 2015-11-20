@@ -1,10 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.github.angerona</groupId>
-  <artifactId>maven-build-all</artifactId>
-  <version>1.0.1</version>
+  
+  <groupId>com.github.kreatures</groupId>
+  <artifactId>build-all</artifactId>
+  <version>2.0.0</version>
   <packaging>pom</packaging>
-  <name>Parent-Angerona</name>
+  <name>KReatures (Parent)</name>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -146,18 +147,6 @@
 		    <autoVersionSubmodules>true</autoVersionSubmodules>
 			<tagNameFormat>maven-release-v@{version}</tagNameFormat>
 			
-			<!--  is relevant for svn (like in tweety) -->
-			<!--
-			<tagBase>https://svn.code.sf.net/p/tweety/code/tags/</tagBase>
-			<remoteTagging>true</remoteTagging>
-			-->
-			
-			<!-- un/comment this to allow changes in this pom.xml for testing purposes in maven-release-plugin -->
-			<!--  
-			<checkModificationExcludes>
-			  <checkModificationExclude>pom.xml</checkModificationExclude>
-			</checkModificationExcludes>
-			-->
 		  </configuration>
 		</plugin>
     </plugins>
@@ -179,16 +168,15 @@
   
   <modules>
   	<module>asp</module>
-  	<module>fw</module>
+  	<module>core</module>
   	<module>app</module>
   	<module>example</module>
   	<module>gui</module>
   	<module>knowhow</module>
-  	
   	<module>secrecy</module>
-  	<module>deploy</module>
-  	<module>conditional</module>
-  	<module>DefendingAgent</module>
+  	
+  	<module>ocl</module>
+  	<module>defendingagent</module>
   	<module>plwithknowledge</module>
   	<module>simple</module>
   	<module>island</module>

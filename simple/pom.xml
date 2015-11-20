@@ -1,10 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<artifactId>simple</artifactId>
-	<name>simple</name>
+	<version>2.0.1</version>
 	<packaging>jar</packaging>
-	<url>http://maven.apache.org</url>
+	<name>KReatures (Simple-Project)</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,21 +19,20 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.github.angerona</groupId>
-			<artifactId>fw</artifactId>
-			<version>1.0.2</version>
+			<groupId>com.github.kreatures</groupId>
+			<artifactId>core</artifactId>
+			<version>2.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.angerona.fw.am</groupId>
+			<groupId>com.github.kreatures</groupId>
 			<artifactId>secrecy</artifactId>
-			<version>1.0.1</version>
+			<version>2.0.1</version>
 		</dependency>
 	</dependencies>
 	<parent>
-		<groupId>com.github.angerona</groupId>
-		<artifactId>maven-build-all</artifactId>
-		<version>1.0.1</version>
+		<groupId>com.github.kreatures</groupId>
+		<artifactId>build-all</artifactId>
+		<version>2.0.0</version>
 		<relativePath>..</relativePath>
 	</parent>
-
 </project>

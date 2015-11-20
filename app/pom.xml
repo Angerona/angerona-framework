@@ -1,380 +1,318 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <artifactId>app</artifactId>
-  <version>1.0.2</version>
-  <packaging>jar</packaging>
+	<artifactId>app</artifactId>
+	<version>2.0.1</version>
+	<packaging>jar</packaging>
+	<name>KReatures (Simulation App)</name>
 
-  <name>Angerona (Functional Test)</name>
-  <url>http://maven.apache.org</url>
-  
-  <properties>
-  	<tools.home>${basedir}/src/main/tools</tools.home>
-  </properties>
-  
-  <profiles>
-    <profile>
-      <id>win</id>
-      <activation>
-        <os>
-          <family>windows</family>
-        </os>
-      </activation>
-      <properties>
-        <permission.script>${basedir}/src/main/permission.bat</permission.script>
-      </properties>
-    </profile>
-    
-    <profile>
-      <id>unix</id>
-      <activation>
-        <os>
-          <family>unix</family>
-        </os>
-      </activation>
-      <properties>
-        <permission.script>${basedir}/src/main/permission.sh</permission.script>
-      </properties>
-    </profile>
-    
-    <!-- 
-    	MAC profile has to be the last one because on MAC OS the
-     	families mac and unix are set. The values of the latest 
-    	loaded profile are the one used in the rest of the pom.
-     -->
-    <profile>
-      <id>mac</id>
-      <activation>
-        <os>
-          <family>mac</family>
-        </os>
-      </activation>
-      <properties>
-        <permission.script>${basedir}/src/main/permission.sh</permission.script>
-      </properties>
-    </profile>
-  </profiles>
+	<properties>
+		<tools.home>${basedir}/src/main/tools</tools.home>
+	</properties>
 
-  <build>
-    <plugins>
-      <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-jar-plugin</artifactId>
-		<version>2.4</version>
-	 	<configuration>
-		  <archive>
-			<manifest>
-              <!-- Specifies the main class of the application -->
-			  <mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
-			</manifest>
-		  </archive>
-		</configuration>
-	  </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.3</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/src/main/plugins</outputDirectory>
-              <includeScope>runtime</includeScope>
-              <excludeTransitive>true</excludeTransitive>
-              <excludeArtifactIds>fw</excludeArtifactIds>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
-        <executions>
-          
-          <execution>
-            <id>Copy Config-Files</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <outputDirectory>${basedir}/target/config/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/config</directory>
-                  <filtering>true</filtering>
-                  <excludes>
-                  	<exclude>*_template.xml</exclude>
-                  </excludes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          
-          <execution>
-            <id>Copy Example-Files</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <outputDirectory>${basedir}/target/examples/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/examples</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          
-          <execution>
-            <id>Copy Plugin-Files</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <outputDirectory>${basedir}/target/plugins/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/plugins</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          
-          <execution>
-            <id>Copy Tool-Files</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <outputDirectory>${basedir}/target/tools/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${tools.home}</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          
-          <execution>
-            <id>Copy Icon-Files</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <outputDirectory>${basedir}/target/resources/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/resources</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>                             
-        </executions>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
-        <executions>
-          <execution>
-            <id>Set permissions</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-                <executable>${permission.script}</executable>
-                <workingDirectory>${basedir}/target</workingDirectory>
-            </configuration>
-          </execution>
-          
-          <!-- Used by Netbeans to run the application: -->
-          <execution>
-              <id>Start Application</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-             <configuration>
-                <executable>java</executable>
-                <workingDirectory>${basedir}/target</workingDirectory>
-                <arguments>
-                <argument>-classpath</argument>
-                <!-- automatically creates the classpath using all project dependencies,
-                     also adding the project build directory -->
-                <classpath />
-                <argument>com.github.angerona.fw.app.GUIApplication</argument>
-                </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
-           <groupId>com.google.code.maven-replacer-plugin</groupId>
-           <artifactId>replacer</artifactId>
-           <version>1.5.1</version>
-           <executions>
-               <execution>
-                   <phase>prepare-package</phase>
-                   <goals>
-                       <goal>replace</goal>
-                   </goals>                   
-               </execution>
-           </executions>
-           <configuration>
-               <ignoreMissingFile>false</ignoreMissingFile>
-               <file>src/main/config/configuration_template.xml</file>
-               <outputFile>target/config/configuration.xml</outputFile>
-               <regex>false</regex>
-               <token>$path_to_angerona$</token>
-               <value>${basedir}/target</value>
-           </configuration>
-       </plugin>
-       
-       <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-shade-plugin</artifactId>
-	        <version>2.1</version>
-	        <executions>
-	          <execution>
-	            <phase>package</phase>
-	            <goals>
-	              <goal>shade</goal>
-	            </goals>
-	            <configuration>
-	              <createDependencyReducedPom>false</createDependencyReducedPom>
-	              <!-- 
-	              		Minimizes the size of the jar, but can lead to problems
-	              		with dynamic code loading
-	               -->
-	              <!--  
-	              <minimizeJar>true</minimizeJar>
-	              -->
-	              <transformers>
-	                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-	                  <mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
-	                 </transformer>
-	               </transformers>
-	            </configuration>
-	          </execution>
-	        </executions>
-      	  </plugin>
-    </plugins>
-    
-    <pluginManagement>
-	    <plugins>
-	      <plugin>
-	        <groupId>org.eclipse.m2e</groupId>
-	        <artifactId>lifecycle-mapping</artifactId>
-	        <version>1.0.0</version>
-	        <configuration>
-	          <lifecycleMappingMetadata>
-	            <pluginExecutions>
-	              <pluginExecution>
-	                <pluginExecutionFilter>
-	                  <groupId>org.apache.maven.plugins</groupId>
-	                  <artifactId>maven-dependency-plugin</artifactId>
-	                  <versionRange>[2.0,)</versionRange>
-	                  <goals>
-	                    <goal>copy-dependencies</goal>
-	                  </goals>
-	                </pluginExecutionFilter>
-	                <action>
-	                  <ignore />
-	                </action>
-	              </pluginExecution>
-	            </pluginExecutions>
-	          </lifecycleMappingMetadata>
-	        </configuration>
-	      </plugin>
-	    </plugins>
-	</pluginManagement>
-  </build>
-  
-  <dependencies>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>fw</artifactId>
-    	<version>1.0.2</version>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>asp</artifactId>
-    	<version>1.0.1</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>gui</artifactId>
-    	<version>1.0.2</version>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>knowhow</artifactId>
-    	<version>1.0.1</version>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>conditional</artifactId>
-    	<version>1.0.1</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>example</artifactId>
-    	<version>1.0.1</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona.fw.am</groupId>
-    	<artifactId>secrecy</artifactId>
-    	<version>1.0.1</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>defendingagent</artifactId>
-    	<version>1.0.1</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>plwithknowledge</artifactId>
-    	<version>1.0.1</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>island</artifactId>
-    	<version>1.0.3</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>simple</artifactId>
-    	<version>1.0.1</version>
-    	<scope>runtime</scope>
-    </dependency>
-  </dependencies>
-  <parent>
-  	<groupId>com.github.angerona</groupId>
-  	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.1</version>
-  	<relativePath>..</relativePath>
-  </parent>
+	<profiles>
+		<profile>
+			<id>win</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<permission.script>${basedir}/src/main/permission.bat</permission.script>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>unix</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<properties>
+				<permission.script>${basedir}/src/main/permission.sh</permission.script>
+			</properties>
+		</profile>
+
+		<!-- MAC profile has to be the last one because on MAC OS the families 
+			mac and unix are set. The values of the latest loaded profile are the one 
+			used in the rest of the pom. -->
+		<profile>
+			<id>mac</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<permission.script>${basedir}/src/main/permission.sh</permission.script>
+			</properties>
+		</profile>
+	</profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<!-- Specifies the main class of the application -->
+							<mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/src/main/plugins</outputDirectory>
+							<includeScope>runtime</includeScope>
+							<excludeTransitive>true</excludeTransitive>
+							<excludeArtifactIds>fw</excludeArtifactIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+
+					<execution>
+						<id>Copy Config-Files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${basedir}/target/config/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/config</directory>
+									<filtering>true</filtering>
+									<excludes>
+										<exclude>*_template.xml</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>Copy Example-Files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${basedir}/target/examples/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/examples</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>Copy Plugin-Files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${basedir}/target/plugins/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/plugins</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>Copy Tool-Files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${basedir}/target/tools/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${tools.home}</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>Copy Icon-Files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${basedir}/target/resources/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>Set permissions</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${permission.script}</executable>
+							<workingDirectory>${basedir}/target</workingDirectory>
+						</configuration>
+					</execution>
+
+					<!-- Used by Netbeans to run the application: -->
+					<execution>
+						<id>Start Application</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>java</executable>
+							<workingDirectory>${basedir}/target</workingDirectory>
+							<arguments>
+								<argument>-classpath</argument>
+								<!-- automatically creates the classpath using all project dependencies, 
+									also adding the project build directory -->
+								<classpath />
+								<argument>com.github.angerona.fw.app.GUIApplication</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<ignoreMissingFile>false</ignoreMissingFile>
+					<file>src/main/config/configuration_template.xml</file>
+					<outputFile>target/config/configuration.xml</outputFile>
+					<regex>false</regex>
+					<token>$path_to_angerona$</token>
+					<value>${basedir}/target</value>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[2.0,)</versionRange>
+										<goals>
+											<goal>copy-dependencies</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.kreatures</groupId>
+			<artifactId>core</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kreatures</groupId>
+			<artifactId>gui</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+	</dependencies>
+	<parent>
+		<groupId>com.github.kreatures</groupId>
+		<artifactId>build-all</artifactId>
+		<version>2.0.0</version>
+		<relativePath>..</relativePath>
+	</parent>
 </project>
