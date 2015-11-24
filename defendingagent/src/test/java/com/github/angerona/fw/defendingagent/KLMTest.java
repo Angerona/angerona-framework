@@ -1,4 +1,4 @@
-package com.github.angerona.fw.DefendingAgent;
+package com.github.angerona.fw.defendingagent;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

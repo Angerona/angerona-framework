@@ -1,4 +1,4 @@
-package com.github.angerona.fw.defendingagent.Prover;
+package com.github.angerona.fw.defendingagent.prover;
 
 import java.util.HashMap;
 import java.util.List;

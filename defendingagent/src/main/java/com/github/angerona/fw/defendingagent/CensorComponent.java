@@ -10,6 +10,18 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.angerona.fw.BaseAgentComponent;
+import com.github.angerona.fw.defendingagent.prover.Prover;
+import com.github.angerona.fw.defendingagent.prover.SICStusException;
+import com.github.angerona.fw.logic.AnswerValue;
+import com.github.angerona.fw.plwithknowledge.logic.ModelTupel;
+import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
+import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeReasoner;
+import com.github.angerona.fw.util.LogicTranslator;
+
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -23,18 +35,6 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.angerona.fw.BaseAgentComponent;
-import com.github.angerona.fw.defendingagent.Prover.Prover;
-import com.github.angerona.fw.defendingagent.Prover.SICStusException;
-import com.github.angerona.fw.logic.AnswerValue;
-import com.github.angerona.fw.plwithknowledge.logic.ModelTupel;
-import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
-import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeReasoner;
-import com.github.angerona.fw.util.LogicTranslator;
 
 /**
  * Implementation of the censor component of a defending censor agent.

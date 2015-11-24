@@ -1,8 +1,8 @@
-package com.github.angerona.fw.defendingagent.Prover;
+package com.github.angerona.fw.defendingagent.prover;
 
 import java.util.List;
 
-import com.github.angerona.fw.defendingagent.Prover.Prover.InferenceSystem;
+import com.github.angerona.fw.defendingagent.prover.Prover.InferenceSystem;
 
 public class ProverInput {
 	public List<String> kFormulas;
