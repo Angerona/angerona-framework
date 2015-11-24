@@ -1,6 +1,8 @@
-configuration.xml
-plugins
+bin
+doc
+/target/
 
-/target
-
-/USER_HOME_IS_UNDEFINED
+*.project
+*.texclipse
+*.classpath
+*.settings

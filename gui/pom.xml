@@ -1,40 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <artifactId>gui</artifactId>
-  <version>1.0.2</version>
-  <packaging>jar</packaging>
+	<artifactId>gui</artifactId>
+	<version>2.0.1</version>
+	<packaging>jar</packaging>
+	<name>KReatures (GUI)</name>
 
-  <name>Angerona (GUI)</name>
-  <url>http://maven.apache.org</url>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>fw</artifactId>
-    	<version>1.0.2</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.dockingframes</groupId>
-    	<artifactId>docking-frames-common</artifactId>
-    	<version>1.1.1</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.dockingframes</groupId>
-    	<artifactId>docking-frames-core</artifactId>
-    	<version>1.1.1</version>
-    </dependency>
-  </dependencies>
-  <parent>
-  	<groupId>com.github.angerona</groupId>
-  	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.1</version>
-  	<relativePath>..</relativePath>
-  </parent>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kreatures</groupId>
+			<artifactId>core</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dockingframes</groupId>
+			<artifactId>docking-frames-common</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dockingframes</groupId>
+			<artifactId>docking-frames-core</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+	</dependencies>
+	<parent>
+		<groupId>com.github.kreatures</groupId>
+		<artifactId>build-all</artifactId>
+		<version>2.0.0</version>
+		<relativePath>..</relativePath>
+	</parent>
 </project>

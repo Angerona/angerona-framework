@@ -1,1 +1,0 @@
-java -DUSER_HOME="%USERPROFILE%" -jar lib/Angerona.jar
