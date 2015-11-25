@@ -1,184 +1,185 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  
-  <groupId>com.github.kreatures</groupId>
-  <artifactId>build-all</artifactId>
-  <version>2.0.0</version>
-  <packaging>pom</packaging>
-  <name>KReatures (Parent)</name>
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  
-  <scm>
-  	<url>https://github.com/Angerona/angerona-framework</url>
-  	<connection>scm:git:https://github.com/Angerona/angerona-framework.git</connection>
-	<developerConnection>scm:git:https://github.com/Angerona/angerona-framework.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-  
-  <distributionManagement>
-    <repository>
-      <id>nexus-angerona</id>
-      <name>Angerona Releases</name>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
-      <layout>default</layout>
-    </repository>
-    <snapshotRepository>
-      <id>nexus-angerona</id>
-      <name>Angerona Snapshots</name>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
-      <layout>default</layout>
-    </snapshotRepository>
-  </distributionManagement>
-  
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>true</enabled>
-	  </snapshots>
-      <id>public-nexus-angerona</id>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/groups/public</url>
-    </repository>
-  </repositories>
-  
-   <profiles>
-    <profile>
-      <id>FULL-Release</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      
-      <build>
-        <plugins>
-          <!-- Generate jar containing the sources of the project: -->
-          <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-source-plugin</artifactId>
-			<version>2.2.1</version>
-			<executions>
-				<execution>
-					<id>attach-sources</id>
-					<goals>
-						<goal>jar</goal>
-					</goals>
-				</execution>
-			</executions>
-		  </plugin>
-		
-		<!-- Generate Jar containing java-docs -->
-		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-javadoc-plugin</artifactId>
-		  <version>2.9.1</version>
-		  <executions>
-		    <execution>
-		      <id>attach-javadocs</id>
-		      <goals>
-		        <goal>jar</goal>
-		      </goals>
-		    </execution>
-		  </executions>
-		  <configuration>
-		    <quiet>true</quiet>
-		    <tags>
-			  <tag>
-			    <name>todo</name>
-			    <placement>X</placement>
-			  </tag>
-			  <tag>
-			    <name>remark</name>
-			    <placement>X</placement>
-			  </tag>
-			</tags>
-		  </configuration>
-		</plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-  
-  <build>
-  	<pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.4</version>
-          <configuration>
-            <descriptors>
-              <descriptor>src/assemble/angerona-zip.xml</descriptor>
-            </descriptors>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-jar-plugin</artifactId>
-			<version>2.2</version>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-			<executions>
-				<execution>
-					<goals>
-						<goal>test-jar</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
-		
-		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-release-plugin</artifactId>
-		  <version>2.4.2</version>
-		  <configuration>
-		    <goals>deploy</goals>
-		    <autoVersionSubmodules>true</autoVersionSubmodules>
-			<tagNameFormat>maven-release-v@{version}</tagNameFormat>
-			
-		  </configuration>
-		</plugin>
-    </plugins>
-  </build>
-  
-  <!-- Enable java doc goals -->
-  <reporting> 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
-        <configuration>
-          <aggregate>true</aggregate>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
-  
-  <modules>
-  	<module>asp</module>
-  	<module>core</module>
-  	<module>app</module>
-  	<module>example</module>
-  	<module>gui</module>
-  	<module>knowhow</module>
-  	<module>secrecy</module>
-  	
-  	<module>ocl</module>
-  	<module>defendingagent</module>
-  	<module>plwithknowledge</module>
-  	<module>simple</module>
-  	<module>island</module>
-  </modules>
+	<groupId>com.github.kreaturesfw</groupId>
+	<artifactId>build-all</artifactId>
+	<version>2.0.0</version>
+	<packaging>pom</packaging>
+	<name>KReatures (Parent)</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<scm>
+		<url>https://github.com/KReaturesFW/kreatures-framework</url>
+		<connection>scm:git:https://github.com/KReaturesFW/kreatures-framework.git</connection>
+		<developerConnection>scm:git:https://github.com/KReaturesFW/kreatures-framework.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-angerona</id>
+			<name>Angerona Releases</name>
+			<url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
+			<layout>default</layout>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-angerona</id>
+			<name>Angerona Snapshots</name>
+			<url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
+			<layout>default</layout>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>public-nexus-angerona</id>
+			<url>http://ls1-www.cs.tu-dortmund.de/nexus/content/groups/public</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<profile>
+			<id>FULL-Release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<!-- Generate jar containing the sources of the project: -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Generate Jar containing java-docs -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<quiet>true</quiet>
+							<tags>
+								<tag>
+									<name>todo</name>
+									<placement>X</placement>
+								</tag>
+								<tag>
+									<name>remark</name>
+									<placement>X</placement>
+								</tag>
+							</tags>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<descriptors>
+							<descriptor>src/assemble/angerona-zip.xml</descriptor>
+						</descriptors>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.2</version>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4.2</version>
+				<configuration>
+					<goals>deploy</goals>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagNameFormat>maven-release-v@{version}</tagNameFormat>
+
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- Enable java doc goals -->
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<modules>
+		<module>asp</module>
+		<module>core</module>
+		<module>app</module>
+		<module>example</module>
+		<module>gui</module>
+		<module>knowhow</module>
+		<module>secrecy</module>
+
+		<module>ocf</module>
+		<module>defendingagent</module>
+		<module>plwithknowledge</module>
+		<module>simple</module>
+		<module>island</module>
+	</modules>
 </project>

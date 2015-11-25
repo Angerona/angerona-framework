@@ -15,18 +15,18 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.github.kreatures</groupId>
+			<groupId>com.github.kreaturesfw</groupId>
 			<artifactId>core</artifactId>
 			<version>2.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.kreatures</groupId>
+			<groupId>com.github.kreaturesfw</groupId>
 			<artifactId>gui</artifactId>
 			<version>2.0.1</version>
 		</dependency>
 	</dependencies>
 	<parent>
-		<groupId>com.github.kreatures</groupId>
+		<groupId>com.github.kreaturesfw</groupId>
 		<artifactId>build-all</artifactId>
 		<version>2.0.0</version>
 		<relativePath>..</relativePath>

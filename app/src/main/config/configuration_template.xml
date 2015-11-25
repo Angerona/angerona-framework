@@ -4,15 +4,15 @@
  -->
 <config>
     <!-- Use this file as a template for your own configuration -->   
-	<plugin>plugins/example-1.0.1.jar</plugin>
-	<plugin>plugins/asp-1.0.1.jar</plugin>
-	<plugin>plugins/knowhow-1.0.1.jar</plugin>
-	<plugin>plugins/conditional-1.0.1.jar</plugin>
-	<plugin>plugins/secrecy-1.0.1.jar</plugin>
-	<plugin>plugins/defendingagent-1.0.1.jar</plugin>
-	<plugin>plugins/plwithknowledge-1.0.1.jar</plugin>
-	<plugin>plugins/simple-1.0.1.jar</plugin>
-	<plugin>plugins/island-1.0.3.jar</plugin>
+	<plugin>plugins/example-2.0.1.jar</plugin>
+	<plugin>plugins/asp-2.0.1.jar</plugin>
+	<plugin>plugins/knowhow-2.0.1.jar</plugin>
+	<plugin>plugins/ocf-2.0.1.jar</plugin>
+	<plugin>plugins/secrecy-2.0.1.jar</plugin>
+	<plugin>plugins/defendingagent-2.0.1.jar</plugin>
+	<plugin>plugins/plwithknowledge-2.0.1.jar</plugin>
+	<plugin>plugins/simple-2.0.1.jar</plugin>
+	<plugin>plugins/island-2.0.1.jar</plugin>
    
 	<!-- possible values are: CLINGO, DLV and DLV_COMPLEX !-->
 	<parameter name="asp-solver" value="DLV"/>
