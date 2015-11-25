@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>E-Markt Szenario 1 mit (MATES)</name>
     <category>scm/mates</category>
-    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.kreatures.core.def.DefaultBehavior</behavior>
 	
 	<agent-instance>
 		<name>Kaeufer</name>

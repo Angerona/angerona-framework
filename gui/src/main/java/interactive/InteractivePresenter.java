@@ -8,13 +8,13 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.github.angerona.fw.InteractiveAgent;
-import com.github.angerona.fw.comm.Query;
-import com.github.angerona.fw.comm.Revision;
-import com.github.angerona.fw.comm.SpeechAct;
-import com.github.angerona.fw.error.AngeronaException;
-import com.github.angerona.fw.gui.base.Presenter;
-import com.github.angerona.fw.reflection.FolFormulaVariable;
+import com.github.kreatures.core.InteractiveAgent;
+import com.github.kreatures.core.comm.Query;
+import com.github.kreatures.core.comm.Revision;
+import com.github.kreatures.core.comm.SpeechAct;
+import com.github.kreatures.core.error.KReaturesException;
+import com.github.kreatures.gui.base.Presenter;
+import com.github.kreatures.core.reflection.FolFormulaVariable;
 
 /**
  * This class is responsible to wire a InteractiveModelAdapter with a
@@ -60,14 +60,14 @@ public class InteractivePresenter
 			if(action.equals("Query")){
 				try {
 					act = new Query(a.getName(), receiver, new FolFormulaVariable((new FolFormulaVariable()).createInstanceFromString(text)));
-				} catch (AngeronaException e) {
+				} catch (KReaturesException e) {
 					JOptionPane.showMessageDialog(view.getActionButton(), "Could not parse action, please check for syntax errors.", "Parser error", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}else{
 				try {
 					act = new Revision(a.getName(), receiver, new FolFormulaVariable((new FolFormulaVariable()).createInstanceFromString(text)));
-				} catch (AngeronaException e) {
+				} catch (KReaturesException e) {
 					JOptionPane.showMessageDialog(view.getActionButton(), "Could not parse action, please check for syntax errors.", "Parser error", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}

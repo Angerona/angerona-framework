@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>MATES (SCM) - Defender without Attacker modeling</name>
     <category>scm/mates</category>
-    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.kreatures.core.def.DefaultBehavior</behavior>
 	
 	<agent-instance>
 		<name>Employee</name>

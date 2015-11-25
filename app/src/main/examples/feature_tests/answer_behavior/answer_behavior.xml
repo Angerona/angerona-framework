@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>Answer Behavior Test</name>
-    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.kreatures.core.def.DefaultBehavior</behavior>
     <category>feature-test</category>
 	<description>
 	This scenario tests the answer behavior of the default subgoal-generation

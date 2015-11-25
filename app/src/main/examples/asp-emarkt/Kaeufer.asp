@@ -11,5 +11,5 @@ lieferTerminPasstZu(a) :- lieferTermin(2,a), kleinerAlsLagerKap(a).
 volleLager(a).
 geringerPreis(a) :- volleLager(a), firma(a).
 -geringerPreis(a) :- -firma(a).
-% Hmm folgende Regel führt in Angerona zur keiner Antwortmenge -> DLV unterstützt dies
+% Hmm folgende Regel führt in KReatures zur keiner Antwortmenge -> DLV unterstützt dies
 herstellung(a); -herstellung(a).

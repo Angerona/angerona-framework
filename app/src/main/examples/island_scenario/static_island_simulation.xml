@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>static island</name>
 	<category>island</category>
-	<behavior>com.github.angerona.fw.island.behavior.IslandBehavior</behavior>
+	<behavior>com.github.kreatures.island.behavior.IslandBehavior</behavior>
 	<description>
 		The Agent is located on a tropical island with constant weather conditions.
 		The Agent has to construct a transmitting station.

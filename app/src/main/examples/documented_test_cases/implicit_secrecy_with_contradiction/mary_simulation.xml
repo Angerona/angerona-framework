@@ -1,6 +1,6 @@
 <simulation-configuration>
 	<name>Implicit Secrecy with Contradiction</name>
-    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.kreatures.core.def.DefaultBehavior</behavior>
 	<category>feature-test</category>
 	
 	<agent-instance>
@@ -11,7 +11,7 @@
 
    	 	<capability>QueryAnswer</capability>
 		
-		<data key="Confidential">(Coroner, com.github.angerona.fw.logic.asp.AspReasoner{d=0.6}, john_argued) 
+		<data key="Confidential">(Coroner, com.github.kreatures.core.logic.asp.AspReasoner{d=0.6}, john_argued) 
 		</data>
 	</agent-instance>
       

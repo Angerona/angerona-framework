@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>SCM simple</name>
     <category>scm/knowhow</category>   
-    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.kreatures.core.def.DefaultBehavior</behavior>
 	<description>
 	This scenario does the same as the scm/asp/Strike Committee Meeting (ASP) but uses other
 	operators, namely know-how driven plan generation operators. The communication is:

@@ -3,9 +3,9 @@
 	<cycle-script source="config/interactive_agent_cycle.xml" />
    	
 	<operation-set operation-type="UpdateBeliefs">
-      <default-operator-cls>com.github.angerona.fw.defendingagent.operators.def.UpdateBeliefsOperator</default-operator-cls>
+      <default-operator-cls>com.github.kreatures.core.def.ndingagent.operators.def.UpdateBeliefsOperator</default-operator-cls>
    	</operation-set>
 
-    <component>com.github.angerona.fw.defendingagent.ViewDataComponent</component>
-    <component>com.github.angerona.fw.ActionHistory</component>
+    <component>com.github.kreatures.core.def.ndingagent.ViewDataComponent</component>
+    <component>com.github.kreatures.core.ActionHistory</component>
 </agent-configuration>

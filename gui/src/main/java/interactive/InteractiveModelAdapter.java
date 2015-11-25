@@ -1,8 +1,8 @@
 package interactive;
 
-import com.github.angerona.fw.AngeronaEnvironment;
-import com.github.angerona.fw.InteractiveAgent;
-import com.github.angerona.fw.util.ModelAdapter;
+import com.github.kreatures.core.KReaturesEnvironment;
+import com.github.kreatures.core.InteractiveAgent;
+import com.github.kreatures.core.util.ModelAdapter;
 
 /**
  * 
@@ -12,7 +12,7 @@ public class InteractiveModelAdapter extends ModelAdapter {
 	private String[] receiver, actionTypes = { "Query", "Revision" };
 	private InteractiveAgent a;
 	
-	public InteractiveModelAdapter(AngeronaEnvironment environment){
+	public InteractiveModelAdapter(KReaturesEnvironment environment){
 		this.receiver = environment.getAgentNames().toArray(new String[environment.getAgentNames().size()]);
 		
 		//find the agent controlled by the user

@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>SCM extended - unsafe</name>
 	<category>scm/knowhow</category>
-    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    <behavior>com.github.kreatures.core.def.DefaultBehavior</behavior>
 	<description>
 	This scenario uses the unsafe version of the know-how plan generation. Therefore the employee gives answers
 	that reveal his secrets.

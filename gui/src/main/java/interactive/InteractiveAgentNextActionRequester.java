@@ -4,15 +4,15 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 
-import com.github.angerona.fw.Angerona;
-import com.github.angerona.fw.AngeronaEnvironment;
-import com.github.angerona.fw.NextActionRequester;
+import com.github.kreatures.core.KReatures;
+import com.github.kreatures.core.KReaturesEnvironment;
+import com.github.kreatures.core.NextActionRequester;
 
 public class InteractiveAgentNextActionRequester implements NextActionRequester {
 
-	private AngeronaEnvironment environment;
+	private KReaturesEnvironment environment;
 
-	public InteractiveAgentNextActionRequester(AngeronaEnvironment environment){
+	public InteractiveAgentNextActionRequester(KReaturesEnvironment environment){
 		this.environment = environment;
 	}
 	
@@ -30,10 +30,10 @@ public class InteractiveAgentNextActionRequester implements NextActionRequester 
 				}
 			});
 		} catch (InvocationTargetException e1) {
-			Angerona.getInstance().onError("Interactive User-Input Internal Error", e1.getMessage());
+			KReatures.getInstance().onError("Interactive User-Input Internal Error", e1.getMessage());
 			e1.printStackTrace();
 		} catch (InterruptedException e1) {
-			Angerona.getInstance().onError("Interactive User-Input interruped", e1.getMessage());
+			KReatures.getInstance().onError("Interactive User-Input interruped", e1.getMessage());
 			e1.printStackTrace();
 		}
 			

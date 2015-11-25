@@ -1,15 +1,15 @@
 <beliefbase-configuration>
    <name>Conditional Belief Base</name>
    <reasoners>
-      <default-operator-cls>com.github.angerona.fw.logic.conditional.ConditionalReasoner</default-operator-cls>
+      <default-operator-cls>com.github.kreatures.core.logic.ocf.ConditionalReasoner</default-operator-cls>
    </reasoners>
    <change-operators>
-      <default-operator-cls>com.github.angerona.fw.logic.conditional.ConditionalRevision</default-operator-cls>
-      <operator-cls>com.github.angerona.fw.logic.conditional.ConditionalExpansion</operator-cls>
+      <default-operator-cls>com.github.kreatures.core.logic.ocf.ConditionalRevision</default-operator-cls>
+      <operator-cls>com.github.kreatures.core.logic.ocf.ConditionalExpansion</operator-cls>
    </change-operators>
    <translators>
-      <default-operator-cls>com.github.angerona.fw.logic.conditional.ConditionalTranslator</default-operator-cls>
+      <default-operator-cls>com.github.kreatures.core.logic.ocf.ConditionalTranslator</default-operator-cls>
    </translators>
    
-   <beliefbase-class>com.github.angerona.fw.logic.conditional.ConditionalBeliefbase</beliefbase-class>
+   <beliefbase-class>com.github.kreatures.core.logic.ocf.ConditionalBeliefbase</beliefbase-class>
 </beliefbase-configuration>
