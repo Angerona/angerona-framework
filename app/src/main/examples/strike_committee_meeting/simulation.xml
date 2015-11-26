@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>Strike Committee Meeting (Simple)</name>
 	<category>scm</category>
-	<behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+	<behavior>com.github.kreaturesfw.core.def.DefaultBehavior</behavior>
 	<description>
 		This scenario uses the simple knowledge representation mechanism
 		and shows that the agent using this mechanism is capable to lie

@@ -1,8 +1,0 @@
-(+ |  hLZ || khLZ ) 
-(mkgl | mX || mY)
-(-mkgl | mZ)
-(-fA|hLZ && mkgl)
-(fA|khLZ && ltA && lkA)
-(ltA|(lt1 || lt2) && mkgl)
-(-ltA|lt3 && mkgl)
-(khLZ|mkgl)
