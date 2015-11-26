@@ -14,6 +14,7 @@ import com.github.kreaturesfw.island.beliefbase.IslandTranslator;
 import com.github.kreaturesfw.island.beliefbase.IslandUpdateBeliefsOperator;
 import com.github.kreaturesfw.island.components.Area;
 import com.github.kreaturesfw.island.components.Battery;
+import com.github.kreaturesfw.island.operators.IslandExecuteOperator;
 import com.github.kreaturesfw.island.operators.IslandFilterOperator;
 import com.github.kreaturesfw.island.operators.IslandOptionsOperator;
 import com.github.kreaturesfw.island.operators.IslandPlanningOperator;
@@ -49,6 +50,7 @@ public class IslandPlugin extends AngeronaPluginAdapter {
 		operators.add(IslandOptionsOperator.class);
 		operators.add(IslandFilterOperator.class);
 		operators.add(IslandPlanningOperator.class);
+		operators.add(IslandExecuteOperator.class);
 
 		operators.add(IslandUpdateBeliefsOperator.class);
 		return operators;

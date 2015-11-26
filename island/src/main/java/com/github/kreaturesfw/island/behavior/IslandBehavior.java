@@ -16,6 +16,8 @@ import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.legacy.Perception;
+import com.github.kreaturesfw.core.simple.behavior.SimpleBehavior;
+import com.github.kreaturesfw.core.util.Generator;
 import com.github.kreaturesfw.island.components.Area;
 import com.github.kreaturesfw.island.components.Battery;
 import com.github.kreaturesfw.island.data.IslandAction;
@@ -23,8 +25,6 @@ import com.github.kreaturesfw.island.data.IslandPerception;
 import com.github.kreaturesfw.island.data.WeatherChart;
 import com.github.kreaturesfw.island.enums.Location;
 import com.github.kreaturesfw.island.enums.Weather;
-import com.github.kreaturesfw.simple.behavior.Generator;
-import com.github.kreaturesfw.simple.behavior.SimpleBehavior;
 
 /**
  * 

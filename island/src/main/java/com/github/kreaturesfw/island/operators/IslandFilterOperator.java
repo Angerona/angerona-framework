@@ -8,11 +8,11 @@ import static com.github.kreaturesfw.island.enums.Weather.THUNDERSTORM;
 
 import java.util.Set;
 
+import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.legacy.Desire;
+import com.github.kreaturesfw.core.simple.operators.FilterOperator;
 import com.github.kreaturesfw.island.components.Area;
 import com.github.kreaturesfw.island.components.Battery;
-import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;
-import com.github.kreaturesfw.simple.operators.FilterOperator;
 
 /**
  * 

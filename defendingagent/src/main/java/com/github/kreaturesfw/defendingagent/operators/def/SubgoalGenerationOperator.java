@@ -5,18 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.parser.FolParserB;
-import net.sf.tweety.logics.fol.parser.ParseException;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.FolSignature;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.ocf.logic.ConditionalBeliefbase;
-import com.github.kreaturesfw.ocf.logic.ConditionalRevision;
+import com.github.kreaturesfw.core.bdi.operators.BaseSubgoalGenerationOperator;
+import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.comm.Revision;
@@ -46,12 +39,19 @@ import com.github.kreaturesfw.defendingagent.ViewWithCompressedHistory;
 import com.github.kreaturesfw.defendingagent.ViewWithHistory;
 import com.github.kreaturesfw.defendingagent.comm.RevisionAnswer;
 import com.github.kreaturesfw.defendingagent.comm.UpdateAnswer;
+import com.github.kreaturesfw.ocf.logic.ConditionalBeliefbase;
+import com.github.kreaturesfw.ocf.logic.ConditionalRevision;
 import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
 import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeUpdate;
 import com.github.kreaturesfw.secrecy.Secret;
 import com.github.kreaturesfw.secrecy.components.SecrecyKnowledge;
-import com.github.kreaturesfw.secrecy.operators.BaseSubgoalGenerationOperator;
-import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;
+
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.fol.parser.FolParserB;
+import net.sf.tweety.logics.fol.parser.ParseException;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * Censor agents subgoal generation generates the atomic actions need to react on the

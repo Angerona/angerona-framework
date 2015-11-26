@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Desire;
 import com.github.kreaturesfw.core.legacy.Intention;
@@ -17,7 +18,6 @@ import com.github.kreaturesfw.knowhow.graph.parameter.DefaultPlanConverter;
 import com.github.kreaturesfw.secrecy.example.operators.GenerateOptionsOperator;
 import com.github.kreaturesfw.secrecy.example.operators.IntentionUpdateOperator;
 import com.github.kreaturesfw.secrecy.example.operators.SubgoalGenerationOperator;
-import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 

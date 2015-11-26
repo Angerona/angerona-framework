@@ -5,18 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.parser.FolParserB;
-import net.sf.tweety.logics.fol.parser.ParseException;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.FolSignature;
-
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.ListenableDirectedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.legacy.Desire;
@@ -31,7 +25,13 @@ import com.github.kreaturesfw.knowhow.penalty.PenaltyFunction;
 import com.github.kreaturesfw.knowhow.penalty.RestrictiveSecretsPenalty;
 import com.github.kreaturesfw.secrecy.example.operators.GenerateOptionsOperator;
 import com.github.kreaturesfw.secrecy.example.operators.SubgoalGenerationOperator;
-import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;
+
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.fol.parser.FolParserB;
+import net.sf.tweety.logics.fol.parser.ParseException;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * A subgoal generation operator tries to generate plans for the desires

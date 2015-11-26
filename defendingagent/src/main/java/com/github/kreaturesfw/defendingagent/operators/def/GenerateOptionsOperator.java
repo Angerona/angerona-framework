@@ -3,21 +3,21 @@ package com.github.kreaturesfw.defendingagent.operators.def;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.bdi.operators.BaseGenerateOptionsOperator;
+import com.github.kreaturesfw.core.bdi.operators.parameter.GenerateOptionsParameter;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.comm.Revision;
 import com.github.kreaturesfw.core.comm.Update;
 import com.github.kreaturesfw.core.internal.IdGenerator;
 import com.github.kreaturesfw.core.legacy.Desire;
 import com.github.kreaturesfw.core.logic.Desires;
-import com.github.kreaturesfw.secrecy.operators.BaseGenerateOptionsOperator;
-import com.github.kreaturesfw.secrecy.operators.parameter.GenerateOptionsParameter;
+
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 
 /**
  * The generate options operator of a defending censor agent expecting either query requests
