@@ -7,9 +7,6 @@ import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import bibliothek.gui.dock.DefaultDockable;
-
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
@@ -18,14 +15,19 @@ import com.github.kreaturesfw.gui.component.OperatorConfig;
 import com.github.kreaturesfw.gui.component.OperatorConfigController;
 import com.github.kreaturesfw.gui.component.OperatorConfigPanel;
 
+import bibliothek.gui.dock.DefaultDockable;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 /**
  * Generic ui view to show a belief base. It shows its content in a list
  * and uses the generic base class ListViewColored
  * 
  * @author Tim Janus
  */
+@SuppressWarnings("deprecation")
 public class BeliefbaseView extends ListViewColored {
 	
+	private static final long serialVersionUID = 6749306899450503411L;
 	private OperatorConfig opConfig;
 	
 	@Override

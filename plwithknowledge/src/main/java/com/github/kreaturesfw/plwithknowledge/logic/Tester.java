@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
-import com.github.kreaturesfw.core.operators.parameter.ReasonerParameter;
 import com.github.kreaturesfw.core.parser.ParseException;
 import com.github.kreaturesfw.core.util.Pair;
 
@@ -20,7 +18,6 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.Sat4jEntailment;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -75,6 +72,7 @@ public class Tester {
 		calculateModels(params);
 		
 		
+		@SuppressWarnings("unchecked")
 		Collection<Proposition> propositions = (Collection<Proposition>) params.getSignature();
 	
 		//calculate the facts that can be inferred from the models of the beliefbase
@@ -132,18 +130,19 @@ public class Tester {
 		
 		Sat4jEntailment test = new Sat4jEntailment();
 
+		@SuppressWarnings("unchecked")
 		Collection<Proposition> signature = (Collection<Proposition>) beliefbase.getSignature();
 		Set<NicePossibleWorld> worlds = NicePossibleWorld.getAllPossibleWorlds(signature);
 		Set<NicePossibleWorld> satisfyingWorlds = new HashSet<NicePossibleWorld>();
 		
-		//compute the models/worlds for the nonupdatabale formulas
+		//compute the models/worlds for the non-updatable formulas
 		for(NicePossibleWorld world: worlds){
 			if(world.satisfies(knowledge)){
 				satisfyingWorlds.add(world);
 			}
 		}
 		
-		//the set of formulas from context which are consistent with the nonupdatable formulas
+		//the set of formulas from context which are consistent with the non-updatable formulas
 		LinkedList<PropositionalFormula> consitent = new LinkedList<PropositionalFormula>();
 		
 		Set<PropositionalFormula> testFormulaSet;

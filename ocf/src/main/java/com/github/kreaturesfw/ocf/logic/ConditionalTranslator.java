@@ -3,13 +3,6 @@ package com.github.kreaturesfw.ocf.logic;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.translators.clnlp.ClNLPTranslator;
-import net.sf.tweety.lp.nlp.syntax.NLPProgram;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +15,12 @@ import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
 
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.lp.nlp.syntax.NLPProgram;
+
 /**
  * Default translator for conditional belief bases
  * @author Sebastian Homann, Pia Wierzoch, Tim Janus (modifications)
@@ -30,7 +29,7 @@ public class ConditionalTranslator extends BaseTranslator {
 	
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(ConditionalTranslator.class);
-	private ClNLPTranslator cl2nlp = new ClNLPTranslator();
+//	private ClNLPTranslator cl2nlp = new ClNLPTranslator();
 	/**
 	 * Translates a perception into a beliefbase. A perception may contain
 	 * formulas in first order logic, which have to be translated to a conditional

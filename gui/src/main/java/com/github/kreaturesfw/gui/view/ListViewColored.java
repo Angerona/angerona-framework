@@ -24,7 +24,6 @@ import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.core.report.ReportListener;
-import com.github.kreaturesfw.core.util.Utility;
 import com.github.kreaturesfw.gui.base.EntityViewComponent;
 import com.github.kreaturesfw.gui.nav.NavigationPanel;
 import com.github.kreaturesfw.gui.nav.NavigationUser;

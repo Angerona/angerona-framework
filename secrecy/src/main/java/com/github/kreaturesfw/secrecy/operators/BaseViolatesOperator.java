@@ -1,8 +1,5 @@
 package com.github.kreaturesfw.secrecy.operators;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaAtom;
@@ -31,9 +28,6 @@ public abstract class BaseViolatesOperator
 	extends Operator<Agent, EvaluateParameter, ViolatesResult> 
 	implements ActionProcessor
 	{
-
-	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(BaseViolatesOperator.class);
 	
 	/** the unique operation name of the violates operator */
 	public static final String OPERATION_NAME = "Violates";

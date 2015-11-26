@@ -5,6 +5,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.logic.AngeronaAnswer;
+import com.github.kreaturesfw.core.logic.AnswerValue;
+import com.github.kreaturesfw.core.logic.BaseReasoner;
+import com.github.kreaturesfw.core.operators.parameter.ReasonerParameter;
+import com.github.kreaturesfw.core.util.LogicTranslator;
+import com.github.kreaturesfw.core.util.Pair;
+import com.github.kreaturesfw.core.util.Utility;
+
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.cl.ClBeliefSet;
 import net.sf.tweety.logics.cl.RuleBasedCReasoner;
@@ -19,25 +28,11 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.logic.AngeronaAnswer;
-import com.github.kreaturesfw.core.logic.AnswerValue;
-import com.github.kreaturesfw.core.logic.BaseReasoner;
-import com.github.kreaturesfw.core.operators.parameter.ReasonerParameter;
-import com.github.kreaturesfw.core.util.LogicTranslator;
-import com.github.kreaturesfw.core.util.Pair;
-import com.github.kreaturesfw.core.util.Utility;
-
 /**
  * A Reasoner for conditional belief bases using c-representations
  * @author Sebastian Homann, Pia Wierzoch
  */
 public class ConditionalReasoner extends BaseReasoner {
-	/** reference to the logging facility */
-	private static Logger log = LoggerFactory.getLogger(ConditionalReasoner.class);
 
 	private Map<ClBeliefSet, RankingFunction> cache = new HashMap<ClBeliefSet, RankingFunction>();
 	

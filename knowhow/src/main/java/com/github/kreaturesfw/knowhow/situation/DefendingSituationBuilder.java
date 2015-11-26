@@ -5,9 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.knowhow.KnowhowBase;
 import com.github.kreaturesfw.knowhow.KnowhowStatement;
@@ -25,8 +22,6 @@ import net.sf.tweety.lp.asp.util.AnswerSet;
 import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 public class DefendingSituationBuilder extends SituationBuilderAdapter {
-	/** logging facility */
-	private static Logger LOG = LoggerFactory.getLogger(InvestigationSituationBuilder.class);
 
 	private DefendingSituation situation;
 	

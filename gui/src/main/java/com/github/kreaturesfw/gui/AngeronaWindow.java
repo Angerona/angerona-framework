@@ -28,19 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import bibliothek.extension.gui.dock.theme.SmoothTheme;
-import bibliothek.gui.DockController;
-import bibliothek.gui.DockStation;
-import bibliothek.gui.Dockable;
-import bibliothek.gui.dock.DefaultDockable;
-import bibliothek.gui.dock.SplitDockStation;
-import bibliothek.gui.dock.StackDockStation;
-import bibliothek.gui.dock.station.split.SplitDockProperty;
-import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
-import bibliothek.gui.dock.themes.NoStackTheme;
-import bibliothek.gui.dock.util.IconManager;
-import bibliothek.gui.dock.util.Priority;
-
 import com.github.kreaturesfw.core.Angerona;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
 import com.github.kreaturesfw.core.legacy.Action;
@@ -56,17 +43,30 @@ import com.github.kreaturesfw.gui.internal.UIPluginInstatiator;
 import com.github.kreaturesfw.gui.internal.ViewComponentFactory;
 import com.github.kreaturesfw.gui.project.ProjectTreeMVPComponent;
 import com.github.kreaturesfw.gui.report.ReportTreeMVP;
-import com.github.kreaturesfw.gui.simctrl.SimulationControlBar;
 import com.github.kreaturesfw.gui.simctrl.SimulationControlBarMVPComponent;
 import com.github.kreaturesfw.gui.simctrl.SimulationControlMenu;
 import com.github.kreaturesfw.gui.simctrl.SimulationControlPresenter;
 import com.github.kreaturesfw.gui.view.ReportView;
 import com.github.kreaturesfw.gui.view.ResourcenView;
 
+import bibliothek.extension.gui.dock.theme.SmoothTheme;
+import bibliothek.gui.DockController;
+import bibliothek.gui.DockStation;
+import bibliothek.gui.Dockable;
+import bibliothek.gui.dock.DefaultDockable;
+import bibliothek.gui.dock.SplitDockStation;
+import bibliothek.gui.dock.StackDockStation;
+import bibliothek.gui.dock.station.split.SplitDockProperty;
+import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
+import bibliothek.gui.dock.themes.NoStackTheme;
+import bibliothek.gui.dock.util.IconManager;
+import bibliothek.gui.dock.util.Priority;
+
 /**
  * The main window of the Angerona UI - Extension. It is a Singleton. 
  * @author Tim Janus
  */
+@SuppressWarnings("deprecation")
 public class AngeronaWindow extends WindowAdapter
 	implements  
 	SimulationListener,
@@ -93,7 +93,7 @@ public class AngeronaWindow extends WindowAdapter
 	private List<Dockable> resMap = new LinkedList<>();
 	
 	/** a bar allowing the loading, running and initalization of simulations */
-	private SimulationControlBar simLoadBar;
+	// private SimulationControlBar simLoadBar;
 	
 	/** logging facility */
 	private static Logger LOG = LoggerFactory.getLogger(AngeronaWindow.class);

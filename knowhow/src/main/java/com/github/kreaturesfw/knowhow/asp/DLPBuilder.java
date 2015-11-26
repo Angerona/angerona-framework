@@ -4,6 +4,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.github.kreaturesfw.core.util.Pair;
+import com.github.kreaturesfw.knowhow.KnowhowBase;
+import com.github.kreaturesfw.knowhow.KnowhowStatement;
+import com.github.kreaturesfw.knowhow.parameter.SkillParameter;
+
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -12,14 +17,6 @@ import net.sf.tweety.lp.asp.syntax.DLPAtom;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.Rule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.kreaturesfw.core.util.Pair;
-import com.github.kreaturesfw.knowhow.KnowhowBase;
-import com.github.kreaturesfw.knowhow.KnowhowStatement;
-import com.github.kreaturesfw.knowhow.parameter.SkillParameter;
-
 /**
  * Helper class responsible for translating the know-how base into other data-structures like
  * extended logical programs. Only static methods are used.
@@ -27,10 +24,7 @@ import com.github.kreaturesfw.knowhow.parameter.SkillParameter;
  * @author Tim Janus
  */
 public class DLPBuilder {
-	
-	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(DLPBuilder.class);
-	
+		
 	/**
 	 * Creates an extended Logic program from the given KnowhowBase.
 	 * @todo Implement variables for Knowhow-Statement targets

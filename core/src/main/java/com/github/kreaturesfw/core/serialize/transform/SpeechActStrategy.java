@@ -18,11 +18,13 @@ import com.github.kreaturesfw.core.comm.Update;
 
 public class SpeechActStrategy implements Strategy{
 
+	@SuppressWarnings("rawtypes")
 	public boolean write(Type arg0, Object arg1,
 			NodeMap<OutputNode> arg2, Map arg3) throws Exception {
 		return false;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Value read(Type arg0, NodeMap<InputNode> arg1, Map arg2)
 			throws Exception {
 		

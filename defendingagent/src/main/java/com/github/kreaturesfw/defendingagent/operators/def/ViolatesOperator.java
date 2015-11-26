@@ -1,8 +1,5 @@
 package com.github.kreaturesfw.defendingagent.operators.def;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.Perception;
@@ -14,9 +11,6 @@ import com.github.kreaturesfw.secrecy.operators.ViolatesResult;
 
 
 public class ViolatesOperator extends BaseViolatesOperator {
-	
-	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory.getLogger(ViolatesOperator.class);
 	
 	@Override
 	protected ViolatesResult onAction(Action action, EvaluateParameter param) {

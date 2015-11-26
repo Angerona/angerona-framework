@@ -21,6 +21,7 @@ public class ResourcenView extends JPanel implements ViewComponent {
 	/** kick warning */
 	private static final long serialVersionUID = -8021405489946274962L;
 
+	@SuppressWarnings("unused")
 	private TreeControllerAdapter controller;
 	
 	private JTree tree;

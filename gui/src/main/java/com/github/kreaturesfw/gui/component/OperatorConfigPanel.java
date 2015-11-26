@@ -160,6 +160,7 @@ public class OperatorConfigPanel extends ObservingPanel {
 	@Override
 	public <T> void propertyChange(String propertyName, T oldValue, T newValue) {
 		if(Utility.equals(propertyName, "parameters")) {
+			@SuppressWarnings("unchecked")
 			Map<String, String> params = (Map<String, String>)newValue;
 			refillParameterList(params);
 			

@@ -6,11 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import net.sf.tweety.logics.commons.syntax.Predicate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Desire;
 import com.github.kreaturesfw.core.legacy.Intention;
@@ -19,11 +14,12 @@ import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
 import com.github.kreaturesfw.knowhow.graph.parameter.DefaultPlanConverter;
-import com.github.kreaturesfw.knowhow.situation.SituationBuilderAdapter;
 import com.github.kreaturesfw.secrecy.example.operators.GenerateOptionsOperator;
 import com.github.kreaturesfw.secrecy.example.operators.IntentionUpdateOperator;
 import com.github.kreaturesfw.secrecy.example.operators.SubgoalGenerationOperator;
 import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;
+
+import net.sf.tweety.logics.commons.syntax.Predicate;
 
 /**
  * An IntentionUpdate operator implementation that does the same as
@@ -33,11 +29,7 @@ import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;
  * @author Tim Janus
  */
 public class KnowhowIntentionUpdate extends IntentionUpdateOperator {
-	
-	/** logging facility */
-	private static Logger LOG = LoggerFactory.getLogger(SituationBuilderAdapter.class);
-	
-	
+		
 	@Override
 	protected PlanElement processImpl(PlanParameter param) {
 		PlanElement reval = null;

@@ -2,23 +2,8 @@ package com.github.kreaturesfw.plwithknowledge.logic;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.pl.Sat4jEntailment;
-import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
@@ -26,15 +11,22 @@ import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.operators.parameter.ReasonerParameter;
 import com.github.kreaturesfw.core.util.Pair;
+
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.pl.Sat4jEntailment;
+import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
 /**
  * A reasoner for propositional beliefbase with knowledge and assertions
  * 
  * @author Pia Wierzoch
  */
 public class PLWithKnowledgeReasoner extends BaseReasoner{
-
-	/** reference to the logging facility */
-	private static Logger log = LoggerFactory.getLogger(PLWithKnowledgeReasoner.class);
 	
 	private ModelTupel beliefbaseModels;
 	
@@ -48,6 +40,7 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 		this.calculateModels(params);
 		
 		PLWithKnowledgeBeliefbase beliefbase = (PLWithKnowledgeBeliefbase) params.getBeliefBase();
+		@SuppressWarnings("unchecked")
 		Collection<Proposition> propositions = (Collection<Proposition>) beliefbase.getSignature();
 		
 		//calculate the facts that can be inferred from the models of the beliefbase
@@ -121,6 +114,7 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 		
 		Sat4jEntailment test = new Sat4jEntailment();
 
+		@SuppressWarnings("unchecked")
 		Collection<Proposition> signature = (Collection<Proposition>) beliefbase.getSignature();
 		Set<NicePossibleWorld> worlds = NicePossibleWorld.getAllPossibleWorlds(signature);
 		Set<NicePossibleWorld> satisfyingWorlds = new HashSet<NicePossibleWorld>();

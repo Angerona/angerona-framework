@@ -12,7 +12,6 @@ import com.github.kreaturesfw.core.comp.Presentable;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.gui.base.EntityViewComponent;
 import com.github.kreaturesfw.gui.base.ViewComponent;
-import com.github.kreaturesfw.gui.view.ListViewColored;
 import com.github.kreaturesfw.gui.view.NoView;
 import com.github.kreaturesfw.gui.view.PresentableView;
 
