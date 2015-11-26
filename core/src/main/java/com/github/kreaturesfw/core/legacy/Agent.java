@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.Angerona;
 import com.github.kreaturesfw.core.asml.CommandSequence;
+import com.github.kreaturesfw.core.basic.AbstractAgent;
 import com.github.kreaturesfw.core.comp.Parsable;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;
 import com.github.kreaturesfw.core.internal.AngeronaReporter;
@@ -76,7 +77,7 @@ import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
  * @author Tim Janus
  * @author Daniel Dilger
  */
-public class Agent implements ContextProvider, Entity, OperatorStack,
+public class Agent extends AbstractAgent<Perception> implements ContextProvider, Entity, OperatorStack,
 		ReportPoster, Reporter, OperatorCaller, ActionProcessor,
 		PropertyChangeListener, SubgoalListener {
 
@@ -142,6 +143,12 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 	public Agent(String name, AngeronaEnvironment env) {
 		this.name = name;
 		this.env = env;
+	}
+	
+	@Override
+	public boolean execute(Perception perception) {
+		perceive(perception);
+		return cycle();
 	}
 
 	public List<String> getCapabilities() {
