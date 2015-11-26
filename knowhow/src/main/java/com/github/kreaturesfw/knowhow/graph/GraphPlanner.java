@@ -10,7 +10,6 @@ import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.error.NotImplementedException;
 import com.github.kreaturesfw.core.legacy.Desire;
 
 /**
@@ -153,7 +152,7 @@ public class GraphPlanner extends GraphPlannerAdapter {
 
 	@Override
 	public void resumePlan(WorkingPlan plan, List<GraphIntention> complexIntentions, List<Integer> steps) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	public static interface BreakCondition {

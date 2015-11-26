@@ -3,7 +3,6 @@ package com.github.kreaturesfw.asp.logic;
 import java.io.File;
 
 import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.error.NotImplementedException;
 import com.github.kreaturesfw.core.serialize.GlobalConfiguration;
 
 import net.sf.tweety.lp.asp.solver.Clingo;
@@ -39,7 +38,7 @@ public enum SolverWrapper implements ISolverWrapper {
 		} else if(ordinal() == 2) { // if dlv-complex:
 			paramName = ("path-dlv-complex");
 		} else {
-			throw new NotImplementedException("SolverWrapper has no implementation for ordinal: " + ordinal());
+			throw new UnsupportedOperationException("SolverWrapper has no implementation for ordinal: " + ordinal());
 		}
 		
 		if(config != null) {
@@ -80,7 +79,7 @@ public enum SolverWrapper implements ISolverWrapper {
 		else if(this == SolverWrapper.DLV_COMPLEX)
 			solver = new DLVComplex(path);
 		else
-			throw new NotImplementedException("Solver of this type not supported yet.");
+			throw new UnsupportedOperationException("Solver of this type not supported yet.");
 		return solver;
 	}
 }

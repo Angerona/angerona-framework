@@ -5,7 +5,6 @@ import java.util.Set;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Query;
-import com.github.kreaturesfw.core.error.NotImplementedException;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.logic.AnswerValue;
@@ -50,7 +49,7 @@ public class ExampleTranslator extends BaseTranslator {
 		}
 		
 		// nothing but answer implemented yet.
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

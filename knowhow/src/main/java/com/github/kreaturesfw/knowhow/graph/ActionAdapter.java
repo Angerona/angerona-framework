@@ -5,18 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.logics.fol.parser.FolParserB;
-import net.sf.tweety.logics.fol.parser.ParseException;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.FolSignature;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Query;
-import com.github.kreaturesfw.core.error.NotImplementedException;
 import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.Perception;
@@ -26,6 +20,11 @@ import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.util.Utility;
 import com.github.kreaturesfw.knowhow.graph.parameter.Parameter;
 import com.github.kreaturesfw.knowhow.graph.parameter.Parameter.TYPE;
+
+import net.sf.tweety.logics.fol.parser.FolParserB;
+import net.sf.tweety.logics.fol.parser.ParseException;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This action adapts another action, it acts as placeholder and can dynamically
@@ -90,7 +89,7 @@ public class ActionAdapter extends Action {
 		} else if(actionName.equals("TBD")) {
 			return null;
 		} else {
-			throw new NotImplementedException("Generation of Action '" + actionName + "' not implemented yet");
+			throw new UnsupportedOperationException("Generation of Action '" + actionName + "' not implemented yet");
 		}
 		reval.setParent(getParent());
 		return reval;
@@ -152,14 +151,14 @@ public class ActionAdapter extends Action {
 					} else if(param.getIdentifier().equals("p_lie")) {
 						simpleAnswer = Utility.lie(simpleAnswer);
 					} else {
-						throw new NotImplementedException("The honesty type: '" + param.getIdentifier().substring(2) + "' is not implemented yet.");
+						throw new UnsupportedOperationException("The honesty type: '" + param.getIdentifier().substring(2) + "' is not implemented yet.");
 					}
 					
 					return new Answer(this.agent, context.getSenderId(), context.getQuestion(), 
 							new AngeronaAnswer(context.getQuestion(), simpleAnswer));
 				}
 				
-				throw new NotImplementedException("Cannot handle the answer on open queries yet.");
+				throw new UnsupportedOperationException("Cannot handle the answer on open queries yet.");
 			} else if(param.getType() == TYPE.T_CONSTANT) {
 				String constant = param.getIdentifier().substring(2);
 				AnswerValue av = null;

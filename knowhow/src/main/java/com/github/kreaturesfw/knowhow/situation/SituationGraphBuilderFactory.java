@@ -3,7 +3,6 @@ package com.github.kreaturesfw.knowhow.situation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.error.NotImplementedException;
 import com.github.kreaturesfw.core.legacy.Agent;
 
 /**
@@ -24,7 +23,7 @@ public class SituationGraphBuilderFactory {
 		} else if(situation instanceof DefendingSituation) {
 			reval = new DefendingSituationBuilder((DefendingSituation)situation, agent);
 		} else {
-			throw new NotImplementedException("There is no SituationGraphBuilder registered at " +
+			throw new UnsupportedOperationException("There is no SituationGraphBuilder registered at " +
 					"the Factory with name '" + situation.getClass().getName() + "'");
 		}
 		;

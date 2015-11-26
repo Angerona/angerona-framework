@@ -3,7 +3,6 @@ package com.github.kreaturesfw.secrecy.operators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.error.NotImplementedException;
 import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaAtom;
@@ -90,7 +89,7 @@ public abstract class BaseViolatesOperator
 			cache.setCacheValue(param, reval);
 			return reval;
 		}
-		throw new NotImplementedException("Violates is not implemeted for Action of type: " + atom.getClass().getSimpleName());
+		throw new UnsupportedOperationException("Violates is not implemeted for Action of type: " + atom.getClass().getSimpleName());
 	}
 	
 	protected abstract ViolatesResult onAction(Action action, EvaluateParameter param);

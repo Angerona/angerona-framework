@@ -4,15 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.NumberTerm;
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.error.NotImplementedException;
 import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
@@ -25,6 +19,11 @@ import com.github.kreaturesfw.secrecy.Secret;
 import com.github.kreaturesfw.secrecy.components.SecrecyKnowledge;
 import com.github.kreaturesfw.secrecy.operators.BaseViolatesOperator;
 import com.github.kreaturesfw.secrecy.operators.ViolatesResult;
+
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
  * This class is capable of proofing if the applying of an answer
@@ -163,7 +162,7 @@ public class ViolatesOperator extends BaseViolatesOperator {
 			
 			return violates;
 		}
-		throw new NotImplementedException("No complex plans supported by violate operator yet.");
+		throw new UnsupportedOperationException("No complex plans supported by violate operator yet.");
 	}
 	
 	@Override
