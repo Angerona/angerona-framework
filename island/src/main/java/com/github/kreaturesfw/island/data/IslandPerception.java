@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.island.data;
 
-import com.github.kreaturesfw.core.Perception;
+import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.island.enums.Location;
 import com.github.kreaturesfw.island.enums.Weather;
 

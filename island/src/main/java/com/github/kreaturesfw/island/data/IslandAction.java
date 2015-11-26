@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.island.data;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.island.enums.ActionId;
 
 /**

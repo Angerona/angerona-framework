@@ -6,9 +6,9 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.simpleframework.xml.Element;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Perception;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Perception;
 
 /**
  * Base class for every SpeechAct implemented by the Angerona framework.

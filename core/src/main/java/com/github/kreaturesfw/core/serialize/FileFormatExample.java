@@ -8,8 +8,8 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 
 import org.simpleframework.xml.core.PersistenceException;
 
-import com.github.kreaturesfw.core.Agent;
 import com.github.kreaturesfw.core.comm.Query;
+import com.github.kreaturesfw.core.legacy.Agent;
 
 /**
  * Writes xml examples of the current file format to the console.

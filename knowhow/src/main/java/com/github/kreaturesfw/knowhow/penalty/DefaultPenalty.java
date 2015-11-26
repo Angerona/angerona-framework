@@ -3,8 +3,8 @@ package com.github.kreaturesfw.knowhow.penalty;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.Beliefs;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;

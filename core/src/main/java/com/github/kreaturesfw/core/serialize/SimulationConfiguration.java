@@ -14,7 +14,7 @@ import org.simpleframework.xml.core.Commit;
 import org.simpleframework.xml.core.PersistenceException;
 import org.simpleframework.xml.core.Validate;
 
-import com.github.kreaturesfw.core.Perception;
+import com.github.kreaturesfw.core.legacy.Perception;
 
 /**
  * Class instance holding all the configuration options for a complete simulation.

@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.gui.interactive;
 
-import com.github.kreaturesfw.core.AngeronaEnvironment;
-import com.github.kreaturesfw.core.InteractiveAgent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.InteractiveAgent;
 import com.github.kreaturesfw.core.util.ModelAdapter;
 
 /**

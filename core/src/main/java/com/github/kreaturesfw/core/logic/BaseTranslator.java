@@ -2,14 +2,14 @@ package com.github.kreaturesfw.core.logic;
 
 import java.util.Set;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
-import com.github.kreaturesfw.core.Perception;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Justification;
 import com.github.kreaturesfw.core.comm.Justify;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.comm.SpeechAct;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.operators.parameter.TranslatorParameter;
 import com.github.kreaturesfw.core.util.Pair;

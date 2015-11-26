@@ -19,6 +19,9 @@ import com.github.kreaturesfw.core.def.FrameworkPlugin;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.OperatorMap;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.FrameworkListener;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.operators.OperatorStack;
@@ -255,13 +258,13 @@ public class Angerona {
 	 * 	It updates the reference to the actual report and the actual simulation.
 	 * 	@param ev	The reference to the new simulation simulation.
 	 */
-	protected void onCreateSimulation(AngeronaEnvironment ev) {
+	public void onCreateSimulation(AngeronaEnvironment ev) {
 		actualReport = new Report(ev);
 		actualSimulation = ev;
 		reports.put(ev, actualReport);
 	}
 	
-	protected void onAgentAdded(AngeronaEnvironment env, Agent added) {
+	public void onAgentAdded(AngeronaEnvironment env, Agent added) {
 		for(SimulationListener l : simulationListeners) {
 			l.agentAdded(env, added);
 		}
@@ -272,7 +275,7 @@ public class Angerona {
 	 * of the given simulation
 	 * @param ev		reference to the initialized simulation.
 	 */
-	protected void onNewSimulation(AngeronaEnvironment ev) {
+	public void onNewSimulation(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
 		}
@@ -283,7 +286,7 @@ public class Angerona {
 	 * the simulation listeners about the cleanup of the simulation.
 	 * @param ev	A reference to the simulation.
 	 */
-	protected void onSimulationDestroyed(AngeronaEnvironment ev) {
+	public void onSimulationDestroyed(AngeronaEnvironment ev) {
 		actualReport = null;
 		reports.clear();
 		for(SimulationListener l : simulationListeners) {

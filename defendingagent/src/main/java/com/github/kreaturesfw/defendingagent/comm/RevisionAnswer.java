@@ -2,8 +2,8 @@ package com.github.kreaturesfw.defendingagent.comm;
 
 import java.util.Set;
 
-import com.github.kreaturesfw.core.Agent;
 import com.github.kreaturesfw.core.comm.Answer;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 

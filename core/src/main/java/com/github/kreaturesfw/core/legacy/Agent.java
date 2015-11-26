@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,6 +21,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.Angerona;
 import com.github.kreaturesfw.core.asml.CommandSequence;
 import com.github.kreaturesfw.core.comp.Parsable;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;

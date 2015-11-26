@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.knowhow.graph;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Perception;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.secrecy.example.operators.ViolatesOperator;
 import com.github.kreaturesfw.secrecy.operators.ViolatesResult;

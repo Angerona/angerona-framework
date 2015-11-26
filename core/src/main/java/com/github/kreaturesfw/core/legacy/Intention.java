@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;
 
 import com.github.kreaturesfw.core.internal.IdGenerator;
 import com.github.kreaturesfw.core.listener.SubgoalListener;

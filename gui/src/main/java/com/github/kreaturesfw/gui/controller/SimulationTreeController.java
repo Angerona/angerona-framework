@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import bibliothek.gui.Dockable;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.AgentComponent;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
-import com.github.kreaturesfw.core.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.gui.AngeronaWindow;
 import com.github.kreaturesfw.gui.base.ViewComponent;

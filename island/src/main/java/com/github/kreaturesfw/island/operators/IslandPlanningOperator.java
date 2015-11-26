@@ -25,12 +25,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Desire;
-import com.github.kreaturesfw.core.PlanComponent;
-import com.github.kreaturesfw.core.PlanElement;
-import com.github.kreaturesfw.core.Subgoal;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Desire;
+import com.github.kreaturesfw.core.legacy.PlanComponent;
+import com.github.kreaturesfw.core.legacy.PlanElement;
+import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.island.components.Area;
 import com.github.kreaturesfw.island.data.IslandAction;
 import com.github.kreaturesfw.island.enums.Location;

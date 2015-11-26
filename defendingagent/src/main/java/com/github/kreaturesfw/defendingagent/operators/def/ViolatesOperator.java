@@ -3,10 +3,10 @@ package com.github.kreaturesfw.defendingagent.operators.def;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Perception;
-import com.github.kreaturesfw.core.PlanElement;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Perception;
+import com.github.kreaturesfw.core.legacy.PlanElement;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.secrecy.operators.BaseViolatesOperator;

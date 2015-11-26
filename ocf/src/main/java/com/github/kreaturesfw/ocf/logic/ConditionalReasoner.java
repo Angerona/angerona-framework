@@ -22,7 +22,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.BaseReasoner;

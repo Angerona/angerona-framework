@@ -2,8 +2,8 @@ package com.github.kreaturesfw.core.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
 import com.github.kreaturesfw.core.error.ConversionException;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 
 /**
  * Input-parameter class for change operations on a belief bases.

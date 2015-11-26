@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 import bibliothek.gui.dock.DefaultDockable;
 
 import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.report.Report;
 import com.github.kreaturesfw.gui.AngeronaWindow;

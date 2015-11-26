@@ -2,12 +2,12 @@ package com.github.kreaturesfw.secrecy.example.logic;
 
 import java.util.Set;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
-import com.github.kreaturesfw.core.Perception;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.error.NotImplementedException;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
 

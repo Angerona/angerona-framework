@@ -2,8 +2,8 @@ package com.github.kreaturesfw.core.operators.parameter;
 
 import java.util.Set;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
-import com.github.kreaturesfw.core.Perception;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.Perception;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.lp.nlp.syntax.NLPProgram;

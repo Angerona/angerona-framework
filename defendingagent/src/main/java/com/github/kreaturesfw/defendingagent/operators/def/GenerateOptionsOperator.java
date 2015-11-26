@@ -10,11 +10,11 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Desire;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.comm.Revision;
 import com.github.kreaturesfw.core.comm.Update;
 import com.github.kreaturesfw.core.internal.IdGenerator;
+import com.github.kreaturesfw.core.legacy.Desire;
 import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.secrecy.operators.BaseGenerateOptionsOperator;
 import com.github.kreaturesfw.secrecy.operators.parameter.GenerateOptionsParameter;

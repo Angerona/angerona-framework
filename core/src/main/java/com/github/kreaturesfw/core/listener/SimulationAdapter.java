@@ -1,8 +1,8 @@
 package com.github.kreaturesfw.core.listener;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * Default implementation of the SimulationListener which can act as super

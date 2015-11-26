@@ -9,9 +9,9 @@ import net.sf.tweety.lp.asp.syntax.DLPAtom;
 
 import com.github.kreaturesfw.asp.logic.AspBeliefbase;
 import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
-import com.github.kreaturesfw.core.BaseAgentComponent;
 import com.github.kreaturesfw.core.internal.IdGenerator;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;

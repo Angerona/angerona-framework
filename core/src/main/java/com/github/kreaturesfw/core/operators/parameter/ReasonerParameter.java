@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.operators.parameter;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 

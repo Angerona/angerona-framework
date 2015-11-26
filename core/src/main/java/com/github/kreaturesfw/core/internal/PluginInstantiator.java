@@ -18,10 +18,10 @@ import net.xeoh.plugins.base.util.PluginManagerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.AgentComponent;
 import com.github.kreaturesfw.core.AngeronaPlugin;
-import com.github.kreaturesfw.core.BaseBeliefbase;
-import com.github.kreaturesfw.core.EnvironmentBehavior;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
 import com.github.kreaturesfw.core.listener.PluginListener;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;

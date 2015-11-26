@@ -15,9 +15,9 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.BaseAgentComponent;
-import com.github.kreaturesfw.core.BaseBeliefbase;
-import com.github.kreaturesfw.core.Perception;
+import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.listener.AgentAdapter;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.Beliefs;

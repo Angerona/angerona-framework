@@ -1,8 +1,8 @@
 package com.github.kreaturesfw.core.listener;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * Listener interface which gets informed about changes of the simulation. For example if a new agent

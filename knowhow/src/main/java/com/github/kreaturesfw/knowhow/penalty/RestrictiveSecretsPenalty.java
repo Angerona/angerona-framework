@@ -5,8 +5,8 @@ import java.util.Set;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;

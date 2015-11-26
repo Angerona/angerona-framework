@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.kreaturesfw.core.SettingsStorage;
+import com.github.kreaturesfw.core.legacy.SettingsStorage;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 import com.github.kreaturesfw.core.operators.parameter.OperatorParameter;
 import com.github.kreaturesfw.core.util.Pair;

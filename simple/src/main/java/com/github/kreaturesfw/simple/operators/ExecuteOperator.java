@@ -2,11 +2,11 @@ package com.github.kreaturesfw.simple.operators;
 
 import java.util.List;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Intention;
-import com.github.kreaturesfw.core.PlanElement;
-import com.github.kreaturesfw.core.Subgoal;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Intention;
+import com.github.kreaturesfw.core.legacy.PlanElement;
+import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.util.Pair;
 import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;

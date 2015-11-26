@@ -22,12 +22,12 @@ import net.sf.tweety.logics.fol.syntax.Negation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Desire;
-import com.github.kreaturesfw.core.PlanComponent;
-import com.github.kreaturesfw.core.Subgoal;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Query;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Desire;
+import com.github.kreaturesfw.core.legacy.PlanComponent;
+import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.Desires;

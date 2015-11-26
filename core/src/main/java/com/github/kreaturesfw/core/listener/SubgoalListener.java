@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.listener;
 
-import com.github.kreaturesfw.core.Intention;
+import com.github.kreaturesfw.core.legacy.Intention;
 
 /**
  * 

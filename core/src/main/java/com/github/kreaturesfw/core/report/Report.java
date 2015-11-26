@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.github.kreaturesfw.core.AngeronaEnvironment;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.util.ModelAdapter;
 
 /**

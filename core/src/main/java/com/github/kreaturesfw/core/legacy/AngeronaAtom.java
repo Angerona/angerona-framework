@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;
 
 /**
  * Base interface for atomic Angerona constructs like: perceptions, actions and

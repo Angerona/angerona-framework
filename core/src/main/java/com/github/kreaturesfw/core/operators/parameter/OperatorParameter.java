@@ -2,8 +2,8 @@ package com.github.kreaturesfw.core.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
-import com.github.kreaturesfw.core.SettingsStorage;
 import com.github.kreaturesfw.core.error.ConversionException;
+import com.github.kreaturesfw.core.legacy.SettingsStorage;
 import com.github.kreaturesfw.core.operators.OperatorCaller;
 
 /**

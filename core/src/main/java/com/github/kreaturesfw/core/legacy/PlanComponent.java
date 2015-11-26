@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;
 
 import java.util.Collections;
 import java.util.LinkedList;

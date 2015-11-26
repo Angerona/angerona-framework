@@ -22,12 +22,12 @@ import net.sf.tweety.lp.asp.syntax.Rule;
 import com.github.kreaturesfw.asp.component.AspMetaKnowledge;
 import com.github.kreaturesfw.asp.component.AspMetaKnowledge.ConstantTriple;
 import com.github.kreaturesfw.asp.logic.AspBeliefbase;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.AgentComponent;
-import com.github.kreaturesfw.core.BaseAgentComponent;
-import com.github.kreaturesfw.core.BaseBeliefbase;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Query;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.secrecy.Secret;
 import com.github.kreaturesfw.secrecy.components.SecrecyKnowledge;
 

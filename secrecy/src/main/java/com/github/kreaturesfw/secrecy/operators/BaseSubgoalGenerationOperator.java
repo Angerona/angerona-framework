@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.secrecy.operators;
 
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.PlanComponent;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.PlanComponent;
 import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.util.Pair;
 import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;

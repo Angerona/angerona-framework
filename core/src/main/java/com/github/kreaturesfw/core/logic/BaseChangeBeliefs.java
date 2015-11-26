@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.logic;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.operators.parameter.ChangeBeliefbaseParameter;
 import com.github.kreaturesfw.core.util.Pair;

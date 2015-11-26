@@ -8,11 +8,11 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.github.kreaturesfw.core.InteractiveAgent;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.comm.Revision;
 import com.github.kreaturesfw.core.comm.SpeechAct;
 import com.github.kreaturesfw.core.error.AngeronaException;
+import com.github.kreaturesfw.core.legacy.InteractiveAgent;
 import com.github.kreaturesfw.core.reflection.FolFormulaVariable;
 import com.github.kreaturesfw.gui.base.Presenter;
 

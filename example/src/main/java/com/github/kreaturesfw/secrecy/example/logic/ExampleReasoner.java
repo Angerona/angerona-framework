@@ -3,7 +3,7 @@ package com.github.kreaturesfw.secrecy.example.logic;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.BaseReasoner;

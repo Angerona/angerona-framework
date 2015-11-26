@@ -3,8 +3,8 @@ package com.github.kreaturesfw.knowhow.situation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Agent;
 import com.github.kreaturesfw.core.error.NotImplementedException;
+import com.github.kreaturesfw.core.legacy.Agent;
 
 /**
  * This factory is responsible to generate the correct graph builders for the given situation.

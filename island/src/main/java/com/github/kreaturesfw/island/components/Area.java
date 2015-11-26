@@ -3,8 +3,8 @@ package com.github.kreaturesfw.island.components;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.kreaturesfw.core.BaseAgentComponent;
 import com.github.kreaturesfw.core.comp.Presentable;
+import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
 import com.github.kreaturesfw.island.data.WeatherChart;
 import com.github.kreaturesfw.island.enums.Location;
 

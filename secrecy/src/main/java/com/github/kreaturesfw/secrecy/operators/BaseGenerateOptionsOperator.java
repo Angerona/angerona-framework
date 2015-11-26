@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.secrecy.operators;
 
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.util.Pair;

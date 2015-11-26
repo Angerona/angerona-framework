@@ -3,7 +3,7 @@ package com.github.kreaturesfw.gui.simctrl;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.github.kreaturesfw.core.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
 import com.github.kreaturesfw.core.util.ModelAdapter;
 

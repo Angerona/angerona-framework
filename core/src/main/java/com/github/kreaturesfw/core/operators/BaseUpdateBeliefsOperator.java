@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.core.operators;
 
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Perception;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.core.util.Pair;

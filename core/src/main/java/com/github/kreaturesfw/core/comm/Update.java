@@ -7,7 +7,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.simpleframework.xml.Element;
 
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Agent;
 
 /**
  * Implementation of the Speech-Act: Update.

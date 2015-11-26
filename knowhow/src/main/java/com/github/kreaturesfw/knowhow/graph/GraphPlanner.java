@@ -10,8 +10,8 @@ import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Desire;
 import com.github.kreaturesfw.core.error.NotImplementedException;
+import com.github.kreaturesfw.core.legacy.Desire;
 
 /**
  * This class implements a sequential planning algorithm on

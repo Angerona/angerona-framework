@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 

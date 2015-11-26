@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import bibliothek.gui.dock.DefaultDockable;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.gui.component.OperatorConfig;

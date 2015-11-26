@@ -7,7 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.util.LogicTranslator;
 import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;

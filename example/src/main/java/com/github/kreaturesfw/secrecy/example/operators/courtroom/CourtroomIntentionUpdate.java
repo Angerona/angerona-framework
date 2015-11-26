@@ -6,12 +6,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.ActionHistory;
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Intention;
-import com.github.kreaturesfw.core.PlanElement;
-import com.github.kreaturesfw.core.Subgoal;
 import com.github.kreaturesfw.core.comm.Answer;
+import com.github.kreaturesfw.core.legacy.ActionHistory;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Intention;
+import com.github.kreaturesfw.core.legacy.PlanElement;
+import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;

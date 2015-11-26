@@ -5,8 +5,8 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.kreaturesfw.core.Agent;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.Agent;
 
 public class ReportWikiGenerator extends BaseReportOutputGenerator<String> {
 

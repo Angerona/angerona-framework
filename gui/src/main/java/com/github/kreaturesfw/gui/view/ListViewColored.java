@@ -19,9 +19,9 @@ import javax.swing.tree.DefaultTreeModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.AgentComponent;
 import com.github.kreaturesfw.core.Angerona;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.core.report.ReportListener;
 import com.github.kreaturesfw.core.util.Utility;

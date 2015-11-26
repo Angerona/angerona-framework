@@ -5,4 +5,4 @@
  * 
  * @author Tim Janus
  */
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;

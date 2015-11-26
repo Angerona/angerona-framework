@@ -10,9 +10,9 @@ import net.sf.tweety.logics.pl.PlBeliefSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.ocf.logic.ConditionalBeliefbase;
-import com.github.kreaturesfw.core.BaseAgentComponent;
-import com.github.kreaturesfw.core.BaseBeliefbase;
 import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
 
 /**

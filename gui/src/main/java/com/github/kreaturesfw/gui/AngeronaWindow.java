@@ -41,12 +41,12 @@ import bibliothek.gui.dock.themes.NoStackTheme;
 import bibliothek.gui.dock.util.IconManager;
 import bibliothek.gui.dock.util.Priority;
 
-import com.github.kreaturesfw.core.Action;
-import com.github.kreaturesfw.core.Agent;
 import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
-import com.github.kreaturesfw.core.InteractiveAgent;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.InteractiveAgent;
 import com.github.kreaturesfw.core.listener.FrameworkListener;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.gui.base.ViewComponent;

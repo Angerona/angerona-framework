@@ -2,8 +2,8 @@ package com.github.kreaturesfw.simple.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
-import com.github.kreaturesfw.core.PlanComponent;
 import com.github.kreaturesfw.core.error.ConversionException;
+import com.github.kreaturesfw.core.legacy.PlanComponent;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;
 

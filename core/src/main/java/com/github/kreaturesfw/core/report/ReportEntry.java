@@ -3,10 +3,10 @@ package com.github.kreaturesfw.core.report;
 import java.util.Date;
 import java.util.Stack;
 
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.AgentComponent;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.OperatorStack;
 

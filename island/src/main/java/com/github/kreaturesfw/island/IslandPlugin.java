@@ -3,9 +3,9 @@ package com.github.kreaturesfw.island;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.kreaturesfw.core.AgentComponent;
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
-import com.github.kreaturesfw.core.EnvironmentBehavior;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
 import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.island.behavior.DynamicIslandBehavior;

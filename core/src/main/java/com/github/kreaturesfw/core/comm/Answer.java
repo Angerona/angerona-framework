@@ -3,7 +3,7 @@ package com.github.kreaturesfw.core.comm;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.reflection.Context;

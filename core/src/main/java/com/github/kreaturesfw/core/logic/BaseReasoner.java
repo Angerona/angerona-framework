@@ -3,7 +3,7 @@ package com.github.kreaturesfw.core.logic;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.kreaturesfw.core.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.operators.parameter.ReasonerParameter;
 import com.github.kreaturesfw.core.util.Pair;

@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.kreaturesfw.core.BaseAgentComponent;
-import com.github.kreaturesfw.core.Desire;
+import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
+import com.github.kreaturesfw.core.legacy.Desire;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;

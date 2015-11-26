@@ -4,10 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.github.kreaturesfw.core.Desire;
-import com.github.kreaturesfw.core.PlanComponent;
-import com.github.kreaturesfw.core.PlanElement;
-import com.github.kreaturesfw.core.Subgoal;
+import com.github.kreaturesfw.core.legacy.Desire;
+import com.github.kreaturesfw.core.legacy.PlanComponent;
+import com.github.kreaturesfw.core.legacy.PlanElement;
+import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.secrecy.operators.BaseIntentionUpdateOperator;
 import com.github.kreaturesfw.secrecy.operators.parameter.PlanParameter;

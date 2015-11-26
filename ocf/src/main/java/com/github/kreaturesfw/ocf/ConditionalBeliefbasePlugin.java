@@ -8,7 +8,7 @@ import java.util.Map;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
-import com.github.kreaturesfw.core.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;

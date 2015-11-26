@@ -9,8 +9,8 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
-import com.github.kreaturesfw.core.Agent;
 import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.util.Utility;
 

@@ -4,11 +4,11 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Desire;
-import com.github.kreaturesfw.core.Subgoal;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Query;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Desire;
+import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.secrecy.example.operators.SubgoalGenerationOperator;

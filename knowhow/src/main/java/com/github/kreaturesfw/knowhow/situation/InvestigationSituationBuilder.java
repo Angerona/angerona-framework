@@ -19,7 +19,7 @@ import net.sf.tweety.lp.asp.util.AnswerSetList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Agent;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.knowhow.KnowhowBase;
 import com.github.kreaturesfw.knowhow.KnowhowStatement;
 

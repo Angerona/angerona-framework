@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,6 +11,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.Angerona;
 import com.github.kreaturesfw.core.comm.SpeechAct;
 import com.github.kreaturesfw.core.error.AgentIdException;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;

@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.knowhow.graph;
 
-import com.github.kreaturesfw.core.Action;
+import com.github.kreaturesfw.core.legacy.Action;
 
 public class ActionAdapterResume extends Action {
 	private WorkingPlan plan;

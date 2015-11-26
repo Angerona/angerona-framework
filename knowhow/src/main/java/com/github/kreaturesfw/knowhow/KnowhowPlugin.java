@@ -7,8 +7,8 @@ import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import com.github.kreaturesfw.core.AgentComponent;
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.gui.UIPlugin;
 import com.github.kreaturesfw.gui.base.ViewComponent;

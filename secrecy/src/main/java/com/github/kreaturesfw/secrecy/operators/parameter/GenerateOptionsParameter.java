@@ -2,9 +2,9 @@ package com.github.kreaturesfw.secrecy.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.Perception;
 import com.github.kreaturesfw.core.error.ConversionException;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 import com.github.kreaturesfw.core.operators.parameter.OperatorPluginParameter;
 

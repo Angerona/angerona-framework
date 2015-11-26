@@ -5,8 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.AngeronaEnvironment;
-import com.github.kreaturesfw.core.NextActionRequester;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.legacy.NextActionRequester;
 
 public class InteractiveAgentNextActionRequester implements NextActionRequester {
 

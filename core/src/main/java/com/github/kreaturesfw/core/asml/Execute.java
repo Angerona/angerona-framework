@@ -3,9 +3,9 @@ package com.github.kreaturesfw.core.asml;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
-import com.github.kreaturesfw.core.Agent;
-import com.github.kreaturesfw.core.PlanElement;
 import com.github.kreaturesfw.core.error.InvokeException;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.PlanElement;
 import com.github.kreaturesfw.core.reflection.Context;
 import com.github.kreaturesfw.core.reflection.Value;
 
