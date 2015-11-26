@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.asml;
+package com.github.kreaturesfw.core.legacy.asml;
 
 import java.util.List;
 

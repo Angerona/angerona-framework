@@ -11,7 +11,7 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.PersistenceException;
 import org.simpleframework.xml.core.Validate;
 
-import com.github.kreaturesfw.core.asml.CommandSequence;
+import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
 
 
 /**

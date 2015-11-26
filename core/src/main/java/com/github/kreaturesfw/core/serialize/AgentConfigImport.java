@@ -7,7 +7,7 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Resolve;
 
-import com.github.kreaturesfw.core.asml.CommandSequence;
+import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
 
 /**
  * An implementation of the agent configuration file as a reference to another file.

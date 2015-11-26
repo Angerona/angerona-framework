@@ -7,4 +7,4 @@
  * 
  * 	@author Tim Janus
  */
-package com.github.kreaturesfw.core.asml;
+package com.github.kreaturesfw.core.legacy.asml;

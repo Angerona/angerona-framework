@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.asml.CommandSequence;
 import com.github.kreaturesfw.core.basic.AbstractAgent;
 import com.github.kreaturesfw.core.comp.Parsable;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;
@@ -30,6 +29,7 @@ import com.github.kreaturesfw.core.internal.AngeronaReporter;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.IdGenerator;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
 import com.github.kreaturesfw.core.listener.ActionProcessor;
 import com.github.kreaturesfw.core.listener.AgentListener;
 import com.github.kreaturesfw.core.listener.SubgoalListener;

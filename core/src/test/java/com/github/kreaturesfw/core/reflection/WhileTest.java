@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.asml.Assign;
-import com.github.kreaturesfw.core.asml.While;
+import com.github.kreaturesfw.core.legacy.asml.Assign;
+import com.github.kreaturesfw.core.legacy.asml.While;
 import com.github.kreaturesfw.core.reflection.BooleanExpression;
 import com.github.kreaturesfw.core.reflection.Context;
 import com.github.kreaturesfw.core.reflection.Value;

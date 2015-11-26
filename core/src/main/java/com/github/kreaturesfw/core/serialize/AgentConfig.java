@@ -2,7 +2,7 @@ package com.github.kreaturesfw.core.serialize;
 
 import java.util.List;
 
-import com.github.kreaturesfw.core.asml.CommandSequence;
+import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
 
 /**
  * Interface for serializable simple xml classes of the agent configuration file.

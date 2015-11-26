@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.asml.Conditional;
+import com.github.kreaturesfw.core.legacy.asml.Conditional;
 import com.github.kreaturesfw.core.reflection.Context;
 import com.github.kreaturesfw.core.serialize.SerializeHelper;
 

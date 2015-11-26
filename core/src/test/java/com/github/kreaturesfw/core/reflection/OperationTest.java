@@ -8,8 +8,8 @@ import java.util.Stack;
 
 import org.junit.Test;
 
-import com.github.kreaturesfw.core.asml.InvokeOperation;
 import com.github.kreaturesfw.core.error.InvokeException;
+import com.github.kreaturesfw.core.legacy.asml.InvokeOperation;
 import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
 import com.github.kreaturesfw.core.operators.OperatorCaller;

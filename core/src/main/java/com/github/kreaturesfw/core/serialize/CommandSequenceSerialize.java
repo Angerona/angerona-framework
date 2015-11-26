@@ -2,7 +2,7 @@ package com.github.kreaturesfw.core.serialize;
 
 import java.util.List;
 
-import com.github.kreaturesfw.core.asml.ASMLCommand;
+import com.github.kreaturesfw.core.legacy.asml.ASMLCommand;
 
 public interface CommandSequenceSerialize {
 	

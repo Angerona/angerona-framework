@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.asml;
+package com.github.kreaturesfw.core.legacy.asml;
 
 import com.github.kreaturesfw.core.error.InvokeException;
 import com.github.kreaturesfw.core.reflection.Context;

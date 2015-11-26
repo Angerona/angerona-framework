@@ -7,8 +7,8 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Resolve;
 
-import com.github.kreaturesfw.core.asml.ASMLCommand;
-import com.github.kreaturesfw.core.asml.CommandSequence;
+import com.github.kreaturesfw.core.legacy.asml.ASMLCommand;
+import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
 
 @Root(name="script-import")
 public class CommandSequenceSerializeImport implements CommandSequenceSerialize{
