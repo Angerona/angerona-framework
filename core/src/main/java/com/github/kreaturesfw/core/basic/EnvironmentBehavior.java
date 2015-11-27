@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.basic;
 
-import com.github.kreaturesfw.core.KReaturesEnvironment;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * This interface defines an behavior for an environment.
@@ -17,28 +17,28 @@ public interface EnvironmentBehavior {
 	 * @param env		Visitor environment to fetch further information.
 	 * @param action	Reference to the action.
 	 */
-	void sendAction(KReaturesEnvironment env, Action action);
+	void sendAction(AngeronaEnvironment env, Action action);
 	
 	/**
 	 * Is called by an external simulation if Angerona should receive an perception
 	 * @param env		Visitor environment to fetch further information.
 	 * @param percept	Reference to the perception received from the external simulation.
 	 */
-	default void receivePerception(KReaturesEnvironment env, Perception percept) {}
+	default void receivePerception(AngeronaEnvironment env, Perception percept) {}
 	
 	/**
 	 * performs a cycle on every agent.
 	 * @param env	Visitor environment which performs the run.
 	 * @return		true if at least one agent does something, false otherwise.
 	 */
-	boolean runOneTick(KReaturesEnvironment env);
+	boolean runOneTick(AngeronaEnvironment env);
 	
 	/**
 	 * Performs runOneTick until it returns false.
 	 * @param env	Visitor environment which performs the run.
 	 * @return		true if no errors occurred in the simulation, false otherwise.	
 	 */
-	default boolean run(KReaturesEnvironment env) {
+	default boolean run(AngeronaEnvironment env) {
 		while(runOneTick(env)) {}
 		
 		return false;

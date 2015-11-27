@@ -10,10 +10,10 @@ import net.sf.tweety.lp.asp.syntax.DLPNeg;
 
 import com.github.kreaturesfw.asp.component.AspMetaKnowledge;
 import com.github.kreaturesfw.core.basic.Perception;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.SpeechAct;
 import com.github.kreaturesfw.core.comm.SpeechAct.SpeechActType;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 
 /**

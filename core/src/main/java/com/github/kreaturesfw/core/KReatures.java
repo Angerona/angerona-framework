@@ -22,6 +22,7 @@ import com.github.kreaturesfw.core.internal.AngeronaProject;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.OperatorMap;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.FrameworkListener;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.operators.OperatorStack;
@@ -66,13 +67,13 @@ public class KReatures {
 	 * A Map containing the Report instances for specific simulations 
 	 * @todo Differentiate between environment and simulation.
 	 */
-	private Map<KReaturesEnvironment, Report> reports = new HashMap<KReaturesEnvironment, Report>(); 
+	private Map<AngeronaEnvironment, Report> reports = new HashMap<AngeronaEnvironment, Report>(); 
 	
 	/** reference to the report of the actual running simulation */
 	private Report actualReport;
 	
 	/** reference to the actual loaded simulation */
-	private KReaturesEnvironment actualSimulation;
+	private AngeronaEnvironment actualSimulation;
 	
 	/** reference to the configuration of Angerona */
 	private GlobalConfiguration config = null;
@@ -194,7 +195,7 @@ public class KReatures {
 	}
 	
 	/** @return the reference to the last loaded simulation */
-	public KReaturesEnvironment getActualSimulation() {
+	public AngeronaEnvironment getActualSimulation() {
 		return actualSimulation;
 	}
 	
@@ -202,7 +203,7 @@ public class KReatures {
 	 * @param simulation a reference to a simulation.
 	 * @return the report belonging to the given simulation.
 	 */
-	public Report getReport(KReaturesEnvironment simulation) {
+	public Report getReport(AngeronaEnvironment simulation) {
 		return reports.get(simulation);
 	}
 	
@@ -258,13 +259,13 @@ public class KReatures {
 	 * 	It updates the reference to the actual report and the actual simulation.
 	 * 	@param ev	The reference to the new simulation simulation.
 	 */
-	public void onCreateSimulation(KReaturesEnvironment ev) {
+	public void onCreateSimulation(AngeronaEnvironment ev) {
 		actualReport = new Report(ev);
 		actualSimulation = ev;
 		reports.put(ev, actualReport);
 	}
 	
-	public void onAgentAdded(KReaturesEnvironment env, Agent added) {
+	public void onAgentAdded(AngeronaEnvironment env, Agent added) {
 		for(SimulationListener l : simulationListeners) {
 			l.agentAdded(env, added);
 		}
@@ -275,7 +276,7 @@ public class KReatures {
 	 * of the given simulation
 	 * @param ev		reference to the initialized simulation.
 	 */
-	public void onNewSimulation(KReaturesEnvironment ev) {
+	public void onNewSimulation(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
 		}
@@ -286,7 +287,7 @@ public class KReatures {
 	 * the simulation listeners about the cleanup of the simulation.
 	 * @param ev	A reference to the simulation.
 	 */
-	public void onSimulationDestroyed(KReaturesEnvironment ev) {
+	public void onSimulationDestroyed(AngeronaEnvironment ev) {
 		actualReport = null;
 		reports.clear();
 		for(SimulationListener l : simulationListeners) {
@@ -298,7 +299,7 @@ public class KReatures {
 	 * Informs the simulations listeners when a tick of the simulation is starting.
 	 * @param ev		Reference to the simulation
 	 */
-	public void onTickStarting(KReaturesEnvironment ev) {
+	public void onTickStarting(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.tickStarting(ev);
 		}
@@ -308,7 +309,7 @@ public class KReatures {
 	 * Informs the simulations listeners when a tick of the simulation is done.
 	 * @param ev		Reference to the simulation
 	 */
-	public void onTickDone(KReaturesEnvironment ev) {
+	public void onTickDone(AngeronaEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.tickDone(ev);
 		}

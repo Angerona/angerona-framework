@@ -13,7 +13,7 @@ import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.operators.parameter.ChangeBeliefbaseParameter;
 

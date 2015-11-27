@@ -11,7 +11,7 @@ import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.bdi.PlanElement;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.core.util.Pair;

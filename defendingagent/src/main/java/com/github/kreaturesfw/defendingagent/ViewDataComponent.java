@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.github.kreaturesfw.core.basic.BaseAgentComponent;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.ocf.logic.ConditionalBeliefbase;
 import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
 

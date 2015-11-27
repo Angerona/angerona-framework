@@ -14,7 +14,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import com.github.kreaturesfw.asp.logic.AspBeliefbase;
 import com.github.kreaturesfw.asp.logic.AspTranslator;
 import com.github.kreaturesfw.core.basic.Perception;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.island.data.IslandPerception;
 
 /**

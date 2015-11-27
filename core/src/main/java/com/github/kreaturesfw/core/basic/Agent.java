@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.bdi.Intention;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.comp.Parsable;
@@ -31,7 +31,7 @@ import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.IdGenerator;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
 import com.github.kreaturesfw.core.legacy.AngeronaAtom;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
 import com.github.kreaturesfw.core.listener.ActionProcessor;
 import com.github.kreaturesfw.core.listener.AgentListener;
@@ -137,13 +137,13 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 
 	protected CommandSequence asmlCylce;
 	
-	protected KReaturesEnvironment env;
+	protected AngeronaEnvironment env;
 
 	public OperatorProvider getOperators() {
 		return operators;
 	}
 
-	public Agent(String name, KReaturesEnvironment env) {
+	public Agent(String name, AngeronaEnvironment env) {
 		this.name = name;
 		this.env = env;
 	}
@@ -196,7 +196,7 @@ public class Agent implements ContextProvider, Entity, OperatorStack,
 		regenContext();
 	}
 	
-	public KReaturesEnvironment getEnvironment() {
+	public AngeronaEnvironment getEnvironment() {
 		return env;
 	}
 

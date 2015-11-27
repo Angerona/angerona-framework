@@ -6,10 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.internal.AngeronaReporter;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.IdGenerator;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.report.FullReporter;
 import com.github.kreaturesfw.core.report.ReportPoster;

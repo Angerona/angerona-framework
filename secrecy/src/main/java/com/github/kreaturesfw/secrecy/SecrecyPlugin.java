@@ -9,7 +9,7 @@ import java.util.Map;
 import com.github.kreaturesfw.core.KReaturesPluginAdapter;
 import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.Operator;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;

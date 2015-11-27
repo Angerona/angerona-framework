@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.swarm.basic;
 
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Agent;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * 
@@ -10,7 +10,7 @@ import com.github.kreaturesfw.core.basic.Agent;
  */
 public abstract class SwarmAgent extends Agent {
 
-	public SwarmAgent(String name, KReaturesEnvironment env) {
+	public SwarmAgent(String name, AngeronaEnvironment env) {
 		super(name, env);
 	}
 

@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.legacy;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -6,39 +6,39 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.bdi.Desire;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.comm.SpeechAct;
 import com.github.kreaturesfw.core.error.AgentIdException;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.InteractiveAgent;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.logic.ScriptingComponent;
 import com.github.kreaturesfw.core.serialize.AgentInstance;
 import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
 import com.github.kreaturesfw.core.util.ObservableMap;
 
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 /**
  * A simulation environment for Angerona. This is actually only used for some functional tests.
  * @author Tim Janus
  */
-public class KReaturesEnvironment  {
+public class AngeronaEnvironment  {
 
 	/** logging facility */
-	private static Logger LOG = LoggerFactory.getLogger(KReaturesEnvironment.class);
+	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
 	
 	/** the name of the simulation */
 	private String name;
@@ -67,7 +67,7 @@ public class KReaturesEnvironment  {
 	/**
 	 * Default Ctor: Generates the default-behavior.
 	 */
-	public KReaturesEnvironment() {
+	public AngeronaEnvironment() {
 	}
 	
 	/**

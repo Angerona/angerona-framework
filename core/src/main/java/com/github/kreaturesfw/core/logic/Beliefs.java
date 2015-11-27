@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.github.kreaturesfw.core.basic.AgentComponent;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.util.Utility;
 
 import java.util.Set;

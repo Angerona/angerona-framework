@@ -5,14 +5,14 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.legacy.NextActionRequester;
 
 public class InteractiveAgentNextActionRequester implements NextActionRequester {
 
-	private KReaturesEnvironment environment;
+	private AngeronaEnvironment environment;
 
-	public InteractiveAgentNextActionRequester(KReaturesEnvironment environment){
+	public InteractiveAgentNextActionRequester(AngeronaEnvironment environment){
 		this.environment = environment;
 	}
 	

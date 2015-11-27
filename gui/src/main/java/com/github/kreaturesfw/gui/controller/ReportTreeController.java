@@ -11,10 +11,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.core.report.ReportOutputGenerator;
@@ -88,7 +88,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 	    	}
 	    	
 	    	@Override
-	    	public void simulationDestroyed(KReaturesEnvironment simulationEnvironment) {
+	    	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
 	    		rootNode = new DefaultMutableTreeNode("Report");
 	    		model = new DefaultTreeModel(rootNode);
 	    		tree.setModel(model);

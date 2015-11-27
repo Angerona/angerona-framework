@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 import bibliothek.gui.dock.DefaultDockable;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.report.Report;
 import com.github.kreaturesfw.gui.AngeronaWindow;
@@ -45,7 +45,7 @@ public class ReportTreeMVP
 	}
 	
 	@Override
-	public void simulationStarted(KReaturesEnvironment environment) {
+	public void simulationStarted(AngeronaEnvironment environment) {
 		final Report curModel = KReatures.getInstance().getReport(environment);
 		
 		// wait for swing event to finish: By setting the model

@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.def.DefaultBehavior;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * 
@@ -20,14 +20,14 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 	private static final Logger LOG = LoggerFactory.getLogger(SimpleBehavior.class);
 
 	@Override
-	public abstract void sendAction(KReaturesEnvironment env, Action act);
+	public abstract void sendAction(AngeronaEnvironment env, Action act);
 
 	@Override
-	public void receivePerception(KReaturesEnvironment env, Perception percept) {
+	public void receivePerception(AngeronaEnvironment env, Perception percept) {
 	}
 
 	@Override
-	public boolean runOneTick(KReaturesEnvironment env) {
+	public boolean runOneTick(AngeronaEnvironment env) {
 		doingTick = true;
 
 		// simulation stuff
@@ -59,7 +59,7 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 		return somethingHappens;
 	}
 
-	protected boolean runAgentCycles(KReaturesEnvironment env) {
+	protected boolean runAgentCycles(AngeronaEnvironment env) {
 		boolean doContinue = false;
 		Perception perception;
 
@@ -95,11 +95,11 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 	 * @param agent
 	 * @return weather the agent's cycle is called
 	 */
-	protected abstract boolean cycleCondition(KReaturesEnvironment env, Agent agent);
+	protected abstract boolean cycleCondition(AngeronaEnvironment env, Agent agent);
 
-	protected abstract Perception createPerception(KReaturesEnvironment env, Agent agent);
+	protected abstract Perception createPerception(AngeronaEnvironment env, Agent agent);
 
-	protected abstract void postCycle(KReaturesEnvironment env, Agent agent);
+	protected abstract void postCycle(AngeronaEnvironment env, Agent agent);
 
 	/**
 	 * 
@@ -107,6 +107,6 @@ public abstract class SimpleBehavior extends DefaultBehavior {
 	 * @param agent
 	 * @return weather the agent's cycle should be called again
 	 */
-	protected abstract boolean terminationCriterion(KReaturesEnvironment env, Agent agent);
+	protected abstract boolean terminationCriterion(AngeronaEnvironment env, Agent agent);
 
 }

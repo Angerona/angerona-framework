@@ -4,13 +4,13 @@ import java.util.Set;
 
 import com.github.kreaturesfw.core.basic.BaseOperator;
 import com.github.kreaturesfw.core.basic.Perception;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Justification;
 import com.github.kreaturesfw.core.comm.Justify;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.comm.SpeechAct;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.operators.parameter.TranslatorParameter;
 import com.github.kreaturesfw.core.util.Pair;
 

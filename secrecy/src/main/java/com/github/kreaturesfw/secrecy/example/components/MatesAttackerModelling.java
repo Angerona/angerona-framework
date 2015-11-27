@@ -12,9 +12,9 @@ import com.github.kreaturesfw.asp.logic.AspBeliefbase;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.BaseAgentComponent;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Query;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.secrecy.Secret;
 import com.github.kreaturesfw.secrecy.components.SecrecyKnowledge;
 

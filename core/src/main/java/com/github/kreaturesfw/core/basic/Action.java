@@ -4,9 +4,9 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.core.Commit;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.bdi.Intention;
 import com.github.kreaturesfw.core.legacy.AngeronaAtom;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.reflection.Context;
 import com.github.kreaturesfw.core.reflection.ContextFactory;
 import com.github.kreaturesfw.core.reflection.ContextProvider;
@@ -76,7 +76,7 @@ public class Action
 	
 	@Commit
 	public void onDeserialization() {
-		KReaturesEnvironment sim = KReatures.getInstance().getActualSimulation();
+		AngeronaEnvironment sim = KReatures.getInstance().getActualSimulation();
 		if(sim != null) {
 			setAgent(sim.getAgentByName(sender));
 		}

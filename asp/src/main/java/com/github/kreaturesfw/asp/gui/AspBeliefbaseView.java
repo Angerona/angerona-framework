@@ -9,7 +9,7 @@ import net.sf.tweety.lp.asp.util.AnswerSet;
 
 import com.github.kreaturesfw.asp.logic.AspBeliefbase;
 import com.github.kreaturesfw.asp.logic.AspReasoner;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.gui.view.BeliefbaseView;
 
 /**

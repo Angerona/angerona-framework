@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.legacy.InteractiveAgent;
 import com.github.kreaturesfw.core.listener.FrameworkListener;
 import com.github.kreaturesfw.core.listener.SimulationListener;
@@ -388,7 +388,7 @@ public class AngeronaWindow extends WindowAdapter
 	}
 	
 	@Override
-	public void simulationStarted(KReaturesEnvironment simulationEnvironment) {
+	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
 		SimulationTreeController stc = new SimulationTreeController(new JTree());
 		stc.simulationStarted(simulationEnvironment);
 		
@@ -408,7 +408,7 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void simulationDestroyed(KReaturesEnvironment simulationEnvironment) {
+	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
 		for(Dockable d : resMap) {
 			DockStation st = d.getDockParent();
 			if(st != null) {
@@ -423,17 +423,17 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void agentAdded(final KReaturesEnvironment simulationEnvironment,
+	public void agentAdded(final AngeronaEnvironment simulationEnvironment,
 			Agent added) {
 	}
 
 	@Override
-	public void agentRemoved(KReaturesEnvironment simulationEnvironment,
+	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
 			Agent removed) {
 	}
 
 	@Override
-	public void tickDone(KReaturesEnvironment simulationEnvironment) {
+	public void tickDone(AngeronaEnvironment simulationEnvironment) {
 	}
 
 	@Override
@@ -445,7 +445,7 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void tickStarting(KReaturesEnvironment simulationEnvironment) {
+	public void tickStarting(AngeronaEnvironment simulationEnvironment) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.BaseReasoner;

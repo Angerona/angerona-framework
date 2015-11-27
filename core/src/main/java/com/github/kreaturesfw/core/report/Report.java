@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.util.ModelAdapter;
 
 /**
@@ -26,12 +26,12 @@ public class Report extends ModelAdapter  {
 	private Map<Long, List<ReportEntry>> attachmentEntriesMap = new HashMap<Long, List<ReportEntry>>();
 	
 	/** reference to the simulation of the report */
-	private KReaturesEnvironment simulation;
+	private AngeronaEnvironment simulation;
 	
 	/** a list of listeners that are informed if the report listeners change */
 	private List<ReportListener> listeners = new ArrayList<>();
 	
-	public Report(KReaturesEnvironment simulation) {
+	public Report(AngeronaEnvironment simulation) {
 		this.simulation = simulation;
 	}
 	

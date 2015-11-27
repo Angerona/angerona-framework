@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.island.beliefbase;
 
 import com.github.kreaturesfw.core.basic.Perception;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.BaseUpdateBeliefsOperator;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;

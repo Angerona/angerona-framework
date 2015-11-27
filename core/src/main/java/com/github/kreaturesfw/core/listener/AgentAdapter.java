@@ -2,7 +2,7 @@ package com.github.kreaturesfw.core.listener;
 
 import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.Perception;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.Beliefs;
 
 /**

@@ -3,11 +3,11 @@ package com.github.kreaturesfw.core.report;
 import java.util.Date;
 import java.util.Stack;
 
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.operators.OperatorStack;
 
 /**
@@ -38,7 +38,7 @@ public class ReportEntry implements Cloneable {
 	private ReportPoster poster;
 	
 	/** reference to the entire simulation */
-	private KReaturesEnvironment simulation;
+	private AngeronaEnvironment simulation;
 	
 	/** a stack of strings representing the operators callstack which create this entry */
 	private Stack<String> operatorCallstack = new Stack<String>();
@@ -53,7 +53,7 @@ public class ReportEntry implements Cloneable {
 	 * @param simulation	A reference to the current simulation.
 	 */
 	public ReportEntry(String message, Entity attachment, 
-			OperatorStack scope, ReportPoster poster, KReaturesEnvironment simulation) {
+			OperatorStack scope, ReportPoster poster, AngeronaEnvironment simulation) {
 		// check for valid parameters
 		if(poster == null)
 			throw new IllegalArgumentException("poster must not be null");
@@ -94,7 +94,7 @@ public class ReportEntry implements Cloneable {
 		return attachment;
 	}
 	
-	public KReaturesEnvironment getSimulation() {
+	public AngeronaEnvironment getSimulation() {
 		return simulation;
 	}
 	

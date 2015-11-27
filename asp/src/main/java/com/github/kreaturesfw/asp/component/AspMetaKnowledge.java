@@ -3,19 +3,19 @@ package com.github.kreaturesfw.asp.component;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
-import net.sf.tweety.lp.asp.syntax.DLPAtom;
-
 import com.github.kreaturesfw.asp.logic.AspBeliefbase;
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.BaseAgentComponent;
 import com.github.kreaturesfw.core.internal.IdGenerator;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
+
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
+import net.sf.tweety.lp.asp.syntax.DLPAtom;
 
 /**
  * Represents additional information that are needed to provide the meta-knowledge
@@ -40,7 +40,7 @@ public class AspMetaKnowledge extends BaseAgentComponent {
 	 */
 	private SimulationListener simListener = new SimulationAdapter() {
 		@Override
-		public void tickDone(KReaturesEnvironment simulationEnvironment) {
+		public void tickDone(AngeronaEnvironment simulationEnvironment) {
 			tick += 1;
 		}
 	};

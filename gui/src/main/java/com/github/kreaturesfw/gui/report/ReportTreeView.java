@@ -11,10 +11,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import com.github.kreaturesfw.core.KReatures;
-import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.Entity;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.gui.AngeronaWindow;
@@ -118,7 +118,7 @@ public class ReportTreeView
 
 	
 	@Override
-	public void tickStarting(KReaturesEnvironment simulationEnvironment) {
+	public void tickStarting(AngeronaEnvironment simulationEnvironment) {
 		invokeTickNodeCreation(simulationEnvironment.getSimulationTick());
 		curAgentName = "";
 	}
@@ -152,12 +152,12 @@ public class ReportTreeView
 	}
 	
 	@Override
-	public void simulationStarted(KReaturesEnvironment simulationEnvironment) {
+	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
 		invokeTickNodeCreation(0);
 	}
 	
 	@Override
-	public void simulationDestroyed(KReaturesEnvironment simulationEnvironment) {
+	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
 		// clear the tree-data-model:
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -262,18 +262,18 @@ public class ReportTreeView
 	// NOT REQUIRED SIMULATIONLISTENER METHODS: ---------------------------------
 	
 	@Override
-	public void tickDone(KReaturesEnvironment simulationEnvironment) {
+	public void tickDone(AngeronaEnvironment simulationEnvironment) {
 		// does nothing
 	}
 	
 	@Override
-	public void agentAdded(KReaturesEnvironment simulationEnvironment,
+	public void agentAdded(AngeronaEnvironment simulationEnvironment,
 			Agent added) {
 		// does nothing
 	}
 
 	@Override
-	public void agentRemoved(KReaturesEnvironment simulationEnvironment,
+	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
 			Agent removed) {
 		// does nothing
 	}

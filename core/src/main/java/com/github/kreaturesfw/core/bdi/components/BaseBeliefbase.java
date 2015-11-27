@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.bdi.components;
 
 
 import java.io.BufferedReader;

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.basic.BaseAgentComponent;
 import com.github.kreaturesfw.core.basic.Perception;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.listener.AgentAdapter;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.Beliefs;

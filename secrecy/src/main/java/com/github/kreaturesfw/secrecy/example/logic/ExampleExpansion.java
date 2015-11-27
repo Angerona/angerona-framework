@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.secrecy.example.logic;
 
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.operators.parameter.ChangeBeliefbaseParameter;
 

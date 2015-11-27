@@ -3,7 +3,7 @@ package com.github.kreaturesfw.gui.simctrl;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.github.kreaturesfw.core.KReaturesEnvironment;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
 import com.github.kreaturesfw.core.util.ModelAdapter;
 
@@ -21,7 +21,7 @@ public class SimulationControlModelAdapter extends ModelAdapter implements Simul
 	private SimulationState simulationState = SimulationState.SS_UNDEFINED;
 	
 	/** the AngeroneEnvironment representing the dynamic simulation */
-	private KReaturesEnvironment environment = new KReaturesEnvironment();
+	private AngeronaEnvironment environment = new AngeronaEnvironment();
 	
 	/** generate a thread pool using one thread (the worker thread for the simulation) */
 	private final ExecutorService pool = Executors.newFixedThreadPool(1);

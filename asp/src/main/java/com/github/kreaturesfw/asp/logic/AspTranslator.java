@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.github.kreaturesfw.core.basic.Perception;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Query;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.logic.BaseTranslator;

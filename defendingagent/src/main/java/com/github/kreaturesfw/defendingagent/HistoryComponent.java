@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import com.github.kreaturesfw.core.basic.BaseAgentComponent;
 import com.github.kreaturesfw.core.basic.Perception;
-import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.bdi.components.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
 
