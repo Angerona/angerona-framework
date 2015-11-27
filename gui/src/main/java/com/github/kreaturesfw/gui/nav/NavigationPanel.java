@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.report.ReportEntry;
 
 /**
@@ -26,7 +26,7 @@ import com.github.kreaturesfw.core.report.ReportEntry;
  */
 public class NavigationPanel extends JPanel implements ActionListener {
 
-	private static Logger LOG = LoggerFactory.getLogger(Angerona.class);
+	private static Logger LOG = LoggerFactory.getLogger(KReatures.class);
 	
 	/** kill warning */
 	private static final long serialVersionUID = -5215434068009560588L;
@@ -78,7 +78,7 @@ public class NavigationPanel extends JPanel implements ActionListener {
 		if(entry == currentEntry)
 			return;
 		
-		List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
+		List<ReportEntry> entries = KReatures.getInstance().getActualReport().getEntriesOf(user.getAttachment());
 		if(entries != null) {
 			int index = entries.indexOf(entry);
 			if(index != -1) {
@@ -154,7 +154,7 @@ public class NavigationPanel extends JPanel implements ActionListener {
 				move = -1;
 			}
 			
-			List<ReportEntry> entries = Angerona.getInstance().getActualReport().getEntriesOf(user.getAttachment());
+			List<ReportEntry> entries = KReatures.getInstance().getActualReport().getEntriesOf(user.getAttachment());
 			if(navAllEntries.isAncestorOf(btn) || navTickEntries.isAncestorOf(btn)) {
 				if(entries != null) {
 					int index = entries.indexOf(user.getCurrentEntry()) + move;

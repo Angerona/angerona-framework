@@ -2,8 +2,8 @@ package com.github.kreaturesfw.knowhow.graph.parameter;
 
 import java.util.List;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.bdi.Intention;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.knowhow.graph.GraphIntention;
 import com.github.kreaturesfw.knowhow.graph.WorkingPlan;
 

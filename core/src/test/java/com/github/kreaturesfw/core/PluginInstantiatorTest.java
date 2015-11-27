@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.BaseAgentComponent;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
 
 public class PluginInstantiatorTest {
 	@Test
@@ -35,7 +35,7 @@ public class PluginInstantiatorTest {
 		
 	}
 	
-	private static class MockPluginA extends AngeronaPluginAdapter {
+	private static class MockPluginA extends KReaturesPluginAdapter {
 		@Override
 		public List<Class<? extends AgentComponent>> getAgentComponentImpl() {
 			List<Class<? extends AgentComponent>> reval = new LinkedList<>();

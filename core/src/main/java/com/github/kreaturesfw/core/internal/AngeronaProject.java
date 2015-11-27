@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core;
+package com.github.kreaturesfw.core.internal;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.error.AngeronaException;
 import com.github.kreaturesfw.core.serialize.AgentConfigReal;
 import com.github.kreaturesfw.core.serialize.BeliefbaseConfigReal;
@@ -60,7 +61,7 @@ public class AngeronaProject extends ModelAdapter {
 				((SimulationConfiguration)res).setFile(file);
 			}
 		} catch(Exception e) {
-			Angerona.getInstance().onError("Cannot parse file!", "Cannot parse: '" + file.getPath() + "':\n" +
+			KReatures.getInstance().onError("Cannot parse file!", "Cannot parse: '" + file.getPath() + "':\n" +
 					Utility.format(e));
 		}
 	}

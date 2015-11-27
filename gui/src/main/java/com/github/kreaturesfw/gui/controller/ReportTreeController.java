@@ -10,11 +10,11 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.Entity;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.core.report.ReportOutputGenerator;
@@ -88,7 +88,7 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 	    	}
 	    	
 	    	@Override
-	    	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
+	    	public void simulationDestroyed(KReaturesEnvironment simulationEnvironment) {
 	    		rootNode = new DefaultMutableTreeNode("Report");
 	    		model = new DefaultTreeModel(rootNode);
 	    		tree.setModel(model);
@@ -98,8 +98,8 @@ public class ReportTreeController extends TreeControllerAdapter implements Repor
 		};
 		
 		// register listeners:
-		Angerona.getInstance().addSimulationListener(simulationHandler);
-		Angerona.getInstance().addReportListener(this);
+		KReatures.getInstance().addSimulationListener(simulationHandler);
+		KReatures.getInstance().addReportListener(this);
     }
 
 	@Override

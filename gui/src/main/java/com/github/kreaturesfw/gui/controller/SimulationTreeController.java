@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import bibliothek.gui.Dockable;
 
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.basic.Agent;
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.gui.AngeronaWindow;
@@ -91,7 +91,7 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	}
 	
 	@Override
-	public void simulationStarted(AngeronaEnvironment simulation) {
+	public void simulationStarted(KReaturesEnvironment simulation) {
 		// TODO: Important the controller is not registered to the simulation listener because
 		// the controller is created during a simulationStarted event and the list of listeners
 		// must not be changed during this event.
@@ -105,7 +105,7 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	}
 
 	@Override
-	public void agentAdded(AngeronaEnvironment simulationEnvironment,
+	public void agentAdded(KReaturesEnvironment simulationEnvironment,
 			Agent added) {
 	}
 	
@@ -170,18 +170,18 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 	}
 
 	@Override
-	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
+	public void agentRemoved(KReaturesEnvironment simulationEnvironment,
 			Agent removed) {		
 	}
 
 	@Override
-	public void tickDone(AngeronaEnvironment simulationEnvironment) {
+	public void tickDone(KReaturesEnvironment simulationEnvironment) {
 		// do nothing.
 	}
 
 	@Override
 	public void simulationDestroyed(
-			AngeronaEnvironment simulationEnvironment) {
+			KReaturesEnvironment simulationEnvironment) {
 		DefaultTreeModel tm = (DefaultTreeModel)tree.getModel();
 		for(int i=0; i<tm.getChildCount(root); ++i) {
 			DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)tm.getChild(root, i);
@@ -189,10 +189,10 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 				continue;
 			
 			UserObjectWrapper tuo = (UserObjectWrapper)dmtn.getUserObject();
-			if(! (tuo.getUserObject() instanceof AngeronaEnvironment) )
+			if(! (tuo.getUserObject() instanceof KReaturesEnvironment) )
 				continue;
 			
-			AngeronaEnvironment sim = (AngeronaEnvironment)tuo.getUserObject();
+			KReaturesEnvironment sim = (KReaturesEnvironment)tuo.getUserObject();
 			if(sim == simulationEnvironment) {
 				tm.removeNodeFromParent(dmtn);
 				break;
@@ -207,7 +207,7 @@ public class SimulationTreeController extends TreeControllerAdapter implements S
 
 
 	@Override
-	public void tickStarting(AngeronaEnvironment simulationEnvironment) {
+	public void tickStarting(KReaturesEnvironment simulationEnvironment) {
 		// does nothing
 	}
 }

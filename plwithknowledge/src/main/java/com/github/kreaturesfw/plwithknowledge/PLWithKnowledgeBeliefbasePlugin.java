@@ -7,7 +7,7 @@ import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
@@ -20,7 +20,7 @@ import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeTranslator;
 import com.github.kreaturesfw.plwithknowledge.logic.PLWithKnowledgeUpdate;
 
 @PluginImplementation
-public class PLWithKnowledgeBeliefbasePlugin extends AngeronaPluginAdapter implements UIPlugin {
+public class PLWithKnowledgeBeliefbasePlugin extends KReaturesPluginAdapter implements UIPlugin {
 	@Override
 	public List<Class<? extends BaseBeliefbase>> getBeliefbaseImpl() {
 		List<Class<? extends BaseBeliefbase>> reval = new LinkedList<Class<? extends BaseBeliefbase>>();

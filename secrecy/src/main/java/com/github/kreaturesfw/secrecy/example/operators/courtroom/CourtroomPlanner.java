@@ -11,6 +11,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.bdi.Desire;
 import com.github.kreaturesfw.core.bdi.Subgoal;
 import com.github.kreaturesfw.core.bdi.components.Desires;
@@ -18,7 +19,6 @@ import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.comm.Answer;
 import com.github.kreaturesfw.core.comm.Query;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.util.Utility;

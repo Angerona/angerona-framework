@@ -1,11 +1,11 @@
 package com.github.kreaturesfw.core.operators;
 
-import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.KReaturesPlugin;
 import com.github.kreaturesfw.core.serialize.ContinuousBeliefOperatorFamilyConfig;
 
 /**
  * Abstract base class for iterator strategies for the continuous belief-operator-families.
- * Can be extended by the Angerona plugin facilility, see {@link AngeronaPlugin}.
+ * Can be extended by the Angerona plugin facilility, see {@link KReaturesPlugin}.
  * 
  * @author Tim Janus
  */

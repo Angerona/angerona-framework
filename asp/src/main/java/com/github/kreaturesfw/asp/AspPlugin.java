@@ -25,10 +25,10 @@ import com.github.kreaturesfw.asp.logic.RevisionCredibilityPrograms;
 import com.github.kreaturesfw.asp.logic.RevisionPreferenceHandling;
 import com.github.kreaturesfw.asp.serialize.DLPAtomTransform;
 import com.github.kreaturesfw.asp.serialize.DLPLiteralTransform;
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
+import com.github.kreaturesfw.core.basic.AgentComponent;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
@@ -46,7 +46,7 @@ import com.github.kreaturesfw.gui.base.ViewComponent;
  * @author Tim Janus
  */
 @PluginImplementation
-public class AspPlugin extends AngeronaPluginAdapter 
+public class AspPlugin extends KReaturesPluginAdapter 
 	implements UIPlugin {
 
 	@Override

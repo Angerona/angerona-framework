@@ -16,12 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.def.FrameworkPlugin;
+import com.github.kreaturesfw.core.internal.AngeronaProject;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.OperatorMap;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.FrameworkListener;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.operators.OperatorStack;
@@ -41,13 +41,13 @@ import com.github.kreaturesfw.core.serialize.GlobalConfiguration;
  * @author Tim Janus
  * @todo Also handle plug-ins as resource.
  */
-public class Angerona {
+public class KReatures {
 	
 	/** reference to the logging facility */
-	private static Logger LOG = LoggerFactory.getLogger(Angerona.class);
+	private static Logger LOG = LoggerFactory.getLogger(KReatures.class);
 	
 	/** the only instance of Angerona */
-	private static Angerona instance = null;
+	private static KReatures instance = null;
 	
 	/** the list of registered report listeners */
 	private List<ReportListener> reportListeners = new LinkedList<ReportListener>();
@@ -66,13 +66,13 @@ public class Angerona {
 	 * A Map containing the Report instances for specific simulations 
 	 * @todo Differentiate between environment and simulation.
 	 */
-	private Map<AngeronaEnvironment, Report> reports = new HashMap<AngeronaEnvironment, Report>(); 
+	private Map<KReaturesEnvironment, Report> reports = new HashMap<KReaturesEnvironment, Report>(); 
 	
 	/** reference to the report of the actual running simulation */
 	private Report actualReport;
 	
 	/** reference to the actual loaded simulation */
-	private AngeronaEnvironment actualSimulation;
+	private KReaturesEnvironment actualSimulation;
 	
 	/** reference to the configuration of Angerona */
 	private GlobalConfiguration config = null;
@@ -85,9 +85,9 @@ public class Angerona {
 	 * 	Implements the singleton pattern.
 	 * 	@return the application wide unique instance of the Angerona class.
 	 */
-	public static Angerona getInstance() {
+	public static KReatures getInstance() {
 		if(instance == null)
-			instance = new Angerona();
+			instance = new KReatures();
 		return instance;
 	}
 	
@@ -182,7 +182,7 @@ public class Angerona {
 		LOG.info("REPORT: " + logOut);
 		
 		ReportEntry entry = new ReportEntry(msg, attachment, scope, poster, this.actualSimulation);
-		Angerona.getInstance().getReport(entry.getSimulation()).saveEntry(entry);
+		KReatures.getInstance().getReport(entry.getSimulation()).saveEntry(entry);
 		for(ReportListener listener : reportListeners) {
 			listener.reportReceived(entry);
 		}
@@ -194,7 +194,7 @@ public class Angerona {
 	}
 	
 	/** @return the reference to the last loaded simulation */
-	public AngeronaEnvironment getActualSimulation() {
+	public KReaturesEnvironment getActualSimulation() {
 		return actualSimulation;
 	}
 	
@@ -202,7 +202,7 @@ public class Angerona {
 	 * @param simulation a reference to a simulation.
 	 * @return the report belonging to the given simulation.
 	 */
-	public Report getReport(AngeronaEnvironment simulation) {
+	public Report getReport(KReaturesEnvironment simulation) {
 		return reports.get(simulation);
 	}
 	
@@ -258,13 +258,13 @@ public class Angerona {
 	 * 	It updates the reference to the actual report and the actual simulation.
 	 * 	@param ev	The reference to the new simulation simulation.
 	 */
-	public void onCreateSimulation(AngeronaEnvironment ev) {
+	public void onCreateSimulation(KReaturesEnvironment ev) {
 		actualReport = new Report(ev);
 		actualSimulation = ev;
 		reports.put(ev, actualReport);
 	}
 	
-	public void onAgentAdded(AngeronaEnvironment env, Agent added) {
+	public void onAgentAdded(KReaturesEnvironment env, Agent added) {
 		for(SimulationListener l : simulationListeners) {
 			l.agentAdded(env, added);
 		}
@@ -275,7 +275,7 @@ public class Angerona {
 	 * of the given simulation
 	 * @param ev		reference to the initialized simulation.
 	 */
-	public void onNewSimulation(AngeronaEnvironment ev) {
+	public void onNewSimulation(KReaturesEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.simulationStarted(ev);
 		}
@@ -286,7 +286,7 @@ public class Angerona {
 	 * the simulation listeners about the cleanup of the simulation.
 	 * @param ev	A reference to the simulation.
 	 */
-	public void onSimulationDestroyed(AngeronaEnvironment ev) {
+	public void onSimulationDestroyed(KReaturesEnvironment ev) {
 		actualReport = null;
 		reports.clear();
 		for(SimulationListener l : simulationListeners) {
@@ -298,7 +298,7 @@ public class Angerona {
 	 * Informs the simulations listeners when a tick of the simulation is starting.
 	 * @param ev		Reference to the simulation
 	 */
-	public void onTickStarting(AngeronaEnvironment ev) {
+	public void onTickStarting(KReaturesEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.tickStarting(ev);
 		}
@@ -308,7 +308,7 @@ public class Angerona {
 	 * Informs the simulations listeners when a tick of the simulation is done.
 	 * @param ev		Reference to the simulation
 	 */
-	public void onTickDone(AngeronaEnvironment ev) {
+	public void onTickDone(KReaturesEnvironment ev) {
 		for(SimulationListener l : simulationListeners) {
 			l.tickDone(ev);
 		}
@@ -325,7 +325,7 @@ public class Angerona {
 		}
 	}
 	
-	private Angerona() {}
+	private KReatures() {}
 	
 	/**
 	 * Loads the resources in the folders registered so far. First of all the

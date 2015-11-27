@@ -5,7 +5,7 @@ import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
 import com.github.kreaturesfw.gui.base.ViewComponent;
 import com.github.kreaturesfw.gui.interactive.InteractiveBarMVPComponent;
 import com.github.kreaturesfw.gui.project.ProjectTreeMVPComponent;
@@ -16,7 +16,7 @@ import com.github.kreaturesfw.gui.view.PlanView;
 import com.github.kreaturesfw.gui.view.ReportView;
 
 @PluginImplementation
-public class DefaultUIPlugin extends AngeronaPluginAdapter implements UIPlugin {
+public class DefaultUIPlugin extends KReaturesPluginAdapter implements UIPlugin {
 
 	@Override
 	public Map<String, Class<? extends ViewComponent>> getUIComponents() {

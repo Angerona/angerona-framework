@@ -7,8 +7,8 @@ import javax.swing.SwingUtilities;
 
 import bibliothek.gui.dock.DefaultDockable;
 
-import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.report.Report;
 import com.github.kreaturesfw.gui.AngeronaWindow;
@@ -38,15 +38,15 @@ public class ReportTreeMVP
 		// generate view and presenter
 		view = new ReportTreeView();
 		presenter = new ReportPresenter(
-				Angerona.getInstance().getActualReport(), 
+				KReatures.getInstance().getActualReport(), 
 				view);
 		
-		Angerona.getInstance().addSimulationListener(this);
+		KReatures.getInstance().addSimulationListener(this);
 	}
 	
 	@Override
-	public void simulationStarted(AngeronaEnvironment environment) {
-		final Report curModel = Angerona.getInstance().getReport(environment);
+	public void simulationStarted(KReaturesEnvironment environment) {
+		final Report curModel = KReatures.getInstance().getReport(environment);
 		
 		// wait for swing event to finish: By setting the model
 		// the listeners of the MVP component are connected, if this would run

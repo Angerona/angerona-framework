@@ -11,7 +11,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.knowhow.KnowhowBase;
 import com.github.kreaturesfw.knowhow.KnowhowStatement;
 import com.github.kreaturesfw.knowhow.situation.SituationGraphBuilder;

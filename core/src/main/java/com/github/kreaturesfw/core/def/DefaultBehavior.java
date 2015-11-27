@@ -8,13 +8,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.comm.SpeechAct;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * Behavior implementing the default Angerona environment behavior.
@@ -36,7 +36,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	
 	
 	@Override
-	public void sendAction(AngeronaEnvironment env, Action act) {
+	public void sendAction(KReaturesEnvironment env, Action act) {
 		// The action send by one agent is the perception of the other one.
 		somethingHappens = true;
 		
@@ -49,7 +49,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	}
 
 	@Override
-	public void receivePerception(AngeronaEnvironment env, Perception percept) {
+	public void receivePerception(KReaturesEnvironment env, Perception percept) {
 		String agentName = percept.getReceiverId();
 		localDelegate(env, percept, agentName);
 	}
@@ -60,7 +60,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	 * @param percept
 	 * @param agentName
 	 */
-	protected void localDelegate(AngeronaEnvironment env, Perception percept, String agentName) {
+	protected void localDelegate(KReaturesEnvironment env, Perception percept, String agentName) {
 		if(SpeechAct.ALL.equals(agentName)) {
 			for(Agent agent : env.getAgents()) {
 				agent.perceive(percept);
@@ -76,7 +76,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 	}
 
 	@Override
-	public boolean runOneTick(AngeronaEnvironment env) {
+	public boolean runOneTick(KReaturesEnvironment env) {
 		doingTick = true;
 		
 		while(!isSimulationReady()) {
@@ -93,7 +93,7 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		somethingHappens = false;
 		angeronaReady = false;
 		++tick;
-		Angerona.getInstance().onTickStarting(env);
+		KReatures.getInstance().onTickStarting(env);
 		
 		List<Agent> orderedAlphabetically = new ArrayList<>(env.getAgents());
 		Collections.sort(orderedAlphabetically, new Comparator<Agent>() {
@@ -111,12 +111,12 @@ public class DefaultBehavior implements EnvironmentBehavior  {
 		angeronaReady = true;
 		
 		doingTick = false;
-		Angerona.getInstance().onTickDone(env);
+		KReatures.getInstance().onTickDone(env);
 		return true;
 	}
 
 	@Override
-	public boolean run(AngeronaEnvironment env) {
+	public boolean run(KReaturesEnvironment env) {
 		boolean reval = false;
 		while(reval = runOneTick(env));
 		return reval;

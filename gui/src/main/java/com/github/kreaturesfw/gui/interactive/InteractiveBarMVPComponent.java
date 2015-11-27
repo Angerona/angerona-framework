@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 import bibliothek.gui.dock.DefaultDockable;
 
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.gui.AngeronaWindow;
 import com.github.kreaturesfw.gui.base.ViewComponent;
 
@@ -17,7 +17,7 @@ public class InteractiveBarMVPComponent implements ViewComponent {
 	private InteractiveBar view;
 
 	
-	public InteractiveBarMVPComponent(AngeronaEnvironment simulationEnvironment, Thread caller) {
+	public InteractiveBarMVPComponent(KReaturesEnvironment simulationEnvironment, Thread caller) {
 		InteractiveModelAdapter modelAdapter = new InteractiveModelAdapter(simulationEnvironment);
 		view = new InteractiveBar(modelAdapter.getReceiver(), modelAdapter.getActionTypes());
 		new InteractivePresenter(modelAdapter, view, caller);

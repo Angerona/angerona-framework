@@ -19,9 +19,9 @@ import javax.swing.tree.DefaultTreeModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.internal.Entity;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.core.report.ReportListener;
 import com.github.kreaturesfw.gui.base.EntityViewComponent;
@@ -142,7 +142,7 @@ public abstract class ListViewColored extends EntityViewComponent implements
 	@Override
 	public void init() {
 		if (ref != null) {
-			List<ReportEntry> entries = Angerona.getInstance()
+			List<ReportEntry> entries = KReatures.getInstance()
 					.getActualReport().getEntriesOf(ref);
 			if (entries != null && entries.size() > 0) {
 				actEntry = entries.get(entries.size() - 1);
@@ -183,7 +183,7 @@ public abstract class ListViewColored extends EntityViewComponent implements
 		this.add(callstackTree, BorderLayout.SOUTH);
 
 		updateView();
-		Angerona.getInstance().addReportListener(this);
+		KReatures.getInstance().addReportListener(this);
 	}
 
 	@Override
@@ -284,7 +284,7 @@ public abstract class ListViewColored extends EntityViewComponent implements
 	private void defaultUpdatePrevious() {
 		if (ref == null)
 			return;
-		List<ReportEntry> entries = Angerona.getInstance().getActualReport()
+		List<ReportEntry> entries = KReatures.getInstance().getActualReport()
 				.getEntriesOf(ref);
 		int index = entries.indexOf(actEntry) - 1;
 

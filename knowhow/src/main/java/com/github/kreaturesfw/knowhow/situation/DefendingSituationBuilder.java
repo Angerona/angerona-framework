@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.knowhow.KnowhowBase;
 import com.github.kreaturesfw.knowhow.KnowhowStatement;
 import com.github.kreaturesfw.knowhow.situation.DefendingSituation.AdditionalInformation;

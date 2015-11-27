@@ -2,9 +2,9 @@ package com.github.kreaturesfw.core.operators;
 
 import java.util.Map;
 
-import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.KReaturesPlugin;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.serialize.ContinuousBeliefOperatorFamilyConfig;
 
 /**
@@ -17,7 +17,7 @@ import com.github.kreaturesfw.core.serialize.ContinuousBeliefOperatorFamilyConfi
  * case {@link StepIteratorStrategy} is used. 
  * 
  * New iterator strategies can be implemented using the Angerona Plug-in facility, see
- * {@link AngeronaPlugin}.
+ * {@link KReaturesPlugin}.
  * 
  * @author Tim Janus
  *

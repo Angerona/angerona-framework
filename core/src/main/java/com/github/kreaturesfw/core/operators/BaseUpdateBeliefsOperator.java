@@ -1,8 +1,8 @@
 package com.github.kreaturesfw.core.operators;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.BaseOperator;
 import com.github.kreaturesfw.core.basic.Perception;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.core.util.Pair;

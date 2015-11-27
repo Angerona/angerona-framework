@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.core.report;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.Entity;
-import com.github.kreaturesfw.core.legacy.Agent;
 
 /**
  * Abstract base class for an output generator of Angerona reports.

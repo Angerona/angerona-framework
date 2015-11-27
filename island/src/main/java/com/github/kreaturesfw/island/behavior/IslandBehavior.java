@@ -12,10 +12,10 @@ import static com.github.kreaturesfw.island.enums.Weather.THUNDERSTORM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.Perception;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.simple.behavior.SimpleBehavior;
 import com.github.kreaturesfw.core.util.Generator;
 import com.github.kreaturesfw.island.components.Area;
@@ -52,7 +52,7 @@ public class IslandBehavior extends SimpleBehavior {
 	}
 
 	@Override
-	public void sendAction(AngeronaEnvironment env, Action act) {
+	public void sendAction(KReaturesEnvironment env, Action act) {
 		if (act instanceof IslandAction) {
 			boolean slow = current == STORM_OR_RAIN || current == THUNDERSTORM;
 
@@ -142,12 +142,12 @@ public class IslandBehavior extends SimpleBehavior {
 	}
 
 	@Override
-	protected boolean cycleCondition(AngeronaEnvironment env, Agent agent) {
+	protected boolean cycleCondition(KReaturesEnvironment env, Agent agent) {
 		return !terminationCriterion(env, agent);
 	}
 
 	@Override
-	protected Perception createPerception(AngeronaEnvironment env, Agent agent) {
+	protected Perception createPerception(KReaturesEnvironment env, Agent agent) {
 		Area area = agent.getComponent(Area.class);
 		Battery battery = agent.getComponent(Battery.class);
 
@@ -169,7 +169,7 @@ public class IslandBehavior extends SimpleBehavior {
 	}
 
 	@Override
-	protected void postCycle(AngeronaEnvironment env, Agent agent) {
+	protected void postCycle(KReaturesEnvironment env, Agent agent) {
 		Area area = agent.getComponent(Area.class);
 		Battery battery = agent.getComponent(Battery.class);
 
@@ -214,7 +214,7 @@ public class IslandBehavior extends SimpleBehavior {
 	}
 
 	@Override
-	protected boolean terminationCriterion(AngeronaEnvironment env, Agent agent) {
+	protected boolean terminationCriterion(KReaturesEnvironment env, Agent agent) {
 		Area area = agent.getComponent(Area.class);
 		Battery battery = agent.getComponent(Battery.class);
 

@@ -18,7 +18,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import com.github.kreaturesfw.core.AngeronaProject;
+import com.github.kreaturesfw.core.internal.AngeronaProject;
 import com.github.kreaturesfw.core.serialize.Resource;
 import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
 import com.github.kreaturesfw.gui.base.ObservingPanel;

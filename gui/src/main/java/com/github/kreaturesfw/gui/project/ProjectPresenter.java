@@ -11,8 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 
-import com.github.kreaturesfw.core.AngeronaProject;
 import com.github.kreaturesfw.core.error.AngeronaException;
+import com.github.kreaturesfw.core.internal.AngeronaProject;
 import com.github.kreaturesfw.core.serialize.Resource;
 import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
 import com.github.kreaturesfw.gui.AngeronaGUIDataStorage;

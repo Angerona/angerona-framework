@@ -2,8 +2,8 @@ package com.github.kreaturesfw.core.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.error.ConversionException;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaAtom;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.util.Utility;

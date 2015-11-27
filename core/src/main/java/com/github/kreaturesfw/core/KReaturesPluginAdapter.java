@@ -8,10 +8,10 @@ import java.util.Map.Entry;
 
 import org.simpleframework.xml.transform.Transform;
 
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
@@ -25,7 +25,7 @@ import com.github.kreaturesfw.core.serialize.SerializeHelper;
  * 
  * @author Tim Janus
  */
-public class AngeronaPluginAdapter implements AngeronaPlugin {
+public class KReaturesPluginAdapter implements KReaturesPlugin {
 
 	private Map<Class<?>, Class<? extends Transform<?>>> matcherMap = new HashMap<>();
 	

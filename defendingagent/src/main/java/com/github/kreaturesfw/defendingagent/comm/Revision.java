@@ -7,8 +7,8 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.simpleframework.xml.Element;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.comm.SpeechAct;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.reflection.FolFormulaVariable;
 
 /**

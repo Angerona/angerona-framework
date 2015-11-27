@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.core.bdi;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.IdGenerator;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.listener.SubgoalListener;
 
 /**

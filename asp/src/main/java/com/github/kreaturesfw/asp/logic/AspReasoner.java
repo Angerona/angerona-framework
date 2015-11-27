@@ -19,7 +19,7 @@ import net.sf.tweety.lp.asp.util.AnswerSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
@@ -45,7 +45,7 @@ public class AspReasoner extends BaseReasoner {
 	private ISolverWrapper solver;
 	
 	public AspReasoner() throws InstantiationException {
-		GlobalConfiguration config = Angerona.getInstance().getConfig();
+		GlobalConfiguration config = KReatures.getInstance().getConfig();
 		if(config != null) {
 			if(!config.getParameters().containsKey("asp-solver")) {
 				throw new InstantiationException("Configuration 'asp-solver' not set in configuration.xml");

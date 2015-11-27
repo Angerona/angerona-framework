@@ -9,8 +9,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.internal.OperatorMap;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.parser.ParseException;
 import com.github.kreaturesfw.core.parser.UtilityParser;
 import com.github.kreaturesfw.core.serialize.OperationSetConfig;

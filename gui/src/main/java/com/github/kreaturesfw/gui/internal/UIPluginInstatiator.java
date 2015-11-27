@@ -7,7 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.KReaturesPlugin;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
 import com.github.kreaturesfw.core.listener.PluginAdapter;
 import com.github.kreaturesfw.gui.UIPlugin;
@@ -43,7 +43,7 @@ public class UIPluginInstatiator extends PluginAdapter {
 	}
 	
 	@Override
-	public void loadedPlugin(AngeronaPlugin plugin) {
+	public void loadedPlugin(KReaturesPlugin plugin) {
 		if(plugin instanceof UIPlugin) {
 			UIPlugin uiPlugin = (UIPlugin) plugin;
 			
@@ -75,7 +75,7 @@ public class UIPluginInstatiator extends PluginAdapter {
 	}
 	
 	@Override
-	public void unloadingPlugin(AngeronaPlugin plugin) {
+	public void unloadingPlugin(KReaturesPlugin plugin) {
 		if(plugin instanceof UIPlugin) {
 			UIPlugin uiPlugin = (UIPlugin) plugin;
 			

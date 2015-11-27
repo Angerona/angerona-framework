@@ -28,11 +28,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.legacy.InteractiveAgent;
 import com.github.kreaturesfw.core.listener.FrameworkListener;
 import com.github.kreaturesfw.core.listener.SimulationListener;
@@ -187,7 +187,7 @@ public class AngeronaWindow extends WindowAdapter
 		PluginInstantiator pi = PluginInstantiator.getInstance();
 		pi.addListener(UIPluginInstatiator.getInstance());
 		
-		Angerona angerona = Angerona.getInstance();
+		KReatures angerona = KReatures.getInstance();
 		angerona.addFrameworkListener(this);
 		angerona.addSimulationListener(this);
 
@@ -388,7 +388,7 @@ public class AngeronaWindow extends WindowAdapter
 	}
 	
 	@Override
-	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
+	public void simulationStarted(KReaturesEnvironment simulationEnvironment) {
 		SimulationTreeController stc = new SimulationTreeController(new JTree());
 		stc.simulationStarted(simulationEnvironment);
 		
@@ -408,7 +408,7 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
+	public void simulationDestroyed(KReaturesEnvironment simulationEnvironment) {
 		for(Dockable d : resMap) {
 			DockStation st = d.getDockParent();
 			if(st != null) {
@@ -423,17 +423,17 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void agentAdded(final AngeronaEnvironment simulationEnvironment,
+	public void agentAdded(final KReaturesEnvironment simulationEnvironment,
 			Agent added) {
 	}
 
 	@Override
-	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
+	public void agentRemoved(KReaturesEnvironment simulationEnvironment,
 			Agent removed) {
 	}
 
 	@Override
-	public void tickDone(AngeronaEnvironment simulationEnvironment) {
+	public void tickDone(KReaturesEnvironment simulationEnvironment) {
 	}
 
 	@Override
@@ -445,7 +445,7 @@ public class AngeronaWindow extends WindowAdapter
 	}
 
 	@Override
-	public void tickStarting(AngeronaEnvironment simulationEnvironment) {
+	public void tickStarting(KReaturesEnvironment simulationEnvironment) {
 		// TODO Auto-generated method stub
 		
 	}

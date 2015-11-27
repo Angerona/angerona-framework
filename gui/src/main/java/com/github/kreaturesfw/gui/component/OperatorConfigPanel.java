@@ -17,7 +17,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.github.kreaturesfw.core.legacy.Operator;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.util.Pair;
 import com.github.kreaturesfw.core.util.Utility;
 import com.github.kreaturesfw.gui.base.ObservingPanel;

@@ -18,11 +18,11 @@ import net.xeoh.plugins.base.util.PluginManagerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.KReaturesPlugin;
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.listener.PluginListener;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
@@ -55,7 +55,7 @@ public class PluginInstantiator {
 	private PluginManagerUtil util;
 	
 	/** set of already loaded plugins */
-	private Set<AngeronaPlugin> loadedPlugins = new HashSet<>();
+	private Set<KReaturesPlugin> loadedPlugins = new HashSet<>();
 	
 	/** a map of Classes defining the basis type to a set of classes defining implementations */
 	private Map<Class<?>, Set<Class<?>>> implMap = new HashMap<Class<?>, Set<Class<?>>>();
@@ -144,10 +144,10 @@ public class PluginInstantiator {
 	 * @todo listener used to load UI Plugins, find other concept
 	 */
 	private void loadAllPlugins() {
-		List<AngeronaPlugin> plugins = new LinkedList<AngeronaPlugin>();
-		plugins.addAll(util.getPlugins(AngeronaPlugin.class));
+		List<KReaturesPlugin> plugins = new LinkedList<KReaturesPlugin>();
+		plugins.addAll(util.getPlugins(KReaturesPlugin.class));
 		
-		for(AngeronaPlugin plugin : plugins) {
+		for(KReaturesPlugin plugin : plugins) {
 			registerPlugin(plugin);
 		}
 	}
@@ -158,7 +158,7 @@ public class PluginInstantiator {
 	 * and if the class is an operator the global instance is generated.
 	 * @param plugin	The AngeronaPlugin having the list of class definitions
 	 */
-	public void registerPlugin(AngeronaPlugin plugin) {
+	public void registerPlugin(KReaturesPlugin plugin) {
 		if(!loadedPlugins.contains(plugin)) {
 			plugin.onLoading();
 			for(PluginListener listener : listeners) {
@@ -189,7 +189,7 @@ public class PluginInstantiator {
 	 * if the implementation is an operator than the gloab operator instance is destroyed.
 	 * @param plugin	The AngeronaPlugin which shall be unregistered.
 	 */
-	public void unregisterPlugin(AngeronaPlugin plugin) {
+	public void unregisterPlugin(KReaturesPlugin plugin) {
 		if(loadedPlugins.contains(plugin)) {
 			for(PluginListener listener : listeners) {
 				listener.unloadingPlugin(plugin);
@@ -264,7 +264,7 @@ public class PluginInstantiator {
 	 * @return			A map containing a mapping between base classes to implementations.
 	 */
 	private Map<Class<?>, Set<Class<?>>> createImplementationMap(
-			AngeronaPlugin plugin) {
+			KReaturesPlugin plugin) {
 		Map<Class<?>, Set<Class<?>>> temp = new HashMap<Class<?>, Set<Class<?>>>();
 		temp.put(AgentComponent.class, new HashSet<Class<?>>());
 		

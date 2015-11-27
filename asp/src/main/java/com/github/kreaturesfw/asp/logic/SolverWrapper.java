@@ -2,7 +2,7 @@ package com.github.kreaturesfw.asp.logic;
 
 import java.io.File;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.serialize.GlobalConfiguration;
 
 import net.sf.tweety.lp.asp.solver.Clingo;
@@ -29,7 +29,7 @@ public enum SolverWrapper implements ISolverWrapper {
 	/** Default-Ctor: Calculates the solver-path depending on the enum-value
 	 * @throws InstantiationException */
 	private SolverWrapper() {
-		GlobalConfiguration config = Angerona.getInstance().getConfig();
+		GlobalConfiguration config = KReatures.getInstance().getConfig();
 
 		if(ordinal() == 0) { // if Clingo:
 			paramName = ("path-clingo");
@@ -54,7 +54,7 @@ public enum SolverWrapper implements ISolverWrapper {
 	
 	public InstantiationException getError() {
 		if(path == null) {
-			GlobalConfiguration config = Angerona.getInstance().getConfig();
+			GlobalConfiguration config = KReatures.getInstance().getConfig();
 			
 			return new InstantiationException("The path '" + config.getParameters().get(paramName) + 
 					"' is not the path to the '" + this.toString() + "' ASP solver.");

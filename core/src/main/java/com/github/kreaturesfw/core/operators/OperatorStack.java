@@ -2,7 +2,7 @@ package com.github.kreaturesfw.core.operators;
 
 import java.util.Stack;
 
-import com.github.kreaturesfw.core.legacy.Operator;
+import com.github.kreaturesfw.core.basic.Operator;
 
 /**
  * The caller of operators must implement this interface

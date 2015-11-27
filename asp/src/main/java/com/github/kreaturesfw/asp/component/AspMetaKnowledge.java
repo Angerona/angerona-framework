@@ -8,10 +8,10 @@ import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
 
 import com.github.kreaturesfw.asp.logic.AspBeliefbase;
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.BaseAgentComponent;
 import com.github.kreaturesfw.core.internal.IdGenerator;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationAdapter;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
@@ -40,7 +40,7 @@ public class AspMetaKnowledge extends BaseAgentComponent {
 	 */
 	private SimulationListener simListener = new SimulationAdapter() {
 		@Override
-		public void tickDone(AngeronaEnvironment simulationEnvironment) {
+		public void tickDone(KReaturesEnvironment simulationEnvironment) {
 			tick += 1;
 		}
 	};
@@ -67,7 +67,7 @@ public class AspMetaKnowledge extends BaseAgentComponent {
 	
 	@Override
 	public void init(Map<String, String> parameters) {
-		Angerona.getInstance().addSimulationListener(simListener);
+		KReatures.getInstance().addSimulationListener(simListener);
 		super.init(parameters);
 	}
 	

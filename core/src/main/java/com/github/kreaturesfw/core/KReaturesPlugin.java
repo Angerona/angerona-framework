@@ -2,10 +2,10 @@ package com.github.kreaturesfw.core;
 
 import java.util.List;
 
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
@@ -34,7 +34,7 @@ import net.xeoh.plugins.base.Plugin;
  * 
  * @author Tim Janus
  */
-public interface AngeronaPlugin extends Plugin {
+public interface KReaturesPlugin extends Plugin {
 	/** is called right before the plug-in is loaded */
 	void onLoading();
 	

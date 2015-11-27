@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.error.ConversionException;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.operators.OperatorCaller;
 import com.github.kreaturesfw.core.operators.OperatorStack;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;

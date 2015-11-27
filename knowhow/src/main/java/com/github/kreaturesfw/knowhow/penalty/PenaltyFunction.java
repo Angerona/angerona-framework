@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.knowhow.penalty;
 
 import com.github.kreaturesfw.core.basic.Action;
-import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.basic.Agent;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 

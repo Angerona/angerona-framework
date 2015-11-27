@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.listener;
 
-import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.KReaturesPlugin;
 
 
 /**
@@ -14,14 +14,14 @@ public interface PluginListener {
 	 * is called.
 	 * @param plugin	The plugin instance.
 	 */
-	void loadingPlugin(AngeronaPlugin plugin);
+	void loadingPlugin(KReaturesPlugin plugin);
 	
 	/**
 	 * Called when the loading of plugin is finished. It is called after the last
 	 * implementationRegistered invocation for the plugin.
 	 * @param plugin	The plugin instance
 	 */
-	void loadedPlugin(AngeronaPlugin plugin);
+	void loadedPlugin(KReaturesPlugin plugin);
 	
 	/**
 	 * Called when an implementation is registered.
@@ -35,14 +35,14 @@ public interface PluginListener {
 	 * is called.
 	 * @param plugin	The plugin instance.
 	 */
-	void unloadingPlugin(AngeronaPlugin plugin);
+	void unloadingPlugin(KReaturesPlugin plugin);
 	
 	/**
 	 * Called when the unloading of a plugin is finished. It is called after the last
 	 * implementationUnregistered invocation for the plugin.
 	 * @param plugin	The plugin instance
 	 */
-	void unloadedPlugin(AngeronaPlugin plugin);
+	void unloadedPlugin(KReaturesPlugin plugin);
 	
 	/**
 	 * Called when an implementation is unregistered.

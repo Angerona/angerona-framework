@@ -2,7 +2,7 @@ package com.github.kreaturesfw.gui;
 
 import java.util.Map;
 
-import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.KReaturesPlugin;
 import com.github.kreaturesfw.gui.base.ViewComponent;
 
 /**
@@ -10,7 +10,7 @@ import com.github.kreaturesfw.gui.base.ViewComponent;
  * by adding more views to the framework.
  * @author Tim Janus
  */
-public interface UIPlugin extends AngeronaPlugin {
+public interface UIPlugin extends KReaturesPlugin {
 	/**
 	 * @return 	a map containing the names of the views as key and the class object of
 	 * 			the actual view implementation as value.

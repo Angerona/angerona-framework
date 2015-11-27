@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.internal;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.operators.OperatorStack;
 import com.github.kreaturesfw.core.report.FullReporter;
 import com.github.kreaturesfw.core.report.ReportPoster;
@@ -53,25 +53,25 @@ public class AngeronaReporter implements FullReporter {
 	@Override
 	public void report(String message) {
 		if(stack != null && defaultPoster != null)
-			Angerona.getInstance().report(message, stack, defaultPoster);
+			KReatures.getInstance().report(message, stack, defaultPoster);
 	}
 	
 	@Override
 	public void report(String message, Entity attachment) {
 		if(stack != null && defaultPoster != null)
-			Angerona.getInstance().report(message, attachment, stack, defaultPoster);
+			KReatures.getInstance().report(message, attachment, stack, defaultPoster);
 	}
 
 	@Override
 	public void report(String message, ReportPoster poster) {
 		if(stack != null)
-			Angerona.getInstance().report(message, stack, poster);
+			KReatures.getInstance().report(message, stack, poster);
 	}
 	
 	@Override
 	public void report(String message, Entity attachment, ReportPoster poster) {
 		if(stack != null)
-			Angerona.getInstance().report(message, attachment, stack, poster);
+			KReatures.getInstance().report(message, attachment, stack, poster);
 	}
 
 }

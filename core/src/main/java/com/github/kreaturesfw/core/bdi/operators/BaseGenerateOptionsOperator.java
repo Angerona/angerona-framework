@@ -1,9 +1,9 @@
 package com.github.kreaturesfw.core.bdi.operators;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.BaseOperator;
 import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.bdi.operators.parameter.GenerateOptionsParameter;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.util.Pair;
 
 

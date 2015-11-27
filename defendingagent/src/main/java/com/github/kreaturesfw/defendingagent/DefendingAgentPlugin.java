@@ -7,9 +7,9 @@ import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.legacy.Operator;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
+import com.github.kreaturesfw.core.basic.AgentComponent;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.defendingagent.gui.HistoryView;
 import com.github.kreaturesfw.defendingagent.gui.ViewView;
 import com.github.kreaturesfw.defendingagent.operators.def.GenerateOptionsOperator;
@@ -26,7 +26,7 @@ import com.github.kreaturesfw.gui.base.ViewComponent;
  *  
  * @author Pia Wierzoch, Sebastian Homann
  */
-public class DefendingAgentPlugin extends AngeronaPluginAdapter implements UIPlugin {
+public class DefendingAgentPlugin extends KReaturesPluginAdapter implements UIPlugin {
 
 	@Override
 	public List<Class<? extends Operator>> getOperators() {

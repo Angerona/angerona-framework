@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.util.Utility;
 

@@ -3,10 +3,10 @@ package com.github.kreaturesfw.island;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.legacy.Operator;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
 import com.github.kreaturesfw.island.behavior.DynamicIslandBehavior;
 import com.github.kreaturesfw.island.behavior.IslandBehavior;
@@ -27,7 +27,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  *
  */
 @PluginImplementation
-public class IslandPlugin extends AngeronaPluginAdapter {
+public class IslandPlugin extends KReaturesPluginAdapter {
 
 	@Override
 	public List<Class<? extends AgentComponent>> getAgentComponentImpl() {

@@ -1,6 +1,7 @@
 package com.github.kreaturesfw.core.legacy;
 
-
+import com.github.kreaturesfw.core.KReaturesEnvironment;
+import com.github.kreaturesfw.core.basic.Agent;
 
 public class InteractiveAgent extends Agent{
 
@@ -11,7 +12,7 @@ public class InteractiveAgent extends Agent{
 	
 	private NextActionRequester nextActionRequester;
 	
-	public InteractiveAgent(String name, AngeronaEnvironment env) {
+	public InteractiveAgent(String name, KReaturesEnvironment env) {
 		super(name, env);
 		hasPerception = true;
 	}

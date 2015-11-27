@@ -2,8 +2,8 @@ package com.github.kreaturesfw.core.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.error.ConversionException;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.operators.OperatorStack;
 import com.github.kreaturesfw.core.report.Reporter;
 

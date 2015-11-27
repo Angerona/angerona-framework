@@ -9,7 +9,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.legacy.Operator;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.listener.PluginAdapter;
 
 /**

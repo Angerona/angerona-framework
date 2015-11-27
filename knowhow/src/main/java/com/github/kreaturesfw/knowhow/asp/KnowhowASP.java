@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.asp.logic.SolverWrapper;
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.bdi.Desire;
 import com.github.kreaturesfw.core.bdi.PlanElement;
 import com.github.kreaturesfw.core.bdi.Subgoal;
@@ -25,7 +26,6 @@ import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Justification;
 import com.github.kreaturesfw.core.comm.Justify;
 import com.github.kreaturesfw.core.comm.Query;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;

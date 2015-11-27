@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.listener.SubgoalListener;
 
 /**

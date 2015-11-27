@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.basic;
 
 import java.beans.PropertyChangeListener;
 import java.util.Map;

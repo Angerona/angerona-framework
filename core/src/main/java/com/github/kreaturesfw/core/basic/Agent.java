@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.basic;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,15 +16,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.basic.AbstractAgent;
-import com.github.kreaturesfw.core.basic.Action;
-import com.github.kreaturesfw.core.basic.Perception;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.bdi.Intention;
 import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.bdi.components.PlanComponent;
@@ -34,6 +30,8 @@ import com.github.kreaturesfw.core.internal.AngeronaReporter;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.IdGenerator;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.AngeronaAtom;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
 import com.github.kreaturesfw.core.listener.ActionProcessor;
 import com.github.kreaturesfw.core.listener.AgentListener;
@@ -58,6 +56,8 @@ import com.github.kreaturesfw.core.serialize.BeliefbaseConfig;
 import com.github.kreaturesfw.core.serialize.OperationSetConfig;
 import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
 
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 /**
  * An agent in the Angerona framework defines itself with the registered
  * instances of AgentComponent and it's used Operator instances. The data
@@ -80,7 +80,7 @@ import com.github.kreaturesfw.core.serialize.SimulationConfiguration;
  * @author Tim Janus
  * @author Daniel Dilger
  */
-public class Agent extends AbstractAgent<Perception> implements ContextProvider, Entity, OperatorStack,
+public class Agent implements ContextProvider, Entity, OperatorStack,
 		ReportPoster, Reporter, OperatorCaller, ActionProcessor,
 		PropertyChangeListener, SubgoalListener {
 
@@ -137,21 +137,15 @@ public class Agent extends AbstractAgent<Perception> implements ContextProvider,
 
 	protected CommandSequence asmlCylce;
 	
-	protected AngeronaEnvironment env;
+	protected KReaturesEnvironment env;
 
 	public OperatorProvider getOperators() {
 		return operators;
 	}
 
-	public Agent(String name, AngeronaEnvironment env) {
+	public Agent(String name, KReaturesEnvironment env) {
 		this.name = name;
 		this.env = env;
-	}
-	
-	@Override
-	public boolean execute(Perception perception) {
-		perceive(perception);
-		return cycle();
 	}
 
 	public List<String> getCapabilities() {
@@ -202,7 +196,7 @@ public class Agent extends AbstractAgent<Perception> implements ContextProvider,
 		regenContext();
 	}
 	
-	public AngeronaEnvironment getEnvironment() {
+	public KReaturesEnvironment getEnvironment() {
 		return env;
 	}
 
@@ -574,7 +568,7 @@ public class Agent extends AbstractAgent<Perception> implements ContextProvider,
 		env.sendAction(act);
 		LOG.info("Action performed: " + act.toString());
 		reporter.report("Action: '" + act.toString() + "' performed.");
-		Angerona.getInstance().onActionPerformed(this, act);
+		KReatures.getInstance().onActionPerformed(this, act);
 	}
 
 	@Override
@@ -667,7 +661,7 @@ public class Agent extends AbstractAgent<Perception> implements ContextProvider,
 	 * Helper method: reports the created belief bases and components to the
 	 * report-system.
 	 */
-	protected void reportCreation() {
+	public void reportCreation() {
 		report("Agent: '" + getName() + "' created.");
 
 		Beliefs b = getBeliefs();

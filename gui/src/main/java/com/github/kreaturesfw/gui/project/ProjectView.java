@@ -3,7 +3,7 @@ package com.github.kreaturesfw.gui.project;
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 
-import com.github.kreaturesfw.core.AngeronaProject;
+import com.github.kreaturesfw.core.internal.AngeronaProject;
 import com.github.kreaturesfw.core.serialize.Resource;
 import com.github.kreaturesfw.gui.base.View;
 import com.github.kreaturesfw.gui.util.CollectionMonitor;

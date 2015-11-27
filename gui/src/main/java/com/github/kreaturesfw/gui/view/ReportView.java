@@ -13,7 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.report.ReportWikiGenerator;
 import com.github.kreaturesfw.core.util.Utility;
 import com.github.kreaturesfw.gui.AngeronaWindow;
@@ -80,7 +80,7 @@ public class ReportView extends JPanel implements ViewComponent {
 				}
 			}
 		});
-		Angerona.getInstance().addReportListener(rwg);
+		KReatures.getInstance().addReportListener(rwg);
 	}
 	
 	@Override

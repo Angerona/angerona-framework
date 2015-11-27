@@ -9,8 +9,8 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
-import com.github.kreaturesfw.core.Angerona;
-import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.util.Utility;
 
@@ -38,7 +38,7 @@ public class Justification extends SpeechAct {
 	private Set<FolFormula> justifications = new HashSet<>();
 	
 	public Justification(Justify source, FolFormula justification) {
-		this(Angerona.getInstance().getActualSimulation().getAgentByName(
+		this(KReatures.getInstance().getActualSimulation().getAgentByName(
 				source.getReceiverId()),
 				source.getSenderId(), source.getProposition(), 
 				source.getAnswerValue(), justification);
@@ -68,7 +68,7 @@ public class Justification extends SpeechAct {
 	}
 	
 	public Justification(Justify source, Set<FolFormula> justifications) {
-		this(Angerona.getInstance().getActualSimulation().getAgentByName(
+		this(KReatures.getInstance().getActualSimulation().getAgentByName(
 				source.getReceiverId()), source.getSenderId(), source.getProposition(), 
 				source.getAnswerValue(), justifications);
 	}

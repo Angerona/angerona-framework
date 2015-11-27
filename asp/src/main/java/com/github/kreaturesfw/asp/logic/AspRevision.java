@@ -9,7 +9,7 @@ import net.sf.tweety.lp.asp.syntax.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.operators.parameter.ChangeBeliefbaseParameter;
@@ -28,7 +28,7 @@ public abstract class AspRevision extends BaseChangeBeliefs {
 	protected SolverWrapper wrapper;
 	
 	public AspRevision() throws InstantiationException {
-		GlobalConfiguration config = Angerona.getInstance().getConfig();
+		GlobalConfiguration config = KReatures.getInstance().getConfig();
 		if(!config.getParameters().containsKey("asp-solver")) {
 			throw new InstantiationException("Configuration 'asp-solver' not set in configuration.xml");
 		}

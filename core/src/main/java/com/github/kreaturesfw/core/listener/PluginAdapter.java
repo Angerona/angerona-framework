@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.listener;
 
-import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.KReaturesPlugin;
 
 /**
  * Adapts the PluginListener interface, implemented for ease of use.
@@ -9,10 +9,10 @@ import com.github.kreaturesfw.core.AngeronaPlugin;
 public class PluginAdapter implements PluginListener {
 
 	@Override
-	public void loadingPlugin(AngeronaPlugin plugin) {}
+	public void loadingPlugin(KReaturesPlugin plugin) {}
 
 	@Override
-	public void loadedPlugin(AngeronaPlugin plugin) {}
+	public void loadedPlugin(KReaturesPlugin plugin) {}
 
 	@Override
 	public void implementationRegistered(Class<?> base, Class<?> impl) {}
@@ -21,9 +21,9 @@ public class PluginAdapter implements PluginListener {
 	public void implementationUnregistered(Class<?> base, Class<?> impl) {}
 
 	@Override
-	public void unloadingPlugin(AngeronaPlugin plugin) {}
+	public void unloadingPlugin(KReaturesPlugin plugin) {}
 
 	@Override
-	public void unloadedPlugin(AngeronaPlugin plugin) {}
+	public void unloadedPlugin(KReaturesPlugin plugin) {}
 
 }

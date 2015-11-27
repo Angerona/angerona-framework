@@ -1,10 +1,10 @@
 package com.github.kreaturesfw.secrecy.operators;
 
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.BaseOperator;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.bdi.PlanElement;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaAtom;
 import com.github.kreaturesfw.core.legacy.Cache;
 import com.github.kreaturesfw.core.listener.ActionProcessor;

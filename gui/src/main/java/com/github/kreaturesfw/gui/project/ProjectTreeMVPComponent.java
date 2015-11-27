@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 import bibliothek.gui.dock.DefaultDockable;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.gui.AngeronaWindow;
 import com.github.kreaturesfw.gui.base.ViewComponent;
 import com.github.kreaturesfw.gui.docking.DecoratorLibrary;
@@ -23,7 +23,7 @@ public class ProjectTreeMVPComponent implements ViewComponent {
 
 	public ProjectTreeMVPComponent() {
 		view = new ProjectTreeView();
-		new ProjectPresenter(Angerona.getInstance().getProject(), view);
+		new ProjectPresenter(KReatures.getInstance().getProject(), view);
 	}
 
 	@Override

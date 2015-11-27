@@ -3,12 +3,12 @@ package com.github.kreaturesfw.core.bdi.operators;
 import java.util.List;
 
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.BaseOperator;
 import com.github.kreaturesfw.core.bdi.Intention;
 import com.github.kreaturesfw.core.bdi.PlanElement;
 import com.github.kreaturesfw.core.bdi.Subgoal;
 import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.simple.operators.parameter.SimplePlanParameter;
 import com.github.kreaturesfw.core.util.Pair;
 

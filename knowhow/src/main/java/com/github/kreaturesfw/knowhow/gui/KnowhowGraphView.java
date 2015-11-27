@@ -7,7 +7,7 @@ import javax.swing.JScrollPane;
 
 import org.jgrapht.graph.DefaultEdge;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.core.report.ReportListener;
@@ -55,7 +55,7 @@ public class KnowhowGraphView
 
 	@Override
 	public void init() {
-		List<ReportEntry> entries = Angerona.getInstance()
+		List<ReportEntry> entries = KReatures.getInstance()
 				.getActualReport().getEntriesOf(ref);
 		if (entries != null && entries.size() > 0) {
 			actEntry = entries.get(entries.size() - 1);

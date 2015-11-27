@@ -1,8 +1,8 @@
 package com.github.kreaturesfw.swarm.basic;
 
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * 
@@ -12,13 +12,13 @@ import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 public class SwarmBehavior implements EnvironmentBehavior {
 
 	@Override
-	public void sendAction(AngeronaEnvironment env, Action action) {
+	public void sendAction(KReaturesEnvironment env, Action action) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public boolean runOneTick(AngeronaEnvironment env) {
+	public boolean runOneTick(KReaturesEnvironment env) {
 		// TODO Auto-generated method stub
 		return false;
 	}

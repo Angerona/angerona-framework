@@ -13,7 +13,7 @@ import org.simpleframework.xml.core.Commit;
 import org.simpleframework.xml.core.PersistenceException;
 import org.simpleframework.xml.core.Validate;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
 
 /**
  * Base class for different situations that are used to generate plans.
@@ -50,7 +50,7 @@ public class Situation {
 		
 		if(filenameBackgroundProgram != null) {
 			if(!filenameBackgroundProgram.exists()) {
-				String dir = Angerona.getInstance().getActualSimulation().getDirectory();
+				String dir = KReatures.getInstance().getActualSimulation().getDirectory();
 				filenameBackgroundProgram = new File(dir + "/" + filenameBackgroundProgram.getPath());
 				if(!filenameBackgroundProgram.exists())
 					throw new PersistenceException("Cannot find background program in '" + filenameBackgroundProgram + "'");

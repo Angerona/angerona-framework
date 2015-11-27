@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,8 +11,9 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.Angerona;
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
+import com.github.kreaturesfw.core.basic.AgentComponent;
 import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.bdi.Desire;
@@ -22,6 +23,8 @@ import com.github.kreaturesfw.core.error.AgentIdException;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.InteractiveAgent;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.logic.ScriptingComponent;
 import com.github.kreaturesfw.core.serialize.AgentInstance;
@@ -32,10 +35,10 @@ import com.github.kreaturesfw.core.util.ObservableMap;
  * A simulation environment for Angerona. This is actually only used for some functional tests.
  * @author Tim Janus
  */
-public class AngeronaEnvironment  {
+public class KReaturesEnvironment  {
 
 	/** logging facility */
-	private static Logger LOG = LoggerFactory.getLogger(AngeronaEnvironment.class);
+	private static Logger LOG = LoggerFactory.getLogger(KReaturesEnvironment.class);
 	
 	/** the name of the simulation */
 	private String name;
@@ -64,7 +67,7 @@ public class AngeronaEnvironment  {
 	/**
 	 * Default Ctor: Generates the default-behavior.
 	 */
-	public AngeronaEnvironment() {
+	public KReaturesEnvironment() {
 	}
 	
 	/**
@@ -108,7 +111,7 @@ public class AngeronaEnvironment  {
 		}
 		
 		agentMap.put(agent.getName(), agent);
-		Angerona.getInstance().onAgentAdded(this, agent);
+		KReatures.getInstance().onAgentAdded(this, agent);
 		return true;
 	}
 	
@@ -168,7 +171,7 @@ public class AngeronaEnvironment  {
 		this.simDirectory = config.getFile().getParent();
 
 		// inform listener of start of simulation creation:
-		Angerona.getInstance().onCreateSimulation(this);
+		KReatures.getInstance().onCreateSimulation(this);
 		
 		if(!createBehavior(config))
 			return false;
@@ -179,7 +182,7 @@ public class AngeronaEnvironment  {
 		if(!createAgents(config))
 			return false;
 				
-		Angerona.getInstance().onNewSimulation(this);
+		KReatures.getInstance().onNewSimulation(this);
 		
 		// report the initialized data of the agent to the report system.
 		for(AgentInstance ai : config.getAgents()) {
@@ -207,7 +210,7 @@ public class AngeronaEnvironment  {
 			}
 		}
 		
-		Angerona.getInstance().onTickDone(this);
+		KReatures.getInstance().onTickDone(this);
 		
 		return ready = true;
 	}
@@ -287,7 +290,7 @@ public class AngeronaEnvironment  {
 	protected void errorDelegation(String errorOutput) {
 		this.cleanupEnvironment();
 		LOG.error(errorOutput);
-		Angerona.getInstance().onError("Simulation Initialization", errorOutput);
+		KReatures.getInstance().onError("Simulation Initialization", errorOutput);
 	}
 
 	/**
@@ -311,13 +314,13 @@ public class AngeronaEnvironment  {
 			}
 			
 			if(error != null) {
-				Angerona.getInstance().onError("Simulation initialization", error);
+				KReatures.getInstance().onError("Simulation initialization", error);
 				LOG.error(error);
 				return false;
 			}
 		} else {
 			String error = "No behavior given in simulation configuration file.";
-			Angerona.getInstance().onError("Simulation initialization", error);
+			KReatures.getInstance().onError("Simulation initialization", error);
 			LOG.error(error);
 			return false;
 		}
@@ -333,7 +336,7 @@ public class AngeronaEnvironment  {
 		
 		agentMap.clear();
 		ready = false;
-		Angerona.getInstance().onSimulationDestroyed(this);
+		KReatures.getInstance().onSimulationDestroyed(this);
 	}
 	
 	public void sendAction(Action action) {

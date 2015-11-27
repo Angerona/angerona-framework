@@ -1,9 +1,9 @@
 package com.github.kreaturesfw.defendingagent.operators.def;
 
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.bdi.PlanElement;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.secrecy.operators.BaseViolatesOperator;

@@ -2,9 +2,9 @@ package com.github.kreaturesfw.core.bdi.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.error.ConversionException;
-import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 import com.github.kreaturesfw.core.operators.parameter.OperatorPluginParameter;
 

@@ -6,10 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
+import com.github.kreaturesfw.core.basic.AgentComponent;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
@@ -58,7 +58,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  * @author Tim Janus
  */
 @PluginImplementation
-public class SecrecyPlugin extends AngeronaPluginAdapter
+public class SecrecyPlugin extends KReaturesPluginAdapter
 	implements 
 	UIPlugin {
 	

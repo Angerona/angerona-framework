@@ -7,9 +7,9 @@ import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import com.github.kreaturesfw.core.AngeronaPluginAdapter;
-import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.legacy.Operator;
+import com.github.kreaturesfw.core.KReaturesPluginAdapter;
+import com.github.kreaturesfw.core.basic.AgentComponent;
+import com.github.kreaturesfw.core.basic.Operator;
 import com.github.kreaturesfw.gui.UIPlugin;
 import com.github.kreaturesfw.gui.base.ViewComponent;
 import com.github.kreaturesfw.knowhow.asp.KnowhowASP;
@@ -27,7 +27,7 @@ import com.github.kreaturesfw.knowhow.situation.SituationStorage;
  * @author Tim Janus
  */
 @PluginImplementation
-public class KnowhowPlugin extends AngeronaPluginAdapter 
+public class KnowhowPlugin extends KReaturesPluginAdapter 
 	implements UIPlugin {
 
 	@Override

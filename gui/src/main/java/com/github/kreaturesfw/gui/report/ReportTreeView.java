@@ -10,11 +10,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.KReatures;
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Agent;
 import com.github.kreaturesfw.core.internal.Entity;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationListener;
 import com.github.kreaturesfw.core.report.ReportEntry;
 import com.github.kreaturesfw.gui.AngeronaWindow;
@@ -80,7 +80,7 @@ public class ReportTreeView
 		
 		this.setLayout(new BorderLayout());
 		this.add(scrollPane, BorderLayout.CENTER);
-		Angerona.getInstance().addSimulationListener(this);
+		KReatures.getInstance().addSimulationListener(this);
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class ReportTreeView
 
 	
 	@Override
-	public void tickStarting(AngeronaEnvironment simulationEnvironment) {
+	public void tickStarting(KReaturesEnvironment simulationEnvironment) {
 		invokeTickNodeCreation(simulationEnvironment.getSimulationTick());
 		curAgentName = "";
 	}
@@ -152,12 +152,12 @@ public class ReportTreeView
 	}
 	
 	@Override
-	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {
+	public void simulationStarted(KReaturesEnvironment simulationEnvironment) {
 		invokeTickNodeCreation(0);
 	}
 	
 	@Override
-	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {
+	public void simulationDestroyed(KReaturesEnvironment simulationEnvironment) {
 		// clear the tree-data-model:
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -262,18 +262,18 @@ public class ReportTreeView
 	// NOT REQUIRED SIMULATIONLISTENER METHODS: ---------------------------------
 	
 	@Override
-	public void tickDone(AngeronaEnvironment simulationEnvironment) {
+	public void tickDone(KReaturesEnvironment simulationEnvironment) {
 		// does nothing
 	}
 	
 	@Override
-	public void agentAdded(AngeronaEnvironment simulationEnvironment,
+	public void agentAdded(KReaturesEnvironment simulationEnvironment,
 			Agent added) {
 		// does nothing
 	}
 
 	@Override
-	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
+	public void agentRemoved(KReaturesEnvironment simulationEnvironment,
 			Agent removed) {
 		// does nothing
 	}

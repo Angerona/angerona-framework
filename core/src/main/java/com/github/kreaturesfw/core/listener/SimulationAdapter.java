@@ -1,8 +1,8 @@
 package com.github.kreaturesfw.core.listener;
 
+import com.github.kreaturesfw.core.KReaturesEnvironment;
 import com.github.kreaturesfw.core.basic.Action;
-import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
+import com.github.kreaturesfw.core.basic.Agent;
 
 /**
  * Default implementation of the SimulationListener which can act as super
@@ -14,24 +14,24 @@ import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 public class SimulationAdapter implements SimulationListener {
 
 	@Override
-	public void simulationStarted(AngeronaEnvironment simulationEnvironment) {}
+	public void simulationStarted(KReaturesEnvironment simulationEnvironment) {}
 
 	@Override
-	public void simulationDestroyed(AngeronaEnvironment simulationEnvironment) {}
+	public void simulationDestroyed(KReaturesEnvironment simulationEnvironment) {}
 
 	@Override
-	public void agentAdded(AngeronaEnvironment simulationEnvironment,
+	public void agentAdded(KReaturesEnvironment simulationEnvironment,
 			Agent added) {}
 
 	@Override
-	public void agentRemoved(AngeronaEnvironment simulationEnvironment,
+	public void agentRemoved(KReaturesEnvironment simulationEnvironment,
 			Agent removed) {}
 	
 	@Override
-	public void tickStarting(AngeronaEnvironment simulationEnvironment) {}
+	public void tickStarting(KReaturesEnvironment simulationEnvironment) {}
 	
 	@Override
-	public void tickDone(AngeronaEnvironment simulationEnvironment) {}
+	public void tickDone(KReaturesEnvironment simulationEnvironment) {}
 
 	@Override
 	public void actionPerformed(Agent agent, Action act) {}
