@@ -15,11 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.def.FrameworkPlugin;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.OperatorMap;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
-import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.FrameworkListener;

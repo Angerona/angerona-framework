@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.BaseAgentComponent;
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.logic.Beliefs;
 
 /**

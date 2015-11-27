@@ -1,10 +1,10 @@
 package com.github.kreaturesfw.core.bdi.operators;
 
+import com.github.kreaturesfw.core.basic.BaseOperator;
+import com.github.kreaturesfw.core.bdi.PlanElement;
+import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.PlanComponent;
-import com.github.kreaturesfw.core.legacy.PlanElement;
-import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.util.Pair;
 
 /**
@@ -22,7 +22,7 @@ import com.github.kreaturesfw.core.util.Pair;
  * @author Tim Janus
  */
 public abstract class BaseIntentionUpdateOperator extends 
-	Operator<Agent, PlanParameter, PlanElement> {
+	BaseOperator<Agent, PlanParameter, PlanElement> {
 
 	public static final String OPERATION_NAME = "IntentionUpdate";
 	

@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.basic;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -9,6 +9,9 @@ import java.util.Map;
 import com.github.kreaturesfw.core.internal.AngeronaReporter;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.IdGenerator;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AgentComponent;
+import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.report.FullReporter;
 import com.github.kreaturesfw.core.report.ReportPoster;

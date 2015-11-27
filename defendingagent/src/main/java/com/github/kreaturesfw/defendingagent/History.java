@@ -3,9 +3,9 @@ package com.github.kreaturesfw.defendingagent;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.comm.Update;
-import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.core.reflection.FolFormulaVariable;
 

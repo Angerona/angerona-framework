@@ -7,8 +7,8 @@ import java.util.Stack;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
-import com.github.kreaturesfw.core.legacy.Action;
-import com.github.kreaturesfw.core.legacy.Desire;
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.bdi.Desire;
 import com.github.kreaturesfw.knowhow.penalty.PenaltyFunction;
 
 /**

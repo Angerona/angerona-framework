@@ -1,7 +1,8 @@
 package com.github.kreaturesfw.core.operators;
 
+import com.github.kreaturesfw.core.basic.BaseOperator;
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.core.util.Pair;
@@ -12,7 +13,7 @@ import com.github.kreaturesfw.core.util.Pair;
  * @author Tim Janus
  */
 public abstract class BaseUpdateBeliefsOperator extends 
-	Operator<Agent, EvaluateParameter, Beliefs> {
+	BaseOperator<Agent, EvaluateParameter, Beliefs> {
 
 	/** unique name of the operation implemented by subclasses. */
 	public static final String OPERATION_NAME = "UpdateBeliefs";

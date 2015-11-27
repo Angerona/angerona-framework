@@ -1,5 +1,7 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.bdi;
 
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.legacy.AngeronaAtom;
 import com.github.kreaturesfw.core.listener.ActionProcessor;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.util.Utility;

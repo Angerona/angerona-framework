@@ -9,7 +9,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.operators.BaseOperator;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.gui.UIPlugin;
 import com.github.kreaturesfw.gui.base.ViewComponent;
 import com.github.kreaturesfw.knowhow.asp.KnowhowASP;
@@ -48,8 +48,8 @@ public class KnowhowPlugin extends AngeronaPluginAdapter
 	}
 	
 	@Override
-	public List<Class<? extends BaseOperator>> getOperators() {
-		List<Class<? extends BaseOperator>> reval = new LinkedList<>();
+	public List<Class<? extends Operator>> getOperators() {
+		List<Class<? extends Operator>> reval = new LinkedList<>();
 		reval.add(KnowhowASP.class);
 		reval.add(KnowhowGraphSubgoal.class);
 		reval.add(KnowhowIntentionUpdate.class);

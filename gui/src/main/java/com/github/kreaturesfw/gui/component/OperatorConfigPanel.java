@@ -17,7 +17,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.github.kreaturesfw.core.operators.BaseOperator;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.util.Pair;
 import com.github.kreaturesfw.core.util.Utility;
 import com.github.kreaturesfw.gui.base.ObservingPanel;
@@ -34,9 +34,9 @@ public class OperatorConfigPanel extends ObservingPanel {
 	
 	private DefaultListModel<Pair<String, String>> paramModel;
 	
-	private JComboBox<BaseOperator> cbOperators;
+	private JComboBox<Operator> cbOperators;
 	
-	private DefaultComboBoxModel<BaseOperator> cbmOperators;
+	private DefaultComboBoxModel<Operator> cbmOperators;
 	
 	private JTextField txtParameterName;
 	
@@ -86,14 +86,14 @@ public class OperatorConfigPanel extends ObservingPanel {
 		operatorBoxPanel.add(lblOp);
 		
 		cbmOperators = new DefaultComboBoxModel<>();
-		cbOperators = new JComboBox<BaseOperator>(cbmOperators);
+		cbOperators = new JComboBox<Operator>(cbmOperators);
 		cbOperators.setPreferredSize(new Dimension(300, 30));
 		cbOperators.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					controller.selectOperator( ((BaseOperator)e.getItem()).toString());
+					controller.selectOperator( ((Operator)e.getItem()).toString());
 				}
 			}
 		});
@@ -147,7 +147,7 @@ public class OperatorConfigPanel extends ObservingPanel {
 	}
 
 	private void linkModel(OperatorConfig model) {
-		for(BaseOperator op : model.getSelectableOperators()) {
+		for(Operator op : model.getSelectableOperators()) {
 			cbmOperators.addElement(op);
 		}
 		cbmOperators.setSelectedItem(model.getDefaultOperator());

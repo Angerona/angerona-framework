@@ -23,11 +23,12 @@ import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.basic.BaseAgentComponent;
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.BeliefOperatorFamily;
 import com.github.kreaturesfw.core.operators.BeliefOperatorFamilyFactory;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
@@ -413,7 +414,7 @@ public abstract class BaseBeliefbase
 	private static class EmptyStackImplementation implements OperatorStack {
 
 		@Override
-		public void pushOperator(BaseOperator op) {
+		public void pushOperator(Operator op) {
 		}
 
 		@Override
@@ -421,7 +422,7 @@ public abstract class BaseBeliefbase
 		}
 
 		@Override
-		public Stack<BaseOperator> getOperatorStack() {
+		public Stack<Operator> getOperatorStack() {
 			return new Stack<>();
 		}
 

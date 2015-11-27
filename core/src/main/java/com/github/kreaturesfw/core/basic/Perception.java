@@ -1,4 +1,6 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.basic;
+
+import com.github.kreaturesfw.core.legacy.AngeronaAtom;
 
 /**
  * interface for perceptions.

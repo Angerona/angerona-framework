@@ -8,13 +8,13 @@ import java.util.Map.Entry;
 
 import org.simpleframework.xml.transform.Transform;
 
+import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 import com.github.kreaturesfw.core.serialize.SerializeHelper;
 
@@ -72,7 +72,7 @@ public class AngeronaPluginAdapter implements AngeronaPlugin {
 	}
 
 	@Override
-	public List<Class<? extends BaseOperator>> getOperators() {
+	public List<Class<? extends Operator>> getOperators() {
 		return new LinkedList<>();
 	}
 

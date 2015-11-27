@@ -9,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.comm.SpeechAct;
-import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
-import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
-import com.github.kreaturesfw.core.legacy.Perception;
 
 /**
  * Behavior implementing the default Angerona environment behavior.

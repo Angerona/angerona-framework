@@ -3,8 +3,8 @@ package com.github.kreaturesfw.gui.view;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.internal.Entity;
-import com.github.kreaturesfw.core.logic.Desires;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 

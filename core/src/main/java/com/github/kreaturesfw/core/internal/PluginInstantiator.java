@@ -19,14 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.AngeronaPlugin;
+import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.listener.PluginListener;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 import com.github.kreaturesfw.core.parser.ParseException;
 import com.github.kreaturesfw.core.serialize.BeliefbaseConfig;
@@ -273,7 +273,7 @@ public class PluginInstantiator {
 		temp.put(BaseChangeBeliefs.class, new HashSet<Class<?>>());
 		temp.put(BaseTranslator.class, new HashSet<Class<?>>());
 		
-		temp.put(BaseOperator.class, new HashSet<Class<?>>());
+		temp.put(Operator.class, new HashSet<Class<?>>());
 		
 		temp.put(EnvironmentBehavior.class, new HashSet<Class<?>>());
 		temp.put(ContinuousBeliefOperatorFamilyIteratorStrategy.class, new HashSet<Class<?>>());
@@ -286,7 +286,7 @@ public class PluginInstantiator {
 			temp.get(BaseChangeBeliefs.class).addAll(plugin.getChangeImpl());
 			temp.get(BaseTranslator.class).addAll(plugin.getTranslatorImpl());
 			
-			temp.get(BaseOperator.class).addAll(plugin.getOperators());
+			temp.get(Operator.class).addAll(plugin.getOperators());
 			
 			temp.get(EnvironmentBehavior.class).addAll(plugin.getEnvironmentBehaviors());
 			temp.get(ContinuousBeliefOperatorFamilyIteratorStrategy.class).addAll(plugin.getBeliefOperatorFamilyIteratorStrategies());

@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.operators;
+package com.github.kreaturesfw.core.legacy;
 
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 import com.github.kreaturesfw.core.operators.parameter.OperatorParameter;
@@ -12,7 +12,7 @@ import com.github.kreaturesfw.core.util.Pair;
  * 
  * @author Tim Janus
  */
-public interface BaseOperator extends ReportPoster {
+public interface Operator extends ReportPoster {
 		
 	/**
 	 * 

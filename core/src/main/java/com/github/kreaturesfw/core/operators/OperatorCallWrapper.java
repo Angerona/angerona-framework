@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.legacy.SettingsStorage;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 import com.github.kreaturesfw.core.operators.parameter.OperatorParameter;
@@ -16,8 +17,8 @@ import com.github.kreaturesfw.core.util.Pair;
  * @param <T>	The type of the wrapped Operator
  */
 public class OperatorCallWrapper 
-	implements BaseOperator, SettingsStorage {
-	private BaseOperator operator;
+	implements Operator, SettingsStorage {
+	private Operator operator;
 	
 	private Map<String, String> settings = new HashMap<>();
 	
@@ -25,13 +26,13 @@ public class OperatorCallWrapper
 	 * Ctor: Generates the wrapper around the given operator object
 	 * @param operator	The wrapped operator
 	 */
-	public OperatorCallWrapper(BaseOperator operator) {
+	public OperatorCallWrapper(Operator operator) {
 		if(operator == null)
 			throw new IllegalArgumentException();
 		this.operator = operator;
 	}
 	
-	public BaseOperator getImplementation() {
+	public Operator getImplementation() {
 		return operator;
 	}
 	

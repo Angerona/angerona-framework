@@ -2,8 +2,8 @@ package com.github.kreaturesfw.island.components;
 
 import java.util.List;
 
+import com.github.kreaturesfw.core.basic.BaseAgentComponent;
 import com.github.kreaturesfw.core.comp.Presentable;
-import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
 
 /**
  * 

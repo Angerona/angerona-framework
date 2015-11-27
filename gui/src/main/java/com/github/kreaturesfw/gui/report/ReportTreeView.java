@@ -11,8 +11,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.internal.Entity;
-import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.listener.SimulationListener;

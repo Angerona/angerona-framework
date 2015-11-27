@@ -8,9 +8,9 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.basic.BaseAgentComponent;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
 
 public class PluginInstantiatorTest {
 	@Test

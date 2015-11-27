@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.secrecy.example.components;
 
+import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.comm.Answer;
-import com.github.kreaturesfw.core.legacy.Action;
 import com.github.kreaturesfw.core.legacy.ActionHistory;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 

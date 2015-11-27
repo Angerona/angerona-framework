@@ -6,9 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.bdi.Subgoal;
+import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.internal.Entity;
-import com.github.kreaturesfw.core.legacy.PlanComponent;
-import com.github.kreaturesfw.core.legacy.Subgoal;
 
 public class PlanView extends ListViewColored {
 	

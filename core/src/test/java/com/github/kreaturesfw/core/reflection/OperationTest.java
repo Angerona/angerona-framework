@@ -9,8 +9,8 @@ import java.util.Stack;
 import org.junit.Test;
 
 import com.github.kreaturesfw.core.error.InvokeException;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.legacy.asml.InvokeOperation;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
 import com.github.kreaturesfw.core.operators.OperatorCaller;
 import com.github.kreaturesfw.core.operators.OperatorProvider;
@@ -26,10 +26,10 @@ import com.github.kreaturesfw.core.util.Pair;
 public class OperationTest {
 	private static class MockVisitor implements OperatorStack, OperatorCaller {
 
-		private Stack<BaseOperator> stack = new Stack<>();
+		private Stack<Operator> stack = new Stack<>();
 		
 		@Override
-		public void pushOperator(BaseOperator op) {
+		public void pushOperator(Operator op) {
 			stack.push(op);
 		}
 
@@ -39,7 +39,7 @@ public class OperationTest {
 		}
 
 		@Override
-		public Stack<BaseOperator> getOperatorStack() {
+		public Stack<Operator> getOperatorStack() {
 			return stack;
 		}
 
@@ -55,7 +55,7 @@ public class OperationTest {
 
 	}
 	
-	private class MockOperation implements BaseOperator {
+	private class MockOperation implements Operator {
 
 		@Override
 		public Pair<String, Class<?>> getOperationType() {

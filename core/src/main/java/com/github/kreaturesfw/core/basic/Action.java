@@ -1,9 +1,13 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.basic;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.core.Commit;
 
 import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.bdi.Intention;
+import com.github.kreaturesfw.core.legacy.Agent;
+import com.github.kreaturesfw.core.legacy.AngeronaAtom;
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 import com.github.kreaturesfw.core.reflection.Context;
 import com.github.kreaturesfw.core.reflection.ContextFactory;
 import com.github.kreaturesfw.core.reflection.ContextProvider;

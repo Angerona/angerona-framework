@@ -4,13 +4,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.kreaturesfw.core.bdi.Desire;
+import com.github.kreaturesfw.core.bdi.PlanElement;
+import com.github.kreaturesfw.core.bdi.Subgoal;
+import com.github.kreaturesfw.core.bdi.components.Desires;
+import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.bdi.operators.BaseIntentionUpdateOperator;
 import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
-import com.github.kreaturesfw.core.legacy.Desire;
-import com.github.kreaturesfw.core.legacy.PlanComponent;
-import com.github.kreaturesfw.core.legacy.PlanElement;
-import com.github.kreaturesfw.core.legacy.Subgoal;
-import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.core.simple.operators.parameter.SimplePlanParameter;
 
 /**

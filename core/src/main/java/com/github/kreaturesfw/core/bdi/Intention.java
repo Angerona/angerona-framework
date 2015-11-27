@@ -1,6 +1,7 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.bdi;
 
 import com.github.kreaturesfw.core.internal.IdGenerator;
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.listener.SubgoalListener;
 
 /**
@@ -50,7 +51,7 @@ public abstract class Intention implements SubgoalListener {
 		return agent;
 	}
 
-	protected void setAgent(Agent agent) {
+	public void setAgent(Agent agent) {
 		this.agent = agent;
 	}
 	

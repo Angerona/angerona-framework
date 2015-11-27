@@ -1,10 +1,11 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.bdi;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.util.Utility;
 
 /**

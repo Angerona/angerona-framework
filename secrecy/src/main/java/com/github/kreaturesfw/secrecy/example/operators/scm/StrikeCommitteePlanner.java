@@ -1,11 +1,11 @@
 package com.github.kreaturesfw.secrecy.example.operators.scm;
 
+import com.github.kreaturesfw.core.bdi.Desire;
+import com.github.kreaturesfw.core.bdi.Subgoal;
 import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.comm.Inform;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.legacy.Agent;
-import com.github.kreaturesfw.core.legacy.Desire;
-import com.github.kreaturesfw.core.legacy.Subgoal;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.AnswerValue;
 import com.github.kreaturesfw.secrecy.example.operators.SubgoalGenerationOperator;

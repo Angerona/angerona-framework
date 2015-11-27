@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
+import com.github.kreaturesfw.core.bdi.components.Desires;
+import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.legacy.ActionHistory;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
-import com.github.kreaturesfw.core.legacy.PlanComponent;
-import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.core.logic.ScriptingComponent;
 import com.github.kreaturesfw.core.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 import com.github.kreaturesfw.core.operators.StepIteratorStrategy;

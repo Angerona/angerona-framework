@@ -2,9 +2,9 @@ package com.github.kreaturesfw.core.simple.operators.parameter;
 
 import javax.management.AttributeNotFoundException;
 
+import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.bdi.operators.parameter.PlanParameter;
 import com.github.kreaturesfw.core.error.ConversionException;
-import com.github.kreaturesfw.core.legacy.PlanComponent;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 
 /**

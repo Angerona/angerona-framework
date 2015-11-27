@@ -1,4 +1,4 @@
-package com.github.kreaturesfw.core.operators;
+package com.github.kreaturesfw.core.basic;
 
 import javax.management.AttributeNotFoundException;
 
@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.error.ConversionException;
+import com.github.kreaturesfw.core.legacy.Operator;
+import com.github.kreaturesfw.core.operators.OperatorCaller;
+import com.github.kreaturesfw.core.operators.OperatorStack;
 import com.github.kreaturesfw.core.operators.parameter.GenericOperatorParameter;
 import com.github.kreaturesfw.core.operators.parameter.OperatorParameter;
 import com.github.kreaturesfw.core.util.Pair;
@@ -30,12 +33,12 @@ import com.github.kreaturesfw.core.util.Pair;
  * 
  * @author Tim Janus
  */
-public abstract class Operator<TCaller extends OperatorCaller, IN extends OperatorParameter, OUT extends Object> 
+public abstract class BaseOperator<TCaller extends OperatorCaller, IN extends OperatorParameter, OUT extends Object> 
 	implements 
-	BaseOperator {
+	Operator {
 	
 	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(Operator.class);
+	private Logger LOG = LoggerFactory.getLogger(BaseOperator.class);
 
 	/**
 	 * Define as abstract method to fix errors in different jars which does not realize

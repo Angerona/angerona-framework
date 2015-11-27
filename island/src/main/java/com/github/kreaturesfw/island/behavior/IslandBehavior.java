@@ -12,10 +12,10 @@ import static com.github.kreaturesfw.island.enums.Weather.THUNDERSTORM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
-import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.simple.behavior.SimpleBehavior;
 import com.github.kreaturesfw.core.util.Generator;
 import com.github.kreaturesfw.island.components.Area;

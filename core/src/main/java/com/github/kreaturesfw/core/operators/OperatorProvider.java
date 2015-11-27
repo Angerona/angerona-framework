@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.internal.OperatorMap;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.parser.ParseException;
 import com.github.kreaturesfw.core.parser.UtilityParser;
 import com.github.kreaturesfw.core.serialize.OperationSetConfig;
@@ -123,7 +124,7 @@ public class OperatorProvider {
 		if(defPair == null)
 			return false;
 		
-		BaseOperator def = defPair.second;
+		Operator def = defPair.second;
 		if(def == null) {
 			LOG.error("Default operator for '{}' cannot be added.", config.getOperationType());
 			return false;
@@ -182,7 +183,7 @@ public class OperatorProvider {
 			return null;
 		}
 		
-		BaseOperator op = OperatorMap.get().getOperator(clsNameAndParams);
+		Operator op = OperatorMap.get().getOperator(clsNameAndParams);
 		if(op == null)
 			throw new ClassNotFoundException(clsNameAndParams);
 		OperatorCallWrapper ocw = new OperatorCallWrapper(op);

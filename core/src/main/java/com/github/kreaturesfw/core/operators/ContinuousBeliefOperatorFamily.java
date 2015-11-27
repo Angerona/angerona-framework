@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.github.kreaturesfw.core.AngeronaPlugin;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.serialize.ContinuousBeliefOperatorFamilyConfig;
 
 /**
@@ -24,7 +25,7 @@ import com.github.kreaturesfw.core.serialize.ContinuousBeliefOperatorFamilyConfi
 public class ContinuousBeliefOperatorFamily implements BeliefOperatorFamily {
 	
 	/** the implementation of the operator used by the implementation */
-	private BaseOperator operator;
+	private Operator operator;
 	
 	/** the loaded configuration for this belief-operator-family */
 	private ContinuousBeliefOperatorFamilyConfig config;

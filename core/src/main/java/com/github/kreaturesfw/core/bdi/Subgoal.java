@@ -1,10 +1,11 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.bdi;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.listener.SubgoalListener;
 
 /**
@@ -34,7 +35,7 @@ public class Subgoal extends Intention implements Cloneable {
 		this.fulfillsDesire = desire;
 	}
 	
-	protected Subgoal(Subgoal other) {
+	public Subgoal(Subgoal other) {
 		super(other);
 		this.fulfillsDesire = new Desire(other.fulfillsDesire);
 		for(Stack<PlanElement> stack : other.stacks) {

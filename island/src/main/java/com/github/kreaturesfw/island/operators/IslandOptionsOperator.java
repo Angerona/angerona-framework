@@ -5,9 +5,9 @@ import static com.github.kreaturesfw.island.data.IslandDesires.FIND_SHELTER;
 import static com.github.kreaturesfw.island.data.IslandDesires.FINISH_WORK;
 import static com.github.kreaturesfw.island.data.IslandDesires.SECURE_SITE;
 
+import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.bdi.operators.BaseGenerateOptionsOperator;
 import com.github.kreaturesfw.core.bdi.operators.parameter.GenerateOptionsParameter;
-import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.island.components.Area;
 import com.github.kreaturesfw.island.components.Battery;
 

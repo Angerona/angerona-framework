@@ -1,7 +1,7 @@
 package com.github.kreaturesfw.core.logic;
 
+import com.github.kreaturesfw.core.basic.BaseOperator;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.operators.parameter.ChangeBeliefbaseParameter;
 import com.github.kreaturesfw.core.util.Pair;
 
@@ -15,12 +15,12 @@ import com.github.kreaturesfw.core.util.Pair;
  * 
  * A subclass has to implement the processInt method of the Operator base class
  * 
- * @see Operator
+ * @see BaseOperator
  * 
  * @author Tim Janus
  */
 public abstract class BaseChangeBeliefs 
-	extends Operator<BaseBeliefbase, ChangeBeliefbaseParameter, BaseBeliefbase> {
+	extends BaseOperator<BaseBeliefbase, ChangeBeliefbaseParameter, BaseBeliefbase> {
 	
 	public static final String OPERATION_TYPE = "ChangeBeliefs";
 	

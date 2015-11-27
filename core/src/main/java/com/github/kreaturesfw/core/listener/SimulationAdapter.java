@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.core.listener;
 
-import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.basic.Action;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 

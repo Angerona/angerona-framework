@@ -1,4 +1,6 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.basic;
+
+import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
 
 /**
  * This interface defines an behavior for an environment.
@@ -22,7 +24,7 @@ public interface EnvironmentBehavior {
 	 * @param env		Visitor environment to fetch further information.
 	 * @param percept	Reference to the perception received from the external simulation.
 	 */
-	void receivePerception(AngeronaEnvironment env, Perception percept);
+	default void receivePerception(AngeronaEnvironment env, Perception percept) {}
 	
 	/**
 	 * performs a cycle on every agent.
@@ -36,23 +38,27 @@ public interface EnvironmentBehavior {
 	 * @param env	Visitor environment which performs the run.
 	 * @return		true if no errors occurred in the simulation, false otherwise.	
 	 */
-	boolean run(AngeronaEnvironment env);
+	default boolean run(AngeronaEnvironment env) {
+		while(runOneTick(env)) {}
+		
+		return false;
+	}
 	
 	/**
 	 * @return	true if Angerona has performed it agent cycles,
 	 * 			false otherwise. 
 	 */
-	boolean isAngeronaReady();
+	default boolean isAngeronaReady() { return false; };
 	
 	/**
 	 * @return	true if the external simulation is ready, false otherwise.
 	 */
-	boolean isSimulationReady();
+	default boolean isSimulationReady() { return true; }
 	
 	/**
 	 * @return 	true if the Angerona simulation is in its tick processing, false otherwise.
 	 */
-	boolean isDoingTick();
+	default boolean isDoingTick() { return true; };
 	
 	/**
 	 * @return the actual Angerona simulation tick.

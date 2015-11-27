@@ -1,12 +1,15 @@
-package com.github.kreaturesfw.core.legacy;
+package com.github.kreaturesfw.core.bdi.components;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.github.kreaturesfw.core.basic.BaseAgentComponent;
+import com.github.kreaturesfw.core.bdi.Desire;
+import com.github.kreaturesfw.core.bdi.Intention;
+import com.github.kreaturesfw.core.bdi.Subgoal;
 import com.github.kreaturesfw.core.listener.SubgoalListener;
-import com.github.kreaturesfw.core.logic.Desires;
 
 /**
  * The PlanComponent is data storage for plans.

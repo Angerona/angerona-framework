@@ -23,6 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.Angerona;
 import com.github.kreaturesfw.core.basic.AbstractAgent;
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.Perception;
+import com.github.kreaturesfw.core.bdi.Intention;
+import com.github.kreaturesfw.core.bdi.components.Desires;
+import com.github.kreaturesfw.core.bdi.components.PlanComponent;
 import com.github.kreaturesfw.core.comp.Parsable;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;
 import com.github.kreaturesfw.core.internal.AngeronaReporter;
@@ -35,8 +40,6 @@ import com.github.kreaturesfw.core.listener.AgentListener;
 import com.github.kreaturesfw.core.listener.SubgoalListener;
 import com.github.kreaturesfw.core.logic.AngeronaAnswer;
 import com.github.kreaturesfw.core.logic.Beliefs;
-import com.github.kreaturesfw.core.logic.Desires;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.BaseUpdateBeliefsOperator;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
 import com.github.kreaturesfw.core.operators.OperatorCaller;
@@ -127,7 +130,7 @@ public class Agent extends AbstractAgent<Perception> implements ContextProvider,
 	protected OperatorProvider operators = new OperatorProvider();
 
 	/** The call stack of operators */
-	protected Stack<BaseOperator> operatorStack = new Stack<BaseOperator>();
+	protected Stack<Operator> operatorStack = new Stack<Operator>();
 
 	/** the last perception used in the updateBeliefs Method */
 	protected Perception lastUpdateBeliefsPercept;
@@ -610,7 +613,7 @@ public class Agent extends AbstractAgent<Perception> implements ContextProvider,
 	}
 
 	@Override
-	public void pushOperator(BaseOperator op) {
+	public void pushOperator(Operator op) {
 		operatorStack.push(op);
 		reporter.setDefaultPoster(op);
 	}
@@ -623,7 +626,7 @@ public class Agent extends AbstractAgent<Perception> implements ContextProvider,
 	}
 
 	@Override
-	public Stack<BaseOperator> getOperatorStack() {
+	public Stack<Operator> getOperatorStack() {
 		return operatorStack;
 	}
 

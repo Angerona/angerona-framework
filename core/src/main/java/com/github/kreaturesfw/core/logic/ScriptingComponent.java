@@ -3,8 +3,8 @@ package com.github.kreaturesfw.core.logic;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.kreaturesfw.core.legacy.BaseAgentComponent;
-import com.github.kreaturesfw.core.legacy.Intention;
+import com.github.kreaturesfw.core.basic.BaseAgentComponent;
+import com.github.kreaturesfw.core.bdi.Intention;
 
 public class ScriptingComponent extends BaseAgentComponent {
 	/** list of all action */

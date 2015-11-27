@@ -3,8 +3,8 @@ package com.github.kreaturesfw.core.logic;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.github.kreaturesfw.core.basic.BaseOperator;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.operators.parameter.ReasonerParameter;
 import com.github.kreaturesfw.core.util.Pair;
 
@@ -28,7 +28,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
  * @author Tim Janus
  */
 public abstract class BaseReasoner 
-	extends Operator<BaseBeliefbase, ReasonerParameter, Pair<Set<FolFormula>, AngeronaAnswer>>{
+	extends BaseOperator<BaseBeliefbase, ReasonerParameter, Pair<Set<FolFormula>, AngeronaAnswer>>{
 	
 	public static final String OPERATION_TYPE = "BeliefOperator";
 	

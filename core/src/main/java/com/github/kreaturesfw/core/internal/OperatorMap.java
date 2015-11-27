@@ -9,8 +9,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.listener.PluginAdapter;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 
 /**
  * Global storage for the instances of the BaseOperator implementations, the global
@@ -29,7 +29,7 @@ public class OperatorMap extends PluginAdapter {
 	private Logger LOG = LoggerFactory.getLogger(OperatorMap.class);
 	
 	/** map from operator class names to an instance of the implementation */
-	private Map<String, BaseOperator> mOperatorMap = new HashMap<String, BaseOperator>();
+	private Map<String, Operator> mOperatorMap = new HashMap<String, Operator>();
 	
 	private Map<String, InstantiationException> mErrorMap = new HashMap<>();
 	
@@ -38,7 +38,7 @@ public class OperatorMap extends PluginAdapter {
 	 * @return	The operator with the given class name or null if it does not exists.
 	 * @throws InstantiationException 
 	 */
-	public BaseOperator getOperator(String fullJavaClsName) throws InstantiationException {
+	public Operator getOperator(String fullJavaClsName) throws InstantiationException {
 		if(mOperatorMap.containsKey(fullJavaClsName)) {
 			return mOperatorMap.get(fullJavaClsName);
 		} else if(mErrorMap.containsKey(fullJavaClsName)) {
@@ -48,7 +48,7 @@ public class OperatorMap extends PluginAdapter {
 	}
 	
 	/** @return an unmodifiable version of the OperatorMap */
-	public Map<String, BaseOperator> getOperatorMap() {
+	public Map<String, Operator> getOperatorMap() {
 		return Collections.unmodifiableMap(mOperatorMap);
 	}
 	
@@ -60,12 +60,12 @@ public class OperatorMap extends PluginAdapter {
 	 * @param cls	The cls which might be an implementation of BaseOperator
 	 */
 	private void createOperatorInstance(Class<?> cls) {
-		if( getAllInterfaces(cls).contains(BaseOperator.class) &&
+		if( getAllInterfaces(cls).contains(Operator.class) &&
 			!mOperatorMap.containsKey(cls.getName())) {		
 			PluginInstantiator pi = PluginInstantiator.getInstance();
-			BaseOperator op = null;
+			Operator op = null;
 			try {
-				op = (BaseOperator)pi.createInstance(cls.getName());
+				op = (Operator)pi.createInstance(cls.getName());
 				mOperatorMap.put(cls.getName(), op);
 			} catch (IllegalAccessException|InstantiationException e) {
 				e.printStackTrace();
@@ -83,7 +83,7 @@ public class OperatorMap extends PluginAdapter {
 	 * @param cls
 	 */
 	private void destroyOperatorInstance(Class<?> cls) {
-		if( getAllInterfaces(cls).contains(BaseOperator.class) &&
+		if( getAllInterfaces(cls).contains(Operator.class) &&
 			mOperatorMap.containsKey(cls.getName())) {		
 			mOperatorMap.remove(cls.getName());
 		}

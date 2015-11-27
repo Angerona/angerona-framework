@@ -9,7 +9,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.operators.BaseOperator;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.defendingagent.gui.HistoryView;
 import com.github.kreaturesfw.defendingagent.gui.ViewView;
 import com.github.kreaturesfw.defendingagent.operators.def.GenerateOptionsOperator;
@@ -29,8 +29,8 @@ import com.github.kreaturesfw.gui.base.ViewComponent;
 public class DefendingAgentPlugin extends AngeronaPluginAdapter implements UIPlugin {
 
 	@Override
-	public List<Class<? extends BaseOperator>> getOperators() {
-		List<Class<? extends BaseOperator>> reval = new LinkedList<>();
+	public List<Class<? extends Operator>> getOperators() {
+		List<Class<? extends Operator>> reval = new LinkedList<>();
 		reval.add(GenerateOptionsOperator.class);
 		reval.add(UpdateBeliefsOperator.class);
 		reval.add(SubgoalGenerationOperator.class);

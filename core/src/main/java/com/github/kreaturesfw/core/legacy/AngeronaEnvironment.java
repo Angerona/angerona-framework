@@ -12,13 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreaturesfw.core.Angerona;
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
+import com.github.kreaturesfw.core.basic.Perception;
+import com.github.kreaturesfw.core.bdi.Desire;
+import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.comm.SpeechAct;
 import com.github.kreaturesfw.core.error.AgentIdException;
 import com.github.kreaturesfw.core.error.AgentInstantiationException;
 import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.internal.PluginInstantiator;
 import com.github.kreaturesfw.core.logic.Beliefs;
-import com.github.kreaturesfw.core.logic.Desires;
 import com.github.kreaturesfw.core.logic.ScriptingComponent;
 import com.github.kreaturesfw.core.serialize.AgentInstance;
 import com.github.kreaturesfw.core.serialize.SimulationConfiguration;

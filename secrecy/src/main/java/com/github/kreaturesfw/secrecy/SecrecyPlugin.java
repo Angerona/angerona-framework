@@ -9,10 +9,10 @@ import java.util.Map;
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.UpdateBeliefsOperator;
 import com.github.kreaturesfw.gui.UIPlugin;
 import com.github.kreaturesfw.gui.base.ViewComponent;
@@ -91,8 +91,8 @@ public class SecrecyPlugin extends AngeronaPluginAdapter
 	}
 	
 	@Override 
-	public List<Class<? extends BaseOperator>> getOperators() {
-		List<Class<? extends BaseOperator>> reval = new ArrayList<>();
+	public List<Class<? extends Operator>> getOperators() {
+		List<Class<? extends Operator>> reval = new ArrayList<>();
 		// general basis operators:
 		reval.add(GenerateOptionsOperator.class);
 		reval.add(SubgoalGenerationOperator.class);

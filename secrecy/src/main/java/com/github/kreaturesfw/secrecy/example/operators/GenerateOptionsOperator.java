@@ -6,6 +6,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreaturesfw.core.bdi.Desire;
+import com.github.kreaturesfw.core.bdi.components.Desires;
 import com.github.kreaturesfw.core.bdi.operators.BaseGenerateOptionsOperator;
 import com.github.kreaturesfw.core.bdi.operators.parameter.GenerateOptionsParameter;
 import com.github.kreaturesfw.core.comm.Inform;
@@ -13,8 +15,6 @@ import com.github.kreaturesfw.core.comm.Justification;
 import com.github.kreaturesfw.core.comm.Justify;
 import com.github.kreaturesfw.core.comm.Query;
 import com.github.kreaturesfw.core.internal.IdGenerator;
-import com.github.kreaturesfw.core.legacy.Desire;
-import com.github.kreaturesfw.core.logic.Desires;
 
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Predicate;

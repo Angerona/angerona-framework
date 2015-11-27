@@ -1,14 +1,14 @@
 package com.github.kreaturesfw.secrecy.operators;
 
-import com.github.kreaturesfw.core.legacy.Action;
+import com.github.kreaturesfw.core.basic.Action;
+import com.github.kreaturesfw.core.basic.BaseOperator;
+import com.github.kreaturesfw.core.basic.Perception;
+import com.github.kreaturesfw.core.bdi.PlanElement;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AngeronaAtom;
 import com.github.kreaturesfw.core.legacy.Cache;
-import com.github.kreaturesfw.core.legacy.Perception;
-import com.github.kreaturesfw.core.legacy.PlanElement;
 import com.github.kreaturesfw.core.listener.ActionProcessor;
 import com.github.kreaturesfw.core.logic.Beliefs;
-import com.github.kreaturesfw.core.operators.Operator;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;
 import com.github.kreaturesfw.core.util.Pair;
 
@@ -25,7 +25,7 @@ import com.github.kreaturesfw.core.util.Pair;
  * @author Tim Janus
  */
 public abstract class BaseViolatesOperator 
-	extends Operator<Agent, EvaluateParameter, ViolatesResult> 
+	extends BaseOperator<Agent, EvaluateParameter, ViolatesResult> 
 	implements ActionProcessor
 	{
 	

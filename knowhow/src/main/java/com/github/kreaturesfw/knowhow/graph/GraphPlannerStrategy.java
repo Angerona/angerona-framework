@@ -5,8 +5,8 @@ import java.util.List;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import com.github.kreaturesfw.core.legacy.Desire;
-import com.github.kreaturesfw.core.legacy.Intention;
+import com.github.kreaturesfw.core.bdi.Desire;
+import com.github.kreaturesfw.core.bdi.Intention;
 import com.github.kreaturesfw.knowhow.graph.parameter.PlanConverter;
 import com.github.kreaturesfw.knowhow.penalty.PenaltyFunction;
 

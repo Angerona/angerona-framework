@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.kreaturesfw.core.AngeronaPluginAdapter;
+import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
-import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.island.behavior.DynamicIslandBehavior;
 import com.github.kreaturesfw.island.behavior.IslandBehavior;
 import com.github.kreaturesfw.island.beliefbase.IslandTranslator;
@@ -45,8 +45,8 @@ public class IslandPlugin extends AngeronaPluginAdapter {
 	}
 
 	@Override
-	public List<Class<? extends BaseOperator>> getOperators() {
-		List<Class<? extends BaseOperator>> operators = new ArrayList<>();
+	public List<Class<? extends Operator>> getOperators() {
+		List<Class<? extends Operator>> operators = new ArrayList<>();
 		operators.add(IslandOptionsOperator.class);
 		operators.add(IslandFilterOperator.class);
 		operators.add(IslandPlanningOperator.class);

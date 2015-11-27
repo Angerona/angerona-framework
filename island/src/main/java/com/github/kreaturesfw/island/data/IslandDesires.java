@@ -1,6 +1,6 @@
 package com.github.kreaturesfw.island.data;
 
-import com.github.kreaturesfw.core.legacy.Desire;
+import com.github.kreaturesfw.core.bdi.Desire;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;

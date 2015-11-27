@@ -2,13 +2,13 @@ package com.github.kreaturesfw.core;
 
 import java.util.List;
 
+import com.github.kreaturesfw.core.basic.EnvironmentBehavior;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.EnvironmentBehavior;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.logic.BaseChangeBeliefs;
 import com.github.kreaturesfw.core.logic.BaseReasoner;
 import com.github.kreaturesfw.core.logic.BaseTranslator;
-import com.github.kreaturesfw.core.operators.BaseOperator;
 import com.github.kreaturesfw.core.operators.ContinuousBeliefOperatorFamilyIteratorStrategy;
 
 import net.xeoh.plugins.base.Plugin;
@@ -57,7 +57,7 @@ public interface AngeronaPlugin extends Plugin {
 	List<Class<? extends BaseTranslator>> getTranslatorImpl();
 	
 	/** @return all operator implementations defined in this plug-in */
-	List<Class<? extends BaseOperator>> getOperators();
+	List<Class<? extends Operator>> getOperators();
 	
 	/** @return all the environment behavior implementations of the plug-in */
 	List<Class<? extends EnvironmentBehavior>> getEnvironmentBehaviors();

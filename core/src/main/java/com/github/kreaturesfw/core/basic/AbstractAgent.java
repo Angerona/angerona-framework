@@ -1,7 +1,5 @@
 package com.github.kreaturesfw.core.basic;
 
-import com.github.kreaturesfw.core.legacy.Perception;
-
 /**
  * This is the most basic definition of an agent, receiving perceptions and
  * performing actions accordingly

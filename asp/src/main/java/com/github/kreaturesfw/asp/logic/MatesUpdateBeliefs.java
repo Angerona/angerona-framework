@@ -17,9 +17,9 @@ import net.sf.tweety.lp.asp.syntax.Rule;
 import net.sf.tweety.lp.asp.syntax.SymbolicSet;
 
 import com.github.kreaturesfw.asp.component.AspMetaKnowledge;
+import com.github.kreaturesfw.core.basic.Perception;
 import com.github.kreaturesfw.core.comm.SpeechAct;
 import com.github.kreaturesfw.core.legacy.BaseBeliefbase;
-import com.github.kreaturesfw.core.legacy.Perception;
 import com.github.kreaturesfw.core.logic.Beliefs;
 import com.github.kreaturesfw.core.operators.UpdateBeliefsOperator;
 import com.github.kreaturesfw.core.operators.parameter.EvaluateParameter;

@@ -178,5 +178,6 @@
 		<module>ocf</module>
 		<module>plwithknowledge</module>
 		<module>secrecy</module>
+		<module>swarm</module>
 	</modules>
 </project>

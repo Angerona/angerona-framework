@@ -7,7 +7,7 @@ import com.github.kreaturesfw.core.internal.Entity;
 import com.github.kreaturesfw.core.legacy.Agent;
 import com.github.kreaturesfw.core.legacy.AgentComponent;
 import com.github.kreaturesfw.core.legacy.AngeronaEnvironment;
-import com.github.kreaturesfw.core.operators.BaseOperator;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.operators.OperatorStack;
 
 /**
@@ -69,7 +69,7 @@ public class ReportEntry implements Cloneable {
 		this.simulationTick = simulation.getSimulationTick();
 		this.realTime = new Date();
 		
-		for(BaseOperator op : scope.getOperatorStack()) {
+		for(Operator op : scope.getOperatorStack()) {
 			operatorCallstack.add(op.getClass().getName());
 		}
 	}

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.kreaturesfw.core.operators.BaseOperator;
+import com.github.kreaturesfw.core.legacy.Operator;
 import com.github.kreaturesfw.core.operators.OperatorCallWrapper;
 import com.github.kreaturesfw.core.operators.OperatorSet;
 import com.github.kreaturesfw.core.util.ModelAdapter;
@@ -41,7 +41,7 @@ public class OperatorConfig extends ModelAdapter {
 		settings = new HashMap<>(selectedOperator.getSettings());
 	}
 	
-	BaseOperator getSelectedOperator() {
+	Operator getSelectedOperator() {
 		return selectedOperator;
 	}
 	
