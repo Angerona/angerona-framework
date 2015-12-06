@@ -2,14 +2,14 @@
    <name>Example Belief base Implementation</name>
    
    <reasoners>
-      <default-operator-cls>com.github.angerona.fw.example.logic.ExampleReasoner</default-operator-cls>
+      <default-operator-cls>com.github.kreaturesfw.secrecy.example.logic.ExampleReasoner</default-operator-cls>
    </reasoners>
    <change-operators>
-      <default-operator-cls>com.github.angerona.fw.example.logic.ExampleExpansion</default-operator-cls>
+      <default-operator-cls>com.github.kreaturesfw.secrecy.example.logic.ExampleExpansion</default-operator-cls>
    </change-operators>
    <translators>
-      <default-operator-cls>com.github.angerona.fw.example.logic.ExampleTranslator</default-operator-cls>
+      <default-operator-cls>com.github.kreaturesfw.secrecy.example.logic.ExampleTranslator</default-operator-cls>
    </translators>
    
-   <beliefbase-class>com.github.angerona.fw.example.logic.ExampleBeliefbase</beliefbase-class>
+   <beliefbase-class>com.github.kreaturesfw.secrecy.example.logic.ExampleBeliefbase</beliefbase-class>
 </beliefbase-configuration>

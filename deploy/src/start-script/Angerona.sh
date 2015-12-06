@@ -1,1 +1,0 @@
-java -DUSER_HOME="$HOME" -jar lib/Angerona.jar

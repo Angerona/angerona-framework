@@ -1,0 +1,33 @@
+package com.github.kreaturesfw.core.serialize;
+
+import java.io.File;
+import java.util.List;
+
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.core.Resolve;
+
+import com.github.kreaturesfw.core.legacy.asml.ASMLCommand;
+import com.github.kreaturesfw.core.legacy.asml.CommandSequence;
+
+@Root(name="script-import")
+public class CommandSequenceSerializeImport implements CommandSequenceSerialize{
+
+	@Attribute(name="source")
+	protected File source;
+
+	@Resolve
+	public CommandSequenceSerialize substitute() throws Exception {
+		return SerializeHelper.get().loadXmlTry(CommandSequence.class, source);
+	}
+	
+	@Override
+	public List<ASMLCommand> getCommandSequence() {
+		throw new IllegalStateException("Method not supported.");
+	}
+
+	@Override
+	public String getName() {
+		throw new IllegalStateException("Method not supported.");
+	}
+}

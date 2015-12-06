@@ -1,44 +1,49 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.github.angerona</groupId>
-    <artifactId>maven-build-all</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>plwithknowledge</artifactId>
-  <name>Angerona (BPlugin-PL With Knowledge)</name>
-  <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-     <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>fw</artifactId>
-    	<version>1.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-    	<groupId>net.sf.tweety.logics</groupId>
-    	<artifactId>pl</artifactId>
-    	<version>1.0.358</version>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>gui</artifactId>
-    	<version>1.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-    	<groupId>net.sf.tweety.logics</groupId>
-    	<artifactId>translators</artifactId>
-    	<version>1.0.358</version>
-    </dependency>
-  </dependencies>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>plwithknowledge</artifactId>
+	<version>2.0.2</version>
+	<packaging>jar</packaging>
+	<name>KReatures (PL With Knowledge)</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kreaturesfw</groupId>
+			<artifactId>core</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kreaturesfw</groupId>
+			<artifactId>gui</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.tweety.logics</groupId>
+			<artifactId>pl</artifactId>
+			<version>1.0.358</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.tweety.logics</groupId>
+			<artifactId>translators</artifactId>
+			<version>1.0.358</version>
+		</dependency>
+	</dependencies>
+	<parent>
+		<groupId>com.github.kreaturesfw</groupId>
+		<artifactId>build-all</artifactId>
+		<version>2.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
 </project>
