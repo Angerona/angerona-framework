@@ -21,13 +21,13 @@
     <repository>
       <id>nexus-angerona</id>
       <name>Angerona Releases</name>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
+      <url>http://zeus.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
       <id>nexus-angerona</id>
       <name>Angerona Snapshots</name>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
+      <url>http://zeus.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
       <layout>default</layout>
     </snapshotRepository>
   </distributionManagement>
@@ -38,7 +38,7 @@
         <enabled>true</enabled>
 	  </snapshots>
       <id>public-nexus-angerona</id>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/groups/public</url>
+      <url>http://zeus.cs.tu-dortmund.de/nexus/content/groups/public</url>
     </repository>
   </repositories>
   
