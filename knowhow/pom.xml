@@ -7,7 +7,7 @@
   <name>Angerona (FPlugin-Know-How)</name>
   <url>http://maven.apache.org</url>
 
-  <build>
+<!-- <build>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -29,7 +29,7 @@
         </executions>
       </plugin>
     </plugins>
-  </build>
+  </build> -->
 
   <dependencies>
     <dependency>
