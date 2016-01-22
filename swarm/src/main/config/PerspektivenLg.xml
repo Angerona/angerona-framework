@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<logisticsGraph>
+	<perspective id = "65" name = "Klassenverteilung" x = "19" y = "57" width = "12" height = "11">
+		<agentType id = "66" name = "Klasse" x = "2" y = "4" count = "5" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+			<time value = "1"/>
+			<size value = "1"/>
+		</agentType>
+		<stationType id = "68" name = "Mathematik" x = "8" y = "1" count = "2" colorRed = "255" colorGreen = "255" colorBlue = "128" interface = "no">
+			<necessity value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "77" name = "Deutsch" x = "8" y = "7" count = "3" colorRed = "255" colorGreen = "255" colorBlue = "128" interface = "no">
+			<necessity value = "1"/>
+			<space value = "1"/>
+		</stationType>
+	</perspective>
+	<perspective id = "80" name = "Raumverteilung" x = "34" y = "60" width = "12" height = "5">
+		<agentType id = "81" name = "Unterricht" x = "2" y = "1" count = "5" colorRed = "255" colorGreen = "255" colorBlue = "128" interface = "no">
+			<time value = "1"/>
+			<size value = "1"/>
+		</agentType>
+		<stationType id = "82" name = "Raum" x = "8" y = "1" count = "4" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+			<space value = "1"/>
+		</stationType>
+	</perspective>
+	<visitEdge id = "70" connectedIdRef1 = "66" connectedIdRef2 = "68" bold = "no"/>
+	<visitEdge id = "78" connectedIdRef1 = "66" connectedIdRef2 = "77" bold = "no"/>
+	<visitEdge id = "84" connectedIdRef1 = "81" connectedIdRef2 = "82" bold = "no"/>
+	<timeEdge id = "86" connectedIdRef1 = "68" connectedIdRef2 = "81" value = "0" directed = "no" andConnected1 = "no" andConnected2 = "no"/>
+	<timeEdge id = "87" connectedIdRef1 = "77" connectedIdRef2 = "81" value = "0" directed = "no" andConnected1 = "no" andConnected2 = "no"/>
+	<placeEdge id = "88" connectedIdRef1 = "68" connectedIdRef2 = "77" value = "0" directed = "no"/>
+</logisticsGraph>

@@ -180,5 +180,6 @@
   	<module>plwithknowledge</module>
   	<module>simple</module>
   	<module>island</module>
+	<module>swarm</module>
   </modules>
 </project>

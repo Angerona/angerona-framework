@@ -1,0 +1,16 @@
+<simulation-configuration>
+   <name>PerspektivenLg</name>
+   <category>PerspektivenLgOfSwarm</category>
+   <description></description>
+   <behavior>com.github.kreatures.swarm.basic.SwarmBehavior</behavior>
+   <agent-instance>
+      <name>Bauer</name>
+      <agent-config source="config/agents/PerspektivenLg_agent.xml"/>
+      <beliefbase-config source="config/beliefbases/asp_PerspektivenLg_beliefbase.xml"/>
+   </agent-instance>
+   <agent-instance>
+      <name>Meister</name>
+      <agent-config source="config/agents/PerspektivenLg_agent.xml"/>
+      <beliefbase-config source="config/beliefbases/asp_PerspektivenLg_beliefbase.xml"/>
+   </agent-instance>
+</simulation-configuration>
