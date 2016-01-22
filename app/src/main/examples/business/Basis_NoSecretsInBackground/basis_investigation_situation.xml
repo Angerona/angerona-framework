@@ -1,9 +1,0 @@
-<investigation-situation>
-   <goal>investigate</goal>
-   <background>basis_background.dlp</background>
-   <query>rap</query>
-   <query>os</query>
-   <query>cai</query>
-   <source>claire</source>
-   <source>detective</source>
-</investigation-situation>

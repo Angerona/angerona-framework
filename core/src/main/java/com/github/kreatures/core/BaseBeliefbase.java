@@ -237,7 +237,7 @@ public abstract class BaseBeliefbase
 	 * Adds the given perception to the knowledge of the belief base.
 	 * Uses the given translator for the translation process and the
 	 * given change operator to perform the change operation
-	 * @param perception		Reference to the perceptin which is added to the belief base
+	 * @param perception		Reference to the perception which is added to the belief base
 	 * @param translator		Reference to the translator to use, if null the default translator is used.
 	 * @param changeOperator	Reference to the change operator to use, if null the default change operator is used.
 	 */

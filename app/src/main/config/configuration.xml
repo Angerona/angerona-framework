@@ -4,6 +4,7 @@
  -->
 <config>
     <!-- Use this file as a template for your own configuration -->   
+	<plugin>plugins/swarm-1.0.1.jar</plugin>
 	<plugin>plugins/example-2.0.1.jar</plugin>
 	<plugin>plugins/core-2.0.1.jar</plugin>
 	<plugin>plugins/asp-2.0.1.jar</plugin>

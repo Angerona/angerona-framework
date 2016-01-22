@@ -61,5 +61,4 @@ public class IslandPlugin extends KReaturesPluginAdapter {
 		behaviors.add(DynamicIslandBehavior.class);
 		return behaviors;
 	}
-
 }
