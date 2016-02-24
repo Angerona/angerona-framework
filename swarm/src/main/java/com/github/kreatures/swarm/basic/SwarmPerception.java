@@ -1,6 +1,6 @@
 package com.github.kreatures.swarm.basic;
 
-import java.util.List;
+import java.util.Hashtable;
 
 import com.github.kreatures.core.Perception;
 import com.github.kreatures.swarm.components.DefaultStation;
@@ -12,7 +12,7 @@ import com.github.kreatures.swarm.components.StatusAgentComponents;
  *
  */
 public class SwarmPerception implements Perception {
-	private static List<DefaultStation> stationStatusList;
+	private static Hashtable<String, DefaultStation> stationStatusList;
 	private int receiverId=0;
 	private String receiverName;
 	private String currentStation;
@@ -41,7 +41,7 @@ public class SwarmPerception implements Perception {
 	 * @param receiverId a identify of a receiver.
 	 * @param stationStatusList all stations, which belong the scenario.
 	 */
-	public SwarmPerception(int receiverId,List<DefaultStation> stationStatusList){
+	public SwarmPerception(int receiverId,Hashtable<String,DefaultStation> stationStatusList){
 		this.receiverId=receiverId;
 		SwarmPerception.stationStatusList=stationStatusList;
 	}
@@ -52,7 +52,7 @@ public class SwarmPerception implements Perception {
 	 * @param stationStatusList all stations, which belong the scenario.
 	 * @param StatusAgentComponents the status of agent which is running the scenario.
 	 */
-	public SwarmPerception(List<DefaultStation> stationStatusList,StatusAgentComponents statusAgent){
+	public SwarmPerception(Hashtable<String, DefaultStation> stationStatusList,StatusAgentComponents statusAgent){
 		//this.receiverId=statusAgent.getAgent();
 		SwarmPerception.stationStatusList=stationStatusList;
 		receiverName=statusAgent.getAgent().getName();
@@ -82,7 +82,7 @@ public class SwarmPerception implements Perception {
 	 * @param receiverName a name of the receiver.
 	 * @param stationStatusList all stations, which belong the scenario.
 	 */
-	public SwarmPerception(String receiverName,List<DefaultStation> stationStatusList){
+	public SwarmPerception(String receiverName,Hashtable<String, DefaultStation> stationStatusList){
 		this.receiverName=receiverName;
 		SwarmPerception.stationStatusList=stationStatusList;
 	}
@@ -106,7 +106,7 @@ public class SwarmPerception implements Perception {
 	 * 
 	 * @return a status of all stations from the receiver's seite. 
 	 */
-	public List <DefaultStation > getStationStatusList(){
+	public Hashtable <String,DefaultStation > getStationStatusList(){
 		return stationStatusList;
 	}
 	@Override

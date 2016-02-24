@@ -1,6 +1,6 @@
 package com.github.kreatures.swarm.components;
 import com.github.kreatures.core.comp.Presentable;
-import com.github.kreatures.core.serialize.CreateKReaturesXMLDateiDefault;
+import com.github.kreatures.core.serialize.CreateKReaturesXMLFileDefault;
 import com.github.kreatures.swarm.serialize.SwarmConfigRead;
 import com.github.kreatures.swarm.serialize.SwarmPerspectiveConfig;
 import com.github.kreatures.swarm.serialize.SwarmStationTypeConfig;
@@ -20,7 +20,7 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 	 * belong to swarm's config
 	 */
 	private static SwarmConfigRead swarmconfig;
-	private static CreateKReaturesXMLDateiDefault kreaturesXMLFile;
+	private static CreateKReaturesXMLFileDefault kreaturesXMLFile;
 	//private static int index=0;
 	private static int numberOfStation=1;
 	private static List<SwarmStationTypeConfig> listSwarmStationTypeConfig;
@@ -42,6 +42,58 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 	 * distance is using to check the distance between a agent and its incommingStation (Here target).  
 	 */
 	protected int distance;
+	
+	/**
+	 * capacity is a numeric value and means that a agent can transports items whose totals size isn't greater than n with n=capacity.
+	 * When this elements not exist, that the value is zero. 
+	 */
+	protected int capacity=0;
+	
+	/**
+	 * speed is a numeric value and means that a agent moves with the speed n (n=speed) when it goes to the next station.
+	 * When this elements not exist, that the value is one. 
+	 */
+	protected int speed=1;
+	
+	/**
+	 * sizeAgent is a numeric value and means that the visited station has to have a space greater than n, where n=sizeAgent.
+	 * When this elements not exist, that the value is zero. 
+	 */
+	protected int sizeAgent=0;
+	
+	/**
+	 * This is the exactly visited duration, which each agent has when it is visiting a stations.
+	 * When a station has its own duration, then visited duration into a given station is the minimum of both.  
+	 * When a agent has no item's element, then the itemSize is zero. That means no duration is defined for this agent's type.
+	 */
+	protected int time=0;
+	
+	/**
+	 * priority is a numeric value. When more agents can visit a station, than agent with high priority has to be prioritized.
+	 * When this elements not exist, that the value is zero. 
+	 */
+	protected int priority=0;
+	
+	/**
+	 * frequency is a numeric value and means that a agent has to visit all allowed stations and the sum of all visits have to be exactly n times, where n=frequency.
+	 * When this elements not exist, that the value is zero. 
+	 */
+	protected int frequency=0;
+	
+	/**
+	 * necessity is a numeric value and means that a agent has to visit all allowed stations exactly n times, where n=necessity.
+	 *  When this elements not exist, that the value is zero. 
+	 */
+	protected int necessity=0;
+	
+	/**
+	 * cycle is a numeric value and it is using for the timeEdge which allow to simulate how agents or stations working in parallel. 
+	 * cycle has a sense when there are a timeEdge connected to this station. 
+	 * When the timeEdge is directed, than outgoing cycle's value is the same as the cycle's value of incoming.
+	 * When this elements not exist, that the value is zero or the value of incoming if exists. 
+	 */
+	protected int cycle=0;
+	
 
 	/**
 	 * distance is using to check the distance between a agent and its incommingStation (Here target).  
@@ -73,12 +125,11 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 	 * Default constructor
 	 */
 	public SwarmAgentComponentsGeneric(){
-		String filepath="config/swarm/PerspektivenLg.xml"; 
-
+		String filepath="config/swarm/PerspektivenLg.xml";
 		//This is a singleton and has to be declared one time.
 		if(swarmconfig==null){
-			try {
-				kreaturesXMLFile=new CreateKReaturesXMLDateiDefault(filepath);
+			try {//TODO new CreateKReaturesXMLDateiDefault(filepath);
+				kreaturesXMLFile=null;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -97,7 +148,6 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 						this.target=this.current;
 						break;	
 					}
-
 				}	
 			}				
 		}else{

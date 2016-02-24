@@ -13,12 +13,12 @@ import com.github.kreatures.core.serialize.SimulationConfiguration;
  * @author donfack
  *
  */
-public interface CreateKReaturesXMLDatei {
+public interface CreateKReaturesXMLFile {
 	
-	public SimulationConfiguration createSimulationConfig();
-	
-	public List<AgentInstance> createAgentConfig();
-	
-	public BeliefbaseConfig createBeliefbaseConfigReal();
+//	public SimulationConfiguration createSimulationConfig();
+//	
+//	public List<AgentInstance> createAgentConfig();
+//	
+//	public BeliefbaseConfig createBeliefbaseConfigReal();
 
 }

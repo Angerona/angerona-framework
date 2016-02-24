@@ -4,7 +4,11 @@ import java.util.List;
 
 import com.github.kreatures.core.Perception;
 import com.github.kreatures.core.serialize.SimulationConfiguration;
-
+/**
+ * 
+ * @author donfack
+ *
+ */
 public class CreateSimulationConfiguration extends SimulationConfiguration {
 
 	protected void setName(String name) {

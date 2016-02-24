@@ -63,6 +63,7 @@ import com.github.kreatures.core.internal.UIPluginInstatiator;
 import com.github.kreatures.core.internal.ViewComponentFactory;
 import com.github.kreatures.core.listener.FrameworkListener;
 import com.github.kreatures.core.listener.SimulationListener;
+import com.github.kreatures.core.serialize.CreateKReaturesXMLFileDefault;
 
 /**
  * The main window of the KReatures UI - Extension. It is a Singleton. 
@@ -194,6 +195,18 @@ public class KReaturesWindow extends WindowAdapter
 
 		kreatures.bootstrap();
 		pi.registerPlugin(new DefaultUIPlugin());
+		/**
+		 * @author donfack
+		 * Here we have to create all abstract swarm config file 
+		 * in order that there can be laoded after into KReatures.
+		 */
+		try {
+			new CreateKReaturesXMLFileDefault();
+			LOG.info("Abstract_Swarm configuration-file are successfull created.");
+		} catch (Exception e) {
+			LOG.error("There are some error when Abstract_Swarm configuration-file would be created.");
+			e.printStackTrace();
+		}
 		
 		kreatures.getProject().addDirectory(new File("config/agents"));
 		kreatures.getProject().addDirectory(new File("config/beliefbases"));

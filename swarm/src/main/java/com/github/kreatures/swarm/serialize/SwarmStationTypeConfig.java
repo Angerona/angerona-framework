@@ -24,10 +24,26 @@ public class SwarmStationTypeConfig {
 	protected int colorBlueSwarmAgentype;
 	@Attribute(name="interface")
 	protected String interfaceSwarmStationType;
+	
+	/* Here are elements there belong only to a stationType. */
+	
 	@Element(name="space", required=false)
 	protected SwarmStationTypeConfigSpace  spaceSwarmStationType;
+	@Element(name="item", required=false)
+	protected SwarmStationTypeConfigItem  itemSwarmStationType;
+	
+	/* Here are attributes there are also defined in station's class */
+	@Element(name="priority", required=false)
+	protected SwarmConfigPriority prioritySwarm;
+	@Element(name="frequency", required=false)
+	protected SwarmConfigFrequency frequencySwarm;
 	@Element(name="necessity", required=false)
-	protected SwarmStationTypeConfigNecessity  necessitySwarmStationType;
+	protected SwarmConfigNecessity necessitySwarm;
+	@Element(name="time", required=false)
+	protected SwarmConfigTime timeSwarm;
+	@Element(name="cycle", required=false)
+	protected SwarmConfigCycle cycleSwarm;
+	
 	
 	public int getIdSwarmStationType() {
 		return idSwarmStationType;
@@ -60,7 +76,23 @@ public class SwarmStationTypeConfig {
 	public SwarmStationTypeConfigSpace getSpaceSwarmStationType() {
 		return spaceSwarmStationType;
 	}
-	public SwarmStationTypeConfigNecessity getNecessitySwarmStationType() {
-		return necessitySwarmStationType;
+	public SwarmStationTypeConfigItem getItemSwarmStationType() {
+		return itemSwarmStationType;
 	}
+	public SwarmConfigPriority getPrioritySwarm() {
+		return prioritySwarm;
+	}
+	public SwarmConfigFrequency getFrequencySwarm() {
+		return frequencySwarm;
+	}
+	public SwarmConfigNecessity getNecessitySwarm() {
+		return necessitySwarm;
+	}
+	public SwarmConfigTime getTimeSwarm() {
+		return timeSwarm;
+	}
+	public SwarmConfigCycle getCycleSwarm() {
+		return cycleSwarm;
+	}
+
 }

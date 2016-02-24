@@ -27,7 +27,7 @@
 	<visitEdge id = "84" connectedIdRef1 = "81" connectedIdRef2 = "82" bold = "no"/>
 	<timeEdge id = "86" connectedIdRef1 = "68" connectedIdRef2 = "81" value = "0" directed = "no" andConnected1 = "no" andConnected2 = "no"/>
 	<timeEdge id = "87" connectedIdRef1 = "77" connectedIdRef2 = "81" value = "0" directed = "no" andConnected1 = "no" andConnected2 = "no"/>
-	<placeEdge id = "88" connectedIdRef1 = "68" connectedIdRef2 = "77" value = "4" directed = "no"/>
-	<placeEdge id = "88" connectedIdRef1 = "82" connectedIdRef2 = "77" value = "5" directed = "no"/>
-	<placeEdge id = "88" connectedIdRef1 = "68" connectedIdRef2 = "68" value = "6" directed = "no"/>
+	<placeEdge id = "98" connectedIdRef1 = "68" connectedIdRef2 = "77" value = "4" directed = "no"/>
+	<placeEdge id = "97" connectedIdRef1 = "82" connectedIdRef2 = "77" value = "5" directed = "no"/>
+	<placeEdge id = "96" connectedIdRef1 = "82" connectedIdRef2 = "68" value = "6" directed = "no"/>
 </logisticsGraph>

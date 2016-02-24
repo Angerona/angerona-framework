@@ -8,6 +8,6 @@ package com.github.kreatures.swarm.components;
 
 
 public interface SwarmStation {
-	//int t();
+	
  
 }

@@ -12,14 +12,19 @@ public class DefaultEdge extends SwarmEdgeGeneric {
 		super(edge);
 	}
 
-	public DefaultEdge(int id,int incommingStation, int outcommingStation, int edgeLenght, boolean underected) {
-		super(id, incommingStation, outcommingStation, edgeLenght, underected);
+	public DefaultEdge(int id,String outgoingStation, String incomingStation, int edgeLenght, boolean underected) {
+		super(id, outgoingStation, incomingStation, edgeLenght, underected);
 		
 	}
 
 	@Override
 	public BaseAgentComponent clone() {
 		return new DefaultEdge(this);
+	}
+	
+	public int hashCode(){
+		//TODO
+		return this.getId();
 	}
 
 }

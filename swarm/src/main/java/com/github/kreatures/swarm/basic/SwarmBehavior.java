@@ -131,22 +131,22 @@ public class SwarmBehavior extends SimpleBehavior{
 	 * @return true when there are a next station.
 	 */
 	public boolean findNextStation(StatusAgentComponents statusAgent, DefaultStation current, SwarmMappingGeneric swarmMapping){
-		for(DefaultEdge edge: current.getListofEdge()){
+		for(DefaultEdge edge: current.getHashTableofEdge().values()){ //TODO  ???
 			if(edge.isUnderected()){
-				if(edge.getIncommingStation()==current.getStationId()){
-					statusAgent.setTarget(swarmMapping.getStationIntance(edge.getOutcommingStation()).getName());
+				if(edge.getOutgoingStation().equals(current.getStationName())){
+					statusAgent.setTarget(swarmMapping.getStationIntance(edge.getIncomingStation()).getStationName());
 					statusAgent.setDistance(edge.getEdgeLenght());
 					statusAgent.report(statusAgent.getAgent().getName()+ " choises "+ statusAgent.getTarget()+" as next station.");
 					return true;
 				}
 			}else{
-				if(edge.getIncommingStation()==current.getStationId()){
-					statusAgent.setTarget(swarmMapping.getStationIntance(edge.getOutcommingStation()).getName());
+				if(edge.getOutgoingStation().equals(current.getStationName())){
+					statusAgent.setTarget(swarmMapping.getStationIntance(edge.getIncomingStation()).getStationName());
 					statusAgent.setDistance(edge.getEdgeLenght());
 					statusAgent.report(statusAgent.getAgent().getName()+ " choises "+ statusAgent.getTarget()+" as next station.");
 					return true;
-				}else if(edge.getOutcommingStation()==current.getStationId()){
-					statusAgent.setTarget(swarmMapping.getStationIntance(edge.getIncommingStation()).getName());
+				}else if(edge.getIncomingStation().equals(current.getStationName())){
+					statusAgent.setTarget(swarmMapping.getStationIntance(edge.getOutgoingStation()).getStationName());
 					statusAgent.setDistance(edge.getEdgeLenght());
 					statusAgent.report(statusAgent.getAgent().getName()+ " choises "+ statusAgent.getTarget()+" as next station.");
 					return true;
@@ -159,7 +159,6 @@ public class SwarmBehavior extends SimpleBehavior{
 		return false;
 	}
 
-	
 	@Override
 	protected void runEnvironment() {
 		// TODO Auto-generated method stub

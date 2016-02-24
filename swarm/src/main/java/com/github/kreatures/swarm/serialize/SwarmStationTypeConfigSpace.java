@@ -7,5 +7,7 @@ import org.simpleframework.xml.Root;
 public class SwarmStationTypeConfigSpace {
 	@Attribute(name="value")
 	protected int value;
-
+	public int getValue() {
+		return value;
+	}
 }

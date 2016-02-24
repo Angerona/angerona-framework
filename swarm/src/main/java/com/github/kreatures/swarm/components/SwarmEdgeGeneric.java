@@ -12,16 +12,16 @@ import com.github.kreatures.core.BaseAgentComponent;
  */
 public abstract class SwarmEdgeGeneric extends BaseAgentComponent implements SwarmEdge{
 	/**
-	 * This is the station's id where a agent is.
+	 * This is the station's name where a agent is.
 	 */
-	protected int incommingStation;
+	protected String outgoingStation;
 	/**
-	 * This is the station's id where the agent want to go.
+	 * This is the station's name where the agent want to go.
 	 */
-	protected int outcommingStation;
+	protected String incomingStation;
 	/**
 	 * That is true when a edge has only one direction and false otherwise. If that is false,
-	 * than incommingStation and outcommingStation mean the same things.  
+	 * then incommingStation and outcommingStation mean the same things.  
 	 */
 	protected boolean underected=true;
 	/**
@@ -48,45 +48,70 @@ public abstract class SwarmEdgeGeneric extends BaseAgentComponent implements Swa
 	 */
 public SwarmEdgeGeneric(SwarmEdgeGeneric swarmEdgeGeneric){
 		super(swarmEdgeGeneric);
-		this.incommingStation=swarmEdgeGeneric.incommingStation;
-		this.outcommingStation=swarmEdgeGeneric.outcommingStation;
+		this.incomingStation=swarmEdgeGeneric.incomingStation;
+		this.outgoingStation=swarmEdgeGeneric.outgoingStation;
 		this.edgeLenght=swarmEdgeGeneric.edgeLenght;
 		this.underected=swarmEdgeGeneric.underected;
 		this.id=swarmEdgeGeneric.id;
+		setName();
 	}
 	
 	/**
 	 * 
-	 * @param incommingStation This is the station where a agent is.
-	 * @param outcommingStation This is the station where the agent want to go.
+	 * @param outgoingStation This is the station where a agent is.
+	 * @param incomingStation This is the station where the agent want to go.
 	 * @param edgeLenght This gives the distance between the both stations.
 	 * @param underected That is true when a edge has only one direction and false otherwise. If that is false,
-	 * than incommingStation and outcommingStation mean the same things.
+	 * then incommingStation and outgoingStation mean the same things.
 	 */
 	
-	public SwarmEdgeGeneric(int id, int incommingStation,int outcommingStation	,int edgeLenght, boolean underected){
+	public SwarmEdgeGeneric(int id, String incomingStation,String outgoingStation,int edgeLenght, boolean underected){
 		super();
-		this.incommingStation=incommingStation;
-		this.outcommingStation=outcommingStation;
+		this.incomingStation=incomingStation;
+		this.outgoingStation=outgoingStation;
 		this.edgeLenght=edgeLenght;
 		this.underected=underected;
 		this.id=id;
+		setName();
 	}
 	/**
-	 * This is the station's id where a agent is.
+	 * This defines the name of a placed edge as a unique key and it is a String.  
 	 */
-	public int getIncommingStation() {
-		return incommingStation;
+	private void setName(){
+		if(outgoingStation!=null && incomingStation!=null ){
+			this.name = outgoingStation+";"+incomingStation;
+		}
 	}
 	/**
-	 * This is the station's id where the agent want to go.
+	 * The Table has two elements. The first is the  outgoingStation's name
+	 * and the second is the incomingStation's name.
+	 * @return the table as name as key of this placed edge object.
 	 */
-	public int getOutcommingStation() {
-		return outcommingStation;
+	public String[] getTableName(){
+		return name.split(";");
+	}
+	/**
+	 * @return the table as name as key of this placed edge object.
+	 */
+	public String getName(){
+		return name;
+	}
+	
+	/**
+	 * This is the station's name where the agent want to go.
+	 */
+	public String getIncomingStation() {
+		return incomingStation;
+	}
+	/**
+	 * This is the station's name where a agent is.
+	 */
+	public String getOutgoingStation() {
+		return outgoingStation;
 	}
 	/**
 	 * That is true when a edge has only one direction and false otherwise. If that is false,
-	 * than incommingStation and outcommingStation mean the same things.  
+	 * then incomingStation and outgoingStation mean the same things.  
 	 */
 	public boolean isUnderected() {
 		return underected;
