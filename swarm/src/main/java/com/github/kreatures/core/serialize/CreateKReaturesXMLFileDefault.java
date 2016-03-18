@@ -22,12 +22,12 @@ import com.github.kreatures.swarm.serialize.SwarmPerspectiveConfig;
 public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 	private static Persister persister = new Persister();
 	private static SwarmConfigRead swarmConfig;
-	private static String fileLoaded; 
+	//private static String fileLoaded; 
 	private static String filepath; // folder where the simulation configuration's file is.
 	// folder where all simulation configuration's file are.
-	private static final String kreaturesConfigSimDirectory="../app/src/main/examples/";
+	private static final String kreaturesConfigSimDirectory="examples/";
 	//Folder where the Abstract_Swarm-Dateien are
-	private static final String AbstractSwarmDirectory="../app/src/main/config/swarm/";
+	private static final String AbstractSwarmDirectory="config/swarm/";
 	
 	public CreateKReaturesXMLFileDefault() throws Exception{
 		
@@ -44,24 +44,24 @@ public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 	
 	private void loadSwarmXMLFile() throws Exception{
 		// There are no current loaded simulation, which belong to abstract_Swarm.
-		fileLoaded=null;
+		//fileLoaded=null;
 		//search all abstract_Swarm_config_files and creates the coresponding simulation file.	
 		for( File file : CreateKReaturesXMLFileDefault.searchSwarmConfigFile(AbstractSwarmDirectory)){
 			filepath=file.getName();
-			System.out.println(filepath);
+			//System.out.println(filepath);
 			filepath=getFilename(file.getName());
 			swarmConfig = persister.read(SwarmConfigRead.class, file);	 
-			System.out.println(kreaturesConfigSimDirectory+filepath);
+			//System.out.println(kreaturesConfigSimDirectory+filepath);
 			File fileKreatures=new File(kreaturesConfigSimDirectory+filepath);
-			System.out.println(!fileKreatures.exists());
+			//System.out.println(!fileKreatures.exists());
 			
 			if(!fileKreatures.exists()){
 				fileKreatures.mkdir();
 			}
 		    	  
 		    fileKreatures=new File(kreaturesConfigSimDirectory+filepath+"/"+filepath+"_simulation.xml");
-		    System.out.println(kreaturesConfigSimDirectory+filepath+"/"+filepath+"_simulation.xml");
-		    System.out.println(!fileKreatures.exists());
+		    //System.out.println(kreaturesConfigSimDirectory+filepath+"/"+filepath+"_simulation.xml");
+		    //System.out.println(!fileKreatures.exists());
 		    if(!fileKreatures.exists()){
 			  persister.write(createSimulationConfig(), fileKreatures);
 		    }
@@ -127,7 +127,7 @@ public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	public SwarmConfigRead getSwarmConfigRead(){
+	public static SwarmConfigRead getSwarmConfigRead(){
 		
 		return swarmConfig;
 	}
@@ -138,7 +138,7 @@ public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 	 */
 	private static File[] searchSwarmConfigFile( String dirName){
     	File dir = new File(dirName);
-
+ 
     	return dir.listFiles(new FilenameFilter() { 
     	         public boolean accept(File dir, String filename)
     	              { return filename.endsWith(".xml"); }

@@ -358,7 +358,7 @@
 		    	<groupId>com.github.kreatures</groupId>
 		    	<artifactId>swarm</artifactId>
 		    	<version>1.0.1</version>
-		    	<scope>runtime</scope>
+		    <!--	<scope>runtime</scope> -->
 		    </dependency>
 	  </dependencies>
 

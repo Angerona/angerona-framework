@@ -49,10 +49,12 @@ public  class SwarmMappingGeneric extends BaseAgentComponent implements SwarmMap
 	public SwarmMappingGeneric() {
 		 //"src/main/config/PerspektivenLg.xml");
 		String filepath="config/swarm/PerspektivenLg.xml"; 
+		
 		//This is a singleton and has to be declared one time.
 				if(swarmconfig==null){
-					try {//TODO new CreateKReaturesXMLDateiDefault(filepath);
-						kreaturesXMLFile=null;
+					try {//TODO new CreateKReaturesXMLFileDefault(filepath);
+						if( kreaturesXMLFile==null)
+							new CreateKReaturesXMLFileDefault();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

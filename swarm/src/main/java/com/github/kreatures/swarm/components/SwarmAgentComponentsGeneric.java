@@ -125,16 +125,16 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 	 * Default constructor
 	 */
 	public SwarmAgentComponentsGeneric(){
-		String filepath="config/swarm/PerspektivenLg.xml";
+		//String filepath="config/swarm/PerspektivenLg.xml";
 		//This is a singleton and has to be declared one time.
 		if(swarmconfig==null){
 			try {//TODO new CreateKReaturesXMLDateiDefault(filepath);
-				kreaturesXMLFile=null;
+				swarmconfig=CreateKReaturesXMLFileDefault.getSwarmConfigRead();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			swarmconfig=kreaturesXMLFile.getSwarmConfigRead();
+			
 		}
 		if(!swarmconfig.getListPerspective().isEmpty()){
 			SwarmPerspectiveConfig perceptConfig=swarmconfig.getListPerspective().get(0);
