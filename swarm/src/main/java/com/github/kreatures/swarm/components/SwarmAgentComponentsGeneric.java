@@ -20,7 +20,6 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 	 * belong to swarm's config
 	 */
 	private static SwarmConfigRead swarmconfig;
-	private static CreateKReaturesXMLFileDefault kreaturesXMLFile;
 	//private static int index=0;
 	private static int numberOfStation=1;
 	private static List<SwarmStationTypeConfig> listSwarmStationTypeConfig;
@@ -127,15 +126,8 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 	public SwarmAgentComponentsGeneric(){
 		//String filepath="config/swarm/PerspektivenLg.xml";
 		//This is a singleton and has to be declared one time.
-		if(swarmconfig==null){
-			try {//TODO new CreateKReaturesXMLDateiDefault(filepath);
-				swarmconfig=CreateKReaturesXMLFileDefault.getSwarmConfigRead();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
+		swarmconfig=CreateKReaturesXMLFileDefault.getSwarmConfig();	
+		
 		if(!swarmconfig.getListPerspective().isEmpty()){
 			SwarmPerspectiveConfig perceptConfig=swarmconfig.getListPerspective().get(0);
 			listSwarmStationTypeConfig=perceptConfig.getListStationType();
@@ -154,28 +146,6 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 			//TODO
 			this.report("There are no stations define.");
 		}
-
-
-
-
-		/*
-		if (!swarmconfig.getListVisitEdge().isEmpty()){
-			for (SwarmVisitEdgeConfig visitEdge : swarmconfig.getListVisitEdge()){
-				 if(this.getAgent().getName().equals(swarmconfig.getAgentNamefromVisitEdge(visitEdge))){
-
-
-					 break;
-				 }
-
-
-			}
-
-		}else{
-			report("there are no visit-edges");
-		}
-		 */
-
-
 	}
 	/**
 	 * Constructor allow that the object will be copy.

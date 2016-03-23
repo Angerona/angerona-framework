@@ -21,6 +21,7 @@ import com.github.kreatures.core.logic.Desires;
 import com.github.kreatures.core.logic.ScriptingComponent;
 import com.github.kreatures.core.serialize.AgentInstance;
 import com.github.kreatures.core.serialize.SimulationConfiguration;
+import com.github.kreatures.core.KReaturesSimulationInfo;
 import com.github.kreatures.core.util.ObservableMap;
 
 /**
@@ -34,7 +35,8 @@ public class KReaturesEnvironment  {
 	
 	/** the name of the simulation */
 	private String name;
-		
+	
+	//public <T extends InitSwarmSimulation> iniSwarm(T); 
 	/** flag indicating if the environment is correctly initialized */
 	private boolean ready = false;
 	
@@ -161,6 +163,11 @@ public class KReaturesEnvironment  {
 		LOG.info("Starting simulation: " + config.getName());
 		this.name = config.getName();
 		this.simDirectory = config.getFile().getParent();
+		/* This two following line are add by Donfack in order to 
+		 * where simulation the swarm have to use as current
+		 */
+		KReaturesSimulationInfo.setName(this.name);
+		KReaturesSimulationInfo.setSimDirectory(this.simDirectory);
 
 		// inform listener of start of simulation creation:
 		KReatures.getInstance().onCreateSimulation(this);
