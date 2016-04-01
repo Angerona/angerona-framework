@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreatures.core.BaseAgentComponent;
+import com.github.kreatures.core.KReaturesSimulationInfo;
 import com.github.kreatures.core.comp.Presentable;
 import com.github.kreatures.core.serialize.CreateKReaturesXMLFileDefault;
 import com.github.kreatures.swarm.serialize.SwarmConfigRead;
@@ -50,26 +51,40 @@ public  class SwarmMappingGeneric extends BaseAgentComponent implements SwarmMap
 
 		//This is a singleton and has to be declared one time.
 		swarmconfig=CreateKReaturesXMLFileDefault.getSwarmConfig();
-		//This is a singleton and has to be declared one time.
-		if(hashSwarmSations==null){
+		/*
+		 * This is a singleton and has to be declared one time.
+		 * It can be newly define when the simulation change.
+		 */
+		if(hashSwarmSations==null ||  CreateKReaturesXMLFileDefault.is_currentSimChange()){
 			hashSwarmSations=new Hashtable<String, DefaultStation>() ;
 			setAllStations();
 		}else {
 			return;
 		}
 
-		//This is a singleton and has to be declared one time.
-		if(hashSwarmEdges==null){
+		/*
+		 * This is a singleton and has to be declared one time.
+		 * It can be newly define when the simulation change.
+		 */
+		if(hashSwarmEdges==null ||  CreateKReaturesXMLFileDefault.is_currentSimChange()){
 			hashSwarmEdges=new  Hashtable<String, DefaultEdge>();
 			setAllEdges();
 			setAllEdgesOfAllStations();
 		}
 
-		//This is a singleton and has to be declared one time.
-		if(hashSwarmVisitEdges==null){
+		/*
+		 * This is a singleton and has to be declared one time.
+		 * It can be newly define when the simulation change.
+		 */
+		if(hashSwarmVisitEdges==null ||  CreateKReaturesXMLFileDefault.is_currentSimChange()){
 			hashSwarmVisitEdges=new Hashtable<DefaultVisitEdge, String>() ;
 			//setAllStations();
 		}	
+		
+		/*
+		 *  This informs that all components of the new simulation are created.
+		 */
+		KReaturesSimulationInfo.setIscurrentSimChange(false);
 	}
 
 	/**

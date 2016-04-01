@@ -22,7 +22,8 @@
       <default-operator-cls>com.github.kreatures.swarm.beliefbase.SwarmUpdateBeliefsOperator</default-operator-cls>
    	</operation-set>
 	<component>com.github.kreatures.core.logic.Desires</component>
-	<component>com.github.kreatures.core.legancy.PlanComponent</component>
+	<component>com.github.kreatures.core.PlanComponent</component>
 	<component>com.github.kreatures.swarm.components.SwarmMappingGeneric</component>
 	<component>com.github.kreatures.swarm.components.StatusAgentComponents</component>
+	<component>com.github.kreatures.swarm.components.DefaultVisitEdge</component>
 </agent-configuration>

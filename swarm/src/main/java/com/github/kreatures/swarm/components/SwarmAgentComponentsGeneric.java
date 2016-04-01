@@ -186,11 +186,14 @@ public abstract class SwarmAgentComponentsGeneric extends BaseAgentComponent imp
 		this.distance = distance;
 	}
 	/**
-	 * decrement the distance of one.
+	 * decrement the distance of speed.
 	 */
 	public void move() {
-		if (0<distance)
-			this.distance -=1;
+		if (speed<distance){
+			this.distance -=speed;
+		}else{
+			this.distance=0;
+		}
 	}
 	/**
 	 * A agent is on the way to a target's station.

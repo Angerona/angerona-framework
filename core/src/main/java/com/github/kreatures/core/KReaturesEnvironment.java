@@ -163,11 +163,14 @@ public class KReaturesEnvironment  {
 		LOG.info("Starting simulation: " + config.getName());
 		this.name = config.getName();
 		this.simDirectory = config.getFile().getParent();
+		
 		/* This two following line are add by Donfack in order to 
 		 * where simulation the swarm have to use as current
 		 */
 		KReaturesSimulationInfo.setName(this.name);
 		KReaturesSimulationInfo.setSimDirectory(this.simDirectory);
+		KReaturesSimulationInfo.setIscurrentSimChange(true);
+		
 
 		// inform listener of start of simulation creation:
 		KReatures.getInstance().onCreateSimulation(this);
@@ -210,6 +213,11 @@ public class KReaturesEnvironment  {
 		}
 		
 		KReatures.getInstance().onTickDone(this);
+		
+		/*
+		 *  This informs that all components of the new simulation are created.
+		 */
+		KReaturesSimulationInfo.setIscurrentSimChange(false);
 		
 		return ready = true;
 	}

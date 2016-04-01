@@ -3,16 +3,19 @@
  */
 package com.github.kreatures.swarm.components;
 
+import java.util.List;
+
 import com.github.kreatures.core.BaseAgentComponent;
+import com.github.kreatures.core.comp.Presentable;
 
 /**
  * @author donfack
  * A Scenario can have more edges' type. The SwarmVisitEdgeGeneric is the abstract class, 
  * which gives all common parameter between visitEdge.
  */
-public abstract class SwarmVisitEdgeGeneric extends BaseAgentComponent implements SwarmEdge{
+public abstract class SwarmVisitEdgeGeneric extends BaseAgentComponent implements SwarmEdge, Presentable{
 	/**
-	 * That is the name of agent which allowing to visit a station
+	 * That is the name of agent which have the permission to visit a station
 	 */
 	protected String agentName;
 	
@@ -85,6 +88,16 @@ public abstract class SwarmVisitEdgeGeneric extends BaseAgentComponent implement
 
 	public int getId() {
 		return id;
+	}
+	
+	@Override
+	public String toString() {
+		return "Status of <<visit>>-Edge [Agent =" + agentName + ", visit Station=" +stationName+ "]";
+	}
+
+	@Override
+	public void getRepresentation(List<String> representation) {
+		representation.add("<<visit>>-Edge: " + getAgentName()+" -> "+ getStationName());
 	}
 
 	

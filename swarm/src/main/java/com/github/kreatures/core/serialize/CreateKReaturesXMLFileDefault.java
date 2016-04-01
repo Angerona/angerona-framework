@@ -1,7 +1,9 @@
 package com.github.kreatures.core.serialize;
 
 import java.io.File;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.io.FilenameFilter;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,8 +50,24 @@ public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 	/**
 	 * Folder where the Abstract_Swarm-Dateien are
 	 */
-	private static final String AbstractSwarmDirectory="config/swarm/";
-
+	private static final String AbstractSwarmDirectory="config/swarm/abstract_swarm_file/";
+	/**
+	 * Folder where the default Kreatures files for Abstract_Swarm-Dateien are. 
+	 */
+	private static final String KReaturesSwarmDirectory="config/swarm/kreatures_default/";
+	/**
+	 * Folder where all Kreatures's configuration files are. 
+	 */
+	private static final String KReaturesConfigDirectory="config/";
+	/**
+	 * Folder where all Kreatures's configuration files for agents are. 
+	 */
+	private static final String KReaturesAgentDirectory="config/agents/";
+	/**
+	 * Folder where all Kreatures's configuration files for beliefbases are. 
+	 */
+	private static final String KReaturesBeliefbasesDirectory="config/beliefbases/";
+	
 	public CreateKReaturesXMLFileDefault() throws Exception{
 
 		//this.testLoadSwarmXMLDatei(filepath); // nur für Test gegedacht, muss nachher gelöscht werden.
@@ -79,6 +97,45 @@ public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 			fileKreatures=new File(kreaturesConfigSimDirectory+fileNameLoaded+"/"+fileNameLoaded+"_simulation.xml");
 			if(!fileKreatures.exists()){
 				persister.write(createSimulationConfig(), fileKreatures);
+			}
+			for( File kreaturesDefaultConfig : CreateKReaturesXMLFileDefault.searchSwarmConfigFile(KReaturesSwarmDirectory)){
+				if(kreaturesDefaultConfig.getName().equals("_cycle.xml")){
+					/*
+					 * We create the commandSequence file for the new project, whose name is contented
+					 * in the variable fileNameLoaded.
+					 */
+					fileKreatures=new File(KReaturesConfigDirectory+fileNameLoaded+"_cycle.xml");
+					if(!fileKreatures.exists()){
+						
+						Files.copy(kreaturesDefaultConfig.toPath(),fileKreatures.toPath(),  REPLACE_EXISTING);
+						//CommandSequence asmlConfigFile=persister.read(CommandSequence.class, kreaturesDefaultConfig);
+						//persister.write(asmlConfigFile, fileKreatures);
+					}
+				}else if(kreaturesDefaultConfig.getName().equals("_agent.xml")){
+					/*
+					 * We create the agent's configuration file for the new project, whose name is contented
+					 * in the variable fileNameLoaded.
+					 */
+					fileKreatures=new File(KReaturesAgentDirectory+fileNameLoaded+"_agent.xml");
+					if(!fileKreatures.exists()){
+						AgentConfigReal agentConfigFile=persister.read(AgentConfigReal.class, kreaturesDefaultConfig);
+						agentConfigFile.name=fileNameLoaded+" Swarm";
+						CommandSequenceSerializeImport asmlImport=new CommandSequenceSerializeImport();
+						asmlImport.source=new File(KReaturesConfigDirectory+fileNameLoaded+"_cycle.xml");
+						agentConfigFile.cylceScript=asmlImport;
+						persister.write(agentConfigFile, fileKreatures);
+					}
+				}else if(kreaturesDefaultConfig.getName().equals("_beliefbase.xml")){
+					/*
+					 * We create the beliefbase's configuration file for the new project, whose name is contented
+					 * in the variable fileNameLoaded.
+					 */
+					fileKreatures=new File(KReaturesBeliefbasesDirectory+"asp_"+fileNameLoaded+"_beliefbase.xml");
+					if(!fileKreatures.exists()){
+						BeliefbaseConfigReal beliefbaseConfigFile=persister.read(BeliefbaseConfigReal.class, kreaturesDefaultConfig);
+						persister.write(beliefbaseConfigFile, fileKreatures);
+					}
+				}
 			}
 		}
 
@@ -181,16 +238,25 @@ public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 	}
 	
 	/**
-	 * 
+	 * When the instance would be created, either it no exists or a other Abstract_swarm's simulation have to be loaded.
 	 * @return this instance is a singleton, therefore we have to return the already created instance. 
 	 */
 	
 	public static SwarmConfigRead getSwarmConfig() {
 		if(swarmConfig==null){
 			swarmConfig=createSwarmConfigRead();
+		}else if (is_currentSimChange()){
+			swarmConfig=createSwarmConfigRead();
 		}
-		
 		return swarmConfig;
+	}
+	/**
+	 * This method is use to check either the current simulation has been changed or not.
+	 * @return true when current simulation changing or false otherwise.
+	 */
+	public static boolean is_currentSimChange(){
+		//return !currentSwarmFile.equals(KReaturesSimulationInfo.getName());
+		return KReaturesSimulationInfo.is_currentSimChange();
 	}
 
 	/**
@@ -207,5 +273,7 @@ public class CreateKReaturesXMLFileDefault implements CreateKReaturesXMLFile {
 		} );
 
 	}
+	
+	
 
 }
