@@ -1,0 +1,256 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.6";
+  static = false;
+}
+
+PARSER_BEGIN(KnowhowParser)
+package com.github.kreatures.knowhow.parser;
+
+import java.io.StringReader;
+import java.util.*;
+
+import com.github.kreatures.knowhow.KnowhowStatement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.sf.tweety.lp.asp.syntax.*;
+import net.sf.tweety.lp.asp.parser.*;
+
+@SuppressWarnings("all")
+public class KnowhowParser
+{
+  private Logger LOG = LoggerFactory.getLogger(KnowhowParser.class);
+  
+  public KnowhowParser(String expr)  {
+    this(new StringReader(expr));
+  }
+
+  public DLPAtom parseELPAtom(String elpString) throws ParseException  {
+    ASPParser parser = new ASPParser(new StringReader(elpString));
+    InstantiateVisitor visitor = new InstantiateVisitor();
+     try {
+        DLPLiteral lit = visitor.visit(parser.Atom(), null);
+		return (DLPAtom)lit;
+	} catch (net.sf.tweety.lp.asp.parser.ParseException e) {
+		LOG.error(e.getMessage());
+		throw new ParseException();
+	}  }
+  
+  public static void main(String args []) throws ParseException
+  {
+   	String expr = "(bel(Y, X), revisionRequest(Y, X), reason(X)) (excused, bel(Boss, excused), ) (attend_scm, excused, )";
+	//String expr = "(target, (subtarget1, subtarget2), condition)";
+    System.out.println("Using expresion :" + expr);
+
+	KnowhowParser parser = new KnowhowParser(expr);
+    try
+    {
+   	  List<KnowhowStatement > lst = parser.start();
+   	  System.out.println("Parsing done...");
+   	  System.out.println(lst.toString());
+    }
+    catch (Exception e)
+    {
+      System.out.println("NOK.");
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+    }
+    catch (Error e)
+    {
+      System.out.println("Oops.");
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+    }
+  }
+}
+
+PARSER_END(KnowhowParser)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+| <"%" (~["\n"])*>
+}
+
+TOKEN : /* OPERATORS */
+{
+  < COMMA : "," >
+| < DOT : "." >
+| < SEMICOLON : ";" >
+| < LBRACE : "(" >
+| < RBRACE : ")" >
+}
+
+TOKEN :
+{
+  < DIGIT: ["0"-"9"] >
+| < CHAR : ["a"-"z"]>
+| < UCHAR : ["A"-"Z"] >
+| < BLANK : "_" >
+| < TEXT : ( < UCHAR > | < CHAR > ) (< UCHAR > | < CHAR > | < BLANK > | < DIGIT > )* >
+}
+
+List<KnowhowStatement> start() :
+{
+  KnowhowStatement stmt = null;
+  List<KnowhowStatement > reval = new LinkedList<KnowhowStatement >();}
+{
+  (   < LBRACE > stmt = statement()
+   {
+     reval.add(stmt);
+   }
+    < RBRACE >
+  )+
+  {    return reval;
+  }}
+
+KnowhowStatement statement() :
+{
+  KnowhowStatement stmt = null;
+  String elpStr = null;
+  DLPAtom target = null;
+  List<String > strings = null;
+  Vector<DLPAtom> subtargets = new Vector<DLPAtom >();
+  Vector<DLPAtom> conditions = new Vector<DLPAtom >();
+  double weight = 0;
+  List<Double > irrelevance = null;
+}
+{
+  elpStr = elpString()
+  {
+    target = parseELPAtom(elpStr);
+    LOG.debug("Target: " + elpStr);
+  }
+
+  < COMMA >
+  (
+    strings = elpStringList()
+    {
+      for(String str : strings) {
+        subtargets.add(parseELPAtom(str));
+      }
+      LOG.debug("Subtargets: " + subtargets);
+    }
+  )
+
+  < COMMA >
+  (
+    strings = elpStringList()
+    {
+      for(String str : strings) {
+        conditions.add(parseELPAtom(str));      }      LOG.debug("Condition: " + conditions);    }
+  )?
+
+  (
+    < COMMA >
+    weight = number()
+	(
+      < COMMA >
+      irrelevance = numberLst()    )?  )?
+  
+  {    return new KnowhowStatement(target, subtargets, conditions,
+    	weight, irrelevance);  }  
+}
+
+List<String > elpStringList() :
+{
+  List<String > reval = new LinkedList<String >();
+  String elpStr = "";
+  Token token = null;}
+{
+  (
+  	(
+    	< LBRACE >
+   		elpStr = elpString()
+		{
+		  reval.add(elpStr);
+    	  LOG.debug("ElpStringList found 1/n string: " + elpStr);
+		}
+		(		  < COMMA > elpStr = elpString()
+		  {		    reval.add(elpStr);
+    	  	LOG.debug("ElpStringList found k/n string: " + elpStr);
+		  }
+		)*
+    	< RBRACE >  	) |
+  	(
+    	elpStr = elpString()
+    	{
+    	  reval.add(elpStr);
+    	  LOG.debug("ElpStringList found one string: " + elpStr);
+    	}  	)
+  )
+  {    return reval;
+  }}
+
+String elpString() :
+{
+  String reval = "";
+  Token token = null;
+  String elpStr = null;}
+{  (    token = < CHAR >
+  | token = < UCHAR >
+  | token = < TEXT >
+  )
+  {
+    reval += token.image;  }
+
+  (
+    < LBRACE > elpStr=elpString()
+    {
+      reval += "(" + elpStr;    }
+    (
+      < COMMA > elpStr=elpString()
+      {
+        reval += "," + elpStr;
+      }
+    )*
+    
+    < RBRACE >
+    {
+      reval += ")";    }
+  )?
+    
+  {
+    return reval;   }  }
+
+List<Double> numberLst() :
+{
+  double no = 0;
+  List<Double> reval = new ArrayList<Double>();}
+{
+  (	< LBRACE >
+	  no = number()	{reval.add(no);}
+	  (
+	    < COMMA >
+	    no = number()
+	    {
+	      reval.add(no);	    }	  )*
+	< RBRACE >
+  ) |
+  (
+    no = number()    {
+      reval.add(no);    }  )
+  {
+    return reval;  }}
+
+double number() :
+{
+  String str = "";
+  Token token = null;
+}
+{
+  ( token = < DIGIT > {str += token.image;} )+
+  (
+    < DOT > {str += ".";}
+    ( token = < DIGIT > {str += token.image;} )*  )?
+  {
+    return Double.parseDouble(str);  }
+}

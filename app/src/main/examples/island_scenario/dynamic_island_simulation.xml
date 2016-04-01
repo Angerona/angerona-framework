@@ -1,7 +1,7 @@
 <simulation-configuration>
 	<name>dynamic island</name>
 	<category>island</category>
-	<behavior>com.github.angerona.fw.island.behavior.DynamicIslandBehavior</behavior>
+	<behavior>com.github.kreatures.island.behavior.DynamicIslandBehavior</behavior>
 	<description>
 		The Agent is located on a tropical island with changing weather conditions.
 		The Agent has to construct a transmitting station.

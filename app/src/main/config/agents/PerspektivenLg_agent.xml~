@@ -1,0 +1,29 @@
+<agent-configuration>
+	<name>PerspektivenLg Swarm</name>
+	<cycle-script source="config/PerspektivenLg_cycle.xml" />
+	
+	<operation-set operation-type="GenerateOptions">
+      <default-operator-cls>com.github.kreatures.swarm.operators.SwarmOptionsOperator</default-operator-cls>
+   	</operation-set>
+	
+	<operation-set operation-type="IntentionUpdate">
+      <default-operator-cls>com.github.kreatures.swarm.operators.SwarmFilterOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="SubgoalGeneration">
+      <default-operator-cls>com.github.kreatures.swarm.operators.SwarmPlanningOperator</default-operator-cls>
+   	</operation-set>
+	
+	<operation-set operation-type="Execute">
+      <default-operator-cls>com.github.kreatures.swarm.operators.SwarmExecuteOperator</default-operator-cls>
+   	</operation-set>
+   	
+	<operation-set operation-type="UpdateBeliefs">
+      <default-operator-cls>com.github.kreatures.swarm.beliefbase.SwarmUpdateBeliefsOperator</default-operator-cls>
+   	</operation-set>
+	<component>com.github.kreatures.core.logic.Desires</component>
+	<component>com.github.kreatures.core.PlanComponent</component>
+	<component>com.github.kreatures.swarm.components.SwarmMappingGeneric</component>
+	<component>com.github.kreatures.swarm.components.StatusAgentComponents</component>
+	<component>com.github.kreatures.swarm.components.DefaultVisitEdge</component>
+</agent-configuration>

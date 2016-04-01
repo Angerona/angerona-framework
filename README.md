@@ -1,48 +1,48 @@
 
-#Angerona-Framework
+#KReatures-Framework
 
-The Angerona framework is a framework for the implementation of knowledge-based agents with a strong focus on flexibility, extensibility and compatibility with diverse knowledge representation formalisms.
+The KReatures framework is a framework for the implementation of knowledge-based agents with a strong focus on flexibility, extensibility and compatibility with diverse knowledge representation formalisms.
 Its basis is a flexible Java plug-in architecture for the mental state of an agent as well as for the agent's functional component.
 Different knowledge representation formalisms can be used within one agent and different agents in the same system can be based on different agent architectures and can use different knowledge representation formalisms.
 Partially instantiated plug-ins define sub-frameworks for, e.g., the development of BDI agents and variants thereof.
 The knowledge representation plug-ins are based on the [Tweety library](http://tweetyproject.org/) for knowledge representation, which provides various ready-for-use implementations and knowledge representation formalisms and a framework for the implementation of additional ones.
-Angerona already contains several partial and complete instantiations that implement several approaches from the literature. 
-Angerona also features an environment plug-in for communicating agents and a flexible GUI to monitor the simulation and the agents, particularly including the inspection of the dynamics of their mental states.
+KReatures already contains several partial and complete instantiations that implement several approaches from the literature. 
+KReatures also features an environment plug-in for communicating agents and a flexible GUI to monitor the simulation and the agents, particularly including the inspection of the dynamics of their mental states.
 
 
 ##Features of the current Version
 
-The Angerona agent architecture can be freely defined by specifying the types of operators to be used and their order of execution.
-This way Angerona allows to easily design different types of agents.
+The KReatures agent architecture can be freely defined by specifying the types of operators to be used and their order of execution.
+This way KReatures allows to easily design different types of agents.
 Not only the used language for knowledge representation can differ, but also to which amount an agent's functionality is logic based. It is, for instance, easily possible to realize the agent's deliberation and means-ends reasoning by Java operators and simple data components, or by simple Java operators which make use of logical formalisms, e.g. answer set programming (ASP), ordinal conditional functions (OCF), argumentation formalisms, or propositional logic or horn logic, or any other formalism from the Tweety library.
 
-While the general Angerona framework allows for a high degree of flexibility it also allows to define partially instantiated plug-ins and default agent configurations which represent sub-frameworks with more predefined structure and functionality.
+While the general KReatures framework allows for a high degree of flexibility it also allows to define partially instantiated plug-ins and default agent configurations which represent sub-frameworks with more predefined structure and functionality.
 The latter might fix the general agent cycle by specifying the types of operators to be used and provide different implementations for these.
 Hence, the sub-frameworks provide more support for easy and rapid development of agents.
-We distinguish three different types of users in the Angerona framework.
-The *core developer* that uses Angerona as a toolkit to define its own agent types.
+We distinguish three different types of users in the KReatures framework.
+The *core developer* that uses KReatures as a toolkit to define its own agent types.
 The *plug-in developer* that uses provided agent types and instantiates them with given or its own plug-ins.
 And the *knowledge engineer* that defines the background and initial knowledge, and all other initial instances of the components of the agents.
 
-Angerona provides default implementations for BDI style agents and diverse extensions that can be modularly used to build agents.
+KReatures provides default implementations for BDI style agents and diverse extensions that can be modularly used to build agents.
 Complete multiagent systems of communicating agents using answer set programming, propositional logic and ordinal conditional functions for knowledge representation, including change operators for these based on belief change theory are implemented and available.
 These have been used in the context of secrecy preserving agents for which scenarios and simulations are available.
 
-Angerona also features a plug-in interface for different environments, with a communication environment for communicating agents implemented.
+KReatures also features a plug-in interface for different environments, with a communication environment for communicating agents implemented.
 
 A graphical user interface (GUI) allows the selection, execution, observation, and inspection of multi-agent simulations.
 The GUI can be extended by plug-ins to feature displays of specific knowledge representation formalisms, for instance dependency graphs.
 
 ##Documentation
-The Angerona framework is well documented from the theoretical concept down to the documentation of the source code and documentation of the use of the application.
-Here is a list of the primary sources of information, further below follows a list of Publications on, and related to, Angerona.
+The KReatures framework is well documented from the theoretical concept down to the documentation of the source code and documentation of the use of the application.
+Here is a list of the primary sources of information, further below follows a list of Publications on, and related to, KReatures.
 
 - [Technical Report](http://sfb876.tu-dortmund.de/PublicPublicationFiles/kruempelmann_janus_2014a.pdf)
-  The report is divided into two parts, the first part introduces the general concept of Angerona and the BDI secrecy agent model. The second part describes the implementation of the concepts in Angerona.
+  The report is divided into two parts, the first part introduces the general concept of KReatures and the BDI secrecy agent model. The second part describes the implementation of the concepts in KReatures.
 - [Manual](documentation/manual.pdf)
-  Contains information on how to install the Angerona framework. It starts by explaining how you can get the binary packages of Angerona to perform experiments and also contains installation steps for developers, that want to contribute to the Angerona framework.
+  Contains information on how to install the KReatures framework. It starts by explaining how you can get the binary packages of KReatures to perform experiments and also contains installation steps for developers, that want to contribute to the KReatures framework.
 - [Doxygen Code-Documentation](https://marathon.cs.tu-dortmund.de/docs/)
-  Contains the full documentation of the source code of Angerona. It is updated every night using the current master branch.
+  Contains the full documentation of the source code of KReatures. It is updated every night using the current master branch.
 - [Track : Issue and Project Management](https://marathon.cs.tu-dortmund.de/trac)
    Issue tracking, project management and a wiki containing e.g. design guidelines, HowTos and an overview of the implemented scenarios.
 - [Tweety](http://tweety.sourceforge.net/)
@@ -51,14 +51,14 @@ Here is a list of the primary sources of information, further below follows a li
 
 ##Contributors
 
-Angerona is collaboratively developed by several contributors. If you could’t find an answer to your questions or problems in any of the listed resources, some of these people might be able to help you:
+KReatures is collaboratively developed by several contributors. If you could’t find an answer to your questions or problems in any of the listed resources, some of these people might be able to help you:
 
  + **Patrick Krümpelmann** *(patrick.kruempelmann@udo.edu)*
-    Initiator and maintainer of the general Angerona Framework, and the secrecy and ASP instances; supervision of students.
+    Initiator and maintainer of the general KReatures Framework, and the secrecy and ASP instances; supervision of students.
  + **Stefan Rötner** *(stefan.roetner@udo.edu)*
   Student research assistant : In charge of framework maintenance and further development.
  + **Tim Janus** *(tim.janus@udo.edu)*
-  Former student research assistant  : Initial main developer of the Angerona Framework, including the secrecy, ASP and know-how implementation.
+  Former student research assistant  : Initial main developer of the KReatures Framework, including the secrecy, ASP and know-how implementation.
  + **Cornelia Tadros** *(cornelia.tadros@cs.tu-dortmund.de)*
   Supervision of students, contributions from research on confidentiality preserving agent interactions, especially revisions and updates.
  + **Pia Wierzoch** *(pia.wierzoch@udo.edu)*
@@ -66,7 +66,7 @@ Angerona is collaboratively developed by several contributors. If you could’t 
  + **Sebastian Homann**
   Former student research assistant  : Modeling and implementation of a negotiation scenario in an e-market based on revision by means of ordinal conditional functions; framework maintenance 
 
-Thanks also go to Ella Albrecht, Manuel Barbi, Benedict Börger and Daniel Dilger for their contributions to Angerona (see Publications and Theses below).
+Thanks also go to Ella Albrecht, Manuel Barbi, Benedict Börger and Daniel Dilger for their contributions to KReatures (see Publications and Theses below).
 
 ##Publications:
 + Albrecht, E. and Krümpelmann, P. and Kern-Isberner, G. (to appear). "Construction of explanation graphs from extended dependency graphs for answer set programs". In Hanus, M. and Rocha, R., editors, Postproceedings of the 27th Workshop on Functional and Logic Programming (WFLP 2013), Lecture Notes in Computer Science. Springer.
@@ -74,7 +74,7 @@ Thanks also go to Ella Albrecht, Manuel Barbi, Benedict Börger and Daniel Dilge
 + Biskup, J. and Tadros, C. (2013). "Preserving confidentiality while reacting on iterated queries and belief revisions". Annals of Mathematics and Artificial Intelligence, pages 1–49.
 + Tadros, C. (2014). "Belief Change Operations under Confidentiality Requirements in Multiagent Systems". PhD thesis, Technische Universität Dortmund.
 + Thimm, M. and Krümpelmann, P. (2009). "Know-how for motivated BDI agents (extended version)". Technical Report 822, Technische Universität Dortmund, Department of Computer Science.
-+ Krümpelmann, P. and Janus, T. and Kern-Isberner, G. (2014a). "Angerona - a flexible multiagent framework for knowledge-based agents". In Bulling, N., editor, Proceedings of the 12th European Conference on Multi-Agent Systems, volume to appear of Lecture Notes in Artificial Intelligence. Springer.
++ Krümpelmann, P. and Janus, T. and Kern-Isberner, G. (2014a). "KReatures - a flexible multiagent framework for knowledge-based agents". In Bulling, N., editor, Proceedings of the 12th European Conference on Multi-Agent Systems, volume to appear of Lecture Notes in Artificial Intelligence. Springer.
 
 
 ####Related Theses:

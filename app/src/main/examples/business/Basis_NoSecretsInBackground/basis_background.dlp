@@ -1,1 +1,0 @@
-:- query(_,S,A), query(_,T,B), query(_,S,C), A<B, B<C.

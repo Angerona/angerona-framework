@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<logisticsGraph>
+	<perspective id = "0" name = "Lehrer" x = "20" y = "27" width = "12" height = "21">
+		<agentType id = "1" name = "Lehrer_M1" x = "2" y = "2" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<agentType id = "2" name = "Lehrer_M2" x = "2" y = "6" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<agentType id = "3" name = "Lehrer_E1" x = "2" y = "10" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<agentType id = "4" name = "Lehrer_E2" x = "2" y = "14" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<agentType id = "5" name = "Lehrer_Musik" x = "2" y = "18" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<stationType id = "6" name = "Mathematik_M1" x = "8" y = "1" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "128" interface = "no">
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "7" name = "Mathematik_M2" x = "8" y = "5" count = "1" colorRed = "0" colorGreen = "128" colorBlue = "255" interface = "no">
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "8" name = "Englisch_E1" x = "8" y = "9" count = "1" colorRed = "128" colorGreen = "255" colorBlue = "128" interface = "no">
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "9" name = "Englisch_E2" x = "8" y = "13" count = "1" colorRed = "255" colorGreen = "128" colorBlue = "64" interface = "no">
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "10" name = "Musik" x = "8" y = "17" count = "1" colorRed = "255" colorGreen = "128" colorBlue = "255" interface = "no">
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+	</perspective>
+	<perspective id = "16" name = "Klassen" x = "60" y = "22" width = "14" height = "30">
+		<agentType id = "17" name = "Klasse_M1_E1" x = "10" y = "3" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<agentType id = "18" name = "Klasse_M2_E1" x = "10" y = "10" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<agentType id = "19" name = "Klasse_M1_E2" x = "10" y = "18" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<agentType id = "20" name = "Klasse_M2_E2" x = "10" y = "25" count = "2" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+		</agentType>
+		<stationType id = "21" name = "Mathematik_M1" x = "2" y = "1" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "128" interface = "no">
+			<necessity value = "2"/>
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "22" name = "Mathematik_M2" x = "2" y = "7" count = "1" colorRed = "0" colorGreen = "128" colorBlue = "255" interface = "no">
+			<necessity value = "2"/>
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "23" name = "Englisch_E1" x = "2" y = "13" count = "1" colorRed = "128" colorGreen = "255" colorBlue = "128" interface = "no">
+			<necessity value = "2"/>
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "24" name = "Englisch_E2" x = "2" y = "19" count = "1" colorRed = "255" colorGreen = "128" colorBlue = "64" interface = "no">
+			<necessity value = "2"/>
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "25" name = "Musik" x = "2" y = "25" count = "1" colorRed = "255" colorGreen = "128" colorBlue = "255" interface = "no">
+			<necessity value = "1"/>
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+	</perspective>
+	<perspective id = "42" name = "Räume" x = "39" y = "56" width = "13" height = "9">
+		<agentType id = "43" name = "Grundunterricht" x = "9" y = "2" count = "4" colorRed = "192" colorGreen = "192" colorBlue = "192" interface = "no">
+		</agentType>
+		<stationType id = "48" name = "Klassenraum" x = "2" y = "1" count = "3" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<stationType id = "49" name = "Musiksaal" x = "2" y = "5" count = "1" colorRed = "255" colorGreen = "255" colorBlue = "255" interface = "no">
+			<time value = "1"/>
+			<space value = "1"/>
+		</stationType>
+		<agentType id = "58" name = "Musikunterricht" x = "9" y = "6" count = "1" colorRed = "255" colorGreen = "128" colorBlue = "255" interface = "no">
+		</agentType>
+	</perspective>
+	<visitEdge id = "11" connectedIdRef1 = "1" connectedIdRef2 = "6" bold = "no"/>
+	<visitEdge id = "12" connectedIdRef1 = "2" connectedIdRef2 = "7" bold = "no"/>
+	<visitEdge id = "13" connectedIdRef1 = "3" connectedIdRef2 = "8" bold = "no"/>
+	<visitEdge id = "14" connectedIdRef1 = "4" connectedIdRef2 = "9" bold = "no"/>
+	<visitEdge id = "15" connectedIdRef1 = "5" connectedIdRef2 = "10" bold = "no"/>
+	<placeEdge id = "26" connectedIdRef1 = "21" connectedIdRef2 = "22" value = "0" directed = "no"/>
+	<placeEdge id = "27" connectedIdRef1 = "22" connectedIdRef2 = "23" value = "0" directed = "no"/>
+	<placeEdge id = "28" connectedIdRef1 = "24" connectedIdRef2 = "25" value = "0" directed = "no"/>
+	<placeEdge id = "29" connectedIdRef1 = "23" connectedIdRef2 = "24" value = "0" directed = "no"/>
+	<visitEdge id = "30" connectedIdRef1 = "17" connectedIdRef2 = "21" bold = "no"/>
+	<visitEdge id = "31" connectedIdRef1 = "17" connectedIdRef2 = "23" bold = "no"/>
+	<visitEdge id = "32" connectedIdRef1 = "17" connectedIdRef2 = "25" bold = "no"/>
+	<visitEdge id = "33" connectedIdRef1 = "18" connectedIdRef2 = "22" bold = "no"/>
+	<visitEdge id = "34" connectedIdRef1 = "18" connectedIdRef2 = "23" bold = "no"/>
+	<visitEdge id = "35" connectedIdRef1 = "18" connectedIdRef2 = "25" bold = "no"/>
+	<visitEdge id = "36" connectedIdRef1 = "19" connectedIdRef2 = "21" bold = "no"/>
+	<visitEdge id = "37" connectedIdRef1 = "19" connectedIdRef2 = "24" bold = "no"/>
+	<visitEdge id = "38" connectedIdRef1 = "19" connectedIdRef2 = "25" bold = "no"/>
+	<visitEdge id = "39" connectedIdRef1 = "20" connectedIdRef2 = "22" bold = "no"/>
+	<visitEdge id = "40" connectedIdRef1 = "20" connectedIdRef2 = "24" bold = "no"/>
+	<visitEdge id = "41" connectedIdRef1 = "20" connectedIdRef2 = "25" bold = "no"/>
+	<visitEdge id = "50" connectedIdRef1 = "43" connectedIdRef2 = "48" bold = "no"/>
+	<visitEdge id = "59" connectedIdRef1 = "58" connectedIdRef2 = "49" bold = "no"/>
+	<timeEdge id = "62" connectedIdRef1 = "6" connectedIdRef2 = "21" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "71" connectedIdRef1 = "7" connectedIdRef2 = "22" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "72" connectedIdRef1 = "8" connectedIdRef2 = "23" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "73" connectedIdRef1 = "9" connectedIdRef2 = "24" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "74" connectedIdRef1 = "10" connectedIdRef2 = "25" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "75" connectedIdRef1 = "6" connectedIdRef2 = "43" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "77" connectedIdRef1 = "8" connectedIdRef2 = "43" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "78" connectedIdRef1 = "9" connectedIdRef2 = "43" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "79" connectedIdRef1 = "10" connectedIdRef2 = "58" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+	<timeEdge id = "80" connectedIdRef1 = "7" connectedIdRef2 = "43" value = "0" directed = "no" andConnected1 = "yes" andConnected2 = "no"/>
+</logisticsGraph>

@@ -4,9 +4,9 @@ import javax.swing.JPanel;
 
 import bibliothek.gui.dock.DefaultDockable;
 
-import com.github.angerona.fw.AngeronaEnvironment;
-import com.github.angerona.fw.gui.AngeronaWindow;
-import com.github.angerona.fw.gui.base.ViewComponent;
+import com.github.kreatures.core.KReaturesEnvironment;
+import com.github.kreatures.gui.KReaturesWindow;
+import com.github.kreatures.gui.base.ViewComponent;
 
 /**
  * 
@@ -17,7 +17,7 @@ public class InteractiveBarMVPComponent implements ViewComponent {
 	private InteractiveBar view;
 
 	
-	public InteractiveBarMVPComponent(AngeronaEnvironment simulationEnvironment, Thread caller) {
+	public InteractiveBarMVPComponent(KReaturesEnvironment simulationEnvironment, Thread caller) {
 		InteractiveModelAdapter modelAdapter = new InteractiveModelAdapter(simulationEnvironment);
 		view = new InteractiveBar(modelAdapter.getReceiver(), modelAdapter.getActionTypes());
 		new InteractivePresenter(modelAdapter, view, caller);
@@ -31,7 +31,7 @@ public class InteractiveBarMVPComponent implements ViewComponent {
 	@Override
 	public void decorate(DefaultDockable dockable) {
 		dockable.setTitleText("Interactive View");
-		dockable.setTitleIcon(AngeronaWindow.get().getIcons().get("monitor"));
+		dockable.setTitleIcon(KReaturesWindow.get().getIcons().get("monitor"));
 		
 	}
 

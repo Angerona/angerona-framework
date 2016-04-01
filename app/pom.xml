@@ -62,7 +62,7 @@
 					<archive>
 						<manifest>
 							<!-- Specifies the main class of the application -->
-							<mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
+							<mainClass>com.github.kreatures.app.GUIApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -81,7 +81,7 @@
 							<outputDirectory>${basedir}/src/main/plugins</outputDirectory>
 							<includeScope>runtime</includeScope>
 							<excludeTransitive>true</excludeTransitive>
-							<excludeArtifactIds>fw</excludeArtifactIds>
+							<excludeArtifactIds>core</excludeArtifactIds>
 						</configuration>
 					</execution>
 				</executions>
@@ -214,7 +214,7 @@
 								<!-- automatically creates the classpath using all project dependencies, 
 									also adding the project build directory -->
 								<classpath />
-								<argument>com.github.angerona.fw.app.GUIApplication</argument>
+								<argument>com.github.kreatures.app.GUIApplication</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -238,7 +238,7 @@
 					<file>src/main/config/configuration_template.xml</file>
 					<outputFile>target/config/configuration.xml</outputFile>
 					<regex>false</regex>
-					<token>$path_to_angerona$</token>
+					<token>$path_to_kreatures$</token>
 					<value>${basedir}/target</value>
 				</configuration>
 			</plugin>
@@ -258,7 +258,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>com.github.angerona.fw.app.GUIApplication</mainClass>
+									<mainClass>com.github.kreatures.app.GUIApplication</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>
@@ -308,7 +308,61 @@
 			<artifactId>gui</artifactId>
 			<version>2.0.1</version>
 		</dependency>
-	</dependencies>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>asp</artifactId>
+		    	<version>2.0.1</version>
+		    	<scope>runtime</scope>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>knowhow</artifactId>
+		    	<version>2.0.1</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>ocf</artifactId>
+		    	<version>2.0.1</version>
+		    	<scope>runtime</scope>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>secrecy</artifactId>
+		    	<version>2.0.1</version>
+		    	<scope>runtime</scope>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>plwithknowledge</artifactId>
+		    	<version>2.0.1</version>
+		    	<scope>runtime</scope>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>island</artifactId>
+		    	<version>2.0.1</version>
+		    	<scope>runtime</scope>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>simple</artifactId>
+		    	<version>2.0.1</version>
+		    	<scope>runtime</scope>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>defendingagent</artifactId>
+		    	<version>2.0.1</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.github.kreatures</groupId>
+		    	<artifactId>swarm</artifactId>
+		    	<version>1.0.1</version>
+		    <!--	<scope>runtime</scope> -->
+		    </dependency>
+	  </dependencies>
+
+
 	<parent>
 		<groupId>com.github.kreatures</groupId>
 		<artifactId>build-all</artifactId>
