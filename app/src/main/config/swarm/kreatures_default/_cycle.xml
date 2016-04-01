@@ -1,0 +1,20 @@
+<asml-script name="secrecyCycle">
+    <operation type="UpdateBeliefs">
+        <param name="information" value="$perception" />
+        <param name="beliefs" value="$beliefs" />
+    </operation>
+     
+	<operation type="GenerateOptions">
+	    <param name="perception" value="$perception" />
+	</operation>
+	
+	<operation type="IntentionUpdate">
+		<param name="plan" value="$plan" />
+	</operation>
+		  
+	<operation type="SubgoalGeneration">
+		<param name="plan" value="$plan" />
+	</operation>
+	
+	<operation type="Execute"></operation>	
+</asml-script>
