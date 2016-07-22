@@ -22,6 +22,11 @@ public class ModelTupel {
 		
 	}
 	
+	public ModelTupel(ModelTupel m){
+		this.models = new HashSet<NicePossibleWorld>(m.models);
+		this.modelsOfKnowledge = new HashSet<NicePossibleWorld>(m.modelsOfKnowledge);
+	}
+	
 	public ModelTupel(Set<NicePossibleWorld> modelsOfNonUpdatableFormulas,Set<NicePossibleWorld> models){
 		this.modelsOfKnowledge = modelsOfNonUpdatableFormulas;
 		this.models = models;

@@ -1,0 +1,31 @@
+<simulation-configuration>
+	<name>Bargaining Example</name>
+	<category>bargaining</category>
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    
+    <agent-instance>
+      	<name>Wife</name>
+      	<beliefbase-name>wife</beliefbase-name>
+      	
+      	<agent-config source="config/agents/bargaining_agent.xml" />
+        <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
+  	
+  		<data key="Goals">v,f,s;3,2,1</data>
+  	
+      	<capability>Offer</capability>
+         
+	</agent-instance>
+    
+	<agent-instance>
+		<name>Husband</name>
+        <beliefbase-name>husband</beliefbase-name>
+         
+        <agent-config source="config/agents/bargaining_agent.xml" />
+        <beliefbase-config source="config/beliefbases/ocf_beliefbase.xml" />
+  	
+  		<data key="Goals">-s,p,v,b;4,3,2,1</data>
+  	
+      	<capability>Offer</capability>
+        
+	</agent-instance>	
+</simulation-configuration>

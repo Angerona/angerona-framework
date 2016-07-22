@@ -1,24 +1,23 @@
 package com.github.angerona.fw.defendingagent;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
+
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.angerona.fw.Agent;
 import com.github.angerona.fw.logic.AnswerValue;
+import com.github.angerona.fw.plwithknowledge.logic.ModelTupel;
 import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
 import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeReasoner;
 import com.github.angerona.fw.util.LogicTranslator;
-
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.pl.syntax.Conjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
 
 public class BetterView implements GeneralView{
 
@@ -35,29 +34,38 @@ public class BetterView implements GeneralView{
 
 	   public T getKnowledge(){ return knowledge;}
 	   public U getAssertions(){ return assertions;}
+	   
+	   public String toString(){
+		   return "<<Knowledge: " + knowledge + "> , <Assertions: " + assertions + ">>";
+	   }
 	}
 	
 	/** reference to the logback instance used for logging */
 	private static Logger LOG = LoggerFactory.getLogger(BetterView.class);
 	
-	private Tupel<Set<PropositionalFormula>, Set<PropositionalFormula>> view;
+	private Tupel<Set<PropositionalFormula>, ModelTupel> view;
 	
 	private Agent ag;
 	
 	public BetterView(PLWithKnowledgeBeliefbase view) {
-		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getReasoningOperator().getImplementation();
-		Set<FolFormula> set = reasoner.infer(view);
-		FOLPropTranslator translator = new FOLPropTranslator();
-		Set<PropositionalFormula> assertions = new HashSet<PropositionalFormula>();
-		for(FolFormula formula: set){
-			assertions.add(translator.toPropositional(formula));
-		}
-		this.view = new Tupel<Set<PropositionalFormula>, Set<PropositionalFormula>>(view.getKnowledge(), assertions);
+//		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getReasoningOperator().getImplementation();
+//		Set<FolFormula> set = reasoner.infer(view);
+//		FOLPropTranslator translator = new FOLPropTranslator();
+//		Set<PropositionalFormula> assertions = new HashSet<PropositionalFormula>();
+//		for(FolFormula formula: set){
+//			assertions.add(translator.toPropositional(formula));
+//		}
+		PLWithKnowledgeReasoner reasoner = new PLWithKnowledgeReasoner();
+		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
+		bbase.setKnowledge(view.getKnowledge());
+		bbase.setAssertions(view.getAssertions());
+		ModelTupel models = reasoner.getModels(bbase);
+		this.view = new Tupel<Set<PropositionalFormula>, ModelTupel>(view.getKnowledge(), models);
 		ag = view.getAgent();
 	}
 	
-	public BetterView(Set<PropositionalFormula> k, Set<PropositionalFormula> a, Agent ag){
-		view = new Tupel<Set<PropositionalFormula>, Set<PropositionalFormula>>(k, a);
+	public BetterView(Set<PropositionalFormula> k, ModelTupel a, Agent ag){
+		view = new Tupel<Set<PropositionalFormula>, ModelTupel>(k, a);
 		this.ag = ag;
 	}
 	
@@ -73,7 +81,7 @@ public class BetterView implements GeneralView{
 	 * @param other
 	 */
 	public BetterView(BetterView other) {
-		this(new HashSet<PropositionalFormula>(other.view.knowledge), new HashSet<PropositionalFormula>(other.view.getAssertions()), other.ag);
+		this(new HashSet<PropositionalFormula>(other.view.knowledge), new ModelTupel(other.view.getAssertions()), other.ag);
 	}
 	
 	/**
@@ -89,10 +97,10 @@ public class BetterView implements GeneralView{
 		if(av == AnswerValue.AV_TRUE) {
 			
 			newView = conclude(newView, q, true);
-			System.out.println(newView.view.assertions);
+			System.out.println("Test for answervalue true: " + newView.view.assertions);
 		} else if(av == AnswerValue.AV_FALSE) {
 			newView = conclude(newView, new Negation(q), true);
-			System.out.println(newView.view.assertions);
+			System.out.println("Test for answervalue false: " + newView.view.assertions);
 		} else if(av == AnswerValue.AV_UNKNOWN) {
 			//do nothing
 		} else {
@@ -113,9 +121,24 @@ public class BetterView implements GeneralView{
 		BetterView newView = new BetterView(this);
 		
 		if(av == AnswerValue.AV_TRUE) {
-			newView.view.assertions.add(q);
+			//newView.view.assertions.add(q);
+			Set<NicePossibleWorld> newModels = new HashSet<NicePossibleWorld>();
+			for(NicePossibleWorld world : newView.view.assertions.getModels()){
+				if(world.satisfies(q)){
+					newModels.add(world);
+				}
+			}
+			newView.view.assertions.setModels(newModels);
+			
 		} else if(av == AnswerValue.AV_FALSE) {
-			newView.view.assertions.add(new Negation(q));
+			//newView.view.assertions.add(new Negation(q));
+			Set<NicePossibleWorld> newModels = new HashSet<NicePossibleWorld>();
+			for(NicePossibleWorld world : newView.view.assertions.getModels()){
+				if(!world.satisfies(q)){
+					newModels.add(world);
+				}
+			}
+			newView.view.assertions.setModels(newModels);
 		} else if(av == AnswerValue.AV_UNKNOWN) {
 			//do nothing
 		} else {
@@ -154,33 +177,39 @@ public class BetterView implements GeneralView{
 	
 	private BetterView conclude(BetterView v, PropositionalFormula formula, boolean a){
 		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) ag.getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
-		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
-		LinkedList<PropositionalFormula> list = new LinkedList<>();
-		if(a){
-			list = new LinkedList<>(v.view.assertions);
-		}else{
-			list.add(new Conjunction(v.view.assertions));
-		}
-		list.addLast(formula);
-		bbase.setAssertions(list);
-		bbase.setKnowledge(v.view.knowledge);
-		Set<FolFormula> l = reasoner.infer(bbase);
+//		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
 		
-		FOLPropTranslator translator = new FOLPropTranslator();
-		Set<PropositionalFormula> assertions = new HashSet<PropositionalFormula>();
-		for(FolFormula f: l){
-			assertions.add(translator.toPropositional(f));
-		}
-		return new BetterView(v.view.getKnowledge(), assertions, ag);
+		ModelTupel models = reasoner.inferModels(v.getView().getAssertions(), formula, v.getView().getKnowledge());
+		BetterView retval = new BetterView(v.getView().getKnowledge(), models, v.getAgent());
+		
+		return retval;
+		
+//		LinkedList<PropositionalFormula> list = new LinkedList<>();
+//		if(a){
+//			list = new LinkedList<>(v.view.assertions);
+//		}else{
+//			list.add(new Conjunction(v.view.assertions));
+//		}
+//		list.addLast(formula);
+//		bbase.setAssertions(list);
+//		bbase.setKnowledge(v.view.knowledge);
+//		Set<FolFormula> l = reasoner.infer(bbase);
+//		
+//		FOLPropTranslator translator = new FOLPropTranslator();
+//		Set<PropositionalFormula> assertions = new HashSet<PropositionalFormula>();
+//		for(FolFormula f: l){
+//			assertions.add(translator.toPropositional(f));
+//		}
+//		return new BetterView(v.view.getKnowledge(), assertions, ag);
 	}
 	
 	
 	@Override
 	public PropositionalSignature getSignature() {
 		PropositionalSignature sig = new PropositionalSignature();
-		for(PropositionalFormula fol: view.assertions){
-			sig.add(fol.getSignature());
-		}
+//		for(PropositionalFormula fol: view.assertions){
+//			sig.add(fol.getSignature());
+//		}
 		for(PropositionalFormula fol : view.knowledge){
 			sig.add(fol.getSignature());
 		}
@@ -190,7 +219,7 @@ public class BetterView implements GeneralView{
 	public Agent getAgent(){
 		return ag;
 	}
-	public Tupel<Set<PropositionalFormula>, Set<PropositionalFormula>> getView(){
+	public Tupel<Set<PropositionalFormula>, ModelTupel> getView(){
 		return view;
 	}
 

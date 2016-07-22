@@ -2,7 +2,6 @@ package com.github.angerona.fw.plwithknowledge.logic;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -11,7 +10,6 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.Sat4jEntailment;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -42,6 +40,48 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 		
 	}
 
+	public ModelTupel inferModels(ModelTupel m, PropositionalFormula f, Set<PropositionalFormula> knowledge){
+		Sat4jEntailment test = new Sat4jEntailment();
+		Set<PropositionalFormula> testFormulaSet;
+		
+		testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
+		testFormulaSet.add(f);
+		if(!test.isConsistent(testFormulaSet)){
+			//Update is inconsistent with knowledge, no need for changes
+			return m;
+		}else{
+			Set<NicePossibleWorld> contextModels = new HashSet<NicePossibleWorld>();
+			Set<NicePossibleWorld> iterator = new HashSet<NicePossibleWorld>(m.getModels());
+						
+			testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
+			testFormulaSet.add(f);
+			for(NicePossibleWorld world: iterator){	
+				if(world.satisfies(testFormulaSet)){
+					contextModels.add(world);
+					
+				}else{
+					int nearest = Integer.MAX_VALUE;
+					Set<NicePossibleWorld> possibleNewModels = new HashSet<NicePossibleWorld>();
+					for(NicePossibleWorld a: m.getModelsOfKnowledge()){
+						if(!a.equals(world) && a.satisfies(f)){
+							int i = distnace(a, world);
+							if(i == nearest){
+								possibleNewModels.add(a);
+							}else if(i < nearest){
+								//nearer world found delete others
+								nearest = distnace(a, world);
+								possibleNewModels.clear();
+								possibleNewModels.add(a);
+							}
+						}
+					}
+					contextModels.addAll(possibleNewModels);
+				}
+			}
+			return new ModelTupel(m.getModelsOfKnowledge(), contextModels);
+		}
+	}
+	
 	@Override
 	protected Set<FolFormula> inferImpl(ReasonerParameter params) {
 		//calculate the models of the beliefbase
@@ -69,7 +109,28 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 		}
 		return retval;
 	}
-
+	
+	public AngeronaAnswer queryAnswer(ModelTupel m, FolFormula question){
+		boolean t= true, f=true;
+		FOLPropTranslator translator = new FOLPropTranslator();
+		PropositionalFormula q = translator.toPropositional(question);
+		for(NicePossibleWorld world: m.getModels()){
+			if(!world.satisfies(q)){
+				t = false;
+			}
+			if(world.satisfies(q)){
+				f = false;
+			}
+		}
+		if(t==true){
+			return new AngeronaAnswer(question, AnswerValue.AV_TRUE);
+		}else if(f==true){
+			return new AngeronaAnswer(question, AnswerValue.AV_FALSE);
+		}else{
+			return new AngeronaAnswer(question, AnswerValue.AV_UNKNOWN);
+		}
+	}
+	
 	@Override
 	protected Pair<Set<FolFormula>, AngeronaAnswer> queryImpl(
 			ReasonerParameter params) {
@@ -116,6 +177,7 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 		return y;
 	}
 	
+	
 	private void calculateModels(PLWithKnowledgeBeliefbase beliefbase){
 		Set<PropositionalFormula> knowledge = new HashSet<PropositionalFormula>(beliefbase.getKnowledge());
 		
@@ -153,10 +215,10 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 			contextModels = new HashSet<NicePossibleWorld>(satisfyingWorlds);
 		}else{
 			PropositionalFormula form = consitent.poll();
-			testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
-			testFormulaSet.add(form);
+			//testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
+			//testFormulaSet.add(form);
 			for(NicePossibleWorld world: satisfyingWorlds){	
-				if(world.satisfies(testFormulaSet)){
+				if(world.satisfies(form)){
 					contextModels.add(world);
 					
 				}
@@ -165,10 +227,10 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 				for(PropositionalFormula formula: consitent){
 					Set<NicePossibleWorld> iterator = new HashSet<NicePossibleWorld>(contextModels);
 					contextModels.clear();
-					testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
-					testFormulaSet.add(formula);
+					//testFormulaSet = new HashSet<PropositionalFormula>(knowledge);
+					//testFormulaSet.add(formula);
 					for(NicePossibleWorld world: iterator){	
-						if(world.satisfies(testFormulaSet)){
+						if(world.satisfies(formula)){
 							contextModels.add(world);
 							
 						}else{
@@ -198,7 +260,7 @@ public class PLWithKnowledgeReasoner extends BaseReasoner{
 	}
 	
 	private void calculateModels(ReasonerParameter params){
-		this.calculateModels((PLWithKnowledgeBeliefbase) params.getBeliefBase());
+		calculateModels((PLWithKnowledgeBeliefbase) params.getBeliefBase());
 		
 	}
 	

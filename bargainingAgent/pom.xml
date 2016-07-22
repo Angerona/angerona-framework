@@ -6,8 +6,8 @@
     <artifactId>maven-build-all</artifactId>
     <version>1.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>plwithknowledge</artifactId>
-  <name>Angerona (BPlugin-PL With Knowledge)</name>
+  <artifactId>bargainingagent</artifactId>
+  <name>Bargaining Agent</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,25 +19,25 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-     <dependency>
+    <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>fw</artifactId>
     	<version>1.0.2</version>
     </dependency>
     <dependency>
-    	<groupId>net.sf.tweety.logics</groupId>
-    	<artifactId>pl</artifactId>
-    	<version>1.0.358</version>
+    	<groupId>com.github.angerona.fw.am</groupId>
+    	<artifactId>secrecy</artifactId>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
-    	<artifactId>gui</artifactId>
-    	<version>1.0.2</version>
+    	<artifactId>asp</artifactId>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>net.sf.tweety.logics</groupId>
-    	<artifactId>translators</artifactId>
-    	<version>1.0.358</version>
+    	<groupId>com.github.angerona</groupId>
+    	<artifactId>conditional</artifactId>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

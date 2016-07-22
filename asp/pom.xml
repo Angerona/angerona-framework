@@ -43,7 +43,6 @@
     	<groupId>com.github.angerona</groupId>
     	<artifactId>fw</artifactId>
     	<version>1.0.2</version>
-    	<scope>test</scope>
     </dependency>
     <dependency>
      	<groupId>com.github.angerona</groupId>

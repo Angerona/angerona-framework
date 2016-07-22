@@ -2,7 +2,6 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>app</artifactId>
-  <version>1.0.2</version>
   <packaging>jar</packaging>
 
   <name>Angerona (Functional Test)</name>
@@ -315,7 +314,7 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>asp</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
     <dependency>
@@ -326,55 +325,51 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>knowhow</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
+    	<scope>runtime</scope>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>conditional</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>example</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.2</version>
     	<scope>runtime</scope>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona.fw.am</groupId>
     	<artifactId>secrecy</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>defendingagent</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>plwithknowledge</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
-    	<artifactId>island</artifactId>
-    	<version>1.0.3</version>
-    	<scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.angerona</groupId>
-    	<artifactId>simple</artifactId>
-    	<version>1.0.1</version>
+    	<artifactId>bargainingagent</artifactId>
+    	<version>1.0.1-SNAPSHOT</version>
     	<scope>runtime</scope>
     </dependency>
   </dependencies>
   <parent>
   	<groupId>com.github.angerona</groupId>
   	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.1</version>
+  	<version>1.0.1-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
+  <version>1.0.2</version>
 </project>

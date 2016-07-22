@@ -1,0 +1,66 @@
+<simulation-configuration>
+	<name>Logistics Example Propositional Logic Paper</name>
+	<category>censor</category>
+    <behavior>com.github.angerona.fw.def.DefaultBehavior</behavior>
+    
+    <agent-instance>
+      	<name>Seller</name>
+      	<beliefbase-name>Seller</beliefbase-name>
+      	
+      	<agent-config source="config/agents/censor_defending_agent.xml" />
+        <beliefbase-config source="config/beliefbases/plknowledge_beliefbase.xml" />
+      	
+      
+        <data key="Confidential">
+            (Buyer, __DEFAULT__, CA)
+        </data> 
+     
+  		
+  		<!-- Choose a View and associated History
+  			* ViewCompressed - Compressed History and the related View
+  			* ViewHistory - Normal History and related View
+  			* BetterView - Faster alternative for ViewCompressed
+  		 -->
+  		<data key="View">BetterView</data>
+
+      	<capability>Answer</capability>
+      	<capability>UpdateAnswer</capability>
+         
+	</agent-instance>
+    
+	<agent-instance>
+		<name>Buyer</name>
+        <beliefbase-name>Buyer</beliefbase-name>
+         
+        <agent-config source="config/agents/censor_attacking_agent.xml" />
+        <beliefbase-config source="config/beliefbases/plknowledge_beliefbase.xml" />
+
+		<desire>scriptingProcessing</desire>
+		<script>
+        	<SpeechAct type="Update">
+        		<sender>Buyer</sender>
+        		<receiver>Seller</receiver>
+        		<proposition>Qx</proposition>
+        	</SpeechAct>
+        </script> 
+		<script>
+        	<SpeechAct type="Update">
+        		<sender>Buyer</sender>
+        		<receiver>Seller</receiver>
+        		<proposition>Qy</proposition>
+        	</SpeechAct>
+        </script> 
+        <script>
+        	<SpeechAct type="Query">
+        		<sender>Buyer</sender>
+        		<receiver>Seller</receiver>
+        		<question>DD2</question>
+        	</SpeechAct>
+        </script> 
+       
+        
+        <capability>Query</capability>
+        <capability>Update</capability>
+        
+	</agent-instance>	
+</simulation-configuration>

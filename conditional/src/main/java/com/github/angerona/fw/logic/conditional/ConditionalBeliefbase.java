@@ -44,6 +44,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 	//  a plausibility ordering of all possible worlds
 	private ClBeliefSet conditionals = new ClBeliefSet();
 	
+	
 	/**
 	 * Construct an empty belief base where every possible world is equally (im-)plausible
 	 */
@@ -107,7 +108,7 @@ public class ConditionalBeliefbase extends BaseBeliefbase {
 			}
 		}
 	}
-	
+		
 	/**
 	 * Returns the set of propositions of this belief base
 	 * @return the set of propositions of this belief base

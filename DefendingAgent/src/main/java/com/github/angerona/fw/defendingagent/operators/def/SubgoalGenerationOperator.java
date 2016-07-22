@@ -51,6 +51,7 @@ import com.github.angerona.fw.logic.conditional.ConditionalRevision;
 import com.github.angerona.fw.operators.OperatorCallWrapper;
 import com.github.angerona.fw.operators.parameter.TranslatorParameter;
 import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
+import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeReasoner;
 import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeUpdate;
 
 /**
@@ -253,12 +254,22 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 					return true;
 				}
 			}
+			
 		}
 		cexec.report("No answer to query '"+ query.getQuestion() + " would reveal a secret. Start actual handling.");
 		
 		// no secret will be revealed by any possible answer to the query.
 		// handle the query and create an appropriate answer action.
-		AngeronaAnswer answer = ag.getBeliefs().getWorldKnowledge().reason(query.getQuestion());
+		AngeronaAnswer answer;
+		if(v instanceof BetterView){
+			PLWithKnowledgeReasoner reasoner =  (PLWithKnowledgeReasoner) ag.getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
+			//BetterView view = (BetterView) v;
+			PLWithKnowledgeBeliefbase base = (PLWithKnowledgeBeliefbase) ag.getBeliefs().getWorldKnowledge();
+			answer = reasoner.queryAnswer(reasoner.getModels(base), query.getQuestion());
+		}else{
+			answer = ag.getBeliefs().getWorldKnowledge().reason(query.getQuestion());	
+		}
+		
 		if(history != null){
 			history.putAction(query,answer.getAnswerValue());
 			ag.getComponent(HistoryComponent.class).getHistories().put(query.getSenderId(), history);
@@ -455,8 +466,7 @@ public class SubgoalGenerationOperator extends BaseSubgoalGenerationOperator {
 		}
 
 		// update would not breach confidentiality, continue updating beliefbase
-		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();
-		
+		BaseBeliefbase bbase = ag.getBeliefs().getWorldKnowledge();;
 		OperatorCallWrapper changeOp = bbase.getChangeOperator();
 		boolean success = false;
 		if(changeOp.getImplementation() instanceof PLWithKnowledgeUpdate) {

@@ -7,9 +7,6 @@ import java.util.Map;
 
 import net.sf.tweety.logics.pl.PlBeliefSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.angerona.fw.BaseAgentComponent;
 import com.github.angerona.fw.BaseBeliefbase;
 import com.github.angerona.fw.logic.conditional.ConditionalBeliefbase;
@@ -24,10 +21,6 @@ import com.github.angerona.fw.plwithknowledge.logic.PLWithKnowledgeBeliefbase;
  * @author Sebastian Homann, Pia Wierzoch
  */
 public class ViewDataComponent extends BaseAgentComponent {
-
-	/** reference to the logback instance used for logging */
-	private static Logger LOG = LoggerFactory
-			.getLogger(ViewDataComponent.class);
 
 	/** map from Agents to Views **/
 	private Map<String, GeneralView> views = new HashMap<String, GeneralView>();

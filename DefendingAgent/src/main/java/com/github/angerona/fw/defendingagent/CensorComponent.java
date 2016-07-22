@@ -291,12 +291,15 @@ public class CensorComponent extends BaseAgentComponent {
 	 */
 	public boolean scepticalInference(BetterView view, FolFormula formula) {
 		boolean satisfy = true;
-		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getAgent().getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
-		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
-		bbase.setKnowledge(view.getView().getKnowledge());
-		bbase.setAssertions(new LinkedList<>(new Conjunction(view.getView().getAssertions())));
+//		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getAgent().getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
+//		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
+//		bbase.setKnowledge(view.getView().getKnowledge());
+//		bbase.setAssertions(new LinkedList<>(new Conjunction(view.getView().getAssertions())));
 
-		ModelTupel models = reasoner.getModels(bbase);
+		ModelTupel models = view.getView().getAssertions();
+		
+		
+		//ModelTupel models = reasoner.getModels(bbase);
 		Iterator<NicePossibleWorld> iterator = models.getModels().iterator();
 		FOLPropTranslator translator = new FOLPropTranslator();
 		while(iterator.hasNext()){
@@ -315,11 +318,12 @@ public class CensorComponent extends BaseAgentComponent {
 	 * @return a list of positive and negated literals that can be infered from the given view.
 	 */
 	public List<FolFormula> scepticalInferences(BetterView view) {
-		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getAgent().getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
-		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
-		bbase.setKnowledge(view.getView().getKnowledge());
-		bbase.setAssertions(new LinkedList<>(new Conjunction(view.getView().getAssertions())));
-		return new LinkedList<FolFormula>(reasoner.infer(bbase));
+//		PLWithKnowledgeReasoner reasoner = (PLWithKnowledgeReasoner) view.getAgent().getBeliefs().getWorldKnowledge().getReasoningOperator().getImplementation();
+//		PLWithKnowledgeBeliefbase bbase = new PLWithKnowledgeBeliefbase();
+//		bbase.setKnowledge(view.getView().getKnowledge());
+//		bbase.setAssertions(new LinkedList<>(new Conjunction(view.getView().getAssertions())));
+//		return new LinkedList<FolFormula>(reasoner.infer(bbase));
+		return null;
 	}
 	
 	/**

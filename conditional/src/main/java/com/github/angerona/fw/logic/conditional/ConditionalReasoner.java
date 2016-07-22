@@ -8,7 +8,6 @@ import java.util.Set;
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.cl.ClBeliefSet;
 import net.sf.tweety.logics.cl.RuleBasedCReasoner;
-import net.sf.tweety.logics.cl.kappa.KappaValue;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -44,22 +43,7 @@ public class ConditionalReasoner extends BaseReasoner {
 	public ConditionalReasoner() {
 	}
 	
-	public RankingFunction calculateCRepresentation(ClBeliefSet bbase) {
-//		RankingFunction result = cache.get(bbase);
-//		
-//		if(result == null) {
-//			// Calculate c-representation
-//			BruteForceCReasoner creasoner = new BruteForceCReasoner(bbase, true);
-//			
-//			log.info("compute c-representation (bruteforce)");
-//			long startTime = System.currentTimeMillis();
-//			result = creasoner.getCRepresentation();
-//			long duration = System.currentTimeMillis() - startTime;
-//			log.info("done. duration: {}ms", duration);
-//			cache.put(bbase, result);
-//		}
-		
-//		return result;
+	public RankingFunction calculateCRepresentation(ClBeliefSet bbase, Set<PropositionalFormula> formulas) {
 		RankingFunction result = cache.get(bbase);
 		if(result != null) {
 			return result;
@@ -69,31 +53,12 @@ public class ConditionalReasoner extends BaseReasoner {
 		conds.addAll(bbase);
 		
 		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
-		System.out.println("Prepare conditional structures...");
-		Long before = System.currentTimeMillis();
+		
 		reasoner.prepare();
-		Long duration = System.currentTimeMillis() - before;
-		System.out.println("Generated in " + duration + "ms:");
-		System.out.println("Conditional Structure:");
-		System.out.println(reasoner.getConditionalStructure());
-		
-		System.out.println("Initial Kappa:");
-		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
-		}
-		
-		before = System.currentTimeMillis();
 		reasoner.process();
-		duration = System.currentTimeMillis() - before;
-		System.out.println("Evaluated in " + duration + "ms:");
-		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
-		}
-		System.out.println("Ranking-Function:");
-		System.out.println(reasoner.getSemantic());
-		System.out.println("");
 		
 		result = reasoner.getSemantic();
+		result.forceStrictness(formulas);//TODO testen ob es geht nochmal paper lesen 
 		cache.put(bbase, result);
 		return result;
 		
@@ -112,7 +77,7 @@ public class ConditionalReasoner extends BaseReasoner {
 		Set<FolFormula> retval = new HashSet<FolFormula>();
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
 		
-		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs());
+		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs(), bbase.getPropositions());
 				
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
 		Conjunction conjunction = new Conjunction(propositions);
@@ -153,7 +118,7 @@ public class ConditionalReasoner extends BaseReasoner {
 		
 		ConditionalBeliefbase bbase = (ConditionalBeliefbase) params.getBeliefBase();
 		
-		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs());
+		RankingFunction ocf = calculateCRepresentation(bbase.getConditionalBeliefs(), bbase.getPropositions());
 				
 		Set<PropositionalFormula> propositions = bbase.getPropositions();
 		Conjunction conjunction = new Conjunction(propositions);

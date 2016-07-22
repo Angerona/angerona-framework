@@ -37,7 +37,7 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>asp</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <parent>
@@ -47,4 +47,5 @@
   	<relativePath>..</relativePath>
   </parent>
   <artifactId>example</artifactId>
+  <version>1.0.2</version>
 </project>

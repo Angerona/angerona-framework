@@ -2,11 +2,13 @@ package com.github.angerona.fw.logic.conditional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashSet;
 
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.fol.parser.FolParserB;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 import com.github.angerona.fw.parser.ParseException;
 
@@ -26,7 +28,7 @@ public class OCFTester {
 		System.out.println(bbase.toString());
 		
 		System.out.println("c-representation:");
-		RankingFunction ocf = bbasereasoner.calculateCRepresentation(bbase.getConditionalBeliefs());
+		RankingFunction ocf = bbasereasoner.calculateCRepresentation(bbase.getConditionalBeliefs(), new HashSet<PropositionalFormula>());
 		System.out.println(ocf);
 		
 		String fol = "a || b";

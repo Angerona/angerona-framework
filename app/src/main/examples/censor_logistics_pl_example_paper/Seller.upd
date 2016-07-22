@@ -1,0 +1,13 @@
+-Qx || DD1
+-Qy || DD2 || DD1
+-DCi || DCA
+-DCj || -DCA
+-(DD1 && DD2) && -(-DD1 && -DD2)
+-(Qy && Qx) && -(-Qy && -Qx)
+-(DCi && DCj) && -(-DCi && -DCj)
+-(DD1 && QLWC) || DDA
+-(DD2 && -QLWC) || DDA
+(QLWC && -P) || (-QLWC &&  P)
+-(DDA && DCA) || CA
+;
+(-Qy || DD2) && (-Qy || P)

@@ -41,7 +41,7 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>asp</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>com.github.angerona</groupId>
@@ -56,7 +56,7 @@
     <dependency>
     	<groupId>com.github.angerona</groupId>
     	<artifactId>example</artifactId>
-    	<version>1.0.1</version>
+    	<version>1.0.2</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.jgrapht</groupId>
@@ -75,4 +75,5 @@
   	<version>1.0.1</version>
   	<relativePath>..</relativePath>
   </parent>
+  <version>1.0.1-SNAPSHOT</version>
 </project>
